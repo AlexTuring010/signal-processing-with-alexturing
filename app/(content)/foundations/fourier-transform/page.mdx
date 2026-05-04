@@ -62,10 +62,10 @@ import Link from 'next/link'
 Στο [προηγούμενο κεφάλαιο](/foundations/fourier-series#η-γέφυρα-προς-τον-fourier-transform) στείλαμε μια προειδοποίηση: *«θυμάσαι από τις Σειρές που είπαμε ότι αν T₀ → ∞ το διακριτό φάσμα γίνεται συνεχές; Να ο τύπος.»* Να την επίσημη έκδοση. Όταν αφήνουμε την περίοδο να πάει στο άπειρο:
 
 $$
-\sum_{k=-\infty}^{\infty} a_k\, e^{j k \omega_0 t} \;\longrightarrow\; \int_{-\infty}^{\infty} X(f)\, e^{j 2\pi f t}\, df
+\sum_{k=-\infty}^{\infty} a_k\, e^{j 2\pi k f_0 t} \;\longrightarrow\; \int_{-\infty}^{\infty} X(f)\, e^{j 2\pi f t}\, df
 $$
 
-Το άθροισμα γίνεται ολοκλήρωμα, οι διακριτοί συντελεστές $a_k$ γίνονται μια συνεχής $X(f)$, και κάθε αρμονική $e^{jk\omega_0 t}$ μετατρέπεται σε ένα **continuum** από complex exponentials σε όλες τις συχνότητες.
+Πέρα από τον αρχικό βρόχο σύνθεσης γραμμένο με $f_0 = 1/T_0$, το μόνο που αλλάζει στο όριο είναι αυτό που θέλουμε να αλλάζει: το **άθροισμα γίνεται ολοκλήρωμα**, και οι **διακριτές συχνότητες $kf_0$ γίνονται μια συνεχής $f$**. Η εκθετική δομή παραμένει ίδια — ίδιο πρόσημο, ίδιο $2\pi$, ίδια μεταβλητή χρόνου. Οι διακριτοί συντελεστές $a_k$ συγχωνεύονται σε μια συνεχή $X(f)$, και κάθε αρμονική $e^{j 2\pi k f_0 t}$ μετατρέπεται σε ένα **continuum** από complex exponentials σε όλες τις συχνότητες.
 </Callout>
 
 <Collapsible title="Απόδειξη — γιατί τα aₖ συγχωνεύονται σε μια συνεχή X(f)" badge="προαιρετικό">
@@ -166,8 +166,8 @@ $$
 | --- | --- | --- |
 | Domain στη συχνότητα | Διακριτό $k = 0, \pm 1, \pm 2, \ldots$ | Συνεχές $f \in \mathbb{R}$ |
 | Συντελεστές / φάσμα | $a_k$ (ακολουθία) | $X(f)$ (συνάρτηση) |
-| Ανάλυση | $a_k = \frac{1}{T_0}\int_{T_0} x(t) e^{-jk\omega_0 t}\,dt$ | $X(f) = \int_{-\infty}^{\infty} x(t) e^{-j 2\pi f t}\,dt$ |
-| Σύνθεση | $x(t) = \sum_k a_k\, e^{jk\omega_0 t}$ | $x(t) = \int_{-\infty}^{\infty} X(f) e^{j 2\pi f t}\,df$ |
+| Ανάλυση | $a_k = \frac{1}{T_0}\int_{T_0} x(t) e^{-j 2\pi k f_0 t}\,dt$ | $X(f) = \int_{-\infty}^{\infty} x(t) e^{-j 2\pi f t}\,dt$ |
+| Σύνθεση | $x(t) = \sum_k a_k\, e^{j 2\pi k f_0 t}$ | $x(t) = \int_{-\infty}^{\infty} X(f) e^{j 2\pi f t}\,df$ |
 
 ## 3. Conditions of existence (Dirichlet) — σύντομα
 
@@ -431,7 +431,7 @@ $$
 **Πώς προκύπτει.** Γράφουμε το $x(t)$ μέσω της σειράς Fourier του και παίρνουμε FT κάθε όρου ξεχωριστά (γραμμικότητα):
 
 $$
-x(t) = \sum_k a_k\, e^{j k \omega_0 t} \;\overset{\mathcal{F}}{\longrightarrow}\; X(f) = \sum_k a_k \cdot \mathcal{F}\{e^{j k \omega_0 t}\}
+x(t) = \sum_k a_k\, e^{j 2\pi k f_0 t} \;\overset{\mathcal{F}}{\longrightarrow}\; X(f) = \sum_k a_k \cdot \mathcal{F}\{e^{j 2\pi k f_0 t}\}
 $$
 
 Από τη Section 4d (συνδυασμένη με frequency-shift), $\mathcal{F}\{e^{j 2\pi f_c t}\} = \delta(f - f_c)$. Άρα:
