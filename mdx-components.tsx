@@ -45,6 +45,12 @@ import { PhaseTimeShiftDemo } from '@/components/viz/PhaseTimeShiftDemo'
 import { ComplexPlaneViz } from '@/components/viz/ComplexPlaneViz'
 import { EulerUnitCircleViz } from '@/components/viz/EulerUnitCircleViz'
 import { ComplexMultiplicationViz } from '@/components/viz/ComplexMultiplicationViz'
+import { VectorDecomposition3D } from '@/components/viz/VectorDecomposition3D'
+import { HarmonicOrthogonalityCheck } from '@/components/viz/HarmonicOrthogonalityCheck'
+import { SpectrumViewer } from '@/components/viz/SpectrumViewer'
+import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourier'
+import { SquareWaveBuilder } from '@/components/viz/SquareWaveBuilder'
+import { PeriodToInfinity } from '@/components/viz/PeriodToInfinity'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -109,6 +115,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ComplexPlaneViz,
     EulerUnitCircleViz,
     ComplexMultiplicationViz,
+
+    // Visualizations — foundations / fourier-series
+    VectorDecomposition3D,
+    HarmonicOrthogonalityCheck,
+    SpectrumViewer,
+    RectangularPulseFourier,
+    SquareWaveBuilder,
+    PeriodToInfinity,
 
     ...components,
   }

@@ -24,11 +24,6 @@ Format:
        Source material: `Εγκατάσταση_του_Matlab.pdf` + `Εργαστήριο_1intro_matlab.pdf`
        Notes: The intro page promises "Πλήρης οδηγός εγκατάστασης και της Lab 1 θα έρθει σε ξεχωριστή σελίδα". Until this page exists, the LabBox link in the intro should either go nowhere clean or to a clearly-marked "🚧 Σύντομα" placeholder.
 
-- [ ] **Explanation of why a pure cosine produces a single spike in the frequency domain**
-       Where it appears: `/intro`, section 6 (TimeFrequencyTeaser teaser)
-       Where it should be fulfilled: Foundations / Fourier section
-       Notes: The intro plants the seed: "παρατήρησε ότι ένα καθαρό cosine βγάζει ένα 'καρφί' στη συχνότητα. Θα δούμε γιατί στο επόμενο κεφάλαιο." The Fourier chapter must explicitly close the loop and reference back ("θυμάσαι από την εισαγωγή το καρφί στη συχνότητα; Να γιατί.")
-
 - [ ] **Full treatment of modulation (AM, FM)**
        Where it appears: `/intro`, section 7
        Where it should be fulfilled: `/modulation/am` and `/modulation/fm`
@@ -52,24 +47,33 @@ Format:
        Notes: Page currently a 🚧 placeholder. Must add: numeric linearity / TI checks for several systems, `conv` usage in MATLAB and comparison to analytical solutions, cascade/parallel composition.
 
 - [ ] **H(f) is the Fourier transform of h(t) — proven and contextualized**
-       Where it appears: `/foundations/systems` section 7 (eigenfunction property derivation introduces H(f₀) but doesn't connect it formally to Fourier)
+       Where it appears:
+         - `/foundations/systems` section 7 (eigenfunction property derivation introduces H(f₀) but doesn't connect it formally to Fourier).
+         - `/foundations/fourier-series` synthesis/analysis section — callout flagging the structural similarity between a_k and H(f₀).
        Where it should be fulfilled: `/foundations/fourier-transform`
-       Notes: Systems chapter ends with two "spoiler" callouts pointing here. The Fourier-transform chapter must explicitly close the loop: "η H(f₀) που είδες στα Συστήματα είναι ο Fourier transform της h(t) — να γιατί κάθε σήμα μπορεί να αναλυθεί σε complex exponentials."
+       Notes: The Fourier-transform chapter must explicitly close the loop: "η H(f₀) που είδες στα Συστήματα είναι ο Fourier transform της h(t) — να γιατί κάθε σήμα μπορεί να αναλυθεί σε complex exponentials." The Fourier-series chapter teases this twice (once as a callout, once at the end of the "γέφυρα" section), so the FT chapter should back-reference both.
 
 - [ ] **Convolution in time = multiplication in frequency**
        Where it appears: `/foundations/systems` section 6 (teaser callout) and the eigenfunction section
        Where it should be fulfilled: `/foundations/fourier-transform`
        Notes: Systems chapter teases this without proof. Fourier-transform chapter must derive it cleanly and use it in at least one worked example to drive home why frequency-domain analysis is so much easier.
 
-- [ ] **Conjugate symmetry of H(f) for real h(t) — and the related FT symmetry siblings**
-       Where it appears: `/foundations/systems` Section 7 collapsible derivation (Βήμα 4) — `H(-f) = H*(f)` is *used* without proof.
+- [ ] **Conjugate symmetry of H(f) / a_k for real signals — and the related FT symmetry siblings**
+       Where it appears:
+         - `/foundations/systems` Section 7 collapsible derivation (Βήμα 4) — `H(-f) = H*(f)` is *used* without proof.
+         - `/foundations/fourier-series` Section "Συμμετρίες ±f for real signals" — `a_{-k} = a_k^*` is stated without proof.
        Where it should be fulfilled: `/foundations/fourier-transform`
        Notes: Frame as a **general property of the Fourier transform**, not a one-off about LTI systems. Cover the full family of symmetry pairings:
          - real $h(t)$ ↔ conjugate-symmetric $H(f)$ (the case used in the systems chapter)
          - real-and-even $h(t)$ ↔ real-and-even $H(f)$
          - real-and-odd $h(t)$ ↔ imaginary-and-odd $H(f)$
          - imaginary $h(t)$ ↔ conjugate-antisymmetric $H(f)$
-       Reader should leave knowing that *every time* they see a real-valued time signal, they get conjugate symmetry in frequency for free (and why). When closing the loop, back-reference: «θυμάσαι από τα Συστήματα που χρησιμοποιήσαμε $H(-f) = H^*(f)$ ως δεδομένο; Να γιατί.»
+       Reader should leave knowing that *every time* they see a real-valued time signal, they get conjugate symmetry in frequency for free (and why). When closing the loop, back-reference both prior chapters: «θυμάσαι από τα Συστήματα που χρησιμοποιήσαμε $H(-f) = H^*(f)$ ως δεδομένο; Να γιατί. Το ίδιο ισχύει για τη συμμετρία του φάσματος που είδαμε στις Σειρές.»
+
+- [ ] **Limit-of-period argument formalized (Σειρά Fourier → μετασχηματισμός Fourier)**
+       Where it appears: `/foundations/fourier-series`, Section "Η γέφυρα προς τον Fourier transform" + the `<PeriodToInfinity />` viz
+       Where it should be fulfilled: `/foundations/fourier-transform`
+       Notes: The Fourier-series chapter sketches the limit T₀ → ∞ informally (line spacing 1/T₀ → 0, discrete spectrum becomes continuous). The FT chapter must do this properly: define X(f) as the limit of T₀·a_k, replace Σ with ∫, and explicitly recover the synthesis/analysis pair. Back-reference: «θυμάσαι από τις Σειρές που είπαμε ότι αν T₀ → ∞ το διακριτό φάσμα γίνεται συνεχές; Να ο τύπος.»
 
 - [ ] **Reference pages for trig identities, Fourier pairs, and integrals**
        Where it appears: implied across the site every time a topic page would otherwise inline general math
@@ -96,6 +100,11 @@ Format:
        Originally appeared: `/foundations/signals` section 4b (RotatingPhasor + the LTI claim)
        Fulfilled in: `/foundations/systems` section 7
        Notes: Section 7 walks through the algebra step by step — pulling the constant out of the convolution integral, defining H(f₀), arriving at y(t) = H(f₀) · x(t). The EigenfunctionDemo viz then makes it interactive: same frequency in/out, only amplitude and phase change as the user sweeps f₀. The full Fourier interpretation of H(f₀) is deferred to /foundations/fourier-transform (now tracked as a separate open commitment).
+
+- [x] **Why a pure cosine produces a single spike in the frequency domain**
+       Originally appeared: `/intro` section 6 (TimeFrequencyTeaser)
+       Fulfilled in: `/foundations/fourier-series` section "Φάσμα πλάτους"
+       Notes: Closed with an explicit recap callout — "θυμάσαι από την εισαγωγή το «καρφί» στη συχνότητα; **Να γιατί.**" — explaining that a pure cosine is the simplest possible Fourier series with only two non-zero coefficients (a_1 = a_{-1} = 1/2), so its spectrum is exactly two lollipops at ±f_0. The SpectrumViewer viz lets the reader see this directly with the "Καθαρό cosine" preset.
 
 ---
 
