@@ -56,6 +56,8 @@ import { RectToSincViz } from '@/components/viz/RectToSincViz'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
+import { CounterRotatingPhasors } from '@/components/viz/CounterRotatingPhasors'
+import { TwoSidedVsOneSidedCosine } from '@/components/viz/TwoSidedVsOneSidedCosine'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -134,6 +136,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ModulationTheoremViz,
     TransformPairsGallery,
     ConvolutionInFrequency,
+
+    // Visualizations — reference / spectrum-conventions
+    CounterRotatingPhasors,
+    TwoSidedVsOneSidedCosine,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on
