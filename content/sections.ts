@@ -62,6 +62,12 @@ export const CHAPTERS: Chapter[] = [
         available: true,
         group: 'reference',
       },
+      {
+        slug: 'reference/spectrum-conventions',
+        title: 'Συμβάσεις φάσματος',
+        available: true,
+        group: 'reference',
+      },
     ],
   },
   {
