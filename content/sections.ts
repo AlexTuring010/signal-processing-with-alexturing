@@ -56,6 +56,12 @@ export const CHAPTERS: Chapter[] = [
         available: true,
         group: 'reference',
       },
+      {
+        slug: 'reference/complex-numbers',
+        title: 'Μιγαδικοί αριθμοί',
+        available: true,
+        group: 'reference',
+      },
     ],
   },
   {

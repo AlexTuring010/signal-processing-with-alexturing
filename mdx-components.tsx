@@ -42,6 +42,9 @@ import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
 import { TransformationDemo } from '@/components/viz/TransformationDemo'
 import { TransformationWorkedExample } from '@/components/viz/TransformationWorkedExample'
 import { PhaseTimeShiftDemo } from '@/components/viz/PhaseTimeShiftDemo'
+import { ComplexPlaneViz } from '@/components/viz/ComplexPlaneViz'
+import { EulerUnitCircleViz } from '@/components/viz/EulerUnitCircleViz'
+import { ComplexMultiplicationViz } from '@/components/viz/ComplexMultiplicationViz'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -103,6 +106,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TransformationDemo,
     TransformationWorkedExample,
     PhaseTimeShiftDemo,
+    ComplexPlaneViz,
+    EulerUnitCircleViz,
+    ComplexMultiplicationViz,
 
     ...components,
   }

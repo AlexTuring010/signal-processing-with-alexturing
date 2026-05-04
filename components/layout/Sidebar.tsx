@@ -70,10 +70,11 @@ export function Sidebar({ onNavigate }: Props) {
                     {reference.length > 0 && (
                       <>
                         <div
-                          className="mt-2 px-2 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-fg-subtle/80"
+                          className="mt-3 flex items-center gap-1 px-2 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-fg-subtle/70"
                           aria-hidden="true"
                         >
-                          Reference
+                          <span>📚</span>
+                          <span>Reference</span>
                         </div>
                         <ul className="space-y-0.5">
                           {reference.map((section) => (
