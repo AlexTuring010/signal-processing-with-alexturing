@@ -7,6 +7,8 @@ import {
   Code2,
   BookOpenCheck,
   Rewind,
+  Target,
+  Link2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -18,6 +20,8 @@ type CalloutType =
   | 'cs-motivation'
   | 'prerequisite'
   | 'recap'
+  | 'closes-commitment'
+  | 'connection'
 
 type Props = {
   type?: CalloutType
@@ -63,6 +67,16 @@ const STYLES: Record<
     icon: Rewind,
     label: 'Quick recap',
     tone: 'border-violet-400/60 bg-violet-50/60 text-violet-950 dark:border-violet-400/30 dark:bg-violet-400/10 dark:text-violet-100',
+  },
+  'closes-commitment': {
+    icon: Target,
+    label: '🎯 Κλείνει υπόσχεση',
+    tone: 'border-fuchsia-400/60 bg-gradient-to-br from-fuchsia-50/80 to-violet-50/60 text-fuchsia-950 dark:border-fuchsia-400/40 dark:from-fuchsia-400/10 dark:to-violet-400/5 dark:text-fuchsia-100',
+  },
+  connection: {
+    icon: Link2,
+    label: 'Σύνδεση',
+    tone: 'border-teal-400/60 bg-teal-50/60 text-teal-950 dark:border-teal-400/30 dark:bg-teal-400/10 dark:text-teal-100',
   },
 }
 

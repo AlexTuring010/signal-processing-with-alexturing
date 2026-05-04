@@ -46,35 +46,6 @@ Format:
        Source material: `Εργαστήριο_3Γραμμικά_συστήματα_συνεχούς_χρόνου.pdf`
        Notes: Page currently a 🚧 placeholder. Must add: numeric linearity / TI checks for several systems, `conv` usage in MATLAB and comparison to analytical solutions, cascade/parallel composition.
 
-- [ ] **H(f) is the Fourier transform of h(t) — proven and contextualized**
-       Where it appears:
-         - `/foundations/systems` section 7 (eigenfunction property derivation introduces H(f₀) but doesn't connect it formally to Fourier).
-         - `/foundations/fourier-series` synthesis/analysis section — callout flagging the structural similarity between a_k and H(f₀).
-       Where it should be fulfilled: `/foundations/fourier-transform`
-       Notes: The Fourier-transform chapter must explicitly close the loop: "η H(f₀) που είδες στα Συστήματα είναι ο Fourier transform της h(t) — να γιατί κάθε σήμα μπορεί να αναλυθεί σε complex exponentials." The Fourier-series chapter teases this twice (once as a callout, once at the end of the "γέφυρα" section), so the FT chapter should back-reference both.
-
-- [ ] **Convolution in time = multiplication in frequency**
-       Where it appears: `/foundations/systems` section 6 (teaser callout) and the eigenfunction section
-       Where it should be fulfilled: `/foundations/fourier-transform`
-       Notes: Systems chapter teases this without proof. Fourier-transform chapter must derive it cleanly and use it in at least one worked example to drive home why frequency-domain analysis is so much easier.
-
-- [ ] **Conjugate symmetry of H(f) / a_k for real signals — and the related FT symmetry siblings**
-       Where it appears:
-         - `/foundations/systems` Section 7 collapsible derivation (Βήμα 4) — `H(-f) = H*(f)` is *used* without proof.
-         - `/foundations/fourier-series` Section "Συμμετρίες ±f for real signals" — `a_{-k} = a_k^*` is stated without proof.
-       Where it should be fulfilled: `/foundations/fourier-transform`
-       Notes: Frame as a **general property of the Fourier transform**, not a one-off about LTI systems. Cover the full family of symmetry pairings:
-         - real $h(t)$ ↔ conjugate-symmetric $H(f)$ (the case used in the systems chapter)
-         - real-and-even $h(t)$ ↔ real-and-even $H(f)$
-         - real-and-odd $h(t)$ ↔ imaginary-and-odd $H(f)$
-         - imaginary $h(t)$ ↔ conjugate-antisymmetric $H(f)$
-       Reader should leave knowing that *every time* they see a real-valued time signal, they get conjugate symmetry in frequency for free (and why). When closing the loop, back-reference both prior chapters: «θυμάσαι από τα Συστήματα που χρησιμοποιήσαμε $H(-f) = H^*(f)$ ως δεδομένο; Να γιατί. Το ίδιο ισχύει για τη συμμετρία του φάσματος που είδαμε στις Σειρές.»
-
-- [ ] **Limit-of-period argument formalized (Σειρά Fourier → μετασχηματισμός Fourier)**
-       Where it appears: `/foundations/fourier-series`, Section "Η γέφυρα προς τον Fourier transform" + the `<PeriodToInfinity />` viz
-       Where it should be fulfilled: `/foundations/fourier-transform`
-       Notes: The Fourier-series chapter sketches the limit T₀ → ∞ informally (line spacing 1/T₀ → 0, discrete spectrum becomes continuous). The FT chapter must do this properly: define X(f) as the limit of T₀·a_k, replace Σ with ∫, and explicitly recover the synthesis/analysis pair. Back-reference: «θυμάσαι από τις Σειρές που είπαμε ότι αν T₀ → ∞ το διακριτό φάσμα γίνεται συνεχές; Να ο τύπος.»
-
 - [ ] **Reference pages for trig identities, Fourier pairs, and integrals**
        Where it appears: implied across the site every time a topic page would otherwise inline general math
        Where it should be fulfilled: `/reference/trig-identities`, `/reference/fourier-pairs`, `/reference/integrals`
@@ -84,6 +55,16 @@ Format:
        Where it appears: `/foundations/systems` Section 7 (the H(f₀) = 0 case mentioning "ένα φίλτρο όταν «κόβει» μια ζώνη")
        Where it should be fulfilled: `/foundations/bandpass-filters`
        Notes: Once filters are introduced, the chapter must address why "ideal" filters (sharp cutoff in the frequency domain) are physically unrealizable for real-time processing — they require a non-causal h(t). Connect to the sinc impulse response that came up in /foundations/signals.
+
+- [ ] **Random-process PSD and the generalized Wiener–Khinchin theorem**
+       Where it appears: `/foundations/fourier-transform` Section 9 (Parseval / ESD) and Section 10 (autocorrelation ↔ |X(f)|² for deterministic signals)
+       Where it should be fulfilled: `/randomness/psd` (and earlier parts of the random-processes chapter)
+       Notes: The FT chapter only treats deterministic-energy signals: $R_x(\tau) \leftrightarrow |X(f)|^2$. For random / power signals (noise, modulated signals once the message is treated as random), `X(f)` is not well-defined per realization. The random-process chapter must define PSD via expected autocorrelation and derive the random-signal version of Wiener–Khinchin, then connect back to the deterministic version proved here.
+
+- [ ] **AM modulation built on the modulation theorem**
+       Where it appears: `/foundations/fourier-transform` Section 7 (modulation theorem promises that "this is exactly the math of AM" and forward-links to /am)
+       Where it should be fulfilled: `/am/conventional`, `/am/dsb-sc`, `/am/ssb`, `/am/demodulation`
+       Notes: The AM chapters must open by reusing the modulation theorem from the FT page rather than re-deriving it. They should explicitly back-reference: «θυμάσαι από τον FT chapter ότι πολλαπλασιασμός με cos(2π f_c t) μετατοπίζει το φάσμα στις ±f_c; Όλη η AM είναι αυτό, εφαρμοσμένο σε baseband σήματα φωνής/μουσικής, με variations στο πώς διαχειριζόμαστε τις δύο πλευρικές ζώνες και το carrier.» Also: the symmetric ±f_c copies are the reason AM bandwidth is twice the baseband bandwidth.
 
 ---
 
@@ -103,8 +84,37 @@ Format:
 
 - [x] **Why a pure cosine produces a single spike in the frequency domain**
        Originally appeared: `/intro` section 6 (TimeFrequencyTeaser)
-       Fulfilled in: `/foundations/fourier-series` section "Φάσμα πλάτους"
-       Notes: Closed with an explicit recap callout — "θυμάσαι από την εισαγωγή το «καρφί» στη συχνότητα; **Να γιατί.**" — explaining that a pure cosine is the simplest possible Fourier series with only two non-zero coefficients (a_1 = a_{-1} = 1/2), so its spectrum is exactly two lollipops at ±f_0. The SpectrumViewer viz lets the reader see this directly with the "Καθαρό cosine" preset.
+       Fulfilled in: `/foundations/fourier-series` section "Φάσμα πλάτους"; *re-confirmed and generalized* in `/foundations/fourier-transform` Section 4e
+       Notes: Closed with an explicit recap callout — "θυμάσαι από την εισαγωγή το «καρφί» στη συχνότητα; **Να γιατί.**" — explaining that a pure cosine is the simplest possible Fourier series with only two non-zero coefficients (a_1 = a_{-1} = 1/2), so its spectrum is exactly two lollipops at ±f_0. The SpectrumViewer viz lets the reader see this directly with the "Καθαρό cosine" preset. The FT chapter then re-closes the same promise as the *general* FT identity $\cos(2\pi f_0 t) \leftrightarrow \tfrac{1}{2}\delta(f-f_0) + \tfrac{1}{2}\delta(f+f_0)$ — same answer, valid for any signal in any context, not just for periodic series.
+
+- [x] **H(f) is the Fourier transform of h(t) — proven and contextualized** (closed 2026-05-05)
+       Originally appeared:
+         - `/foundations/systems` section 7 (eigenfunction property derivation introduces H(f₀) but doesn't connect it formally to Fourier).
+         - `/foundations/fourier-series` synthesis/analysis section — callout flagging the structural similarity between a_k and H(f₀).
+       Fulfilled in: `/foundations/fourier-transform` Sections 5b and 11
+       Notes: Section 5b derives convolution↔multiplication, then immediately observes that the integral defining H(f₀) in the systems chapter is letter-for-letter the FT integral, hence $H(f) = \mathcal{F}\{h(t)\}$. A 🎯 closes-commitment callout makes this visible. Section 11 then synthesizes everything (eigenfunction + FT + LTI) into one paragraph: "ο FT είναι το εργαλείο που κάνει τη θεωρία LTI εύκολη — η συνέλιξη γίνεται πολλαπλασιασμός, οι complex exponentials γίνονται απλά νούμερα H(f)."
+
+- [x] **Convolution in time = multiplication in frequency** (closed 2026-05-05)
+       Originally appeared: `/foundations/systems` section 6 (teaser callout) and the eigenfunction section
+       Fulfilled in: `/foundations/fourier-transform` Section 5b
+       Notes: Two-line proof inside a 🎯 closes-commitment callout (change of variable in the inner integral, swap order of integration). The `<ConvolutionInFrequency />` viz lets the reader pick `x(t)` and `h(t)` from a small preset and watch `Y(f) = X(f)·H(f)` form by simple pointwise multiplication — driving home that the flip-and-slide gymnastics of convolution disappears in the frequency domain.
+
+- [x] **Conjugate symmetry of H(f) / a_k for real signals — and the related FT symmetry siblings** (closed 2026-05-05)
+       Originally appeared:
+         - `/foundations/systems` Section 7 collapsible derivation (Βήμα 4) — `H(-f) = H*(f)` is *used* without proof.
+         - `/foundations/fourier-series` Section "Συμμετρίες ±f for real signals" — `a_{-k} = a_k^*` is stated without proof.
+       Fulfilled in: `/foundations/fourier-transform` Section 8
+       Notes: Section 8 proves $X(-f) = X^*(f)$ for real $x(t)$ in three lines using the FT definition + conjugate properties, then tabulates the full family (real-and-even ↔ real-and-even, real-and-odd ↔ imaginary-and-odd, imaginary ↔ conjugate-antisymmetric). Three 🎯 closes-commitment callouts back-reference the original promises: (i) the systems-chapter use of $H(-f) = H^*(f)$, (ii) the special real-and-even case the systems chapter handled via Euler split, (iii) the unified family across all symmetry types. Reader leaves with the takeaway: real-valued time signal ⇒ conjugate symmetry in frequency, for free.
+
+- [x] **Limit-of-period argument formalized (Σειρά Fourier → μετασχηματισμός Fourier)** (closed 2026-05-05)
+       Originally appeared: `/foundations/fourier-series`, Section "Η γέφυρα προς τον Fourier transform" + the `<PeriodToInfinity />` viz
+       Fulfilled in: `/foundations/fourier-transform` Section 1
+       Notes: Section 1 walks through the heuristic limit ($T_0 \to \infty$, fundamental $f_0 \to 0$, line spacing collapses, sum becomes integral) and shows the explicit replacement $\sum a_k e^{j k \omega_0 t} \to \int X(f) e^{j 2\pi f t}\,df$. A 🎯 closes-commitment callout makes the back-reference to the FS chapter promise. The `<PeriodToInfinity />` viz from the FS chapter is reused to anchor the visual intuition.
+
+- [x] **Parseval for signals** (closed 2026-05-05)
+       Originally appeared: `/foundations/fourier-series` (deferred until FT chapter, since the general statement uses the integral form)
+       Fulfilled in: `/foundations/fourier-transform` Section 9
+       Notes: Section 9 boxes the general Parseval $\int |x(t)|^2 dt = \int |X(f)|^2 df$, defines ESD as $|X(f)|^2$, and a 🎯 closes-commitment callout exhibits the periodic special case $\frac{1}{T_0}\int_{T_0}|x|^2 dt = \sum_k |a_k|^2$ as a corollary, unifying the FS energy formula with the general FT statement.
 
 ---
 

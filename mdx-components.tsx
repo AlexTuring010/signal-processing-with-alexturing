@@ -51,6 +51,10 @@ import { SpectrumViewer } from '@/components/viz/SpectrumViewer'
 import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourier'
 import { SquareWaveBuilder } from '@/components/viz/SquareWaveBuilder'
 import { PeriodToInfinity } from '@/components/viz/PeriodToInfinity'
+import { RectToSincViz } from '@/components/viz/RectToSincViz'
+import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
+import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
+import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -123,6 +127,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RectangularPulseFourier,
     SquareWaveBuilder,
     PeriodToInfinity,
+
+    // Visualizations — foundations / fourier-transform
+    RectToSincViz,
+    ModulationTheoremViz,
+    TransformPairsGallery,
+    ConvolutionInFrequency,
 
     ...components,
   }
