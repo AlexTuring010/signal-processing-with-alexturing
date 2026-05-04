@@ -52,49 +52,102 @@ export function Sidebar({ onNavigate }: Props) {
                 <span className="flex-1">{chapter.title}</span>
               </button>
 
-              {isOpen && (
-                <ul className="mb-2 ml-2 space-y-0.5 border-l border-border pl-2">
-                  {chapter.sections.map((section) => {
-                    const href = `/${section.slug}`
-                    const active = pathname === href
-                    return (
-                      <li key={section.slug}>
-                        {section.available ? (
-                          <Link
-                            href={href}
-                            onClick={onNavigate}
-                            className={cn(
-                              'flex items-center gap-2 rounded px-2 py-1.5 text-[0.875rem] transition-colors',
-                              active
-                                ? 'bg-accent-soft/50 text-fg font-medium'
-                                : 'text-fg-muted hover:bg-bg-soft hover:text-fg',
-                            )}
-                            aria-current={active ? 'page' : undefined}
-                          >
-                            <ProgressDot slug={section.slug} current={active} />
-                            <span className="flex-1 truncate">{section.title}</span>
-                          </Link>
-                        ) : (
-                          <span
-                            className="flex items-center gap-2 rounded px-2 py-1.5 text-[0.875rem] text-fg-subtle/70"
-                            title="Έρχεται σύντομα"
-                          >
-                            <ProgressDot slug={section.slug} />
-                            <span className="flex-1 truncate">{section.title}</span>
-                            <span className="text-[10px] uppercase tracking-wide text-fg-subtle/60">
-                              soon
-                            </span>
-                          </span>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              )}
+              {isOpen && (() => {
+                const main = chapter.sections.filter((s) => !s.group)
+                const reference = chapter.sections.filter((s) => s.group === 'reference')
+                return (
+                  <div className="mb-2 ml-2 border-l border-border pl-2">
+                    <ul className="space-y-0.5">
+                      {main.map((section) => (
+                        <SectionLink
+                          key={section.slug}
+                          section={section}
+                          pathname={pathname}
+                          onNavigate={onNavigate}
+                        />
+                      ))}
+                    </ul>
+                    {reference.length > 0 && (
+                      <>
+                        <div
+                          className="mt-2 px-2 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-fg-subtle/80"
+                          aria-hidden="true"
+                        >
+                          Reference
+                        </div>
+                        <ul className="space-y-0.5">
+                          {reference.map((section) => (
+                            <SectionLink
+                              key={section.slug}
+                              section={section}
+                              pathname={pathname}
+                              onNavigate={onNavigate}
+                              reference
+                            />
+                          ))}
+                        </ul>
+                      </>
+                    )}
+                  </div>
+                )
+              })()}
             </li>
           )
         })}
       </ul>
     </nav>
+  )
+}
+
+function SectionLink({
+  section,
+  pathname,
+  onNavigate,
+  reference,
+}: {
+  section: { slug: string; title: string; available: boolean }
+  pathname: string
+  onNavigate?: () => void
+  reference?: boolean
+}) {
+  const href = `/${section.slug}`
+  const active = pathname === href
+  if (!section.available) {
+    return (
+      <li>
+        <span
+          className={cn(
+            'flex items-center gap-2 rounded px-2 py-1.5 text-fg-subtle/70',
+            reference ? 'text-[0.82rem] italic' : 'text-[0.875rem]',
+          )}
+          title="Έρχεται σύντομα"
+        >
+          <ProgressDot slug={section.slug} />
+          <span className="flex-1 truncate">{section.title}</span>
+          <span className="text-[10px] uppercase tracking-wide text-fg-subtle/60">
+            soon
+          </span>
+        </span>
+      </li>
+    )
+  }
+  return (
+    <li>
+      <Link
+        href={href}
+        onClick={onNavigate}
+        className={cn(
+          'flex items-center gap-2 rounded px-2 py-1.5 transition-colors',
+          reference ? 'text-[0.82rem] italic' : 'text-[0.875rem]',
+          active
+            ? 'bg-accent-soft/50 text-fg font-medium not-italic'
+            : 'text-fg-muted hover:bg-bg-soft hover:text-fg',
+        )}
+        aria-current={active ? 'page' : undefined}
+      >
+        <ProgressDot slug={section.slug} current={active} />
+        <span className="flex-1 truncate">{section.title}</span>
+      </Link>
+    </li>
   )
 }

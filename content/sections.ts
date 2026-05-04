@@ -15,6 +15,12 @@ export type Section = {
   available: boolean
   examWeight?: number
   prerequisites?: string[]
+  /**
+   * Subgroup within a chapter. `undefined` (default) = main flow content.
+   * `'reference'` = quick-reference / lookup pages, rendered separately in
+   * the sidebar so the linear flow stays clean.
+   */
+  group?: 'reference'
 }
 
 export type Chapter = {
@@ -44,6 +50,12 @@ export const CHAPTERS: Chapter[] = [
       { slug: 'foundations/fourier-series', title: 'Fourier series', available: false },
       { slug: 'foundations/fourier-transform', title: 'Fourier transform', available: false },
       { slug: 'foundations/sampling-light', title: 'Sampling — εισαγωγή', available: false },
+      {
+        slug: 'foundations/signal-transformations',
+        title: 'Μετασχηματισμοί σήματος',
+        available: true,
+        group: 'reference',
+      },
     ],
   },
   {
