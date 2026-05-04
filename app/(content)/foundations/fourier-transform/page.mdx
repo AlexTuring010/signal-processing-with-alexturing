@@ -283,7 +283,17 @@ $$
 e^{j 2\pi f_c t} \overset{\mathcal{F}}{\longleftrightarrow} \delta(f - f_c)
 $$
 
-Συμμετρικά, $e^{-j 2\pi f_0 t} \overset{\mathcal{F}}{\longleftrightarrow} \delta(f + f_0)$.
+Με την ίδια λογική, εφαρμόζοντας τον inverse FT στο $\delta(f + f_0)$:
+
+$$
+\mathcal{F}^{-1}\{\delta(f + f_0)\} = \int_{-\infty}^{\infty} \delta(f + f_0)\, e^{j 2\pi f t}\, df = e^{-j 2\pi f_0 t}
+$$
+
+Άρα:
+
+$$
+e^{-j 2\pi f_0 t} \overset{\mathcal{F}}{\longleftrightarrow} \delta(f + f_0)
+$$
 
 Από γραμμικότητα του FT, αθροίζοντας τα δύο complex exponentials με συντελεστή $1/2$:
 
