@@ -215,6 +215,61 @@ html {
   margin: 2rem 0;
 }
 
+/* Tables — give cells real breathing room so columns don't crowd each other.
+   Without these rules tables inherit zero padding and the eye can't tell
+   adjacent columns apart, especially when math runs long. */
+.prose-content table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
+  overflow-x: auto;
+  white-space: normal;
+}
+
+.prose-content table thead {
+  background-color: rgb(var(--bg-soft));
+}
+
+.prose-content table th,
+.prose-content table td {
+  padding: 0.6rem 1rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+/* Vertical separators between columns — the actual readability fix */
+.prose-content table th + th,
+.prose-content table td + td {
+  border-left: 1px solid rgb(var(--border));
+}
+
+.prose-content table th {
+  font-weight: 600;
+  color: rgb(var(--fg));
+  letter-spacing: -0.005em;
+}
+
+.prose-content table tr:last-child td {
+  border-bottom: none;
+}
+
+.prose-content table tbody tr:nth-child(even) {
+  background-color: rgb(var(--bg-soft) / 0.4);
+}
+
+/* Math inside tables shouldn't shrink the cell padding — give it air */
+.prose-content table .katex {
+  font-size: 1em;
+}
+
 /* KaTeX tweaks — make sure colors inherit and display math centers nicely */
 .katex {
   font-size: 1.05em;
