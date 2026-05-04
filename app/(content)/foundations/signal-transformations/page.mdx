@@ -1,0 +1,121 @@
+export const metadata = {
+  title: 'Μετασχηματισμοί σήματος — Quick reference',
+  description:
+    'Αναφορά για τους πέντε βασικούς μετασχηματισμούς σήματος: amplitude scaling, time shift, time reversal, time scaling, και η σειρά που τους εφαρμόζουμε σε σύνθετες εκφράσεις.',
+}
+
+export const frontmatter = {
+  title: 'Μετασχηματισμοί σήματος — Quick reference',
+  slug: 'foundations/signal-transformations',
+  order: 99,
+  prerequisites: [],
+  examWeight: 5,
+  estimatedReadTime: 8,
+  lastUpdated: '2026-05-04',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Foundations · Reference</span>
+  <span>·</span>
+  <span>~8 min read</span>
+</div>
+
+# Μετασχηματισμοί σήματος
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="foundations/signal-transformations" />
+  <Bookmark id="foundations/signal-transformations" />
+</div>
+
+<Callout type="note">
+  Αυτή είναι σελίδα **αναφοράς** — όχι μέρος της κύριας ροής. Το ίδιο
+  περιεχόμενο εμφανίζεται και στο [/foundations/signals §4.5](/foundations/signals#combinations) όπου εισάγεται για πρώτη φορά. Εδώ τη διατηρούμε ξεχωριστά για να μπορείς να την ανοίγεις γρήγορα από τη συνέλιξη, τους Fourier ή τη διαμόρφωση χωρίς να ψάχνεις.
+</Callout>
+
+Πέντε standard «κουμπιά» που μετακινούν, ζυγίζουν, αντιστρέφουν ή συμπιέζουν ένα σήμα. Εμφανίζονται **παντού** — από τη συνέλιξη μέχρι τους Fourier και τη διαμόρφωση.
+
+## Amplitude scaling — A · x(t)
+
+Πολλαπλασιάζοντας **όλο** το σήμα με έναν σταθερό αριθμό $A$ αλλάζει μόνο ο **κάθετος άξονας**. Δεν αλλάζει η χρονική του συμπεριφορά.
+
+- $A > 1$ → ψηλαίνει
+- $0 < A < 1$ → χαμηλώνει
+- $A < 0$ → ανάκλαση γύρω από τον $x$-άξονα (αλλαγή προσήμου ταυτόχρονα με αλλαγή πλάτους)
+
+Ένα cosine παραμένει cosine ίδιας συχνότητας — απλώς πιο ψηλό ή πιο χαμηλό.
+
+<TransformationDemo mode="scale" />
+
+## Time shift — x(t − t₀)
+
+Αντικαθιστούμε `t` με `t − t₀` στο όρισμα. Το σήμα **ολισθαίνει** κατά μήκος του χρόνου.
+
+<Callout type="warning" title="Σύμβαση που μπερδεύει τους πάντες">
+  $t_0 > 0$ σημαίνει ολίσθηση **προς τα δεξιά** (καθυστέρηση). $t_0 < 0$ σημαίνει ολίσθηση **προς τα αριστερά**.
+
+  **Μνημονικό:** «πότε γίνεται μηδέν αυτό που έχω μέσα στην παρένθεση;» — εκεί κάθεται η αρχική ενδιαφέρουσα στιγμή του σήματος τώρα.
+</Callout>
+
+<TransformationDemo mode="shift" />
+
+## Time reversal — x(−t)
+
+Αντικαθιστούμε `t` με `−t`. Το σήμα **καθρεφτίζεται** γύρω από τον $y$-άξονα.
+
+- Άρτια σήματα ($\cos$): δεν αλλάζουν.
+- Περιττά σήματα ($\sin$): αλλάζουν πρόσημο.
+- Αιτιατά σήματα γίνονται «αντι-αιτιατά»: μη-μηδενικά μόνο για $t < 0$.
+
+<TransformationDemo mode="flip" />
+
+## Time scaling — x(at)
+
+Αντικαθιστούμε `t` με `at`, όπου $a$ ένας μη-μηδενικός σταθερός αριθμός.
+
+- $|a| > 1$ → **συμπίεση** στον χρόνο (το σήμα τρέχει πιο γρήγορα).
+- $0 < |a| < 1$ → **επέκταση** στον χρόνο (πιο αργά).
+- $a < 0$ → επιπλέον flip.
+
+Για cosines: $\cos(2\pi f t)$ έχει συχνότητα $f$, και $\cos(2\pi f a t)$ έχει συχνότητα $|f a|$. **Συμπίεση στον χρόνο = αύξηση της συχνότητας.**
+
+<TransformationDemo mode="time-scale" />
+
+<span id="combinations" />
+
+## Συνδυασμοί — η σειρά παίζει ρόλο
+
+Σύνθετα ορίσματα όπως $x(at + b)$ ή $A \cdot x(-t + T)$ διαβάζονται με έναν απλό κανόνα.
+
+<Callout type="key" title="Κανόνας: βγάλε πρώτα τον συντελεστή του t έξω από την παρένθεση">
+  Αν έχεις $x(at + b)$, ξαναγράψτο σαν
+
+  $$
+  x\bigl(a\,(t + b/a)\bigr).
+  $$
+
+  1. **Πρώτα** εφαρμόζεις το time scaling κατά $a$ (και πιθανό flip αν $a < 0$).
+  2. **Μετά** ολισθαίνεις κατά $-b/a$.
+
+  Πάντα με αυτή τη σειρά: scaling/flip πρώτα, shift μετά.
+</Callout>
+
+**Παράδειγμα 1.** $x(2t - 4) = x\bigl(2(t - 2)\bigr)$. Πρώτα συμπίεση κατά 2, μετά shift δεξιά κατά 2.
+
+**Παράδειγμα-κλειδί που εμφανίζεται στη συνέλιξη.** $h(t - \tau) = h\bigl(-(\tau - t)\bigr)$ (όταν θεωρούμε $\tau$ μεταβλητή και $t$ σταθερά). Πρώτα flip, μετά shift δεξιά κατά $t$. Αυτό είναι το **flip-and-slide** της συνέλιξης — δες [/foundations/systems](/foundations/systems#sumelixi).
+
+**Worked example.** Έστω $x(t)$ τρίγωνο πλάτους 1, βάση $[0, 2]$, κορυφή στο 1. Σχεδίασε το $x(-t + 3)$.
+
+- $x(-t + 3) = x\bigl(-(t - 3)\bigr)$.
+- **Βήμα 1 — flip:** βάση $[-2, 0]$, κορυφή στο $-1$.
+- **Βήμα 2 — shift δεξιά κατά 3:** βάση $[1, 3]$, κορυφή στο $2$.
+
+<TransformationWorkedExample />
+
+## Σχετικές σελίδες
+
+- Πρώτη εμφάνιση και πλήρης κουβέντα: [/foundations/signals §4.5](/foundations/signals#combinations).
+- Ο πιο σημαντικός λόγος που νοιαζόμαστε: η συνέλιξη χρειάζεται flip-and-slide — δες [/foundations/systems](/foundations/systems).
+- Time-scaling / frequency relationship εμφανίζεται ξανά σαν ιδιότητα του [Fourier transform](/foundations/fourier-transform).
