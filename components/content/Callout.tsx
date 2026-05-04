@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { Lightbulb, AlertTriangle, KeyRound, StickyNote } from 'lucide-react'
+import { Lightbulb, AlertTriangle, KeyRound, StickyNote, Code2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-type CalloutType = 'intuition' | 'warning' | 'key' | 'note'
+type CalloutType = 'intuition' | 'warning' | 'key' | 'note' | 'cs-motivation'
 
 type Props = {
   type?: CalloutType
@@ -33,6 +33,11 @@ const STYLES: Record<
     icon: StickyNote,
     label: 'Σημείωση',
     tone: 'border-slate-300/60 bg-slate-50/70 text-slate-900 dark:border-slate-400/30 dark:bg-slate-400/10 dark:text-slate-100',
+  },
+  'cs-motivation': {
+    icon: Code2,
+    label: 'Για CS reader',
+    tone: 'border-emerald-400/60 bg-gradient-to-br from-emerald-50/80 to-teal-50/60 text-emerald-950 dark:border-emerald-400/40 dark:from-emerald-400/10 dark:to-teal-400/5 dark:text-emerald-100',
   },
 }
 
