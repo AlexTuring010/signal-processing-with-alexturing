@@ -29,6 +29,16 @@ import {
   TriPulsePlot,
   SincPlot,
 } from '@/components/viz/BuildingBlockPlots'
+import {
+  SystemBoxDiagram,
+  CascadeDiagram,
+  ParallelDiagram,
+} from '@/components/viz/SystemDiagrams'
+import { LinearityChecker } from '@/components/viz/LinearityChecker'
+import { TimeInvarianceChecker } from '@/components/viz/TimeInvarianceChecker'
+import { ImpulseResponseDemo } from '@/components/viz/ImpulseResponseDemo'
+import { ConvolutionFlipAndSlide } from '@/components/viz/ConvolutionFlipAndSlide'
+import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -77,6 +87,16 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RectPulsePlot,
     TriPulsePlot,
     SincPlot,
+
+    // Visualizations — foundations / systems
+    SystemBoxDiagram,
+    CascadeDiagram,
+    ParallelDiagram,
+    LinearityChecker,
+    TimeInvarianceChecker,
+    ImpulseResponseDemo,
+    ConvolutionFlipAndSlide,
+    EigenfunctionDemo,
 
     ...components,
   }

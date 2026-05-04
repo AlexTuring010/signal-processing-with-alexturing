@@ -45,15 +45,21 @@ Format:
        Source material: `Εργαστήριο_2Συνεχή_και_διακριτά_σήματα.pdf`
        Notes: The signals page promises a full lab page with `trapz` integration, even/odd in code, periodicity checks, etc. Until that page is fleshed out, the placeholder at `/labs/02-signals` is fine but should be replaced.
 
-- [ ] **Convolution definition and the connection to δ(t)**
-       Where it appears: `/foundations/signals` section 4g (the δ-sifting property motivates convolution as the natural operation)
-       Where it should be fulfilled: `/foundations/systems`
-       Notes: The signals page introduces δ(t) and its sifting property, then says "we'll use this when we hit convolution". Systems chapter must define convolution explicitly and reference back: "θυμάσαι το δ(t) που σάρωνε το x(t); Αυτό ακριβώς γενικεύεται σε convolution."
+- [ ] **Full Lab 3 page (linearity / TI / convolution in MATLAB)**
+       Where it appears: `/foundations/systems` LabBox in section 8
+       Where it should be fulfilled: `/labs/03-systems`
+       Source material: `Εργαστήριο_3Γραμμικά_συστήματα_συνεχούς_χρόνου.pdf`
+       Notes: Page currently a 🚧 placeholder. Must add: numeric linearity / TI checks for several systems, `conv` usage in MATLAB and comparison to analytical solutions, cascade/parallel composition.
 
-- [ ] **Why complex exponentials are LTI eigenfunctions**
-       Where it appears: `/foundations/signals` section 4b (RotatingPhasor + the "LTI systems treat them as their natural language" claim)
-       Where it should be fulfilled: First sketched in `/foundations/systems`, made fully clear in `/foundations/fourier-transform`
-       Notes: The signals page promises this without proving it. Systems chapter should show H(f) emerges naturally when the input is e^(jωt); Fourier-transform chapter closes the loop with "this is why every signal is built out of complex exponentials".
+- [ ] **H(f) is the Fourier transform of h(t) — proven and contextualized**
+       Where it appears: `/foundations/systems` section 7 (eigenfunction property derivation introduces H(f₀) but doesn't connect it formally to Fourier)
+       Where it should be fulfilled: `/foundations/fourier-transform`
+       Notes: Systems chapter ends with two "spoiler" callouts pointing here. The Fourier-transform chapter must explicitly close the loop: "η H(f₀) που είδες στα Συστήματα είναι ο Fourier transform της h(t) — να γιατί κάθε σήμα μπορεί να αναλυθεί σε complex exponentials."
+
+- [ ] **Convolution in time = multiplication in frequency**
+       Where it appears: `/foundations/systems` section 6 (teaser callout) and the eigenfunction section
+       Where it should be fulfilled: `/foundations/fourier-transform`
+       Notes: Systems chapter teases this without proof. Fourier-transform chapter must derive it cleanly and use it in at least one worked example to drive home why frequency-domain analysis is so much easier.
 
 ---
 
@@ -61,7 +67,15 @@ Format:
 
 (Move entries here when satisfied. Keep them for traceability.)
 
-*(empty)*
+- [x] **Convolution definition and the connection to δ(t)**
+       Originally appeared: `/foundations/signals` section 4g
+       Fulfilled in: `/foundations/systems` sections 3b and 4
+       Notes: Section 3b derives convolution as the consequence of (1) δ-sifting, (2) time-invariance, (3) linearity — explicitly framed as "η συνέλιξη δεν είναι μαγική — αυτό προκύπτει από τις τρεις ιδιότητες που ήδη ξέραμε." The page uses the back-reference "θυμάσαι από το προηγούμενο κεφάλαιο που είπαμε η δ(t) είναι το «test signal»; Να γιατί."
+
+- [x] **Why complex exponentials are LTI eigenfunctions**
+       Originally appeared: `/foundations/signals` section 4b (RotatingPhasor + the LTI claim)
+       Fulfilled in: `/foundations/systems` section 7
+       Notes: Section 7 walks through the algebra step by step — pulling the constant out of the convolution integral, defining H(f₀), arriving at y(t) = H(f₀) · x(t). The EigenfunctionDemo viz then makes it interactive: same frequency in/out, only amplitude and phase change as the user sweeps f₀. The full Fourier interpretation of H(f₀) is deferred to /foundations/fourier-transform (now tracked as a separate open commitment).
 
 ---
 

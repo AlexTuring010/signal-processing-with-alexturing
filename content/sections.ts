@@ -40,7 +40,7 @@ export const CHAPTERS: Chapter[] = [
     blurb: 'SP1 από την αρχή, σωστά',
     sections: [
       { slug: 'foundations/signals', title: 'Σήματα', available: true },
-      { slug: 'foundations/systems', title: 'Συστήματα & convolution', available: false },
+      { slug: 'foundations/systems', title: 'Συστήματα & convolution', available: true },
       { slug: 'foundations/fourier-series', title: 'Fourier series', available: false },
       { slug: 'foundations/fourier-transform', title: 'Fourier transform', available: false },
       { slug: 'foundations/sampling-light', title: 'Sampling — εισαγωγή', available: false },
