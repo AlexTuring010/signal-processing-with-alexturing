@@ -14,6 +14,21 @@ import { EMSpectrumExplorer } from '@/components/viz/EMSpectrumExplorer'
 import { PeopleTalkingDiagram } from '@/components/viz/PeopleTalkingDiagram'
 import { DuplexAnimation } from '@/components/viz/DuplexAnimation'
 import { RoadmapGrid } from '@/components/viz/RoadmapGrid'
+import { EverydaySignals } from '@/components/viz/EverydaySignals'
+import { ContinuousVsDiscreteDemo } from '@/components/viz/ContinuousVsDiscreteDemo'
+import { FourQuadrantSignalDemo } from '@/components/viz/FourQuadrantSignalDemo'
+import { CosineExplorer } from '@/components/viz/CosineExplorer'
+import { RotatingPhasor } from '@/components/viz/RotatingPhasor'
+import { ImpulseConstruction } from '@/components/viz/ImpulseConstruction'
+import { PeriodicityChecker } from '@/components/viz/PeriodicityChecker'
+import { EvenOddDecomposer } from '@/components/viz/EvenOddDecomposer'
+import { EnergyPowerCalculator } from '@/components/viz/EnergyPowerCalculator'
+import {
+  UnitStepPlot,
+  RectPulsePlot,
+  TriPulsePlot,
+  SincPlot,
+} from '@/components/viz/BuildingBlockPlots'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -38,7 +53,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Tabs,
     Collapsible,
 
-    // Visualizations
+    // Visualizations — intro
     Viz,
     CommSystemDiagram,
     TimeFrequencyTeaser,
@@ -47,6 +62,21 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PeopleTalkingDiagram,
     DuplexAnimation,
     RoadmapGrid,
+
+    // Visualizations — foundations / signals
+    EverydaySignals,
+    ContinuousVsDiscreteDemo,
+    FourQuadrantSignalDemo,
+    CosineExplorer,
+    RotatingPhasor,
+    ImpulseConstruction,
+    PeriodicityChecker,
+    EvenOddDecomposer,
+    EnergyPowerCalculator,
+    UnitStepPlot,
+    RectPulsePlot,
+    TriPulsePlot,
+    SincPlot,
 
     ...components,
   }

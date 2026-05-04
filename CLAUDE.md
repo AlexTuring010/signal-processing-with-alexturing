@@ -180,6 +180,10 @@ The site is built incrementally:
 
 **Important:** `CLAUDE.md` (this file) stays small and durable. Per-section plans go in `plans/`. Don't bloat this file with content specifics.
 
+### Commitments tracker
+
+`plans/COMMITMENTS.md` is the record of every "we'll come back to this" / "see later chapter" promise the site has made to readers. **Before declaring any section done, check this file** — if the section you just built was supposed to fulfill an open commitment, satisfy it explicitly (with a back-reference: *"θυμάσαι που είπαμε X στην εισαγωγή; Να γιατί"*) and move the entry to the "Fulfilled" section. **If your section makes any new forward-looking promises, add them to the open list.** This file is the safety net that keeps the site internally consistent across many small build steps.
+
 ---
 
 ## Ground rules for Claude Code
