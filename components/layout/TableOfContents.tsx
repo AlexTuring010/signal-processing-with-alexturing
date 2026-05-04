@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 type Heading = { id: string; text: string; level: number }
@@ -8,12 +9,22 @@ type Heading = { id: string; text: string; level: number }
 /**
  * Builds an in-page TOC from h2/h3 elements in the article. Highlights the
  * heading currently in view via IntersectionObserver.
+ *
+ * Note: this component is mounted in the shared content layout, so it
+ * persists across content-page navigations. We re-run the heading scan
+ * whenever the pathname changes — otherwise the TOC would freeze on the
+ * first page's headings.
  */
 export function TableOfContents() {
+  const pathname = usePathname()
   const [headings, setHeadings] = useState<Heading[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
 
   useEffect(() => {
+    // Reset before re-querying so a stale list never lingers on screen.
+    setHeadings([])
+    setActiveId(null)
+
     const article = document.querySelector('article.prose-content')
     if (!article) return
 
@@ -49,7 +60,7 @@ export function TableOfContents() {
     )
     nodes.forEach((n) => observer.observe(n))
     return () => observer.disconnect()
-  }, [])
+  }, [pathname])
 
   if (headings.length === 0) return null
 
