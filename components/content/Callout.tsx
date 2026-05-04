@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { Lightbulb, AlertTriangle, KeyRound, StickyNote, Code2 } from 'lucide-react'
+import { Lightbulb, AlertTriangle, KeyRound, StickyNote, Code2, BookOpenCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-type CalloutType = 'intuition' | 'warning' | 'key' | 'note' | 'cs-motivation'
+type CalloutType = 'intuition' | 'warning' | 'key' | 'note' | 'cs-motivation' | 'prerequisite'
 
 type Props = {
   type?: CalloutType
@@ -38,6 +38,11 @@ const STYLES: Record<
     icon: Code2,
     label: 'Για CS reader',
     tone: 'border-emerald-400/60 bg-gradient-to-br from-emerald-50/80 to-teal-50/60 text-emerald-950 dark:border-emerald-400/40 dark:from-emerald-400/10 dark:to-teal-400/5 dark:text-emerald-100',
+  },
+  prerequisite: {
+    icon: BookOpenCheck,
+    label: 'Πριν προχωρήσουμε',
+    tone: 'border-cyan-400/60 bg-cyan-50/60 text-cyan-950 dark:border-cyan-400/30 dark:bg-cyan-400/10 dark:text-cyan-100',
   },
 }
 
