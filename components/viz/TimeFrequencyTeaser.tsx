@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Play, Pause, AlertCircle, Loader2 } from 'lucide-react'
+import { Play, Pause, AlertCircle, Loader2, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { magnitudeSpectrum } from '@/lib/fft'
 
 const AUDIO_SRC = '/audio/intro-speech.mp3'
@@ -18,14 +19,37 @@ type AudioState =
   | { status: 'error'; reason: string }
   | { status: 'ready'; samples: Float32Array; sampleRate: number }
 
+type ScaleMode = 'linear' | 'log'
+/** Floor for log-scale rendering. Anything quieter is clamped to the baseline. */
+const LOG_FLOOR_DB = -60
+
 export function TimeFrequencyTeaser() {
   const [audio, setAudio] = useState<AudioState>({ status: 'loading' })
   const [showCosine, setShowCosine] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [scaleMode, setScaleMode] = useState<ScaleMode>('linear')
+  /** Once the user explicitly clicks Linear/Log, we stop auto-syncing with the cosine toggle. */
+  const [scaleOverridden, setScaleOverridden] = useState(false)
+  const [hintDismissed, setHintDismissed] = useState(false)
   const audioElRef = useRef<HTMLAudioElement | null>(null)
 
   const timeCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const freqCanvasRef = useRef<HTMLCanvasElement | null>(null)
+
+  // Auto-pick scale based on cosine toggle until user manually picks one.
+  // (Linear shows speech texture nicely; Log keeps speech visible next to the
+  // 500 Hz spike, which would otherwise crush everything else against the floor.)
+  useEffect(() => {
+    if (scaleOverridden) return
+    setScaleMode(showCosine ? 'log' : 'linear')
+  }, [showCosine, scaleOverridden])
+
+  const setScaleManually = (m: ScaleMode) => {
+    setScaleMode(m)
+    setScaleOverridden(true)
+  }
+
+  const showLogHint = scaleMode === 'log' && !hintDismissed
 
   // Decode audio once on mount.
   useEffect(() => {
@@ -122,8 +146,8 @@ export function TimeFrequencyTeaser() {
   useEffect(() => {
     const canvas = freqCanvasRef.current
     if (!canvas || !spectrum) return
-    drawSpectrum(canvas, spectrum.mag, spectrum.sampleRate, spectrum.binCount)
-  }, [spectrum])
+    drawSpectrum(canvas, spectrum.mag, spectrum.sampleRate, spectrum.binCount, scaleMode)
+  }, [spectrum, scaleMode])
 
   // Audio element lifecycle.
   useEffect(() => {
@@ -213,7 +237,16 @@ export function TimeFrequencyTeaser() {
 
         <PlotPanel
           title="Στη συχνότητα"
-          subtitle="Πόσο «ζυγίζει» κάθε συχνότητα μέσα στο σήμα"
+          subtitle={
+            scaleMode === 'log'
+              ? 'Magnitude — log scale (dB)'
+              : 'Πόσο «ζυγίζει» κάθε συχνότητα μέσα στο σήμα'
+          }
+          action={
+            audio.status === 'ready' ? (
+              <ScaleToggle mode={scaleMode} onChange={setScaleManually} />
+            ) : null
+          }
         >
           {audio.status === 'loading' && <PlotPlaceholder loading />}
           {audio.status === 'error' && <PlotPlaceholder error={audio.reason} />}
@@ -223,7 +256,11 @@ export function TimeFrequencyTeaser() {
               width={600}
               height={180}
               className="block h-[180px] w-full"
-              aria-label="Frequency-domain magnitude spectrum"
+              aria-label={
+                scaleMode === 'log'
+                  ? 'Frequency-domain magnitude spectrum, log scale'
+                  : 'Frequency-domain magnitude spectrum, linear scale'
+              }
             />
           )}
           <PlotAxisCaption
@@ -233,6 +270,23 @@ export function TimeFrequencyTeaser() {
           />
         </PlotPanel>
       </div>
+
+      {showLogHint && (
+        <div
+          role="status"
+          className="mt-2 flex items-center justify-between gap-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-1.5 text-xs text-fg"
+        >
+          <span>💡 Σε log scale και τα δύο σήματα φαίνονται μαζί.</span>
+          <button
+            type="button"
+            onClick={() => setHintDismissed(true)}
+            className="rounded p-0.5 text-fg-muted hover:bg-bg-soft hover:text-fg"
+            aria-label="Κλείσιμο"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
       <p className="mt-3 text-xs text-fg-muted">
         Παρατήρησε ότι ένα καθαρό cosine βγάζει ένα <strong>«καρφί»</strong> στη
@@ -249,19 +303,59 @@ export function TimeFrequencyTeaser() {
 function PlotPanel({
   title,
   subtitle,
+  action,
   children,
 }: {
   title: string
   subtitle: string
+  action?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
     <div className="overflow-hidden rounded-md border border-border bg-bg-soft/60">
-      <div className="border-b border-border bg-bg-soft px-3 py-2">
-        <div className="text-xs font-semibold tracking-tight text-fg">{title}</div>
-        <div className="text-[11px] text-fg-muted">{subtitle}</div>
+      <div className="flex items-start justify-between gap-2 border-b border-border bg-bg-soft px-3 py-2">
+        <div className="min-w-0">
+          <div className="text-xs font-semibold tracking-tight text-fg">{title}</div>
+          <div className="truncate text-[11px] text-fg-muted">{subtitle}</div>
+        </div>
+        {action && <div className="shrink-0">{action}</div>}
       </div>
       <div>{children}</div>
+    </div>
+  )
+}
+
+function ScaleToggle({
+  mode,
+  onChange,
+}: {
+  mode: ScaleMode
+  onChange: (m: ScaleMode) => void
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Y-axis scale"
+      className="inline-flex items-center rounded-full border border-border bg-bg p-0.5 text-[10px]"
+    >
+      {(['linear', 'log'] as const).map((m) => {
+        const active = mode === m
+        return (
+          <button
+            key={m}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(m)}
+            className={cn(
+              'rounded-full px-2 py-0.5 transition-colors',
+              active ? 'bg-accent text-accent-fg' : 'text-fg-muted hover:text-fg',
+            )}
+          >
+            {m === 'linear' ? 'Linear' : 'Log'}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -374,6 +468,7 @@ function drawSpectrum(
   mag: Float32Array,
   sampleRate: number,
   binCount: number,
+  scaleMode: ScaleMode,
 ) {
   const colors = getColors()
   if (!colors) return
@@ -384,7 +479,7 @@ function drawSpectrum(
   const plotH = h - padding * 2
   const baselineY = h - padding
 
-  // Subtle gridlines at 500 Hz, 1k, 2k, 3k, 4k
+  // Frequency-axis gridlines at 500 Hz, 1k, 2k, 3k, 4k.
   ctx.strokeStyle = colors.border
   ctx.lineWidth = 1
   ctx.fillStyle = colors.fgMuted
@@ -404,14 +499,23 @@ function drawSpectrum(
   const cutoffBin = Math.min(binCount, Math.ceil((MAX_DISPLAY_HZ / nyquist) * binCount))
   if (cutoffBin <= 1) return
 
+  // Map a normalized magnitude (0..1) to [0..1] bar-height fraction, depending on scale mode.
+  const mapHeight =
+    scaleMode === 'log'
+      ? (v: number) => {
+          const dB = 20 * Math.log10(Math.max(v, 1e-12))
+          // dB lives in (-inf, 0]; map [LOG_FLOOR_DB, 0] -> [0, 1].
+          return Math.max(0, Math.min(1, (dB - LOG_FLOOR_DB) / -LOG_FLOOR_DB))
+        }
+      : (v: number) => Math.max(0, Math.min(1, v))
+
   // Bars
   ctx.fillStyle = colors.accent
   for (let i = 0; i < cutoffBin; i++) {
     const x = (i / cutoffBin) * w
     const xNext = ((i + 1) / cutoffBin) * w
     const barW = Math.max(1, xNext - x - 0.5)
-    const v = Math.max(0, Math.min(1, mag[i]))
-    const barH = v * plotH
+    const barH = mapHeight(mag[i]) * plotH
     ctx.fillRect(x, baselineY - barH, barW, barH)
   }
 
