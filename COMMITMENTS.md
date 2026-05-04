@@ -61,6 +61,16 @@ Format:
        Where it should be fulfilled: `/foundations/fourier-transform`
        Notes: Systems chapter teases this without proof. Fourier-transform chapter must derive it cleanly and use it in at least one worked example to drive home why frequency-domain analysis is so much easier.
 
+- [ ] **Conjugate symmetry of H(f) for real h(t) — and the related FT symmetry siblings**
+       Where it appears: `/foundations/systems` Section 7 collapsible derivation (Βήμα 4) — `H(-f) = H*(f)` is *used* without proof.
+       Where it should be fulfilled: `/foundations/fourier-transform`
+       Notes: Frame as a **general property of the Fourier transform**, not a one-off about LTI systems. Cover the full family of symmetry pairings:
+         - real $h(t)$ ↔ conjugate-symmetric $H(f)$ (the case used in the systems chapter)
+         - real-and-even $h(t)$ ↔ real-and-even $H(f)$
+         - real-and-odd $h(t)$ ↔ imaginary-and-odd $H(f)$
+         - imaginary $h(t)$ ↔ conjugate-antisymmetric $H(f)$
+       Reader should leave knowing that *every time* they see a real-valued time signal, they get conjugate symmetry in frequency for free (and why). When closing the loop, back-reference: «θυμάσαι από τα Συστήματα που χρησιμοποιήσαμε $H(-f) = H^*(f)$ ως δεδομένο; Να γιατί.»
+
 - [ ] **Reference pages for trig identities, Fourier pairs, and integrals**
        Where it appears: implied across the site every time a topic page would otherwise inline general math
        Where it should be fulfilled: `/reference/trig-identities`, `/reference/fourier-pairs`, `/reference/integrals`
