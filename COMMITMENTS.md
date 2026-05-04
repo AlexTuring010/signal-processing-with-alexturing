@@ -61,6 +61,11 @@ Format:
        Where it should be fulfilled: `/foundations/fourier-transform`
        Notes: Systems chapter teases this without proof. Fourier-transform chapter must derive it cleanly and use it in at least one worked example to drive home why frequency-domain analysis is so much easier.
 
+- [ ] **Reference pages for trig identities, Fourier pairs, and integrals**
+       Where it appears: implied across the site every time a topic page would otherwise inline general math
+       Where it should be fulfilled: `/reference/trig-identities`, `/reference/fourier-pairs`, `/reference/integrals`
+       Notes: We started the pattern with `/foundations/signal-transformations` and `/reference/complex-numbers` — general math = reference page, topic-specific application = topic page. As later chapters need product-to-sum trig identities (modulation chapters lean on these constantly), the canonical Fourier pairs from the typology, or the integrals from the typology, build the corresponding reference page and link instead of inlining.
+
 ---
 
 ## Fulfilled commitments
