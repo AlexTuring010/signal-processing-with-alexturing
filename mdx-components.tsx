@@ -39,7 +39,6 @@ import { TimeInvarianceChecker } from '@/components/viz/TimeInvarianceChecker'
 import { ImpulseResponseDemo } from '@/components/viz/ImpulseResponseDemo'
 import { ConvolutionFlipAndSlide } from '@/components/viz/ConvolutionFlipAndSlide'
 import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
-import { SiftingIntegralIntuition } from '@/components/viz/SiftingIntegralIntuition'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -98,7 +97,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ImpulseResponseDemo,
     ConvolutionFlipAndSlide,
     EigenfunctionDemo,
-    SiftingIntegralIntuition,
 
     ...components,
   }
