@@ -482,16 +482,32 @@ $$
 y(t) = x(t)\, \cos(2\pi f_c t)
 $$
 
-Από Euler και την 5d′ (frequency shift):
+Από Euler:
 
 $$
 y(t) = \tfrac{1}{2} x(t)\, e^{j 2\pi f_c t} + \tfrac{1}{2} x(t)\, e^{-j 2\pi f_c t}
 $$
 
-Παίρνουμε FT:
+Παίρνουμε FT και από τις δύο πλευρές. Από γραμμικότητα του FT (Section 5a):
 
 $$
-\boxed{\,Y(f) = \tfrac{1}{2}\big[\,X(f - f_c) + X(f + f_c)\,\big]\,}
+Y(f) = \tfrac{1}{2}\,\mathcal{F}\{x(t)\, e^{j 2\pi f_c t}\} + \tfrac{1}{2}\,\mathcal{F}\{x(t)\, e^{-j 2\pi f_c t}\}
+$$
+
+Εφαρμόζουμε την ιδιότητα **frequency-shift** (Section 5d′), η οποία λέει ότι ο πολλαπλασιασμός στον χρόνο με $e^{j 2\pi f_0 t}$ μετατοπίζει το φάσμα κατά $+f_0$:
+
+$$
+\mathcal{F}\{x(t)\, e^{j 2\pi f_c t}\} = X(f - f_c)
+$$
+
+$$
+\mathcal{F}\{x(t)\, e^{-j 2\pi f_c t}\} = X(f + f_c)
+$$
+
+Αντικαθιστούμε:
+
+$$
+\boxed{\,Y(f) = \tfrac{1}{2}\,X(f - f_c) + \tfrac{1}{2}\,X(f + f_c) = \tfrac{1}{2}\big[\,X(f - f_c) + X(f + f_c)\,\big]\,}
 $$
 
 **Με λόγια:** πολλαπλασιάζοντας με $\cos(2\pi f_c t)$ στον χρόνο, το φάσμα του $x(t)$ **αναπαράγεται μετατοπισμένο** κατά $\pm f_c$, με τη μισή του πλάτους σε κάθε αντίγραφο.
