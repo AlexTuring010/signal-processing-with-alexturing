@@ -66,6 +66,16 @@ Format:
        Where it should be fulfilled: `/reference/trig-identities`, `/reference/fourier-pairs`, `/reference/integrals`
        Notes: We started the pattern with `/foundations/signal-transformations` and `/reference/complex-numbers` — general math = reference page, topic-specific application = topic page. As later chapters need product-to-sum trig identities (modulation chapters lean on these constantly), the canonical Fourier pairs from the typology, or the integrals from the typology, build the corresponding reference page and link instead of inlining.
 
+- [ ] **Why even h(t) gives real H(f)**
+       Where it appears: `/foundations/systems` Section 7 (the "Ειδική περίπτωση: όταν το H(f₀) είναι πραγματικός αριθμός" subsection)
+       Where it should be fulfilled: `/foundations/fourier-transform`
+       Notes: Section 7 lists what happens when H(f₀) is real (no phase shift / inversion / null) but explicitly defers "ποια συστήματα έχουν πραγματικό H, και γιατί" to later. The Fourier-transform chapter must close this loop by showing that even-symmetric h(t) ⟺ real H(f), tying it back to the conjugate-symmetry result already proved in /foundations/systems Βήμα 3.
+
+- [ ] **Ideal filters and the non-causality trade-off**
+       Where it appears: `/foundations/systems` Section 7 (the H(f₀) = 0 case mentioning "ένα φίλτρο όταν «κόβει» μια ζώνη")
+       Where it should be fulfilled: `/foundations/bandpass-filters`
+       Notes: Once filters are introduced, the chapter must address why "ideal" filters (sharp cutoff in the frequency domain) are physically unrealizable for real-time processing — they require a non-causal h(t). Connect to the sinc impulse response that came up in /foundations/signals.
+
 ---
 
 ## Fulfilled commitments
