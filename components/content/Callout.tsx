@@ -1,8 +1,23 @@
 import type { ReactNode } from 'react'
-import { Lightbulb, AlertTriangle, KeyRound, StickyNote, Code2, BookOpenCheck } from 'lucide-react'
+import {
+  Lightbulb,
+  AlertTriangle,
+  KeyRound,
+  StickyNote,
+  Code2,
+  BookOpenCheck,
+  Rewind,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-type CalloutType = 'intuition' | 'warning' | 'key' | 'note' | 'cs-motivation' | 'prerequisite'
+type CalloutType =
+  | 'intuition'
+  | 'warning'
+  | 'key'
+  | 'note'
+  | 'cs-motivation'
+  | 'prerequisite'
+  | 'recap'
 
 type Props = {
   type?: CalloutType
@@ -43,6 +58,11 @@ const STYLES: Record<
     icon: BookOpenCheck,
     label: 'Πριν προχωρήσουμε',
     tone: 'border-cyan-400/60 bg-cyan-50/60 text-cyan-950 dark:border-cyan-400/30 dark:bg-cyan-400/10 dark:text-cyan-100',
+  },
+  recap: {
+    icon: Rewind,
+    label: 'Quick recap',
+    tone: 'border-violet-400/60 bg-violet-50/60 text-violet-950 dark:border-violet-400/30 dark:bg-violet-400/10 dark:text-violet-100',
   },
 }
 

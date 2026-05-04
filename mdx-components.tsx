@@ -41,6 +41,7 @@ import { ConvolutionFlipAndSlide } from '@/components/viz/ConvolutionFlipAndSlid
 import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
 import { TransformationDemo } from '@/components/viz/TransformationDemo'
 import { TransformationWorkedExample } from '@/components/viz/TransformationWorkedExample'
+import { PhaseTimeShiftDemo } from '@/components/viz/PhaseTimeShiftDemo'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -101,6 +102,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     EigenfunctionDemo,
     TransformationDemo,
     TransformationWorkedExample,
+    PhaseTimeShiftDemo,
 
     ...components,
   }

@@ -84,6 +84,16 @@ export function CosineExplorer() {
         />
       </div>
 
+      <div className="mt-2 rounded-md border border-emerald-400/40 bg-emerald-50/40 px-3 py-1.5 text-xs text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-400/10 dark:text-emerald-200">
+        <span className="font-medium">Ισοδύναμη χρονική ολίσθηση:</span>{' '}
+        <span className="font-mono tabular-nums">
+          Δt = −φ / (2π f) = {(-phi / (2 * Math.PI * f)).toFixed(3)} s
+        </span>
+        <span className="ml-2 text-emerald-600/80 dark:text-emerald-300/70">
+          (το ίδιο cosine αλλά μετατοπισμένο σε χρόνο — δες §4a.5 παρακάτω)
+        </span>
+      </div>
+
       <p className="mt-3 text-xs text-fg-muted">
         Πρόσεξε ότι η <em>συχνότητα</em> και η <em>φάση</em> δεν αλλάζουν την
         εικόνα στη συχνότητα τόσο εμφανώς όσο στον χρόνο: το{' '}
