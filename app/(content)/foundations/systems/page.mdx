@@ -289,6 +289,8 @@ $$x(t) * \delta(t - t_0) = x(t - t_0)$$
   Πλήρης απόδειξη και χρήση: <Link href="/foundations/fourier-transform" className="text-accent hover:underline">/foundations/fourier-transform</Link>.
 </Callout>
 
+<span id="eigenfunction" />
+
 ## Eigenfunction property — γιατί τα complex exponentials είναι ξεχωριστά
 
 Στο [προηγούμενο κεφάλαιο](/foundations/signals) είπαμε ότι τα complex exponentials $e^{j\omega t}$ είναι «η μητρική γλώσσα των LTI». Τώρα μπορούμε να το αποδείξουμε.
@@ -330,6 +332,12 @@ $$
 </Callout>
 
 Τι σημαίνει αυτό σε πραγματικά (real-valued) σήματα; Επειδή κάθε cosine γράφεται σαν άθροισμα δύο complex exponentials, ισχύει το ίδιο:
+
+<Callout type="recap">
+  Quick recap από [Φάση](/foundations/signals#phase): όταν λέμε ότι ένα cosine έχει φάση $\phi$, εννοούμε ότι αναπαρίσταται σαν $\cos(2\pi f t + \phi)$ — δηλαδή είναι ολισθημένο στον χρόνο κατά $t_0 = -\phi/(2\pi f)$ σε σχέση με ένα κανονικό cosine. Στην παρακάτω παράγραφο, το $\angle H(f_0)$ θα είναι ακριβώς αυτό: η φάση που το σύστημα **προσθέτει** στο cosine συχνότητας $f_0$.
+
+  Αν δεν σου είναι ακόμα ξεκάθαρη η σχέση φάσης ↔ χρονικής ολίσθησης, ρίξε μια ματιά στο [PhaseTimeShiftDemo](/foundations/signals#phase) πριν προχωρήσεις.
+</Callout>
 
 $$
 \cos(2\pi f_0 t) \,\longrightarrow\, |H(f_0)|\,\cos\bigl(2\pi f_0 t + \angle H(f_0)\bigr)
