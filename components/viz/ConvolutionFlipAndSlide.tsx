@@ -60,8 +60,15 @@ const PRESETS: Preset[] = [
   },
 ]
 
-const TAU_RANGE: [number, number] = [-1.0, 3.0]
-const T_RANGE: [number, number] = [-0.5, 3.5]
+/**
+ * One horizontal coordinate system for ALL FOUR panels. The top three plot
+ * functions of τ; the bottom plots y as a function of t. Either way, a
+ * vertical line at any value v should hit the same x-pixel in every panel —
+ * that's how the viewer mentally connects "shaded area in the product panel
+ * at τ-axis position t" with "the dot on y(t)". So we lock to a single
+ * range covering the full action across every preset, with a small margin.
+ */
+const SHARED_RANGE: [number, number] = [-1.0, 3.0]
 const N = 480 // resolution along the τ axis
 const PLAY_DURATION_S = 8
 
@@ -81,20 +88,20 @@ export function ConvolutionFlipAndSlide() {
     const xs = new Float32Array(N) // x(τ) samples
     const hs = new Float32Array(N) // h(τ) samples
     const tau = new Float32Array(N)
-    const dtau = (TAU_RANGE[1] - TAU_RANGE[0]) / (N - 1)
+    const dtau = (SHARED_RANGE[1] - SHARED_RANGE[0]) / (N - 1)
     for (let i = 0; i < N; i++) {
-      const v = TAU_RANGE[0] + i * dtau
+      const v = SHARED_RANGE[0] + i * dtau
       tau[i] = v
       xs[i] = preset.x.fn(v)
       hs[i] = preset.h.fn(v)
     }
-    // Compute y(t) at a dense grid in T_RANGE via numerical convolution.
+    // Compute y(t) at a dense grid in SHARED_RANGE via numerical convolution.
     const M = 240
     const tArr = new Float32Array(M)
     const yArr = new Float32Array(M)
-    const dtT = (T_RANGE[1] - T_RANGE[0]) / (M - 1)
+    const dtT = (SHARED_RANGE[1] - SHARED_RANGE[0]) / (M - 1)
     for (let m = 0; m < M; m++) {
-      const tm = T_RANGE[0] + m * dtT
+      const tm = SHARED_RANGE[0] + m * dtT
       tArr[m] = tm
       let sum = 0
       for (let i = 0; i < N; i++) {
@@ -113,13 +120,13 @@ export function ConvolutionFlipAndSlide() {
     if (!playing) return
     let raf = 0
     let last = performance.now()
-    const speed = (T_RANGE[1] - T_RANGE[0]) / PLAY_DURATION_S
+    const speed = (SHARED_RANGE[1] - SHARED_RANGE[0]) / PLAY_DURATION_S
     const tick = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       setT((cur) => {
         let next = cur + dt * speed
-        if (next > T_RANGE[1]) next = T_RANGE[0]
+        if (next > SHARED_RANGE[1]) next = SHARED_RANGE[0]
         return next
       })
       raf = requestAnimationFrame(tick)
@@ -143,8 +150,8 @@ export function ConvolutionFlipAndSlide() {
     const step = 0.05
     setT((cur) => {
       const next = cur + dir * step
-      if (next < T_RANGE[0]) return T_RANGE[0]
-      if (next > T_RANGE[1]) return T_RANGE[1]
+      if (next < SHARED_RANGE[0]) return SHARED_RANGE[0]
+      if (next > SHARED_RANGE[1]) return SHARED_RANGE[1]
       return next
     })
   }
@@ -250,7 +257,7 @@ export function ConvolutionFlipAndSlide() {
         </button>
         <button
           type="button"
-          onClick={() => setT(T_RANGE[0])}
+          onClick={() => setT(SHARED_RANGE[0])}
           className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-bg-soft hover:border-accent/50"
           aria-label="Επανεκκίνηση"
           title="Επανεκκίνηση"
@@ -263,8 +270,8 @@ export function ConvolutionFlipAndSlide() {
       </div>
       <input
         type="range"
-        min={T_RANGE[0]}
-        max={T_RANGE[1]}
+        min={SHARED_RANGE[0]}
+        max={SHARED_RANGE[1]}
         step={0.01}
         value={t}
         onChange={(e) => setT(parseFloat(e.target.value))}
@@ -331,7 +338,7 @@ function drawAxes(
 }
 
 function tToX(tau: number, w: number) {
-  return lerp(tau, TAU_RANGE[0], TAU_RANGE[1], PAD_X, w - PAD_X)
+  return lerp(tau, SHARED_RANGE[0], SHARED_RANGE[1], PAD_X, w - PAD_X)
 }
 
 function drawX(
@@ -344,7 +351,7 @@ function drawX(
   if (!colors) return
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
-  drawAxes(ctx, colors, w, h, TAU_RANGE)
+  drawAxes(ctx, colors, w, h, SHARED_RANGE)
 
   let yMax = 0
   for (let i = 0; i < xs.length; i++) if (xs[i] > yMax) yMax = xs[i]
@@ -387,7 +394,7 @@ function drawHFlipped(
   if (!colors) return
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
-  drawAxes(ctx, colors, w, h, TAU_RANGE)
+  drawAxes(ctx, colors, w, h, SHARED_RANGE)
 
   // h(t - τ) for each τ
   const ys = new Float32Array(tau.length)
@@ -437,7 +444,7 @@ function drawProduct(
   if (!colors) return
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
-  drawAxes(ctx, colors, w, h, TAU_RANGE)
+  drawAxes(ctx, colors, w, h, SHARED_RANGE)
 
   const prod = new Float32Array(tau.length)
   let yMax = 0
@@ -504,8 +511,8 @@ function drawY(
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  for (let v = Math.ceil(T_RANGE[0]); v <= Math.floor(T_RANGE[1]); v++) {
-    const x = lerp(v, T_RANGE[0], T_RANGE[1], padX, w - padX)
+  for (let v = Math.ceil(SHARED_RANGE[0]); v <= Math.floor(SHARED_RANGE[1]); v++) {
+    const x = lerp(v, SHARED_RANGE[0], SHARED_RANGE[1], padX, w - padX)
     ctx.fillText(String(v), x, h - 1)
   }
 
@@ -513,7 +520,7 @@ function drawY(
   for (let i = 0; i < yArr.length; i++) if (Math.abs(yArr[i]) > yMax) yMax = Math.abs(yArr[i])
   if (yMax < 1e-6) yMax = 1
 
-  const px = (tt: number) => lerp(tt, T_RANGE[0], T_RANGE[1], padX, w - padX)
+  const px = (tt: number) => lerp(tt, SHARED_RANGE[0], SHARED_RANGE[1], padX, w - padX)
   const py = (y: number) => lerp(y, yMax * 1.15, -0.1 * yMax, padY, h - padY)
 
   // Faint full curve in the background — what y(t) will be.
