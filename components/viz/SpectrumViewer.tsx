@@ -1,6 +1,8 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Lightbulb } from 'lucide-react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 import { cn } from '@/lib/utils'
 
@@ -180,6 +182,8 @@ export function SpectrumViewer() {
         </div>
       </div>
 
+      {presetId === 'square' && <PhaseRecapForSquare />}
+
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
         Παρατήρησε: <strong>μόνο γραμμές</strong> στα ακέραια πολλαπλάσια του f₀.
         Δεν υπάρχει σήμα μεταξύ τους — αυτό είναι το «φάσμα είναι discrete». Για
@@ -187,6 +191,105 @@ export function SpectrumViewer() {
         το <em>μέτρο</em> είναι κατοπτρικό και η <em>φάση</em> αντισυμμετρική.
       </div>
     </figure>
+  )
+}
+
+function PhaseRecapForSquare() {
+  return (
+    <aside className="mt-3 rounded-lg border border-amber-300/60 bg-amber-50/70 px-4 py-3.5 text-amber-950 shadow-sm dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100">
+      <div className="mb-2 flex items-center gap-2 text-sm font-semibold tracking-tight">
+        <Lightbulb className="h-4 w-4 shrink-0" aria-hidden="true" />
+        <span>Γιατί η φάση εδώ μοιάζει «επίπεδη»;</span>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-start">
+        <div className="text-[0.95rem] leading-relaxed [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+          <p>
+            <strong>Πριν προχωρήσουμε — γρήγορη υπενθύμιση:</strong> η{' '}
+            <strong>φάση</strong> ενός μιγαδικού <em>z</em> είναι η γωνία που
+            σχηματίζει το διάνυσμά του με τον θετικό real άξονα στο{' '}
+            <Link
+              href="/reference/complex-numbers#plane"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              μιγαδικό επίπεδο
+            </Link>
+            . Για τα ειδικά σημεία:
+          </p>
+          <ul className="my-2 list-disc space-y-0.5 pl-5">
+            <li>
+              <em>z</em> καθαρά <strong>πραγματικός θετικός</strong> (π.χ.{' '}
+              <span className="font-mono">+5</span>) → στον θετικό real άξονα →{' '}
+              <strong>φάση = 0</strong>.
+            </li>
+            <li>
+              <em>z</em> καθαρά <strong>πραγματικός αρνητικός</strong> (π.χ.{' '}
+              <span className="font-mono">−5</span>) → στον αρνητικό real άξονα →{' '}
+              <strong>φάση = π</strong> (ή ισοδύναμα <span className="font-mono">−π</span>{' '}
+              — ίδιο σημείο στον μοναδιαίο κύκλο).
+            </li>
+            <li>
+              <em>z</em> καθαρά <strong>φανταστικός θετικός</strong> (π.χ.{' '}
+              <span className="font-mono">+5j</span>) → πάνω από τον real άξονα →{' '}
+              <strong>φάση = π/2</strong>.
+            </li>
+            <li>
+              <em>z</em> καθαρά <strong>φανταστικός αρνητικός</strong> (π.χ.{' '}
+              <span className="font-mono">−5j</span>) → κάτω από τον real άξονα →{' '}
+              <strong>φάση = −π/2</strong>.
+            </li>
+          </ul>
+          <p>
+            Με αυτό κατά νου: εδώ όλα τα <span className="font-mono">aₖ</span>{' '}
+            είναι <strong>πραγματικοί</strong> αριθμοί (η σειρά Fourier ενός
+            συμμετρικού square wave είναι πραγματική). Άρα οι φάσεις είναι ή{' '}
+            <strong>0</strong> (για θετικά <span className="font-mono">aₖ</span>) ή{' '}
+            <strong>π</strong> (για αρνητικά). Επειδή <span className="font-mono">+π</span>{' '}
+            και <span className="font-mono">−π</span> είναι το ίδιο σημείο στον μοναδιαίο
+            κύκλο, η αντισυμμετρία της φάσης δεν φαίνεται οπτικά. Δες το preset{' '}
+            <strong>«Cosine με phase shift»</strong> για να την δεις καθαρά.
+          </p>
+        </div>
+        <PhaseFourCasesSVG />
+      </div>
+    </aside>
+  )
+}
+
+function PhaseFourCasesSVG() {
+  // Inline diagram: four arrows in the complex plane (right, left, up, down)
+  // with the phase value labelled at each tip. Stays small; mobile-friendly.
+  return (
+    <svg
+      viewBox="-70 -70 140 140"
+      className="mx-auto h-32 w-32 shrink-0 text-amber-900 dark:text-amber-200"
+      aria-label="Τέσσερα ειδικά σημεία στο μιγαδικό επίπεδο και οι φάσεις τους"
+    >
+      {/* Axes */}
+      <line x1="-58" y1="0" x2="58" y2="0" stroke="currentColor" strokeOpacity="0.35" />
+      <line x1="0" y1="-58" x2="0" y2="58" stroke="currentColor" strokeOpacity="0.35" />
+      <text x="60" y="3" fontSize="8" fill="currentColor" opacity="0.6">Re</text>
+      <text x="3" y="-60" fontSize="8" fill="currentColor" opacity="0.6">Im</text>
+
+      {/* +5 → phase 0 (right) */}
+      <line x1="0" y1="0" x2="42" y2="0" stroke="rgb(29,78,216)" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="42" cy="0" r="3" fill="rgb(29,78,216)" />
+      <text x="46" y="4" fontSize="10" fill="currentColor" fontWeight="600">0</text>
+
+      {/* -5 → phase π (left) */}
+      <line x1="0" y1="0" x2="-42" y2="0" stroke="rgb(220,38,38)" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="-42" cy="0" r="3" fill="rgb(220,38,38)" />
+      <text x="-65" y="4" fontSize="10" fill="currentColor" fontWeight="600">π</text>
+
+      {/* +5j → phase π/2 (up; SVG y is flipped) */}
+      <line x1="0" y1="0" x2="0" y2="-42" stroke="rgb(22,163,74)" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="0" cy="-42" r="3" fill="rgb(22,163,74)" />
+      <text x="4" y="-46" fontSize="10" fill="currentColor" fontWeight="600">π/2</text>
+
+      {/* -5j → phase -π/2 (down) */}
+      <line x1="0" y1="0" x2="0" y2="42" stroke="rgb(202,138,4)" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="0" cy="42" r="3" fill="rgb(202,138,4)" />
+      <text x="4" y="56" fontSize="10" fill="currentColor" fontWeight="600">−π/2</text>
+    </svg>
   )
 }
 
