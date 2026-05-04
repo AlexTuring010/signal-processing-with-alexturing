@@ -276,7 +276,10 @@ export function TimeFrequencyTeaser() {
           role="status"
           className="mt-2 flex items-center justify-between gap-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-1.5 text-xs text-fg"
         >
-          <span>💡 Σε log scale και τα δύο σήματα φαίνονται μαζί.</span>
+          <span>
+            💡 Το spike θα ήταν τόσο ψηλό που το speech θα γινόταν αόρατο. Με
+            log scale χωράνε και τα δύο στο ίδιο γράφημα.
+          </span>
           <button
             type="button"
             onClick={() => setHintDismissed(true)}
