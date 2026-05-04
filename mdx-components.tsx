@@ -1,4 +1,5 @@
 import type { MDXComponents } from 'mdx/types'
+import type { HTMLAttributes } from 'react'
 import { Callout } from '@/components/content/Callout'
 import { Example } from '@/components/content/Example'
 import { LabBox } from '@/components/content/LabBox'
@@ -133,6 +134,16 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ModulationTheoremViz,
     TransformPairsGallery,
     ConvolutionInFrequency,
+
+    // Markdown table override: wrap in a scroll container so the table can
+    // fill the available width on desktop and overflow horizontally on
+    // narrow screens. Styling lives in app/globals.css under
+    // `.prose-table-wrap` and `.prose-content table`.
+    table: (props: HTMLAttributes<HTMLTableElement>) => (
+      <div className="prose-table-wrap">
+        <table {...props} />
+      </div>
+    ),
 
     ...components,
   }

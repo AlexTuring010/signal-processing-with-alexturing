@@ -215,22 +215,28 @@ html {
   margin: 2rem 0;
 }
 
-/* Tables — give cells real breathing room so columns don't crowd each other.
-   Without these rules tables inherit zero padding and the eye can't tell
-   adjacent columns apart, especially when math runs long. */
+/* Tables — give cells real breathing room and let the table actually
+   span its container. Wrapping happens in mdx-components: each markdown
+   table is wrapped in a <div class="prose-table-wrap"> that handles
+   horizontal scroll on narrow screens (the table itself stays in normal
+   `display: table` layout so columns spread to fill the wrapper width). */
+.prose-table-wrap {
+  margin: 1.5rem 0;
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+}
+
 .prose-content table {
   width: 100%;
-  margin: 1.5rem 0;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.95rem;
   line-height: 1.5;
-  border: 1px solid rgb(var(--border));
-  border-radius: 8px;
-  overflow: hidden;
-  display: block;
-  overflow-x: auto;
-  white-space: normal;
+  /* No outer border / radius / margin here — those live on .prose-table-wrap
+     so the rounded corners and horizontal-scroll behaviour compose cleanly. */
 }
 
 .prose-content table thead {
