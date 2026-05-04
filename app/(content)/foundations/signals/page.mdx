@@ -1,0 +1,123 @@
+export const metadata = {
+  title: 'Σήματα — Εισαγωγή',
+  description: 'Placeholder σελίδα — QA harness για όλα τα content components.',
+}
+
+export const frontmatter = {
+  title: 'Σήματα — Εισαγωγή (placeholder)',
+  slug: 'foundations/signals',
+  order: 1,
+  prerequisites: [],
+  examWeight: 5,
+  lastUpdated: '2026-05-04',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Foundations · Section 1</span>
+  <span>·</span>
+  <span>~6 min read</span>
+</div>
+
+# Σήματα
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="foundations/signals" />
+  <Bookmark id="foundations/signals" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Αυτή είναι μια **placeholder** σελίδα — υπάρχει για να ελέγξουμε ότι όλο το {' '}
+content infrastructure δουλεύει: MDX, KaTeX math, components, theme,{' '}
+σελιδοδείκτες, progress tracking, table of contents.
+
+Όταν φτιάξουμε το πραγματικό περιεχόμενο της ενότητας, αυτή η σελίδα θα{' '}
+αντικατασταθεί από το κανονικό μάθημα για τα signals.
+
+## Τι είναι ένα signal
+
+<Callout type="intuition">
+  Ένα signal είναι απλά μια ποσότητα που αλλάζει στον χρόνο. Παράδειγμα από τη ζωή μας: ο ήχος της φωνής μας — η πίεση του αέρα στο αυτί μας αλλάζει στιγμή με στιγμή, και αυτή η αλλαγή _είναι_ το ηχητικό signal.
+</Callout>
+
+Στα μαθηματικά γράφουμε ένα cosine signal ως:
+
+$$
+x(t) = A\,\cos(2\pi f t + \phi)
+$$
+
+όπου $A$ είναι το **πλάτος** (amplitude), $f$ η **συχνότητα** (frequency, σε Hz),{' '}
+και $\phi$ η **φάση** (phase). Αυτή η μία γραμμή κρύβει τρεις διαφορετικές{' '}
+γνωριμίες — και θα τις χτίσουμε μία-μία στις επόμενες ενότητες.
+
+<Callout type="key" title="Σημαντικό">
+  Η συχνότητα $f$ μετράει "_πόσες φορές το δευτερόλεπτο επαναλαμβάνεται ένας κύκλος_". Μην την μπερδεύεις με την **γωνιακή συχνότητα** $\omega = 2\pi f$ που χρησιμοποιούμε στα μαθηματικά για να καθαρίζουν οι τύποι.
+</Callout>
+
+## Ένα interactive demo
+
+<Viz name="placeholder-signal" caption="Placeholder — εδώ θα μπει το SignalBuilder demo." />
+
+## Παράδειγμα
+
+<Example title="Παράδειγμα 1 — Υπολογισμός περιόδου">
+Έστω signal με $f = 50\,\text{Hz}$. Ποια είναι η περίοδός του;
+
+$$
+T = \frac{1}{f} = \frac{1}{50} = 20\,\text{ms}
+$$
+
+Δηλαδή ο κύκλος επαναλαμβάνεται κάθε 20 χιλιοστά του δευτερολέπτου.
+</Example>
+
+## 🧪 Lab — Προαιρετικό
+
+<LabBox title="Lab 2 — Continuous & discrete signals (preview)">
+Αν κάνεις και το lab μέρος του μαθήματος, αυτή είναι η ώρα να ανοίξεις MATLAB και να φτιάξεις το πρώτο σου signal:
+
+```matlab
+t = 0:0.001:1;       % 1 second, sampled every 1 ms
+f = 5;               % 5 Hz cosine
+x = cos(2*pi*f*t);
+plot(t, x);
+xlabel('t (s)'); ylabel('x(t)');
+title('5 Hz cosine');
+```
+
+Το `0:0.001:1` φτιάχνει ένα διάνυσμα με χρόνους από 0 ως 1 sec, με βήμα 1 ms — σαν να "κόβουμε" τον συνεχή χρόνο σε διακριτά δείγματα.
+</LabBox>
+
+## ⚠️ Παράδειγμα Callout warning
+
+<Callout type="warning">
+  Αν δεν μπορείς να δεις το παραπάνω plot σωστά στο MATLAB, ίσως χρειάζεται να αυξήσεις τη resolution: αν πάρεις `t = 0:0.1:1` αντί για `0:0.001:1`, θα δεις ένα ζιγκ-ζαγκ αντί για κύμα — γιατί έχεις πολύ λίγα σημεία.
+</Callout>
+
+## Παράδειγμα ExamProblem
+
+<ExamProblem year="2025-09" weight="10%">
+Ένα signal $x(t) = 4\cos(2\pi \cdot 100 t)$ διέρχεται από ένα LTI σύστημα με{' '}
+συνάρτηση μεταφοράς $H(f) = e^{-j\pi f / 100}$. Υπολόγισε την έξοδο $y(t)$.
+
+<Example title="Λύση" defaultOpen={true}>
+Στη συχνότητα $f = 100$ Hz: $H(100) = e^{-j\pi} = -1$. Άρα:
+
+$$
+y(t) = -4\cos(2\pi \cdot 100 t) = 4\cos(2\pi \cdot 100 t + \pi)
+$$
+
+Δηλαδή το σύστημα μετατοπίζει τη φάση κατά 180°.
+</Example>
+</ExamProblem>
+
+<Recap>
+- Ένα signal είναι μια ποσότητα που αλλάζει στον χρόνο.
+- Ένα cosine περιγράφεται από πλάτος, συχνότητα, και φάση.
+- Η περίοδος είναι το αντίστροφο της συχνότητας.
+</Recap>
+
+<NextUp slug="foundations/frequency" />

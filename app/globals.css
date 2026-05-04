@@ -1,0 +1,268 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light theme — clean white, navy text, blue accent (NKUA-inspired without copying) */
+:root,
+[data-theme='light'] {
+  --bg: 255 255 255;
+  --bg-soft: 248 250 252;       /* slate-50 */
+  --bg-elevated: 255 255 255;
+  --fg: 15 23 42;               /* slate-900 */
+  --fg-muted: 71 85 105;        /* slate-600 */
+  --fg-subtle: 100 116 139;     /* slate-500 */
+  --border: 226 232 240;        /* slate-200 */
+  --border-strong: 203 213 225; /* slate-300 */
+  --accent: 29 78 216;          /* blue-700 */
+  --accent-soft: 219 234 254;   /* blue-100 */
+  --accent-fg: 255 255 255;
+  --success: 22 163 74;         /* green-600 */
+  --warn: 202 138 4;            /* yellow-600 */
+  --danger: 220 38 38;          /* red-600 */
+}
+
+[data-theme='dark'] {
+  --bg: 15 20 30;               /* near slate-950 */
+  --bg-soft: 22 28 40;
+  --bg-elevated: 28 35 49;
+  --fg: 226 232 240;            /* slate-200 */
+  --fg-muted: 148 163 184;      /* slate-400 */
+  --fg-subtle: 100 116 139;     /* slate-500 */
+  --border: 51 65 85;           /* slate-700 */
+  --border-strong: 71 85 105;   /* slate-600 */
+  --accent: 96 165 250;         /* blue-400 */
+  --accent-soft: 30 58 138;     /* blue-900 */
+  --accent-fg: 15 23 42;
+  --success: 34 197 94;         /* green-500 */
+  --warn: 234 179 8;            /* yellow-500 */
+  --danger: 248 113 113;        /* red-400 */
+}
+
+html {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+[data-theme='dark'] html,
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+  min-height: 100dvh;
+}
+
+/* Smooth, but not aggressive */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus rings — clear and theme-aware */
+*:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Prose / content typography for MDX pages */
+.prose-content {
+  color: rgb(var(--fg));
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.prose-content h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.prose-content h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+  scroll-margin-top: 5rem;
+}
+
+.prose-content h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+  scroll-margin-top: 5rem;
+}
+
+.prose-content h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.prose-content p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose-content a {
+  color: rgb(var(--accent));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.prose-content a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.prose-content strong {
+  font-weight: 600;
+  color: rgb(var(--fg));
+}
+
+.prose-content em {
+  font-style: italic;
+  color: rgb(var(--fg-muted));
+}
+
+.prose-content code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.92em;
+  background-color: rgb(var(--bg-soft));
+  border: 1px solid rgb(var(--border));
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.prose-content pre {
+  background-color: rgb(var(--bg-soft));
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 1.25rem 0;
+}
+
+.prose-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+.prose-content ul,
+.prose-content ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.prose-content ul {
+  list-style: disc;
+}
+
+.prose-content ol {
+  list-style: decimal;
+}
+
+.prose-content li {
+  margin: 0.35rem 0;
+}
+
+.prose-content li > p {
+  margin: 0.25rem 0;
+}
+
+.prose-content blockquote {
+  border-left: 3px solid rgb(var(--border-strong));
+  padding-left: 1rem;
+  color: rgb(var(--fg-muted));
+  font-style: italic;
+  margin: 1.25rem 0;
+}
+
+.prose-content hr {
+  border: none;
+  border-top: 1px solid rgb(var(--border));
+  margin: 2rem 0;
+}
+
+/* KaTeX tweaks — make sure colors inherit and display math centers nicely */
+.katex {
+  font-size: 1.05em;
+}
+
+.katex-display {
+  margin: 1.25rem 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+.katex-display > .katex {
+  color: rgb(var(--fg));
+}
+
+/* Skip link, visually hidden until focused */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  background: rgb(var(--accent));
+  color: rgb(var(--accent-fg));
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  z-index: 100;
+  font-weight: 500;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Subtle scrollbar in dark mode */
+[data-theme='dark'] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: rgb(var(--bg));
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: rgb(var(--border));
+  border-radius: 5px;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--border-strong));
+}
