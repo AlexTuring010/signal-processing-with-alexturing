@@ -271,10 +271,24 @@ $$
 \cos(2\pi f_0 t) = \tfrac{1}{2}e^{j 2\pi f_0 t} + \tfrac{1}{2}e^{-j 2\pi f_0 t}
 $$
 
-Από γραμμικότητα και την ιδιότητα ότι $e^{j 2\pi f_c t} \overset{\mathcal{F}}{\longleftrightarrow} \delta(f - f_c)$ (η οποία βγαίνει από τη Section 4d εφαρμοσμένη μαζί με το frequency-shift της Section 5d):
+Πρώτα, ας βρούμε τον FT ενός complex exponential $e^{j 2\pi f_c t}$. Δεν τον υπολογίζουμε από τον forward FT integral απευθείας (δεν είναι απολύτως ολοκληρώσιμος), αλλά από τον **inverse**: αν εφαρμόσουμε τον inverse FT στο $\delta(f - f_c)$, χρησιμοποιώντας τη σαρωτική ιδιότητα της δ — όπως ακριβώς στη 4c, αλλά τώρα στη συχνότητα — παίρνουμε:
 
 $$
-\mathcal{F}\{\cos(2\pi f_0 t)\} = \tfrac{1}{2}\delta(f - f_0) + \tfrac{1}{2}\delta(f + f_0)
+\mathcal{F}^{-1}\{\delta(f - f_c)\} = \int_{-\infty}^{\infty} \delta(f - f_c)\, e^{j 2\pi f t}\, df = e^{j 2\pi f_c t}
+$$
+
+Δηλαδή:
+
+$$
+e^{j 2\pi f_c t} \overset{\mathcal{F}}{\longleftrightarrow} \delta(f - f_c)
+$$
+
+Συμμετρικά, $e^{-j 2\pi f_0 t} \overset{\mathcal{F}}{\longleftrightarrow} \delta(f + f_0)$.
+
+Από γραμμικότητα του FT, αθροίζοντας τα δύο complex exponentials με συντελεστή $1/2$:
+
+$$
+\cos(2\pi f_0 t) \overset{\mathcal{F}}{\longleftrightarrow} \tfrac{1}{2}\delta(f - f_0) + \tfrac{1}{2}\delta(f + f_0)
 $$
 
 Όλη η ενέργεια του cosine είναι **συμπυκνωμένη ακριβώς στις δύο συχνότητες ±f₀** — δύο κρούσεις, η καθεμία με «βάρος» $\frac{1}{2}$. Στα διαγράμματα φάσματος εμφανίζονται σαν δύο κάθετα «καρφιά».
