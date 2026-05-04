@@ -31,8 +31,7 @@ export const CHAPTERS: Chapter[] = [
     title: '1. Intro',
     blurb: 'Why we study communications',
     sections: [
-      { slug: 'intro/big-picture', title: 'Η μεγάλη εικόνα', available: false },
-      { slug: 'intro/how-to-use', title: 'Πώς να χρησιμοποιήσεις τον οδηγό', available: false },
+      { slug: 'intro', title: 'Τι είναι ένα σύστημα επικοινωνιών', available: true },
     ],
   },
   {
