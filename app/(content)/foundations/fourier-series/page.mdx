@@ -268,6 +268,68 @@ $$
 
 και περιοδικό με περίοδο $T_0$.
 
+<figure className="my-5 rounded-md border border-border bg-bg-soft/40 p-3 text-fg">
+  <svg
+    viewBox="0 0 640 180"
+    role="img"
+    aria-label="Τετραγωνικός παλμός 50% duty cycle περιόδου T₀"
+    className="block w-full"
+  >
+    {/* Reference dashed horizontal at y = 1 */}
+    <line x1="50" y1="40" x2="610" y2="40" stroke="currentColor" strokeOpacity="0.22" strokeDasharray="3 3" />
+
+    {/* Period boundaries (dashed verticals at ±T₀/2 and ±3T₀/2) */}
+    <line x1="50" y1="40" x2="50" y2="140" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="2 4" />
+    <line x1="230" y1="40" x2="230" y2="140" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="2 4" />
+    <line x1="410" y1="40" x2="410" y2="140" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="2 4" />
+    <line x1="590" y1="40" x2="590" y2="140" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="2 4" />
+
+    {/* Pulse rectangles, centred at -T₀, 0, +T₀, each width T₀/2 */}
+    <rect x="95" y="40" width="90" height="100" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="275" y="40" width="90" height="100" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="455" y="40" width="90" height="100" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+
+    {/* x-axis with arrow tip */}
+    <line x1="40" y1="140" x2="618" y2="140" stroke="currentColor" strokeWidth="1.2" />
+    <polygon points="624,140 614,135 614,145" fill="currentColor" />
+
+    {/* y-axis with arrow tip */}
+    <line x1="50" y1="155" x2="50" y2="28" stroke="currentColor" strokeWidth="1.2" />
+    <polygon points="50,22 45,32 55,32" fill="currentColor" />
+
+    {/* Tick marks on the x-axis */}
+    <line x1="50"  y1="140" x2="50"  y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="140" y1="140" x2="140" y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="230" y1="140" x2="230" y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="275" y1="140" x2="275" y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="320" y1="140" x2="320" y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="365" y1="140" x2="365" y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="410" y1="140" x2="410" y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="500" y1="140" x2="500" y2="144" stroke="currentColor" strokeWidth="1" />
+    <line x1="590" y1="140" x2="590" y2="144" stroke="currentColor" strokeWidth="1" />
+
+    {/* x-axis labels (only the key ones) */}
+    <text x="320" y="158" textAnchor="middle" fontSize="11" fill="currentColor">0</text>
+    <text x="275" y="158" textAnchor="middle" fontSize="11" fill="currentColor">−T₀/4</text>
+    <text x="365" y="158" textAnchor="middle" fontSize="11" fill="currentColor">+T₀/4</text>
+    <text x="230" y="158" textAnchor="middle" fontSize="11" fill="currentColor">−T₀/2</text>
+    <text x="410" y="158" textAnchor="middle" fontSize="11" fill="currentColor">+T₀/2</text>
+    <text x="140" y="158" textAnchor="middle" fontSize="11" fill="currentColor" opacity="0.7">−T₀</text>
+    <text x="500" y="158" textAnchor="middle" fontSize="11" fill="currentColor" opacity="0.7">+T₀</text>
+
+    {/* y-axis tick at 1 */}
+    <line x1="46" y1="40" x2="50" y2="40" stroke="currentColor" strokeWidth="1" />
+    <text x="42" y="44" textAnchor="end" fontSize="11" fill="currentColor">1</text>
+
+    {/* Axis name labels */}
+    <text x="618" y="134" textAnchor="end" fontSize="11" fill="currentColor" opacity="0.7" fontStyle="italic">t</text>
+    <text x="56" y="28" textAnchor="start" fontSize="11" fill="currentColor" opacity="0.7" fontStyle="italic">x(t)</text>
+  </svg>
+  <figcaption className="mt-2 text-center text-xs text-fg-muted">
+    Τετραγωνικός παλμός 50% duty cycle, περίοδος <span className="font-mono">T₀</span>.
+  </figcaption>
+</figure>
+
 Από την εξίσωση ανάλυσης (διαλέγουμε το διάστημα $[-T_0/2, T_0/2]$):
 
 $$
