@@ -32,6 +32,8 @@ const SYSTEMS: { id: SysId; expr: string; expected: 'TI' | 'non-TI'; blurb: stri
 const T_END = 4
 const N = 800
 const RC_TAU = 0.2
+/** Grid step. Chosen so dt divides the slider step (0.05 s) exactly. */
+const DT = T_END / N // = 0.005 s — slider step 0.05 s is exactly 10·DT
 
 function pulse(t: number) {
   // Triangular pulse around 1, width 0.6.
@@ -76,34 +78,45 @@ export function TimeInvarianceChecker() {
   const [delay, setDelay] = useState(1.0) // seconds
 
   const sys = SYSTEMS.find((s) => s.id === sysId)!
-  const dt = T_END / (N - 1)
 
   const data = useMemo(() => {
+    // Snap the delay to the sample grid and use that single value for BOTH
+    // the analytical sampling (xShifted) AND the integer-index shift on y.
+    // This guarantees the two paths agree exactly for any genuinely TI
+    // system — no numerical drift from sub-sample misalignment.
+    const shiftSamples = Math.round(delay / DT)
+    const effectiveDelay = shiftSamples * DT
+
     const x = new Float32Array(N)
     const xShifted = new Float32Array(N)
     for (let i = 0; i < N; i++) {
-      const t = i * dt
+      const t = i * DT
       x[i] = pulse(t)
-      xShifted[i] = pulse(t - delay)
+      xShifted[i] = pulse(t - effectiveDelay)
     }
-    const y = applySystem(sysId, x, dt)
-    const yShifted = applySystem(sysId, xShifted, dt)
-    // Reference: y(t-delay) — what we'd expect if TI.
+    const y = applySystem(sysId, x, DT)
+    const yShifted = applySystem(sysId, xShifted, DT)
+    // Reference: y(t-effectiveDelay) — what we'd expect if TI.
     const yExpected = new Float32Array(N)
-    const shiftSamples = Math.round(delay / dt)
     for (let i = 0; i < N; i++) {
       const j = i - shiftSamples
       yExpected[i] = j >= 0 && j < N ? y[j] : 0
     }
     let maxDiff = 0
+    let yPeak = 0
     for (let i = 0; i < N; i++) {
       const d = Math.abs(yShifted[i] - yExpected[i])
       if (d > maxDiff) maxDiff = d
+      const a = Math.abs(y[i])
+      if (a > yPeak) yPeak = a
     }
-    return { x, xShifted, y, yShifted, yExpected, maxDiff }
-  }, [sysId, delay, dt])
+    return { x, xShifted, y, yShifted, yExpected, maxDiff, yPeak }
+  }, [sysId, delay])
 
-  const isTI = data.maxDiff < 1e-2
+  // Relative tolerance: 2 % of the system's peak output, with a small floor
+  // so we don't divide by ~0 when the system attenuates heavily.
+  const tol = Math.max(1e-3, 0.02 * data.yPeak)
+  const isTI = data.maxDiff < tol
 
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
@@ -157,7 +170,7 @@ export function TimeInvarianceChecker() {
         </label>
         <input
           type="range"
-          min={0}
+          min={0.05}
           max={1.8}
           step={0.05}
           value={delay}
