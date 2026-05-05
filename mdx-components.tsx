@@ -75,6 +75,10 @@ import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
 import { BesselTable } from '@/components/viz/BesselTable'
 import { CarsonRuleViz } from '@/components/viz/CarsonRuleViz'
 import { FMNoiseTriangleViz } from '@/components/viz/FMNoiseTriangleViz'
+import { RandomPhaseCosineViz } from '@/components/viz/RandomPhaseCosineViz'
+import { RandomProcessRealizationsViz } from '@/components/viz/RandomProcessRealizationsViz'
+import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
+import { ErgodicityViz } from '@/components/viz/ErgodicityViz'
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
@@ -210,6 +214,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — fm / in-noise
     FMNoiseTriangleViz,
+
+    // Visualizations — randomness
+    RandomPhaseCosineViz,
+    RandomProcessRealizationsViz,
+    AutocorrelationViz,
+    ErgodicityViz,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on

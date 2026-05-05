@@ -1,0 +1,243 @@
+export const metadata = {
+  title: 'Random processes — από RVs σε τυχαία σήματα',
+  description:
+    'Ορισμός random process: collection of RVs indexed by t. Realization, ensemble, mean function, autocorrelation, autocovariance, cross-correlation. Worked example: random-phase cosine X(t) = A cos(2π f_0 t + Θ) με Θ ~ U[0, 2π).',
+}
+
+export const frontmatter = {
+  title: 'Random processes',
+  slug: 'randomness/random-processes',
+  order: 3,
+  prerequisites: ['randomness/random-variables'],
+  examWeight: 2,
+  estimatedReadTime: 24,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Randomness · 3</span>
+  <span>·</span>
+  <span>~24 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-emerald-700 dark:text-emerald-400">🟢 Light exam — foundation for noise</span>
+</div>
+
+# Random processes — από RVs σε τυχαία σήματα
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="randomness/random-processes" />
+  <Bookmark id="randomness/random-processes" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Τώρα που ξέρουμε τι είναι μια τυχαία μεταβλητή, ας την «κουνήσουμε» στον χρόνο. Ένα **random process** (τυχαίο σήμα) είναι μια **οικογένεια τυχαίων μεταβλητών indexed by time**: μια διαφορετική RV για κάθε στιγμή $t$.
+
+## 1. Ο ορισμός — ensemble και realization
+
+Φαντάσου ότι έχεις χίλιους ίδιους δέκτες ραδιοφώνου, ο καθένας με δικό του antenna, όλοι σιωπηλοί (χωρίς εκπομπές). Αν κάθε ένας **καταγράφει την έξοδό του** για 1 δευτερόλεπτο, παίρνεις χίλιες **διαφορετικές κυματομορφές θορύβου**.
+
+**Όλες αυτές μαζί** σχηματίζουν το random process. Κάθε μια από αυτές είναι μια **realization** (ή «δείγμα») του process.
+
+Επίσημα:
+
+$$
+X(t, \omega), \qquad t \in T,\ \omega \in \Omega
+$$
+
+όπου:
+- $t$ είναι ο χρόνος (η «πρώτη παράμετρος»)
+- $\omega$ είναι το αποτέλεσμα του τυχαίου πειράματος (η «δεύτερη παράμετρος»)
+- $\Omega$ είναι ο χώρος όλων των δυνατών αποτελεσμάτων
+
+**Δύο τρόποι να «τέμνεις» ένα random process:**
+
+1. **Σταθερό $t$, μεταβλητό $\omega$:** $X(t_0, \cdot)$ είναι μια **τυχαία μεταβλητή** (η τιμή κάθε realization στη στιγμή $t_0$).
+2. **Σταθερό $\omega$, μεταβλητός $t$:** $X(\cdot, \omega_0)$ είναι μια **realization** (ένα ντετερμινιστικό σήμα).
+
+Στην πράξη παραλείπουμε τη γραφή $\omega$ και γράφουμε απλά $X(t)$. Πρέπει να θυμάσαι ότι $X(t)$ **είναι RV για κάθε $t$**.
+
+<RandomProcessRealizationsViz />
+
+Πάτα τα διάφορα presets και δες τι σημαίνει «ensemble» — μια οικογένεια realizations του ίδιου random process.
+
+## 2. Mean function
+
+Ο **μέσος** ενός random process είναι **συνάρτηση του χρόνου**:
+
+$$
+\boxed{\,\mu_X(t) = E[X(t)]\,}
+$$
+
+(Παίρνουμε το ensemble average σε σταθερό $t$.)
+
+Αν το process έχει **σταθερό μέσο** στον χρόνο, λέμε ότι ο μέσος είναι «**stationary in mean**». Αυτό είναι το πρώτο από τα δύο που χρειάζεται για να είναι ένα process WSS (το βλέπουμε στο επόμενο κεφάλαιο).
+
+## 3. Autocorrelation function
+
+Πιο σημαντική από τον μέσο για τη θεωρία επικοινωνιών είναι η **αυτοσυσχέτιση**:
+
+$$
+\boxed{\,R_X(t_1, t_2) = E[X(t_1)\, X(t_2)]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+Είναι ο μέσος όρος του **γινομένου** των τιμών του process σε δύο διαφορετικές χρονικές στιγμές, υπολογισμένος πάνω στο ensemble.
+
+**Πρακτική σημασία:** μάς λέει πόσο **συσχετισμένες** είναι οι τιμές του process σε διαφορετικές χρονικές στιγμές.
+
+- Αν $R_X(t_1, t_2)$ είναι μεγάλο όταν $t_2$ κοντά στο $t_1$, τότε το process είναι «**αργό**» — οι τιμές αλλάζουν σιγά-σιγά (π.χ. lowpass-filtered θόρυβος).
+- Αν $R_X$ πέφτει γρήγορα στο 0 όταν $|t_2 - t_1| > 0$, τότε το process είναι «**γρήγορο**» — οι τιμές αλλάζουν απότομα (π.χ. λευκός θόρυβος).
+- Όταν $t_1 = t_2 = t$, παίρνουμε $R_X(t, t) = E[X^2(t)]$ — η **μέση ισχύς** του process στη στιγμή $t$.
+
+### Autocovariance
+
+Παρόμοια με covariance για RVs:
+
+$$
+C_X(t_1, t_2) = E[(X(t_1) - \mu_X(t_1))(X(t_2) - \mu_X(t_2))] = R_X(t_1, t_2) - \mu_X(t_1)\mu_X(t_2)
+$$
+
+Αν ο μέσος είναι 0 (που είναι συνήθης case για θόρυβο), τότε **autocorrelation και autocovariance ταυτίζονται**.
+
+## 4. Cross-correlation και cross-covariance
+
+Για **δύο διαφορετικά** random processes $X(t)$ και $Y(t)$, μπορούμε να μετρήσουμε **πόσο συσχετίζεται το ένα με το άλλο** σε δύο στιγμές:
+
+**Cross-correlation:**
+$$
+R_{XY}(t_1, t_2) = E[X(t_1)\, Y(t_2)]
+$$
+
+**Cross-covariance:**
+$$
+C_{XY}(t_1, t_2) = R_{XY}(t_1, t_2) - \mu_X(t_1)\, \mu_Y(t_2)
+$$
+
+Δύο processes που έχουν $C_{XY} = 0$ για όλα $t_1, t_2$ ονομάζονται **uncorrelated**.
+
+**Πραγματικό παράδειγμα:** ο θόρυβος που εισέρχεται από την κεραία και η θέρμανση των transistors του δέκτη. Είναι δύο **διαφορετικές** πηγές — γενικά uncorrelated, οπότε $R_{XY}(t_1, t_2) = 0$. Όταν αναλύουμε το συνολικό θόρυβο στην έξοδο του δέκτη, αυτή η ιδιότητα μάς επιτρέπει να **προσθέτουμε ισχύες** χωρίς cross-terms.
+
+## 5. Ένα κρίσιμο σημείο — δεν είναι «μέσος όρος στον χρόνο»
+
+Πολλοί φοιτητές μπερδεύονται:
+
+> «Ο μέσος όρος δεν είναι $\frac{1}{T}\int x(t)\, dt$;»
+
+**Όχι** — αυτός είναι ο **time average**. Ο μέσος όρος του random process σύμφωνα με τον ορισμό είναι ο **ensemble average**: παίρνουμε **πολλές realizations** και υπολογίζουμε τον μέσο τους **σε σταθερό χρόνο**.
+
+Αυτή η διάκριση είναι τόσο σημαντική που έχει το δικό της κεφάλαιο: η **ergodicity** (επόμενη σελίδα) λέει ακριβώς **πότε** time average και ensemble average συμπίπτουν.
+
+## 6. Worked example — random-phase cosine (το κλασικό)
+
+<Example title="Ex. — μέσος και autocorrelation της X(t) = A cos(2π f₀ t + Θ)">
+
+Έστω $X(t) = A\cos(2\pi f_0 t + \Theta)$ όπου $A, f_0$ σταθερές και $\Theta \sim U[0, 2\pi)$.
+
+**Ζητούνται:** $\mu_X(t)$ και $R_X(t_1, t_2)$.
+
+---
+
+**(α) Μέσος.**
+
+$$
+\mu_X(t) = E[A\cos(2\pi f_0 t + \Theta)] = A \cdot E[\cos(2\pi f_0 t + \Theta)]
+$$
+
+Από LOTUS με $\Theta \sim U[0, 2\pi)$:
+
+$$
+E[\cos(2\pi f_0 t + \Theta)] = \int_0^{2\pi} \cos(2\pi f_0 t + \theta)\, \frac{1}{2\pi}\, d\theta
+$$
+
+Με αλλαγή μεταβλητής $\phi = 2\pi f_0 t + \theta$:
+
+$$
+= \int_{2\pi f_0 t}^{2\pi f_0 t + 2\pi} \cos\phi\, \frac{1}{2\pi}\, d\phi = 0
+$$
+
+(Ολοκλήρωμα $\cos\phi$ πάνω σε ολόκληρη περίοδο = 0.)
+
+$$
+\boxed{\mu_X(t) = 0}
+$$
+
+Σταθερός — δεν εξαρτάται από τον $t$. ✓ Πρώτη συνθήκη WSS.
+
+---
+
+**(β) Autocorrelation.**
+
+$$
+R_X(t_1, t_2) = E[X(t_1) X(t_2)] = A^2\, E[\cos(2\pi f_0 t_1 + \Theta)\cos(2\pi f_0 t_2 + \Theta)]
+$$
+
+Χρησιμοποιούμε την product-to-sum ταυτότητα $\cos a\, \cos b = \tfrac{1}{2}[\cos(a-b) + \cos(a+b)]$:
+
+$$
+\cos(2\pi f_0 t_1 + \Theta)\cos(2\pi f_0 t_2 + \Theta) = \tfrac{1}{2}\big[\cos(2\pi f_0 (t_1 - t_2)) + \cos(2\pi f_0 (t_1 + t_2) + 2\Theta)\big]
+$$
+
+Παίρνοντας expectation:
+
+- Ο **πρώτος όρος** δεν περιέχει $\Theta$ → μένει ως έχει.
+- Ο **δεύτερος όρος** έχει $2\Theta$ μέσα στο cosine. Επειδή $\Theta \sim U[0, 2\pi)$, και πάλι $E[\cos(\ldots + 2\Theta)] = 0$ (ολοκλήρωμα πάνω σε δύο περιόδους).
+
+Άρα:
+
+$$
+R_X(t_1, t_2) = A^2 \cdot \tfrac{1}{2}\cos(2\pi f_0 (t_1 - t_2)) = \frac{A^2}{2}\cos(2\pi f_0 (t_1 - t_2))
+$$
+
+**Σημαντικό:** η αυτοσυσχέτιση **εξαρτάται μόνο από τη διαφορά** $\tau = t_1 - t_2$, **όχι** από τα $t_1$ ή $t_2$ ξεχωριστά. Άρα μπορούμε να γράψουμε:
+
+$$
+\boxed{R_X(\tau) = \frac{A^2}{2}\cos(2\pi f_0 \tau)}
+$$
+
+✓ Δεύτερη συνθήκη WSS. Άρα ο random-phase cosine είναι **WSS**.
+
+</Example>
+
+<RandomPhaseCosineViz />
+
+Στη γραφική, **σύρε** τη time-slice. Παρατήρησε ότι:
+- Σε κάθε $t$, η **κατανομή** του $X(t)$ είναι ίδια (arcsine — με ψηλά «αυτιά» στα ±A).
+- Άρα η stationarity είναι ορατή: τίποτα δεν αλλάζει με τον χρόνο.
+
+## 7. Properties της autocorrelation (για WSS process)
+
+Όταν $R_X(t_1, t_2) = R_X(\tau)$ μόνο, οι ιδιότητες απλοποιούνται:
+
+| Ιδιότητα | Τύπος |
+| --- | --- |
+| Τιμή στο 0 = ισχύς | $R_X(0) = E[X^2(t)] = P_X$ |
+| Άρτια | $R_X(\tau) = R_X(-\tau)$ |
+| Maximum στο 0 | $|R_X(\tau)| \leq R_X(0)$ |
+| Σχέση με covariance | $C_X(\tau) = R_X(\tau) - \mu_X^2$ |
+
+Η ιδιότητα **«max στο 0»** δηλώνει: **κανένα ζευγάρι σημείων δεν είναι πιο συσχετισμένο από ένα σημείο με τον εαυτό του**.
+
+## 8. Σύνοψη
+
+| Έννοια | Τύπος |
+| --- | --- |
+| Mean function | $\mu_X(t) = E[X(t)]$ |
+| Autocorrelation | $R_X(t_1, t_2) = E[X(t_1) X(t_2)]$ |
+| Autocovariance | $C_X(t_1, t_2) = R_X - \mu_X(t_1)\mu_X(t_2)$ |
+| Cross-correlation | $R_{XY}(t_1, t_2) = E[X(t_1) Y(t_2)]$ |
+| Cross-covariance | $C_{XY} = R_{XY} - \mu_X\mu_Y$ |
+| Random-phase cosine | $\mu_X = 0$, $R_X(\tau) = (A^2/2)\cos(2\pi f_0 \tau)$ |
+
+<Recap>
+- Ένα **random process** είναι μια οικογένεια RVs indexed by χρόνο. Δύο τρόποι να το «τέμνεις»: σταθερό t (RV) ή σταθερό ω (realization).
+- **Mean** $\mu_X(t)$ και **autocorrelation** $R_X(t_1, t_2)$ είναι οι βασικές στατιστικές ποσότητες.
+- Cross-correlation $R_{XY}(t_1, t_2)$ μετρά πόσο συσχετίζονται δύο διαφορετικά processes.
+- Στο **random-phase cosine** (το κλασικό παράδειγμα) προκύπτει $\mu_X = 0$ και $R_X(\tau) = (A^2/2)\cos(2\pi f_0 \tau)$ — **εξαρτάται μόνο από τη διαφορά** χρόνων.
+- Αυτή η εξάρτηση μόνο από $\tau$ είναι κρίσιμη — οδηγεί στην έννοια της **Wide-Sense Stationarity (WSS)** που ορίζουμε στο επόμενο κεφάλαιο.
+</Recap>
+
+<NextUp slug="randomness/stationarity" />

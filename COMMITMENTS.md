@@ -47,10 +47,6 @@ Format:
        Where it should be fulfilled: `/reference/trig-identities`, `/reference/fourier-pairs`, `/reference/integrals`
        Notes: We started the pattern with `/foundations/signal-transformations` and `/reference/complex-numbers` — general math = reference page, topic-specific application = topic page. As later chapters need product-to-sum trig identities (modulation chapters lean on these constantly), the canonical Fourier pairs from the typology, or the integrals from the typology, build the corresponding reference page and link instead of inlining.
 
-- [ ] **Random-process PSD and the generalized Wiener–Khinchin theorem**
-       Where it appears: `/foundations/fourier-transform` Section 9 (Parseval / ESD) and Section 10 (autocorrelation ↔ |X(f)|² for deterministic signals)
-       Where it should be fulfilled: `/randomness/psd` (and earlier parts of the random-processes chapter)
-       Notes: The FT chapter only treats deterministic-energy signals: $R_x(\tau) \leftrightarrow |X(f)|^2$. For random / power signals (noise, modulated signals once the message is treated as random), `X(f)` is not well-defined per realization. The random-process chapter must define PSD via expected autocorrelation and derive the random-signal version of Wiener–Khinchin, then connect back to the deterministic version proved here.
 
 
 ---
@@ -112,6 +108,11 @@ Format:
        Originally appeared: implicit forward-promise from `/foundations/fourier-transform` Section 7 (modulation theorem) and the FT NextUp pointing at this chapter
        Fulfilled in: `/modulation/bridge` Sections 1, 4, 5 (chapter promoted to first chapter of modulation group on 2026-05-05; previously lived at `/foundations/bandpass-filters` §1, 4, 5)
        Notes: Section 1 names baseband vs bandpass and ties the modulation theorem to the bandpass class. Section 4 derives the complex envelope $g(t) = x_p(t)\,e^{-j 2\pi f_c t}$ and the canonical $x(t) = \mathrm{Re}\{g(t)\,e^{j 2\pi f_c t}\}$. Section 5 unfolds this into the I/Q form $x(t) = x_I\cos - x_Q\sin$ and lays out the five-modulation table (AM, DSB-SC, SSB, FM, PM) as different rows. The `<IQDecompositionViz />` flagship makes AM-vs-FM visceral by tracing $(x_I, x_Q)$ in the complex plane (line for AM, circle for FM). A 🎯 closes-commitment callout names this as the bridge to modulation.
+
+- [x] **Random-process PSD and the generalized Wiener–Khinchin theorem** (closed 2026-05-05)
+       Originally appeared: `/foundations/fourier-transform` Section 9 (Parseval / ESD) and Section 10 (autocorrelation ↔ |X(f)|² for deterministic signals)
+       Fulfilled in: `/randomness/psd` (Sections 1–3) and the autocorrelation primer in `/randomness/random-processes`
+       Notes: The PSD chapter explicitly opens with the FT §10 result (deterministic ESD), then explains why a random-process per-realization $X(f)$ isn't well-defined, motivating the move to PSD via the autocorrelation. Wiener-Khinchin is stated and used. A 🎯 closes-commitment callout in `/randomness/psd` Section 2 makes the back-reference. The output-of-LTI-filter result $S_Y(f) = |H(f)|^2 S_X(f)$ is given as the load-bearing tool for the upcoming Noise group.
 
 - [x] **Full treatment of modulation (AM, FM)** (closed 2026-05-05)
        Originally appeared: `/intro`, section 7

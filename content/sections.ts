@@ -76,11 +76,11 @@ export const CHAPTERS: Chapter[] = [
     title: '3. Randomness',
     blurb: 'Πιθανότητα στα σήματα',
     sections: [
-      { slug: 'randomness/why', title: 'Γιατί χρειαζόμαστε πιθανότητα', available: false },
-      { slug: 'randomness/random-variables', title: 'Random variables', available: false },
-      { slug: 'randomness/random-processes', title: 'Random processes', available: false },
-      { slug: 'randomness/stationarity', title: 'Stationarity & autocorrelation', available: false },
-      { slug: 'randomness/psd', title: 'Power spectral density', available: false },
+      { slug: 'randomness/why', title: 'Γιατί χρειαζόμαστε πιθανότητα', available: true, examWeight: 1 },
+      { slug: 'randomness/random-variables', title: 'Random variables', available: true, examWeight: 1 },
+      { slug: 'randomness/random-processes', title: 'Random processes', available: true, examWeight: 2 },
+      { slug: 'randomness/stationarity', title: 'Stationarity & ergodicity', available: true, examWeight: 2 },
+      { slug: 'randomness/psd', title: 'Power spectral density', available: true, examWeight: 3 },
     ],
   },
   {

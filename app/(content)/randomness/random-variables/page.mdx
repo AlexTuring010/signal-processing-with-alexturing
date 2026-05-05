@@ -1,0 +1,252 @@
+export const metadata = {
+  title: 'Random variables — γρήγορος οδηγός',
+  description:
+    'Quick recap πάνω στις τυχαίες μεταβλητές: PDF/CDF, μέσος, variance, κύριες κατανομές (Gaussian, uniform, exponential), independence, joint distributions.',
+}
+
+export const frontmatter = {
+  title: 'Random variables',
+  slug: 'randomness/random-variables',
+  order: 2,
+  prerequisites: ['randomness/why'],
+  examWeight: 1,
+  estimatedReadTime: 18,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Randomness · 2</span>
+  <span>·</span>
+  <span>~18 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-emerald-700 dark:text-emerald-400">🟢 Light exam — recap</span>
+</div>
+
+# Random variables — γρήγορος οδηγός
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="randomness/random-variables" />
+  <Bookmark id="randomness/random-variables" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Το πιθανώς ήδη το έχεις δει σε άλλο μάθημα (Πιθανότητες & Στατιστική). Εδώ κάνουμε γρήγορο recap **εστιασμένο σε όσα χρειαζόμαστε** για το random processes chapter που έρχεται.
+
+## 1. Τι είναι μια τυχαία μεταβλητή
+
+Μια **τυχαία μεταβλητή (random variable)** $X$ είναι ένας αριθμός που παίρνει την τιμή του από ένα τυχαίο πείραμα. Παραδείγματα:
+
+- Ρίξε νόμισμα: $X = 0$ αν κορώνα, $X = 1$ αν γράμματα.
+- Μέτρα τη θερμοκρασία ενός αντιστάτη: $X$ = η ένδειξη του βολτομέτρου σε ένα τυχαίο πείραμα.
+- Δες το επόμενο sample θορύβου από έναν δέκτη: $X$ = η τιμή του στο επόμενο millisecond.
+
+**Σημαντική διάκριση:**
+- $X$ (κεφαλαίο) — η τυχαία μεταβλητή ως αντικείμενο (αφηρημένη έννοια).
+- $x$ (πεζό) — μια συγκεκριμένη τιμή που πήρε σε ένα δείγμα.
+
+Αυτή η σύμβαση εμφανίζεται **παντού** στον υπόλοιπο σύλλογο.
+
+## 2. CDF και PDF
+
+Η **cumulative distribution function (CDF)** δίνει την πιθανότητα η RV να είναι ≤ από κάποιο όριο:
+
+$$
+F_X(x) = P(X \leq x)
+$$
+
+Πάντα μη-φθίνουσα, με $F_X(-\infty) = 0$ και $F_X(+\infty) = 1$.
+
+Η **probability density function (PDF)** είναι η παράγωγός της:
+
+$$
+f_X(x) = \frac{dF_X(x)}{dx}
+$$
+
+Πάντα $f_X(x) \geq 0$ και $\int_{-\infty}^{\infty} f_X(x)\, dx = 1$.
+
+**Ερμηνεία:** η πιθανότητα η RV να βρίσκεται σε ένα μικρό διάστημα γύρω από $x$ είναι περίπου $f_X(x) \cdot dx$. (Όχι «η πιθανότητα να είναι $x$» — αυτή είναι 0 για συνεχείς RVs.)
+
+Για **διακριτές** RVs χρησιμοποιούμε τη **probability mass function (PMF)** $P(X = x_i) = p_i$ αντί για PDF.
+
+## 3. Μέσος και διασπορά
+
+**Expectation (μέσος, mean)** — το αριθμητικό «κέντρο» της κατανομής:
+
+$$
+\mu_X = E[X] = \int_{-\infty}^{\infty} x\, f_X(x)\, dx
+$$
+
+(ή $\sum_i x_i p_i$ για διακριτές.)
+
+**Variance (διασπορά)** — η μέση τετραγωνική απόκλιση από τον μέσο:
+
+$$
+\sigma_X^2 = \mathrm{Var}(X) = E[(X - \mu_X)^2] = E[X^2] - \mu_X^2
+$$
+
+**Standard deviation:** $\sigma_X = \sqrt{\sigma_X^2}$.
+
+**Mean square value:**
+
+$$
+E[X^2] = \int_{-\infty}^{\infty} x^2\, f_X(x)\, dx = \mu_X^2 + \sigma_X^2
+$$
+
+Σημαντική για ισχύ: αν $X$ είναι μια στιγμιαία τιμή σήματος, τότε το $E[X^2]$ είναι η μέση **ισχύς** του σήματος.
+
+### Linearity (γραμμικότητα)
+
+Για οποιεσδήποτε σταθερές $a, b$ και RVs $X, Y$:
+
+$$
+E[aX + bY] = a\, E[X] + b\, E[Y]
+$$
+
+Πάντα ισχύει — **ανεξάρτητα** από το αν τα $X, Y$ είναι ανεξάρτητα μεταξύ τους.
+
+Για **variance** όμως: μόνο αν $X, Y$ ανεξάρτητα ισχύει
+$$
+\mathrm{Var}(aX + bY) = a^2\,\mathrm{Var}(X) + b^2\,\mathrm{Var}(Y)
+$$
+
+## 4. Κύριες κατανομές
+
+### Uniform U(a, b)
+
+PDF: $f_X(x) = 1/(b - a)$ για $x \in [a, b]$, αλλιώς 0.
+
+- $E[X] = (a + b)/2$
+- $\mathrm{Var}(X) = (b - a)^2/12$
+
+Συχνή χρήση: η **τυχαία φάση** $\Theta \sim U(0, 2\pi)$ στις διαμορφώσεις, οποτεδήποτε δεν έχουμε προτίμηση φάσης.
+
+### Gaussian / Normal N(μ, σ²)
+
+$$
+f_X(x) = \frac{1}{\sigma\sqrt{2\pi}}\, e^{-(x - \mu)^2/(2\sigma^2)}
+$$
+
+- $E[X] = \mu$
+- $\mathrm{Var}(X) = \sigma^2$
+- 68% της μάζας μέσα σε $\pm \sigma$, 95% σε $\pm 2\sigma$, 99.7% σε $\pm 3\sigma$.
+
+**Πανταχού παρούσα** στα συστήματα επικοινωνιών:
+- Ο **θερμικός θόρυβος** είναι Gaussian (από το Central Limit Theorem — ο θόρυβος είναι άθροισμα πολλών ανεξάρτητων ηλεκτρικών διεγέρσεων).
+- Πολλά τυχαία σήματα προσεγγίζονται ως Gaussian.
+
+### Exponential
+
+$$
+f_X(x) = \lambda\, e^{-\lambda x} \quad \text{για } x \geq 0
+$$
+
+- $E[X] = 1/\lambda$
+- $\mathrm{Var}(X) = 1/\lambda^2$
+
+Χρήση: χρόνοι μεταξύ τυχαίων γεγονότων (π.χ. arrivals ζητημάτων σε ένα δίκτυο).
+
+### Bernoulli, Binomial, Poisson
+
+Διακριτές κατανομές. Δεν τις χρειάζεται κατ' ανάγκη το K21 — αλλά καλό είναι να τις γνωρίζεις:
+
+- **Bernoulli(p)**: $P(X=1) = p$, $P(X=0) = 1-p$. Νόμισμα.
+- **Binomial(n, p)**: άθροισμα n ανεξάρτητων Bernoulli. Πόσες κορώνες σε n ρίψεις.
+- **Poisson(λ)**: αριθμός γεγονότων σε σταθερό διάστημα όταν ο ρυθμός είναι λ.
+
+## 5. Joint distributions, independence
+
+Για δύο RVs $X, Y$:
+
+**Joint PDF:** $f_{X,Y}(x, y)$. Πιθανότητα ότι $(X, Y)$ είναι σε μικρή περιοχή γύρω από $(x, y)$ είναι $\approx f_{X,Y}(x, y)\, dx\, dy$.
+
+**Marginals:**
+$$
+f_X(x) = \int f_{X,Y}(x, y)\, dy
+$$
+
+**Independence:** $X, Y$ είναι ανεξάρτητα αν και μόνο αν
+$$
+f_{X,Y}(x, y) = f_X(x)\, f_Y(y)
+$$
+
+για όλα τα $x, y$. Σε αυτή την περίπτωση και:
+$$
+E[XY] = E[X]\, E[Y]
+$$
+
+## 6. Correlation και covariance
+
+**Covariance:**
+
+$$
+\mathrm{Cov}(X, Y) = E[(X - \mu_X)(Y - \mu_Y)] = E[XY] - \mu_X\,\mu_Y
+$$
+
+- Αν $X, Y$ ανεξάρτητα → $\mathrm{Cov}(X, Y) = 0$.
+- Αλλά **το αντίστροφο δεν ισχύει πάντα** — δύο RVs μπορεί να έχουν zero covariance και να μην είναι ανεξάρτητες (μη γραμμική σχέση).
+- Για Gaussian RVs **ισχύει** το αντίστροφο: zero covariance ⇔ ανεξαρτησία.
+
+**Correlation coefficient:**
+
+$$
+\rho_{XY} = \frac{\mathrm{Cov}(X, Y)}{\sigma_X\, \sigma_Y} \in [-1, 1]
+$$
+
+- $\rho = 1$: γραμμικά ανάλογα ($Y = aX + b$, $a > 0$)
+- $\rho = -1$: γραμμικά αντιστρόφως ανάλογα
+- $\rho = 0$: γραμμικά ασύσχετα
+
+## 7. Συνάρτηση τυχαίας μεταβλητής
+
+Αν $Y = g(X)$ είναι μια ντετερμινιστική συνάρτηση μιας RV, τότε:
+
+$$
+E[g(X)] = \int g(x)\, f_X(x)\, dx
+$$
+
+(**Law of the unconscious statistician** — δεν χρειάζεται να βρούμε πρώτα την $f_Y(y)$.)
+
+**Παραδείγματα:**
+
+- $E[\cos\Theta]$ όπου $\Theta \sim U(0, 2\pi)$:
+  $$
+  E[\cos\Theta] = \int_0^{2\pi} \cos\theta \cdot \frac{1}{2\pi}\, d\theta = 0
+  $$
+
+- $E[\cos^2\Theta]$ όπου $\Theta \sim U(0, 2\pi)$:
+  $$
+  E[\cos^2\Theta] = \int_0^{2\pi} \cos^2\theta \cdot \frac{1}{2\pi}\, d\theta = \frac{1}{2}
+  $$
+
+Αυτές οι δύο ταυτότητες θα τις χρησιμοποιήσουμε ξανά και ξανά για τη random-phase cosine.
+
+## 8. Σύνοψη
+
+| Έννοια | Τύπος |
+| --- | --- |
+| CDF | $F_X(x) = P(X \leq x)$ |
+| PDF | $f_X(x) = dF_X/dx$ |
+| Mean | $\mu_X = \int x f_X dx$ |
+| Mean square | $E[X^2] = \int x^2 f_X dx$ |
+| Variance | $\sigma_X^2 = E[X^2] - \mu_X^2$ |
+| Linearity (always) | $E[aX + bY] = aE[X] + bE[Y]$ |
+| Variance sum (indep only) | $\mathrm{Var}(aX + bY) = a^2 \mathrm{Var}(X) + b^2 \mathrm{Var}(Y)$ |
+| Covariance | $\mathrm{Cov}(X, Y) = E[XY] - \mu_X\mu_Y$ |
+| Indep ⇒ uncorrelated | (πάντα) |
+| Uncorrelated ⇒ indep | (μόνο για Gaussian) |
+| LOTUS | $E[g(X)] = \int g(x) f_X(x) dx$ |
+
+<Recap>
+- Μια **τυχαία μεταβλητή** χαρακτηρίζεται από την PDF (ή CDF). Από αυτές παίρνεις mean, variance, και κάθε άλλη στατιστική.
+- Οι σημαντικότερες κατανομές για το K21: **Uniform** (τυχαία φάση), **Gaussian** (θερμικός θόρυβος, CLT).
+- Linearity πάντα ισχύει για mean, αλλά για variance χρειάζεσαι ανεξαρτησία.
+- Independence ⇒ zero covariance, αλλά zero covariance δεν συνεπάγεται γενικά independence (εκτός από Gaussian).
+- Στο επόμενο κεφάλαιο εφαρμόζουμε αυτές τις έννοιες σε **σήματα** — έχουμε μια διαφορετική RV $X(t)$ σε **κάθε** χρονική στιγμή.
+</Recap>
+
+<NextUp slug="randomness/random-processes" />

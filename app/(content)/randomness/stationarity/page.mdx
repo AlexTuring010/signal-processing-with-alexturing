@@ -1,0 +1,211 @@
+export const metadata = {
+  title: 'Stationarity & ergodicity',
+  description:
+    'Strict-sense stationarity (SSS), wide-sense stationarity (WSS), και ergodicity. Πότε ένα random process έχει χρονικά αμετάβλητες στατιστικές, πότε μπορούμε να εκτιμήσουμε ensemble averages από μία μόνο realization. Properties της R_X(τ).',
+}
+
+export const frontmatter = {
+  title: 'Stationarity & ergodicity',
+  slug: 'randomness/stationarity',
+  order: 4,
+  prerequisites: ['randomness/random-processes'],
+  examWeight: 2,
+  estimatedReadTime: 22,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Randomness · 4</span>
+  <span>·</span>
+  <span>~22 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-emerald-700 dark:text-emerald-400">🟢 Light exam — load-bearing for noise</span>
+</div>
+
+# Stationarity & ergodicity
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="randomness/stationarity" />
+  <Bookmark id="randomness/stationarity" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Στο προηγούμενο κεφάλαιο είδαμε ότι η αυτοσυσχέτιση του random-phase cosine **εξαρτάται μόνο από τη διαφορά χρόνων** $\tau = t_1 - t_2$. Αυτή η ιδιότητα — οι στατιστικές να είναι **αμετάβλητες σε χρονική μετατόπιση** — είναι τόσο σημαντική που της δίνουμε όνομα: **stationarity**.
+
+Σε αυτό το κεφάλαιο:
+
+1. Ορίζουμε **strict-sense stationarity (SSS)** — αυστηρή έννοια.
+2. Ορίζουμε **wide-sense stationarity (WSS)** — πρακτική έννοια που χρησιμοποιούμε.
+3. Συζητάμε **ergodicity** — πότε time average ισούται με ensemble average.
+4. Λύνουμε ένα παράδειγμα όπου ένα process **δεν** είναι WSS και ένα όπου είναι αλλά **όχι** ergodic.
+
+## 1. Strict-sense stationarity
+
+Ένα random process είναι **strict-sense stationary** αν **όλες** οι joint distributions του είναι αμετάβλητες σε χρονική μετατόπιση. Επίσημα, για κάθε $n, t_1, \ldots, t_n$ και κάθε χρονική μετατόπιση $\delta$:
+
+$$
+f_{X(t_1), \ldots, X(t_n)}(x_1, \ldots, x_n) = f_{X(t_1 + \delta), \ldots, X(t_n + \delta)}(x_1, \ldots, x_n)
+$$
+
+Δηλαδή: η πιθανότητα να βρεθώ σε συγκεκριμένη συνδυαστική κατάσταση είναι ίδια **όποτε κι αν** βρίσκομαι. **Πολύ ισχυρή** συνθήκη — δύσκολο να εξακριβωθεί στην πράξη.
+
+## 2. Wide-sense stationarity (WSS) — αυτό που χρησιμοποιούμε
+
+Στην πράξη χρειαζόμαστε μόνο τις **πρώτες δύο ροπές** (mean και autocorrelation) να είναι σταθερές. Αυτό είναι το **wide-sense stationary**:
+
+$$
+\boxed{\,
+\begin{aligned}
+&\text{1. } \mu_X(t) = \mu_X = \text{const} \\
+&\text{2. } R_X(t_1, t_2) = R_X(\tau), \quad \tau = t_1 - t_2
+\end{aligned}\,}
+$$
+
+Δύο συνθήκες:
+
+1. **Σταθερός μέσος** στον χρόνο.
+2. **Autocorrelation εξαρτάται μόνο από τη διαφορά** χρόνων.
+
+**Σχέση με SSS:** SSS ⇒ WSS (αλλιώς θα ήταν SSS και όχι ισχυρότερη). Αλλά WSS ⇏ SSS γενικά. Για **Gaussian** processes ισχύει WSS ⇔ SSS (γιατί η Gaussian οικογένεια ορίζεται πλήρως από mean και covariance).
+
+### Γιατί WSS αρκεί συνήθως
+
+Στις περισσότερες εφαρμογές (θόρυβος σε δέκτες, διαμόρφωση), μάς ενδιαφέρει η **ισχύς** του σήματος και το **φάσμα** του. Και τα δύο εκφράζονται μέσω της autocorrelation:
+- $R_X(0) = E[X^2] = $ ισχύς
+- $S_X(f) = \mathcal{F}\{R_X(\tau)\} = $ PSD (επόμενο κεφάλαιο)
+
+Άρα **το WSS αρκεί** για όλη τη φαρδιά συμβατική ανάλυση SNR / spectrum / filtering.
+
+## 3. Ιδιότητες της R_X(τ) για WSS process
+
+Από WSS η $R_X$ είναι συνάρτηση μόνο του $\tau$:
+
+| Ιδιότητα | Τύπος |
+| --- | --- |
+| Άρτια | $R_X(-\tau) = R_X(\tau)$ |
+| Maximum στο 0 | $\|R_X(\tau)\| \leq R_X(0)$ |
+| Ισχύς | $R_X(0) = E[X^2] = P_X$ |
+| Asymptote για ασυσχέτιστες τιμές | $R_X(\tau) \to \mu_X^2$ καθώς $|\tau| \to \infty$ (αν το process έχει «μνήμη» που ξεχνιέται) |
+
+Πρόσθετη: η $R_X(\tau)$ είναι **non-negatively definite** — δηλαδή είναι FT μιας **μη αρνητικής** συνάρτησης (της PSD). Δεν την αποδεικνύουμε εδώ, αλλά την χρησιμοποιούμε στο επόμενο κεφάλαιο.
+
+## 4. Ergodicity — πότε **μία** καταγραφή αρκεί
+
+Σκέψου: στην πράξη **δεν** μπορούμε να καταγράψουμε χίλιες διαφορετικές realizations του ίδιου random process. Έχουμε **μία**, που γράφεται μέσα από έναν δέκτη.
+
+Πώς υπολογίζουμε τότε τις στατιστικές ($\mu_X, R_X$); Παίρνουμε **time averages** από αυτή τη μία καταγραφή:
+
+$$
+\bar{X} = \lim_{T \to \infty} \frac{1}{2T}\int_{-T}^{T} x(t)\, dt
+$$
+
+$$
+\bar{R}_X(\tau) = \lim_{T \to \infty} \frac{1}{2T}\int_{-T}^{T} x(t)\, x(t + \tau)\, dt
+$$
+
+**Ergodicity** είναι η συνθήκη που κάνει αυτή την ιδέα να δουλεύει:
+
+$$
+\boxed{\,\text{Ergodic στον μέσο: } \bar{X} = \mu_X \text{ (η.π.)}\,}
+$$
+
+$$
+\boxed{\,\text{Ergodic στην autocorrelation: } \bar{R}_X(\tau) = R_X(\tau)\,}
+$$
+
+Όπου «η.π.» = με πιθανότητα 1. Δηλαδή, για **σχεδόν κάθε** realization, ο time-average ισούται με τον ensemble-average.
+
+**Σχέση με stationarity:** Ergodic ⇒ WSS (γιατί $\mu_X$ πρέπει να είναι σταθερός για να ορίζεται). Αλλά WSS ⇏ ergodic γενικά.
+
+<ErgodicityViz />
+
+**Δες τα presets:**
+
+- **Λευκός θόρυβος**: time-average και ensemble-average συγκλίνουν στο 0. Ergodic ✓
+- **Random-phase cosine**: ίδιο. Ergodic ✓
+- **Random DC**: το time-average σε **κάθε realization** είναι η DC τιμή της — όχι ο ensemble mean! Δείχνει το process είναι WSS αλλά **όχι ergodic**.
+
+### Γιατί δεν είναι πάντα ergodic
+
+Στο random-DC παράδειγμα, κάθε realization είναι μια σταθερά $A$ (δειγματισμένη μία φορά κατά την έναρξη). Ο μέσος όρος **στον χρόνο** ισούται με αυτό το $A$ — **η συγκεκριμένη realization του πειράματος**, όχι το $\mu_X = E[A] = 0$. Διαφορετική realization → διαφορετικό time-average.
+
+Σε αντίθεση, ο λευκός θόρυβος αλλάζει **τόσο γρήγορα** που η ίδια η μία realization καλύπτει «όλη την κατανομή» στον χρόνο — ο time-average στατιστικά ίδιος με τον ensemble average.
+
+<Callout type="key" title="Πρακτικός κανόνας">
+Όταν ο θόρυβος ή το σήμα **«ξεχνά»** σύντομα (γρήγορα φθίνουσα autocorrelation), συνήθως είναι ergodic. Όταν υπάρχει «μνήμη που μένει για πάντα» (DC level, τυχαία επιλογή σταθεράς), τότε **δεν** είναι ergodic, και χρειάζεται πολλά ensembles για να μετρήσεις σωστά.
+
+Στις εξετάσεις του K21, **όλα τα random signals που εμφανίζονται είναι ergodic** εκτός αν αναφέρεται ρητά αντίθετο — οπότε στην πράξη μπορείς να χρησιμοποιείς time-averages.
+</Callout>
+
+## 5. Worked example — διάκριση WSS / not WSS
+
+<Example title="Ex. — είναι το X(t) = A cos(2π f_0 t) με A ~ N(0,1) WSS;">
+
+Έστω $X(t) = A\cos(2\pi f_0 t)$ όπου $A \sim N(0, 1)$ είναι μια Gaussian RV (όχι η φάση — το **πλάτος** είναι τυχαίο).
+
+**Ζητείται:** Είναι το $X(t)$ WSS;
+
+---
+
+**(α) Mean.**
+
+$$
+\mu_X(t) = E[A\cos(2\pi f_0 t)] = \cos(2\pi f_0 t)\, E[A] = 0
+$$
+
+Σταθερός — ✓ συνθήκη 1.
+
+---
+
+**(β) Autocorrelation.**
+
+$$
+R_X(t_1, t_2) = E[A^2 \cos(2\pi f_0 t_1)\cos(2\pi f_0 t_2)] = E[A^2]\cos(2\pi f_0 t_1)\cos(2\pi f_0 t_2)
+$$
+
+$$
+= 1 \cdot \cos(2\pi f_0 t_1)\cos(2\pi f_0 t_2)
+$$
+
+(αφού $E[A^2] = \mathrm{Var}(A) + \mu_A^2 = 1 + 0 = 1$)
+
+**Εξαρτάται από τα $t_1, t_2$ ξεχωριστά**, όχι μόνο από τη διαφορά τους! Π.χ. $R_X(0, 0) = 1$ ενώ $R_X(\frac{1}{4f_0}, \frac{1}{4f_0}) = 0 \cdot 0 = 0$ — διαφορετική τιμή για ίδιο $\tau = 0$.
+
+**Άρα το $X(t)$ ΔΕΝ είναι WSS.** ✗
+
+</Example>
+
+**Σύγκρινε:** το **random-phase** cosine είναι WSS, το **random-amplitude** cosine **δεν είναι**. Αυτό φαίνεται οπτικά στο `<RandomProcessRealizationsViz />` του προηγούμενου κεφαλαίου — δες το preset «A cos(2π f₀ t), A ~ N(0,1)» και θα παρατηρήσεις ότι όλες οι realizations έχουν **το ίδιο σχήμα** αλλά **διαφορετικά πλάτη**: όταν είναι στο peak, οι statistics εξαρτώνται από το $t$.
+
+## 6. Joint stationarity (για δύο processes)
+
+Δύο processes $X(t)$ και $Y(t)$ είναι **jointly WSS** αν:
+1. Καθένα από μόνο του είναι WSS.
+2. Το cross-correlation εξαρτάται μόνο από τη διαφορά: $R_{XY}(t_1, t_2) = R_{XY}(\tau)$.
+
+Παράδειγμα: ο θόρυβος εισόδου $N_1(t)$ και ο θόρυβος του δέκτη $N_2(t)$ είναι από διαφορετικές πηγές → uncorrelated, jointly WSS.
+
+## 7. Σύνοψη
+
+| Έννοια | Συνθήκη |
+| --- | --- |
+| **SSS** | Όλες οι joint distributions αμετάβλητες σε time shift |
+| **WSS** | $\mu_X = $ const και $R_X(t_1, t_2) = R_X(\tau)$ |
+| **Ergodic στον μέσο** | $\frac{1}{2T}\int_{-T}^{T} x(t) dt \to \mu_X$ |
+| **Ergodic στην autocorrelation** | $\frac{1}{2T}\int_{-T}^{T} x(t)x(t+\tau) dt \to R_X(\tau)$ |
+| Σχέσεις | SSS ⇒ WSS, ergodic ⇒ WSS. Για Gaussian: WSS ⇔ SSS. |
+
+<Recap>
+- **WSS** είναι η πρακτική έννοια stationarity: σταθερός μέσος + autocorrelation που εξαρτάται μόνο από $\tau$.
+- **Random-phase cosine** είναι WSS. **Random-amplitude cosine** δεν είναι.
+- **Ergodicity** σου επιτρέπει να μετράς ensemble statistics από **μία** μακροχρόνια καταγραφή — απαραίτητο στην πράξη.
+- Στις εξετάσεις του K21, τα random signals που εμφανίζονται είναι σχεδόν πάντα WSS και ergodic εκτός αν αναφέρεται διαφορετικά.
+- Επόμενο κεφάλαιο: η **PSD** ενός WSS process — η FT της autocorrelation, που γενικεύει την Wiener-Khinchin που είδαμε για ντετερμινιστικά σήματα.
+</Recap>
+
+<NextUp slug="randomness/psd" />
