@@ -81,6 +81,27 @@ $$
 
 Άρα **το WSS αρκεί** για όλη τη φαρδιά συμβατική ανάλυση SNR / spectrum / filtering.
 
+### Decomposition R_X(τ) = μ_X² + R_N(τ) για non-zero-mean
+
+Αν ένα WSS process $X(t)$ έχει **σταθερό αλλά μη μηδενικό μέσο** $\mu_X$, μπορούμε να το αναλύσουμε ως:
+$$
+X(t) = \mu_X + N(t), \quad \text{όπου } N(t) = X(t) - \mu_X \text{ είναι zero-mean}
+$$
+
+Τότε η αυτοσυσχέτιση γίνεται:
+$$
+R_X(\tau) = E[(\mu_X + N(t))(\mu_X + N(t+\tau))] = \mu_X^2 + R_N(\tau)
+$$
+
+(Οι σταυρωτοί όροι $\mu_X E[N(t)]$ και $\mu_X E[N(t+\tau)]$ μηδενίζονται λόγω zero-mean.)
+
+**Σημαντική παρατήρηση:** η $R_X(\tau)$ έχει έναν **σταθερό όρο $\mu_X^2$** που δεν εξαρτάται από το $\tau$. Αυτό σημαίνει ότι όταν $\tau \to \infty$ (για processes που «ξεχνούν» γρήγορα), $R_N(\tau) \to 0$ και άρα $R_X(\tau) \to \mu_X^2$. Δηλαδή ο μέσος όρος μπορεί να βρεθεί **από το asymptotic της autocorrelation**:
+$$
+\mu_X = \pm\sqrt{\lim_{\tau \to \infty} R_X(\tau)}
+$$
+
+Αυτή η decomposition εμφανίζεται όταν αναλύουμε modulated σήματα όπου ένα DC offset συνυπάρχει με τυχαίο message — π.χ. AM σήμα με $A_c$ ως DC + message $m(t)$ ως random.
+
 ## 3. Ιδιότητες της R_X(τ) για WSS process
 
 Από WSS η $R_X$ είναι συνάρτηση μόνο του $\tau$:

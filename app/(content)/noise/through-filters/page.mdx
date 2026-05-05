@@ -200,6 +200,44 @@ $$
 
 Αυτή η εξίσωση εμφανίστηκε στο [Autocorrelation viz](/randomness/psd) — δες το preset «Bandpass θόρυβος» για να την επιβεβαιώσεις.
 
+### Παραγωγή της R_Y(τ) βήμα προς βήμα
+
+Από session 10 (Άσκηση 8) — μια πλήρης παραγωγή που εμφανίζεται στις εξετάσεις. Έχουμε $S_Y(f) = N_0/2$ για $f_c - W/2 \leq |f| \leq f_c + W/2$ και 0 αλλιώς.
+
+Inverse FT διασπασμένη σε δύο ολοκληρώματα (θετικές + αρνητικές συχνότητες):
+$$
+R_Y(\tau) = \int_{-\infty}^{\infty} S_Y(f)\, e^{j 2\pi f \tau}\, df = I_1 + I_2
+$$
+
+όπου $I_1$ είναι το θετικό κομμάτι:
+$$
+I_1 = \int_{f_c - W/2}^{f_c + W/2} \frac{N_0}{2}\, e^{j 2\pi f \tau}\, df = \frac{N_0}{2}\!\left[\frac{e^{j 2\pi f \tau}}{j 2\pi \tau}\right]_{f_c - W/2}^{f_c + W/2}
+$$
+
+$$
+= \frac{N_0}{2 \cdot \pi \tau}\, e^{j 2\pi f_c \tau}\,\frac{e^{j\pi W \tau} - e^{-j\pi W \tau}}{2j} = e^{j 2\pi f_c \tau}\,\frac{N_0}{2\pi\tau}\sin(\pi W\tau)
+$$
+
+$$
+= e^{j 2\pi f_c \tau}\,\frac{N_0 W}{2}\,\mathrm{sinc}(W\tau)
+$$
+
+Αντίστοιχα ($I_2$) για το αρνητικό κομμάτι:
+$$
+I_2 = e^{-j 2\pi f_c \tau}\,\frac{N_0 W}{2}\,\mathrm{sinc}(W\tau)
+$$
+
+Άθροισμα:
+$$
+R_Y(\tau) = I_1 + I_2 = \frac{N_0 W}{2}\,\mathrm{sinc}(W\tau)\!\left[e^{j 2\pi f_c \tau} + e^{-j 2\pi f_c \tau}\right] = N_0 W\,\mathrm{sinc}(W\tau)\,\cos(2\pi f_c \tau)
+$$
+
+✓ Συμφωνεί με τον τύπο πιο πάνω. Ισχύς: $P_Y = R_Y(0) = N_0 W \cdot 1 \cdot 1 = N_0 W$.
+
+<Callout type="note" title="Σημαντικό σημείο">
+Το output process $Y(t)$ είναι **WSS Gaussian με μηδενικό μέσο και διασπορά $\sigma_Y^2 = R_Y(0) = N_0 W$**. Αυτό είναι το μοντέλο του «**bandpass θορύβου**» που χρησιμοποιείται σε όλη τη μετέπειτα ανάλυση των AM-in-noise και FM-in-noise.
+</Callout>
+
 ## 6. Worked example — Πρόοδος B 2025-09 Θ3
 
 <Example title="Ex. — output power μετά από LPF cascade">
