@@ -108,7 +108,7 @@ export const CHAPTERS: Chapter[] = [
     blurb: 'Amplitude modulation',
     sections: [
       { slug: 'am/overview', title: 'AM Overview', available: true, examWeight: 5 },
-      { slug: 'am/conventional', title: 'Conventional AM', available: false, examWeight: 15 },
+      { slug: 'am/conventional', title: 'Conventional AM', available: true, examWeight: 15 },
       { slug: 'am/dsb-sc', title: 'DSB-SC', available: false, examWeight: 5 },
       { slug: 'am/ssb', title: 'SSB', available: false, examWeight: 5 },
       { slug: 'am/vsb', title: 'VSB', available: false, examWeight: 2 },
