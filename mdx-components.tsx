@@ -62,6 +62,8 @@ import { AMFamilySpectra } from '@/components/viz/AMFamilySpectra'
 import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
 import { AMPowerCalculator } from '@/components/viz/AMPowerCalculator'
+import { DSBSCSignalViz } from '@/components/viz/DSBSCSignalViz'
+import { CoherentDemodulationViz } from '@/components/viz/CoherentDemodulationViz'
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
@@ -166,6 +168,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     AMSignalViz,
     AMSpectrumViz,
     AMPowerCalculator,
+
+    // Visualizations — am / dsb-sc
+    DSBSCSignalViz,
+    CoherentDemodulationViz,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on

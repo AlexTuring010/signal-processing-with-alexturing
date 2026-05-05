@@ -1,0 +1,271 @@
+export const metadata = {
+  title: 'DSB-SC — Conventional AM χωρίς τον carrier',
+  description:
+    'DSB-SC (Double-Sideband, Suppressed Carrier): η AM χωρίς το carrier component. Πετάει 67% της ισχύος που σπαταλούσε η Conventional AM, αλλά απαιτεί coherent demodulation. Φάσμα, ισχύς (100% efficient), envelope-detector failure, coherent receiver, ευαισθησία στη φάση.',
+}
+
+export const frontmatter = {
+  title: 'DSB-SC',
+  slug: 'am/dsb-sc',
+  order: 3,
+  prerequisites: [
+    'foundations/fourier-transform',
+    'modulation/bridge',
+    'am/conventional',
+  ],
+  examWeight: 5,
+  estimatedReadTime: 22,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · AM</span>
+  <span>·</span>
+  <span>~22 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-amber-700 dark:text-amber-400">🟠 Medium exam</span>
+</div>
+
+# DSB-SC (Double-Sideband, Suppressed Carrier)
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="am/dsb-sc" />
+  <Bookmark id="am/dsb-sc" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Στην [Conventional AM](/am/conventional) είδαμε ότι **πάνω από 67% της ισχύος σπαταλιέται πάντα στον carrier** που δεν κουβαλάει πληροφορία. Σε αυτό το κεφάλαιο **τον πετάμε**.
+
+Το αποτέλεσμα — DSB-SC, *Double-Sideband Suppressed Carrier* — είναι το πιο φυσικό AM σχήμα μαθηματικά (απλά $m \cdot \cos$, χωρίς extra constants). Έχει $\eta = 100\%$ efficiency. Αλλά **πληρώνει το κόστος**: ο envelope detector δεν δουλεύει πια, και χρειαζόμαστε **coherent demodulation** στον δέκτη — απαιτητικό.
+
+## 1. Από Conventional AM στο DSB-SC
+
+Θυμήσου την Conventional AM:
+
+$$
+x_{AM}(t) = [A_c + m(t)]\cos(2\pi f_c t) = \underbrace{A_c\cos(2\pi f_c t)}_{\text{carrier}} + \underbrace{m(t)\cos(2\pi f_c t)}_{\text{DSB-SC κομμάτι}}
+$$
+
+Το DSB-SC είναι **ακριβώς το δεύτερο κομμάτι** — πετάμε τον carrier:
+
+$$
+\boxed{\,x_{DSB}(t) = m(t)\cos(2\pi f_c t)\,}
+$$
+
+Δεν υπάρχει $A_c$ προστιθέμενος όρος. Μόνο message επί cos. Για **single-tone** $m(t) = A_m\cos(2\pi f_m t)$:
+
+$$
+x_{DSB}(t) = A_m\cos(2\pi f_m t)\cos(2\pi f_c t) = \frac{A_m}{2}\big[\cos(2\pi(f_c - f_m)t) + \cos(2\pi(f_c + f_m)t)\big]
+$$
+
+(Από product-to-sum.) Δύο cosines στις $f_c \pm f_m$ — οι δύο sidebands. Καθόλου carrier component.
+
+<Callout type="connection" title="Σύνδεση με την I/Q canonical form">
+Από τον [πίνακα στο /modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η DSB-SC είναι η **δεύτερη γραμμή**:
+
+$$
+x_I(t) = A_c m(t), \qquad x_Q(t) = 0
+$$
+
+Όπως και στη Conventional AM, $x_Q = 0$ — όλη η πληροφορία στο envelope. Αλλά τώρα **το envelope είναι $|m(t)|$**, όχι $|A_c + m(t)|$. Όταν το $m(t)$ αλλάζει πρόσημο, το envelope «αναποδογυρίζει» (πάει από positive σε negative και πίσω). Αυτό είναι **phase flip** — και είναι αυτό που διαλύει τον envelope detector.
+</Callout>
+
+## 2. Time-domain — phase flips και γιατί ο envelope detector αποτυγχάνει
+
+Όταν το $m(t)$ είναι θετικό, το $x_{DSB}(t) = m(t)\cos(\omega_c t)$ είναι ένα cosine πλάτους $m(t)$. Όταν το $m(t)$ γίνει αρνητικό, το γινόμενο γίνεται $\,-|m(t)|\cos(\omega_c t) = |m(t)|\cos(\omega_c t + \pi)$ — **το ίδιο cosine αλλά μετατοπισμένο κατά $\pi$ στη φάση**. Δηλαδή ο carrier «αναποδογυρίζει».
+
+Ένας envelope detector βλέπει το $|x_{DSB}(t)| = |m(t)|$ — την **απόλυτη τιμή** του message, όχι το ίδιο το message. Όλα τα αρνητικά κομμάτια του $m(t)$ εμφανίζονται ως κατοπτρικά θετικά. Αυτή είναι **πραγματική παραμόρφωση** — όχι κάτι που μπορείς να το βγάλεις φιλτράροντας.
+
+<DSBSCSignalViz />
+
+<Callout type="warning" title="Ο envelope detector NON-OK για DSB-SC">
+Στη Conventional AM, ο envelope detector δούλευε γιατί η σταθερά $A_c$ κρατούσε το envelope πάντα θετικό (όταν $\mu \leq 1$). Η DSB-SC δεν έχει αυτή τη σταθερά — το envelope $|m(t)|$ είναι «μισός» $m(t)$ (ή σωστότερα: ο $m(t)$ μέσα από rectifier). Σπασμένο σήμα.
+
+**Λύση:** χρειαζόμαστε **coherent demodulator** — που γνωρίζει τη φάση του carrier και διορθώνει τα flips.
+</Callout>
+
+## 3. Φάσμα — μόνο sidebands
+
+Από τον modulation theorem:
+
+$$
+X_{DSB}(f) = \frac{1}{2}\big[M(f - f_c) + M(f + f_c)\big]
+$$
+
+Δύο αντίγραφα του $M(f)$ μετατοπισμένα στις $\pm f_c$, με συντελεστή $\frac{1}{2}$ καθένα. **Καθόλου carrier impulse.**
+
+Σύγκρινε με τη Conventional AM:
+
+| | Conventional AM | DSB-SC |
+| --- | --- | --- |
+| Φάσμα | carrier impulses + sidebands | μόνο sidebands |
+| Carrier ύψος (στις ±f_c) | $A_c/2$ | $0$ |
+| Sidebands ύψος | $\frac{1}{2}M(f \mp f_c)$ | $\frac{1}{2}M(f \mp f_c)$ |
+| **Bandwidth** | $2W$ | **$2W$** (ίδιο!) |
+| Power efficiency | ≤ 33.3% | **100%** |
+| Demodulation | envelope detector (απλό) | coherent (πολύπλοκο) |
+
+**Το bandwidth μένει ίδιο** — δεν κερδίζουμε μισό φάσμα. Η μόνη βελτίωση είναι ισχύς. (Αν θέλουμε να κόψουμε και bandwidth, πάμε σε **SSB** στο επόμενο κεφάλαιο.)
+
+## 4. Coherent demodulation — πώς ανακτούμε το message
+
+Στον δέκτη, πολλαπλασιάζουμε το λαμβανόμενο σήμα με ένα **τοπικό cosine ίδιας συχνότητας και φάσης** με τον αρχικό carrier:
+
+$$
+y(t) = x_{DSB}(t) \cdot 2\cos(2\pi f_c t)
+     = 2 m(t)\cos^2(2\pi f_c t)
+$$
+
+Από την ταυτότητα $\cos^2\theta = \frac{1}{2}(1 + \cos 2\theta)$:
+
+$$
+y(t) = m(t)\big[1 + \cos(4\pi f_c t)\big] = m(t) + m(t)\cos(4\pi f_c t)
+$$
+
+Δύο όροι:
+
+- $m(t)$ — το **ζητούμενο message**, στο baseband
+- $m(t)\cos(4\pi f_c t)$ — αντίγραφο του message μετατοπισμένο στις $\pm 2f_c$, μακριά από το baseband
+
+Περνάμε το $y(t)$ από ένα **lowpass φίλτρο** με cutoff $W$ (δηλαδή πάνω από το message bandwidth, κάτω από το $2f_c$). Το LPF διώχνει το high-frequency κομμάτι και κρατάει:
+
+$$
+\boxed{\,m(t)_{\text{recovered}} = m(t)\,}
+$$
+
+Τέλεια ανάκτηση! Σε ιδανικές συνθήκες.
+
+### 4a. Ευαισθησία στη φάση
+
+Η λέξη «**coherent**» σημαίνει ότι το τοπικό cosine πρέπει να είναι **σε σύγχρονη φάση** με τον αρχικό carrier — όχι μόνο στην ίδια συχνότητα. Αν η φάση είναι λάθος κατά $\varphi$:
+
+$$
+y(t) = x_{DSB}(t) \cdot 2\cos(2\pi f_c t + \varphi) = m(t)\big[\cos\varphi + \cos(4\pi f_c t + \varphi)\big]
+$$
+
+Μετά LPF:
+
+$$
+m(t)_{\text{recovered}} = m(t)\cos\varphi
+$$
+
+Δηλαδή το ανακτημένο message είναι **ζυγισμένο με $\cos\varphi$**.
+
+- **$\varphi = 0$:** $\cos\varphi = 1$ — perfect recovery.
+- **$\varphi = 30°$:** $\cos\varphi = 0.87$ — μικρή απόσβεση.
+- **$\varphi = 60°$:** $\cos\varphi = 0.5$ — σήμα στο μισό.
+- **$\varphi = 90°$:** $\cos\varphi = 0$ — **τίποτα!** «Quadrature null». Πολλαπλασιασμός με sin αντί cos ακυρώνει το πάν.
+
+<CoherentDemodulationViz />
+
+<Callout type="key" title="Γιατί το DSB-SC είναι «δύσκολο» στην πράξη">
+Αυτή η ευαισθησία στη φάση είναι το βασικό πρόβλημα. Ο δέκτης πρέπει να **ξέρει** ή να **ανακτήσει** την ακριβή φάση του carrier. Συνήθως αυτό γίνεται με:
+
+- **Carrier pilot tone:** ο πομπός στέλνει ένα μικρό ξεκάθαρο carrier σαν reference (τότε δεν είναι 100% suppressed πλέον).
+- **Costas loop ή PLL:** ηλεκτρονικό κύκλωμα που «κλειδώνει» στη φάση του εισερχόμενου σήματος.
+- **Pilot signal εκτός ζώνης:** στέλνεται ένα reference cosine σε άλλη συχνότητα και χρησιμοποιείται για συγχρονισμό.
+
+Όλα αυτά **κοστίζουν πολυπλοκότητα** στον δέκτη — γι' αυτό η Conventional AM (που χρησιμοποιεί απλό envelope detector) επικράτησε στο εμπορικό AM ραδιόφωνο, ακόμα κι αν είναι λιγότερο efficient.
+</Callout>
+
+## 5. Ισχύς και efficiency
+
+Για **single-tone** $m(t) = A_m\cos(2\pi f_m t)$:
+
+$$
+x_{DSB}(t) = \frac{A_m}{2}\big[\cos(2\pi(f_c - f_m)t) + \cos(2\pi(f_c + f_m)t)\big]
+$$
+
+Δύο cosines πλάτους $A_m/2$ καθένας. Ισχύς κάθε cosine: $\frac{1}{2}(A_m/2)^2 = A_m^2/8$.
+
+$$
+P_{\text{total}} = 2 \cdot \frac{A_m^2}{8} = \frac{A_m^2}{4}
+$$
+
+**Όλη η ισχύς είναι «χρήσιμη»** — είναι όλη στις sidebands που κουβαλάνε πληροφορία:
+
+$$
+\eta_{DSB} = \frac{P_{\text{useful}}}{P_{\text{total}}} = \frac{A_m^2/4}{A_m^2/4} = 100\%
+$$
+
+Σύγκριση με την Conventional AM στο ίδιο message ($A_c$ προσαρμόζεται για να έχουμε ίδια $A_m$):
+
+| | Conventional AM | DSB-SC |
+| --- | --- | --- |
+| Total power (single-tone) | $\frac{A_c^2}{2}\left(1 + \frac{\mu^2}{2}\right)$ | $\frac{A_m^2}{4}$ |
+| Useful power | $\frac{\mu^2 A_c^2}{4}$ | $\frac{A_m^2}{4}$ |
+| Efficiency | ≤ 33.3% | **100%** |
+
+**Pure win στο efficiency** — αρκεί να μπορέσεις να κάνεις coherent demodulation.
+
+## 6. Worked example
+
+<Example title="Ex. — DSB-SC ισχύς και σύγκριση με Conventional AM">
+
+**Δίνονται:** Message $m(t) = 5\cos(2\pi f_m t)$ V, carrier συχνότητα $f_c = 1$ MHz, message bandwidth $W = f_m = 5$ kHz.
+
+**Ζητούνται:** (α) η εξίσωση του DSB-SC, (β) το bandwidth, (γ) η συνολική ισχύς, (δ) σύγκριση με Conventional AM στις ίδιες συνθήκες ($A_c = 10$ V).
+
+---
+
+**Λύση.**
+
+**(α) DSB-SC:**
+$$
+x_{DSB}(t) = m(t)\cos(2\pi f_c t) = 5\cos(2\pi f_m t)\cos(2\pi f_c t)
+$$
+
+Από product-to-sum:
+$$
+x_{DSB}(t) = 2.5\big[\cos(2\pi(f_c - f_m)t) + \cos(2\pi(f_c + f_m)t)\big]
+$$
+
+**(β) Bandwidth:**
+$$
+\text{BW} = 2W = 2 \cdot 5 = 10 \text{ kHz}
+$$
+
+(Ίδιο με Conventional AM — το DSB-SC δεν εξοικονομεί φάσμα.)
+
+**(γ) Total power:**
+$$
+P_{DSB} = \frac{A_m^2}{4} = \frac{25}{4} = 6.25 \text{ W}
+$$
+
+Όλη χρήσιμη: $\eta_{DSB} = 100\%$.
+
+**(δ) Σύγκριση με Conventional AM** ($A_c = 10$ V, $A_m = 5$ V → $\mu = 0.5$):
+
+Από [προηγούμενο κεφάλαιο](/am/conventional#6-worked-example-το-κανονικό-εξεταστικό-πρόβλημα): $P_{AM} = 56.25$ W με $\eta = 11.1\%$. Από αυτά μόνο **6.25 W είναι στις sidebands** — ακριβώς ίδιο με το $P_{DSB}$.
+
+**Συμπέρασμα:** Η DSB-SC χρησιμοποιεί **9× λιγότερη συνολική ισχύ** για να μεταφέρει την ίδια πληροφορία (6.25 W αντί 56.25 W). Η εξοικονόμηση πάει στο $A_c \cos$ που πετάχτηκε.
+
+</Example>
+
+## 7. Πού χρησιμοποιείται στην πράξη
+
+- **Stereo FM transmission**: το διαφορικό σήμα L−R εκπέμπεται σαν DSB-SC γύρω από έναν 38 kHz pilot (που χρησιμοποιείται και για carrier recovery στον δέκτη).
+- **Color TV chrominance** (NTSC, PAL): τα δύο color difference signals εκπέμπονται σαν DSB-SC σε quadrature γύρω από τον color subcarrier.
+- **Ραδιοερασιτεχνικά συστήματα**: SSB είναι πιο συνηθισμένο, αλλά DSB-SC εμφανίζεται για low-cost κατασκευές.
+- **Πολλά proprietary point-to-point links** χρησιμοποιούν DSB-SC γιατί η ισχύς είναι κρίσιμη και οι δέκτες μπορούν να ενσωματώσουν Costas loops.
+
+Η DSB-SC σπάνια εμφανίζεται **standalone** σε εμπορικά ραδιόφωνα — το πραγματικό AM ραδιόφωνο είναι Conventional. Αλλά στην εξεταστική, η DSB-SC δοκιμάζεται **πάρα πολύ συχνά** σε πολυπλεξίας προβλήματα (FDM), όπου χρειάζεται για να μετατοπίζεις σήματα γύρω από διαφορετικούς carriers.
+
+<Recap>
+- **DSB-SC** = Conventional AM χωρίς το $A_c$ component: $x_{DSB}(t) = m(t)\cos(2\pi f_c t)$.
+- Στην I/Q canonical form: $x_I = A_c m(t)$, $x_Q = 0$.
+- **Φάσμα:** μόνο sidebands $\frac{1}{2}M(f \mp f_c)$, καθόλου carrier impulses. Bandwidth = $2W$ (ίδιο με Conventional AM).
+- **Power efficiency = 100%** — όλη η ισχύς στις sidebands. Σύγκριση: για ίδιο message, χρησιμοποιεί ~9× λιγότερη συνολική ισχύ από Conventional AM στο $\mu = 0.5$.
+- **Envelope detector NON-OK**: ο envelope είναι $|m(t)|$, rectified message. Phase flips στα zero crossings.
+- **Coherent demodulation:** πολλαπλασιασμός με τοπικό $2\cos(2\pi f_c t)$ + LPF. Recovers $m(t)$ ακριβώς όταν φάση = 0.
+- **Phase sensitivity:** error $\varphi$ → output $m(t)\cos\varphi$. Στις 90° τίποτα (quadrature null). Χρειάζεται PLL/Costas loop ή pilot στον δέκτη — γι' αυτό το DSB-SC είναι «πιο δύσκολο» από AM.
+- Επόμενο σχήμα: **SSB**, που πετάει επιπλέον τη μία από τις δύο sidebands, μειώνει το bandwidth στο μισό.
+</Recap>
+
+<NextUp slug="am/ssb" />
