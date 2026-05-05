@@ -122,6 +122,7 @@ export const CHAPTERS: Chapter[] = [
     blurb: 'Frequency modulation',
     sections: [
       { slug: 'fm/idea', title: 'Η ιδέα του FM + modulation index β', available: true, examWeight: 8 },
+      { slug: 'fm/pm', title: 'PM + δυϊκότητα με FM', available: true, examWeight: 2 },
       { slug: 'fm/bessel', title: 'Bessel expansion + sidebands', available: true, examWeight: 10 },
       { slug: 'fm/carson', title: "Carson's rule + NBFM vs WBFM", available: true, examWeight: 5 },
       { slug: 'fm/in-noise', title: 'FM στον θόρυβο + vs AM', available: true, examWeight: 5 },
