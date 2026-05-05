@@ -1,0 +1,140 @@
+export const metadata = {
+  title: 'AM Overview — γιατί διαμορφώνουμε και η οικογένεια AM',
+  description:
+    'Ξεκινάμε τη modulation: γιατί χρειαζόμαστε διαμόρφωση, η βασική AM ιδέα (πληροφορία στο πλάτος του carrier), και οι τέσσερις παραλλαγές της οικογένειας AM (Conventional, DSB-SC, SSB, VSB) με τη roadmap των κεφαλαίων που ακολουθούν.',
+}
+
+export const frontmatter = {
+  title: 'AM Overview',
+  slug: 'am/overview',
+  order: 1,
+  prerequisites: [
+    'foundations/fourier-transform',
+    'foundations/filters',
+    'modulation/bridge',
+  ],
+  examWeight: 5,
+  estimatedReadTime: 18,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · AM</span>
+  <span>·</span>
+  <span>~18 min read</span>
+</div>
+
+# AM Overview — η εκκίνηση της modulation
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="am/overview" />
+  <Bookmark id="am/overview" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Φτάσαμε στο πιο τεστόμενο κομμάτι του μαθήματος. **Η AM (Amplitude Modulation) και οι παραλλαγές της κουβαλούν 35–40% του βαθμού** σε κάθε εξεταστική. Τα επόμενα 6–7 κεφάλαια χτίζουν αυτή την οικογένεια από το μηδέν, ξεκινώντας από τη γραμμή «AM» του πίνακα στο [/modulation/bridge §5b](/modulation/bridge) που μόλις τελειώσαμε.
+
+Σε αυτό το πρώτο κεφάλαιο **δεν θα κάνουμε υπολογισμούς** — απλώς:
+
+1. Θυμόμαστε **γιατί** χρειαζόμαστε διαμόρφωση (recap από την εισαγωγή).
+2. Πιάνουμε το **βασικό AM concept**: «κωδικοποιούμε την πληροφορία στο πλάτος του carrier».
+3. Βλέπουμε όλη την **οικογένεια AM** σχηματικά — Conventional, DSB-SC, SSB, VSB — με τα φάσματά τους δίπλα-δίπλα.
+4. Παίρνουμε **roadmap** για τα κεφάλαια που έρχονται.
+
+Ο σκοπός είναι να φύγεις από εδώ ξέροντας **τι ακριβώς θα μάθεις** και **γιατί κάθε παραλλαγή υπάρχει** — όχι ακόμα *πώς* δουλεύει η καθεμία.
+
+## 1. Γιατί χρειαζόμαστε modulation — γρήγορη υπενθύμιση
+
+Στην [εισαγωγή](/intro#section-7) είδαμε **έξι λόγους** για modulation. Επειδή θα ξαναπαίξουν στις εξετάσεις (το «γιατί διαμορφώνουμε» είναι πάντα μια ερώτηση των 4–5%), τους θυμόμαστε εδώ συνοπτικά:
+
+1. **Μέγεθος κεραίας.** Για ηχητικό σήμα 20 kHz, η ιδανική κεραία (μισό μήκος κύματος) είναι 7.5 km — αδύνατο. Σε 100 MHz κατεβαίνει στα 1.5 m. Η διαμόρφωση μετατοπίζει το σήμα στις υψηλές συχνότητες όπου οι κεραίες είναι πρακτικού μεγέθους.
+2. **Multiplexing (FDM).** Πολλοί χρήστες μοιράζονται τον ίδιο δίαυλο, ο καθένας σε διαφορετική ζώνη συχνοτήτων. Χωρίς διαμόρφωση όλοι θα συνωστίζονταν στο baseband.
+3. **Noise immunity.** Διαφορετικά σχήματα διαμόρφωσης συμπεριφέρονται διαφορετικά στον θόρυβο (το FM είναι πολύ πιο ανθεκτικό από το AM, π.χ.).
+4. **Fading vs frequency.** Διαφορετικές συχνότητες υφίστανται διαφορετικές απώλειες ανά διάδοση. Μπορούμε να επιλέγουμε.
+5. **Regulatory.** Τα κανάλια εκπομπής είναι κατανεμημένα ανά συχνοτική ζώνη από τις αρχές.
+6. **Bandwidth efficiency.** Διαφορετικά σχήματα χρησιμοποιούν διαφορετικά bandwidth — π.χ. SSB στο μισό από conventional AM.
+
+**Η AM** ασχολείται με τους πρώτους δύο κυρίως — μέγεθος κεραίας + multiplexing — και εισάγει την έννοια. Στις επόμενες παραλλαγές (DSB-SC, SSB, VSB) θα δούμε πώς γίνονται trade-offs ανάμεσα σε ισχύ, bandwidth και πολυπλοκότητα.
+
+## 2. Το AM concept — info στο πλάτος του carrier
+
+Πάρε ένα baseband **message signal** $m(t)$ — π.χ. ηχητικό σήμα φωνής με bandwidth $W \approx 4$ kHz. Πάρε ένα **carrier** $c(t) = A_c \cos(2\pi f_c t)$ — ένα καθαρό cosine υψηλής συχνότητας (π.χ. $f_c = 1$ MHz).
+
+Το βασικό AM παίρνει το $m(t)$ και το χρησιμοποιεί για να **«διακυμάνει το πλάτος»** του carrier:
+
+$$
+x(t) = [A_c + m(t)] \cdot \cos(2\pi f_c t)
+$$
+
+— Ο carrier «κουβαλάει» την πληροφορία **κρυμμένη στο envelope** του. Αν δεις γραφικά το $x(t)$, θα δεις ένα γρήγορο ταλαντούμενο cosine του οποίου το «πλάτος ταλάντωσης» δεν είναι σταθερό — ακολουθεί το $m(t)$ προσθεμένο σε μια σταθερά $A_c$.
+
+<Callout type="connection" title="Σύνδεση με την I/Q canonical form">
+Από την [§5b του /modulation/bridge](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η Conventional AM είναι η **πρώτη γραμμή** του πίνακα:
+
+$$
+x_I(t) = A_c[1 + k_a m(t)], \qquad x_Q(t) = 0
+$$
+
+που σημαίνει $V(t) = |A_c[1 + k_a m(t)]|$ (envelope ακολουθεί το message) και $\theta(t) = 0$ (μηδενική phase modulation). Όλη η πληροφορία ζει στο envelope — η phase είναι «ησυχία». Αυτή είναι η οπτική που θα κουβαλάμε σε όλη την AM οικογένεια.
+</Callout>
+
+**Από τον FT chapter** ξέρουμε επίσης ότι ο πολλαπλασιασμός με $\cos(2\pi f_c t)$ μετατοπίζει το φάσμα του $m(t)$ στις $\pm f_c$ ([modulation theorem](/foundations/fourier-transform#7-modulation-theorem-)). Άρα το $X(f)$ έχει:
+- Δύο **πλευρικές ζώνες** (sidebands) — αντίγραφα του φάσματος του $m(t)$ στις $\pm f_c$.
+- Έναν **carrier component** — μια κρούση στις $\pm f_c$ από τον σταθερό όρο $A_c$.
+
+**Όλη η οικογένεια AM** είναι παραλλαγές πάνω σε αυτό το θέμα: «τι κρατάς από το φάσμα;»
+
+## 3. Οι τέσσερις παραλλαγές AM — η οικογένεια
+
+Όλες οι AM παραλλαγές ξεκινάνε από την ίδια ιδέα (σήμα $\propto$ envelope) αλλά **κάνουν διαφορετική επιλογή** για το τι κρατάνε στο φάσμα:
+
+<AMFamilySpectra />
+
+**Σύντομα:**
+
+- **Conventional AM (DSB-AM-TC)** — και οι δύο πλευρικές + carrier. Το «κλασικό» AM που ακούς στο ραδιόφωνο. Πλεονέκτημα: εύκολη demodulation με **envelope detector** (απλό κύκλωμα δίοδος + RC). Μειονέκτημα: ο carrier καταλαμβάνει **≥ 67%** της εκπεμπόμενης ισχύος και δεν μεταφέρει πληροφορία.
+- **DSB-SC (Double-Sideband, Suppressed Carrier)** — πετάμε τον carrier component, κρατάμε μόνο τις δύο πλευρικές. Πλεονέκτημα: 100% της ισχύος είναι «χρήσιμη». Μειονέκτημα: χρειάζεται **coherent demodulator** (τοπικό cosine ίδιας φάσης με τον carrier) για να ανακτήσεις το message.
+- **SSB (Single Sideband — Upper ή Lower)** — πετάμε επιπλέον τη μία από τις δύο πλευρικές. Πλεονέκτημα: **μισό bandwidth** (η μία πλευρά αρκεί για ανάκτηση). Μειονέκτημα: πιο πολύπλοκη κατασκευή — χρειάζεται **Hilbert transform** ή **filter SSB** στον πομπό.
+- **VSB (Vestigial Sideband)** — συμβιβασμός μεταξύ SSB και AM: μία πλήρης πλευρά + κατάλοιπο της άλλης + reduced carrier. Επιτρέπει envelope detector και κρατάει σχεδόν το bandwidth του SSB. Χρησιμοποιήθηκε στο NTSC TV broadcasting.
+
+## 4. Πού χρησιμοποιείται καθεμία
+
+| Σχήμα | Πραγματικές εφαρμογές |
+| --- | --- |
+| **Conventional AM** | AM ραδιόφωνο (540–1700 kHz), CB radio, αεροπορικές επικοινωνίες VHF |
+| **DSB-SC** | Σπάνιο standalone· χτίζει τη βάση για stereo FM, color TV chrominance |
+| **SSB** | Shortwave radio (HF, 3–30 MHz), ραδιοερασιτεχνικές επικοινωνίες long-distance, στρατιωτικές HF |
+| **VSB** | NTSC αναλογική TV (μέχρι το 2009 στις ΗΠΑ· ιστορικά σημαντικό) |
+
+**Παρατήρηση:** Το γιατί κάθε εφαρμογή διαλέγει ένα συγκεκριμένο σχήμα έχει να κάνει με trade-offs ισχύος, bandwidth, πολυπλοκότητας **του δέκτη**. Στο κλασικό AM ραδιόφωνο, ο δέκτης πρέπει να είναι όσο πιο φθηνός γίνεται (γι' αυτό envelope detector) — ακόμα κι αν αυτό σημαίνει σπατάλη ισχύος στον carrier.
+
+## 5. Roadmap — τι έρχεται
+
+Τα επόμενα κεφάλαια της AM ομάδας:
+
+1. **`/am/conventional`** — Conventional AM σε βάθος. Η εξίσωση, το modulation index $\mu$, η υπερδιαμόρφωση, ο υπολογισμός ισχύος + efficiency.
+2. **`/am/dsb-sc`** — DSB-SC και η ανάγκη για coherent demodulation.
+3. **`/am/ssb`** — SSB μέσω Hilbert (filter method και phase-shift method), σύγκριση με DSB.
+4. **`/am/vsb`** — VSB σαν compromise solution, χρήση στην TV.
+5. **`/am/modulator-demodulator`** — circuits: envelope detector (δίοδος + RC), coherent receiver (mixer + LPF), AM in noise, threshold conditions.
+6. **`/am/multiplexing`** — FDM (Frequency Division Multiplexing), η εξεταστική «sinc + Π σε δύο carriers» που εμφανίζεται **σχεδόν αυτολεξεί** σε 4+ από τα τελευταία θέματα.
+
+<Callout type="closes-commitment" title="🎯 Κλείνει υπόσχεση — ξεκινά η modulation">
+Στην [εισαγωγή](/intro#section-7) υποσχεθήκαμε «πλήρη μεταχείριση της AM και FM σε ξεχωριστά κεφάλαια». Αυτό το κεφάλαιο και τα 6 που ακολουθούν στην AM ομάδα κλείνουν το AM μισό αυτής της υπόσχεσης. Το FM μισό αρχίζει στο `/fm/idea` μετά το τέλος της AM ομάδας.
+</Callout>
+
+<Recap>
+- Η **AM** κωδικοποιεί την πληροφορία στο **πλάτος** ενός carrier cosine: $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$.
+- Στη γλώσσα της I/Q canonical form: $x_I = A_c[1 + k_a m(t)]$, $x_Q = 0$ — όλη η πληροφορία στο envelope, μηδέν στη phase.
+- Στη συχνότητα: ο modulation theorem μετατοπίζει το $M(f)$ στις $\pm f_c$ → δύο πλευρικές + carrier impulse.
+- **Τέσσερις παραλλαγές** (Conventional, DSB-SC, SSB, VSB) διαφέρουν στο τι κρατάνε από το φάσμα. Trade-offs: ισχύς, bandwidth, πολυπλοκότητα δέκτη.
+- **Conventional AM** είναι το πιο εξεταστικό σχήμα + αυτό που ακούς πραγματικά στο ραδιόφωνο. Ξεκινάμε από εκεί.
+</Recap>
+
+<NextUp slug="am/conventional" />

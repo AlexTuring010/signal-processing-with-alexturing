@@ -107,12 +107,13 @@ export const CHAPTERS: Chapter[] = [
     title: '6. AM',
     blurb: 'Amplitude modulation',
     sections: [
+      { slug: 'am/overview', title: 'AM Overview', available: true, examWeight: 5 },
       { slug: 'am/conventional', title: 'Conventional AM', available: false, examWeight: 15 },
-      { slug: 'am/modulation-index', title: 'Modulation index μ', available: false, examWeight: 5 },
-      { slug: 'am/power', title: 'Ισχύς & efficiency', available: false, examWeight: 5 },
       { slug: 'am/dsb-sc', title: 'DSB-SC', available: false, examWeight: 5 },
       { slug: 'am/ssb', title: 'SSB', available: false, examWeight: 5 },
-      { slug: 'am/demodulation', title: 'Envelope & coherent detection', available: false, examWeight: 5 },
+      { slug: 'am/vsb', title: 'VSB', available: false, examWeight: 2 },
+      { slug: 'am/modulator-demodulator', title: 'Modulator & Demodulator + AM in noise', available: false, examWeight: 8 },
+      { slug: 'am/multiplexing', title: 'Multiplexing (FDM)', available: false, examWeight: 5 },
     ],
   },
   {

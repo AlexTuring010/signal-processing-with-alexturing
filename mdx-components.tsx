@@ -58,6 +58,7 @@ import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
 import { CounterRotatingPhasors } from '@/components/viz/CounterRotatingPhasors'
 import { TwoSidedVsOneSidedCosine } from '@/components/viz/TwoSidedVsOneSidedCosine'
+import { AMFamilySpectra } from '@/components/viz/AMFamilySpectra'
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
@@ -154,6 +155,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     IQDecompositionViz,
     HilbertTransformViz,
     PreEnvelopeSpectrumViz,
+
+    // Visualizations — am / overview
+    AMFamilySpectra,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on
