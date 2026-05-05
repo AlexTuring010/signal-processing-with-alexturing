@@ -146,12 +146,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     CounterRotatingPhasors,
     TwoSidedVsOneSidedCosine,
 
-    // Visualizations — foundations / bandpass-filters
+    // Visualizations — foundations / filters
+    FilterTypeViewer,
+    IdealVsRealFilterViz,
+
+    // Visualizations — modulation / bridge
     IQDecompositionViz,
     HilbertTransformViz,
     PreEnvelopeSpectrumViz,
-    FilterTypeViewer,
-    IdealVsRealFilterViz,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on

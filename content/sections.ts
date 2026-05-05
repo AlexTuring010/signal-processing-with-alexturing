@@ -49,8 +49,8 @@ export const CHAPTERS: Chapter[] = [
       { slug: 'foundations/systems', title: 'Συστήματα & convolution', available: true },
       { slug: 'foundations/fourier-series', title: 'Fourier series', available: true },
       { slug: 'foundations/fourier-transform', title: 'Fourier transform', available: true, examWeight: 18 },
-      { slug: 'foundations/bandpass-filters', title: 'Bandpass & Φίλτρα', available: true, examWeight: 8 },
-      { slug: 'foundations/sampling-light', title: 'Sampling — εισαγωγή', available: false },
+      { slug: 'foundations/filters', title: 'Φίλτρα', available: true, examWeight: 5 },
+      { slug: 'foundations/sampling-theorem', title: 'Sampling theorem', available: false },
       {
         slug: 'foundations/signal-transformations',
         title: 'Μετασχηματισμοί σήματος',
@@ -96,11 +96,10 @@ export const CHAPTERS: Chapter[] = [
   },
   {
     id: 'modulation',
-    title: '5. Modulation — Why',
-    blurb: 'Γιατί διαμορφώνουμε καθόλου',
+    title: '5. Modulation',
+    blurb: 'Η γέφυρα από Foundations στη διαμόρφωση',
     sections: [
-      { slug: 'modulation/why', title: 'Γιατί modulation', available: false },
-      { slug: 'modulation/players', title: 'Carrier, message, modulated signal', available: false },
+      { slug: 'modulation/bridge', title: 'Bandpass & I/Q canonical form', available: true, examWeight: 5 },
     ],
   },
   {

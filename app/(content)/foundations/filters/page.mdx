@@ -1,0 +1,123 @@
+export const metadata = {
+  title: 'Φίλτρα — τα LTI που επιλέγουν συχνότητες',
+  description:
+    'Τα τέσσερα ιδανικά φίλτρα (LP, HP, BP, BS) ορισμένα από το |H(f)| τους, η σύνδεση με την even-h(t) ↔ real-H(f) ιδιότητα του FT, η μη-αιτιατότητα του ιδανικού sinc, και οι real-filter προδιαγραφές (passband ripple, transition band, stopband ripple).',
+}
+
+export const frontmatter = {
+  title: 'Φίλτρα',
+  slug: 'foundations/filters',
+  order: 6,
+  prerequisites: [
+    'foundations/signals',
+    'foundations/systems',
+    'foundations/fourier-transform',
+  ],
+  examWeight: 5,
+  estimatedReadTime: 15,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Foundations · Section 5</span>
+  <span>·</span>
+  <span>~15 min read</span>
+</div>
+
+# Φίλτρα
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="foundations/filters" />
+  <Bookmark id="foundations/filters" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Από το [κεφάλαιο των συστημάτων](/foundations/systems) ξέρουμε ότι ένα LTI σύστημα έχει κρουστική απόκριση $h(t)$, και από το [κεφάλαιο του Fourier transform](/foundations/fourier-transform#5b-convolution-multiplication-) ότι περιγράφεται στη συχνότητα από $H(f) = \mathcal{F}\{h(t)\}$ και η έξοδος είναι $Y(f) = X(f)\cdot H(f)$.
+
+Σε αυτό το κεφάλαιο ασχολούμαστε με μια **ειδική κατηγορία LTI** — εκείνα που σχεδιάζουμε επίτηδες ώστε **να αφήνουν να περάσουν μερικές συχνότητες και να αποκλείουν άλλες**. Λέγονται **φίλτρα**. Είναι το πιο συχνό LTI στην πράξη — υπάρχει σχεδόν σε κάθε δέκτη, σε κάθε αναλογικό στάδιο επεξεργασίας ήχου, και (όταν φτάσουμε στη demodulation) σε σχεδόν κάθε modulation σχήμα.
+
+## 1. Τι είναι ένα φίλτρο
+
+Ένα φίλτρο είναι απλώς ένα LTI σύστημα του οποίου το $|H(f)|$ έχει σχήμα που διαλέγουμε εμείς:
+
+- ~1 σε μια ζώνη συχνοτήτων που θέλουμε να **περάσει** (passband)
+- ~0 σε μια ζώνη που θέλουμε να **αποκόψουμε** (stopband)
+
+Τα τέσσερα κλασικά σχήματα είναι **lowpass (LP)**, **highpass (HP)**, **bandpass (BP)**, **bandstop (BS / notch)**. Διαφέρουν μόνο στο ποιες περιοχές αφήνουν στο 1 και ποιες στο 0:
+
+| Τύπος | $|H(f)| = 1$ στο | $|H(f)| = 0$ στο | Σκοπός |
+| --- | --- | --- | --- |
+| **Lowpass (LP)** | $\lvert f\rvert < f_c$ | αλλιώς | περνάει χαμηλές, κόβει υψηλές |
+| **Highpass (HP)** | $\lvert f\rvert > f_c$ | αλλιώς | κόβει χαμηλές, περνάει υψηλές |
+| **Bandpass (BP)** | $f_1 < \lvert f\rvert < f_2$ | αλλιώς | περνάει μια ζώνη |
+| **Bandstop (BS / Notch)** | $\lvert f\rvert < f_1$ ή $\lvert f\rvert > f_2$ | $f_1 < \lvert f\rvert < f_2$ | κόβει μια ζώνη, περνάει τα υπόλοιπα |
+
+Όλα τα παραπάνω σχήματα είναι ✓ στο τυπολόγιο.
+
+**Vocabulary:**
+
+- **Passband** (ζώνη διέλευσης): οι συχνότητες που περνάνε αναλλοίωτες.
+- **Stopband** (ζώνη αποκοπής): οι συχνότητες που κόβονται.
+- **Cutoff frequency** $f_c$: το όριο μεταξύ τους.
+
+<FilterTypeViewer />
+
+## 2. Even h(t), real H(f), zero phase distortion
+
+Στο [κεφάλαιο των συστημάτων](/foundations/systems#eigenfunction) είδαμε ότι αν η κρουστική απόκριση $h(t)$ είναι **even**, τότε το $H(f)$ προκύπτει **real** (η phase μηδενίζεται). Στο [κεφάλαιο του FT](/foundations/fourier-transform#8-conjugate-symmetry-γιατί-τα-φάσματα-real-signals-είναι-συμμετρικά) γενικεύσαμε: real-and-even signal ↔ real-and-even spectrum. Εκεί όμως δεν είχαμε ακόμα συγκεκριμένο φυσικό αντικείμενο για να ζωγραφίσουμε αυτή την ιδιότητα.
+
+**Τα ιδανικά φίλτρα είναι αυτό το αντικείμενο.** Τα $|H(f)|$ που είδαμε στον πίνακα παραπάνω είναι όλα **even** συναρτήσεις (συμμετρικές γύρω από το 0). Άρα η κρουστική τους απόκριση $h(t)$ είναι **και αυτή even** — και το $H(f)$ είναι **real**, χωρίς phase distortion.
+
+Ένα φίλτρο με phase = 0 σημαίνει: **όλες οι συχνότητες που περνάνε, περνάνε με την ίδια χρονική ευθυγράμμιση** — δεν εισάγει time delay σε καμιά συχνότητα. Αυτή είναι η αιτία που τα ιδανικά φίλτρα είναι «τέλεια»: σχήμα παλμού in = σχήμα παλμού out (απλώς ζυγισμένο σε διαφορετικές συχνότητες). Πρακτικά, αυτό είναι το πιο προτιμητέο που μπορεί να κάνει ένα φίλτρο.
+
+<Callout type="closes-commitment" title="🎯 Κλείνει υπόσχεση — ιδανικά φίλτρα και η non-causality του sinc">
+Στο [κεφάλαιο των συστημάτων](/foundations/systems) είχαμε αναφέρει «ένα φίλτρο όταν κόβει μια ζώνη...» χωρίς να ορίσουμε τι σημαίνει αυτό. Στο [COMMITMENTS.md](https://github.com/AlexTuring010/signal-processing-with-alexturing/blob/main/COMMITMENTS.md) σημείωσα ότι αυτό θα κλείσει εδώ — και κλείνει: τα τέσσερα ιδανικά φίλτρα ορίζονται από το $|H(f)|$, η even συμμετρία τους στη συχνότητα προέρχεται από even $h(t)$ στον χρόνο, και για τον LP φίλτρο **το $h(t)$ είναι sinc**:
+
+$$
+h_{LP}(t) = 2 f_c\, \mathrm{sinc}(2 f_c\, t)
+$$
+
+που εκτείνεται μέχρι το $-\infty$ και το $+\infty$. Δηλαδή για να βγάλει output αυτή τη στιγμή χρειάζεται να ξέρει τι θα είναι το input στο μέλλον — **μη-αιτιατό**, αδύνατο σε real-time κύκλωμα. Η Section 3 παρακάτω εξηγεί τι συμβιβασμό κάνουμε στην πράξη.
+</Callout>
+
+## 3. Real (non-ideal) φίλτρα
+
+Τα ιδανικά είναι θεωρητικές αφαιρέσεις. Στην πράξη χτίζουμε φίλτρα που **προσεγγίζουν** το ιδανικό με κάποιο compromise.
+
+### 3a. Real-filter spec
+
+Ένα ρεαλιστικό LP φίλτρο περιγράφεται από τέσσερις παραμέτρους:
+
+- **Passband edge** $f_p$: μέχρι αυτή τη συχνότητα θεωρούμε «πέρασμα».
+- **Stopband edge** $f_s$: από αυτή τη συχνότητα και μετά θεωρούμε «αποκοπή».
+- **Passband ripple** $\delta_p$: στο $\lvert f\rvert < f_p$ ισχύει $|H(f)| \in [1 - \delta_p, 1 + \delta_p]$ — ταλάντωση γύρω από το 1.
+- **Stopband ripple** $\delta_s$: στο $\lvert f\rvert > f_s$ ισχύει $|H(f)| < \delta_s$ — μικρή ταλάντωση γύρω από το 0.
+- Στο **transition band** $f_p < \lvert f\rvert < f_s$ δεν δίνουμε spec — απλώς απαιτούμε μονοτονικά πτώση.
+
+<IdealVsRealFilterViz />
+
+### 3b. Trade-offs
+
+- **Πιο απότομο cutoff** (μικρότερο $f_s - f_p$) ⇒ **μακρύτερη κρουστική απόκριση** ⇒ μεγαλύτερη μνήμη, μεγαλύτερη καθυστέρηση.
+- **Μικρότερο ripple** ($\delta_p, \delta_s \to 0$) ⇒ **πιο πολύπλοκο** φίλτρο.
+- Δεν υπάρχει «δωρεάν» ιδανικό. Συγκεκριμένες σχεδιάσεις (Butterworth, Chebyshev, elliptic) ανταλλάσσουν αυτές τις παραμέτρους διαφορετικά — αλλά αυτό είναι αντικείμενο ξεχωριστού μαθήματος.
+
+**Γιατί μας απασχολεί.** Όταν θα φτάσουμε στην AM demodulation, χρειαζόμαστε ένα LP φίλτρο για να ανακτήσουμε το μήνυμα μετά τον envelope detector. Δεν θα είναι ιδανικό — θα έχει αυτές τις προδιαγραφές, και πρέπει να ξέρεις τι σημαίνουν. Όταν φτάσουμε στον θόρυβο, ένα BP φίλτρο γύρω από τον carrier θα κρατάει το επιθυμητό σήμα και θα κόβει το θόρυβο εκτός ζώνης — η ποιότητα του φίλτρου θα καθορίζει πόσο θόρυβο πραγματικά κόβουμε.
+
+## 4. Recap + Next up
+
+<Recap>
+- Ένα **φίλτρο** είναι ένα LTI σύστημα του οποίου το $|H(f)|$ έχει σχεδιασμένο σχήμα — passband στις επιθυμητές συχνότητες, stopband στις ανεπιθύμητες.
+- Τα τέσσερα κλασικά: **LP, HP, BP, BS** — όλα στο τυπολόγιο.
+- Όλα τα ιδανικά φίλτρα έχουν even $|H(f)|$ → even $h(t)$ → **zero phase distortion**: όλες οι συχνότητες που περνάνε, περνάνε χωρίς χρονική ολίσθηση.
+- Τα ιδανικά είναι **μη-αιτιατά**: το $h_{LP}(t)$ είναι sinc που εκτείνεται στο $\pm\infty$, οπότε για να δώσει output τη στιγμή $t$ χρειάζεται είσοδο και από $t' > t$ — αδύνατο σε real-time.
+- Τα **real φίλτρα** προσεγγίζουν τα ιδανικά με τέσσερις παραμέτρους: passband ripple $\delta_p$, transition band $[f_p, f_s]$, stopband ripple $\delta_s$. Trade-off: σαφέστερο cutoff = μεγαλύτερη πολυπλοκότητα και καθυστέρηση.
+</Recap>
+
+<NextUp slug="foundations/sampling-light" />

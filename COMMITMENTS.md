@@ -62,17 +62,17 @@ Format:
        Notes: The AM chapters must open by reusing the modulation theorem from the FT page rather than re-deriving it. They should explicitly back-reference: «θυμάσαι από τον FT chapter ότι πολλαπλασιασμός με cos(2π f_c t) μετατοπίζει το φάσμα στις ±f_c; Όλη η AM είναι αυτό, εφαρμοσμένο σε baseband σήματα φωνής/μουσικής, με variations στο πώς διαχειριζόμαστε τις δύο πλευρικές ζώνες και το carrier.» Also: the symmetric ±f_c copies are the reason AM bandwidth is twice the baseband bandwidth.
 
 - [ ] **AM modulation as the x_Q = 0 row of the canonical bandpass form**
-       Where it appears: `/foundations/bandpass-filters` Section 5b (the I/Q canonical-form table)
+       Where it appears: `/modulation/bridge` Section 5b (the I/Q canonical-form table)
        Where it should be fulfilled: `/modulation/am` (specifically `/am/conventional` Section 1)
        Notes: The bandpass chapter promises that AM, DSB-SC, SSB, FM, PM are all special cases of $x(t) = x_I\cos(2\pi f_c t) - x_Q\sin(2\pi f_c t)$. Each modulation chapter must open by quoting its row of the §5b table and deriving the spectrum, bandwidth, and modulator/demodulator structure from there — not from scratch. AM specifically: $x_I = A_c[1 + k_a m(t)]$, $x_Q = 0$ ⇒ envelope-only modulation ⇒ envelope detector recovers the message.
 
 - [ ] **FM modulation as constant-envelope $V = A_c$, message-encoded $\theta(t)$**
-       Where it appears: `/foundations/bandpass-filters` Section 5b (the I/Q canonical-form table) and Section 5a (polar form)
+       Where it appears: `/modulation/bridge` Section 5b (the I/Q canonical-form table) and Section 5a (polar form)
        Where it should be fulfilled: `/modulation/fm` (specifically `/fm/idea` Section 1)
        Notes: Same pattern as AM — FM chapter must back-reference the §5b row: $V(t) = A_c$ constant, $\theta(t) = \phi(t)$ where $\phi$ encodes the integral of the message. The constant-envelope property is what makes FM resilient to amplitude noise; that connection should be made explicitly when noise/SNR enters the picture.
 
 - [ ] **Quadrature receiver / IQ demodulator architecture**
-       Where it appears: `/foundations/bandpass-filters` Section 5 (the canonical form implicitly suggests that $x_I$ and $x_Q$ can be extracted by mixing with $\cos$ and $-\sin$ + lowpass)
+       Where it appears: `/modulation/bridge` Section 5 (the canonical form implicitly suggests that $x_I$ and $x_Q$ can be extracted by mixing with $\cos$ and $-\sin$ + lowpass)
        Where it should be fulfilled: A modulation chapter where coherent demodulation is treated (likely `/am/demodulation` or `/modulation/players`)
        Notes: The bandpass chapter doesn't show the receiver block diagram; it only proves the canonical decomposition exists. The modulation chapters must close the loop: multiplying the bandpass signal by $2\cos(2\pi f_c t)$ and lowpass-filtering recovers $x_I$; multiplying by $-2\sin(2\pi f_c t)$ and lowpass-filtering recovers $x_Q$. This is the quadrature receiver — used universally in software-defined radio.
 
@@ -128,17 +128,17 @@ Format:
 
 - [x] **Ideal filters and the non-causality trade-off** (closed 2026-05-05)
        Originally appeared: `/foundations/systems` Section 7 (the H(f₀) = 0 case mentioning "ένα φίλτρο όταν «κόβει» μια ζώνη")
-       Fulfilled in: `/foundations/bandpass-filters` Sections 6 and 7
+       Fulfilled in: `/foundations/filters` Sections 1–3 (chapter renamed/split from former `/foundations/bandpass-filters` on 2026-05-05)
        Notes: Section 6 names the four ideal filter types (LP, HP, BP, BS) by their $|H(f)|$ shape, ties them to the even-h(t)/real-H(f) symmetry rule from FT §8 (so the "concrete example" promised by the systems chapter finally lands), and the `<FilterTypeViewer />` viz shows which tones survive each filter type. Section 7 introduces the real-filter spec ($\delta_p, \delta_s, f_p, f_s$) and the `<IdealVsRealFilterViz />` viz makes the non-causality concrete by drawing the ideal LP's sinc impulse response extending to ±∞ — a 🎯 closes-commitment callout makes the connection explicit. Trade-off (sharper cutoff = longer impulse response = more delay) named explicitly.
 
 - [x] **Bandpass signals — canonical I/Q form unifying AM/DSB/SSB/FM/PM** (closed 2026-05-05)
        Originally appeared: implicit forward-promise from `/foundations/fourier-transform` Section 7 (modulation theorem) and the FT NextUp pointing at this chapter
-       Fulfilled in: `/foundations/bandpass-filters` Sections 1, 4, 5
+       Fulfilled in: `/modulation/bridge` Sections 1, 4, 5 (chapter promoted to first chapter of modulation group on 2026-05-05; previously lived at `/foundations/bandpass-filters` §1, 4, 5)
        Notes: Section 1 names baseband vs bandpass and ties the modulation theorem to the bandpass class. Section 4 derives the complex envelope $g(t) = x_p(t)\,e^{-j 2\pi f_c t}$ and the canonical $x(t) = \mathrm{Re}\{g(t)\,e^{j 2\pi f_c t}\}$. Section 5 unfolds this into the I/Q form $x(t) = x_I\cos - x_Q\sin$ and lays out the five-modulation table (AM, DSB-SC, SSB, FM, PM) as different rows. The `<IQDecompositionViz />` flagship makes AM-vs-FM visceral by tracing $(x_I, x_Q)$ in the complex plane (line for AM, circle for FM). A 🎯 closes-commitment callout names this as the bridge to modulation.
 
 - [x] **Hilbert transform — phase-shifter at every frequency** (closed 2026-05-05)
        Originally appeared: implicit forward-promise from FT chapter (mentioned as belonging to bandpass chapter in the FT plan)
-       Fulfilled in: `/foundations/bandpass-filters` Section 2
+       Fulfilled in: `/modulation/bridge` Section 2 (moved from `/foundations/bandpass-filters` §2 on 2026-05-05 when bandpass-filters split into `/foundations/filters` + `/modulation/bridge`)
        Notes: Defined first via its frequency-domain action ($-j\,\mathrm{sgn}(f)$ multiplier) and only secondarily via the time-domain $1/(\pi t)$ convolution. Worked example shows $\cos \to \sin$. Properties (double application = sign flip, orthogonality, distributivity over convolution) listed for reference. The `<HilbertTransformViz />` viz makes the spectrum-multiplier picture concrete with cos, sin, and two-cosine presets. A 🎯 closes-commitment callout flags the closure. Used immediately downstream in §3 (pre-envelope) and §5 (SSB row of the table).
 
 ---

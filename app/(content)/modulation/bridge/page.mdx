@@ -1,21 +1,22 @@
 export const metadata = {
-  title: 'Bandpass signals και Φίλτρα — η γέφυρα προς τη modulation',
+  title: 'Bandpass signals & I/Q canonical form — η γέφυρα προς τη modulation',
   description:
-    'Baseband vs bandpass σήματα, Hilbert transform ως phase-shifter στη συχνότητα, pre-envelope και complex envelope, η canonical I/Q μορφή που ξεδιπλώνει AM/DSB/FM/PM/SSB ως ειδικές περιπτώσεις, και τα τέσσερα ιδανικά φίλτρα μαζί με το real-filter spec.',
+    'Baseband vs bandpass σήματα, Hilbert transform ως phase-shifter στη συχνότητα, pre-envelope και complex envelope, και η canonical I/Q μορφή που ξεδιπλώνει AM/DSB-SC/SSB/FM/PM ως πέντε γραμμές ενός πίνακα.',
 }
 
 export const frontmatter = {
-  title: 'Bandpass signals και Φίλτρα',
-  slug: 'foundations/bandpass-filters',
-  order: 6,
+  title: 'Bandpass signals & I/Q canonical form',
+  slug: 'modulation/bridge',
+  order: 1,
   prerequisites: [
     'foundations/signals',
     'foundations/systems',
     'foundations/fourier-series',
     'foundations/fourier-transform',
+    'foundations/filters',
   ],
-  examWeight: 8,
-  estimatedReadTime: 35,
+  examWeight: 5,
+  estimatedReadTime: 25,
   lastUpdated: '2026-05-05',
 }
 
@@ -25,23 +26,23 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 import Link from 'next/link'
 
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
-  <span>Foundations · Section 5</span>
+  <span>Modulation · Bridge</span>
   <span>·</span>
-  <span>~35 min read</span>
+  <span>~25 min read</span>
 </div>
 
-# Bandpass signals και Φίλτρα
+# Bandpass signals & I/Q canonical form
 
 <div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
-  <CompleteToggle slug="foundations/bandpass-filters" />
-  <Bookmark id="foundations/bandpass-filters" />
+  <CompleteToggle slug="modulation/bridge" />
+  <Bookmark id="modulation/bridge" />
 </div>
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
-Αυτό είναι το **τελευταίο κεφάλαιο των Foundations** και η γέφυρα προς τη modulation. Δύο πράγματα κάνουμε εδώ. Πρώτο: ονομάζουμε επιτέλους τη μεγάλη οικογένεια σημάτων που μας περιμένει — τα **bandpass signals** — και βρίσκουμε τη μία **canonical μορφή** που τα γράφει όλα. Δεύτερο: εισάγουμε τα **φίλτρα** ως τα LTI που κρατούν ή αποκόβουν συγκεκριμένες συχνοτικές ζώνες, και εξηγούμε γιατί τα «ιδανικά» τους είναι θεωρητικές αφαιρέσεις, όχι κάτι που υπάρχει σε κύκλωμα.
+Αυτή είναι η **γέφυρα από τα Foundations στη modulation**. Ένα κεφάλαιο, μία δουλειά: ονομάζουμε επιτέλους τη μεγάλη οικογένεια σημάτων που δουλεύει όλο το υπόλοιπο μάθημα — τα **bandpass signals** — και βρίσκουμε τη μία **canonical μορφή** που τα γράφει όλα.
 
-Όταν τελειώσει αυτή η σελίδα, η AM/FM/PM/SSB δεν θα είναι πέντε ξεχωριστά μυστήρια — θα είναι **πέντε γραμμές ενός πίνακα**, διαφορετικές επιλογές για δύο baseband σήματα $x_I$ και $x_Q$. Όλο το επόμενο μάθημα ξεκλειδώνει εδώ.
+Όταν τελειώσει αυτή η σελίδα, η AM/FM/PM/SSB/DSB-SC δεν θα είναι πέντε ξεχωριστά μυστήρια — θα είναι **πέντε γραμμές ενός πίνακα**, διαφορετικές επιλογές για δύο baseband σήματα $x_I$ και $x_Q$. Κάθε επόμενο κεφάλαιο της modulation θα ξεκινάει quotάροντας μία γραμμή αυτού του πίνακα.
 
 ## 1. Baseband vs Bandpass — δύο οικογένειες σημάτων
 
@@ -242,71 +243,7 @@ $$
 Στο FT chapter αναφέρθηκε αόριστα ότι «τα bandpass signals και ο Hilbert ζουν σε επόμενο κεφάλαιο». Εδώ τα έχουμε όλα: ο Hilbert (Section 2) ορίστηκε ως phase-shifter στη συχνότητα, η pre-envelope (Section 3) τον χρησιμοποίησε για να φτιάξει one-sided spectrum, και η complex envelope (Section 4) τον περιέλαβε σιωπηρά μέσω της pre-envelope.
 </Callout>
 
-## 6. Φίλτρα — τα LTI που επιλέγουν συχνότητες
-
-Από τον FT έχουμε ότι ένα LTI σύστημα έχει frequency response $H(f) = \mathcal{F}\{h(t)\}$, και η έξοδος είναι $Y(f) = X(f)\cdot H(f)$. Ένα **φίλτρο** είναι ένα LTI σύστημα όπου *νοιαζόμαστε ποιες συχνότητες περνάνε*: σχεδιάζουμε το $|H(f)|$ ώστε να είναι ~1 σε μια ζώνη (passband) και ~0 σε μια άλλη (stopband).
-
-### 6a. Τα τέσσερα ιδανικά φίλτρα
-
-| Τύπος | $|H(f)| = 1$ | $|H(f)| = 0$ | Σκοπός |
-| --- | --- | --- | --- |
-| **Lowpass (LP)** | $\lvert f\rvert < f_c$ | αλλιώς | περνάει χαμηλές, κόβει υψηλές |
-| **Highpass (HP)** | $\lvert f\rvert > f_c$ | αλλιώς | κόβει χαμηλές, περνάει υψηλές |
-| **Bandpass (BP)** | $f_1 < \lvert f\rvert < f_2$ | αλλιώς | περνάει μια ζώνη |
-| **Bandstop (BS / Notch)** | $\lvert f\rvert < f_1$ ή $\lvert f\rvert > f_2$ | $f_1 < \lvert f\rvert < f_2$ | κόβει μια ζώνη, περνάει τα υπόλοιπα |
-
-Όλα ✓ στο τυπολόγιο.
-
-**Vocabulary:**
-- **Passband** (ζώνη διέλευσης): οι συχνότητες που περνάνε αναλλοίωτες.
-- **Stopband** (ζώνη αποκοπής): οι συχνότητες που κόβονται.
-- **Cutoff frequency** $f_c$: το όριο μεταξύ τους.
-
-<FilterTypeViewer />
-
-### 6b. Even h(t), real H(f), no time delay — τώρα έχει συγκεκριμένο όνομα
-
-Στο [κεφάλαιο των συστημάτων](/foundations/systems#eigenfunction) είδαμε ότι αν η κρουστική απόκριση $h(t)$ είναι **even**, τότε το $H(f)$ προκύπτει **real** (η phase μηδενίζεται). Στο [κεφάλαιο του FT](/foundations/fourier-transform#8-conjugate-symmetry-γιατί-τα-φάσματα-real-signals-είναι-συμμετρικά) γενικεύσαμε: real-and-even signal ↔ real-and-even spectrum. Αλλά μέχρι τώρα δεν είχαμε συγκεκριμένο φυσικό αντικείμενο για να ζωγραφίσουμε αυτή την ιδιότητα.
-
-**Τα ιδανικά φίλτρα είναι αυτό το αντικείμενο.** Τα $|H(f)|$ που είδαμε στον πίνακα παραπάνω είναι όλα **even** συναρτήσεις (συμμετρικές γύρω από το 0). Άρα η κρουστική τους απόκριση $h(t)$ είναι **και αυτή even** — και το $H(f)$ είναι **real**, χωρίς phase distortion.
-
-Ένα φίλτρο με phase = 0 σημαίνει: **όλες οι συχνότητες που περνάνε, περνάνε με την ίδια χρονική ευθυγράμμιση** — δεν εισάγει time delay σε καμιά συχνότητα. Αυτή είναι η αιτία που τα ιδανικά φίλτρα είναι «τέλεια»: σχήμα παλμού in = σχήμα παλμού out (απλώς ζυγισμένο σε διαφορετικές συχνότητες). Πρακτικά, αυτό είναι το πιο προτιμητέο που μπορεί να κάνει ένα φίλτρο.
-
-<Callout type="closes-commitment" title="🎯 Κλείνει υπόσχεση — ιδανικά φίλτρα και η non-causality του sinc">
-Στο [κεφάλαιο των συστημάτων](/foundations/systems) είχαμε αναφέρει «ένα φίλτρο όταν κόβει μια ζώνη...» χωρίς να ορίσουμε τι σημαίνει αυτό. Στο [COMMITMENTS.md](https://github.com/AlexTuring010/signal-processing-with-alexturing/blob/main/COMMITMENTS.md) σημείωσα ότι αυτό θα κλείσει εδώ — και κλείνει: τα τέσσερα ιδανικά φίλτρα ορίζονται από το $|H(f)|$, η even συμμετρία τους στη συχνότητα προέρχεται από even $h(t)$ στον χρόνο, και για τον LP φίλτρο **το $h(t)$ είναι sinc**:
-
-$$
-h_{LP}(t) = 2 f_c\, \mathrm{sinc}(2 f_c\, t)
-$$
-
-που εκτείνεται μέχρι το $-\infty$ και το $+\infty$. Δηλαδή για να βγάλει output αυτή τη στιγμή χρειάζεται να ξέρει τι θα είναι το input στο μέλλον — **μη-αιτιατό**, αδύνατο σε real-time κύκλωμα. Η Section 7 παρακάτω εξηγεί τι συμβιβασμό κάνουμε στην πράξη.
-</Callout>
-
-## 7. Real (non-ideal) φίλτρα
-
-Τα ιδανικά είναι θεωρητικές αφαιρέσεις. Στην πράξη χτίζουμε φίλτρα που **προσεγγίζουν** το ιδανικό με κάποιο compromise.
-
-### 7a. Real-filter spec
-
-Ένα ρεαλιστικό LP φίλτρο περιγράφεται από τέσσερις παραμέτρους:
-
-- **Passband edge** $f_p$: μέχρι αυτή τη συχνότητα θεωρούμε «πέρασμα».
-- **Stopband edge** $f_s$: από αυτή τη συχνότητα και μετά θεωρούμε «αποκοπή».
-- **Passband ripple** $\delta_p$: στο $\lvert f\rvert < f_p$ ισχύει $|H(f)| \in [1 - \delta_p, 1 + \delta_p]$ — ταλάντωση γύρω από το 1.
-- **Stopband ripple** $\delta_s$: στο $\lvert f\rvert > f_s$ ισχύει $|H(f)| < \delta_s$ — μικρή ταλάντωση γύρω από το 0.
-- Στο **transition band** $f_p < \lvert f\rvert < f_s$ δεν δίνουμε spec — απλώς απαιτούμε μονοτονικά πτώση.
-
-<IdealVsRealFilterViz />
-
-### 7b. Trade-offs
-
-- **Πιο απότομο cutoff** (μικρότερο $f_s - f_p$) ⇒ **μακρύτερη κρουστική απόκριση** ⇒ μεγαλύτερη μνήμη, μεγαλύτερη καθυστέρηση.
-- **Μικρότερο ripple** ($\delta_p, \delta_s \to 0$) ⇒ **πιο πολύπλοκο** φίλτρο.
-- Δεν υπάρχει «δωρεάν» ιδανικό. Συγκεκριμένες σχεδιάσεις (Butterworth, Chebyshev, elliptic) ανταλλάσσουν αυτές τις παραμέτρους διαφορετικά — αλλά αυτό είναι αντικείμενο ξεχωριστού μαθήματος.
-
-**Γιατί μας απασχολεί.** Όταν θα φτάσουμε στην AM demodulation, χρειαζόμαστε ένα LP φίλτρο για να ανακτήσουμε το μήνυμα μετά τον envelope detector. Δεν θα είναι ιδανικό — θα έχει αυτές τις προδιαγραφές, και πρέπει να ξέρεις τι σημαίνουν.
-
-## 8. Recap + Next up
+## 6. Recap + Next up
 
 <Recap>
 - Τα σήματα κατατάσσονται σε **baseband** (φάσμα γύρω από 0) και **bandpass** (φάσμα γύρω από $\pm f_c$). Σχεδόν καθετί στον αέρα είναι bandpass, με narrowband υπόθεση $W \ll f_c$.
@@ -315,10 +252,8 @@ $$
 - Η **complex envelope** $g = x_p\, e^{-j 2\pi f_c t}$ μεταφέρει το pre-envelope στο baseband. Όλη η πληροφορία του bandpass σήματος συμπυκνώνεται σε αυτό.
 - **Canonical μορφή κάθε ζωνοπερατού:** $x(t) = x_I(t)\cos(2\pi f_c t) - x_Q(t)\sin(2\pi f_c t)$, με $g = x_I + jx_Q$. Σε πολική μορφή: $x = V\cos(2\pi f_c t + \theta)$.
 - **AM, DSB, SSB, FM, PM** είναι όλες ειδικές περιπτώσεις αυτής της μορφής — **διαφορετικές επιλογές για $x_I, x_Q$** (ή ισοδύναμα για $V, \theta$). AM/DSB έχουν $x_Q = 0$. FM/PM έχουν σταθερό envelope $V = A_c$.
-- **Ένα φίλτρο** είναι LTI με σχήμα του $|H(f)|$. Τέσσερα ιδανικά: LP, HP, BP, BS. Τα ιδανικά είναι **μη-αιτιατά** (sinc impulse response).
-- **Real φίλτρα** προσεγγίζουν τα ιδανικά με passband ripple $\delta_p$, transition band $[f_p, f_s]$, stopband ripple $\delta_s$. Trade-off: σαφέστερο cutoff = μεγαλύτερη πολυπλοκότητα.
 </Recap>
 
-**Αυτό είναι το τέλος των Foundations.** Έχεις τώρα όλα τα εργαλεία που χρειάζονται για να ξεκινήσεις τη modulation. Η AM είναι η πρώτη — και θα τη χτίσουμε **ξεκινώντας από τη γραμμή του πίνακα Section 5b**.
+**Από εδώ ξεκινάει η modulation.** Η AM είναι το πρώτο κεφάλαιο — ξεκινάμε από τη γραμμή «AM» του πίνακα §5b, παίρνουμε τη συνέπεια στο φάσμα μέσω του modulation theorem, και χτίζουμε όλη την οικογένεια AM (Conventional, DSB-SC, SSB, VSB) ως παραλλαγές του ίδιου σχήματος.
 
 <NextUp slug="modulation/am" />
