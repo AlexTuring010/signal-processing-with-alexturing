@@ -128,25 +128,14 @@ export const CHAPTERS: Chapter[] = [
     ],
   },
   {
-    id: 'sampling',
-    title: '8. Sampling & ADC',
-    blurb: 'Από συνεχές σε διακριτό',
-    sections: [
-      { slug: 'sampling/theorem', title: 'Sampling theorem', available: false },
-      { slug: 'sampling/aliasing', title: 'Aliasing', available: false },
-      { slug: 'sampling/quantization', title: 'Quantization', available: false },
-      { slug: 'sampling/dac', title: 'DAC reconstruction', available: false },
-    ],
-  },
-  {
     id: 'digital',
-    title: '9. Digital transmission',
+    title: '8. Digital transmission',
     blurb: 'Light coverage',
     sections: [{ slug: 'digital/intro', title: 'Εισαγωγή', available: false }],
   },
   {
     id: 'exam',
-    title: '10. Exam prep',
+    title: '9. Exam prep',
     blurb: 'Παλιά θέματα & tips',
     sections: [
       { slug: 'practice', title: 'Practice hub', available: true },
