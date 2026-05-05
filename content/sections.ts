@@ -129,14 +129,8 @@ export const CHAPTERS: Chapter[] = [
     ],
   },
   {
-    id: 'digital',
-    title: '8. Digital transmission',
-    blurb: 'Light coverage',
-    sections: [{ slug: 'digital/intro', title: 'Εισαγωγή', available: false }],
-  },
-  {
     id: 'exam',
-    title: '9. Exam prep',
+    title: '8. Exam prep',
     blurb: 'Παλιά θέματα & tips',
     sections: [
       { slug: 'practice', title: 'Practice hub', available: true },
