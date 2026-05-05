@@ -58,6 +58,11 @@ import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
 import { CounterRotatingPhasors } from '@/components/viz/CounterRotatingPhasors'
 import { TwoSidedVsOneSidedCosine } from '@/components/viz/TwoSidedVsOneSidedCosine'
+import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
+import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
+import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
+import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
+import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -140,6 +145,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — reference / spectrum-conventions
     CounterRotatingPhasors,
     TwoSidedVsOneSidedCosine,
+
+    // Visualizations — foundations / bandpass-filters
+    IQDecompositionViz,
+    HilbertTransformViz,
+    PreEnvelopeSpectrumViz,
+    FilterTypeViewer,
+    IdealVsRealFilterViz,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on

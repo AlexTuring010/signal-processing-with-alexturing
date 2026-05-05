@@ -49,6 +49,7 @@ export const CHAPTERS: Chapter[] = [
       { slug: 'foundations/systems', title: 'Συστήματα & convolution', available: true },
       { slug: 'foundations/fourier-series', title: 'Fourier series', available: true },
       { slug: 'foundations/fourier-transform', title: 'Fourier transform', available: true, examWeight: 18 },
+      { slug: 'foundations/bandpass-filters', title: 'Bandpass & Φίλτρα', available: true, examWeight: 8 },
       { slug: 'foundations/sampling-light', title: 'Sampling — εισαγωγή', available: false },
       {
         slug: 'foundations/signal-transformations',
