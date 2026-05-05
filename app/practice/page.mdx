@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Practice — λυμένα παραδείγματα',
   description:
-    'Λυμένα παραδείγματα από τις διαλέξεις και παλαιότερα θέματα εξετάσεων. Καλύπτει AM (modulation index, φάσμα, μη γραμμικός modulator) και FM (Carson bandwidth, Bessel sidebands, ισχύς μετά από bandpass filter).',
+    'Λυμένα παραδείγματα από τις διαλέξεις και παλαιότερα θέματα εξετάσεων. Καλύπτει AM (modulation index, φάσμα, μη γραμμικός modulator), FM (Carson bandwidth, Bessel sidebands, ισχύς μετά από bandpass filter) και Random Processes (joint statistics, ergodicity).',
 }
 
 export const frontmatter = {
@@ -31,7 +31,7 @@ import { Bookmark } from '@/components/layout/Bookmark'
   <Bookmark id="practice" />
 </div>
 
-Λυμένα παραδείγματα από τις διαλέξεις (sessions 14 για AM, 15 για FM/PM) και παλαιότερα θέματα. Κάθε παράδειγμα έχει το **πλήρες σκεπτικό** — όχι μόνο την απάντηση. Πάτα σε ένα toggle για να δεις τη λύση, αν θέλεις πρώτα να το προσπαθήσεις μόνος.
+Λυμένα παραδείγματα από τις διαλέξεις (sessions 14 για AM, 15 για FM/PM, 10 για random processes) και παλαιότερα θέματα. Κάθε παράδειγμα έχει το **πλήρες σκεπτικό** — όχι μόνο την απάντηση. Πάτα σε ένα toggle για να δεις τη λύση, αν θέλεις πρώτα να το προσπαθήσεις μόνος.
 
 ## AM exercises
 
@@ -251,6 +251,165 @@ $$
 **Ποσοστό:** $P_u/P_x \approx 11.1/32 = 34.7\%$.
 
 **Συμπέρασμα:** το πολύ στενό BPF (64 Hz όταν Carson προβλέπει $2(10+1)\cdot 8 = 176$ Hz) απορρίπτει τα **2/3 της ενέργειας**. Ο BPF είναι «πολύ στενός» για το $\beta = 10$ που έχουμε.
+
+</Example>
+
+## Random process exercises
+
+### Άσκηση RP-1 — joint statistics δύο τυχαίων διαδικασιών
+
+<Example title="X(t) = A cos(2π f₁t + φ) με φ ~ U[0,π]· Y(t) = α cos(2π f₂t) με α ~ U[0,2]. Τα φ και α ανεξάρτητα. Βρες m_X(t), m_Y(t), R_X(t₁,t₂), R_XY(t₁,t₂), C_XY(t₁,t₂).">
+
+**Setup:**
+- $f_\phi(\phi) = 1/\pi$ για $\phi \in [0, \pi]$, αλλιώς 0.
+- $f_\alpha(\alpha) = 1/2$ για $\alpha \in [0, 2]$, αλλιώς 0.
+
+---
+
+**Βήμα 1 — m_X(t).** Από LOTUS:
+
+$$
+m_X(t) = E[A\cos(2\pi f_1 t + \phi)] = \int_0^\pi A\cos(2\pi f_1 t + \phi)\, \frac{1}{\pi}\, d\phi
+$$
+
+Ολοκληρώνοντας ($\int \cos = \sin$):
+
+$$
+= \frac{A}{\pi}\!\big[\sin(2\pi f_1 t + \phi)\big]_0^\pi = \frac{A}{\pi}\big[\sin(2\pi f_1 t + \pi) - \sin(2\pi f_1 t)\big]
+$$
+
+Με $\sin(\theta + \pi) = -\sin\theta$:
+
+$$
+\boxed{\,m_X(t) = -\frac{2A}{\pi}\sin(2\pi f_1 t)\,}
+$$
+
+**Παρατήρηση:** εξαρτάται από τον $t$ → $X(t)$ **δεν είναι WSS** (αν ήταν, ο μέσος θα ήταν σταθερός).
+
+---
+
+**Βήμα 2 — m_Y(t).**
+
+$$
+m_Y(t) = \int_0^2 \alpha\cos(2\pi f_2 t)\, \frac{1}{2}\, d\alpha = \cos(2\pi f_2 t)\,\frac{1}{2}\!\left[\frac{\alpha^2}{2}\right]_0^2 = \cos(2\pi f_2 t)
+$$
+
+$$
+\boxed{\,m_Y(t) = \cos(2\pi f_2 t)\,}
+$$
+
+Επίσης χρονικά μεταβαλλόμενος → $Y(t)$ **δεν είναι WSS** ούτε αυτό.
+
+---
+
+**Βήμα 3 — R_X(t₁, t₂).** Με product-to-sum $\cos a\cos b = \tfrac{1}{2}[\cos(a-b) + \cos(a+b)]$:
+
+$$
+R_X(t_1, t_2) = E\!\left[\frac{A^2}{2}\big(\cos(2\pi f_1(t_1 - t_2)) + \cos(2\pi f_1(t_1 + t_2) + 2\phi)\big)\right]
+$$
+
+- Πρώτος όρος: δεν περιέχει $\phi$, μένει ως έχει.
+- Δεύτερος όρος: $E[\cos(\ldots + 2\phi)]$ με $2\phi \in [0, 2\pi]$ → ολοκλήρωμα cosine πάνω σε ολόκληρη περίοδο = **0**.
+
+$$
+\boxed{\,R_X(t_1, t_2) = \frac{A^2}{2}\cos(2\pi f_1(t_1 - t_2))\,}
+$$
+
+(Παράδοξο: η αυτοσυσχέτιση **εξαρτάται μόνο από $\tau = t_1 - t_2$** αλλά ο μέσος δεν είναι σταθερός. Για WSS χρειάζονται **και τα δύο**.)
+
+---
+
+**Βήμα 4 — R_XY(t₁, t₂).** Επειδή τα $\alpha, \phi$ ανεξάρτητα, $E[XY] = E[X]E[Y]$:
+
+$$
+R_{XY}(t_1, t_2) = E[X(t_1) Y(t_2)] = m_X(t_1)\, m_Y(t_2)
+$$
+
+$$
+\boxed{\,R_{XY}(t_1, t_2) = -\frac{2A}{\pi}\sin(2\pi f_1 t_1)\,\cos(2\pi f_2 t_2)\,}
+$$
+
+---
+
+**Βήμα 5 — C_XY(t₁, t₂).**
+
+$$
+C_{XY}(t_1, t_2) = R_{XY}(t_1, t_2) - m_X(t_1) m_Y(t_2) = m_X(t_1) m_Y(t_2) - m_X(t_1) m_Y(t_2) = 0
+$$
+
+$$
+\boxed{\,C_{XY}(t_1, t_2) = 0\,}
+$$
+
+**Συμπέρασμα:** τα $X(t)$ και $Y(t)$ είναι **uncorrelated** (αναμενόμενο, αφού οι $\alpha, \phi$ τα κατασκευάζουν είναι ανεξάρτητες). Δεν είναι όμως **orthogonal** (γιατί $R_{XY} \neq 0$ — εξαιτίας του μη-μηδενικού $m_X m_Y$ γινομένου).
+
+</Example>
+
+### Άσκηση RP-2 — ergodicity του random-phase cosine
+
+<Example title="Z(t) = A cos(2π f t + θ) με A, f σταθερές και θ ~ U[0, 2π]. Να εξεταστεί ως προς ergodicity (στον μέσο και στην autocorrelation).">
+
+**Πρώτη γνωριμία:** πρώτα να δείξουμε ότι το $Z(t)$ είναι **WSS** (αλλιώς ergodicity δεν έχει νόημα). Από αντίστοιχη παραγωγή με την Άσκηση RP-1 με $\theta \in [0, 2\pi]$ (ολόκληρη περίοδος αντί για μισή):
+
+$$
+m_Z(t) = E[A\cos(2\pi f t + \theta)] = 0, \quad R_Z(\tau) = \frac{A^2}{2}\cos(2\pi f \tau)
+$$
+
+Σταθερός μέσος + autocorrelation εξαρτάται μόνο από $\tau$ → ✓ WSS.
+
+---
+
+**Μέρος 1 — Ergodic στον μέσο;** Χρειάζεται να δείξουμε ότι ο time-average **μιας** realization $z_i(t) = A\cos(2\pi f t + \theta_i)$ ισούται με τον ensemble mean $m_Z = 0$:
+
+$$
+E[z_i(t)] \triangleq \lim_{T \to \infty} \frac{1}{T}\int_{-T/2}^{T/2} z_i(t)\, dt
+$$
+
+Υπολογίζοντας:
+
+$$
+= A \lim_{T \to \infty} \frac{1}{T}\int_{-T/2}^{T/2}\cos(2\pi f t + \theta_i)\, dt = \frac{A}{2\pi f}\lim_{T \to \infty}\frac{1}{T}\big[\sin(2\pi f t + \theta_i)\big]_{-T/2}^{T/2}
+$$
+
+$$
+= \frac{A}{2\pi f}\lim_{T \to \infty}\frac{\sin(\pi f T + \theta_i) - \sin(-\pi f T + \theta_i)}{T}
+$$
+
+Επειδή $|\sin| \leq 1$, ο αριθμητής είναι φραγμένος ενώ ο παρονομαστής $T \to \infty$:
+
+$$
+\boxed{\,E[z_i(t)] = 0 = m_Z\,}
+$$
+
+Ισχύει για **όλες** τις realizations $\theta_i$ → ✓ **ergodic στον μέσο**.
+
+---
+
+**Μέρος 2 — Ergodic στην autocorrelation;** Χρειάζεται να δείξουμε ότι ο time-average autocorrelation $R_{z_i}(\tau)$ ισούται με τον ensemble $R_Z(\tau) = (A^2/2)\cos(2\pi f \tau)$:
+
+$$
+R_{z_i}(\tau) = \lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2} z_i(t)\, z_i(t + \tau)\, dt
+$$
+
+$$
+= A^2 \lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2}\cos(2\pi f t + \theta_i)\cos(2\pi f (t + \tau) + \theta_i)\, dt
+$$
+
+Με product-to-sum:
+
+$$
+= \frac{A^2}{2}\cos(2\pi f \tau)\, \underbrace{\lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2} 1\, dt}_{=1} + \frac{A^2}{2}\underbrace{\lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2}\cos(4\pi f t + 2\pi f \tau + 2\theta_i)\, dt}_{= 0 \text{ (ίδιο τέχνασμα όπως πριν)}}
+$$
+
+$$
+\boxed{\,R_{z_i}(\tau) = \frac{A^2}{2}\cos(2\pi f \tau) = R_Z(\tau)\,}
+$$
+
+Ισχύει για **όλες** τις realizations → ✓ **ergodic στην αυτοσυσχέτιση**.
+
+---
+
+**Συνολικό συμπέρασμα:** το random-phase cosine είναι **ergodic** ως προς τον μέσο και την αυτοσυσχέτιση. Πρακτικά αυτό σημαίνει ότι μια **μία** μακροχρόνια καταγραφή αρκεί για να μετρήσεις τις στατιστικές του — δεν χρειάζονται πολλαπλά ensembles. Αυτή η ιδιότητα κάνει το random-phase cosine το ιδανικό μοντέλο carrier σε modulation analysis.
 
 </Example>
 
