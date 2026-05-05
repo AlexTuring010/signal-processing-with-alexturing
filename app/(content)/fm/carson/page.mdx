@@ -1,0 +1,221 @@
+export const metadata = {
+  title: "Carson's rule — FM bandwidth",
+  description:
+    "Carson's rule για το bandwidth της FM. Παραγωγή B = 2(Δf + W) από τη συνεισφορά των sidebands. NBFM vs WBFM regimes, σύγκριση με AM, παραδείγματα FM ραδιοφώνου και two-way radio.",
+}
+
+export const frontmatter = {
+  title: "Carson's rule + NBFM/WBFM",
+  slug: 'fm/carson',
+  order: 3,
+  prerequisites: ['fm/bessel'],
+  examWeight: 5,
+  estimatedReadTime: 22,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · FM</span>
+  <span>·</span>
+  <span>~22 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Medium exam — recurring formula</span>
+</div>
+
+# Carson's rule + NBFM vs WBFM
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="fm/carson" />
+  <Bookmark id="fm/carson" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Στο [προηγούμενο κεφάλαιο](/fm/bessel) είδαμε ότι το FM φάσμα είναι **άπειρο** — sidebands εκτείνονται μέχρι το άπειρο. Στην πράξη όμως, σχεδόν όλη η ενέργεια συγκεντρώνεται σε λίγες sidebands. Σε αυτό το κεφάλαιο **ποσοτικοποιούμε** πόσο bandwidth χρειάζεται μια FM εκπομπή, μέσω της θεμελιώδους **Carson's rule**.
+
+## 1. Carson's rule — η εξίσωση
+
+$$
+\boxed{\,B_{FM} = 2(\Delta f + W) = 2(\beta + 1)\,W\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+όπου:
+
+- $\Delta f$ — frequency deviation (Hz)
+- $W$ — message bandwidth (για single-tone, $W = f_m$)
+- $\beta = \Delta f / W$ — modulation index
+
+Η ισοδυναμία των δύο μορφών προκύπτει από το $\Delta f = \beta W$:
+
+$$
+2(\Delta f + W) = 2(\beta W + W) = 2(\beta + 1) W
+$$
+
+**Αυτή η εξίσωση μπαίνει σε σχεδόν κάθε εξεταστικό θέμα FM.**
+
+## 2. Διαισθητική εξήγηση
+
+Από το Bessel expansion ξέρουμε:
+
+$$
+x_{FM}(t) = A_c\sum_n J_n(\beta)\cos[2\pi(f_c + nf_m)t]
+$$
+
+Τα sidebands εκτείνονται σε όλες τις $f_c \pm n f_m$ για $n = 0, 1, 2, \ldots$ μέχρι το άπειρο. Αλλά τα $J_n(\beta)$ φθίνουν γρήγορα όταν $|n|$ ξεπεράσει το $\beta$.
+
+**Εμπειρικός κανόνας:** για $|n| > \beta + 1$, τα $J_n(\beta)$ είναι αμελητέα. Άρα τα **σημαντικά** sidebands είναι τα $n = -(\beta+1), \ldots, +(\beta+1)$.
+
+Η ζώνη που καταλαμβάνουν αυτά τα sidebands εκτείνεται από:
+
+$$
+f_c - (\beta+1)\, f_m \quad \text{έως} \quad f_c + (\beta+1)\, f_m
+$$
+
+**Συνολικό bandwidth:**
+
+$$
+B = 2(\beta + 1)\, f_m
+$$
+
+Που για single-tone ($W = f_m$) ή για γενικότερο message bandwidth $W$ γίνεται $B = 2(\beta+1)W = 2(\Delta f + W)$.
+
+<CarsonRuleViz />
+
+**Παρατηρήσεις από τη γραφική:**
+
+- Σύρε το $\beta$ μικρό (NBFM) → η αθροιστική ισχύς φτάνει το 98% στο $n = 1$. Ο Carson μάς δίνει $B \approx 2W$, ίδιο με την AM.
+- Σύρε το $\beta$ μεσαίο (~ 2-3) → η ενέργεια απλώνεται σε 3-4 sidebands. Carson κοντά στο πραγματικό N για 98%.
+- Σύρε το $\beta$ μεγάλο (5+) → χρειάζονται 6-7 sidebands. Το Carson γίνεται **ελαφρώς συντηρητικό** (μικρή υποεκτίμηση) — δίνει $\approx 98\%$ ενέργειας. Στην πράξη, για high-fidelity audio χρησιμοποιούν $B = 2(\beta + 2) W$.
+
+## 3. Δύο regimes — NBFM vs WBFM
+
+### NBFM — Narrowband FM (β ≪ 1)
+
+Όταν $\beta \ll 1$ (συνήθως $\beta < 0.3$), στο Bessel expansion μόνο τα $J_0(\beta) \approx 1$ και $J_1(\beta) \approx \beta/2$ είναι σημαντικά. Όλες οι άλλες $J_n$ είναι $O(\beta^n)$ — αμελητέες.
+
+**NBFM προσεγγιστική εξίσωση:**
+
+$$
+x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) - A_c \beta \sin(2\pi f_m t)\sin(2\pi f_c t)
+$$
+
+Συγκρίνετε με το AM:
+
+$$
+x_{AM}(t) = A_c\cos(2\pi f_c t) + A_c \mu \cos(2\pi f_m t)\cos(2\pi f_c t)
+$$
+
+Σχεδόν ίδιο! Οι διαφορές:
+
+| | AM | NBFM |
+| --- | --- | --- |
+| Sideband term | $\cos\cdot\cos$ → προστιθέμενο | $\sin\cdot\sin$ → αφαιρούμενο |
+| Σχέση φάσης | sidebands **σε φάση** με carrier | sidebands **σε quadrature** (90° απ' τον carrier) |
+| Bandwidth | $2W$ | $2W$ (Carson με β=0) |
+
+**Άρα NBFM = AM σε bandwidth, αλλά με quadrature sidebands.** Αυτή η quadrature τοποθέτηση είναι που του δίνει την **ανθεκτικότητα στον θόρυβο** — ο amplitude θόρυβος δεν επηρεάζει τη φάση.
+
+### WBFM — Wideband FM (β ≫ 1)
+
+Όταν $\beta \gg 1$, χρειάζονται πολλά sidebands. Το Carson απλοποιείται:
+
+$$
+B \approx 2\beta W = 2\Delta f
+$$
+
+(αφού ο όρος $+1$ γίνεται αμελητέος). Δηλαδή το bandwidth **καθορίζεται κυρίως από το $\Delta f$**, όχι από το $W$.
+
+**Γι' αυτό το εμπορικό FM ραδιόφωνο** χρησιμοποιεί $\Delta f = 75$ kHz: αυτό καθορίζει το bandwidth (~150 kHz), και το $W$ (audio bandwidth ~15 kHz) μπαίνει ως μια μικρή διόρθωση. Carson: $B = 2(75 + 15) = 180$ kHz, με channel spacing 200 kHz για guard band.
+
+## 4. Σύγκριση με AM
+
+| | AM (DSB+carrier) | DSB-SC | SSB | NBFM (β &lt; 0.3) | WBFM (β=5) |
+| --- | --- | --- | --- | --- | --- |
+| Bandwidth | $2W$ | $2W$ | $W$ | $2W$ | $2(\beta+1)W \approx 12W$ |
+| Carrier present | Ναι | Όχι | Όχι | Ναι | Ναι (ποικίλει) |
+| Envelope demod | Απλό | Όχι | Όχι | Όχι | Όχι |
+| Coherent demod | Δουλεύει | Απαραίτητο | Απαραίτητο | Δουλεύει | Δουλεύει (discriminator) |
+| Ανοσία στον θόρυβο | Φτωχή | Φτωχή | Φτωχή | Καλή | **Εξαιρετική** |
+| Πολυπλοκότητα δέκτη | Χαμηλή | Μέτρια | Υψηλή | Μέτρια | Μέτρια |
+| Χαρακτηριστικά | Audio AM ραδιόφωνο | Stereo L−R, NTSC | Shortwave/HAM | Two-way ραδιοεπικοινωνία | FM ραδιόφωνο, TV audio |
+
+**Τo trade-off:** η FM **δίνει** bandwidth για να **αγοράσει** ανοσία στον θόρυβο. Αυτό είναι **βασικό αποτέλεσμα** της θεωρίας Shannon και επιστρέφουμε σε αυτό στο επόμενο κεφάλαιο.
+
+## 5. Worked example — Πρόοδος B / June'25 Θ4
+
+<Example title="Ex. — εμπορικό FM ραδιόφωνο">
+
+Σε ένα εμπορικό FM σταθμό, η μέγιστη μετατόπιση συχνότητας είναι $\Delta f = 75$ kHz και το bandwidth του ηχητικού σήματος είναι $W = 15$ kHz.
+
+**Ζητούνται:**
+1. Το modulation index $\beta$.
+2. Το bandwidth κατά Carson.
+3. Πόσα channels χωράνε στη ζώνη 88-108 MHz με channel spacing 200 kHz;
+4. Αν το $\Delta f$ μειωνόταν στα 5 kHz (NBFM), πόσα channels;
+
+---
+
+**Λύση.**
+
+**(1)** $\beta = \Delta f / W = 75/15 = 5$ → WBFM.
+
+**(2)** $B = 2(\Delta f + W) = 2(75 + 15) = 180$ kHz. Με channel spacing 200 kHz, αφήνουμε 20 kHz ως guard band — λογικό.
+
+**(3)** Διαθέσιμη ζώνη: $108 - 88 = 20$ MHz. Channels = $20\,000/200 = 100$ channels.
+
+**(4)** Με NBFM, $\beta = 5/15 = 0.33$, $B = 2(5 + 15) = 40$ kHz. Με spacing 50 kHz, χωράνε $20\,000/50 = 400$ channels — **4× περισσότερα**, αλλά με χειρότερη ποιότητα ήχου και ανοσία στον θόρυβο.
+
+</Example>
+
+## 6. Παράδειγμα NBFM (Πρόοδος A 2025-09)
+
+<Example title="Ex. — two-way radio NBFM">
+
+Ένα ασυρματάκι παραδίδει NBFM σήμα με:
+- $f_c = 462$ MHz
+- $W = 5$ kHz (φωνή)
+- $\Delta f = 5$ kHz
+
+**Ζητείται:** το bandwidth και το modulation index.
+
+---
+
+**Λύση.**
+
+$$
+\beta = \frac{\Delta f}{W} = \frac{5}{5} = 1
+$$
+
+Στο boundary NBFM/WBFM. Carson:
+
+$$
+B = 2(\beta + 1) W = 2 \cdot 2 \cdot 5 = 20 \text{ kHz}
+$$
+
+Με channel spacing 25 kHz (FRS standard), αυτό αφήνει 5 kHz guard band. Έγκυρη επιλογή για στενά κανάλια.
+
+</Example>
+
+## 7. Σύνοψη formulas
+
+| Ποσότητα | Τύπος |
+| --- | --- |
+| Carson's rule | $B = 2(\Delta f + W) = 2(\beta+1)W$ |
+| NBFM bandwidth ($\beta \ll 1$) | $B \approx 2W$ (όπως AM) |
+| WBFM bandwidth ($\beta \gg 1$) | $B \approx 2\Delta f$ (deviation-dominated) |
+| FM ραδιόφωνο | $\Delta f = 75$ kHz, $W = 15$ kHz, $\beta = 5$, $B = 180$ kHz |
+| Two-way (NBFM) | $\Delta f \approx 5$ kHz, $W \approx 5$ kHz, $\beta \approx 1$, $B \approx 20$ kHz |
+
+<Recap>
+- **Carson's rule:** $B = 2(\Delta f + W) = 2(\beta+1)W$. Δίνει το πρακτικό bandwidth για ~98% της ενέργειας.
+- **NBFM** ($\beta \ll 1$): $B \approx 2W$, σχεδόν σαν AM. Quadrature sidebands → ανοσία στον amplitude θόρυβο.
+- **WBFM** ($\beta \gg 1$): $B \approx 2\Delta f$. Το $\Delta f$ καθορίζει το bandwidth.
+- Trade-off: η FM **καταναλώνει bandwidth για να αγοράσει SNR ανοσία**. Επόμενο κεφάλαιο: ποσοτικά αυτό το trade-off (FM στον θόρυβο, σύγκριση με AM).
+</Recap>
+
+<NextUp slug="fm/in-noise" />

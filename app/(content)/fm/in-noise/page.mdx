@@ -1,0 +1,327 @@
+export const metadata = {
+  title: 'FM στον θόρυβο + AM vs FM',
+  description:
+    'FM σε θόρυβο: triangular noise spectrum, output SNR, FM gain over AM, threshold effect, capture effect, pre-emphasis/de-emphasis. Σύγκριση AM και FM σε ενέργεια, bandwidth, ανθεκτικότητα.',
+}
+
+export const frontmatter = {
+  title: 'FM στον θόρυβο + vs AM',
+  slug: 'fm/in-noise',
+  order: 4,
+  prerequisites: ['fm/carson', 'am/modulator-demodulator'],
+  examWeight: 5,
+  estimatedReadTime: 26,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · FM</span>
+  <span>·</span>
+  <span>~26 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Medium exam</span>
+</div>
+
+# FM στον θόρυβο + AM vs FM
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="fm/in-noise" />
+  <Bookmark id="fm/in-noise" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Έχουμε δει ότι η FM δίνει bandwidth για να αγοράσει ανοσία στον θόρυβο. Σε αυτό το τελευταίο κεφάλαιο της FM ομάδας:
+
+1. **Παράγουμε το output SNR** στην έξοδο ενός FM discriminator.
+2. Δείχνουμε το «**triangular noise spectrum**» — ο θόρυβος μεγαλώνει με τη συχνότητα.
+3. Συγκρίνουμε με την AM για να δούμε το **FM gain**.
+4. Συζητάμε το **threshold effect** και το **capture effect**.
+5. Εξηγούμε γιατί το εμπορικό FM χρησιμοποιεί **pre-emphasis / de-emphasis**.
+
+## 1. Setup — FM σήμα και θόρυβος
+
+Στείλε FM σήμα μέσα από κανάλι με προσθετικό λευκό θόρυβο:
+
+$$
+y(t) = x_{FM}(t) + n(t), \qquad x_{FM}(t) = A_c\cos[2\pi f_c t + \phi(t)]
+$$
+
+όπου $\phi(t) = 2\pi k_f \int m(\tau)d\tau$ και $n(t)$ είναι λευκός θόρυβος με PSD $N_0/2$ (διπλός). Στον δέκτη υπάρχει:
+
+1. **Bandpass filter** γύρω από $f_c$ με bandwidth $B$ (Carson) — περιορίζει τον θόρυβο σε αυτή τη ζώνη.
+2. **Limiter** — αφαιρεί amplitude variations (κρατάει σταθερό envelope).
+3. **Discriminator** — διαφορίζει τη φάση: έξοδος $\propto d\theta/dt$.
+4. **Lowpass filter** στα $\pm W$ — κρατάει μόνο τις συχνότητες του message.
+
+## 2. Input SNR
+
+Στην είσοδο του δέκτη (μετά τον BPF), η ισχύς του σήματος είναι:
+
+$$
+P_{signal} = \frac{A_c^2}{2}
+$$
+
+Η ισχύς του θορύβου στη ζώνη $B$ είναι:
+
+$$
+P_{noise} = N_0 \cdot B
+$$
+
+(διπλά την $N_0/2$ επί το bandwidth). Άρα:
+
+$$
+\text{SNR}_{in} = \frac{A_c^2/2}{N_0 B}
+$$
+
+## 3. Output SNR — η triangular noise
+
+Μετά τον discriminator, ο θόρυβος έχει **τριγωνικό φάσμα**. Παράγουμε αυτό το αποτέλεσμα σύντομα.
+
+**Παραγωγή.** Όταν προσθέτεις μικρό λευκό θόρυβο σε ένα FM σήμα με σταθερό envelope $A_c$, μπορείς να αναλύσεις τον θόρυβο σε δύο συνιστώσες σχετικά με τον carrier: μία **σε φάση** (in-phase) και μία **σε quadrature**. Μόνο η quadrature επηρεάζει τη φάση — ο limiter εξαλείφει την in-phase.
+
+Η phase noise είναι:
+
+$$
+\theta_n(t) = \frac{n_Q(t)}{A_c}
+$$
+
+όπου $n_Q$ είναι η quadrature συνιστώσα του θορύβου. Ο discriminator παράγει **το παράγωγο** της φάσης:
+
+$$
+v_n(t) = \frac{1}{2\pi}\frac{d\theta_n(t)}{dt}
+$$
+
+Από την Fourier theory, αν $\theta_n$ έχει PSD $S_\theta(f)$, τότε το παράγωγό του έχει PSD $(2\pi f)^2 S_\theta(f) / (2\pi)^2 = f^2 S_\theta(f)$.
+
+Ο θόρυβος $n_Q$ είναι λευκός με PSD $N_0$ μέσα στο BPF, άρα $S_\theta(f) = N_0/A_c^2$, και τελικά:
+
+$$
+\boxed{\,S_{v_n}(f) = \frac{N_0\, f^2}{A_c^2}\,}
+$$
+
+**Triangular noise spectrum** — η PSD αυξάνεται **τετραγωνικά** με τη συχνότητα.
+
+<FMNoiseTriangleViz />
+
+**Παρατηρήσεις:**
+
+- Στο DC (low frequencies), σχεδόν δεν υπάρχει θόρυβος. Οι μπάσες συχνότητες περνάνε «καθαρές».
+- Στις υψηλές συχνότητες, ο θόρυβος μεγαλώνει γρήγορα. Γι' αυτό η FM ραδιόφωνο ακούγεται «**hissy**» στις υψηλές νότες αν το SNR είναι οριακό.
+
+## 4. Output noise power και SNR_out
+
+Το output LPF περιορίζει τον θόρυβο στα $|f| \leq W$:
+
+$$
+P_{noise,out} = \int_{-W}^{W} \frac{N_0 f^2}{A_c^2} df = \frac{2 N_0 W^3}{3 A_c^2}
+$$
+
+Η ισχύς του message στην έξοδο, για single-tone $m(t) = A_m\cos(2\pi f_m t)$ με $\Delta f = k_f A_m$:
+
+$$
+P_{signal,out} = \frac{(\Delta f)^2}{2}
+$$
+
+(Παραγωγή: ο discriminator παράγει $f(t) - f_c = k_f m(t)$, η ισχύς του οποίου είναι $k_f^2 A_m^2/2 = (\Delta f)^2/2$.)
+
+Άρα:
+
+$$
+\boxed{\,\text{SNR}_{out,FM} = \frac{(\Delta f)^2/2}{2 N_0 W^3/(3 A_c^2)} = \frac{3 A_c^2 (\Delta f)^2}{4 N_0 W^3}\,}
+$$
+
+Με $\beta = \Delta f / W$:
+
+$$
+\text{SNR}_{out,FM} = \frac{3 A_c^2 \beta^2}{4 N_0 W} = 3\beta^2 \cdot \frac{A_c^2}{2 N_0 W} \cdot \frac{1}{2}
+$$
+
+Δηλαδή:
+
+$$
+\boxed{\,\text{SNR}_{out,FM} = 3\beta^2 \cdot \text{SNR}_{ref}\,}, \qquad \text{SNR}_{ref} = \frac{A_c^2}{2 N_0 W}
+$$
+
+Η $\text{SNR}_{ref}$ είναι η εξεταστική «αναφορά» — το SNR που θα είχες αν είχες όλο το σήμα μέσα σε bandwidth $W$ (χωρίς bandpass overhead).
+
+## 5. FM gain over AM
+
+Για AM (conventional, εδώ θεωρώντας 100% modulation $\mu = 1$ ως άνω όριο), από το προηγούμενο [κεφάλαιο AM in noise](/am/modulator-demodulator#am-in-noise):
+
+$$
+\text{SNR}_{out,AM} = \frac{1}{3} \cdot \text{SNR}_{ref}
+$$
+
+(Στην πραγματικότητα η αναλογία είναι ένα-προς-ένα μετά τον envelope detector με το high-SNR linearization· εδώ χρησιμοποιούμε την πιο κοινή φόρμα του τυπολογίου με τον παράγοντα $\mu^2/(2+\mu^2)$.)
+
+**FM gain** πάνω από AM:
+
+$$
+\boxed{\,G = \frac{\text{SNR}_{out,FM}}{\text{SNR}_{out,AM}} = 3\beta^2 \cdot 3 = 9\beta^2\,} \quad (\text{με } \mu = 1)
+$$
+
+Πιο γενικά:
+
+$$
+G = \frac{3\beta^2 (2 + \mu^2)}{\mu^2}
+$$
+
+**Παράδειγμα — εμπορικό FM:** $\beta = 5$. $G = 9 \cdot 25 = 225$ → **23.5 dB** πάνω από AM. Δηλαδή η FM ραδιόφωνο ακούγεται 23 dB πιο καθαρά από το AM ραδιόφωνο, για το ίδιο επίπεδο πομπού.
+
+**Σημαντικό trade-off:** η FM χρησιμοποιεί $B = 2(\beta+1)W$ bandwidth, **πολύ περισσότερο** από την AM. Αν αναμετρήσουμε bandwidth και SNR, βλέπουμε ότι:
+
+$$
+G \propto \beta^2 \quad \text{αλλά} \quad B \propto \beta
+$$
+
+Δηλαδή, **διπλασιάζοντας το bandwidth** (αυξάνοντας το β κατά 2), παίρνουμε **τετραπλάσιο** SNR gain. Αυτό είναι το ουσιαστικό trade-off που κάνει την FM ελκυστική.
+
+## 6. Threshold effect
+
+Η σχέση SNR_out = 3β² · SNR_ref **δεν ισχύει για όλα τα SNR**. Όταν το input SNR γίνεται χαμηλό (~10 dB ή λιγότερο), ο discriminator αρχίζει να παράγει «**clicks**» — μεγάλους κρότους από κακή φάση tracking. Το output SNR καταρρέει απότομα.
+
+Αυτό είναι το **FM threshold effect**:
+
+- **Πάνω από threshold** (~10 dB SNR_in): ο τύπος ισχύει. SNR_out = 3β² · SNR_ref.
+- **Κάτω από threshold**: ο τύπος αποτυγχάνει. Ο ήχος γίνεται «κρακίδια» και τελικά αδιάβαστος.
+
+Στο εμπορικό FM ραδιόφωνο, αυτό εξηγεί γιατί όσο πας πιο μακριά από τον σταθμό, **ξαφνικά** χάνεις σήμα — δεν είναι σταδιακό όπως στο AM.
+
+<Callout type="warning" title="Threshold trade-off με β">
+Όσο μεγαλύτερο το β, **τόσο μεγαλύτερο το bandwidth** του δέκτη και **τόσο περισσότερος θόρυβος μπαίνει**. Το threshold ανεβαίνει. Άρα δεν μπορείς απλά να αυξάνεις το β για να βελτιώσεις το SNR — υπάρχει optimum balance, και κάτω από κάποιο SNR το «μεγαλύτερο β = χειρότερη απόδοση».
+</Callout>
+
+## 7. Capture effect
+
+Όταν δύο FM σταθμοί στην ίδια συχνότητα φτάνουν στον δέκτη με ασύμμετρη ισχύ, ο πιο **ισχυρός κερδίζει** εντελώς — ο πιο αδύναμος **εξαφανίζεται** (όχι απλά μειωμένος, αλλά μηδενικός).
+
+Αυτό είναι το **capture effect** και είναι μοναδικό χαρακτηριστικό της FM. Για ίδια ισχύ τα δύο σήματα ανταγωνίζονται και το αποτέλεσμα είναι «μπλέξιμο» — αλλά αρκεί ένα 3-6 dB πλεονέκτημα και ο ισχυρότερος **κυριαρχεί απόλυτα**.
+
+**Εφαρμογές:**
+- **FM ραδιόφωνο**: όταν δύο σταθμοί στην ίδια συχνότητα, ακούς μόνο τον κοντινότερο.
+- **Στρατιωτικά**: ισχυρότερος jammer μπορεί να καλύψει εντελώς εχθρικές εκπομπές.
+- **Cellular FM (παλαιότερα)**: αλληλεπίδραση μεταξύ cells.
+
+## 8. Pre-emphasis / De-emphasis
+
+Επειδή ο FM noise είναι **triangular** (μεγαλώνει με $f^2$), οι υψηλές συχνότητες του message «πληρώνουν» περισσότερο από τις χαμηλές. Στη φωνή και τη μουσική όμως, οι υψηλές συχνότητες έχουν **ήδη χαμηλότερη ισχύ** από τις χαμηλές — οπότε το SNR στις υψηλές είναι ακόμα χειρότερο.
+
+**Λύση** (εμπορικό FM ραδιόφωνο):
+
+1. **Pre-emphasis** στον πομπό: ενίσχυσε τις υψηλές συχνότητες (high-shelf filter με $\tau = 50$ μs ή 75 μs).
+2. **De-emphasis** στον δέκτη: αντίστοιχη μείωση των υψηλών (lowpass με ίδιο $\tau$).
+
+Το αποτέλεσμα: η μουσική γυρίζει στο σωστό φάσμα, αλλά ο θόρυβος που προσθέτηκε **μετά** το pre-emphasis (στο κανάλι) **κόβεται** από το de-emphasis. SNR βελτίωση 12-13 dB στο εμπορικό FM.
+
+## 9. Σύγκριση AM vs FM — full picture
+
+| | AM | FM |
+| --- | --- | --- |
+| Bandwidth | $2W$ | $2(\beta+1)W$ |
+| Total power | $A_c^2(1 + \mu^2/2)/2$ | $A_c^2/2$ (ανεξάρτητο β) |
+| Useful (sideband) power | $A_c^2\mu^2/4$ | $A_c^2/2$ (όλη η ισχύς ωφέλιμη) |
+| Efficiency | ≤ 33.3% | 100% |
+| Envelope demod | Ναι | Όχι |
+| Output SNR | $\propto \mu^2 \cdot \text{SNR}_{ref}$ | $\propto 3\beta^2 \cdot \text{SNR}_{ref}$ |
+| Threshold | Όχι (graceful degradation) | Ναι (~10 dB) |
+| Capture effect | Όχι | Ναι |
+| Πολυπλοκότητα δέκτη | Χαμηλή | Μέτρια |
+| Παρουσία στο εμπόριο | AM ραδιόφωνο, aviation | FM ραδιόφωνο, TV audio, two-way |
+
+**Πότε προτιμάμε AM:**
+- Όταν το bandwidth είναι ακριβό (αναβάθμιση πομπού, ευρυζωνικά κανάλια στην ψηφιακή εποχή).
+- Για εφαρμογές χαμηλής πολυπλοκότητας (cheap envelope detectors).
+- Όταν θέλουμε **αργή** υποβάθμιση με την απόσταση (AM ραδιόφωνο).
+
+**Πότε προτιμάμε FM:**
+- Όταν θέλουμε υψηλή ποιότητα ήχου (εμπορικό FM, TV audio).
+- Όταν είμαστε σε θορυβώδες περιβάλλον (two-way radio).
+- Όταν η σταθερή envelope είναι σημαντική (saturated power amplifiers, μεγαλύτερη απόδοση πομπού).
+
+## 10. Worked example — Πρόοδος B 2024-09 Θ4
+
+<Example title="Ex. — FM noise gain calculation">
+
+Δίνεται FM σήμα με $A_c = 10$ V, $\Delta f = 75$ kHz, $W = 15$ kHz, σε κανάλι με $N_0 = 10^{-12}$ W/Hz.
+
+**Ζητούνται:**
+1. $\text{SNR}_{in}$ (μετά τον BPF στον δέκτη)
+2. $\text{SNR}_{out}$ (μετά τον discriminator και LPF)
+3. Το FM gain σε dB
+
+---
+
+**Λύση.**
+
+**(1) Carson bandwidth και input SNR.**
+
+$$
+B = 2(\Delta f + W) = 2(75 + 15) = 180 \text{ kHz}
+$$
+
+$$
+\text{SNR}_{in} = \frac{A_c^2/2}{N_0 B} = \frac{100/2}{10^{-12} \cdot 180\,000} = \frac{50}{1.8 \times 10^{-7}} = 2.78 \times 10^8
+$$
+
+Σε dB: $10\log_{10}(2.78 \times 10^8) = 84.4$ dB.
+
+**(2) Output SNR.**
+
+$$
+\beta = \Delta f / W = 75/15 = 5
+$$
+
+$$
+\text{SNR}_{out} = 3\beta^2 \cdot \text{SNR}_{ref} = 3 \cdot 25 \cdot \frac{A_c^2}{2 N_0 W}
+$$
+
+$$
+\text{SNR}_{ref} = \frac{100/2}{10^{-12} \cdot 15\,000} = \frac{50}{1.5 \times 10^{-8}} = 3.33 \times 10^9
+$$
+
+$$
+\text{SNR}_{out} = 75 \cdot 3.33 \times 10^9 = 2.5 \times 10^{11}
+$$
+
+Σε dB: $10\log_{10}(2.5 \times 10^{11}) = 114.0$ dB.
+
+**(3) FM gain σε dB:**
+
+$$
+G = \text{SNR}_{out} - \text{SNR}_{in} = 114.0 - 84.4 = 29.6 \text{ dB}
+$$
+
+(Πάνω από τον τύπο των $9\beta^2 = 225 \to 23.5$ dB γιατί ο τύπος συγκρίνει με AM, εδώ συγκρίνουμε με input SNR. Τα δύο είναι διαφορετικά.)
+
+</Example>
+
+## 11. Σύνοψη formulas
+
+| Ποσότητα | Τύπος |
+| --- | --- |
+| FM noise PSD (output) | $S_n(f) = N_0 f^2 / A_c^2$ (triangular) |
+| Output noise power | $P_n = 2 N_0 W^3 / (3 A_c^2)$ |
+| Output signal power (single-tone) | $P_s = (\Delta f)^2/2$ |
+| **SNR_out (FM)** | $\text{SNR}_{out} = 3\beta^2 A_c^2 / (4 N_0 W)$ |
+| Reference SNR | $\text{SNR}_{ref} = A_c^2/(2 N_0 W)$ |
+| FM gain over AM (μ=1) | $G = 9\beta^2$ |
+| FM threshold | ~10 dB SNR_in |
+| Pre/de-emphasis (FM ραδιόφωνο) | $\tau = 50$ ή $75$ μs |
+
+<Recap>
+- FM σε θόρυβο: **triangular noise PSD** $\propto f^2$ μετά τον discriminator. Ο θόρυβος μεγαλώνει με τη συχνότητα.
+- **SNR_out = 3β² · SNR_ref** — τετραγωνική βελτίωση με το β.
+- **FM gain over AM:** $9\beta^2$ (με $\mu=1$). Για β=5, FM gain = 225 → 23.5 dB.
+- **Threshold effect:** κάτω από ~10 dB SNR_in, η FM **καταρρέει**. Δεν είναι graceful όπως η AM.
+- **Capture effect:** ισχυρότερο σήμα κυριαρχεί απόλυτα. Μοναδικό στην FM.
+- **Pre-emphasis / de-emphasis:** εμπορικό FM χρησιμοποιεί high-shelf filters με $\tau = 50$ ή $75$ μs για να αντισταθμίσει το triangular noise.
+- **Trade-off**: bandwidth για SNR. $G \propto \beta^2$, $B \propto \beta$ → διπλασιάζοντας bandwidth παίρνεις 4× SNR.
+</Recap>
+
+Έχουμε ολοκληρώσει την FM ομάδα. Επόμενα βήματα στην ύλη: **Random Signals** & **Noise** ομάδες (πιθανότητα, autocorrelation, PSD), και μετά **Sampling**.

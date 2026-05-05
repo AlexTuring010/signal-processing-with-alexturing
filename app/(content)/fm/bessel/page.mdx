@@ -1,0 +1,297 @@
+export const metadata = {
+  title: 'FM φάσμα — Bessel sidebands',
+  description:
+    'Το φάσμα του FM σήματος μέσω Bessel functions. Παραγωγή της σειράς J_n(β), φάσμα με sidebands στις f_c ± n f_m, διατήρηση ισχύος, εξαφάνιση carrier, εξεταστικό παράδειγμα β=2.5.',
+}
+
+export const frontmatter = {
+  title: 'FM φάσμα — Bessel',
+  slug: 'fm/bessel',
+  order: 2,
+  prerequisites: ['fm/idea', 'foundations/fourier-transform'],
+  examWeight: 10,
+  estimatedReadTime: 32,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · FM</span>
+  <span>·</span>
+  <span>~32 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam — load-bearing math</span>
+</div>
+
+# FM φάσμα — Bessel sidebands
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="fm/bessel" />
+  <Bookmark id="fm/bessel" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Στο [προηγούμενο κεφάλαιο](/fm/idea) γράψαμε το single-tone FM σήμα ως:
+
+$$
+x_{FM}(t) = A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]
+$$
+
+Αλλά αυτή η μορφή **δεν μας λέει το φάσμα**. Είναι ένα cosine με φάση που κουνιέται μέσα — η μη-γραμμικότητα του cosine «ανακατεύει» τον carrier και το message ώστε να δημιουργηθούν **πολλά sidebands**, όχι μόνο δύο όπως στην AM.
+
+Σε αυτό το κεφάλαιο:
+
+1. Παράγουμε τη **Bessel σειρά** που μετατρέπει το $\cos[\beta\sin\theta]$ σε άθροισμα cosines.
+2. Γράφουμε το **φάσμα** του single-tone FM ως forest of impulses.
+3. Δείχνουμε τη **διατήρηση ισχύος** — γιατί $\sum |J_n|^2 = 1$.
+4. Εξετάζουμε την **εξαφάνιση του carrier** στις ρίζες του $J_0$.
+5. Λύνουμε ένα κλασικό εξεταστικό παράδειγμα με β = 2.5.
+
+## 1. Το πρόβλημα — γιατί δεν αρκεί η AM intuition
+
+Στη DSB-SC είδαμε: $x(t) = m(t)\cos(2\pi f_c t)$ — το spectrum πάει από το $M(f)$ σε δύο μετατοπισμένα αντίγραφα στις $\pm f_c$. Δουλειά τελειωμένη μέσω modulation theorem (γραμμικός πολλαπλασιασμός).
+
+Στην FM όμως, το $m(t)$ μπαίνει **μέσα στη φάση**, μέσω ενός cosine. Δεν είναι γραμμικό. Δεν μπορούμε να εφαρμόσουμε modulation theorem επειδή το $\cos(\theta + \beta\sin(\omega_m t))$ **δεν είναι το γινόμενο δύο σημάτων** — είναι μια **σύνθετη συνάρτηση** του χρόνου.
+
+Για να βρούμε το φάσμα χρειαζόμαστε ένα εργαλείο που **να αναλύει το $\cos[\beta\sin\theta]$ σε άθροισμα cosines**. Αυτό το εργαλείο είναι οι **συναρτήσεις Bessel πρώτου είδους**.
+
+## 2. Το Bessel expansion
+
+Είναι **μαθηματική ταυτότητα** (Jacobi-Anger expansion) ότι:
+
+$$
+\boxed{\,e^{j\beta\sin\theta} = \sum_{n=-\infty}^{\infty} J_n(\beta)\, e^{jn\theta}\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+Παίρνοντας πραγματικά μέρη (cos) και φανταστικά (sin) ξεχωριστά:
+
+$$
+\cos[\beta\sin\theta] = \sum_{n=-\infty}^{\infty} J_n(\beta)\cos(n\theta), \qquad
+\sin[\beta\sin\theta] = \sum_{n=-\infty}^{\infty} J_n(\beta)\sin(n\theta)
+$$
+
+Οι **συναρτήσεις Bessel πρώτου είδους** $J_n(\beta)$ έχουν δύο σημαντικές ιδιότητες που χρησιμοποιούμε ξανά και ξανά:
+
+- $J_{-n}(\beta) = (-1)^n J_n(\beta)$ — **ζυγά n** = συμμετρικά, **μονά n** = αντισυμμετρικά
+- $\sum_{n=-\infty}^{\infty} J_n^2(\beta) = 1$ — **διατήρηση ισχύος** (energy identity)
+
+Δεν χρειάζεται να αποδείξεις την Jacobi-Anger στις εξετάσεις — δίνεται. Αλλά πρέπει να ξέρεις πώς να την **εφαρμόσεις**.
+
+## 3. Παραγωγή του φάσματος — βήμα προς βήμα
+
+Παίρνουμε το single-tone FM:
+
+$$
+x_{FM}(t) = A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]
+$$
+
+**Βήμα 1.** Γράφουμε το cosine ως πραγματικό μέρος μιγαδικού εκθετικού:
+
+$$
+x_{FM}(t) = A_c\,\Re\!\left\{ e^{j[2\pi f_c t + \beta\sin(2\pi f_m t)]} \right\}
+$$
+
+**Βήμα 2.** Διαχωρίζουμε τα δύο εκθετικά:
+
+$$
+x_{FM}(t) = A_c\,\Re\!\left\{ e^{j 2\pi f_c t} \cdot e^{j\beta\sin(2\pi f_m t)} \right\}
+$$
+
+**Βήμα 3.** Εφαρμόζουμε Jacobi-Anger στο δεύτερο παράγοντα (με $\theta = 2\pi f_m t$):
+
+$$
+e^{j\beta\sin(2\pi f_m t)} = \sum_{n=-\infty}^{\infty} J_n(\beta)\, e^{j 2\pi n f_m t}
+$$
+
+**Βήμα 4.** Πολλαπλασιάζουμε:
+
+$$
+x_{FM}(t) = A_c\,\Re\!\left\{ \sum_{n=-\infty}^{\infty} J_n(\beta)\, e^{j 2\pi (f_c + n f_m) t} \right\}
+$$
+
+**Βήμα 5.** Το πραγματικό μέρος ενός cisoid είναι cosine:
+
+$$
+\boxed{\,x_{FM}(t) = A_c\sum_{n=-\infty}^{\infty} J_n(\beta)\cos[2\pi(f_c + n f_m)t]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+**Διαβάζουμε αυτή τη σειρά:** το FM σήμα είναι **άπειρο άθροισμα cosines**, στις συχνότητες $f_c, f_c\pm f_m, f_c\pm 2f_m, \ldots$, με πλάτη $A_c\, J_n(\beta)$.
+
+## 4. Το φάσμα — forest of impulses
+
+Παίρνοντας Fourier transform όρο προς όρο:
+
+$$
+\boxed{\,X_{FM}(f) = \frac{A_c}{2}\sum_{n=-\infty}^{\infty} J_n(\beta)\,\big[\delta(f - f_c - n f_m) + \delta(f + f_c + n f_m)\big]\,}
+$$
+
+Αυτό σημαίνει:
+
+- Στο **θετικό μέρος** του φάσματος, εμφανίζονται impulses σε όλες τις συχνότητες $f_c + n f_m$ για $n = 0, \pm 1, \pm 2, \ldots$
+- Το ύψος κάθε impulse είναι $|A_c J_n(\beta)/2|$.
+- Στο **n=0** βρίσκεται ο carrier ($f_c$).
+- Στα $n=\pm 1$ βρίσκονται οι **πρώτες sidebands** (όπως στην AM).
+- Στα $n=\pm 2, \pm 3, \ldots$ έρχονται οι **higher-order sidebands** που δεν υπήρχαν στην AM.
+
+<BesselSpectrumViz />
+
+**Παρατηρήσεις από τη γραφική:**
+
+- Όταν **β είναι μικρό** (π.χ. β=0.2 — NBFM), σχεδόν όλη η ενέργεια είναι στο $J_0$ (carrier) και το $J_1$ (πρώτη sideband). Μοιάζει με AM.
+- Όταν **β αυξάνεται**, η ενέργεια **απλώνεται** σε περισσότερα sidebands. Το $J_0$ μειώνεται· τα $J_n$ για μεγάλα n αυξάνονται.
+- Στις **ρίζες του J₀** (β ≈ 2.405, 5.520, 8.654…), ο carrier **εξαφανίζεται εντελώς**. Όλη η ισχύς του πάει στις sidebands.
+
+## 5. Διατήρηση ισχύος
+
+Ο carrier πριν τη modulation έχει ισχύ $P_T = A_c^2/2$. Μετά τη modulation, η ισχύς κατανέμεται ως εξής:
+
+$$
+P_{FM} = \frac{A_c^2}{2}\sum_{n=-\infty}^{\infty} J_n^2(\beta)
+$$
+
+Αλλά από την **energy identity** $\sum J_n^2(\beta) = 1$:
+
+$$
+\boxed{\,P_{FM} = \frac{A_c^2}{2}\,}
+$$
+
+**Αποτέλεσμα:** η συνολική ισχύς του FM σήματος είναι η **ίδια** ασχέτως του β. Δεν εξαρτάται από το message. Αυτό είναι **πολύ διαφορετικό από την AM** όπου η ισχύς αυξάνεται με την $\mu$.
+
+<Callout type="key" title="Γιατί η ισχύς διατηρείται">
+Επειδή το envelope είναι σταθερό! $V(t) = A_c$, οπότε $\langle x_{FM}^2\rangle = A_c^2/2$ ανεξάρτητα από το β. Η Bessel ταυτότητα $\sum J_n^2 = 1$ είναι ο μαθηματικός τρόπος να εκφράσει την ίδια αλήθεια στο **frequency domain**. Η ενέργεια απλά **κατανέμεται** σε διαφορετικά sidebands ανάλογα με το β — αλλά το άθροισμα μένει $A_c^2/2$.
+</Callout>
+
+## 6. Πίνακας Bessel — interactive
+
+Στις εξετάσεις σου δίνεται ο πίνακας τιμών $J_n(\beta)$. Εδώ έχεις μια interactive εκδοχή για να εξασκηθείς:
+
+<BesselTable />
+
+Σημαντικά points για τις εξετάσεις:
+
+- Στο **β = 1** ([NBFM boundary](/fm/idea#5-nbfm-vs-wbfm)): $J_0 \approx 0.77$, $J_1 \approx 0.44$, $J_2 \approx 0.11$, $J_3 \approx 0.02$. Σχεδόν όλη η ενέργεια στις πρώτες δύο γραμμές.
+- Στο **β = 2.405** (πρώτη ρίζα του $J_0$): $J_0 = 0$. Ο carrier εξαφανίζεται. Κλασική ερώτηση εξετάσεων: «για ποιο β χάνεται ο carrier;»
+- Στο **β = 5**: η ενέργεια απλώνεται μέχρι $J_8$. Αρκετά πλατύ φάσμα — η Carson's rule θα το ποσοτικοποιήσει στο επόμενο κεφάλαιο.
+
+## 7. Πόσα sidebands μετράνε; (προοίμιο για Carson)
+
+Δεν υπάρχει ξεκάθαρο cutoff — η σειρά είναι άπειρη. Αλλά πρακτικά, για κάθε β υπάρχει ένα $N$ πέρα από το οποίο τα $J_n(\beta)$ είναι αμελητέα.
+
+Ένας **εμπειρικός κανόνας** (1% της ενέργειας ή λιγότερο):
+
+$$
+N \approx \beta + 1
+$$
+
+Δηλαδή χρειαζόμαστε **±(β+1)** sidebands για να ανακατασκευάσουμε το σήμα με αμελητέο σφάλμα. Αυτό οδηγεί στο **Carson's rule** για το bandwidth:
+
+$$
+B_{Carson} = 2(\beta + 1) f_m \quad \text{✓ Στο τυπολόγιο}
+$$
+
+(Λεπτομέρειες στο [επόμενο κεφάλαιο](/fm/carson).)
+
+## 8. Worked example — β = 2.5
+
+<Example title="Ex. — δίνεται FM εξίσωση, βρες τα 5 σημαντικότερα sidebands">
+
+**Δίνεται:**
+$$
+s(t) = 5\cos[2\pi(100\,000)\,t + 2.5\sin(2\pi(2000)\,t)] \text{ V}
+$$
+
+**Ζητούνται:**
+1. $f_c, f_m, \beta, A_c$
+2. Οι συχνότητες των πρώτων 5 ζευγών sidebands
+3. Τα πλάτη τους
+4. Η συνολική ισχύς
+
+Δίνεται ότι $J_0(2.5) = -0.048$, $J_1(2.5) = 0.497$, $J_2(2.5) = 0.446$, $J_3(2.5) = 0.217$, $J_4(2.5) = 0.074$, $J_5(2.5) = 0.020$.
+
+---
+
+**Λύση.**
+
+**(1)** Από τη μορφή $A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]$:
+
+- $A_c = 5$ V
+- $f_c = 100\,000$ Hz = **100 kHz**
+- $f_m = 2000$ Hz = **2 kHz**
+- $\beta = 2.5$ → **WBFM** (β > 1)
+
+**(2)** Τα sidebands βρίσκονται στις $f_c \pm n f_m$:
+
+| n | Συχνότητα (kHz) |
+| --- | --- |
+| 0 | 100 (carrier) |
+| ±1 | 98, 102 |
+| ±2 | 96, 104 |
+| ±3 | 94, 106 |
+| ±4 | 92, 108 |
+| ±5 | 90, 110 |
+
+**(3)** Τα πλάτη είναι $A_c |J_n(2.5)|$:
+
+| n | $J_n(2.5)$ | Πλάτος (V) |
+| --- | --- | --- |
+| 0 | -0.048 | 0.24 |
+| ±1 | 0.497 | 2.49 |
+| ±2 | 0.446 | 2.23 |
+| ±3 | 0.217 | 1.09 |
+| ±4 | 0.074 | 0.37 |
+| ±5 | 0.020 | 0.10 |
+
+**Παρατήρηση 1:** ο carrier είναι σχεδόν μηδέν! (β = 2.5 ≈ 2.405, η ρίζα του $J_0$). Η μεγάλη ενέργεια έχει πάει στα n = ±1, ±2.
+
+**Παρατήρηση 2:** το **n = ±1** είναι το μεγαλύτερο, με πλάτος 2.49 V — μεγαλύτερο από το πλάτος του carrier στο unmodulated σήμα.
+
+**(4)** Η συνολική ισχύς του FM σήματος (πάνω σε αντίσταση 1Ω):
+
+$$
+P_{FM} = \frac{A_c^2}{2} = \frac{5^2}{2} = 12.5 \text{ W}
+$$
+
+(Δεν εξαρτάται από το β — η energy identity εγγυάται.)
+
+**Sanity check** χρησιμοποιώντας τις πρώτες 5 sidebands:
+$$
+\frac{A_c^2}{2}\Big[J_0^2 + 2(J_1^2 + J_2^2 + J_3^2 + J_4^2 + J_5^2)\Big]
+$$
+$$
+= \frac{25}{2}\big[0.0023 + 2(0.247 + 0.199 + 0.047 + 0.0055 + 0.0004)\big]
+$$
+$$
+= 12.5 \cdot \big[0.0023 + 2(0.499)\big] \approx 12.5 \cdot 0.998 \approx 12.48 \text{ W}
+$$
+
+99.8% της ενέργειας περιέχεται στα ±5 sidebands — οπότε για πρακτικούς σκοπούς το bandwidth είναι ≈ 10 f_m = 20 kHz, που συμφωνεί με το Carson's $2(\beta+1)f_m = 2(3.5)(2000) = 14$ kHz (μικρή υποεκτίμηση επειδή ο Carson cuts στα ~98% αντί για 99.8%).
+
+</Example>
+
+## 9. Σύνοψη formulas
+
+| Ποσότητα | Τύπος |
+| --- | --- |
+| FM signal (Bessel form) | $x_{FM}(t) = A_c\sum_n J_n(\beta)\cos[2\pi(f_c+nf_m)t]$ |
+| FM spectrum | $X_{FM}(f) = \frac{A_c}{2}\sum_n J_n(\beta)[\delta(f - f_c - nf_m) + \delta(f + f_c + nf_m)]$ |
+| Sideband symmetry | $J_{-n}(\beta) = (-1)^n J_n(\beta)$ |
+| Energy identity | $\sum_n J_n^2(\beta) = 1$ |
+| Total power | $P_{FM} = A_c^2/2$ (ανεξάρτητο του β!) |
+| n-οστή sideband power | $P_n = (A_c^2/2)\, J_n^2(\beta)$ |
+| Carrier zeros | β ≈ 2.405, 5.520, 8.654, … |
+
+<Recap>
+- Το $\cos[\beta\sin\theta]$ αναλύεται σε άθροισμα harmonics μέσω **Jacobi-Anger expansion**: $e^{j\beta\sin\theta} = \sum_n J_n(\beta) e^{jn\theta}$.
+- Το single-tone FM σήμα γίνεται $x_{FM}(t) = A_c\sum_n J_n(\beta)\cos[2\pi(f_c+nf_m)t]$.
+- **Φάσμα:** forest of impulses στα $f_c \pm n f_m$ με ύψος $A_c|J_n(\beta)|/2$.
+- **Energy identity:** $\sum J_n^2 = 1$ → $P_{FM} = A_c^2/2$ ανεξάρτητο του β.
+- **Carrier vanishes** στις ρίζες του $J_0$: β ≈ 2.405, 5.520, 8.654.
+- **Bandwidth heuristic:** $\sim$ ±(β+1) sidebands είναι σημαντικά. Επόμενο κεφάλαιο: Carson's rule το κάνει αυστηρό.
+</Recap>
+
+<NextUp slug="fm/carson" />

@@ -70,6 +70,11 @@ import { VSBShapingViz } from '@/components/viz/VSBShapingViz'
 import { EnvelopeDetectorViz } from '@/components/viz/EnvelopeDetectorViz'
 import { AMInNoiseViz } from '@/components/viz/AMInNoiseViz'
 import { FDMSpectrumViz } from '@/components/viz/FDMSpectrumViz'
+import { FMSignalViz } from '@/components/viz/FMSignalViz'
+import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
+import { BesselTable } from '@/components/viz/BesselTable'
+import { CarsonRuleViz } from '@/components/viz/CarsonRuleViz'
+import { FMNoiseTriangleViz } from '@/components/viz/FMNoiseTriangleViz'
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
@@ -192,6 +197,19 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — am / multiplexing
     FDMSpectrumViz,
+
+    // Visualizations — fm / idea
+    FMSignalViz,
+
+    // Visualizations — fm / bessel
+    BesselSpectrumViz,
+    BesselTable,
+
+    // Visualizations — fm / carson
+    CarsonRuleViz,
+
+    // Visualizations — fm / in-noise
+    FMNoiseTriangleViz,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on

@@ -1,0 +1,257 @@
+export const metadata = {
+  title: 'FM — η ιδέα + modulation index β',
+  description:
+    'Frequency Modulation: η πληροφορία ζει στη συχνότητα του carrier, όχι στο πλάτος. Στιγμιαία συχνότητα, η εξίσωση FM, modulation index β = Δf/f_m, NBFM vs WBFM, σύνδεση με την constant-envelope γραμμή της I/Q canonical form.',
+}
+
+export const frontmatter = {
+  title: 'FM — η ιδέα + β',
+  slug: 'fm/idea',
+  order: 1,
+  prerequisites: [
+    'foundations/fourier-transform',
+    'modulation/bridge',
+    'am/conventional',
+  ],
+  examWeight: 8,
+  estimatedReadTime: 28,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · FM</span>
+  <span>·</span>
+  <span>~28 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam</span>
+</div>
+
+# FM — η ιδέα + modulation index β
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="fm/idea" />
+  <Bookmark id="fm/idea" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Η AM κωδικοποιεί την πληροφορία στο **πλάτος** του carrier. Η **FM (Frequency Modulation)** την κωδικοποιεί στη **συχνότητα**. Στο γνωστό AM ραδιόφωνο, όταν εκτονώνεται κεραυνός, ο amplitude θόρυβος προστίθεται στο envelope και ακούγεται. Στο FM, τα peaks του θορύβου προσπαθούν να αλλάξουν το πλάτος — και αγνοούνται. Γι' αυτό το FM είναι **ανώτερο σε θόρυβο** από το AM.
+
+Η FM ομάδα (4 κεφάλαια) είναι το δεύτερο βαρύ exam topic μετά την AM (~25% combined). Σε αυτό το πρώτο κεφάλαιο μαθαίνουμε:
+
+1. Την έννοια της **στιγμιαίας συχνότητας**.
+2. Την **εξίσωση FM**.
+3. Το **modulation index β** και τη σχέση του με τη **frequency deviation** $\Delta f$.
+4. Τη διάκριση **NBFM vs WBFM**.
+
+## 1. Στιγμιαία συχνότητα — όταν η συχνότητα κουνιέται με τον χρόνο
+
+Σε ένα κανονικό cosine $A\cos(2\pi f_0 t)$, η **συχνότητα είναι σταθερή** ($f_0$). Αλλά τι γίνεται αν θέλουμε να την κάνουμε **να μεταβάλλεται** με τον χρόνο;
+
+Ορίζουμε τη **στιγμιαία συχνότητα** $f(t)$ ως τον ρυθμό αλλαγής της φάσης ως προς τον χρόνο, διαιρεμένο με $2\pi$:
+
+$$
+\boxed{\,f(t) = \frac{1}{2\pi}\frac{d\theta(t)}{dt}\,}
+$$
+
+όπου $\theta(t)$ είναι η συνολική φάση του σήματος. Γενικότερα, ένα κύμα γράφεται:
+
+$$
+x(t) = A\cos\theta(t)
+$$
+
+Για σταθερή συχνότητα, $\theta(t) = 2\pi f_0 t$ → $f(t) = f_0$. Για **χρονικά μεταβαλλόμενη** συχνότητα, η φάση είναι το ολοκλήρωμα της στιγμιαίας συχνότητας:
+
+$$
+\theta(t) = 2\pi \int_{-\infty}^{t} f(\tau)\, d\tau
+$$
+
+**Παράδειγμα:** αν θέλουμε η συχνότητα να ταλαντώνεται γύρω από $f_c$ ακολουθώντας ένα message $m(t)$:
+
+$$
+f(t) = f_c + k_f \cdot m(t)
+$$
+
+όπου $k_f$ είναι ο **frequency deviation constant** (Hz/V). Όταν $m$ είναι θετικό, η συχνότητα ανεβαίνει· όταν αρνητικό, πέφτει.
+
+## 2. Η εξίσωση FM
+
+Ολοκληρώνουμε την στιγμιαία συχνότητα για να βρούμε τη φάση:
+
+$$
+\theta(t) = 2\pi f_c t + 2\pi k_f \int_{-\infty}^{t} m(\tau)\, d\tau
+$$
+
+Άρα το FM σήμα είναι:
+
+$$
+\boxed{\,x_{FM}(t) = A_c \cos\!\left[2\pi f_c t + 2\pi k_f \int_{-\infty}^{t} m(\tau)\, d\tau\right]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+Δύο όροι μέσα στο cosine:
+
+- $2\pi f_c t$ — η σταθερή συνιστώσα (carrier).
+- $2\pi k_f \int m(\tau) d\tau$ — η **phase modulation**: το ολοκλήρωμα του message «σπρώχνει» τη φάση πάνω-κάτω.
+
+**Σημείωση:** το ολοκλήρωμα είναι **κρίσιμο**. Δεν είναι το $m(t)$ που μπαίνει απευθείας στη φάση — είναι το ολοκλήρωμά του. Γι' αυτό η FM διαφέρει από την Phase Modulation (PM), όπου το $m(t)$ μπαίνει απευθείας:
+
+$$
+x_{PM}(t) = A_c\cos[2\pi f_c t + k_p\, m(t)]
+$$
+
+(PM και FM είναι «δυϊκές» — αν το $m(t)$ της FM είναι το παράγωγο του $m(t)$ της PM, οι έξοδοι είναι ίδιες.)
+
+## 3. Single-tone FM
+
+Στις εξετάσεις, σχεδόν πάντα δουλεύουμε με **single-tone** message:
+
+$$
+m(t) = A_m \cos(2\pi f_m t)
+$$
+
+Το ολοκλήρωμα γίνεται:
+
+$$
+\int_{-\infty}^{t} m(\tau)\, d\tau = \frac{A_m}{2\pi f_m}\sin(2\pi f_m t)
+$$
+
+Αντικαθιστώντας:
+
+$$
+x_{FM}(t) = A_c \cos\!\left[2\pi f_c t + \frac{k_f A_m}{f_m}\sin(2\pi f_m t)\right]
+$$
+
+Ορίζουμε:
+
+$$
+\boxed{\,\beta = \frac{k_f A_m}{f_m} = \frac{\Delta f}{f_m}\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+όπου:
+
+- $\beta$ — **modulation index** της FM (αδιάστατος αριθμός)
+- $\Delta f = k_f A_m$ — **frequency deviation** (Hz): η μέγιστη απόκλιση της στιγμιαίας συχνότητας από τον carrier.
+- $f_m$ — η συχνότητα του message.
+
+Με τον ορισμό του β, η εξίσωση γίνεται:
+
+$$
+\boxed{\,x_{FM}(t) = A_c \cos[2\pi f_c t + \beta \sin(2\pi f_m t)]\,}
+$$
+
+Αυτή είναι η μορφή που θα δουλέψουμε στο επόμενο κεφάλαιο για να βρούμε το φάσμα μέσω Bessel.
+
+<FMSignalViz />
+
+## 4. Σύνδεση με την I/Q canonical form
+
+Από το [/modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η FM είναι η **τέταρτη γραμμή** του πίνακα:
+
+$$
+x_I(t) = A_c\cos\phi(t), \qquad x_Q(t) = -A_c\sin\phi(t)
+$$
+
+όπου $\phi(t) = \beta\sin(2\pi f_m t)$ για single-tone.
+
+**Envelope:**
+$$
+V(t) = \sqrt{x_I^2 + x_Q^2} = A_c\sqrt{\cos^2\phi + \sin^2\phi} = A_c
+$$
+
+**Σταθερό envelope!** — όλη η πληροφορία ζει στη φάση. Στο complex plane, το complex envelope $g(t) = A_c\, e^{j\phi(t)}$ κινείται **πάνω σε κύκλο ακτίνας $A_c$**, χωρίς ποτέ να αλλάζει μέτρο. Δες αυτό στο [`<IQDecompositionViz />`](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή) με το preset «FM».
+
+<Callout type="key" title="Γιατί η FM είναι ανθεκτική στον θόρυβο">
+Επειδή το envelope είναι σταθερό. Αν προσθέσεις amplitude θόρυβο στον carrier, ένα FM receiver μπορεί να **πάρει το άρνημα του envelope** πριν τη demodulation (limiter) — και να εξαλείψει εντελώς τον amplitude θόρυβο πριν εξάγει την πληροφορία της φάσης. Στο AM δεν μπορείς να το κάνεις αυτό γιατί το envelope **είναι** η πληροφορία.
+
+Το trade-off: η FM **καταναλώνει περισσότερο bandwidth** για την ίδια ποιότητα ομιλίας (Carson's rule, επόμενο κεφάλαιο).
+</Callout>
+
+## 5. NBFM vs WBFM — δύο regimes
+
+Ανάλογα με το $\beta$, η FM ξεχωρίζει σε δύο πολύ διαφορετικά καθεστώτα:
+
+| Regime | Συνθήκη | Συμπεριφορά |
+| --- | --- | --- |
+| **NBFM** (Narrowband FM) | $\beta \ll 1$ (συνήθως $\beta < 0.3$) | Συμπεριφέρεται σχεδόν σαν AM — μόνο 2 sidebands. Bandwidth $\approx 2 f_m$ (όπως AM). |
+| **WBFM** (Wideband FM) | $\beta \gg 1$ (συνήθως $\beta > 1$) | Πολλαπλές sidebands. Bandwidth $\gg 2 f_m$. Χρησιμοποιείται στο εμπορικό FM ραδιόφωνο. |
+
+**Παράδειγμα τιμών για εμπορικό FM ραδιόφωνο:**
+- Message bandwidth $W \approx 15$ kHz (high-fidelity audio)
+- Frequency deviation $\Delta f = 75$ kHz (πρότυπο FCC)
+- $\beta = \Delta f / W = 5$ → **WBFM**
+- Carson's rule bandwidth: $\sim 180$ kHz, ταιριάζει με τα 200 kHz spacing του broadcast standard
+
+**Παράδειγμα NBFM:**
+- Two-way ραδιοεπικοινωνία (police, taxi)
+- Δf $\approx 5$ kHz, message $\approx 5$ kHz → $\beta \approx 1$ (boundary)
+- Στενότερα κανάλια ($\sim 25$ kHz) χωράνε στο διαθέσιμο φάσμα.
+
+## 6. Worked example — Jan'26 Θ4
+
+<Example title="Ex. — δίνεται η FM εξίσωση, βρες όλα τα παραμέτρα">
+
+**Δίνεται:**
+$$
+s(t) = 10\cos[2\pi\cdot 100000\, t + 3\sin(2\pi\cdot 1000\, t)] \text{ V}
+$$
+
+**Ζητούνται:** $f_c$, $f_m$, $\beta$, $\Delta f$, $A_c$.
+
+---
+
+**Λύση.**
+
+Συγκρίνοντας με την standard form $x_{FM}(t) = A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]$:
+
+- **$A_c = 10$ V** (πλάτος του cosine)
+- **$f_c = 100\,000$ Hz = 100 kHz** (ο συντελεστής του $t$ στον πρώτο όρο, διαιρεμένο με $2\pi$)
+- **$f_m = 1000$ Hz = 1 kHz** (ο συντελεστής του $t$ μέσα στον $\sin$)
+- **$\beta = 3$** (ο συντελεστής του $\sin$ — το modulation index)
+
+Από $\beta = \Delta f / f_m$:
+
+$$
+\Delta f = \beta \cdot f_m = 3 \cdot 1000 = 3000 \text{ Hz} = 3 \text{ kHz}
+$$
+
+Αυτό είναι **WBFM** (αφού $\beta = 3 > 1$). Το επόμενο κεφάλαιο (Bessel) μάς δίνει το φάσμα.
+
+</Example>
+
+## 7. Σύνοψη formulas (στο τυπολόγιο)
+
+| Ποσότητα | Τύπος |
+| --- | --- |
+| FM signal (general) | $x_{FM}(t) = A_c\cos[2\pi f_c t + 2\pi k_f \int m\, d\tau]$ |
+| FM signal (single-tone) | $x_{FM}(t) = A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]$ |
+| Στιγμιαία συχνότητα | $f(t) = f_c + k_f m(t)$ |
+| Frequency deviation (single-tone) | $\Delta f = k_f A_m$ |
+| Modulation index | $\beta = \Delta f / f_m = k_f A_m / f_m$ |
+| Envelope | $V(t) = A_c$ (σταθερό) |
+| Phase | $\theta(t) = \beta\sin(2\pi f_m t)$ |
+
+## 8. Πραγματικές εφαρμογές της FM
+
+- **FM ραδιόφωνο** (88–108 MHz): high-fidelity stereo audio, $\beta \approx 5$, channel spacing 200 kHz.
+- **TV audio (αναλογικό)**: FM-modulated audio carrier δίπλα στο VSB video.
+- **Two-way radio** (ασυρματάκια): NBFM, $\beta \approx 1$, στενά κανάλια.
+- **Cellular (αναλογικό AMPS, ιστορικό)**: NBFM για φωνή πριν τα ψηφιακά standards.
+- **Telemetry**: FM-FM telemetry για επιστημονικά πειράματα.
+- **Aircraft VHF**: στην πραγματικότητα AM, όχι FM (παράδοση από WW2 — FM δεν είχε αναπτυχθεί ακόμα). Αλλά UHF στρατιωτικά είναι FM.
+
+<Recap>
+- Η **FM** κωδικοποιεί την πληροφορία στη **στιγμιαία συχνότητα** του carrier, με $f(t) = f_c + k_f m(t)$.
+- Η εξίσωση: $x_{FM}(t) = A_c\cos[2\pi f_c t + 2\pi k_f \int m\, d\tau]$. Για single-tone: $x_{FM}(t) = A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]$.
+- **Modulation index** $\beta = \Delta f / f_m$, αδιάστατος. Η frequency deviation $\Delta f = k_f A_m$ μετριέται σε Hz.
+- **Σταθερό envelope** $V = A_c$ — όλη η πληροφορία στη φάση. Στο complex plane το $g(t)$ κινείται σε κύκλο.
+- **NBFM** ($\beta < 0.3$): σχεδόν σαν AM, BW ≈ 2 f_m. **WBFM** ($\beta > 1$): πολλές sidebands, BW μεγαλύτερο.
+- **Πλεονέκτημα έναντι AM**: ανθεκτικότητα στο amplitude noise (envelope μπορεί να αφαιρεθεί). **Κόστος**: μεγαλύτερο bandwidth.
+- Επόμενο κεφάλαιο: το **φάσμα** της FM μέσω Bessel functions — εκεί το β μπαίνει στο παιχνίδι μαθηματικά.
+</Recap>
+
+<NextUp slug="fm/bessel" />

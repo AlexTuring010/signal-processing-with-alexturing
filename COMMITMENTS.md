@@ -24,10 +24,6 @@ Format:
        Source material: `Εγκατάσταση_του_Matlab.pdf` + `Εργαστήριο_1intro_matlab.pdf`
        Notes: The intro page promises "Πλήρης οδηγός εγκατάστασης και της Lab 1 θα έρθει σε ξεχωριστή σελίδα". Until this page exists, the LabBox link in the intro should either go nowhere clean or to a clearly-marked "🚧 Σύντομα" placeholder.
 
-- [ ] **Full treatment of modulation (AM, FM)**
-       Where it appears: `/intro`, section 7
-       Where it should be fulfilled: `/modulation/am` and `/modulation/fm`
-       Notes: The intro gives a teaser definition of modulation and lists 6 reasons. The full chapters must build on this without re-defining from scratch (instead: "θυμάσαι από την εισαγωγή τι είναι modulation; Τώρα θα δούμε αναλυτικά πώς γίνεται.")
 
 - [ ] **Full treatment of the sampling theorem**
        Where it appears: `/intro`, roadmap section
@@ -56,25 +52,6 @@ Format:
        Where it should be fulfilled: `/randomness/psd` (and earlier parts of the random-processes chapter)
        Notes: The FT chapter only treats deterministic-energy signals: $R_x(\tau) \leftrightarrow |X(f)|^2$. For random / power signals (noise, modulated signals once the message is treated as random), `X(f)` is not well-defined per realization. The random-process chapter must define PSD via expected autocorrelation and derive the random-signal version of Wiener–Khinchin, then connect back to the deterministic version proved here.
 
-- [ ] **AM modulation built on the modulation theorem**
-       Where it appears: `/foundations/fourier-transform` Section 7 (modulation theorem promises that "this is exactly the math of AM" and forward-links to /am)
-       Where it should be fulfilled: `/am/conventional`, `/am/dsb-sc`, `/am/ssb`, `/am/demodulation`
-       Notes: The AM chapters must open by reusing the modulation theorem from the FT page rather than re-deriving it. They should explicitly back-reference: «θυμάσαι από τον FT chapter ότι πολλαπλασιασμός με cos(2π f_c t) μετατοπίζει το φάσμα στις ±f_c; Όλη η AM είναι αυτό, εφαρμοσμένο σε baseband σήματα φωνής/μουσικής, με variations στο πώς διαχειριζόμαστε τις δύο πλευρικές ζώνες και το carrier.» Also: the symmetric ±f_c copies are the reason AM bandwidth is twice the baseband bandwidth.
-
-- [ ] **AM modulation as the x_Q = 0 row of the canonical bandpass form**
-       Where it appears: `/modulation/bridge` Section 5b (the I/Q canonical-form table)
-       Where it should be fulfilled: `/modulation/am` (specifically `/am/conventional` Section 1)
-       Notes: The bandpass chapter promises that AM, DSB-SC, SSB, FM, PM are all special cases of $x(t) = x_I\cos(2\pi f_c t) - x_Q\sin(2\pi f_c t)$. Each modulation chapter must open by quoting its row of the §5b table and deriving the spectrum, bandwidth, and modulator/demodulator structure from there — not from scratch. AM specifically: $x_I = A_c[1 + k_a m(t)]$, $x_Q = 0$ ⇒ envelope-only modulation ⇒ envelope detector recovers the message.
-
-- [ ] **FM modulation as constant-envelope $V = A_c$, message-encoded $\theta(t)$**
-       Where it appears: `/modulation/bridge` Section 5b (the I/Q canonical-form table) and Section 5a (polar form)
-       Where it should be fulfilled: `/modulation/fm` (specifically `/fm/idea` Section 1)
-       Notes: Same pattern as AM — FM chapter must back-reference the §5b row: $V(t) = A_c$ constant, $\theta(t) = \phi(t)$ where $\phi$ encodes the integral of the message. The constant-envelope property is what makes FM resilient to amplitude noise; that connection should be made explicitly when noise/SNR enters the picture.
-
-- [ ] **Quadrature receiver / IQ demodulator architecture**
-       Where it appears: `/modulation/bridge` Section 5 (the canonical form implicitly suggests that $x_I$ and $x_Q$ can be extracted by mixing with $\cos$ and $-\sin$ + lowpass)
-       Where it should be fulfilled: A modulation chapter where coherent demodulation is treated (likely `/am/demodulation` or `/modulation/players`)
-       Notes: The bandpass chapter doesn't show the receiver block diagram; it only proves the canonical decomposition exists. The modulation chapters must close the loop: multiplying the bandpass signal by $2\cos(2\pi f_c t)$ and lowpass-filtering recovers $x_I$; multiplying by $-2\sin(2\pi f_c t)$ and lowpass-filtering recovers $x_Q$. This is the quadrature receiver — used universally in software-defined radio.
 
 ---
 
@@ -135,6 +112,31 @@ Format:
        Originally appeared: implicit forward-promise from `/foundations/fourier-transform` Section 7 (modulation theorem) and the FT NextUp pointing at this chapter
        Fulfilled in: `/modulation/bridge` Sections 1, 4, 5 (chapter promoted to first chapter of modulation group on 2026-05-05; previously lived at `/foundations/bandpass-filters` §1, 4, 5)
        Notes: Section 1 names baseband vs bandpass and ties the modulation theorem to the bandpass class. Section 4 derives the complex envelope $g(t) = x_p(t)\,e^{-j 2\pi f_c t}$ and the canonical $x(t) = \mathrm{Re}\{g(t)\,e^{j 2\pi f_c t}\}$. Section 5 unfolds this into the I/Q form $x(t) = x_I\cos - x_Q\sin$ and lays out the five-modulation table (AM, DSB-SC, SSB, FM, PM) as different rows. The `<IQDecompositionViz />` flagship makes AM-vs-FM visceral by tracing $(x_I, x_Q)$ in the complex plane (line for AM, circle for FM). A 🎯 closes-commitment callout names this as the bridge to modulation.
+
+- [x] **Full treatment of modulation (AM, FM)** (closed 2026-05-05)
+       Originally appeared: `/intro`, section 7
+       Fulfilled in: `/am/*` (7 chapters) and `/fm/*` (4 chapters)
+       Notes: The AM group covers conventional/DSB-SC/SSB/VSB plus modulator/demodulator + AM-in-noise + multiplexing. The FM group covers the basic idea + β, Bessel sidebands, Carson's rule + NBFM/WBFM, and FM-in-noise + AM-vs-FM trade-offs. Each chapter back-references the intro and chains forward, so a reader who started from /intro reaches the FM chapters without ever needing to re-derive a fundamental.
+
+- [x] **AM modulation built on the modulation theorem** (closed 2026-05-05)
+       Originally appeared: `/foundations/fourier-transform` Section 7 (modulation theorem)
+       Fulfilled in: `/am/overview`, `/am/conventional` Section 4 (spectrum), `/am/dsb-sc` Section 1 (derived from AM), `/am/ssb` Section 1
+       Notes: AM chapters open with the modulation-theorem framing — multiplication by cos(2π f_c t) shifts the spectrum to ±f_c. Bandwidth = 2W is presented as a direct corollary of the symmetric ±f_c copies, not as an independent fact.
+
+- [x] **AM modulation as the x_Q = 0 row of the canonical bandpass form** (closed 2026-05-05)
+       Originally appeared: `/modulation/bridge` Section 5b (the I/Q canonical-form table)
+       Fulfilled in: `/am/conventional` Section 1, `/am/dsb-sc` Section 1, `/am/ssb` Section 1
+       Notes: Each AM-family chapter quotes its row of the §5b table. Conventional AM: $x_I = A_c[1 + \mu m(t)]$, $x_Q = 0$ → envelope detector. DSB-SC: $x_I = A_c m(t)$, $x_Q = 0$, no carrier. SSB: $x_I = m(t)$, $x_Q = \pm \hat m(t)$ — uses Hilbert. The structural decomposition makes the differences in bandwidth, demodulator complexity, and power efficiency fall out of the (x_I, x_Q) choice rather than appearing ad-hoc.
+
+- [x] **FM modulation as constant-envelope $V = A_c$, message-encoded $\theta(t)$** (closed 2026-05-05)
+       Originally appeared: `/modulation/bridge` Section 5b (the I/Q canonical-form table) and Section 5a (polar form)
+       Fulfilled in: `/fm/idea` Section 4 ("Σύνδεση με την I/Q canonical form")
+       Notes: §4 quotes the FM row of the §5b table — $V(t) = A_c$ constant, $\theta(t) = \beta\sin(2\pi f_m t)$ for single-tone — and points the reader to the FM preset of `<IQDecompositionViz />` showing the complex envelope tracing a circle. The constant-envelope property is then explicitly tied to noise resilience: any amplitude noise can be stripped by a limiter before demodulation, since the information lives entirely in the phase. That connection is reinforced in `/fm/in-noise` Section 1 (the "limiter" stage of the receiver block diagram).
+
+- [x] **Quadrature receiver / IQ demodulator architecture** (closed 2026-05-05)
+       Originally appeared: `/modulation/bridge` Section 5 (canonical form suggests $x_I$ and $x_Q$ can be extracted by mixing with $\cos$ and $-\sin$ + lowpass)
+       Fulfilled in: `/am/dsb-sc` Section "Coherent demodulation" + `<CoherentDemodulationViz />`, `/am/modulator-demodulator` Section "Coherent receiver", `/fm/in-noise` Section 1 (FM discriminator analogue)
+       Notes: The DSB-SC chapter draws the full coherent receiver chain: multiply by $2\cos(2\pi f_c t)$ → LPF → recover $m(t)$. The phase-error analysis shows what happens when the receiver oscillator drifts off the carrier (quadrature null at ±90°). The AM modulator/demodulator chapter uses the same architecture for AM coherent demodulation. The FM-in-noise chapter generalizes: instead of multiplying by $\cos$ alone, the FM discriminator extracts the instantaneous frequency, which is the derivative of the angle — analogous role.
 
 - [x] **Hilbert transform — phase-shifter at every frequency** (closed 2026-05-05)
        Originally appeared: implicit forward-promise from FT chapter (mentioned as belonging to bandpass chapter in the FT plan)
