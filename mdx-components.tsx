@@ -66,6 +66,10 @@ import { DSBSCSignalViz } from '@/components/viz/DSBSCSignalViz'
 import { CoherentDemodulationViz } from '@/components/viz/CoherentDemodulationViz'
 import { SSBSpectrumViz } from '@/components/viz/SSBSpectrumViz'
 import { SSBGenerationViz } from '@/components/viz/SSBGenerationViz'
+import { VSBShapingViz } from '@/components/viz/VSBShapingViz'
+import { EnvelopeDetectorViz } from '@/components/viz/EnvelopeDetectorViz'
+import { AMInNoiseViz } from '@/components/viz/AMInNoiseViz'
+import { FDMSpectrumViz } from '@/components/viz/FDMSpectrumViz'
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
@@ -178,6 +182,16 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — am / ssb
     SSBSpectrumViz,
     SSBGenerationViz,
+
+    // Visualizations — am / vsb
+    VSBShapingViz,
+
+    // Visualizations — am / modulator-demodulator
+    EnvelopeDetectorViz,
+    AMInNoiseViz,
+
+    // Visualizations — am / multiplexing
+    FDMSpectrumViz,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on

@@ -1,0 +1,121 @@
+export const metadata = {
+  title: 'VSB — ο συμβιβασμός μεταξύ AM και SSB',
+  description:
+    'VSB (Vestigial Sideband): πλήρης μία sideband + κατάλοιπο της άλλης. Παραμένει envelope-detectable ενώ μειώνει σημαντικά το bandwidth. Η Nyquist symmetry απαίτηση του shaping φίλτρου, η χρήση στο NTSC TV.',
+}
+
+export const frontmatter = {
+  title: 'VSB',
+  slug: 'am/vsb',
+  order: 5,
+  prerequisites: [
+    'modulation/bridge',
+    'am/conventional',
+    'am/ssb',
+  ],
+  examWeight: 2,
+  estimatedReadTime: 12,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · AM</span>
+  <span>·</span>
+  <span>~12 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-green-700 dark:text-green-400">🟢 Light exam</span>
+</div>
+
+# VSB (Vestigial Sideband)
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="am/vsb" />
+  <Bookmark id="am/vsb" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Η AM και η SSB έχουν αντίθετα trade-offs:
+
+| | Conventional AM | SSB |
+| --- | --- | --- |
+| Bandwidth | $2W$ (πλήρες) | $W$ (μισό) |
+| Demodulation | envelope detector (φθηνός) | coherent (πολύπλοκος) |
+| Πρακτικά για χαμηλές message συχνότητες | πάντα δουλεύει | δύσκολο (απότομα φίλτρα) |
+
+**Η VSB είναι ο συμβιβασμός:** μειώνει αισθητά το bandwidth (όχι τόσο πολύ όσο SSB, αλλά αρκετά) **ενώ διατηρεί** τη δυνατότητα envelope detection. Πληρώνει με μια **πολύπλοκη απαίτηση στο shaping φίλτρο** που πρέπει να έχει συγκεκριμένη συμμετρία γύρω από τον carrier.
+
+**Πραγματική χρήση:** το NTSC αναλογικό TV broadcasting (μέχρι το 2009 στις ΗΠΑ) — το video signal έχει συνιστώσες κοντά στο DC και το receiver έπρεπε να είναι φθηνός.
+
+## 1. Η ιδέα — vestige αντί για πλήρη sideband
+
+Στο SSB, πετάμε **όλη** τη μία sideband. Αυτό απαιτεί BPF με **απότομη μετάβαση** στο $f_c$, που είναι δύσκολο όταν το message έχει στοιχεία κοντά στο DC.
+
+Στο VSB, αντί να πετάξουμε όλη τη μία sideband, **πετάμε σχεδόν όλη** και κρατάμε ένα μικρό κατάλοιπο (vestige) γύρω από τον carrier. Το αποτέλεσμα:
+
+- **Bandwidth:** $W + W_{\text{vestige}}$, λίγο μεγαλύτερο από $W$ αλλά πολύ μικρότερο από $2W$.
+- Το shaping filter μπορεί να έχει **ομαλή μετάβαση** (όχι απότομη) — πρακτικά υλοποιήσιμο.
+- Επιτρέπει envelope detection αν ο vestige πληροί συγκεκριμένη συμμετρία.
+
+<VSBShapingViz />
+
+## 2. Η Nyquist symmetry απαίτηση
+
+Για να δουλέψει envelope detection στο VSB, ο shaping filter $H_{VSB}(f)$ πρέπει να έχει **odd symmetry** γύρω από το $f_c$:
+
+$$
+\boxed{\,H_{VSB}(f_c + \Delta) + H_{VSB}(f_c - \Delta) = \text{const} \quad \text{για } |\Delta| < W\,}
+$$
+
+Στο τυπολόγιο. Με λόγια: αν προσθέσεις την τιμή του φίλτρου σε σημείο πάνω από $f_c$ με την τιμή στο συμμετρικό σημείο κάτω από $f_c$, παίρνεις πάντα την ίδια σταθερά. Το vestige συμπληρώνει ακριβώς τη missing μάζα από τη μία sideband.
+
+Στο viz πάνω, ο filter περνάει από 0 σε 1 ομαλά, με την τιμή 0.5 ακριβώς στο $f_c$ — αυτή είναι η Nyquist-symmetric μετάβαση.
+
+**Γιατί αυτό κάνει την envelope detection να δουλεύει:** ο envelope detector «προσθέτει» τις δύο πλευρές του spectrum γύρω από $f_c$. Αν το άθροισμα είναι σταθερό, το αποτέλεσμα είναι το ίδιο σαν να είχαμε πλήρη DSB-SC, με σταθερό βάρος. Καμία παραμόρφωση.
+
+## 3. Conventional VSB vs SSB στην πράξη
+
+Η VSB που χρησιμοποιείται σε **NTSC TV broadcasting** δεν είναι «καθαρή» — έχει **και reduced carrier component** (όπως Conventional AM), για να ενεργοποιεί envelope detection χωρίς PLL/coherent receiver. Δηλαδή είναι ένας τριπλός συνδυασμός:
+
+- **Σχεδόν όλη η μία sideband** (USB στο NTSC)
+- **Vestige** της άλλης (LSB στο NTSC), συμμετρικό κατά Nyquist
+- **Reduced carrier** για envelope detection
+
+Spectrum του NTSC video signal:
+- Carrier: 1.25 MHz πάνω από το κάτω άκρο του 6 MHz channel
+- Vestige: ~0.75 MHz κάτω από carrier
+- USB: ~4.2 MHz πάνω από carrier
+- Total channel: 6 MHz (σύγκριση με ~9 MHz αν έβγαινε σαν Conventional AM, ή ~4.5 MHz αν έβγαινε σαν SSB).
+
+## 4. Demodulation
+
+Δύο επιλογές, αντίστοιχες με Conventional AM:
+
+- **Envelope detector** (φθηνό κύκλωμα όπως στην Conventional AM). Δουλεύει επειδή ο shaping filter πληροί Nyquist symmetry. Αυτό χρησιμοποιήθηκε στα φθηνά TV receivers.
+- **Coherent demodulation** για ακριβέστερη ανάκτηση. Πολυπλοκότερο.
+
+## 5. Σύνοψη trade-offs
+
+| Σχήμα | BW | Power efficiency | Demod | Πρακτική δυσκολία |
+| --- | --- | --- | --- | --- |
+| Conventional AM | $2W$ | ≤ 33.3% | envelope (φθηνό) | καμία |
+| DSB-SC | $2W$ | 100% | coherent | μέτρια |
+| **VSB** | **$\sim W + \text{vestige}$** | **μεσαία** (reduced carrier) | **envelope OR coherent** | shaping filter |
+| SSB | $W$ | 100% | coherent | απότομος BPF ή Hilbert |
+
+Η VSB κερδίζει τη χρυσή τομή για **applications με video** (πολλά χαμηλά συχνοτικά στοιχεία) και **φθηνούς receivers** (envelope detection). Σπάνια εμφανίζεται σε άλλο context.
+
+<Recap>
+- **VSB** = πλήρης μία sideband + **vestige** (μικρό κατάλοιπο) της άλλης + (συνήθως) reduced carrier.
+- **Bandwidth ~ W + vestige**, ανάμεσα σε SSB ($W$) και AM/DSB ($2W$).
+- **Nyquist symmetry απαίτηση:** $H_{VSB}(f_c + \Delta) + H_{VSB}(f_c - \Delta) = \text{const}$. Αυτή η συμμετρία επιτρέπει envelope detection.
+- **NTSC TV** η κανονική εφαρμογή — video signals έχουν χαμηλές συχνότητες όπου SSB είναι δύσκολη, και χρειάζεται φθηνό receiver.
+- Δεν εμφανίζεται συχνά σε εξετάσεις (~2% weight) — αρκεί να ξέρεις ότι υπάρχει σαν συμβιβασμός και να αναγνωρίζεις τη συμμετρική απαίτηση του shaping filter.
+</Recap>
+
+<NextUp slug="am/modulator-demodulator" />

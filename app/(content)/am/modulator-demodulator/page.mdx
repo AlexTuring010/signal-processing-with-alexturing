@@ -1,0 +1,214 @@
+export const metadata = {
+  title: 'AM Modulator/Demodulator + AM στον θόρυβο',
+  description:
+    'Πρακτικά κυκλώματα AM: ο envelope detector (δίοδος + RC) και τα όρια του time constant, ο coherent receiver (mixer + LPF), και η συμπεριφορά της AM σε θόρυβο μαζί με το threshold effect του envelope detector.',
+}
+
+export const frontmatter = {
+  title: 'Modulator & Demodulator + AM στον θόρυβο',
+  slug: 'am/modulator-demodulator',
+  order: 6,
+  prerequisites: [
+    'foundations/filters',
+    'modulation/bridge',
+    'am/conventional',
+    'am/dsb-sc',
+  ],
+  examWeight: 8,
+  estimatedReadTime: 28,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · AM</span>
+  <span>·</span>
+  <span>~28 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam</span>
+</div>
+
+# Modulator & Demodulator + AM στον θόρυβο
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="am/modulator-demodulator" />
+  <Bookmark id="am/modulator-demodulator" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Ξέρουμε **τι είναι** η AM, ποιο είναι το φάσμα της, πόση ισχύ καταναλώνει, ποιες παραλλαγές υπάρχουν. Σε αυτό το κεφάλαιο πάμε στα **πρακτικά κυκλώματα** και στη **συμπεριφορά σε θόρυβο** — τι κάνει πραγματικά ένας AM δέκτης, ποιοι είναι οι περιορισμοί, και γιατί η AM είναι ευαίσθητη στον θόρυβο.
+
+8% εξεταστικό βάρος, εμφανίζεται σχεδόν σε κάθε εξεταστική ως ερώτηση «εξήγησε τη λειτουργία του envelope detector», «βρες τα όρια του RC», ή «υπολόγισε output SNR».
+
+## 1. Modulator (πομπός)
+
+Ο πομπός AM χρειάζεται να παράξει το $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$. Δύο βασικές προσεγγίσεις:
+
+### 1a. Direct multiplication (ιδεατή προσέγγιση)
+
+Πάρε τον carrier $A_c\cos(2\pi f_c t)$, προσθέσε το $A_c$ στο message για να το πιάσεις πάνω από μηδέν, και πολλαπλασίασε. Αυτό απαιτεί έναν **αναλογικό multiplier** στις υψηλές συχνότητες — δύσκολο αν το $f_c$ είναι ραδιοφωνικό (MHz).
+
+### 1b. Nonlinear element + bandpass filter (πραγματικός πομπός)
+
+Η πραγματική AM παράγεται **εκμεταλλευόμενη μη γραμμικότητα**, π.χ. ένα διοδικό κύκλωμα τύπου $y = a_1 x + a_2 x^2$. Όταν δίνεις $x(t) = A_c\cos(2\pi f_c t) + m(t)$, ο τετραγωνικός όρος παράγει συχνότητες σε $2f_c, f_c \pm f_m, 2f_m, ...$ Επιλέγεις το $f_c \pm f_m$ ζώνη με ένα **bandpass filter** γύρω από τον carrier, και παίρνεις (περίπου) AM σήμα.
+
+Αυτό είναι το «**nonlinear AM transmitter**» πρόβλημα που εμφανίστηκε στην **Πρόοδος B Θ4** (June 2025) — και εμφανίζεται σε διάφορες εκδοχές στις εξετάσεις.
+
+## 2. Envelope detector — η ραχοκοκαλιά του AM δέκτη
+
+Το πιο σημαντικό κύκλωμα στο εμπορικό AM. Είναι **απλό** (δίοδος + αντίσταση + πυκνωτής), **φθηνό**, και **δεν χρειάζεται συγχρονισμό φάσης**. Γι' αυτό το AM ραδιόφωνο είναι ακόμα ζωντανό μετά από 100 χρόνια.
+
+### 2a. Πώς δουλεύει
+
+Το AM σήμα $x(t)$ μπαίνει σε δίοδο. Η δίοδος **half-wave rectifies** — αφήνει μόνο τη θετική πλευρά:
+
+$$
+x_{\text{rect}}(t) = \max(0, x(t))
+$$
+
+Στη συνέχεια ένα RC κύκλωμα (αντίσταση και πυκνωτής σε παράλληλη σύνδεση) λειτουργεί σαν **lowpass filter** που «κρατάει την κορυφή» κάθε carrier κύκλου. Το αποτέλεσμα **ακολουθεί το envelope** του AM σήματος, που είναι (όταν $\mu \leq 1$) το $A_c + m(t)$.
+
+Στη συνέχεια αφαιρούμε το DC offset $A_c$ και κρατάμε το $m(t)$.
+
+<EnvelopeDetectorViz />
+
+### 2b. Όρια του RC time constant
+
+Το RC time constant πρέπει να είναι σε **σωστό εύρος**:
+
+$$
+\boxed{\,\frac{1}{f_c} \ll RC \ll \frac{1}{W}\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+όπου $W$ είναι το message bandwidth.
+
+- **Πολύ μικρό RC** (κοντά στο $1/f_c$): ο πυκνωτής εκφορτίζεται γρήγορα ανάμεσα στους carrier κύκλους → output με **ripple** στη συχνότητα του carrier. Δεν είναι καθαρή ανάκτηση.
+- **Πολύ μεγάλο RC** (κοντά στο $1/W$): ο πυκνωτής δεν εκφορτίζεται αρκετά γρήγορα για να ακολουθήσει τις πτώσεις του message → **diagonal clipping** όπου το ανακτημένο σήμα μένει «ψηλά» όταν το message πέφτει απότομα.
+- **Σωστό RC**: αρκετά μεγάλο για να εξομαλύνει carrier, αρκετά μικρό για να ακολουθεί message.
+
+**Παράδειγμα τιμών για AM ραδιόφωνο:** $f_c = 1$ MHz, $W = 4$ kHz. Σωστό RC ≈ 50–100 μs (ανάμεσα στα $1/(2π \cdot 10^6)$ ≈ 0.16 μs και $1/(2π \cdot 4 \cdot 10^3)$ ≈ 40 μs).
+
+### 2c. Όρος envelope detection για να δουλέψει
+
+**Απαραίτητη συνθήκη**: $\mu \leq 1$ (καμία υπερδιαμόρφωση). Διαφορετικά το envelope πάει αρνητικό σε κάποιες στιγμές, ο envelope detector το αναποδογυρίζει, και παίρνεις παραμορφωμένο message.
+
+## 3. Coherent receiver (synchronous detection)
+
+Ο εναλλακτικός τρόπος demodulation που ισχύει για **όλα τα AM σχήματα** (Conventional, DSB-SC, SSB, VSB):
+
+1. **Mixer**: πολλαπλασιάζεις το λαμβανόμενο σήμα με ένα τοπικό cosine ίδιας συχνότητας και φάσης με τον carrier.
+2. **LPF**: φιλτράρεις το αποτέλεσμα με ένα low-pass filter cutoff $W$.
+3. (Αν Conventional AM) **DC removal**: αφαιρείς το $A_c$ DC component για να μείνει μόνο το $m(t)$.
+
+Είναι η ίδια διαδικασία που είδαμε στο [DSB-SC](/am/dsb-sc#4-coherent-demodulation-πώς-ανακτούμε-το-message). Δουλεύει για κάθε AM σχήμα. Είναι **πιο πολύπλοκο αλλά πιο ισχυρό** σε noisy συνθήκες — γι' αυτό το εμπορικό AM ραδιόφωνο χρησιμοποιεί envelope detector (φθηνός), αλλά τα professional συστήματα χρησιμοποιούν coherent.
+
+## 4. AM στον θόρυβο — threshold effect
+
+Στην πράξη, το λαμβανόμενο σήμα έχει **πάντα** προστιθέμενο θόρυβο:
+
+$$
+r(t) = x(t) + n(t)
+$$
+
+όπου $n(t)$ είναι **bandpass θόρυβος** (συνήθως white noise φιλτραρισμένο από τον RF bandpass του δέκτη). Πώς συμπεριφέρεται ο envelope detector;
+
+### 4a. High-SNR regime (συνήθης λειτουργία)
+
+Όταν το SNR είναι υψηλό (πάνω από ~10 dB), ο θόρυβος είναι «μικρός» σε σύγκριση με τον carrier. Σε αυτή την περιοχή ο envelope detector λειτουργεί **σχεδόν γραμμικά**:
+
+$$
+\text{Output SNR}_{\text{AM}} \approx \frac{\mu^2/2}{1 + \mu^2/2} \cdot \text{Input SNR}
+$$
+
+Δηλαδή, η output SNR είναι **χειρότερη** από την input SNR κατά τον παράγοντα efficiency $\eta$ που υπολογίσαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency). Για $\mu = 1$: output SNR ≈ (1/3) × input SNR ≈ −5 dB. Για $\mu = 0.5$: ακόμα χειρότερα.
+
+### 4b. Threshold effect (κάτω από ~10 dB)
+
+Κάτω από SNR ≈ 10 dB, ο envelope detector **σπάει**. Ο θόρυβος envelope κυριαρχεί και το ανακτημένο message χάνεται γρήγορα:
+
+$$
+\text{Output SNR}_{\text{AM}} \propto (\text{Input SNR})^2 \quad \text{στο threshold region}
+$$
+
+Δηλαδή κάθε 3 dB πτώση στο input → 6 dB πτώση στο output. **Threshold effect** — η μεγαλύτερη αδυναμία της Conventional AM.
+
+<AMInNoiseViz />
+
+### 4c. Coherent vs envelope σε θόρυβο
+
+Ο coherent receiver **δεν έχει threshold effect** — η output SNR ακολουθεί γραμμικά την input SNR ακόμα και σε χαμηλά SNR. Είναι ο λόγος που στρατιωτικά συστήματα χρησιμοποιούν coherent παρά την πολυπλοκότητα.
+
+| Demodulator | High SNR | Low SNR |
+| --- | --- | --- |
+| **Envelope detector** | Σχεδόν γραμμικός, factor $\eta$ απώλεια | Threshold collapse |
+| **Coherent (synchronous)** | Γραμμικός | Παραμένει γραμμικός |
+
+## 5. AM input/output SNR στο τυπολόγιο
+
+Για Conventional AM στο high-SNR regime, ο γενικός τύπος για την output SNR είναι:
+
+$$
+(\text{SNR})_{\text{out, AM}} = \frac{\mu^2 P_{m,N}}{1 + \mu^2 P_{m,N}} \cdot (\text{SNR})_{\text{in}}
+$$
+
+όπου $P_{m,N} = \langle m^2 \rangle / m_{\max}^2$ είναι η **κανονικοποιημένη** ισχύς του message ($\leq 1$). Για single-tone $m(t) = A_m\cos$ → $P_{m,N} = 1/2$, και ο τύπος γίνεται:
+
+$$
+(\text{SNR})_{\text{out, AM}} = \frac{\mu^2/2}{1 + \mu^2/2} \cdot (\text{SNR})_{\text{in}} = \eta \cdot (\text{SNR})_{\text{in}}
+$$
+
+Για DSB-SC και SSB, η output SNR είναι **πάντα ίση με την input SNR** (κανένας carrier να πετάξει).
+
+## 6. Worked example
+
+<Example title="Ex. — όρια RC + output SNR για Conventional AM">
+
+**Δίνονται:** AM ραδιοφωνική εκπομπή με $f_c = 1$ MHz, message bandwidth $W = 5$ kHz, $\mu = 0.7$, single-tone modulation, και input SNR στον δέκτη = 20 dB.
+
+**Ζητούνται:** (α) σωστό εύρος για το RC του envelope detector, (β) η output SNR.
+
+---
+
+**Λύση.**
+
+**(α) RC range:**
+$$
+\frac{1}{f_c} = 1 \text{ μs}, \qquad \frac{1}{W} = 200 \text{ μs}
+$$
+
+Σωστό εύρος: $1 \text{ μs} \ll RC \ll 200 \text{ μs}$. Πρακτικά διαλέγουμε **RC ≈ 50 μs** (στο μέσον λογαριθμικά).
+
+**(β) Output SNR:**
+$$
+\eta = \frac{\mu^2/2}{1 + \mu^2/2} = \frac{0.49/2}{1 + 0.49/2} = \frac{0.245}{1.245} \approx 0.197
+$$
+
+$$
+(\text{SNR})_{\text{out}} = \eta \cdot (\text{SNR})_{\text{in}} = 0.197 \cdot 100 = 19.7
+$$
+
+Σε dB: $10 \log_{10}(19.7) \approx 13$ dB. Δηλαδή η output SNR είναι **7 dB χαμηλότερη** από την input — η απώλεια λόγω της σπατάλης ισχύος στον carrier.
+
+</Example>
+
+## 7. Πρακτικές παρατηρήσεις
+
+- **Εμπορικό AM ραδιόφωνο** χρησιμοποιεί envelope detector γιατί είναι φθηνό. Η ευαισθησία στον θόρυβο είναι αποδεκτή για τοπικές εκπομπές με ισχυρό σήμα.
+- **DX (long-distance) AM listening** συχνά χρησιμοποιεί receiverς με coherent detection (synchronous AM detectors) για καλύτερη ποιότητα σε ασθενή σήματα.
+- **Stereo AM** (όπου υπάρχει — σπάνιο σήμερα) χρησιμοποιεί quadrature multiplexing με coherent detection — απαιτεί PLL για συγχρονισμό.
+
+<Recap>
+- Ο **envelope detector** είναι δίοδος + RC LPF. Δουλεύει για Conventional AM και VSB, όχι για DSB-SC/SSB.
+- **RC range:** $1/f_c \ll RC \ll 1/W$. Πολύ μικρό → ripple. Πολύ μεγάλο → diagonal clipping.
+- Ο **coherent receiver** (mixer + LPF + DC removal) είναι universal — δουλεύει για κάθε AM σχήμα. Χρειάζεται PLL ή pilot για carrier recovery.
+- **AM στον θόρυβο:** στο high-SNR regime, output SNR = $\eta \cdot$ input SNR (factor απώλεια από carrier waste). Στο low-SNR regime ($<$ 10 dB), **threshold effect** — output SNR καταρρέει τετραγωνικά.
+- **Coherent demodulation δεν έχει threshold effect** — γραμμική ανάκτηση μέχρι κάτω.
+- **Πρακτική σημείωση:** εμπορικό AM = envelope detector (φθηνό), professional = coherent (καλύτερο σε θόρυβο).
+</Recap>
+
+<NextUp slug="am/multiplexing" />
