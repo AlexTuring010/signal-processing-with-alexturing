@@ -1,0 +1,224 @@
+export const metadata = {
+  title: 'Πηγές θορύβου — από πού έρχεται',
+  description:
+    'Πηγές θορύβου σε δέκτες: thermal (Johnson-Nyquist), shot, flicker (1/f), impulse. Ισχύς θερμικού θορύβου P = kTB. Equivalent noise temperature. Γιατί θερμικός θόρυβος κυριαρχεί στην πράξη.',
+}
+
+export const frontmatter = {
+  title: 'Πηγές θορύβου',
+  slug: 'noise/sources',
+  order: 1,
+  prerequisites: ['randomness/psd'],
+  examWeight: 3,
+  estimatedReadTime: 18,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Noise · 1</span>
+  <span>·</span>
+  <span>~18 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Medium exam</span>
+</div>
+
+# Πηγές θορύβου — από πού έρχεται
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="noise/sources" />
+  <Bookmark id="noise/sources" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Στη διαμόρφωση είδαμε «AM στον θόρυβο» και «FM στον θόρυβο» χρησιμοποιώντας μια αφηρημένη ποσότητα $N_0$ (PSD level). Τώρα **βάζουμε το χέρι στο σπλάχνο** και ρωτάμε: πού γεννιέται αυτός ο θόρυβος; Πόσο μεγάλος είναι στην πράξη;
+
+## 1. Οι κύριες πηγές
+
+Ένας πραγματικός δέκτης κουβαλάει θόρυβο από **πολλές** πηγές. Οι σημαντικότερες:
+
+### (α) Θερμικός θόρυβος (Johnson-Nyquist)
+
+Η **τυχαία θερμική κίνηση των ηλεκτρονίων** σε αντιστάτες, καλώδια, transistors. Πάντα παρών σε οποιοδήποτε στοιχείο που είναι πάνω από το απόλυτο μηδέν.
+
+- **Gaussian** (από CLT — αμέτρητοι ηλεκτρόνιοι αθροίζονται).
+- **Λευκός** σε μια πολύ ευρεία ζώνη (μέχρι ~10¹³ Hz, οπότε για RF/microwave θεωρείται επίπεδος).
+- Διπλής όψεως PSD: $S_n(f) = N_0/2$ Watts/Hz.
+- $N_0 = kT$ όπου $k = 1.38 \times 10^{-23}$ J/K (Boltzmann) και $T$ θερμοκρασία σε Kelvin.
+
+### (β) Shot θόρυβος
+
+Η **διακριτή φύση των ηλεκτρονίων**. Όταν ρεύμα DC $I_0$ ρέει μέσα από μια pn-επαφή, στην πραγματικότητα είναι **πολλά μικρά γεγονότα** ηλεκτρονίων που περνάνε. Το μέσο ρεύμα είναι $I_0$ αλλά υπάρχουν **τυχαίες διακυμάνσεις**.
+
+- PSD: $S(f) = q I_0$ Amps²/Hz, όπου $q = 1.6 \times 10^{-19}$ C.
+- **Λευκός** σε ευρεία ζώνη.
+- Σημαντικός σε **photodiodes, transistors σε χαμηλά ρεύματα**.
+
+### (γ) Flicker / 1/f θόρυβος
+
+Σε ηλεκτρονικές διατάξεις, σε **χαμηλές συχνότητες** εμφανίζεται ένας θόρυβος με PSD που πέφτει ως $1/f$:
+
+$$
+S(f) \propto \frac{1}{f}
+$$
+
+- Δεν είναι λευκός.
+- Σημαντικός κάτω από ~kHz.
+- Από **ατέλειες υλικών** (impurities, surface states σε MOSFETs).
+
+### (δ) Παλμικός (impulse) θόρυβος
+
+Σύντομες, μεγάλες αιχμές: κεραυνοί, ηλεκτρικοί κινητήρες, σπινθήρες. **Όχι Gaussian** — έντονα non-Gaussian, γιατί έχει σπάνια αλλά τεράστια events.
+
+- Σε AM ραδιόφωνο: «κρακ» κατά τη διάρκεια καταιγίδας.
+- Σε digital: bit errors σε bursts.
+- Δεν τον αναλύουμε με PSD — χρειάζεται ειδικά εργαλεία.
+
+## 2. Γιατί θερμικός κυριαρχεί
+
+Στις τυπικές RF/microwave εφαρμογές (AM/FM ραδιόφωνο, κινητή, WiFi):
+
+- **Shot θόρυβος** στα μετρητικά μας transistors είναι μικρότερος από τον thermal.
+- **1/f** εξαφανίζεται γρήγορα πάνω από ~kHz, οπότε δεν παίζει ρόλο για AM/FM που είναι MHz.
+- **Παλμικός** είναι σπάνιος και αντιμετωπίζεται με coding/error correction.
+
+Έτσι, **όταν λέμε «θόρυβος» στο K21 εννοούμε θερμικό θόρυβο** εκτός αν αναφέρεται διαφορετικά. Είναι Gaussian, λευκός, με PSD $N_0/2 = kT/2$.
+
+## 3. Πόσος είναι; Η εξίσωση P = kTB
+
+Σε αντιστάτη $R$ που βρίσκεται σε θερμοκρασία $T$, η ισχύς θερμικού θορύβου που παράγεται **σε ζώνη bandwidth $B$** Hz είναι:
+
+$$
+\boxed{\,P_{thermal} = k T B\,} \quad \text{[Watts]}
+$$
+
+όπου:
+- $k = 1.38 \times 10^{-23}$ J/K (σταθερά Boltzmann)
+- $T$ θερμοκρασία σε Kelvin (`κανονικά 290 K = 17°C` για πρότυπες υπολογισμούς)
+- $B$ bandwidth σε Hz
+
+**Παράγωγο:** η μονόπλευρη PSD του θερμικού θορύβου είναι $N_0 = kT$ (W/Hz). Δίπλευρη: $N_0/2$.
+
+### Numerical example
+
+Σε $T = 290$ K (πρότυπο «room temperature» στις τηλεπικοινωνίες):
+
+$$
+N_0 = (1.38 \times 10^{-23})(290) = 4.0 \times 10^{-21} \text{ W/Hz} = -174 \text{ dBm/Hz}
+$$
+
+Για bandwidth $B = 1$ MHz:
+$$
+P = N_0 \cdot B = 4.0 \times 10^{-15} \text{ W} = -114 \text{ dBm}
+$$
+
+Αυτό είναι το **noise floor** ενός ιδανικού δέκτη με 1 MHz bandwidth στα 290 K. Πραγματικοί δέκτες έχουν λίγο περισσότερο εξαιτίας **noise figure** του amplifier (επόμενη παράγραφος).
+
+## 4. Equivalent noise temperature
+
+Πρακτικά, ο amplifier του δέκτη προσθέτει δικό του θόρυβο. Αντί να τον περιγράψουμε με PSD, χρησιμοποιούμε την **equivalent noise temperature** $T_e$:
+
+$$
+P_{noise,amp} = k T_e B
+$$
+
+όπου $T_e$ είναι μια **πλασματική θερμοκρασία** που, αν τη βάζαμε σε έναν αντιστάτη στην είσοδο ενός ιδανικού amplifier, θα παρήγαγε τον ίδιο θόρυβο που στην πραγματικότητα παράγει το όλο amplifier. **Δεν είναι** η πραγματική φυσική θερμοκρασία του chip.
+
+Συνολικός θόρυβος εισόδου ενός δέκτη με κεραία στα 290 K και amp με $T_e = 100$ K:
+
+$$
+T_{total} = T_{antenna} + T_e = 290 + 100 = 390 \text{ K}
+$$
+
+$$
+P_{total} = k T_{total} B
+$$
+
+Όσο **χαμηλότερο** το $T_e$, τόσο καλύτερος ο amplifier. Σε επιστημονικά radio telescopes χρησιμοποιούν cryogenic LNAs με $T_e < 10$ K.
+
+## 5. Noise figure
+
+Εναλλακτικά, η ποιότητα ενός amplifier μετριέται με **noise figure** $F$:
+
+$$
+F = \frac{\text{SNR}_{in}}{\text{SNR}_{out}} \geq 1
+$$
+
+(πάντα ≥ 1: ο amplifier μόνο **χειροτερεύει** το SNR).
+
+Σχέση με $T_e$:
+$$
+T_e = (F - 1) \cdot T_0, \qquad T_0 = 290 \text{ K (standard)}
+$$
+
+Σε dB: $F_{dB} = 10\log_{10} F$. Τυπικά:
+
+| Συσκευή | $F_{dB}$ | $T_e$ |
+| --- | --- | --- |
+| Cryogenic LNA (radio astronomy) | 0.1 dB | 7 K |
+| Καλό RF LNA (cellular) | 0.5–1 dB | 35–75 K |
+| Κανονικός αναλογικός δέκτης | 5–10 dB | 600–2900 K |
+| Φθηνό consumer ραδιόφωνο | 10+ dB | 2900+ K |
+
+## 6. Worked example — noise floor σε FM δέκτη
+
+<Example title="Ex. — υπολογισμός noise floor">
+
+Ένας FM δέκτης έχει bandwidth $B = 200$ kHz (Carson για εμπορικό FM), noise figure $F = 8$ dB, σε room temperature ($T_0 = 290$ K).
+
+**Ζητούμενη:** η ισχύς θορύβου στο input του demodulator.
+
+---
+
+**Λύση.**
+
+$F$ σε γραμμικά: $F = 10^{8/10} = 6.31$.
+
+Equivalent temperature:
+$$
+T_e = (F - 1) T_0 = 5.31 \cdot 290 = 1540 \text{ K}
+$$
+
+Συνολική θερμοκρασία (κεραία στα 290 K + δέκτης):
+$$
+T_{total} = 290 + 1540 = 1830 \text{ K}
+$$
+
+Ισχύς θορύβου:
+$$
+P_n = k T_{total} B = (1.38 \times 10^{-23})(1830)(200\,000)
+$$
+$$
+= 5.05 \times 10^{-15} \text{ W} = -113 \text{ dBm}
+$$
+
+Άρα, για να πιάνεις καθαρή λήψη, το σήμα πρέπει να φτάνει στον δέκτη με ισχύ **πολύ πάνω από −113 dBm**. Για high-quality FM (~30 dB SNR threshold) χρειάζεσαι **σήμα ≥ −83 dBm**.
+
+</Example>
+
+## 7. Σύνοψη formulas
+
+| Ποσότητα | Τύπος |
+| --- | --- |
+| Θερμικός θόρυβος, ισχύς | $P = k T B$ |
+| Θερμικός θόρυβος, PSD (διπλής όψεως) | $S_n(f) = N_0/2 = kT/2$ |
+| Θερμικός θόρυβος, PSD (μονής όψεως) | $N_0 = kT$ |
+| Σταθερά Boltzmann | $k = 1.38 \times 10^{-23}$ J/K |
+| Standard temperature | $T_0 = 290$ K |
+| Noise floor σε 290 K | $-174$ dBm/Hz |
+| Noise figure → $T_e$ | $T_e = (F - 1) T_0$ |
+| Total noise temperature | $T_{total} = T_{antenna} + T_e$ |
+
+<Recap>
+- **Θερμικός θόρυβος** (Johnson-Nyquist) είναι η κυρίαρχη πηγή σε RF δέκτες. Gaussian, λευκός, με $N_0 = kT$.
+- **P = kTB** σου δίνει την ισχύ θορύβου σε ζώνη B.
+- **Equivalent noise temperature** $T_e$ ή **noise figure** $F$ περιγράφουν την ποιότητα του amplifier — όσο χαμηλότερα, τόσο καλύτερα.
+- Σε $T_0 = 290$ K, το noise floor είναι **−174 dBm/Hz**. Πρακτικά στα 1 MHz bandwidth: ~−114 dBm.
+- Στο επόμενο κεφάλαιο φορμαλίζουμε τον **λευκό θόρυβο** ως θεωρητική ιδανικότητα και βλέπουμε γιατί η R(τ) = δ είναι το «καμία μνήμη» όριο.
+</Recap>
+
+<NextUp slug="noise/white-noise" />

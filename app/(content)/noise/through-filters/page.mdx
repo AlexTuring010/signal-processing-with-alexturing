@@ -1,0 +1,297 @@
+export const metadata = {
+  title: 'Θόρυβος μέσα από φίλτρα',
+  description:
+    'Το βασικό θεώρημα S_Y(f) = |H(f)|² S_X(f). Λευκός θόρυβος μέσα από LPF (RC και ιδανικό), BPF, BSF. Equivalent noise bandwidth (B_N). Output noise power calculations με worked examples.',
+}
+
+export const frontmatter = {
+  title: 'Θόρυβος μέσα από φίλτρα',
+  slug: 'noise/through-filters',
+  order: 3,
+  prerequisites: ['noise/white-noise', 'foundations/filters'],
+  examWeight: 4,
+  estimatedReadTime: 24,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Noise · 3</span>
+  <span>·</span>
+  <span>~24 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Medium exam — recurring calc</span>
+</div>
+
+# Θόρυβος μέσα από φίλτρα
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="noise/through-filters" />
+  <Bookmark id="noise/through-filters" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Όλη η ανάλυση θορύβου σε δέκτες ανάγεται **σε αυτό το ένα θεώρημα**:
+
+$$
+\boxed{\,S_Y(f) = |H(f)|^2\, S_X(f)\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+Σε αυτό το κεφάλαιο εφαρμόζουμε το θεώρημα σε:
+
+1. **Λευκό θόρυβο μέσα από ιδανικό LPF** (rect filter).
+2. **Λευκό θόρυβο μέσα από RC LPF** (πρώτης τάξης).
+3. **Λευκό θόρυβο μέσα από BPF** (κανονικό model για RF receiver front-end).
+4. Ορίζουμε **Equivalent Noise Bandwidth** $B_N$.
+
+## 1. Το θεώρημα — γρήγορη επανάληψη
+
+Έστω WSS random process $X(t)$ με PSD $S_X(f)$ μπαίνει σε LTI φίλτρο με frequency response $H(f)$. Η έξοδος $Y(t)$ είναι WSS με:
+
+$$
+S_Y(f) = |H(f)|^2\, S_X(f), \qquad R_Y(\tau) = h(\tau) * h(-\tau) * R_X(\tau)
+$$
+
+(η δεύτερη μορφή είναι time-domain ισοδύναμη.)
+
+**Output power:**
+$$
+P_Y = R_Y(0) = \int_{-\infty}^{\infty} |H(f)|^2 S_X(f)\, df
+$$
+
+Για **λευκό θόρυβο εισόδου** $S_X = N_0/2$:
+
+$$
+\boxed{\,P_Y = \frac{N_0}{2} \int_{-\infty}^{\infty} |H(f)|^2\, df\,}
+$$
+
+Δηλαδή το output noise power εξαρτάται μόνο από την **ολοκλήρωμα του squared magnitude του φίλτρου**.
+
+<NoiseFilterShapingViz />
+
+Πάτα τα διάφορα presets και δες πώς το output PSD «μιμείται το σχήμα του $|H(f)|^2$», αφού πολλαπλασιάζεται με ένα σταθερό $N_0/2$.
+
+## 2. Παράδειγμα — Ιδανικό LPF
+
+Έστω ιδανικό LPF με cutoff $B$:
+
+$$
+|H(f)|^2 = \begin{cases} 1, & |f| \leq B \\ 0, & |f| > B \end{cases}
+$$
+
+Output PSD:
+$$
+S_Y(f) = \frac{N_0}{2} \text{ για } |f| \leq B, \text{ αλλιώς } 0
+$$
+
+Output power:
+$$
+P_Y = \int_{-B}^{B} \frac{N_0}{2}\, df = N_0\, B
+$$
+
+**Διαβάζεται:** ένα LPF με cutoff $B$ «κρατάει» θόρυβο ισχύος $N_0 B$ και πετάει τον υπόλοιπο.
+
+Output autocorrelation:
+$$
+R_Y(\tau) = N_0\, B\, \mathrm{sinc}(2B\tau)
+$$
+
+(όπως είδαμε στο [προηγούμενο κεφάλαιο](/noise/white-noise) — αυτό είναι ακριβώς bandlimited white noise.)
+
+## 3. Παράδειγμα — RC LPF (πρώτης τάξης)
+
+Ένα **πραγματικό** φίλτρο, όχι ιδανικό. Η frequency response είναι:
+
+$$
+H(f) = \frac{1}{1 + j 2\pi f R C}
+$$
+
+$$
+|H(f)|^2 = \frac{1}{1 + (2\pi f R C)^2}
+$$
+
+Με $f_c = 1/(2\pi R C)$ (3dB cutoff):
+
+$$
+|H(f)|^2 = \frac{1}{1 + (f/f_c)^2}
+$$
+
+**Output PSD:**
+
+$$
+S_Y(f) = \frac{N_0/2}{1 + (f/f_c)^2}
+$$
+
+(Lorentzian.)
+
+**Output power:**
+
+$$
+P_Y = \frac{N_0}{2} \int_{-\infty}^{\infty} \frac{df}{1 + (f/f_c)^2}
+$$
+
+Με $u = f/f_c$, $df = f_c\, du$:
+
+$$
+= \frac{N_0\, f_c}{2} \int_{-\infty}^{\infty} \frac{du}{1 + u^2} = \frac{N_0\, f_c}{2} \cdot \pi = \frac{\pi N_0 f_c}{2}
+$$
+
+Άρα:
+
+$$
+\boxed{\,P_Y^{(RC)} = \frac{\pi N_0 f_c}{2}\,}
+$$
+
+**Σύγκριση με ιδανικό LPF στο ίδιο $B = f_c$:**
+
+| Φίλτρο | Output power |
+| --- | --- |
+| Ιδανικό LPF | $N_0 \cdot f_c$ |
+| RC LPF | $(\pi/2) \cdot N_0\, f_c \approx 1.57 \cdot N_0 f_c$ |
+
+Το RC φίλτρο **περνάει 57% περισσότερο θόρυβο** από το ιδανικό! Γιατί; Επειδή ο RC δεν κόβει στιγμιαία στο $f_c$ — η αργή φθορά του $|H|^2$ αφήνει συχνότητες πάνω από $f_c$ να περάσουν με κάποιο gain.
+
+## 4. Equivalent noise bandwidth $B_N$
+
+Για να συγκρίνουμε φίλτρα διαφορετικού σχήματος ως προς θόρυβο, ορίζουμε το **equivalent noise bandwidth** $B_N$ ως το bandwidth του **ισοδύναμου ιδανικού LPF** που θα παρήγαγε τον ίδιο output θόρυβο:
+
+$$
+\boxed{\,B_N = \frac{1}{|H(0)|^2}\int_{0}^{\infty} |H(f)|^2\, df\,}
+$$
+
+**Πρακτικό:** αν ξέρεις $B_N$ ενός φίλτρου, μπορείς να γράψεις
+$$
+P_Y = N_0 B_N
+$$
+σαν να ήταν ιδανικό LPF.
+
+### Παραδείγματα:
+
+| Φίλτρο | $B_N$ |
+| --- | --- |
+| Ιδανικό LPF cutoff $B$ | $B$ |
+| RC LPF με $f_c$ | $(\pi/2) f_c \approx 1.57 f_c$ |
+| 2-pole Butterworth, $f_c$ | $1.11 f_c$ |
+| Gaussian, $\sigma_f$ | $\sqrt{\pi/2}\, \sigma_f$ |
+
+Όσο πιο **απότομα** πέφτει το φίλτρο μετά το cutoff του, τόσο **πιο κοντά στο ιδανικό** είναι το $B_N$.
+
+## 5. Bandpass noise
+
+Για ζωνοπερατό φίλτρο γύρω από $f_c$ με bandwidth $B$ (από $f_c - B/2$ έως $f_c + B/2$):
+
+$$
+P_Y = \frac{N_0}{2} \cdot 2 \cdot B = N_0 B
+$$
+
+(παράγοντας 2 για να συμπεριληφθούν τα **δύο** κομμάτια στις $\pm f_c$.)
+
+Output autocorrelation (από Wiener-Khinchin):
+
+$$
+R_Y(\tau) = N_0 B \cdot \mathrm{sinc}(B\tau) \cdot \cos(2\pi f_c \tau)
+$$
+
+**Διαβάζεται:** το envelope είναι sinc (όπως LPF), και ο carrier-cosine πάνω του είναι το «βαρύ κέντρο» γύρω από το οποίο επικεντρώνεται το φάσμα.
+
+Αυτή η εξίσωση εμφανίστηκε στο [Autocorrelation viz](/randomness/psd) — δες το preset «Bandpass θόρυβος» για να την επιβεβαιώσεις.
+
+## 6. Worked example — Πρόοδος B 2025-09 Θ3
+
+<Example title="Ex. — output power μετά από LPF cascade">
+
+Λευκός θόρυβος με $N_0 = 10^{-12}$ W/Hz εισέρχεται σε δέκτη με δύο φίλτρα σε σειρά:
+1. Ιδανικό LPF cutoff $B_1 = 100$ kHz
+2. RC LPF με $f_c = 50$ kHz
+
+**Ζητούνται:**
+1. Output power μετά τον cascade.
+2. Σύγκριση: τι θα ήταν αν είχαμε μόνο το RC LPF;
+
+---
+
+**Λύση.**
+
+**(1)** Cascade: $|H_{total}(f)|^2 = |H_1(f)|^2 \cdot |H_2(f)|^2$.
+
+$$
+|H_{total}(f)|^2 = \begin{cases} \frac{1}{1 + (f/f_c)^2}, & |f| \leq B_1 \\ 0, & |f| > B_1 \end{cases}
+$$
+
+Επειδή $B_1 = 100$ kHz $> f_c = 50$ kHz, στις περιοχές που το ιδανικό LPF επιτρέπει, το RC δουλεύει κανονικά. Output power:
+
+$$
+P_Y = \frac{N_0}{2}\int_{-B_1}^{B_1} \frac{df}{1 + (f/f_c)^2} = \frac{N_0 f_c}{2}\int_{-B_1/f_c}^{B_1/f_c} \frac{du}{1 + u^2}
+$$
+
+$$
+= N_0 f_c \arctan(B_1/f_c)/1 \cdot \frac{1}{1}
+$$
+
+Λάθος βήμα — ας γράψουμε σωστά:
+$$
+P_Y = \frac{N_0 f_c}{2} \cdot 2\arctan(B_1/f_c) = N_0\, f_c\, \arctan(B_1/f_c)
+$$
+
+(αφού $\int_{-a}^{a}du/(1+u^2) = 2\arctan(a)$.)
+
+Με $B_1/f_c = 2$:
+$$
+\arctan(2) = 1.107 \text{ rad}
+$$
+
+$$
+P_Y = 10^{-12} \cdot 50\,000 \cdot 1.107 = 5.54 \times 10^{-8} \text{ W}
+$$
+
+**(2)** Με μόνο το RC (το ιδανικό LPF αφαιρείται, $B_1 \to \infty$):
+
+$$
+P_Y = \frac{\pi N_0 f_c}{2} = \frac{\pi \cdot 10^{-12} \cdot 50\,000}{2} = 7.85 \times 10^{-8} \text{ W}
+$$
+
+**Σύγκριση:** ο cascade κόβει 30% περισσότερο θόρυβο ($1.57 \to 1.107$ ratios). Η ιδανική LPF στις 100 kHz «μάζεψε» την ουρά του RC.
+
+</Example>
+
+## 7. Παράδειγμα από AM/FM context
+
+Στο [AM in noise](/am/modulator-demodulator) χρησιμοποιήσαμε:
+$$
+P_n = N_0 B
+$$
+
+Αυτό είναι ακριβώς $S_Y = |H|^2 S_X$ με ιδανικό BPF bandwidth $B$ (Carson) γύρω από τον carrier. Τώρα έχεις τη μηχανή να το παράγεις.
+
+Στο [FM in noise](/fm/in-noise) χρησιμοποιήσαμε ότι ο discriminator δίνει triangular noise PSD:
+$$
+S_n^{out}(f) = \frac{N_0 f^2}{A_c^2}
+$$
+
+Αυτό προκύπτει από το ότι ο discriminator είναι **ισοδύναμος με differentiator** (transfer function $j 2\pi f$, $|H|^2 = (2\pi f)^2$) εφαρμοσμένος σε bandpass-filtered θόρυβο. Τέλεια συνέπεια του $S_Y = |H|^2 S_X$.
+
+## 8. Σύνοψη formulas
+
+| Ποσότητα | Τύπος |
+| --- | --- |
+| **Output PSD** | $S_Y(f) = \|H(f)\|^2 S_X(f)$ |
+| Output power (general) | $P_Y = \int \|H\|^2 S_X df$ |
+| White noise + LPF (ideal) | $P_Y = N_0 B$ |
+| White noise + RC LPF | $P_Y = \pi N_0 f_c/2$ |
+| White noise + BPF | $P_Y = N_0 B$ |
+| Equivalent noise bandwidth | $B_N = \int_0^\infty \|H\|^2 df / \|H(0)\|^2$ |
+| RC $B_N$ | $B_N^{RC} = (\pi/2) f_c$ |
+
+<Recap>
+- Το **κεντρικό θεώρημα** $S_Y = |H|^2 S_X$ είναι το βασικό εργαλείο για όλες τις θορυβικές αναλύσεις.
+- **Λευκός + ιδανικό LPF**: $P_Y = N_0 B$. Λευκός + RC LPF: $P_Y = \pi N_0 f_c/2$.
+- **Equivalent noise bandwidth** $B_N$ μετατρέπει οποιοδήποτε φίλτρο σε ισοδύναμο ιδανικό LPF για θορυβικούς υπολογισμούς.
+- Cascade φίλτρων: $|H_{total}|^2 = \prod |H_i|^2$.
+- Επόμενο κεφάλαιο: **SNR formalism** — πώς το αξιοποιούμε όλο αυτό για να αξιολογήσουμε δέκτες.
+</Recap>
+
+<NextUp slug="noise/snr" />

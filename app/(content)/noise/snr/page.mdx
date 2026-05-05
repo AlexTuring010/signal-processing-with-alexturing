@@ -1,0 +1,243 @@
+export const metadata = {
+  title: 'SNR — Signal-to-Noise Ratio',
+  description:
+    'SNR formalism: ορισμός, dB scale, input vs output SNR, processing gain, ανακεφαλαίωση όλων των AM/FM SNR αποτελεσμάτων που είδαμε. Κανόνες πρακτικής αξιολόγησης δεκτών.',
+}
+
+export const frontmatter = {
+  title: 'SNR',
+  slug: 'noise/snr',
+  order: 4,
+  prerequisites: ['noise/through-filters', 'am/modulator-demodulator', 'fm/in-noise'],
+  examWeight: 3,
+  estimatedReadTime: 18,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Noise · 4</span>
+  <span>·</span>
+  <span>~18 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Medium exam — capstone</span>
+</div>
+
+# SNR — Signal-to-Noise Ratio
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="noise/snr" />
+  <Bookmark id="noise/snr" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Το SNR είναι **η μετρική** που χρησιμοποιούμε για να συγκρίνουμε modulation schemes, να αξιολογήσουμε δέκτες, και να ποσοτικοποιήσουμε «πόσο καλά ακούγεται» μια μετάδοση. Σε αυτό το τελευταίο κεφάλαιο της Noise group:
+
+1. Ορίζουμε **SNR** και την dB scale.
+2. Διακρίνουμε **input SNR** vs **output SNR**.
+3. Ορίζουμε **processing gain** του δέκτη.
+4. Ανακεφαλαιώνουμε όλα τα SNR formulas που έχουμε δει.
+
+## 1. Ορισμός
+
+$$
+\boxed{\,\text{SNR} = \frac{P_{signal}}{P_{noise}}\,}
+$$
+
+— ο λόγος της ισχύος του σήματος προς την ισχύ του θορύβου, σε **κάποιο σημείο** του δέκτη.
+
+**Παρατήρηση:** το SNR είναι **dimensionless** (αριθμός χωρίς μονάδες). Είναι ένας **καθαρός λόγος**, οπότε εκφράζεται φυσικά σε **dB**:
+
+$$
+\text{SNR}_{dB} = 10 \log_{10}\!\left(\frac{P_{signal}}{P_{noise}}\right)
+$$
+
+| SNR linear | SNR dB | Ποιότητα |
+| --- | --- | --- |
+| 1 | 0 dB | Σήμα ίσο με θόρυβο — αόρατο |
+| 10 | 10 dB | Οριακή ανίχνευση |
+| 100 | 20 dB | Ακούγεται καθαρά |
+| 1000 | 30 dB | Καλή ποιότητα |
+| 10000 | 40 dB | Hi-fi audio |
+
+<SNRPlaygroundViz />
+
+Σύρε το SNR slider και θα νιώσεις πότε «χάνεις» το σήμα. Στα ~5 dB είναι οριακό· κάτω από 0 dB δεν διακρίνεται καθόλου με γυμνό μάτι.
+
+## 2. Input vs Output SNR
+
+Σε ένα δέκτη υπάρχουν **πολλαπλά σημεία** στα οποία μπορούμε να μετρήσουμε SNR. Δύο σημαντικά:
+
+### Input SNR ($\text{SNR}_{in}$ ή $\text{SNR}_i$)
+
+Στην **είσοδο του demodulator** — μετά τον BPF του δέκτη, πριν την αποδιαμόρφωση. Συνήθως εκφράζεται ως:
+
+$$
+\text{SNR}_{in} = \frac{P_{signal,RF}}{N_0\, B}
+$$
+
+όπου $B$ είναι το bandwidth του front-end BPF (συνήθως Carson).
+
+### Output SNR ($\text{SNR}_{out}$ ή $\text{SNR}_o$)
+
+Μετά τον demodulator και τον LPF στο message bandwidth $W$. Αυτό είναι «το SNR που ακούει ο τελικός χρήστης».
+
+## 3. Processing gain
+
+Το **processing gain** ενός δέκτη είναι ο λόγος SNR_out προς SNR_in:
+
+$$
+G_{proc} = \frac{\text{SNR}_{out}}{\text{SNR}_{in}}
+$$
+
+- $G > 1$ ($G_{dB} > 0$): ο δέκτης **βελτιώνει** το SNR (FM με β μεγάλο).
+- $G < 1$ ($G_{dB} < 0$): ο δέκτης **χειροτερεύει** το SNR (AM με μ < 1).
+- $G = 1$ (0 dB): ουδέτερος (DSB-SC με coherent demod).
+
+**Πραγματικά νούμερα:**
+
+| Modulation | $G_{proc}$ | Σε dB |
+| --- | --- | --- |
+| DSB-SC coherent | 1 | 0 dB |
+| SSB coherent | 1 | 0 dB |
+| Conventional AM (μ=1, envelope) | 2/3 | -1.8 dB |
+| FM (β=5) | 75 | 18.8 dB |
+| FM (β=10) | 300 | 24.8 dB |
+
+(Αυτά είναι processing gains, όχι σύγκριση με reference SNR — δες παρακάτω για το reference framework.)
+
+## 4. Reference SNR — η «δίκαιη σύγκριση»
+
+Για να συγκρίνουμε modulation schemes **δίκαια**, ορίζουμε:
+
+$$
+\text{SNR}_{ref} = \frac{P_{signal,RF}}{N_0\, W}
+$$
+
+Αυτό είναι το SNR που θα είχε **βασικό baseband transmission** χωρίς modulation: σήμα bandwidth $W$, θόρυβος μόνο στη ζώνη $W$.
+
+Τότε όλα τα modulation schemes συγκρίνονται με αυτό:
+
+| Modulation | $\text{SNR}_{out}$ |
+| --- | --- |
+| DSB-SC | $\text{SNR}_{ref}$ |
+| SSB | $\text{SNR}_{ref}$ |
+| Conventional AM (μ=1) | $(1/3) \text{SNR}_{ref}$ |
+| FM | $3\beta^2 \text{SNR}_{ref}$ |
+
+Έτσι βλέπεις ότι:
+- DSB-SC και SSB είναι «νευτρικά»: δεν κερδίζουν, δεν χάνουν.
+- AM **χάνει** ένα παράγοντα 3 (-4.8 dB) λόγω του carrier που μεταφέρει 2/3 της ισχύος.
+- FM **κερδίζει** $3\beta^2$ — quadratic improvement με το β.
+
+## 5. AM in noise — recap από [/am/modulator-demodulator](/am/modulator-demodulator)
+
+**Setup:** AM signal $A_c[1 + \mu m(t)]\cos(2\pi f_c t)$ + AWGN.
+
+**Coherent demod:**
+$$
+\text{SNR}_{out,AM,coh} = \frac{\mu^2 \cdot P_m}{2 + \mu^2 P_m} \cdot \text{SNR}_{ref}
+$$
+
+(όπου $P_m$ είναι μέση ισχύς του normalized message.)
+
+**Envelope detector** (πάνω από threshold ~10 dB):
+- Ίδιο με coherent στο high-SNR regime.
+- Threshold effect: κάτω από ~10 dB SNR_in το output καταρρέει.
+
+## 6. FM in noise — recap από [/fm/in-noise](/fm/in-noise)
+
+**Triangular noise:** $S_n^{out}(f) = N_0 f^2 / A_c^2$.
+
+**Output SNR:**
+$$
+\text{SNR}_{out,FM} = 3\beta^2 \cdot \text{SNR}_{ref}
+$$
+
+**FM gain over AM** (μ=1):
+$$
+G = 9\beta^2
+$$
+
+**Threshold:** ~10 dB SNR_in. Capture effect, pre-/de-emphasis covered in detail there.
+
+## 7. Worked example — σύγκριση SNR για ίδιο πομπό
+
+<Example title="Ex. — ίδιο σήμα, διαφορετικά modulation">
+
+Πομπός με $A_c = 10$ V εκπέμπει ένα μήνυμα bandwidth $W = 5$ kHz σε κανάλι με $N_0 = 10^{-15}$ W/Hz, μέσω:
+
+(α) DSB-SC
+(β) Conventional AM με μ = 0.8, μήνυμα μοναδιαίας ισχύος ($P_m = 1$)
+(γ) FM με Δf = 50 kHz
+
+**Ζητείται:** το $\text{SNR}_{out}$ σε dB για κάθε περίπτωση.
+
+---
+
+**Λύση.**
+
+**Reference SNR:**
+$$
+P_s = A_c^2/2 = 50 \text{ W}, \quad P_{noise,ref} = N_0 W = 10^{-15} \cdot 5000 = 5 \times 10^{-12} \text{ W}
+$$
+$$
+\text{SNR}_{ref} = 50 / (5 \times 10^{-12}) = 10^{13} = 130 \text{ dB}
+$$
+
+**(α) DSB-SC:** $\text{SNR}_{out} = \text{SNR}_{ref} = 130$ dB.
+
+**(β) AM με μ=0.8, P_m = 1:**
+$$
+\text{SNR}_{out} = \frac{0.64}{2 + 0.64} \cdot \text{SNR}_{ref} = 0.242 \cdot 10^{13} = 2.42 \times 10^{12}
+$$
+Σε dB: $130 + 10\log(0.242) = 130 - 6.2 = 123.8$ dB.
+
+**(γ) FM:** $\beta = \Delta f / W = 50/5 = 10$.
+$$
+\text{SNR}_{out} = 3\beta^2 \text{SNR}_{ref} = 300 \cdot 10^{13} = 3 \times 10^{15}
+$$
+Σε dB: $130 + 10\log(300) = 130 + 24.8 = 154.8$ dB.
+
+**Σύνοψη:**
+
+| Modulation | SNR_out (dB) |
+| --- | --- |
+| AM | 123.8 |
+| DSB-SC | 130.0 |
+| FM (β=10) | 154.8 |
+
+FM είναι **31 dB καλύτερο από AM** για ίδιο πομπό! (Με το κόστος bandwidth $B_{FM} = 110$ kHz vs $B_{AM} = 10$ kHz — 11× περισσότερο spectrum.)
+
+</Example>
+
+## 8. Σύνοψη formulas
+
+| Ποσότητα | Τύπος |
+| --- | --- |
+| SNR | $\text{SNR} = P_s/P_n$ |
+| dB scale | $\text{SNR}_{dB} = 10\log_{10}(\text{SNR})$ |
+| Input SNR | $P_{signal,RF}/(N_0 B)$ |
+| Reference SNR | $P_{signal,RF}/(N_0 W)$ |
+| Processing gain | $G = \text{SNR}_{out}/\text{SNR}_{in}$ |
+| DSB-SC out | $\text{SNR}_{ref}$ |
+| AM out | $\frac{\mu^2 P_m}{2 + \mu^2 P_m} \text{SNR}_{ref}$ |
+| FM out | $3\beta^2 \text{SNR}_{ref}$ |
+| FM gain over AM | $9\beta^2$ (μ=1) |
+
+<Recap>
+- **SNR = signal power / noise power**, εκφράζεται σε dB με $10\log_{10}$.
+- **Input** vs **output** SNR — διαφορετικά σημεία του δέκτη, διαφορετικές τιμές.
+- **Processing gain** $G = \text{SNR}_{out}/\text{SNR}_{in}$ μετρά πόσο βελτιώνει ο δέκτης.
+- **Reference SNR** βάσει της baseband ζώνης $W$ είναι το «καθαρό» benchmark.
+- **DSB-SC, SSB**: ουδέτερα. **AM**: χειρότερο. **FM**: $3\beta^2$ καλύτερο.
+- Το trade-off bandwidth-vs-SNR (FM «αγοράζει» SNR με bandwidth) ποσοτικοποιείται από τις παραπάνω εξισώσεις.
+
+Έχουμε ολοκληρώσει την Noise ομάδα. Όλη η μηχανή που χρειάζεται για ανάλυση δεκτών είναι έτοιμη.
+</Recap>
+
+Επόμενα βήματα στην ύλη: **Sampling theorem** (foundations) και ίσως ένας **Practice hub** με worked exam problems.
