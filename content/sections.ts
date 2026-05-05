@@ -110,7 +110,7 @@ export const CHAPTERS: Chapter[] = [
       { slug: 'am/overview', title: 'AM Overview', available: true, examWeight: 5 },
       { slug: 'am/conventional', title: 'Conventional AM', available: true, examWeight: 15 },
       { slug: 'am/dsb-sc', title: 'DSB-SC', available: true, examWeight: 5 },
-      { slug: 'am/ssb', title: 'SSB', available: false, examWeight: 5 },
+      { slug: 'am/ssb', title: 'SSB', available: true, examWeight: 5 },
       { slug: 'am/vsb', title: 'VSB', available: false, examWeight: 2 },
       { slug: 'am/modulator-demodulator', title: 'Modulator & Demodulator + AM in noise', available: false, examWeight: 8 },
       { slug: 'am/multiplexing', title: 'Multiplexing (FDM)', available: false, examWeight: 5 },

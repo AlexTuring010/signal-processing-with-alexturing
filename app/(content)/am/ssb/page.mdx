@@ -1,0 +1,256 @@
+export const metadata = {
+  title: 'SSB — Single Sideband, μισό φάσμα μέσω Hilbert',
+  description:
+    'SSB (Single Sideband): πετάμε τη μία από τις δύο sidebands της DSB-SC. Bandwidth = W (μισό από AM/DSB), 100% efficient. Δύο μέθοδοι παραγωγής (filter + Hilbert phase-shift), coherent demodulation, USB vs LSB, χρήση σε shortwave και ραδιοερασιτεχνικά.',
+}
+
+export const frontmatter = {
+  title: 'SSB',
+  slug: 'am/ssb',
+  order: 4,
+  prerequisites: [
+    'foundations/fourier-transform',
+    'modulation/bridge',
+    'am/dsb-sc',
+  ],
+  examWeight: 5,
+  estimatedReadTime: 22,
+  lastUpdated: '2026-05-05',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Modulation · AM</span>
+  <span>·</span>
+  <span>~22 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-amber-700 dark:text-amber-400">🟠 Medium exam</span>
+</div>
+
+# SSB (Single Sideband)
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="am/ssb" />
+  <Bookmark id="am/ssb" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Στο [DSB-SC](/am/dsb-sc) πετάξαμε τον carrier component και κερδίσαμε **όλη την ισχύ** στις sidebands. Αλλά και τα δύο σχήματα (Conventional + DSB-SC) έχουν το ίδιο **bandwidth = 2W** — διπλάσιο του message.
+
+Σε αυτό το κεφάλαιο πετάμε επιπλέον **τη μία από τις δύο sidebands**. Το αποτέλεσμα — SSB, *Single Sideband* — έχει **bandwidth = W** (μισό), διατηρεί **100% efficiency** της DSB-SC, και επιτρέπει **πολλαπλούς χρήστες σε στενότερο κανάλι**. Το κόστος: ακόμα πιο πολύπλοκη παραγωγή και demodulation.
+
+## 1. Από DSB-SC στο SSB
+
+Το DSB-SC σήμα έχει **και τις δύο sidebands** στο φάσμα — πάνω και κάτω από κάθε $\pm f_c$:
+
+$$
+X_{DSB}(f) = \frac{1}{2}[M(f-f_c) + M(f+f_c)]
+$$
+
+Αλλά οι δύο sidebands είναι **κατοπτρικά συμμετρικές γύρω από το $f_c$** (αφού το $m(t)$ είναι real, το $M(f)$ έχει conjugate symmetry). Δηλαδή κουβαλάνε **την ίδια πληροφορία** σε διαφορετική γεωμετρία. **Αν κρατήσουμε μόνο τη μία**, δεν χάνουμε πληροφορία — απλά πετάμε ένα redundant αντίγραφο.
+
+Δύο εκδοχές του SSB:
+
+- **USB (Upper Sideband):** κρατάμε την πλευρά $|f| > f_c$ (έξω από τον carrier).
+- **LSB (Lower Sideband):** κρατάμε την πλευρά $|f| < f_c$ (μέσα στον carrier).
+
+Είναι **ισοδύναμες** ως προς ποιότητα — απλά διαλέγουμε ποια χωρά καλύτερα στο διαθέσιμο κανάλι.
+
+<SSBSpectrumViz />
+
+<Callout type="connection" title="Σύνδεση με την I/Q canonical form">
+Από [bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η SSB (USB) είναι η **τρίτη γραμμή** του πίνακα:
+
+$$
+x_I(t) = \frac{A_c}{2}\, m(t), \qquad x_Q(t) = -\frac{A_c}{2}\, \hat{m}(t)
+$$
+
+Διαφορά με AM/DSB-SC: **το $x_Q$ δεν είναι μηδέν**. Χρειάζεται τον Hilbert transform του message. Γι' αυτό η SSB είναι «πιο πολύπλοκη» — και γι' αυτό χτίσαμε ολόκληρη Section 2 του bridge chapter για τον Hilbert.
+</Callout>
+
+## 2. Δύο μέθοδοι παραγωγής
+
+### 2a. Filter method
+
+Η εννοιολογικά απλή προσέγγιση:
+1. Φτιάξε DSB-SC: $x_{DSB}(t) = m(t)\cos(2\pi f_c t)$.
+2. Πέρασέ το από **bandpass filter** που αφήνει μόνο τη μία sideband.
+
+**Πρόβλημα:** ο BPF πρέπει να είναι **πολύ απότομος** στο $f_c$. Αν το message έχει συνιστώσες κοντά στο DC (όπως τα χαμηλά bass συχνότητες της φωνής), οι δύο sidebands είναι **πολύ κοντά** στο $f_c$ — και ο φίλτρος πρέπει να τις ξεχωρίσει χωρίς να κόβει χρήσιμο σήμα. Πρακτικά αυτό απαιτεί **πολύ υψηλό filter order** ή «κενή ζώνη» γύρω από το DC του message.
+
+### 2b. Phase-shift (Hilbert) method
+
+Πιο μαθηματικά κομψή. Από την I/Q canonical form με $x_I = A_c m / 2$, $x_Q = -A_c \hat{m}/2$:
+
+$$
+x_{USB}(t) = x_I\cos(2\pi f_c t) - x_Q\sin(2\pi f_c t) = \frac{A_c}{2}\big[m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)(-1)\big]
+$$
+
+Καθαρίζοντας τα πρόσημα (με $A_c = 2$ για απλότητα):
+
+$$
+\boxed{\,x_{USB}(t) = m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)\,}
+$$
+
+και
+
+$$
+\boxed{\,x_{LSB}(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)\,}
+$$
+
+Δύο γινόμενα και ένα άθροισμα. Το «−» δίνει USB, το «+» δίνει LSB. **Καμία ανάγκη για απότομο φίλτρο** — ο Hilbert transform κάνει τη δουλειά της επιλογής sideband.
+
+<SSBGenerationViz />
+
+<Callout type="closes-commitment" title="🎯 Κλείνει υπόσχεση — γιατί χτίσαμε τον Hilbert στο bridge chapter">
+Στο [/modulation/bridge §2](/modulation/bridge#2-hilbert-transform-phase-shifter-όλων-των-συχνοτήτων) είδαμε τον Hilbert transform — phase-shifter όλων των συχνοτήτων κατά $\pi/2$ — και υποσχεθήκαμε ότι «θα τον χρειαστούμε στη SSB». **Να γιατί.** Ο Hilbert του message $\hat{m}(t)$ μάς επιτρέπει να κατασκευάσουμε ένα bandpass σήμα με μόνο μία sideband, χωρίς να χρειαζόμαστε αδύνατα απότομα φίλτρα. Είναι το «καθαρό» μαθηματικό εργαλείο για SSB.
+
+Παρόλο που η SSB έχει εξεταστική σημασία (5%), ο Hilbert ως ξεχωριστή ερώτηση **δεν** εμφανίζεται — απλά τον χρησιμοποιείς. Στις εξετάσεις θα πρέπει να ξέρεις τη διπλή φόρμουλα `x_SSB = m cos ∓ m̂ sin`, να ξεχωρίζεις το πρόσημο για USB vs LSB, και να μπορείς να σχεδιάζεις σπεκτρα.
+</Callout>
+
+### 2c. Απόδειξη ότι το `m cos − m̂ sin` δίνει μόνο USB
+
+Παίρνοντας FT (γραμμικότητα + frequency shift):
+
+$$
+\mathcal{F}\{m(t)\cos(2\pi f_c t)\} = \frac{1}{2}[M(f-f_c) + M(f+f_c)]
+$$
+
+$$
+\mathcal{F}\{\hat{m}(t)\sin(2\pi f_c t)\} = \frac{1}{2j}[\hat{M}(f-f_c) - \hat{M}(f+f_c)] = \frac{-j\,\mathrm{sgn}(f-f_c)}{2j} M(f-f_c) - \frac{-j\,\mathrm{sgn}(f+f_c)}{2j} M(f+f_c)
+$$
+
+Χρησιμοποιώντας $\hat{M}(f) = -j\,\mathrm{sgn}(f) M(f)$ από τον Hilbert ορισμό. Καθαρίζοντας:
+
+$$
+\mathcal{F}\{\hat{m}(t)\sin(2\pi f_c t)\} = -\frac{1}{2}\mathrm{sgn}(f-f_c) M(f-f_c) + \frac{1}{2}\mathrm{sgn}(f+f_c) M(f+f_c)
+$$
+
+Αφαιρώντας:
+
+$$
+X_{USB}(f) = \frac{1}{2}[1 + \mathrm{sgn}(f-f_c)]M(f-f_c) + \frac{1}{2}[1 - \mathrm{sgn}(f+f_c)]M(f+f_c)
+$$
+
+- Στο $+f_c$ side: ο όρος $1 + \mathrm{sgn}(f-f_c)$ είναι 2 για $f > f_c$, 0 για $f < f_c$ → κρατάει **μόνο USB** (πάνω από $f_c$).
+- Στο $-f_c$ side: ο όρος $1 - \mathrm{sgn}(f+f_c)$ είναι 2 για $f < -f_c$, 0 για $f > -f_c$ → κρατάει **μόνο τη μη-mirror πλευρά** (κάτω από $-f_c$).
+
+Δηλαδή το USB κρατάει μόνο τα έξω-από-τον-carrier κομμάτια του φάσματος. ∎
+
+## 3. Coherent demodulation της SSB
+
+Πολλαπλασιάζουμε με τοπικό cosine και LPF — ίδια διαδικασία με DSB-SC:
+
+$$
+y(t) = x_{SSB}(t) \cdot 2\cos(2\pi f_c t)
+$$
+
+Για USB:
+$$
+y(t) = 2[m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)] \cdot \cos(2\pi f_c t)
+$$
+$$
+= 2m(t)\cos^2(2\pi f_c t) - 2\hat{m}(t)\sin(2\pi f_c t)\cos(2\pi f_c t)
+$$
+$$
+= m(t)[1 + \cos(4\pi f_c t)] - \hat{m}(t)\sin(4\pi f_c t)
+$$
+
+Μετά από LPF (cutoff $W$):
+
+$$
+m_{\text{recovered}}(t) = m(t)
+$$
+
+Τα $\cos(4\pi f_c t)$ και $\sin(4\pi f_c t)$ κομμάτια κόβονται — μένει το $m(t)$ καθαρό.
+
+**Phase sensitivity:** όπως στο DSB-SC, αν η τοπική φάση είναι $\varphi$, παίρνουμε $m(t)\cos\varphi - \hat{m}(t)\sin\varphi$ μετά LPF. Σε $\varphi = 0$: τέλεια ανάκτηση. Σε $\varphi = 90°$: το $\hat{m}(t)$ που δεν είναι το $m(t)$ — **παραμόρφωση** (όχι quadrature null όπως DSB-SC, αλλά το «λάθος» message). Για ομιλία αυτό ακούγεται σαν διπλό μετασχηματισμό φωνής.
+
+## 4. Bandwidth και ισχύς
+
+| | DSB-SC | SSB |
+| --- | --- | --- |
+| Bandwidth | $2W$ | **$W$** (μισό!) |
+| Power efficiency | 100% | 100% |
+| Φάσμα φάσμα συμμετρικό; | ναι (USB ίδιο με LSB) | **όχι** (μόνο USB ή LSB) |
+| Σύνθεση δέκτη | coherent | coherent + ευαίσθητη στη φάση |
+
+Η ισχύς εξαρτάται από το συγκεκριμένο message. Για single-tone $m(t) = A_m\cos(2\pi f_m t)$ → $\hat{m}(t) = A_m\sin(2\pi f_m t)$, και:
+
+$$
+x_{USB}(t) = A_m\cos(2\pi f_m t)\cos(2\pi f_c t) - A_m\sin(2\pi f_m t)\sin(2\pi f_c t) = A_m\cos(2\pi(f_c + f_m)t)
+$$
+
+Ένα και μοναδικό cosine στη συχνότητα $f_c + f_m$. Ισχύς: $A_m^2/2$. Σύγκριση με DSB-SC ($A_m^2/4$): **διπλάσια ισχύς ανά συχνότητα**, αλλά την ίδια συνολική (αφού η DSB-SC είχε δύο sidebands $A_m^2/8$ κάθε μία).
+
+## 5. Πραγματικές εφαρμογές
+
+- **Shortwave radio (HF, 3–30 MHz):** SSB είναι το επικρατές σχήμα. Σε αυτές τις συχνότητες το φάσμα είναι **πολύτιμο** (όλος ο πλανήτης μοιράζεται τα ίδια bands μέσω ionospheric propagation), και η μισή BW του SSB επιτρέπει **διπλάσιο πλήθος καναλιών** στο ίδιο φάσμα.
+- **Ραδιοερασιτεχνικά (amateur radio) HF:** SSB δομεί τις περισσότερες long-distance επικοινωνίες. Συνήθως USB πάνω από 10 MHz, LSB κάτω.
+- **Στρατιωτικές HF επικοινωνίες:** SSB για ίδιους λόγους — φάσμα efficiency.
+- **Marine/aeronautical HF:** SSB για επικοινωνίες πέρα από τον ορίζοντα.
+
+Η SSB **σπάνια εμφανίζεται σε εμπορικό broadcast** (FM/AM ραδιόφωνο) γιατί η demodulation είναι πολύπλοκη — δεν μπορείς να φτιάξεις φθηνό SSB δέκτη με απλά κυκλώματα. Για broadcast επικρατούν Conventional AM (απλός envelope detector) και FM.
+
+## 6. Worked example
+
+<Example title="Ex. — single-tone SSB">
+
+**Δίνονται:** $m(t) = 4\cos(2\pi \cdot 1000 t)$ V, $f_c = 100$ kHz, USB.
+
+**Ζητούνται:** η εξίσωση του $x_{USB}(t)$, η συχνότητα στην οποία ζει, και το bandwidth.
+
+---
+
+**Λύση.**
+
+**Βήμα 1 — Hilbert του message.**
+$$
+\hat{m}(t) = \mathcal{H}\{4\cos(2\pi\cdot 1000 t)\} = 4\sin(2\pi\cdot 1000 t)
+$$
+
+**Βήμα 2 — SSB equation (USB):**
+$$
+x_{USB}(t) = m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)
+$$
+$$
+= 4\cos(2\pi\cdot 1000 t)\cos(2\pi\cdot 100000 t) - 4\sin(2\pi\cdot 1000 t)\sin(2\pi\cdot 100000 t)
+$$
+
+**Βήμα 3 — απλοποίηση μέσω cosine sum identity** $\cos A \cos B - \sin A \sin B = \cos(A+B)$:
+$$
+x_{USB}(t) = 4\cos(2\pi(100000 + 1000)t) = 4\cos(2\pi\cdot 101000\, t) \text{ V}
+$$
+
+**Βήμα 4 — συχνότητα και bandwidth.**
+- Συχνότητα: $f_c + f_m = 101$ kHz (single tone).
+- Bandwidth: $W = 1$ kHz (η συχνότητα του message). Σύγκριση με Conventional AM/DSB-SC: 2 kHz. Η SSB κερδίζει το μισό.
+
+**Επαλήθευση από LSB:**
+$$
+x_{LSB}(t) = m\cos + \hat{m}\sin = 4\cos(2\pi(100000 - 1000)t) = 4\cos(2\pi\cdot 99000\, t) \text{ V}
+$$
+
+LSB ζει στα 99 kHz — κάτω από τον carrier. USB στα 101 kHz — πάνω. Δύο διαφορετικά κανάλια, ίδιο message.
+
+</Example>
+
+<Recap>
+- **SSB** = DSB-SC με μία από τις δύο sidebands αφαιρεμένη. Δύο εκδοχές: **USB** (πάνω από $f_c$), **LSB** (κάτω από $f_c$).
+- **Bandwidth = W** — μισό του AM/DSB. Power efficiency = 100% (διατηρεί τα πλεονεκτήματα του DSB-SC).
+- **I/Q form:** $x_I = A_c m/2$, $x_Q = -A_c \hat{m}/2$ — **η μόνη AM παραλλαγή με $x_Q \neq 0$**. Γι' αυτό χρειάζεται Hilbert.
+- **Δύο μέθοδοι παραγωγής:** filter (DSB-SC + απότομος BPF) ή phase-shift (Hilbert: $m\cos \mp \hat{m}\sin$).
+- **Φόρμουλες προς απομνημόνευση:**
+  - $x_{USB}(t) = m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)$
+  - $x_{LSB}(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)$
+  - Single-tone: USB → $A_m\cos(2\pi(f_c + f_m)t)$, LSB → $A_m\cos(2\pi(f_c - f_m)t)$.
+- **Coherent demodulation** όπως στο DSB-SC. Phase error παράγει mix του $m$ και $\hat{m}$ — όχι quadrature null αλλά παραμόρφωση.
+- Επόμενο: **VSB**, ένας συμβιβασμός μεταξύ AM (απλό demod) και SSB (μισό BW).
+</Recap>
+
+<NextUp slug="am/vsb" />
