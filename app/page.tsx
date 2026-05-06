@@ -103,65 +103,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Collaborative manifesto */}
-      <section className="mx-auto mt-14 max-w-4xl rounded-2xl border border-accent/30 bg-accent-soft/15 p-6 sm:p-8">
-        <div className="mb-3 flex items-center gap-2 text-accent">
-          <MessageSquare className="h-5 w-5" aria-hidden />
-          <h2 className="text-sm font-semibold uppercase tracking-wider">
-            Πώς γίνεται καλύτερο το site
-          </h2>
-        </div>
-        <h3 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
-          Δεν είναι τέλειο. Γι' αυτό σε χρειάζεται.
-        </h3>
-        <div className="space-y-3 text-fg-muted leading-relaxed">
-          <p>
-            Σκοπός: να μη μένει ιδιωτική η δουλειά που κάνει ο καθένας μας με
-            το AI. Αντί κάθε φοιτητής να ρωτάει χωριστά τις ίδιες ερωτήσεις,
-            παίρνουμε τις καλύτερες AI-βασισμένες εξηγήσεις, παραδείγματα και
-            visualizations και τα <strong>συγκεντρώνουμε</strong> εδώ ως
-            κοινό class resource — κάτι που βελτιώνεται με τον χρόνο.
-          </p>
-          <p>
-            Αυτό το site δεν είναι ένα στατικό βιβλίο. Είναι ζωντανός πόρος
-            φτιαγμένος από συμφοιτητή για συμφοιτητές, και βελτιώνεται κάθε
-            φορά που κάποιος επισημαίνει τι είναι ασαφές, λάθος ή ελλιπές. Η
-            ύλη υπάρχει· εκείνο που λείπει είναι τα μάτια σας πάνω της.
-          </p>
-          <p>
-            <strong className="text-fg">Δεν χρειάζεται να είσαι expert.</strong>{' '}
-            Αν μπερδεύτηκες σε κάποια ενότητα, αυτό είναι{' '}
-            <em>χρήσιμη πληροφορία</em>: σημαίνει ότι η εξήγηση χρειάζεται
-            δουλειά. Η σύγχυσή σου είναι δεδομένο, όχι αδυναμία.
-          </p>
-          <p>Καλά σχόλια μοιάζουν με αυτά:</p>
-          <ul className="ml-5 list-disc space-y-1 text-sm">
-            <li>«Δεν καταλαβαίνω αυτό το βήμα.»</li>
-            <li>«Νομίζω ο τύπος εδώ είναι λάθος.»</li>
-            <li>«Μπορεί να μπει ένα παράδειγμα εδώ;»</li>
-            <li>«Η εξήγηση υποθέτει κάτι που δεν έχουμε δει.»</li>
-            <li>«Η λύση πηδάει πολύ γρήγορα από τη μία γραμμή στην άλλη.»</li>
-          </ul>
-          <p>
-            Όταν κάνεις review, το site αλλάζει: πιο καθαρές εξηγήσεις,
-            έξτρα παραδείγματα, διορθωμένα λάθη, καλύτερα visualizations.
-            Σε κάθε σελίδα και σε κάθε άσκηση υπάρχει χώρος για σχόλια. Στις
-            μεγάλες θεωρητικές σελίδες θα δεις ένα μικρό κουμπί{' '}
-            <em>«Σχόλιο»</em> δίπλα σε κάθε ενότητα — χρησιμοποίησέ το ώστε
-            να ξέρω <em>για ποιο σημείο</em> μιλάς.
-          </p>
-          <div className="mt-4 rounded-lg border border-purple-500/30 bg-purple-500/5 p-4 text-sm">
-            <div className="mb-1.5 flex items-center gap-2 font-semibold text-purple-700 dark:text-purple-300">
-              <Trophy className="h-4 w-4" aria-hidden />
-              Top Contributors — όχι Smartest Students
+      {/* Collaborative manifesto — compact, two-column */}
+      <section className="mx-auto mt-12 max-w-5xl rounded-2xl border border-accent/30 bg-accent-soft/15 p-5 sm:p-6">
+        <div className="grid gap-5 sm:grid-cols-[1.1fr_1fr] sm:gap-7">
+          <div>
+            <div className="mb-2 inline-flex items-center gap-1.5 text-accent">
+              <MessageSquare className="h-4 w-4" aria-hidden />
+              <span className="text-[11px] font-semibold uppercase tracking-wider">
+                Πώς γίνεται καλύτερο το site
+              </span>
             </div>
-            <p className="text-fg-muted">
-              Υπάρχει leaderboard, αλλά μετράει <strong>συνεισφορά</strong>,
-              όχι «εξυπνάδα». Πόντοι δίνονται μόνο σε σχόλια που πραγματικά{' '}
-              <em>βοηθάνε</em> να γίνει καλύτερο το site (έγκυρες διορθώσεις,
-              χρήσιμες ερωτήσεις διευκρίνησης, καλές προτάσεις). Spam και
-              «lol idk» δεν δίνουν τίποτα. Σκοπός: να αισθανόμαστε ότι όταν
-              διαβάζουμε, βοηθάμε και τον επόμενο.
+            <h3 className="text-xl font-bold tracking-tight sm:text-2xl">
+              Δεν είναι τέλειο. Γι&apos; αυτό σε χρειάζεται.
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-fg-muted">
+              Αν μπερδεύτηκες σε κάτι, αυτό είναι <em>χρήσιμη πληροφορία</em>:
+              η εξήγηση χρειάζεται δουλειά. Άσε σχόλιο και θα φτιαχτεί. Στις
+              θεωρητικές σελίδες υπάρχει κουμπί{' '}
+              <em className="whitespace-nowrap">«Σχόλιο»</em> δίπλα σε κάθε
+              ενότητα — χρησιμοποίησέ το για να ξέρουμε{' '}
+              <em>για ποιο σημείο</em> μιλάς.
+            </p>
+          </div>
+          <div className="rounded-lg border border-purple-500/30 bg-purple-500/5 p-3.5 text-sm">
+            <div className="mb-1 flex items-center gap-1.5 font-semibold text-purple-700 dark:text-purple-300">
+              <Trophy className="h-4 w-4" aria-hidden />
+              Top Contributors
+            </div>
+            <p className="text-xs leading-relaxed text-fg-muted">
+              Leaderboard που μετράει <strong>συνεισφορά</strong>, όχι
+              «εξυπνάδα». Πόντοι μόνο σε σχόλια που βοηθάνε πραγματικά
+              (διορθώσεις, χρήσιμες ερωτήσεις, καλές προτάσεις).
             </p>
           </div>
         </div>
@@ -303,24 +275,13 @@ export default function HomePage() {
         <Leaderboard />
       </section>
 
-      {/* Comments */}
+      {/* Comments — site-wide / general */}
       <section className="mx-auto mt-12 max-w-4xl">
         <Comments
           slug="homepage"
           pageTitle="Homepage"
           title="Σχόλια για το site συνολικά"
         />
-      </section>
-
-      {/* Note */}
-      <section className="mx-auto mt-12 max-w-3xl rounded-lg border border-dashed border-border bg-bg-soft px-5 py-4 text-sm text-fg-muted">
-        <p>
-          <strong className="text-fg">Σημείωση τεχνική:</strong> τα σχόλια
-          αποθηκεύονται τοπικά στον browser σου (localStorage). Δεν υπάρχει
-          backend ακόμα. Ο AlexTuring περνάει περιοδικά τα σχόλιά σας στον{' '}
-          Claude που σαρώνει, απαντάει και προτείνει αλλαγές — δες{' '}
-          <code>plans/COMMENTS_LOOP.md</code> στο repo για το workflow.
-        </p>
       </section>
     </div>
   )

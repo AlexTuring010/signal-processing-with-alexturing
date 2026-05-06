@@ -1,10 +1,38 @@
 import Link from 'next/link'
-import { Github, Radio } from 'lucide-react'
+import { Radio } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
 import { SearchBar } from './SearchBar'
 import { MobileNav } from './MobileNav'
+import { UserMenu } from './UserMenu'
+import { createClient } from '@/lib/supabase/server'
 
-export function Header() {
+export async function Header() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  let menuUser: {
+    id: string
+    displayName: string
+    avatarUrl: string | null
+    isModerator: boolean
+  } | null = null
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('display_name, avatar_url, role')
+      .eq('id', user.id)
+      .maybeSingle()
+    menuUser = {
+      id: user.id,
+      displayName: profile?.display_name ?? user.email?.split('@')[0] ?? 'Φοιτητής',
+      avatarUrl: profile?.avatar_url ?? null,
+      isModerator: profile?.role === 'moderator',
+    }
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
       <div className="mx-auto flex h-14 max-w-screen-2xl items-center gap-3 px-3 sm:px-4 lg:px-6">
@@ -26,16 +54,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <a
-            href="https://github.com/alexturing010/signal-processing-with-alexturing"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-fg-muted hover:bg-bg-soft hover:text-fg"
-            aria-label="Repository στο GitHub"
-            title="GitHub"
-          >
-            <Github className="h-4 w-4" />
-          </a>
+          <UserMenu user={menuUser} />
         </div>
       </div>
     </header>

@@ -8,8 +8,8 @@ type Props = {
   sectionTitle: string
   /**
    * Anchor / id of the section heading. Click scrolls to comments and the
-   * comment is saved with this anchor so AlexTuring/Claude can follow the
-   * link back to the exact spot.
+   * comment is saved with this anchor so reviewers can follow the link
+   * back to the exact spot.
    */
   sectionAnchor: string
 }

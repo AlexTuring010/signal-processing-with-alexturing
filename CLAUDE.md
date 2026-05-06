@@ -1,4 +1,4 @@
-# Signal Processing with AlexTuring
+# Signal Processing Class Hub
 
 Educational website for the **Συστήματα Επικοινωνιών (K21)** course at NKUA (Department of Informatics & Telecommunications, 4th semester). Built to help classmates actually understand the material — not just memorize it for the exam.
 
@@ -6,7 +6,7 @@ Educational website for the **Συστήματα Επικοινωνιών (K21)*
 
 ## Project identity
 
-- **Name:** Signal Processing with AlexTuring
+- **Name:** Signal Processing Class Hub
 - **Audience:** Undergraduate students taking K21 — Συστήματα Επικοινωνιών. Some take the optional MATLAB lab, some don't. The site serves both.
 - **Goal:** A study companion that builds understanding from zero. Reader is treated as smart but with significant gaps in prior knowledge.
 
@@ -17,8 +17,10 @@ Educational website for the **Συστήματα Επικοινωνιών (K21)*
 - **Math rendering:** KaTeX (via `react-katex` or `rehype-katex` for MDX)
 - **Content authoring:** MDX (Markdown + JSX) — lets us mix prose, equations, and interactive React components seamlessly
 - **Visualizations:** D3.js for data-driven plots; plain Canvas/SVG for simple animations; React state + sliders for interactive demos
+- **Backend:** Supabase (Postgres + Auth) for comments, replies, profiles, leaderboard
+- **Auth:** Supabase Auth — email magic link + Google OAuth. Public read, sign-in required to post.
 - **Deployment:** Vercel (auto-deploy from `main` branch)
-- **Persistent state (progress, bookmarks, theme):** `localStorage` (no backend needed — this is a static site for classmates)
+- **Client-only state (progress, bookmarks, theme):** `localStorage`
 
 ## Repository conventions
 
@@ -35,6 +37,10 @@ Educational website for the **Συστήματα Επικοινωνιών (K21)*
     ...
   /practice                 Exam practice hub
   /formulas                 Interactive formula sheet
+  /sign-in                  Auth (magic link + Google)
+  /profile                  User profile (display name, avatar, my comments)
+  /auth/callback            OAuth / OTP exchange
+  /auth/sign-out            POST → sign out
   layout.tsx                Root layout (theme, nav, footer)
   page.tsx                  Landing page
 
@@ -42,15 +48,26 @@ Educational website for the **Συστήματα Επικοινωνιών (K21)*
   /ui                       Generic UI: Button, Card, Tabs, Collapsible, etc.
   /math                     Math rendering helpers (Eq, InlineMath, BlockMath)
   /viz                      Interactive visualizations (SignalBuilder, AMDemo, FFTViewer, ...)
-  /layout                   Header, Sidebar, ProgressDot, Bookmark, ThemeToggle
+  /layout                   Header, Sidebar, ProgressDot, Bookmark, ThemeToggle, Comments, UserMenu
   /content                  Reusable content blocks: Callout, LabBox, Example, ExamProblem
 
 /lib                        Utilities (math helpers, signal generation, storage)
+  /supabase                 Browser + server clients, types, middleware helper
 /content                    Static content data (lecture index, exam questions, formula table)
 /public                     Static assets
+/supabase/migrations        Postgres schema + RLS policies
 
 /plans                      Per-section build plans (handed to Claude Code one at a time)
 ```
+
+### Auth + RLS model
+
+- Two roles in `profiles.role`: `user` (default) and `moderator`.
+- A profile row is auto-created on signup via the `handle_new_user` trigger.
+- Posting comments/replies inserts only as `auth.uid()` and cannot self-award points or self-resolve — RLS enforces this.
+- Authors can delete their own comment/reply within 10 minutes; moderators always.
+- `is_claude_reply = true` replies are moderator-only.
+- See `supabase/migrations/0001_init.sql` for the canonical policy set.
 
 ### File & folder naming
 

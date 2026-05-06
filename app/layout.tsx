@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     'Συνεργατικός οδηγός για το μάθημα K21 — Συστήματα Επικοινωνιών (ΕΚΠΑ, DIT). Φτιαγμένος από συμφοιτητές, βελτιώνεται με σχόλια.',
   applicationName: 'Signal Processing Class Hub',
-  authors: [{ name: 'AlexTuring & συμμαθητές' }],
+  authors: [{ name: 'Class Hub contributors' }],
   openGraph: {
     title: 'Signal Processing Class Hub',
     description:

@@ -1,60 +1,70 @@
-'use client'
-
-import { useEffect, useMemo, useState } from 'react'
 import { Trophy, Award } from 'lucide-react'
-import { readAllComments, CATEGORY_LABELS } from './Comments'
+import { createClient } from '@/lib/supabase/server'
+import {
+  CATEGORY_LABELS,
+  type CommentCategory,
+} from '@/lib/supabase/types'
 
 /**
- * "Top Contributors" leaderboard, computed locally from all comments
- * across all pages (localStorage). Authors get points only for reviewed
- * comments — see plans/COMMENTS_LOOP.md.
+ * "Top Contributors" leaderboard, aggregated from reviewed comments
+ * across the whole site. Authors get points only for reviewed comments —
+ * see plans/COMMENTS_LOOP.md.
  *
- * Self-contained: reads localStorage on mount, aggregates per-author.
- * No backend, no real cross-device leaderboard yet.
+ * Server component: aggregates in memory from a single Supabase query.
+ * Acceptable while contributor counts are small (low hundreds). If the
+ * dataset grows, push the aggregation into a Postgres view.
  */
 
 type Entry = {
-  author: string
+  authorId: string
+  authorName: string
   totalPoints: number
   contributions: number
   byCategory: Record<string, number>
 }
 
-export function Leaderboard() {
-  const [entries, setEntries] = useState<Entry[]>([])
-  const [hydrated, setHydrated] = useState(false)
+export async function Leaderboard() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('comments')
+    .select(
+      'author_id, points_awarded, category, author:profiles!comments_author_id_fkey(id, display_name)',
+    )
+    .gt('points_awarded', 0)
 
-  useEffect(() => {
-    const all = readAllComments()
-    const map = new Map<string, Entry>()
-    for (const c of all) {
-      if (c.author === 'Claude') continue // exclude AI account
-      if (c.pointsAwarded == null || c.pointsAwarded <= 0) continue
-      const existing = map.get(c.author) ?? {
-        author: c.author,
+  // Supabase types embedded foreign rows as arrays even for single-row FKs;
+  // normalize by taking the first element when present.
+  const rows = (data ?? []) as unknown as Array<{
+    author_id: string
+    points_awarded: number
+    category: string | null
+    author: { id: string; display_name: string } | { id: string; display_name: string }[] | null
+  }>
+
+  const map = new Map<string, Entry>()
+  for (const row of rows) {
+    const author = Array.isArray(row.author) ? row.author[0] : row.author
+    const id = row.author_id
+    const existing =
+      map.get(id) ??
+      ({
+        authorId: id,
+        authorName: author?.display_name ?? '—',
         totalPoints: 0,
         contributions: 0,
         byCategory: {},
-      }
-      existing.totalPoints += c.pointsAwarded
-      existing.contributions += 1
-      const cat = c.category ?? 'unspecified'
-      existing.byCategory[cat] = (existing.byCategory[cat] ?? 0) + 1
-      map.set(c.author, existing)
-    }
-    const list = [...map.values()].sort((a, b) => b.totalPoints - a.totalPoints)
-    setEntries(list)
-    setHydrated(true)
-  }, [])
-
-  const total = useMemo(
-    () => entries.reduce((s, e) => s + e.totalPoints, 0),
-    [entries],
-  )
-
-  if (!hydrated) {
-    return null
+      } satisfies Entry)
+    existing.totalPoints += row.points_awarded
+    existing.contributions += 1
+    const cat = row.category ?? 'unspecified'
+    existing.byCategory[cat] = (existing.byCategory[cat] ?? 0) + 1
+    map.set(id, existing)
   }
+
+  const entries = [...map.values()].sort(
+    (a, b) => b.totalPoints - a.totalPoints,
+  )
+  const total = entries.reduce((s, e) => s + e.totalPoints, 0)
 
   return (
     <section className="rounded-xl border border-border bg-bg-elevated p-5">
@@ -64,7 +74,8 @@ export function Leaderboard() {
           Top Contributors
         </h2>
         <span className="ml-auto text-xs text-fg-subtle">
-          {entries.length} contributors · {total} συνολικοί πόντοι
+          {entries.length} contributor{entries.length === 1 ? '' : 's'} · {total}{' '}
+          συνολικοί πόντοι
         </span>
       </header>
       <p className="mb-4 text-xs leading-relaxed text-fg-muted">
@@ -81,7 +92,7 @@ export function Leaderboard() {
         <ol className="space-y-2">
           {entries.slice(0, 20).map((e, i) => (
             <li
-              key={e.author}
+              key={e.authorId}
               className="flex items-center gap-3 rounded-lg border border-border bg-bg-soft/40 p-3"
             >
               <span
@@ -98,13 +109,16 @@ export function Leaderboard() {
                 {i + 1}
               </span>
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-fg">{e.author}</div>
+                <div className="font-semibold text-fg">{e.authorName}</div>
                 <div className="text-[11px] text-fg-muted">
-                  {e.contributions} reviewed contribution{e.contributions === 1 ? '' : 's'} ·{' '}
+                  {e.contributions} reviewed contribution
+                  {e.contributions === 1 ? '' : 's'} ·{' '}
                   {Object.entries(e.byCategory)
                     .map(
                       ([k, v]) =>
-                        `${v}× ${CATEGORY_LABELS[k as keyof typeof CATEGORY_LABELS] ?? k}`,
+                        `${v}× ${
+                          CATEGORY_LABELS[k as CommentCategory] ?? k
+                        }`,
                     )
                     .join(', ')}
                 </div>

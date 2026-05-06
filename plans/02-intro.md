@@ -413,7 +413,7 @@ For signal plots (time domain, frequency spectrum, FFT outputs): **generate the 
 
 ### C. Decorative slide elements → skip
 
-NKUA logos, slide template backgrounds, the dot-network pattern on the original slides — **skip entirely**. We are not branding the site as NKUA; we have our own brand ("Signal Processing with AlexTuring"). Picking our own visual identity is a feature, not a regression.
+NKUA logos, slide template backgrounds, the dot-network pattern on the original slides — **skip entirely**. We are not branding the site as NKUA; we have our own brand ("Signal Processing Class Hub"). Picking our own visual identity is a feature, not a regression.
 
 ### D. Photos / real-world imagery → request from the user if needed
 

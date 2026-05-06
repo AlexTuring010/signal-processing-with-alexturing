@@ -142,7 +142,7 @@ Typography:
 ### 6. Layout shell
 
 **Header (sticky, full width):**
-- Site title "Signal Processing with AlexTuring" (left)
+- Site title "Signal Processing Class Hub" (left)
 - Search bar (center, expands on focus)
 - Theme toggle, GitHub link (right)
 
