@@ -201,6 +201,10 @@ The site is built incrementally:
 
 `plans/COMMITMENTS.md` is the record of every "we'll come back to this" / "see later chapter" promise the site has made to readers. **Before declaring any section done, check this file** — if the section you just built was supposed to fulfill an open commitment, satisfy it explicitly (with a back-reference: *"θυμάσαι που είπαμε X στην εισαγωγή; Να γιατί"*) and move the entry to the "Fulfilled" section. **If your section makes any new forward-looking promises, add them to the open list.** This file is the safety net that keeps the site internally consistent across many small build steps.
 
+### Comments review loop
+
+When the moderator says **"review pending comments"**, follow `plans/COMMENTS_LOOP.md` — it has the rules (verdict triage, reply tone, category calibration, hard stops) and the CLI scripts (`npm run comments:list / :reply / :resolve`). Don't review comments without re-reading that file each session.
+
 ---
 
 ## Ground rules for Claude Code
