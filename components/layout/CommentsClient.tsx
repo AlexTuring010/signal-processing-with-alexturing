@@ -111,12 +111,9 @@ export function CommentsClient({
       section_anchor: null as string | null,
       body,
       author_id: (me?.id ?? null) as string | null,
-      status: (me && noReview ? 'general' : 'pending') as
-        | 'general'
-        | 'pending',
-      visibility: (me && modOnly ? 'mod_only' : 'public') as
-        | 'mod_only'
-        | 'public',
+      status: (noReview ? 'general' : 'pending') as 'general' | 'pending',
+      visibility: (modOnly ? 'mod_only' : 'public') as 'mod_only' | 'public',
+      // Guests can't be anonymous (no name to hide; RLS forbids it too).
       is_anonymous: !!me && anonymous,
     }
     const { data, error: insertError } = await supabase
@@ -339,42 +336,46 @@ export function CommentsClient({
           className="w-full resize-none rounded-md border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-accent"
           maxLength={2000}
         />
-        {me && (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-fg-muted">
-            <label
-              className="inline-flex items-center gap-1.5"
-              title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
-            >
-              <input
-                type="checkbox"
-                checked={noReview}
-                onChange={(e) => {
-                  setNoReview(e.target.checked)
-                  if (e.target.checked) setModOnly(false)
-                }}
-                disabled={modOnly}
-                className="h-3 w-3 disabled:opacity-50"
-              />
-              <MessageCircleOff className="h-3 w-3" aria-hidden />
-              Γενικό — χωρίς review
-            </label>
-            <label
-              className="inline-flex items-center gap-1.5"
-              title="Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο."
-            >
-              <input
-                type="checkbox"
-                checked={modOnly}
-                onChange={(e) => {
-                  setModOnly(e.target.checked)
-                  if (e.target.checked) setNoReview(false)
-                }}
-                disabled={noReview}
-                className="h-3 w-3 disabled:opacity-50"
-              />
-              <EyeOff className="h-3 w-3" aria-hidden />
-              Μόνο για moderators
-            </label>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-fg-muted">
+          <label
+            className="inline-flex items-center gap-1.5"
+            title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
+          >
+            <input
+              type="checkbox"
+              checked={noReview}
+              onChange={(e) => {
+                setNoReview(e.target.checked)
+                if (e.target.checked) setModOnly(false)
+              }}
+              disabled={modOnly}
+              className="h-3 w-3 disabled:opacity-50"
+            />
+            <MessageCircleOff className="h-3 w-3" aria-hidden />
+            Γενικό — χωρίς review
+          </label>
+          <label
+            className="inline-flex items-center gap-1.5"
+            title={
+              me
+                ? 'Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο.'
+                : 'Μόνο οι moderators θα δουν αυτό το σχόλιο. Μετά την υποβολή δεν θα φαίνεται ούτε σε εσένα (δεν υπάρχει σύνδεση).'
+            }
+          >
+            <input
+              type="checkbox"
+              checked={modOnly}
+              onChange={(e) => {
+                setModOnly(e.target.checked)
+                if (e.target.checked) setNoReview(false)
+              }}
+              disabled={noReview}
+              className="h-3 w-3 disabled:opacity-50"
+            />
+            <EyeOff className="h-3 w-3" aria-hidden />
+            Μόνο για moderators
+          </label>
+          {me && (
             <label
               className="inline-flex items-center gap-1.5"
               title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους — οι moderators ξέρουν ποιος έγραψε."
@@ -388,8 +389,8 @@ export function CommentsClient({
               <VenetianMask className="h-3 w-3" aria-hidden />
               Ανώνυμα
             </label>
-          </div>
-        )}
+          )}
+        </div>
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-fg-subtle">
             {text.length}/2000 χαρακτήρες

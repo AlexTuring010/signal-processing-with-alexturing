@@ -195,12 +195,9 @@ export function SectionComments({
       section_anchor: anchor,
       body,
       author_id: (me?.id ?? null) as string | null,
-      status: (me && noReview ? 'general' : 'pending') as
-        | 'general'
-        | 'pending',
-      visibility: (me && modOnly ? 'mod_only' : 'public') as
-        | 'mod_only'
-        | 'public',
+      status: (noReview ? 'general' : 'pending') as 'general' | 'pending',
+      visibility: (modOnly ? 'mod_only' : 'public') as 'mod_only' | 'public',
+      // Guests can't be anonymous (RLS forbids; no name to hide anyway).
       is_anonymous: !!me && anonymous,
     }
     const { data, error: insertError } = await supabase
@@ -383,56 +380,58 @@ export function SectionComments({
                     maxLength={2000}
                   />
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-fg-muted">
+                    <label
+                      className="inline-flex items-center gap-1.5"
+                      title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
+                    >
+                      <input
+                        type="checkbox"
+                        checked={noReview}
+                        onChange={(e) => {
+                          setNoReview(e.target.checked)
+                          if (e.target.checked) setModOnly(false)
+                        }}
+                        disabled={modOnly}
+                        className="h-3 w-3 disabled:opacity-50"
+                      />
+                      <MessageCircleOff className="h-3 w-3" aria-hidden />
+                      Γενικό
+                    </label>
+                    <label
+                      className="inline-flex items-center gap-1.5"
+                      title={
+                        me
+                          ? 'Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο.'
+                          : 'Μόνο οι moderators θα δουν αυτό το σχόλιο. Δεν θα φαίνεται ούτε σε εσένα μετά (δεν υπάρχει σύνδεση).'
+                      }
+                    >
+                      <input
+                        type="checkbox"
+                        checked={modOnly}
+                        onChange={(e) => {
+                          setModOnly(e.target.checked)
+                          if (e.target.checked) setNoReview(false)
+                        }}
+                        disabled={noReview}
+                        className="h-3 w-3 disabled:opacity-50"
+                      />
+                      <EyeOff className="h-3 w-3" aria-hidden />
+                      Mod-only
+                    </label>
                     {me && (
-                      <>
-                        <label
-                          className="inline-flex items-center gap-1.5"
-                          title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
-                        >
-                          <input
-                            type="checkbox"
-                            checked={noReview}
-                            onChange={(e) => {
-                              setNoReview(e.target.checked)
-                              if (e.target.checked) setModOnly(false)
-                            }}
-                            disabled={modOnly}
-                            className="h-3 w-3 disabled:opacity-50"
-                          />
-                          <MessageCircleOff className="h-3 w-3" aria-hidden />
-                          Γενικό
-                        </label>
-                        <label
-                          className="inline-flex items-center gap-1.5"
-                          title="Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο."
-                        >
-                          <input
-                            type="checkbox"
-                            checked={modOnly}
-                            onChange={(e) => {
-                              setModOnly(e.target.checked)
-                              if (e.target.checked) setNoReview(false)
-                            }}
-                            disabled={noReview}
-                            className="h-3 w-3 disabled:opacity-50"
-                          />
-                          <EyeOff className="h-3 w-3" aria-hidden />
-                          Mod-only
-                        </label>
-                        <label
-                          className="inline-flex items-center gap-1.5"
-                          title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
-                        >
-                          <input
-                            type="checkbox"
-                            checked={anonymous}
-                            onChange={(e) => setAnonymous(e.target.checked)}
-                            className="h-3 w-3"
-                          />
-                          <VenetianMask className="h-3 w-3" aria-hidden />
-                          Ανώνυμα
-                        </label>
-                      </>
+                      <label
+                        className="inline-flex items-center gap-1.5"
+                        title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
+                      >
+                        <input
+                          type="checkbox"
+                          checked={anonymous}
+                          onChange={(e) => setAnonymous(e.target.checked)}
+                          className="h-3 w-3"
+                        />
+                        <VenetianMask className="h-3 w-3" aria-hidden />
+                        Ανώνυμα
+                      </label>
                     )}
                     <button
                       type="submit"
