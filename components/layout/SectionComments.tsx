@@ -210,6 +210,19 @@ export function SectionComments({
     return true
   }
 
+  const removeComment = async (commentId: string) => {
+    if (!window.confirm('Διαγραφή σχολίου;')) return
+    const { error: delError } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', commentId)
+    if (delError) {
+      setError(delError.message)
+      return
+    }
+    setComments((prev) => prev.filter((c) => c.id !== commentId))
+  }
+
   const removeReply = async (commentId: string, replyId: string) => {
     if (!window.confirm('Διαγραφή απάντησης;')) return
     const { error: delError } = await supabase
@@ -271,6 +284,7 @@ export function SectionComments({
                       me={me ?? null}
                       onReply={(t, asClaude) => addReply(c.id, t, asClaude)}
                       onRemoveReply={(rid) => removeReply(c.id, rid)}
+                      onRemove={() => removeComment(c.id)}
                     />
                   ))}
                 </ul>
@@ -347,11 +361,13 @@ function SectionCommentItem({
   me,
   onReply,
   onRemoveReply,
+  onRemove,
 }: {
   comment: SectionCommentRow
   me: Me | null
   onReply: (text: string, asClaude: boolean) => Promise<boolean>
   onRemoveReply: (replyId: string) => void
+  onRemove: () => void
 }) {
   const author = Array.isArray(comment.author) ? comment.author[0] : comment.author
   const [replyOpen, setReplyOpen] = useState(false)
@@ -359,6 +375,9 @@ function SectionCommentItem({
   const [replyAsClaude, setReplyAsClaude] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const isMod = me?.isModerator ?? false
+  const isAuthor = me?.id === comment.author_id
+  const createdMs = new Date(comment.created_at).getTime()
+  const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
 
   const handleReplySubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -413,6 +432,17 @@ function SectionCommentItem({
             Προς review
           </span>
         ) : null}
+        {canDelete && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="rounded p-0.5 text-fg-subtle transition hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-300"
+            aria-label="Διαγραφή σχολίου"
+            title="Διαγραφή σχολίου"
+          >
+            <Trash2 className="h-3 w-3" aria-hidden />
+          </button>
+        )}
       </div>
       <p className="whitespace-pre-wrap text-sm leading-relaxed text-fg">
         {comment.body}
