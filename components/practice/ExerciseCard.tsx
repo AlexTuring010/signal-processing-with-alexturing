@@ -61,44 +61,70 @@ export function ExerciseCard({ exercise }: Props) {
           : 'border-border hover:border-border/80'
       }`}
     >
-      {/* Header row: badges */}
-      <div className="mb-3 flex flex-wrap items-center gap-1.5">
-        <span
-          className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${ORIGIN_COLORS[exercise.origin]}`}
-        >
-          {exercise.origin === 'past-exam' && (
-            <GraduationCap className="mr-1 inline-block h-3 w-3" aria-hidden />
+      {/* Header row: badges (left) + solved toggle (right) */}
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span
+            className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${ORIGIN_COLORS[exercise.origin]}`}
+          >
+            {exercise.origin === 'past-exam' && (
+              <GraduationCap className="mr-1 inline-block h-3 w-3" aria-hidden />
+            )}
+            {exercise.origin === 'ai-generated' && (
+              <Sparkles className="mr-1 inline-block h-3 w-3" aria-hidden />
+            )}
+            {ORIGIN_LABELS[exercise.origin]}
+          </span>
+          {exercise.source && (
+            <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
+              {SOURCE_LABELS[exercise.source]}
+            </span>
           )}
-          {exercise.origin === 'ai-generated' && (
-            <Sparkles className="mr-1 inline-block h-3 w-3" aria-hidden />
+          {exercise.problemNumber && (
+            <span className="rounded-full border border-border bg-bg-soft px-2 py-0.5 text-[11px] font-mono font-semibold text-fg-muted">
+              {exercise.problemNumber}
+            </span>
           )}
-          {ORIGIN_LABELS[exercise.origin]}
-        </span>
-        {exercise.source && (
-          <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
-            {SOURCE_LABELS[exercise.source]}
+          {exercise.weight != null && (
+            <span className="rounded-full border border-rose-500/40 bg-rose-500/10 px-2 py-0.5 text-[11px] font-mono font-semibold text-rose-700 dark:text-rose-300">
+              {exercise.weight}%
+            </span>
+          )}
+          <span
+            className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${TOPIC_COLORS[exercise.topic]}`}
+          >
+            {TOPIC_LABELS[exercise.topic]}
           </span>
-        )}
-        {exercise.problemNumber && (
-          <span className="rounded-full border border-border bg-bg-soft px-2 py-0.5 text-[11px] font-mono font-semibold text-fg-muted">
-            {exercise.problemNumber}
+          <span
+            className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${DIFFICULTY_COLORS[exercise.difficulty]}`}
+          >
+            {DIFFICULTY_LABELS[exercise.difficulty]}
           </span>
-        )}
-        {exercise.weight != null && (
-          <span className="rounded-full border border-rose-500/40 bg-rose-500/10 px-2 py-0.5 text-[11px] font-mono font-semibold text-rose-700 dark:text-rose-300">
-            {exercise.weight}%
-          </span>
-        )}
-        <span
-          className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${TOPIC_COLORS[exercise.topic]}`}
+        </div>
+        <button
+          type="button"
+          onClick={() => toggleSolved(storageKey)}
+          aria-pressed={solved}
+          title={solved ? 'Σήμανε ως άλυτο' : 'Σήμανε ως λυμένο'}
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition ${
+            solved
+              ? 'border-success/50 bg-success/10 text-success hover:bg-success/15'
+              : 'border-border bg-bg-soft text-fg-muted hover:border-accent/50 hover:text-fg'
+          }`}
         >
-          {TOPIC_LABELS[exercise.topic]}
-        </span>
-        <span
-          className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${DIFFICULTY_COLORS[exercise.difficulty]}`}
-        >
-          {DIFFICULTY_LABELS[exercise.difficulty]}
-        </span>
+          {solved ? (
+            <>
+              <CheckCircle2 className="h-4 w-4" aria-hidden />
+              Λυμένη
+            </>
+          ) : (
+            <>
+              <Circle className="h-4 w-4" aria-hidden />
+              <span className="hidden sm:inline">Σήμανε ως λυμένη</span>
+              <span className="sm:hidden">Λύθηκε;</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Title */}
@@ -139,29 +165,6 @@ export function ExerciseCard({ exercise }: Props) {
             Assist με τυπολόγιο
           </button>
         )}
-        <button
-          type="button"
-          onClick={() => toggleSolved(storageKey)}
-          aria-pressed={solved}
-          title={solved ? 'Σήμανε ως άλυτο' : 'Σήμανε ως λυμένο'}
-          className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition ${
-            solved
-              ? 'border-success/50 bg-success/10 text-success hover:bg-success/15'
-              : 'border-border bg-bg-soft text-fg-muted hover:border-accent/50 hover:text-fg'
-          }`}
-        >
-          {solved ? (
-            <>
-              <CheckCircle2 className="h-4 w-4" aria-hidden />
-              Λυμένη
-            </>
-          ) : (
-            <>
-              <Circle className="h-4 w-4" aria-hidden />
-              Σήμανε ως λυμένη
-            </>
-          )}
-        </button>
         {exercise.origin === 'ai-generated' && (
           <span className="inline-flex items-center gap-1.5 rounded-md border border-yellow-500/40 bg-yellow-500/10 px-3 py-1.5 text-xs text-yellow-800 dark:text-yellow-200">
             <BookOpen className="h-3.5 w-3.5" aria-hidden />
