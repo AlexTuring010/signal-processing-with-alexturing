@@ -14,6 +14,7 @@ type Props = {
 type OriginFilter = 'all' | Origin
 
 const SOURCE_ORDER: ExamSource[] = [
+  'proodos-april-2026',
   'jan-2026',
   'sept-2025',
   'june-2025',

@@ -35,6 +35,7 @@ export type ExamSource =
   | 'june-2025'
   | 'proodos-a-2025'
   | 'proodos-b-2025'
+  | 'proodos-april-2026'
 
 export const TOPIC_LABELS: Record<Topic, string> = {
   foundations: 'Foundations',
@@ -68,6 +69,7 @@ export const SOURCE_LABELS: Record<ExamSource, string> = {
   'june-2025': 'Ιούνιος 2025',
   'proodos-a-2025': 'Πρόοδος A · Μάιος 2025',
   'proodos-b-2025': 'Πρόοδος B · Μάιος 2025',
+  'proodos-april-2026': 'Πρόοδος · Απρίλιος 2026',
 }
 
 export const ORIGIN_LABELS: Record<Origin, string> = {
