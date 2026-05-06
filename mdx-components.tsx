@@ -1,7 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { isValidElement } from 'react'
-import { SectionCommentButton } from '@/components/layout/SectionCommentButton'
+import { SectionComments } from '@/components/layout/SectionComments'
 import { Callout } from '@/components/content/Callout'
 import { Example } from '@/components/content/Example'
 import { LabBox } from '@/components/content/LabBox'
@@ -272,12 +272,12 @@ function HeadingWithCommentButton(level: 2 | 3) {
     }
     const sectionTitle = extractText(children).trim() || id
     return (
-      <Tag id={id} {...rest} className="scroll-mt-20">
-        {children}
-        <span className="ml-2 inline-flex align-middle">
-          <SectionCommentButton sectionTitle={sectionTitle} sectionAnchor={id} />
-        </span>
-      </Tag>
+      <>
+        <Tag id={id} {...rest} className="scroll-mt-20">
+          {children}
+        </Tag>
+        <SectionComments anchor={id} sectionTitle={sectionTitle} />
+      </>
     )
   }
 }

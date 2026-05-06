@@ -131,9 +131,8 @@ export default function HomePage() {
               Top Contributors
             </div>
             <p className="text-xs leading-relaxed text-fg-muted">
-              Leaderboard που μετράει <strong>συνεισφορά</strong>, όχι
-              «εξυπνάδα». Πόντοι μόνο σε σχόλια που βοηθάνε πραγματικά
-              (διορθώσεις, χρήσιμες ερωτήσεις, καλές προτάσεις).
+              Leaderboard για όσους βοηθάνε το site να γίνει καλύτερο —
+              διορθώσεις, χρήσιμες διευκρινήσεις, καλές προτάσεις, tips.
             </p>
           </div>
         </div>

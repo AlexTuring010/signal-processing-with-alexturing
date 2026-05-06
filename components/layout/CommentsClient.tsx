@@ -14,13 +14,11 @@ import {
   Sparkles,
   ChevronDown,
   Award,
-  X,
   Tag,
   LogIn,
   ShieldCheck,
 } from 'lucide-react'
 
-import { useCommentTarget } from './comment-target-store'
 import { UserAvatar } from './UserAvatar'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -63,9 +61,6 @@ export function CommentsClient({
   const [error, setError] = useState<string | null>(null)
   const [moderate, setModerate] = useState(false)
 
-  const target = useCommentTarget((s) => s.target)
-  const clearTarget = useCommentTarget((s) => s.clear)
-
   // Re-sync if the server-rendered list changes (e.g. after navigation).
   useEffect(() => {
     setComments(initialComments)
@@ -97,8 +92,8 @@ export function CommentsClient({
       .insert({
         slug,
         page_title: pageTitle ?? null,
-        section_title: target?.sectionTitle ?? null,
-        section_anchor: target?.sectionAnchor ?? null,
+        section_title: null,
+        section_anchor: null,
         body,
         author_id: me.id,
       })
@@ -121,7 +116,6 @@ export function CommentsClient({
     }
     setComments((prev) => [optimistic, ...prev])
     setText('')
-    clearTarget()
     router.refresh()
   }
 
@@ -268,18 +262,13 @@ export function CommentsClient({
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden />
           <div>
             <p>
-              <strong className="text-fg">Πώς λειτουργεί.</strong> Άσε σχόλιο
-              όπου κάτι είναι ασαφές ή λάθος. Οι περισσότερες σελίδες έχουν
-              κουμπί <em>Σχόλιο</em> δίπλα στις ενότητες — έτσι το σχόλιο
-              αποθηκεύεται μαζί με τη συγκεκριμένη ενότητα. Η ομάδα του site
-              και ο <strong>Claude</strong> κάνουν review και απαντούν εδώ·
-              οι απαντήσεις του Claude εμφανίζονται με το avatar του.
-            </p>
-            <p className="mt-1.5">
-              <strong className="text-fg">Πόντοι:</strong> δίνονται μόνο μετά
-              από review και ανάλογα με την ποιότητα (έγκυρη διόρθωση 8,
-              χρήσιμη διευκρίνηση 5, καλή πρόταση 5, …). Spam ή «lol idk»
-              δεν παίρνει τίποτα.
+              <strong className="text-fg">Άσε σχόλιο για ό,τι θες.</strong>{' '}
+              Διόρθωση, διευκρίνηση που έλειπε, ένα tip που σε βοήθησε,
+              μια ωραία αναλογία, ακόμα και «εδώ ένιωσα ότι κάτι κλικάρει».
+              Στις θεωρητικές σελίδες υπάρχει κουμπί <em>Σχόλιο</em> δίπλα
+              σε κάθε ενότητα ώστε το σχόλιο να αποθηκεύεται με το
+              συγκεκριμένο σημείο. Η ομάδα του site και ο{' '}
+              <strong>Claude</strong> διαβάζουν και απαντούν εδώ.
             </p>
           </div>
         </div>
@@ -287,22 +276,6 @@ export function CommentsClient({
 
       {me ? (
         <form id="comments-form" onSubmit={handleSubmit} className="mb-4 space-y-2">
-          {target && (
-            <div className="flex items-center justify-between rounded-md border border-accent/40 bg-accent/10 px-3 py-2 text-xs">
-              <span className="text-fg-muted">
-                Σχολιάζεις:{' '}
-                <strong className="text-fg">{target.sectionTitle}</strong>
-              </span>
-              <button
-                type="button"
-                onClick={clearTarget}
-                className="rounded p-0.5 text-fg-subtle transition hover:bg-accent/10 hover:text-accent"
-                aria-label="Καθάρισε ενότητα"
-              >
-                <X className="h-3.5 w-3.5" aria-hidden />
-              </button>
-            </div>
-          )}
           <div className="flex items-center gap-2 text-xs text-fg-muted">
             <span>Ως:</span>
             <UserAvatar url={me.avatarUrl} name={me.displayName} size="xs" />
@@ -317,7 +290,7 @@ export function CommentsClient({
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Γράψε εδώ το σχόλιό σου…"
+            placeholder="Γενικό σχόλιο για όλη τη σελίδα — διόρθωση, tip, αναλογία, ή απλά κάτι που σκέφτηκες…"
             rows={3}
             className="w-full resize-none rounded-md border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-accent"
             maxLength={2000}

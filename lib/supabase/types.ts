@@ -4,6 +4,8 @@ export type CommentCategory =
   | 'valid-correction'
   | 'useful-clarification'
   | 'helpful-suggestion'
+  | 'tip'
+  | 'appreciation'
   | 'common-misconception'
   | 'wrong-but-helpful'
   | 'duplicate'
@@ -60,6 +62,8 @@ export const CATEGORY_LABELS: Record<CommentCategory, string> = {
   'valid-correction': 'Έγκυρη διόρθωση',
   'useful-clarification': 'Ζητάει χρήσιμη διευκρίνηση',
   'helpful-suggestion': 'Καλή πρόταση',
+  tip: 'Χρήσιμο tip / πρόσθετη γνώση',
+  appreciation: 'Θετικό σχόλιο',
   'common-misconception': 'Συχνή παρανόηση',
   'wrong-but-helpful': 'Λάθος αλλά αποκαλυπτικό',
   duplicate: 'Διπλό',
@@ -72,6 +76,8 @@ export const CATEGORY_DEFAULT_POINTS: Record<CommentCategory, number> = {
   'valid-correction': 8,
   'useful-clarification': 5,
   'helpful-suggestion': 5,
+  tip: 5,
+  appreciation: 0,
   'common-misconception': 3,
   'wrong-but-helpful': 1,
   duplicate: 1,
