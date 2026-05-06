@@ -2269,10 +2269,34 @@ USSB(k):    ◢            ◣         (τρίγωνο, πλάτος W)
     solution: (
       <>
         <p>
-          <strong>ΛΑΘΟΣ.</strong> <InlineMath>{'M^3(f)'}</InlineMath> στο time
-          domain: <InlineMath>{'\\mathcal{F}^{-1}\\{M^3\\} = m * m * m'}</InlineMath>.
-          Convolution προσθέτει bandwidths:{' '}
-          <InlineMath>{'W + W + W = 3W'}</InlineMath>.
+          <strong>ΛΑΘΟΣ.</strong> Ο γραφή{' '}
+          <InlineMath>{'M^3(f)'}</InlineMath> έχει δύο εύλογες αναγνώσεις, και
+          <em>καμία</em> από τις δύο δεν δίνει <InlineMath>{'W^3'}</InlineMath>:
+        </p>
+        <ol className="ml-5 list-decimal text-fg-muted">
+          <li>
+            <strong>Pointwise κυβισμός του φάσματος</strong> (αυτό που γράφει
+            κυριολεκτικά ο τύπος): <InlineMath>{'G(f) = [M(f)]^3'}</InlineMath>.
+            Το <em>στήριγμα</em> δεν αλλάζει — όπου <InlineMath>M = 0</InlineMath>{' '}
+            έχουμε <InlineMath>{'M^3 = 0'}</InlineMath>. Bandwidth παραμένει{' '}
+            <strong>W</strong>.
+          </li>
+          <li>
+            <strong>Φάσμα του{' '}
+            <InlineMath>{'m^3(t)'}</InlineMath></strong> (η συνηθέστερη πρόθεση
+            σε exam questions). Πολλαπλασιασμός στον χρόνο = συνέλιξη στη
+            συχνότητα:{' '}
+            <InlineMath>{'\\mathcal{F}\\{m^3\\} = M * M * M'}</InlineMath>. Η
+            συνέλιξη <em>προσθέτει</em> τα στηρίγματα:{' '}
+            <InlineMath>{'W + W + W = 3W'}</InlineMath>.
+          </li>
+        </ol>
+        <p>
+          Σε καμία περίπτωση δεν προκύπτει <InlineMath>{'W^3'}</InlineMath>.
+          (Παγίδα: <em>convolution στον χρόνο</em> δίνει
+          <em> πολλαπλασιασμό στη συχνότητα</em> με ίδιο BW· η{' '}
+          <strong>convolution στη συχνότητα</strong> είναι αυτή που προσθέτει
+          BWs.)
         </p>
       </>
     ),
@@ -2338,8 +2362,21 @@ USSB(k):    ◢            ◣         (τρίγωνο, πλάτος W)
         </p>
         <BlockMath>{'x(t) = [1 + 2\\sin(2\\pi t)]\\cos(8\\pi t)'}</BlockMath>
         <p>
-          μ = 2 → <strong>overmodulation</strong>. Envelope flips στο μηδέν.
+          <InlineMath>{'\\mu = A_m/A_c = 2/1 = 2 > 1'}</InlineMath> →{' '}
+          <strong>overmodulation</strong>. Η περιβάλλουσα{' '}
+          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath> διασταυρώνει το μηδέν
+          (φτάνει από <InlineMath>-1</InlineMath> έως{' '}
+          <InlineMath>+3</InlineMath>) — phase reversals ορατά στο waveform.
         </p>
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Παγίδα:</strong> ο modulation index είναι λόγος{' '}
+          <em>πλατών</em> (<InlineMath>{'A_m / A_c'}</InlineMath>), όχι{' '}
+          <InlineMath>{'A_m / f_c'}</InlineMath>. Σε κυκλοφορούσες λύσεις
+          εμφανίζεται «<InlineMath>{'\\mu = 2/4 = 1/2'}</InlineMath>» —
+          διαστατικά λάθος (διαιρεί πλάτος με συχνότητα). Το σωστό είναι{' '}
+          <InlineMath>{'\\mu = 2'}</InlineMath>, και η περιβάλλουσα στο
+          σχεδιάγραμμα όντως πέφτει αρνητική, που το επιβεβαιώνει.
+        </div>
       </>
     ),
   },
@@ -2480,7 +2517,33 @@ USSB(k):    ◢            ◣         (τρίγωνο, πλάτος W)
     prerequisites: ['foundations/fourier-transform'],
     formulaIds: ['fourier-convolution'],
     statement: <p>Σ/Λ: Αν W είναι το φάσμα του M(f), το φάσμα του G(f)=M³(f) είναι W³.</p>,
-    solution: <p><strong>ΛΑΘΟΣ.</strong> Bandwidth = 3W (convolution προσθέτει BW).</p>,
+    solution: (
+      <>
+        <p>
+          <strong>ΛΑΘΟΣ.</strong> Δύο εύλογες αναγνώσεις του{' '}
+          <InlineMath>{'M^3(f)'}</InlineMath>, καμία δεν δίνει{' '}
+          <InlineMath>{'W^3'}</InlineMath>:
+        </p>
+        <ul className="ml-5 list-disc text-fg-muted">
+          <li>
+            <strong>Pointwise κυβισμός:</strong>{' '}
+            <InlineMath>{'[M(f)]^3'}</InlineMath> — ίδιο στήριγμα με το{' '}
+            <InlineMath>M(f)</InlineMath>, BW = <strong>W</strong>.
+          </li>
+          <li>
+            <strong>Φάσμα του{' '}
+            <InlineMath>{'m^3(t)'}</InlineMath>:</strong>{' '}
+            <InlineMath>{'M * M * M'}</InlineMath> (συνέλιξη <em>στη συχνότητα</em>{' '}
+            από πολλαπλασιασμό στον χρόνο), BW = <strong>3W</strong>.
+          </li>
+        </ul>
+        <p>
+          Παγίδα: convolution <em>στον χρόνο</em> δίνει πολλαπλασιασμό στη
+          συχνότητα <em>με ίδιο BW</em>. Η συχνοτική συνέλιξη (από πολ/μο στον
+          χρόνο) είναι αυτή που προσθέτει BWs.
+        </p>
+      </>
+    ),
   },
   {
     id: 'pb25-th1-5',
@@ -2531,8 +2594,25 @@ USSB(k):    ◢            ◣         (τρίγωνο, πλάτος W)
     statement: <p>Σχεδιάστε το διαμορφωμένο κατά AM σήμα όταν <InlineMath>{'c(t) = \\cos(8\\pi t)'}</InlineMath> και <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.</p>,
     solution: (
       <>
+        <p>
+          <InlineMath>{'A_c = 1,\\; f_c = 4'}</InlineMath> Hz,{' '}
+          <InlineMath>{'A_m = 2,\\; f_m = 1'}</InlineMath> Hz.
+        </p>
         <BlockMath>{'x(t) = [1 + 2\\sin(2\\pi t)]\\cos(8\\pi t)'}</BlockMath>
-        <p>μ = 2 (overmodulation). Envelope flips στο 0.</p>
+        <p>
+          <InlineMath>{'\\mu = A_m/A_c = 2 > 1'}</InlineMath> →{' '}
+          <strong>overmodulation</strong>. Περιβάλλουσα{' '}
+          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath> διασταυρώνει το 0
+          (κυμαίνεται από <InlineMath>-1</InlineMath> έως{' '}
+          <InlineMath>+3</InlineMath>), phase reversals ορατά.
+        </p>
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Παγίδα:</strong> ο modulation index είναι λόγος{' '}
+          <em>πλατών</em>, όχι «<InlineMath>{'A_m / f_c'}</InlineMath>». Σε
+          κυκλοφορούσες λύσεις εμφανίζεται «<InlineMath>{'\\mu = 2/4 = 1/2'}</InlineMath>»
+          (διαστατικά λάθος). Το σωστό είναι{' '}
+          <InlineMath>{'\\mu = 2'}</InlineMath>.
+        </div>
       </>
     ),
   },
