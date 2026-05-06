@@ -9,6 +9,8 @@ import {
   LogIn,
   AlertCircle,
   ShieldCheck,
+  CheckCircle2,
+  Clock,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
@@ -27,6 +29,7 @@ type SectionCommentRow = {
   body: string
   created_at: string
   author_id: string
+  status: 'pending' | 'resolved'
   author: Author | Author[] | null
 }
 
@@ -72,7 +75,7 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
       supabase
         .from('comments')
         .select(
-          'id, body, created_at, author_id, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role)',
+          'id, body, created_at, author_id, status, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role)',
         )
         .eq('slug', slug)
         .eq('section_anchor', anchor)
@@ -127,7 +130,7 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
         author_id: me.id,
       })
       .select(
-        'id, body, created_at, author_id, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role)',
+        'id, body, created_at, author_id, status, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role)',
       )
       .single()
     setSubmitting(false)
@@ -201,6 +204,17 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
                               },
                             )}
                           </span>
+                          {c.status === 'resolved' ? (
+                            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
+                              <CheckCircle2 className="h-2.5 w-2.5" aria-hidden />
+                              Resolved
+                            </span>
+                          ) : me?.isModerator ? (
+                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/50 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">
+                              <Clock className="h-2.5 w-2.5" aria-hidden />
+                              Προς review
+                            </span>
+                          ) : null}
                         </div>
                         <p className="whitespace-pre-wrap text-sm leading-relaxed text-fg">
                           {c.body}
