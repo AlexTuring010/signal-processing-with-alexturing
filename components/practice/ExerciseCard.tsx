@@ -13,6 +13,7 @@ import {
 import type { Exercise } from '@/content/practice/types'
 import { PrereqChips } from './PrereqChips'
 import { useFormulaSheet } from './formula-sheet-store'
+import { SectionComments } from '@/components/layout/SectionComments'
 
 type Props = {
   exercise: Exercise
@@ -127,6 +128,15 @@ export function ExerciseCard({ exercise }: Props) {
           {exercise.solution}
         </div>
       )}
+
+      <div className="mt-4 border-t border-border pt-3">
+        <SectionComments
+          anchor={`exercise:${exercise.id}`}
+          sectionTitle={exercise.title}
+          className=""
+          emptyLabel="Σχόλιο για την άσκηση"
+        />
+      </div>
     </article>
   )
 }

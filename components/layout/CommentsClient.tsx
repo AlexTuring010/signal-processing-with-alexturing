@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 
 import { UserAvatar } from './UserAvatar'
+import { ClaudeAvatar } from './ClaudeAvatar'
 import { createClient } from '@/lib/supabase/client'
 import {
   CATEGORY_DEFAULT_POINTS,
@@ -733,13 +734,3 @@ function ReplyItem({
   )
 }
 
-function ClaudeAvatar() {
-  return (
-    <span
-      className="inline-flex h-4 w-4 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-[10px] font-bold text-white"
-      aria-hidden
-    >
-      C
-    </span>
-  )
-}

@@ -11,17 +11,32 @@ import {
   ShieldCheck,
   CheckCircle2,
   Clock,
+  Reply,
+  Sparkles,
+  Trash2,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
 import { useSectionCommentsCtx } from './section-comments-context'
 import { UserAvatar } from './UserAvatar'
+import { ClaudeAvatar } from './ClaudeAvatar'
+
+const DELETE_WINDOW_MS = 10 * 60 * 1000
 
 type Author = {
   id: string
   display_name: string
   avatar_url: string | null
   role: 'user' | 'moderator'
+}
+
+type ReplyRow = {
+  id: string
+  body: string
+  created_at: string
+  author_id: string
+  is_claude_reply: boolean
+  author: Author | Author[] | null
 }
 
 type SectionCommentRow = {
@@ -31,6 +46,7 @@ type SectionCommentRow = {
   author_id: string
   status: 'pending' | 'resolved'
   author: Author | Author[] | null
+  replies: ReplyRow[]
 }
 
 type Me = {
@@ -40,20 +56,36 @@ type Me = {
   isModerator: boolean
 }
 
+const COMMENT_SELECT =
+  'id, body, created_at, author_id, status, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role), replies(id, body, created_at, author_id, is_claude_reply, author:profiles!replies_author_id_fkey(id, display_name, avatar_url, role))'
+
+const REPLY_SELECT =
+  'id, body, created_at, author_id, is_claude_reply, author:profiles!replies_author_id_fkey(id, display_name, avatar_url, role)'
+
 type Props = {
   /** Heading anchor (id) — used as `comments.section_anchor`. */
   anchor: string
   /** Heading text — saved as `comments.section_title`. */
   sectionTitle: string
+  /** Outer wrapper class. Defaults to MDX-heading-aware spacing. */
+  className?: string
+  /** Label override for the toggle button when no comments exist. */
+  emptyLabel?: string
 }
 
 /**
- * Collapsible inline comment thread tied to a single heading. Lazy-loads
- * its slice from Supabase the first time the user expands it. Renders a
- * compact view (no replies, no moderation actions) — for the full
- * threaded view, scroll to the bottom-of-page <Comments>.
+ * Collapsible inline comment thread tied to a single anchor (heading or
+ * exercise id). Lazy-loads its slice from Supabase the first time the
+ * user expands it. Supports posting top-level comments and replies; full
+ * moderation (status, points, reviews) still happens at the bottom-of-
+ * page <Comments> view.
  */
-export function SectionComments({ anchor, sectionTitle }: Props) {
+export function SectionComments({
+  anchor,
+  sectionTitle,
+  className,
+  emptyLabel,
+}: Props) {
   const ctx = useSectionCommentsCtx()
   const supabase = useMemo(() => createClient(), [])
   const [open, setOpen] = useState(false)
@@ -74,12 +106,11 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
     const [{ data: rows }, userRes] = await Promise.all([
       supabase
         .from('comments')
-        .select(
-          'id, body, created_at, author_id, status, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role)',
-        )
+        .select(COMMENT_SELECT)
         .eq('slug', slug)
         .eq('section_anchor', anchor)
-        .order('created_at', { ascending: false }),
+        .order('created_at', { ascending: false })
+        .order('created_at', { foreignTable: 'replies', ascending: true }),
       supabase.auth.getUser(),
     ])
     setComments((rows ?? []) as unknown as SectionCommentRow[])
@@ -129,9 +160,7 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
         body,
         author_id: me.id,
       })
-      .select(
-        'id, body, created_at, author_id, status, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role)',
-      )
+      .select(COMMENT_SELECT)
       .single()
     setSubmitting(false)
     if (insertError || !data) {
@@ -142,8 +171,67 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
     setText('')
   }
 
+  const addReply = async (
+    commentId: string,
+    replyText: string,
+    asClaude: boolean,
+  ): Promise<boolean> => {
+    if (!me) return false
+    const trimmed = replyText.trim()
+    if (!trimmed) return false
+    const { data, error: insertError } = await supabase
+      .from('replies')
+      .insert({
+        comment_id: commentId,
+        body: trimmed,
+        author_id: me.id,
+        is_claude_reply: asClaude && me.isModerator,
+      })
+      .select(REPLY_SELECT)
+      .single()
+    if (insertError || !data) {
+      setError(insertError?.message ?? 'Δεν μπόρεσε να αποθηκευτεί η απάντηση.')
+      return false
+    }
+    setComments((prev) =>
+      prev.map((c) =>
+        c.id === commentId
+          ? {
+              ...c,
+              replies: [...(c.replies ?? []), data as unknown as ReplyRow],
+            }
+          : c,
+      ),
+    )
+    return true
+  }
+
+  const removeReply = async (commentId: string, replyId: string) => {
+    if (!window.confirm('Διαγραφή απάντησης;')) return
+    const { error: delError } = await supabase
+      .from('replies')
+      .delete()
+      .eq('id', replyId)
+    if (delError) {
+      setError(delError.message)
+      return
+    }
+    setComments((prev) =>
+      prev.map((c) =>
+        c.id === commentId
+          ? {
+              ...c,
+              replies: (c.replies ?? []).filter((r) => r.id !== replyId),
+            }
+          : c,
+      ),
+    )
+  }
+
+  const wrapperClass = className ?? '-mt-2 mb-6'
+
   return (
-    <div className="-mt-2 mb-6">
+    <div className={wrapperClass}>
       <button
         type="button"
         onClick={toggle}
@@ -153,7 +241,7 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
         <MessageSquarePlus className="h-3 w-3" aria-hidden />
         {displayCount > 0
           ? `${displayCount} σχόλι${displayCount === 1 ? 'ο' : 'α'}`
-          : 'Σχόλιο'}
+          : (emptyLabel ?? 'Σχόλιο')}
         <ChevronDown
           className={`h-3 w-3 transition ${open ? 'rotate-180' : ''}`}
           aria-hidden
@@ -172,57 +260,23 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
                 </p>
               ) : (
                 <ul className="space-y-2">
-                  {comments.map((c) => {
-                    const author = Array.isArray(c.author) ? c.author[0] : c.author
-                    return (
-                      <li
-                        key={c.id}
-                        className="rounded-md border border-border/60 bg-bg p-2.5"
-                      >
-                        <div className="mb-1 flex flex-wrap items-center gap-2 text-[11px]">
-                          <UserAvatar
-                            url={author?.avatar_url}
-                            name={author?.display_name}
-                            size="xs"
-                          />
-                          <span className="font-semibold text-fg">
-                            {author?.display_name ?? '—'}
-                          </span>
-                          {author?.role === 'moderator' && (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
-                              <ShieldCheck className="h-2.5 w-2.5" aria-hidden />
-                              mod
-                            </span>
-                          )}
-                          <span className="ml-auto text-fg-subtle">
-                            {new Date(c.created_at).toLocaleDateString(
-                              'el-GR',
-                              {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric',
-                              },
-                            )}
-                          </span>
-                          {c.status === 'resolved' ? (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
-                              <CheckCircle2 className="h-2.5 w-2.5" aria-hidden />
-                              Resolved
-                            </span>
-                          ) : me?.isModerator ? (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/50 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">
-                              <Clock className="h-2.5 w-2.5" aria-hidden />
-                              Προς review
-                            </span>
-                          ) : null}
-                        </div>
-                        <p className="whitespace-pre-wrap text-sm leading-relaxed text-fg">
-                          {c.body}
-                        </p>
-                      </li>
-                    )
-                  })}
+                  {comments.map((c) => (
+                    <SectionCommentItem
+                      key={c.id}
+                      comment={c}
+                      me={me ?? null}
+                      onReply={(t, asClaude) => addReply(c.id, t, asClaude)}
+                      onRemoveReply={(rid) => removeReply(c.id, rid)}
+                    />
+                  ))}
                 </ul>
+              )}
+
+              {error && (
+                <div className="mt-2 flex items-start gap-1.5 text-[11px] text-rose-700 dark:text-rose-300">
+                  <AlertCircle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                  <span>{error}</span>
+                </div>
               )}
 
               {me === undefined ? null : me === null ? (
@@ -251,12 +305,6 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
                     className="w-full resize-none rounded-md border border-border bg-bg px-2.5 py-1.5 text-sm outline-none focus:border-accent"
                     maxLength={2000}
                   />
-                  {error && (
-                    <div className="flex items-start gap-1.5 text-[11px] text-rose-700 dark:text-rose-300">
-                      <AlertCircle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
-                      <span>{error}</span>
-                    </div>
-                  )}
                   <div className="flex items-center justify-end">
                     <button
                       type="submit"
@@ -274,5 +322,234 @@ export function SectionComments({ anchor, sectionTitle }: Props) {
         </div>
       )}
     </div>
+  )
+}
+
+function SectionCommentItem({
+  comment,
+  me,
+  onReply,
+  onRemoveReply,
+}: {
+  comment: SectionCommentRow
+  me: Me | null
+  onReply: (text: string, asClaude: boolean) => Promise<boolean>
+  onRemoveReply: (replyId: string) => void
+}) {
+  const author = Array.isArray(comment.author) ? comment.author[0] : comment.author
+  const [replyOpen, setReplyOpen] = useState(false)
+  const [replyText, setReplyText] = useState('')
+  const [replyAsClaude, setReplyAsClaude] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const isMod = me?.isModerator ?? false
+
+  const handleReplySubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!replyText.trim()) return
+    setSubmitting(true)
+    const ok = await onReply(replyText, replyAsClaude)
+    setSubmitting(false)
+    if (ok) {
+      setReplyText('')
+      setReplyOpen(false)
+      setReplyAsClaude(false)
+    }
+  }
+
+  return (
+    <li className="rounded-md border border-border/60 bg-bg p-2.5">
+      <div className="mb-1 flex flex-wrap items-center gap-2 text-[11px]">
+        <UserAvatar
+          url={author?.avatar_url}
+          name={author?.display_name}
+          size="xs"
+        />
+        <span className="font-semibold text-fg">
+          {author?.display_name ?? '—'}
+        </span>
+        {author?.role === 'moderator' && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
+            <ShieldCheck className="h-2.5 w-2.5" aria-hidden />
+            mod
+          </span>
+        )}
+        <span className="ml-auto text-fg-subtle">
+          {new Date(comment.created_at).toLocaleDateString('el-GR', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          })}
+        </span>
+        {comment.status === 'resolved' ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
+            <CheckCircle2 className="h-2.5 w-2.5" aria-hidden />
+            Resolved
+          </span>
+        ) : isMod ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/50 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">
+            <Clock className="h-2.5 w-2.5" aria-hidden />
+            Προς review
+          </span>
+        ) : null}
+      </div>
+      <p className="whitespace-pre-wrap text-sm leading-relaxed text-fg">
+        {comment.body}
+      </p>
+
+      {comment.replies && comment.replies.length > 0 && (
+        <ul className="mt-2 space-y-1.5 border-l-2 border-border/60 pl-2.5">
+          {comment.replies.map((r) => (
+            <SectionReplyItem
+              key={r.id}
+              reply={r}
+              me={me}
+              onRemove={() => onRemoveReply(r.id)}
+            />
+          ))}
+        </ul>
+      )}
+
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        {me ? (
+          <button
+            type="button"
+            onClick={() => setReplyOpen((v) => !v)}
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-fg-muted hover:text-accent"
+          >
+            <Reply className="h-3 w-3" aria-hidden />
+            Απάντηση
+            <ChevronDown
+              className={`h-3 w-3 transition ${replyOpen ? 'rotate-180' : ''}`}
+              aria-hidden
+            />
+          </button>
+        ) : (
+          <Link
+            href="/sign-in"
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-fg-muted hover:text-accent"
+          >
+            <Reply className="h-3 w-3" aria-hidden />
+            Συνδέσου για απάντηση
+          </Link>
+        )}
+      </div>
+
+      {replyOpen && me && (
+        <form onSubmit={handleReplySubmit} className="mt-2 space-y-1.5">
+          {isMod && (
+            <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
+              <input
+                type="checkbox"
+                checked={replyAsClaude}
+                onChange={(e) => setReplyAsClaude(e.target.checked)}
+                className="h-3 w-3"
+              />
+              <Sparkles className="h-3 w-3" aria-hidden />
+              Reply ως Claude
+            </label>
+          )}
+          <textarea
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            placeholder="Γράψε την απάντηση…"
+            rows={2}
+            className="w-full resize-none rounded-md border border-border bg-bg px-2 py-1.5 text-sm outline-none focus:border-accent"
+            maxLength={1000}
+          />
+          <div className="flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setReplyOpen(false)}
+              className="text-[11px] text-fg-subtle hover:text-fg"
+            >
+              Άκυρο
+            </button>
+            <button
+              type="submit"
+              disabled={!replyText.trim() || submitting}
+              className="inline-flex items-center gap-1.5 rounded-md bg-accent px-2.5 py-1 text-[11px] font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+            >
+              <Send className="h-3 w-3" aria-hidden />
+              {submitting ? 'Αποθήκευση…' : 'Στείλε'}
+            </button>
+          </div>
+        </form>
+      )}
+    </li>
+  )
+}
+
+function SectionReplyItem({
+  reply,
+  me,
+  onRemove,
+}: {
+  reply: ReplyRow
+  me: Me | null
+  onRemove: () => void
+}) {
+  const author = Array.isArray(reply.author) ? reply.author[0] : reply.author
+  const isClaude = reply.is_claude_reply
+  const isAuthor = me?.id === reply.author_id
+  const isMod = me?.isModerator ?? false
+  const createdMs = new Date(reply.created_at).getTime()
+  const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
+
+  return (
+    <li
+      className={`rounded-md p-2 ${
+        isClaude
+          ? 'border border-purple-500/30 bg-purple-500/5'
+          : 'bg-bg-soft/60'
+      }`}
+    >
+      <div className="mb-1 flex items-center gap-1.5 text-[11px]">
+        {isClaude ? (
+          <span className="inline-flex items-center gap-1.5 font-semibold text-purple-700 dark:text-purple-300">
+            <ClaudeAvatar size="xs" />
+            Claude
+            <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0 text-[9px] font-mono text-purple-700 dark:text-purple-300">
+              AI
+            </span>
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1.5">
+            <UserAvatar
+              url={author?.avatar_url}
+              name={author?.display_name}
+              size="xs"
+            />
+            <span className="font-semibold text-fg">
+              {author?.display_name ?? '—'}
+            </span>
+          </span>
+        )}
+        {!isClaude && author?.role === 'moderator' && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-purple-700 dark:text-purple-300">
+            <ShieldCheck className="h-2.5 w-2.5" aria-hidden />
+            mod
+          </span>
+        )}
+        <span className="text-fg-subtle">
+          {new Date(reply.created_at).toLocaleDateString('el-GR', {
+            day: '2-digit',
+            month: 'short',
+          })}
+        </span>
+        {canDelete && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="ml-auto rounded p-0.5 text-fg-subtle transition hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-300"
+            aria-label="Διαγραφή"
+          >
+            <Trash2 className="h-3 w-3" aria-hidden />
+          </button>
+        )}
+      </div>
+      <p className="whitespace-pre-wrap text-sm leading-relaxed text-fg">
+        {reply.body}
+      </p>
+    </li>
   )
 }

@@ -6,6 +6,7 @@ import {
   FormulaSheetButton,
 } from '@/components/practice/FormulaSheetPanel'
 import { Comments } from '@/components/layout/Comments'
+import { SectionCommentsProvider } from '@/components/layout/section-comments-context'
 import { EXERCISES } from '@/content/practice/exercises'
 import { QUIZ_BANK } from '@/content/practice/quiz-bank'
 
@@ -86,7 +87,9 @@ export default function PracticePage() {
           <h2 className="mb-4 text-xl font-bold tracking-tight">
             Λυμένες ασκήσεις
           </h2>
-          <ExerciseLibrary exercises={EXERCISES} />
+          <SectionCommentsProvider>
+            <ExerciseLibrary exercises={EXERCISES} />
+          </SectionCommentsProvider>
         </section>
 
         {/* Footer tips with section refs */}
