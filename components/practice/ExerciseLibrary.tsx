@@ -1,11 +1,20 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { GraduationCap, Search, Sparkles, BookOpen, Layers } from 'lucide-react'
+import {
+  GraduationCap,
+  Search,
+  Sparkles,
+  BookOpen,
+  Layers,
+  CheckCircle2,
+  Circle,
+} from 'lucide-react'
 import type { Exercise, Topic, Origin, ExamSource } from '@/content/practice/types'
 import { SOURCE_LABELS } from '@/content/practice/types'
 import { TopicFilter } from './TopicFilter'
-import { ExerciseCard } from './ExerciseCard'
+import { ExerciseCard, PRACTICE_SOLVED_PREFIX } from './ExerciseCard'
+import { useAppStore } from '@/lib/store'
 
 type Props = {
   exercises: Exercise[]
@@ -26,6 +35,13 @@ export function ExerciseLibrary({ exercises }: Props) {
   const [topics, setTopics] = useState<Set<Topic>>(new Set())
   const [originFilter, setOriginFilter] = useState<OriginFilter>('past-exam')
   const [sourceFilter, setSourceFilter] = useState<ExamSource | 'all'>('all')
+  const [unsolvedOnly, setUnsolvedOnly] = useState(false)
+
+  // Solved state — drives both the "Άλυτα μόνο" filter and the summary chip
+  const hydrated = useAppStore((s) => s.hydrated)
+  const solvedSet = useAppStore((s) => s.solvedExercises)
+  const isSolved = (id: string) =>
+    hydrated && solvedSet.has(`${PRACTICE_SOLVED_PREFIX}:${id}`)
 
   const handleTopicToggle = (t: Topic) => {
     setTopics((prev) => {
@@ -50,8 +66,9 @@ export function ExerciseLibrary({ exercises }: Props) {
     return c
   }, [exercises])
 
-  // Filter
-  const filtered = useMemo(() => {
+  // Filter (excluding solved-state — applied separately so we can compute
+  // accurate solved counts within the current scope)
+  const inScope = useMemo(() => {
     return exercises.filter((ex) => {
       if (topics.size > 0 && !topics.has(ex.topic)) return false
       if (originFilter !== 'all' && ex.origin !== originFilter) return false
@@ -59,6 +76,18 @@ export function ExerciseLibrary({ exercises }: Props) {
       return true
     })
   }, [exercises, topics, originFilter, sourceFilter])
+
+  const solvedInScope = useMemo(
+    () => inScope.filter((ex) => isSolved(ex.id)).length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [inScope, hydrated, solvedSet],
+  )
+
+  const filtered = useMemo(() => {
+    if (!unsolvedOnly) return inScope
+    return inScope.filter((ex) => !isSolved(ex.id))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inScope, unsolvedOnly, hydrated, solvedSet])
 
   // Sort: past-exams first, sorted by recent year, then by problem number;
   // lectures and ai-generated below
@@ -164,14 +193,51 @@ export function ExerciseLibrary({ exercises }: Props) {
               counts={topicCounts}
             />
           </div>
+          <div>
+            <div className="mb-2 text-xs uppercase tracking-wider text-fg-subtle">
+              Πρόοδος
+            </div>
+            <button
+              type="button"
+              onClick={() => setUnsolvedOnly((v) => !v)}
+              aria-pressed={unsolvedOnly}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                unsolvedOnly
+                  ? 'border-accent bg-accent/15 text-accent'
+                  : 'border-border bg-bg-soft text-fg-muted hover:border-accent/40 hover:text-fg'
+              }`}
+            >
+              <Circle className="h-3 w-3" aria-hidden />
+              Άλυτα μόνο
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Result count */}
-      <div className="text-sm text-fg-muted">
-        Δείχνει{' '}
-        <span className="font-semibold text-fg tabular-nums">{sorted.length}</span>{' '}
-        από <span className="tabular-nums">{exercises.length}</span> ασκήσεις.
+      {/* Summary + result count */}
+      <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-fg-muted">
+        <div>
+          Δείχνει{' '}
+          <span className="font-semibold text-fg tabular-nums">{sorted.length}</span>{' '}
+          από <span className="tabular-nums">{exercises.length}</span> ασκήσεις.
+        </div>
+        <div
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs ${
+            inScope.length > 0 && solvedInScope === inScope.length
+              ? 'border-success/50 bg-success/10 text-success'
+              : 'border-border bg-bg-elevated text-fg-muted'
+          }`}
+          aria-live="polite"
+        >
+          <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
+          <span>
+            <strong className="tabular-nums">{solvedInScope}</strong>{' '}
+            <span className="tabular-nums">/ {inScope.length}</span> λυμένα
+            {inScope.length !== exercises.length && (
+              <span className="ml-1 text-fg-subtle">(στα φίλτρα)</span>
+            )}
+          </span>
+        </div>
       </div>
 
       {/* Exercise list */}

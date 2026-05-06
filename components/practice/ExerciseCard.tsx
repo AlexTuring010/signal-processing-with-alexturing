@@ -1,7 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, GraduationCap, Sparkles, BookOpen } from 'lucide-react'
+import {
+  ChevronDown,
+  GraduationCap,
+  Sparkles,
+  BookOpen,
+  CheckCircle2,
+  Circle,
+} from 'lucide-react'
 import {
   TOPIC_COLORS,
   TOPIC_LABELS,
@@ -14,6 +21,10 @@ import type { Exercise } from '@/content/practice/types'
 import { PrereqChips } from './PrereqChips'
 import { useFormulaSheet } from './formula-sheet-store'
 import { SectionComments } from '@/components/layout/SectionComments'
+import { useAppStore } from '@/lib/store'
+
+/** localStorage key prefix for practice-library exercises. */
+export const PRACTICE_SOLVED_PREFIX = 'practice'
 
 type Props = {
   exercise: Exercise
@@ -35,10 +46,20 @@ export function ExerciseCard({ exercise }: Props) {
     openWithAssist(exercise.formulaIds ?? [], exercise.memorizationNote)
   }
 
+  const storageKey = `${PRACTICE_SOLVED_PREFIX}:${exercise.id}`
+  const hydrated = useAppStore((s) => s.hydrated)
+  const isExerciseSolved = useAppStore((s) => s.isExerciseSolved)
+  const toggleSolved = useAppStore((s) => s.toggleSolvedExercise)
+  const solved = hydrated && isExerciseSolved(storageKey)
+
   return (
     <article
       id={`exercise:${exercise.id}`}
-      className="scroll-mt-20 rounded-xl border border-border bg-bg-elevated p-5 shadow-sm transition hover:border-border/80"
+      className={`scroll-mt-20 rounded-xl border bg-bg-elevated p-5 shadow-sm transition ${
+        solved
+          ? 'border-success/50 bg-success/5'
+          : 'border-border hover:border-border/80'
+      }`}
     >
       {/* Header row: badges */}
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
@@ -118,6 +139,29 @@ export function ExerciseCard({ exercise }: Props) {
             Assist με τυπολόγιο
           </button>
         )}
+        <button
+          type="button"
+          onClick={() => toggleSolved(storageKey)}
+          aria-pressed={solved}
+          title={solved ? 'Σήμανε ως άλυτο' : 'Σήμανε ως λυμένο'}
+          className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm font-medium transition ${
+            solved
+              ? 'border-success/50 bg-success/10 text-success hover:bg-success/15'
+              : 'border-border bg-bg-soft text-fg-muted hover:border-accent/50 hover:text-fg'
+          }`}
+        >
+          {solved ? (
+            <>
+              <CheckCircle2 className="h-4 w-4" aria-hidden />
+              Λυμένη
+            </>
+          ) : (
+            <>
+              <Circle className="h-4 w-4" aria-hidden />
+              Σήμανε ως λυμένη
+            </>
+          )}
+        </button>
         {exercise.origin === 'ai-generated' && (
           <span className="inline-flex items-center gap-1.5 rounded-md border border-yellow-500/40 bg-yellow-500/10 px-3 py-1.5 text-xs text-yellow-800 dark:text-yellow-200">
             <BookOpen className="h-3.5 w-3.5" aria-hidden />
