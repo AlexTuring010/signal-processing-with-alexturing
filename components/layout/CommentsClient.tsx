@@ -239,7 +239,7 @@ export function CommentsClient({
       <header className="mb-3 flex flex-wrap items-center gap-2">
         <MessageSquare className="h-5 w-5 text-accent" aria-hidden />
         <h2 className="text-base font-semibold tracking-tight">{title}</h2>
-        {pendingCount > 0 && (
+        {me?.isModerator && pendingCount > 0 && (
           <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-300">
             {pendingCount} εκκρεμές{pendingCount === 1 ? '' : 'α'}
           </span>
@@ -260,17 +260,11 @@ export function CommentsClient({
       <div className="mb-4 rounded-lg border border-accent/30 bg-accent-soft/20 p-3 text-xs leading-relaxed text-fg-muted">
         <div className="flex items-start gap-2">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden />
-          <div>
-            <p>
-              <strong className="text-fg">Άσε σχόλιο για ό,τι θες.</strong>{' '}
-              Διόρθωση, διευκρίνηση που έλειπε, ένα tip που σε βοήθησε,
-              μια ωραία αναλογία, ακόμα και «εδώ ένιωσα ότι κάτι κλικάρει».
-              Στις θεωρητικές σελίδες υπάρχει κουμπί <em>Σχόλιο</em> δίπλα
-              σε κάθε ενότητα ώστε το σχόλιο να αποθηκεύεται με το
-              συγκεκριμένο σημείο. Η ομάδα του site και ο{' '}
-              <strong>Claude</strong> διαβάζουν και απαντούν εδώ.
-            </p>
-          </div>
+          <p>
+            <strong className="text-fg">Άσε σχόλιο.</strong> Ιδιαίτερα
+            χρήσιμα είναι σχόλια που επισημαίνουν λάθη, σημεία που ήταν
+            δύσκολα στην κατανόηση, ή προτάσεις για βελτίωση.
+          </p>
         </div>
       </div>
 
@@ -408,14 +402,15 @@ function CommentItem({
     setReviewOpen(false)
   }
 
+  const tint =
+    comment.status === 'resolved'
+      ? 'border-emerald-500/40 bg-emerald-500/5'
+      : isMod
+        ? 'border-amber-500/40 bg-amber-500/5'
+        : 'border-border bg-bg-soft/40'
+
   return (
-    <li
-      className={`rounded-lg border p-3 transition ${
-        comment.status === 'resolved'
-          ? 'border-emerald-500/40 bg-emerald-500/5'
-          : 'border-amber-500/40 bg-amber-500/5'
-      }`}
-    >
+    <li className={`rounded-lg border p-3 transition ${tint}`}>
       <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs">
         <UserAvatar
           url={comment.author?.avatar_url}
@@ -482,27 +477,12 @@ function CommentItem({
               </>
             )}
           </button>
-        ) : (
-          <span
-            className={`ml-auto inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${
-              comment.status === 'resolved'
-                ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
-                : 'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-300'
-            }`}
-          >
-            {comment.status === 'resolved' ? (
-              <>
-                <CheckCircle2 className="h-3 w-3" aria-hidden />
-                Resolved
-              </>
-            ) : (
-              <>
-                <Clock className="h-3 w-3" aria-hidden />
-                Προς review
-              </>
-            )}
+        ) : comment.status === 'resolved' ? (
+          <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+            <CheckCircle2 className="h-3 w-3" aria-hidden />
+            Resolved
           </span>
-        )}
+        ) : null}
         {canDelete && (
           <button
             type="button"

@@ -122,7 +122,9 @@ export default async function ProfilePage() {
                       ⛬ {c.section_title}
                     </span>
                   )}
-                  <StatusBadge status={c.status as CommentStatus} />
+                  {c.status === 'resolved' && (
+                    <StatusBadge status={c.status as CommentStatus} />
+                  )}
                   {c.points_awarded > 0 && (
                     <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
                       <Award className="h-2.5 w-2.5" aria-hidden />+
