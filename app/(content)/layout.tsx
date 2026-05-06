@@ -1,5 +1,6 @@
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TableOfContents } from '@/components/layout/TableOfContents'
+import { PageComments } from '@/components/layout/PageComments'
 
 /**
  * Layout for all educational content pages.
@@ -9,6 +10,9 @@ import { TableOfContents } from '@/components/layout/TableOfContents'
  *
  * Below `lg`, the sidebar collapses into the mobile drawer (in `Header`),
  * and the right TOC is hidden in favor of the in-page anchors.
+ *
+ * The bottom-of-page comments thread is auto-mounted here so every theory
+ * page gets one without needing to import it in each MDX file.
  */
 export default function ContentLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +23,10 @@ export default function ContentLayout({ children }: { children: React.ReactNode 
         </div>
       </aside>
 
-      <article className="prose-content min-w-0 max-w-prose">{children}</article>
+      <article className="prose-content min-w-0 max-w-prose">
+        {children}
+        <PageComments />
+      </article>
 
       <aside className="hidden lg:block">
         <div className="sticky top-20 max-h-[calc(100dvh-6rem)] overflow-y-auto pl-2">

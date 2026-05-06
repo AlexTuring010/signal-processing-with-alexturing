@@ -1,5 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
+import { isValidElement } from 'react'
+import { SectionCommentButton } from '@/components/layout/SectionCommentButton'
 import { Callout } from '@/components/content/Callout'
 import { Example } from '@/components/content/Example'
 import { LabBox } from '@/components/content/LabBox'
@@ -247,6 +249,46 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </div>
     ),
 
+    // Auto-inject a "Comment on this section" button next to every h2/h3
+    // that has a stable id (provided by rehype-slug). The button writes the
+    // section title + anchor into the comment-target store; the bottom-of-
+    // page comments form picks it up and saves the section context.
+    h2: HeadingWithCommentButton(2),
+    h3: HeadingWithCommentButton(3),
+
     ...components,
   }
+}
+
+function HeadingWithCommentButton(level: 2 | 3) {
+  const Tag = `h${level}` as 'h2' | 'h3'
+  return function Heading({
+    id,
+    children,
+    ...rest
+  }: HTMLAttributes<HTMLHeadingElement>) {
+    if (!id) {
+      return <Tag {...rest}>{children}</Tag>
+    }
+    const sectionTitle = extractText(children).trim() || id
+    return (
+      <Tag id={id} {...rest} className="group/heading scroll-mt-20">
+        {children}
+        <span className="ml-2 inline-flex align-middle opacity-0 transition group-hover/heading:opacity-100 focus-within:opacity-100">
+          <SectionCommentButton sectionTitle={sectionTitle} sectionAnchor={id} />
+        </span>
+      </Tag>
+    )
+  }
+}
+
+function extractText(node: ReactNode): string {
+  if (node == null || typeof node === 'boolean') return ''
+  if (typeof node === 'string' || typeof node === 'number') return String(node)
+  if (Array.isArray(node)) return node.map(extractText).join('')
+  if (isValidElement(node)) {
+    const props = node.props as { children?: ReactNode }
+    return extractText(props.children)
+  }
+  return ''
 }

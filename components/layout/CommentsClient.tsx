@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 
 import { useCommentTarget } from './comment-target-store'
+import { UserAvatar } from './UserAvatar'
 import { createClient } from '@/lib/supabase/client'
 import {
   CATEGORY_DEFAULT_POINTS,
@@ -304,6 +305,7 @@ export function CommentsClient({
           )}
           <div className="flex items-center gap-2 text-xs text-fg-muted">
             <span>Ως:</span>
+            <UserAvatar url={me.avatarUrl} name={me.displayName} size="xs" />
             <strong className="text-fg">{me.displayName}</strong>
             {me.isModerator && (
               <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
@@ -442,6 +444,11 @@ function CommentItem({
       }`}
     >
       <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs">
+        <UserAvatar
+          url={comment.author?.avatar_url}
+          name={comment.author?.display_name}
+          size="sm"
+        />
         <span className="font-semibold text-fg">
           {comment.author?.display_name ?? '—'}
         </span>
@@ -732,8 +739,15 @@ function ReplyItem({
             </span>
           </span>
         ) : (
-          <span className="font-semibold text-fg">
-            {reply.author?.display_name ?? '—'}
+          <span className="inline-flex items-center gap-1.5">
+            <UserAvatar
+              url={reply.author?.avatar_url}
+              name={reply.author?.display_name}
+              size="xs"
+            />
+            <span className="font-semibold text-fg">
+              {reply.author?.display_name ?? '—'}
+            </span>
           </span>
         )}
         {!isClaude && reply.author?.role === 'moderator' && (
