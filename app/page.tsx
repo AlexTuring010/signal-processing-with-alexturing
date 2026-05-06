@@ -7,16 +7,18 @@ import {
   ListChecks,
   BookOpen,
   Sigma,
-  FlaskConical,
   ChevronRight,
   Bookmark,
   Flame,
+  MessageSquare,
+  Trophy,
 } from 'lucide-react'
 import { CHAPTERS, AVAILABLE_COUNT, ALL_SECTIONS } from '@/lib/content-index'
+import { Comments } from '@/components/layout/Comments'
+import { Leaderboard } from '@/components/layout/Leaderboard'
 
 const FIRST_AVAILABLE = ALL_SECTIONS.find((s) => s.available)
 
-/** Topics ranked by exam weight from the inventory, for the "if you're cramming" panel. */
 const EXAM_PRIORITY = [
   {
     label: 'AM',
@@ -53,18 +55,19 @@ export default function HomePage() {
       <section className="mx-auto max-w-3xl text-center">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-soft px-3 py-1 text-xs font-medium tracking-wide text-fg-muted">
           <Sparkles className="h-3.5 w-3.5 text-accent" aria-hidden />
-          K21 — Συστήματα Επικοινωνιών · ΕΚΠΑ ΔΙΤ
+          K21 — Συστήματα Επικοινωνιών · ΕΚΠΑ DIT
         </span>
         <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
-          Signal Processing με{' '}
+          Signal Processing{' '}
           <span className="bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent">
-            AlexTuring
+            Class Hub
           </span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg text-fg-muted">
-          Διαδραστικός οδηγός για το μάθημα <em>Συστήματα Επικοινωνιών</em>. Από
-          το μηδέν — με διαίσθηση πρώτα, μαθηματικά μετά, και visualizations
-          που τα δένουν μεταξύ τους.
+          Φτιαγμένο για να καταλάβουμε{' '}
+          <em>πραγματικά</em> το μάθημα — όχι απλώς να αποστηθίσουμε τύπους.
+          Κάτι ασαφές; Κάποιο λάθος; Άσε σχόλιο και θα βελτιωθεί. Όσο
+          περισσότερα μάτια, τόσο πιο καλό γίνεται για όλους.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           {FIRST_AVAILABLE && (
@@ -100,34 +103,98 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Collaborative manifesto */}
+      <section className="mx-auto mt-14 max-w-4xl rounded-2xl border border-accent/30 bg-accent-soft/15 p-6 sm:p-8">
+        <div className="mb-3 flex items-center gap-2 text-accent">
+          <MessageSquare className="h-5 w-5" aria-hidden />
+          <h2 className="text-sm font-semibold uppercase tracking-wider">
+            Πώς γίνεται καλύτερο το site
+          </h2>
+        </div>
+        <h3 className="mb-3 text-2xl font-bold tracking-tight sm:text-3xl">
+          Δεν είναι τέλειο. Γι' αυτό σε χρειάζεται.
+        </h3>
+        <div className="space-y-3 text-fg-muted leading-relaxed">
+          <p>
+            Σκοπός: να μη μένει ιδιωτική η δουλειά που κάνει ο καθένας μας με
+            το AI. Αντί κάθε φοιτητής να ρωτάει χωριστά τις ίδιες ερωτήσεις,
+            παίρνουμε τις καλύτερες AI-βασισμένες εξηγήσεις, παραδείγματα και
+            visualizations και τα <strong>συγκεντρώνουμε</strong> εδώ ως
+            κοινό class resource — κάτι που βελτιώνεται με τον χρόνο.
+          </p>
+          <p>
+            Αυτό το site δεν είναι ένα στατικό βιβλίο. Είναι ζωντανός πόρος
+            φτιαγμένος από συμφοιτητή για συμφοιτητές, και βελτιώνεται κάθε
+            φορά που κάποιος επισημαίνει τι είναι ασαφές, λάθος ή ελλιπές. Η
+            ύλη υπάρχει· εκείνο που λείπει είναι τα μάτια σας πάνω της.
+          </p>
+          <p>
+            <strong className="text-fg">Δεν χρειάζεται να είσαι expert.</strong>{' '}
+            Αν μπερδεύτηκες σε κάποια ενότητα, αυτό είναι{' '}
+            <em>χρήσιμη πληροφορία</em>: σημαίνει ότι η εξήγηση χρειάζεται
+            δουλειά. Η σύγχυσή σου είναι δεδομένο, όχι αδυναμία.
+          </p>
+          <p>Καλά σχόλια μοιάζουν με αυτά:</p>
+          <ul className="ml-5 list-disc space-y-1 text-sm">
+            <li>«Δεν καταλαβαίνω αυτό το βήμα.»</li>
+            <li>«Νομίζω ο τύπος εδώ είναι λάθος.»</li>
+            <li>«Μπορεί να μπει ένα παράδειγμα εδώ;»</li>
+            <li>«Η εξήγηση υποθέτει κάτι που δεν έχουμε δει.»</li>
+            <li>«Η λύση πηδάει πολύ γρήγορα από τη μία γραμμή στην άλλη.»</li>
+          </ul>
+          <p>
+            Όταν κάνεις review, το site αλλάζει: πιο καθαρές εξηγήσεις,
+            έξτρα παραδείγματα, διορθωμένα λάθη, καλύτερα visualizations.
+            Σε κάθε σελίδα και σε κάθε άσκηση υπάρχει χώρος για σχόλια. Στις
+            μεγάλες θεωρητικές σελίδες θα δεις ένα μικρό κουμπί{' '}
+            <em>«Σχόλιο»</em> δίπλα σε κάθε ενότητα — χρησιμοποίησέ το ώστε
+            να ξέρω <em>για ποιο σημείο</em> μιλάς.
+          </p>
+          <div className="mt-4 rounded-lg border border-purple-500/30 bg-purple-500/5 p-4 text-sm">
+            <div className="mb-1.5 flex items-center gap-2 font-semibold text-purple-700 dark:text-purple-300">
+              <Trophy className="h-4 w-4" aria-hidden />
+              Top Contributors — όχι Smartest Students
+            </div>
+            <p className="text-fg-muted">
+              Υπάρχει leaderboard, αλλά μετράει <strong>συνεισφορά</strong>,
+              όχι «εξυπνάδα». Πόντοι δίνονται μόνο σε σχόλια που πραγματικά{' '}
+              <em>βοηθάνε</em> να γίνει καλύτερο το site (έγκυρες διορθώσεις,
+              χρήσιμες ερωτήσεις διευκρίνησης, καλές προτάσεις). Spam και
+              «lol idk» δεν δίνουν τίποτα. Σκοπός: να αισθανόμαστε ότι όταν
+              διαβάζουμε, βοηθάμε και τον επόμενο.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Quick destinations */}
       <section className="mx-auto mt-14 grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <QuickDest
           href="/practice"
           Icon={ListChecks}
           title="Λυμένες ασκήσεις"
-          subtitle="13 παραδείγματα — διαλέξεις + παλαιά θέματα, φιλτραρίσιμα κατά topic"
+          subtitle="Παλαιότερα θέματα εξετάσεων με χρονιά + βάρος, φιλτραρίσιμα"
           accent="bg-emerald-500/15 text-emerald-600 dark:text-emerald-300"
         />
         <QuickDest
           href="/practice/quiz"
           Icon={Brain}
           title="Quiz mode"
-          subtitle="Σωστό/Λάθος + πολλαπλής επιλογής σε 3 modes (static / timed / one-by-one)"
+          subtitle="Σ/Λ + πολλαπλής επιλογής σε 3 modes (static / timed / one-by-one)"
           accent="bg-purple-500/15 text-purple-600 dark:text-purple-300"
         />
         <QuickDest
           href="/formulas"
           Icon={Sigma}
           title="Τυπολόγιο"
-          subtitle="Όλες οι κρίσιμες εξισώσεις του μαθήματος, οργανωμένες"
+          subtitle="Όλες οι κρίσιμες εξισώσεις. Διαθέσιμο και ως slide-out στο /practice"
           accent="bg-sky-500/15 text-sky-600 dark:text-sky-300"
         />
         <QuickDest
           href="/bookmarks"
           Icon={Bookmark}
           title="Bookmarks"
-          subtitle="Σελίδες που έχεις σημαδέψει για γρήγορη πρόσβαση"
+          subtitle="Σημαδεμένες σελίδες για γρήγορη πρόσβαση"
           accent="bg-amber-500/15 text-amber-600 dark:text-amber-300"
         />
       </section>
@@ -141,8 +208,8 @@ export default function HomePage() {
           </h2>
         </div>
         <p className="mb-4 text-sm text-fg-muted">
-          Η ύλη με βάση το βάρος στις προηγούμενες εξετάσεις (αναλυμένη από 8
-          παρελθοντικά θέματα). Ξεκίνα από τα μεγάλα ποσοστά.
+          Με βάση το βάρος στις προηγούμενες εξετάσεις (8 περιόδους
+          αναλύθηκαν). Ξεκίνα από τα μεγάλα ποσοστά.
         </p>
         <div className="flex flex-wrap gap-2">
           {EXAM_PRIORITY.map((p) => (
@@ -160,7 +227,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Full syllabus — every chapter, every section, all clickable */}
+      {/* Full syllabus */}
       <section className="mx-auto mt-14 max-w-6xl">
         <div className="mb-6 flex items-baseline justify-between">
           <h2 className="text-2xl font-bold tracking-tight">Όλη η ύλη</h2>
@@ -231,31 +298,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why this site (compact pillars) */}
-      <section className="mx-auto mt-16 grid max-w-5xl gap-4 sm:grid-cols-3">
-        <Pillar
-          Icon={BookOpen}
-          title="Από το μηδέν"
-          body="Καμία υπόθεση ότι ξέρεις. Κάθε έννοια εξηγείται με διαίσθηση και απλό παράδειγμα πριν μπει η πρώτη εξίσωση."
-        />
-        <Pillar
-          Icon={Sigma}
-          title="Μαθηματικά με νόημα"
-          body="Όταν εμφανίζεται μια εξίσωση, εξηγείται τι λέει στ' αλήθεια — όχι μόνο πώς γράφεται."
-        />
-        <Pillar
-          Icon={FlaskConical}
-          title="Lab & visualizations"
-          body="Interactive demos σού δείχνουν πώς αλλάζει η συμπεριφορά όταν σύρεις slider. Lab MATLAB πάντα προαιρετικό."
+      {/* Leaderboard */}
+      <section className="mx-auto mt-14 max-w-4xl">
+        <Leaderboard />
+      </section>
+
+      {/* Comments */}
+      <section className="mx-auto mt-12 max-w-4xl">
+        <Comments
+          slug="homepage"
+          pageTitle="Homepage"
+          title="Σχόλια για το site συνολικά"
         />
       </section>
 
       {/* Note */}
       <section className="mx-auto mt-12 max-w-3xl rounded-lg border border-dashed border-border bg-bg-soft px-5 py-4 text-sm text-fg-muted">
         <p>
-          <strong className="text-fg">Σημείωση:</strong> Το site είναι σε ενεργή
-          ανάπτυξη. Φτιάχνουμε μια ενότητα τη φορά, με τη φιλοσοφία ότι αν δεν
-          βγάζει νόημα σε κάποιον που ξεκινάει από το μηδέν, την ξαναγράφουμε.
+          <strong className="text-fg">Σημείωση τεχνική:</strong> τα σχόλια
+          αποθηκεύονται τοπικά στον browser σου (localStorage). Δεν υπάρχει
+          backend ακόμα. Ο AlexTuring περνάει περιοδικά τα σχόλιά σας στον{' '}
+          Claude που σαρώνει, απαντάει και προτείνει αλλαγές — δες{' '}
+          <code>plans/COMMENTS_LOOP.md</code> στο repo για το workflow.
         </p>
       </section>
     </div>
@@ -280,7 +344,9 @@ function QuickDest({
       href={href}
       className="group rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-accent/50 hover:shadow-md"
     >
-      <div className={`mb-2.5 inline-flex h-9 w-9 items-center justify-center rounded-md ${accent}`}>
+      <div
+        className={`mb-2.5 inline-flex h-9 w-9 items-center justify-center rounded-md ${accent}`}
+      >
         <Icon className="h-5 w-5" aria-hidden />
       </div>
       <h3 className="flex items-center gap-1 font-semibold tracking-tight">
@@ -292,25 +358,5 @@ function QuickDest({
       </h3>
       <p className="mt-1 text-xs leading-relaxed text-fg-muted">{subtitle}</p>
     </Link>
-  )
-}
-
-function Pillar({
-  Icon,
-  title,
-  body,
-}: {
-  Icon: typeof BookOpen
-  title: string
-  body: string
-}) {
-  return (
-    <div className="rounded-lg border border-border bg-bg-elevated p-5">
-      <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-md bg-accent-soft/60 text-accent">
-        <Icon className="h-5 w-5" aria-hidden />
-      </div>
-      <h3 className="font-semibold tracking-tight">{title}</h3>
-      <p className="mt-1.5 text-sm leading-relaxed text-fg-muted">{body}</p>
-    </div>
   )
 }

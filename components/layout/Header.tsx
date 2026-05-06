@@ -17,7 +17,7 @@ export function Header() {
           <Radio className="h-5 w-5 text-accent" aria-hidden="true" />
           <span className="hidden sm:inline">Signal Processing</span>
           <span className="hidden text-fg-subtle sm:inline">·</span>
-          <span className="text-accent">AlexTuring</span>
+          <span className="text-accent">Class Hub</span>
         </Link>
 
         <div className="flex flex-1 justify-center">

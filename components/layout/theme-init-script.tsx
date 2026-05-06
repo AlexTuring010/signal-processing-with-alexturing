@@ -8,13 +8,13 @@ const SCRIPT = `
 (function() {
   try {
     var raw = localStorage.getItem('spwa:theme');
-    var stored = raw ? JSON.parse(raw) : 'system';
+    var stored = raw ? JSON.parse(raw) : 'dark';
     var resolved = stored === 'system'
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
       : stored;
     document.documentElement.setAttribute('data-theme', resolved);
   } catch (e) {
-    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.setAttribute('data-theme', 'dark');
   }
 })();
 `

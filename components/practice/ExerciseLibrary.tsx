@@ -1,8 +1,9 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { GraduationCap, Search } from 'lucide-react'
-import type { Exercise, Topic } from '@/content/practice/types'
+import { GraduationCap, Search, Sparkles, BookOpen, Layers } from 'lucide-react'
+import type { Exercise, Topic, Origin, ExamSource } from '@/content/practice/types'
+import { SOURCE_LABELS } from '@/content/practice/types'
 import { TopicFilter } from './TopicFilter'
 import { ExerciseCard } from './ExerciseCard'
 
@@ -10,11 +11,20 @@ type Props = {
   exercises: Exercise[]
 }
 
-type SourceFilter = 'all' | 'lectures' | 'past-exams'
+type OriginFilter = 'all' | Origin
+
+const SOURCE_ORDER: ExamSource[] = [
+  'jan-2026',
+  'sept-2025',
+  'june-2025',
+  'proodos-b-2025',
+  'proodos-a-2025',
+]
 
 export function ExerciseLibrary({ exercises }: Props) {
   const [topics, setTopics] = useState<Set<Topic>>(new Set())
-  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all')
+  const [originFilter, setOriginFilter] = useState<OriginFilter>('past-exam')
+  const [sourceFilter, setSourceFilter] = useState<ExamSource | 'all'>('all')
 
   const handleTopicToggle = (t: Topic) => {
     setTopics((prev) => {
@@ -32,15 +42,43 @@ export function ExerciseLibrary({ exercises }: Props) {
     return c
   }, [exercises])
 
+  // Origin counts
+  const originCounts = useMemo(() => {
+    const c: Partial<Record<Origin, number>> = {}
+    for (const ex of exercises) c[ex.origin] = (c[ex.origin] ?? 0) + 1
+    return c
+  }, [exercises])
+
   // Filter
   const filtered = useMemo(() => {
     return exercises.filter((ex) => {
       if (topics.size > 0 && !topics.has(ex.topic)) return false
-      if (sourceFilter === 'lectures' && ex.source) return false
-      if (sourceFilter === 'past-exams' && !ex.source) return false
+      if (originFilter !== 'all' && ex.origin !== originFilter) return false
+      if (sourceFilter !== 'all' && ex.source !== sourceFilter) return false
       return true
     })
-  }, [exercises, topics, sourceFilter])
+  }, [exercises, topics, originFilter, sourceFilter])
+
+  // Sort: past-exams first, sorted by recent year, then by problem number;
+  // lectures and ai-generated below
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      const orderRank = (o: Origin) =>
+        o === 'past-exam' ? 0 : o === 'lecture' ? 1 : 2
+      const ra = orderRank(a.origin)
+      const rb = orderRank(b.origin)
+      if (ra !== rb) return ra - rb
+      // Within same origin, past-exams sort by source recency
+      if (a.origin === 'past-exam' && b.origin === 'past-exam') {
+        const sa = a.source ? SOURCE_ORDER.indexOf(a.source) : 99
+        const sb = b.source ? SOURCE_ORDER.indexOf(b.source) : 99
+        if (sa !== sb) return sa - sb
+        // Same source: sort by problem number
+        return (a.problemNumber ?? '').localeCompare(b.problemNumber ?? '')
+      }
+      return 0
+    })
+  }, [filtered])
 
   return (
     <div className="space-y-5">
@@ -53,7 +91,70 @@ export function ExerciseLibrary({ exercises }: Props) {
         <div className="space-y-3">
           <div>
             <div className="mb-2 text-xs uppercase tracking-wider text-fg-subtle">
-              Κατά topic
+              Πηγή
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <OriginChip
+                active={originFilter === 'past-exam'}
+                onClick={() => setOriginFilter('past-exam')}
+                label={`Παλαιά θέματα (${originCounts['past-exam'] ?? 0})`}
+                icon={<GraduationCap className="h-3 w-3" />}
+                color="purple"
+              />
+              <OriginChip
+                active={originFilter === 'lecture'}
+                onClick={() => setOriginFilter('lecture')}
+                label={`Από διαλέξεις (${originCounts.lecture ?? 0})`}
+                icon={<BookOpen className="h-3 w-3" />}
+                color="blue"
+              />
+              <OriginChip
+                active={originFilter === 'ai-generated'}
+                onClick={() => setOriginFilter('ai-generated')}
+                label={`AI παραλλαγές (${originCounts['ai-generated'] ?? 0})`}
+                icon={<Sparkles className="h-3 w-3" />}
+                color="yellow"
+              />
+              <OriginChip
+                active={originFilter === 'all'}
+                onClick={() => setOriginFilter('all')}
+                label={`Όλες (${exercises.length})`}
+                icon={<Layers className="h-3 w-3" />}
+                color="neutral"
+              />
+            </div>
+          </div>
+          {originFilter === 'past-exam' && (
+            <div>
+              <div className="mb-2 text-xs uppercase tracking-wider text-fg-subtle">
+                Εξέταση
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <SmallChip
+                  active={sourceFilter === 'all'}
+                  onClick={() => setSourceFilter('all')}
+                  label="Όλες"
+                />
+                {SOURCE_ORDER.map((src) => {
+                  const count = exercises.filter(
+                    (e) => e.origin === 'past-exam' && e.source === src,
+                  ).length
+                  if (count === 0) return null
+                  return (
+                    <SmallChip
+                      key={src}
+                      active={sourceFilter === src}
+                      onClick={() => setSourceFilter(src)}
+                      label={`${SOURCE_LABELS[src]} (${count})`}
+                    />
+                  )
+                })}
+              </div>
+            </div>
+          )}
+          <div>
+            <div className="mb-2 text-xs uppercase tracking-wider text-fg-subtle">
+              Topic
             </div>
             <TopicFilter
               selected={topics}
@@ -62,47 +163,24 @@ export function ExerciseLibrary({ exercises }: Props) {
               counts={topicCounts}
             />
           </div>
-          <div>
-            <div className="mb-2 text-xs uppercase tracking-wider text-fg-subtle">
-              Κατά πηγή
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <SourceChip
-                active={sourceFilter === 'all'}
-                onClick={() => setSourceFilter('all')}
-                label="Όλες"
-              />
-              <SourceChip
-                active={sourceFilter === 'lectures'}
-                onClick={() => setSourceFilter('lectures')}
-                label="Από διαλέξεις"
-              />
-              <SourceChip
-                active={sourceFilter === 'past-exams'}
-                onClick={() => setSourceFilter('past-exams')}
-                label="Παλαιότερα θέματα"
-                icon={<GraduationCap className="h-3 w-3" />}
-              />
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Result count */}
       <div className="text-sm text-fg-muted">
         Δείχνει{' '}
-        <span className="font-semibold text-fg tabular-nums">{filtered.length}</span>{' '}
+        <span className="font-semibold text-fg tabular-nums">{sorted.length}</span>{' '}
         από <span className="tabular-nums">{exercises.length}</span> ασκήσεις.
       </div>
 
       {/* Exercise list */}
-      {filtered.length === 0 ? (
+      {sorted.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border bg-bg-soft/50 p-8 text-center text-sm text-fg-muted">
           Καμία άσκηση δεν ταιριάζει στα τρέχοντα φίλτρα.
         </div>
       ) : (
         <div className="space-y-4">
-          {filtered.map((ex) => (
+          {sorted.map((ex) => (
             <ExerciseCard key={ex.id} exercise={ex} />
           ))}
         </div>
@@ -111,28 +189,60 @@ export function ExerciseLibrary({ exercises }: Props) {
   )
 }
 
-function SourceChip({
+function OriginChip({
   active,
   onClick,
   label,
   icon,
+  color,
 }: {
   active: boolean
   onClick: () => void
   label: string
   icon?: React.ReactNode
+  color: 'purple' | 'blue' | 'yellow' | 'neutral'
+}) {
+  const colorClass = active
+    ? color === 'purple'
+      ? 'border-purple-500 bg-purple-500/15 text-purple-700 dark:text-purple-300'
+      : color === 'blue'
+        ? 'border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300'
+        : color === 'yellow'
+          ? 'border-yellow-500 bg-yellow-500/15 text-yellow-700 dark:text-yellow-300'
+          : 'border-accent bg-accent text-white'
+    : 'border-border bg-bg-soft text-fg-muted hover:border-accent/40 hover:text-fg'
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition ${colorClass}`}
+    >
+      {icon}
+      {label}
+    </button>
+  )
+}
+
+function SmallChip({
+  active,
+  onClick,
+  label,
+}: {
+  active: boolean
+  onClick: () => void
+  label: string
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition ${
+      className={`rounded-full border px-2.5 py-0.5 text-[11px] transition ${
         active
-          ? 'border-accent bg-accent text-white'
-          : 'border-border bg-bg-soft text-fg-muted hover:border-accent/50 hover:text-fg'
+          ? 'border-accent bg-accent/10 text-accent font-semibold'
+          : 'border-border bg-bg-soft text-fg-muted hover:border-accent/40 hover:text-fg'
       }`}
     >
-      {icon}
       {label}
     </button>
   )

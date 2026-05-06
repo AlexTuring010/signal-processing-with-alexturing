@@ -19,6 +19,13 @@ export type Topic =
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
 /**
+ * Where an exercise comes from. Past-exam problems are the most valuable —
+ * the UI prioritises them. AI-generated variations are clearly marked so
+ * students don't mistake them for real exam material.
+ */
+export type Origin = 'past-exam' | 'lecture' | 'ai-generated'
+
+/**
  * Year/source tag for past-exam-derived problems. `undefined` means
  * the exercise is from the lecture deck, not from a past exam.
  */
@@ -26,8 +33,8 @@ export type ExamSource =
   | 'sept-2025'
   | 'jan-2026'
   | 'june-2025'
-  | 'proodos-a'
-  | 'proodos-b'
+  | 'proodos-a-2025'
+  | 'proodos-b-2025'
 
 export const TOPIC_LABELS: Record<Topic, string> = {
   foundations: 'Foundations',
@@ -59,8 +66,20 @@ export const SOURCE_LABELS: Record<ExamSource, string> = {
   'sept-2025': 'Σεπτέμβριος 2025',
   'jan-2026': 'Ιανουάριος 2026 (Επί Πτυχίω)',
   'june-2025': 'Ιούνιος 2025',
-  'proodos-a': 'Πρόοδος A',
-  'proodos-b': 'Πρόοδος B',
+  'proodos-a-2025': 'Πρόοδος A · Μάιος 2025',
+  'proodos-b-2025': 'Πρόοδος B · Μάιος 2025',
+}
+
+export const ORIGIN_LABELS: Record<Origin, string> = {
+  'past-exam': 'Παλαιό θέμα',
+  lecture: 'Από διαλέξεις',
+  'ai-generated': 'AI-generated παραλλαγή',
+}
+
+export const ORIGIN_COLORS: Record<Origin, string> = {
+  'past-exam': 'border-purple-500/40 bg-purple-500/10 text-purple-700 dark:text-purple-300',
+  lecture: 'border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-300',
+  'ai-generated': 'border-yellow-500/40 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300',
 }
 
 /**
@@ -75,10 +94,28 @@ export type Exercise = {
   id: string
   title: string
   topic: Topic
+  /** Where this problem comes from. Past-exam problems are surfaced first. */
+  origin: Origin
   source?: ExamSource
+  /** Problem label, e.g. "ΘΕΜΑ 1.5", "ΘΕΜΑ 4.2". */
+  problemNumber?: string
+  /** Weight on the exam, e.g. 10 for "10%". */
+  weight?: number
   difficulty: Difficulty
   /** Section slugs the reader needs to know (renders as chips with deep links). */
   prerequisites: string[]
+  /**
+   * IDs of the formula-sheet entries that are needed to solve this. Used
+   * by the assist toggle to highlight relevant formulas in the slide-out
+   * formula panel.
+   */
+  formulaIds?: string[]
+  /**
+   * When the assist toggle is on and the problem needs something that's
+   * NOT in the formula sheet, this note is shown to nudge the student to
+   * memorize it.
+   */
+  memorizationNote?: ReactNode
   statement: ReactNode
   solution: ReactNode
 }

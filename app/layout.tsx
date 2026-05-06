@@ -14,17 +14,17 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Signal Processing with AlexTuring',
-    template: '%s · Signal Processing with AlexTuring',
+    default: 'Signal Processing Class Hub',
+    template: '%s · Signal Processing Class Hub',
   },
   description:
-    'Διαδραστικός οδηγός για το μάθημα K21 — Συστήματα Επικοινωνιών (ΕΚΠΑ, ΔΙΤ).',
-  applicationName: 'Signal Processing with AlexTuring',
-  authors: [{ name: 'AlexTuring' }],
+    'Συνεργατικός οδηγός για το μάθημα K21 — Συστήματα Επικοινωνιών (ΕΚΠΑ, DIT). Φτιαγμένος από συμφοιτητές, βελτιώνεται με σχόλια.',
+  applicationName: 'Signal Processing Class Hub',
+  authors: [{ name: 'AlexTuring & συμμαθητές' }],
   openGraph: {
-    title: 'Signal Processing with AlexTuring',
+    title: 'Signal Processing Class Hub',
     description:
-      'Διαδραστικός οδηγός για το μάθημα Συστήματα Επικοινωνιών — από το μηδέν, με visualizations.',
+      'Συνεργατικός οδηγός για Συστήματα Επικοινωνιών — από το μηδέν, με visualizations και σχόλια από συμφοιτητές.',
     type: 'website',
     locale: 'el_GR',
   },

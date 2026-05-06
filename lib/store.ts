@@ -35,13 +35,13 @@ function applyThemeToDom(theme: Theme) {
 
 export const useAppStore = create<Store>((set, get) => ({
   hydrated: false,
-  theme: 'system',
+  theme: 'dark',
   completed: new Set<string>(),
   bookmarks: new Set<string>(),
 
   hydrate: () => {
     if (get().hydrated) return
-    const theme = (readJSON<Theme>(STORAGE_KEYS.theme, 'system') ?? 'system') as Theme
+    const theme = (readJSON<Theme>(STORAGE_KEYS.theme, 'dark') ?? 'dark') as Theme
     const completedArr = readJSON<string[]>(STORAGE_KEYS.completed, [])
     const bookmarksArr = readJSON<string[]>(STORAGE_KEYS.bookmarks, [])
     set({
