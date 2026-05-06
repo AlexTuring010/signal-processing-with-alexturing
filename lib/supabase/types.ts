@@ -1,4 +1,4 @@
-export type CommentStatus = 'pending' | 'resolved'
+export type CommentStatus = 'pending' | 'resolved' | 'general'
 
 export type CommentCategory =
   | 'valid-correction'

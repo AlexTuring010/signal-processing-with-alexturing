@@ -14,6 +14,7 @@ import {
   Reply,
   Sparkles,
   Trash2,
+  MessageCircleOff,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
@@ -44,7 +45,7 @@ type SectionCommentRow = {
   body: string
   created_at: string
   author_id: string
-  status: 'pending' | 'resolved'
+  status: 'pending' | 'resolved' | 'general'
   author: Author | Author[] | null
   replies: ReplyRow[]
 }
@@ -93,6 +94,7 @@ export function SectionComments({
   const [comments, setComments] = useState<SectionCommentRow[]>([])
   const [me, setMe] = useState<Me | null | undefined>(undefined)
   const [text, setText] = useState('')
+  const [noReview, setNoReview] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -159,6 +161,7 @@ export function SectionComments({
         section_anchor: anchor,
         body,
         author_id: me.id,
+        status: noReview ? 'general' : 'pending',
       })
       .select(COMMENT_SELECT)
       .single()
@@ -169,6 +172,7 @@ export function SectionComments({
     }
     setComments((prev) => [data as unknown as SectionCommentRow, ...prev])
     setText('')
+    setNoReview(false)
   }
 
   const addReply = async (
@@ -305,7 +309,20 @@ export function SectionComments({
                     className="w-full resize-none rounded-md border border-border bg-bg px-2.5 py-1.5 text-sm outline-none focus:border-accent"
                     maxLength={2000}
                   />
-                  <div className="flex items-center justify-end">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <label
+                      className="inline-flex items-center gap-1.5 text-[10px] text-fg-muted"
+                      title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
+                    >
+                      <input
+                        type="checkbox"
+                        checked={noReview}
+                        onChange={(e) => setNoReview(e.target.checked)}
+                        className="h-3 w-3"
+                      />
+                      <MessageCircleOff className="h-3 w-3" aria-hidden />
+                      Γενικό σχόλιο — δεν χρειάζεται review
+                    </label>
                     <button
                       type="submit"
                       disabled={!text.trim() || submitting}
@@ -384,6 +401,11 @@ function SectionCommentItem({
           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">
             <CheckCircle2 className="h-2.5 w-2.5" aria-hidden />
             Resolved
+          </span>
+        ) : isMod && comment.status === 'general' ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-border bg-bg-soft px-1.5 py-0.5 text-[10px] font-semibold text-fg-muted">
+            <MessageCircleOff className="h-2.5 w-2.5" aria-hidden />
+            Γενικό
           </span>
         ) : isMod ? (
           <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/50 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-300">

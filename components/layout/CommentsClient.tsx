@@ -17,6 +17,7 @@ import {
   Tag,
   LogIn,
   ShieldCheck,
+  MessageCircleOff,
 } from 'lucide-react'
 
 import { UserAvatar } from './UserAvatar'
@@ -58,6 +59,7 @@ export function CommentsClient({
   const supabase = useMemo(() => createClient(), [])
   const [comments, setComments] = useState<CommentWithAuthor[]>(initialComments)
   const [text, setText] = useState('')
+  const [noReview, setNoReview] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [moderate, setModerate] = useState(false)
@@ -97,6 +99,7 @@ export function CommentsClient({
         section_anchor: null,
         body,
         author_id: me.id,
+        status: noReview ? 'general' : 'pending',
       })
       .select('*')
       .single()
@@ -117,6 +120,7 @@ export function CommentsClient({
     }
     setComments((prev) => [optimistic, ...prev])
     setText('')
+    setNoReview(false)
     router.refresh()
   }
 
@@ -136,7 +140,8 @@ export function CommentsClient({
 
   const toggleStatus = async (c: CommentWithAuthor) => {
     if (!me?.isModerator) return
-    const next = c.status === 'pending' ? 'resolved' : 'pending'
+    const next: 'pending' | 'resolved' =
+      c.status === 'resolved' ? 'pending' : 'resolved'
     const { error: updError } = await supabase
       .from('comments')
       .update({ status: next })
@@ -290,6 +295,19 @@ export function CommentsClient({
             className="w-full resize-none rounded-md border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-accent"
             maxLength={2000}
           />
+          <label
+            className="inline-flex items-center gap-1.5 text-[11px] text-fg-muted"
+            title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
+          >
+            <input
+              type="checkbox"
+              checked={noReview}
+              onChange={(e) => setNoReview(e.target.checked)}
+              className="h-3 w-3"
+            />
+            <MessageCircleOff className="h-3 w-3" aria-hidden />
+            Γενικό σχόλιο — δεν χρειάζεται review
+          </label>
           <div className="flex items-center justify-between">
             <span className="text-[11px] text-fg-subtle">
               {text.length}/2000 χαρακτήρες
@@ -463,13 +481,25 @@ function CommentItem({
             className={`ml-auto inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold transition ${
               comment.status === 'resolved'
                 ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
-                : 'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-300'
+                : comment.status === 'general'
+                  ? 'border-border bg-bg-soft text-fg-muted'
+                  : 'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-300'
             }`}
+            title={
+              comment.status === 'general'
+                ? 'Σημειωμένο ως γενικό σχόλιο. Πάτα για να το κλείσεις ως resolved.'
+                : undefined
+            }
           >
             {comment.status === 'resolved' ? (
               <>
                 <CheckCircle2 className="h-3 w-3" aria-hidden />
                 Resolved
+              </>
+            ) : comment.status === 'general' ? (
+              <>
+                <MessageCircleOff className="h-3 w-3" aria-hidden />
+                Γενικό
               </>
             ) : (
               <>
