@@ -13,7 +13,7 @@ export function ClaudeAvatar({ size = 'sm' }: { size?: Size } = {}) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/claude.png"
+      src="/claude2.png"
       alt=""
       className={`${SIZE_CLASS[size]} shrink-0 rounded-full object-cover`}
       aria-hidden
