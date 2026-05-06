@@ -314,6 +314,78 @@ $$
 | FM threshold | ~10 dB SNR_in |
 | Pre/de-emphasis (FM ραδιόφωνο) | $\tau = 50$ ή $75$ μs |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="fm/in-noise" total={5} />
+
+Πέντε ερωτήσεις πάνω στη triangular noise και το $9\beta^2$ FM gain.
+
+<ExamProblem id="triangular-noise" year="Triangular noise" weight="κρίσιμη ιδέα">
+**Δήλωση:** Στον FM δέκτη, ο output noise PSD είναι λευκός (επίπεδος).
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Ο discriminator (frequency-to-voltage converter) δίνει output proportional στο $f$. Όταν εφαρμόζεται σε λευκό θόρυβο, το output PSD γίνεται **τριγωνικό** (στην πραγματικότητα παραβολικό σε PSD form, αφού $|H_{disc}|^2 \propto f^2$):
+$$S_{n,out}(f) = \frac{N_0 f^2}{A_c^2}$$
+
+Δηλαδή ο **θόρυβος μεγαλώνει με τη συχνότητα** στην έξοδο. Γι' αυτό η FM χρησιμοποιεί **pre-emphasis / de-emphasis** — pre-emphasis του message στις υψηλές συχνότητες πριν τη μετάδοση, de-emphasis στον δέκτη μετά τον discriminator. Αυτό «επανισσορροπεί» το θόρυβο και βελτιώνει την ποιότητα.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="fm-gain-formula" year="FM gain" weight="τυπολόγιο">
+**Ερώτηση:** FM ραδιόφωνο με $\beta = 5$. Πόσο dB κερδίζει η FM σε σχέση με AM ($\mu = 1$);
+
+<Example title="Λύση" defaultOpen={true}>
+$G = 9\beta^2 = 9 \cdot 25 = 225$.
+
+Σε dB: $10\log_{10}(225) \approx 23.5$ dB.
+
+**Σημασία:** η FM δίνει **23.5 dB καλύτερο SNR** σε ίσες συνθήκες θορύβου σε σχέση με AM στο ίδιο $A_c$. Αυτό είναι γιγαντιαία βελτίωση — αξίζει το 6× bandwidth premium.
+
+**Πληρωμή σε bandwidth:** $B_{FM}/B_{AM} \approx 6\times$. Άρα **6× bandwidth για 225× SNR** — ένα από τα πιο ευνοϊκά trade-offs σε όλες τις communications.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="threshold-fm" year="Threshold" weight="dramatic failure">
+**Ερώτηση:** Τι σημαίνει «threshold effect» στην FM, και πού πέφτει το threshold;
+
+<Example title="Λύση">
+Σε **υψηλό** SNR_in (πάνω από ~10 dB), η FM δουλεύει γραμμικά — το $9\beta^2$ gain ισχύει.
+
+Σε **χαμηλό** SNR_in (κάτω από ~10 dB), η FM «καταρρέει» απότομα — το output γεμίζει με **clicks και noise bursts** (από false zero crossings στον discriminator). Το SNR_out πέφτει πολύ πιο γρήγορα από αυτό που προβλέπει ο γραμμικός τύπος.
+
+**Σύγκριση με AM:** η AM επίσης έχει threshold αλλά πιο ήπιο — η ποιότητα μειώνεται σταδιακά (graceful degradation). Η FM **κόβει σαν διακόπτης** — γι' αυτό σε weak signals το AM παραμένει ακούσιμο ενώ το FM γίνεται άχρηστο. Στην πράξη: στην άκρη της εμβέλειας του FM σταθμού, αρχίζεις να ακούς clicks πριν χάσεις τελείως το σήμα.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="capture-effect" year="Capture" weight="μοναδικό FM">
+**Ερώτηση:** Δύο FM σταθμοί στην ίδια συχνότητα φτάνουν σε έναν δέκτη με ισχύεις $P_1 > P_2$. Τι ακούει ο χρήστης;
+
+<Example title="Λύση">
+**Capture effect:** ο δέκτης κάνει **lock στο ισχυρότερο σήμα και αγνοεί τελείως το ασθενέστερο** (το αδύναμο γίνεται «θόρυβος» στο limiter). Αρκεί συνήθως 6 dB διαφορά για πλήρη capture.
+
+Αυτό είναι **μοναδικό στην FM** — στο AM δύο σήματα στην ίδια συχνότητα **αναμιγνύονται** (linear interference, ακούς και τα δύο). Στο FM είτε ακούς το ένα, είτε το άλλο, ποτέ μίξη.
+
+**Πρακτική συνέπεια:** σε FM ραδιόφωνο, αν φύγεις από το δικό σου σταθμό, ξαφνικά «πιάνεις» τον επόμενο ισχυρότερο στην ίδια συχνότητα — δεν υπάρχει gradual transition. Στο AM υπάρχει zone αναμίξης.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="output-snr-calc" year="Computation" weight="τυπολόγιο">
+**Ερώτηση:** FM σήμα: $A_c = 4$ V, $\beta = 4$, audio bandwidth $W = 10$ kHz, $N_0 = 10^{-9}$ W/Hz. Βρες το output SNR σε dB.
+
+<Example title="Λύση">
+Από τυπολόγιο:
+$$\text{SNR}_{out} = \frac{3\beta^2 A_c^2}{4 N_0 W}$$
+
+Αντικαθιστώντας: $A_c^2 = 16$, $\beta^2 = 16$, $4 N_0 W = 4 \cdot 10^{-9} \cdot 10^4 = 4\cdot 10^{-5}$.
+
+$$\text{SNR}_{out} = \frac{3 \cdot 16 \cdot 16}{4 \cdot 10^{-5}} = \frac{768}{4\cdot 10^{-5}} = 1.92 \cdot 10^7$$
+
+Σε dB: $10\log_{10}(1.92\cdot 10^7) \approx 72.8$ dB.
+
+**Έλεγχος** μέσω reference SNR + gain: $\text{SNR}_{ref} = A_c^2/(2 N_0 W) = 16/(2\cdot 10^{-5}) = 8\cdot 10^5$. $\text{SNR}_{out} = 3\beta^2 \cdot \text{SNR}_{ref}/2 = (48/2)\cdot 8\cdot 10^5 = 1.92\cdot 10^7$ ✓.
+</Example>
+</ExamProblem>
+
 <Recap>
 - FM σε θόρυβο: **triangular noise PSD** $\propto f^2$ μετά τον discriminator. Ο θόρυβος μεγαλώνει με τη συχνότητα.
 - **SNR_out = 3β² · SNR_ref** — τετραγωνική βελτίωση με το β.

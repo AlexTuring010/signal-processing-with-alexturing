@@ -243,6 +243,75 @@ $$
 | Cross-covariance | $C_{XY} = R_{XY} - \mu_X\mu_Y$ |
 | Random-phase cosine | $\mu_X = 0$, $R_X(\tau) = (A^2/2)\cos(2\pi f_0 \tau)$ |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="randomness/random-processes" total={5} />
+
+Πέντε ερωτήσεις πάνω στο random-phase cosine και την autocorrelation — κλασικά εξεταστικά.
+
+<ExamProblem id="random-phase-mean" year="Mean computation" weight="κλασικό">
+**Ερώτηση:** $X(t) = A\cos(2\pi f_0 t + \Theta)$ με $\Theta \sim U[0, 2\pi)$ και $A$ σταθερό. Βρες το $\mu_X(t)$.
+
+<Example title="Λύση" defaultOpen={true}>
+$$\mu_X(t) = E[A\cos(2\pi f_0 t + \Theta)] = A \int_0^{2\pi}\cos(2\pi f_0 t + \theta)\cdot\frac{1}{2\pi}d\theta$$
+
+Το ολοκλήρωμα ενός cosine πάνω σε ολόκληρο cycle είναι μηδέν (ανεξάρτητα από τη φάση offset $2\pi f_0 t$). Άρα:
+$$\mu_X(t) = 0 \quad \forall t$$
+
+**Ανεξάρτητο του χρόνου** — χαρακτηριστικό του random-phase cosine, και προοίμιο για WSS.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="random-phase-autocorrelation" year="Autocorrelation" weight="θεμελιώδες">
+**Ερώτηση:** Για το ίδιο $X(t) = A\cos(2\pi f_0 t + \Theta)$, βρες το $R_X(t_1, t_2)$.
+
+<Example title="Λύση">
+$$R_X(t_1, t_2) = E[X(t_1) X(t_2)] = A^2 E[\cos(2\pi f_0 t_1 + \Theta)\cos(2\pi f_0 t_2 + \Theta)]$$
+
+Από product-to-sum: $\cos\alpha\cos\beta = \tfrac{1}{2}[\cos(\alpha-\beta) + \cos(\alpha+\beta)]$:
+$$= \frac{A^2}{2}\bigl(\cos(2\pi f_0(t_1 - t_2)) + E[\cos(2\pi f_0(t_1 + t_2) + 2\Theta)]\bigr)$$
+
+Ο δεύτερος όρος έχει $2\Theta$ — μέσος του cosine πάνω σε uniform φάση = 0. Μένει:
+$$R_X(t_1, t_2) = \frac{A^2}{2}\cos(2\pi f_0(t_1 - t_2)) = \frac{A^2}{2}\cos(2\pi f_0 \tau)$$
+
+όπου $\tau = t_1 - t_2$. **Εξαρτάται μόνο από τη διαφορά** των χρόνων — χαρακτηριστικό **WSS** (επόμενο κεφάλαιο).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="autocorr-power" year="Power" weight="γρήγορο">
+**Δήλωση:** Για WSS process, η μέση ισχύς είναι $P_X = R_X(0)$.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** $R_X(0) = E[X^2(t)]$ — η μέση τετραγωνική τιμή σε **κάθε** χρονική στιγμή (WSS, οπότε ίδια). Αυτή είναι η ορισμός της average power για zero-mean process.
+
+**Παράδειγμα:** για το random-phase cosine, $R_X(0) = A^2/2$ — η γνωστή ισχύς ενός cosine πλάτους $A$. ✓
+</Example>
+</ExamProblem>
+
+<ExamProblem id="autocorr-symmetry" year="Symmetry" weight="property">
+**Δήλωση:** Για WSS process, $R_X(\tau) = R_X(-\tau)$.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** $R_X(\tau) = E[X(t)X(t+\tau)] = E[X(t+\tau)X(t)]$ (πολλαπλασιασμός commutes). Στο νέο form, αντικαθιστώντας $u = t+\tau$, δίνει $E[X(u)X(u-\tau)] = R_X(-\tau)$ από WSS.
+
+Άρα **το autocorrelation είναι άρτια συνάρτηση**. Αυτό σε συνδυασμό με το ότι το $R_X(\tau)$ είναι Fourier transform pair με το PSD $S_X(f)$ (Wiener-Khinchin), δίνει ότι το $S_X(f)$ είναι επίσης άρτια συνάρτηση και real.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="ensemble-vs-time-avg" year="Ensemble vs time" weight="key concept">
+**Ερώτηση:** Πώς διαφέρει το $\mu_X(t) = E[X(t)]$ από το time-average $\langle x(t)\rangle = \lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2}x(t)dt$;
+
+<Example title="Λύση">
+- $E[X(t)]$ είναι **ensemble average**: σταθερό $t$, μέσος όρος πάνω από όλες τις δυνατές realizations.
+- $\langle x(t)\rangle$ είναι **time average**: μία συγκεκριμένη realization, μέσος όρος πάνω από όλο τον χρόνο.
+
+Γενικά **είναι διαφορετικά**. Για **εrgodic** processes ταυτίζονται:
+$$E[X(t)] = \langle x(t)\rangle \text{ για κάθε realization}$$
+
+Πρακτική σημασία: για ergodic process, μπορούμε να εκτιμήσουμε στατιστικές ιδιότητες από **μία** ηχογράφηση. Π.χ. το random-phase cosine είναι ergodic — μπορούμε να μετρήσουμε mean και autocorrelation από μία μόνο waveform. Όχι όμως σε μη-ergodic processes (όπου μπορεί ένα coin-flip να καθορίζει αν η realization είναι όλο 0 ή όλο 1 — time average = μηδέν ή ένα, ensemble = 1/2).
+</Example>
+</ExamProblem>
+
 <Recap>
 - Ένα **random process** είναι μια οικογένεια RVs indexed by χρόνο. Δύο τρόποι να το «τέμνεις»: σταθερό t (RV) ή σταθερό ω (realization).
 - **Mean** $\mu_X(t)$ και **autocorrelation** $R_X(t_1, t_2)$ είναι οι βασικές στατιστικές ποσότητες.

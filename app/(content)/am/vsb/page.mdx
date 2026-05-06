@@ -110,6 +110,72 @@ Spectrum του NTSC video signal:
 
 Η VSB κερδίζει τη χρυσή τομή για **applications με video** (πολλά χαμηλά συχνοτικά στοιχεία) και **φθηνούς receivers** (envelope detection). Σπάνια εμφανίζεται σε άλλο context.
 
+## Εξάσκηση
+
+<ExerciseProgress slug="am/vsb" total={5} />
+
+Πέντε ερωτήσεις πάνω στην αλχημεία της VSB.
+
+<ExamProblem id="vsb-bandwidth-position" year="Bandwidth" weight="μεταξύ AM και SSB">
+**Ερώτηση:** Σήμα video με $W = 4.2$ MHz. Τι bandwidth χρειάζεται με: (a) AM/DSB, (b) SSB, (c) VSB με vestige 1.25 MHz;
+
+<Example title="Λύση" defaultOpen={true}>
+- (a) AM/DSB: $2W = 8.4$ MHz.
+- (b) SSB: $W = 4.2$ MHz (αν ήταν εφικτό — αλλά για video με low-frequency content ο απότομος SSB filter είναι αδύνατος).
+- (c) VSB: $W + \text{vestige} = 4.2 + 1.25 = 5.45$ MHz (στην πράξη NTSC: ~6 MHz total channel).
+
+Η VSB κάθεται **ανάμεσα** σε SSB (ιδανικό αλλά αδύνατο) και DSB (χωρίς εξοικονόμηση). Αυτή η μέση λύση ήταν ο συμβιβασμός που έσωσε το αναλογικό TV broadcasting.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="nyquist-symmetry" year="Nyquist symmetry" weight="πυρήνας VSB">
+**Ερώτηση:** Γιατί ο shaping filter $H_{VSB}(f)$ πρέπει να ικανοποιεί τη συνθήκη $H(f_c + \Delta) + H(f_c - \Delta) = \text{const}$;
+
+<Example title="Λύση">
+Στο envelope detection, η σωστή ανάκτηση του $m(t)$ απαιτεί το άθροισμα της shaped USB και της vestige LSB γύρω από κάθε baseband συχνότητα να δίνει τη ίδια συνολική «ισχύ» για κάθε $\Delta$. Αν η συμμετρία σπάσει, διαφορετικά baseband components θα παίρνουν διαφορετικό gain → distortion του video.
+
+**Πρακτικό σχήμα του filter:** ομαλή κλίση γύρω από $f_c$ — από 1 (full sideband) μέσω 1/2 (στο $f_c$) σε 0 (πέρα από το vestige). Αυτό το σχήμα διασφαλίζει ότι κάθε ζεύγος $\pm\Delta$ συμπληρώνεται σωστά.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="vsb-envelope-detection" year="Demod" weight="γιατί δουλεύει">
+**Ερώτηση:** Γιατί το VSB μπορεί να αποδιαμορφωθεί με envelope detector ενώ το SSB όχι;
+
+<Example title="Λύση">
+**SSB:** μια καθαρή sideband + (κανονικά) χωρίς carrier. Το envelope δεν είναι απλώς $A_c + m(t)$ — είναι μια πολύπλοκη μη-γραμμική συνάρτηση του $m$ και του $\hat{m}$.
+
+**VSB:** συνήθως κρατάει **reduced carrier** ώστε ο envelope να είναι κυρίως $A_c + m(t)$ (όπως στο conventional AM). Επιπλέον, η Nyquist symmetry του shaping filter εξασφαλίζει ότι οι δύο πλευρές «επανασυγχρονίζονται» στο envelope ώστε το $m(t)$ να ανακτάται ορθά. Έτσι ο envelope detector μπορεί να δουλέψει με αμελητέα παραμόρφωση.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="vsb-application" year="Application" weight="NTSC">
+**Δήλωση:** Η VSB χρησιμοποιήθηκε ιστορικά στο NTSC αναλογικό TV.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Λόγοι:
+
+1. **Bandwidth:** το video έχει $W \approx 4.2$ MHz. DSB θα ήθελε 8.4 MHz, και ένα 6 MHz κανάλι δεν φτάνει. Το VSB σπρώχνει στα ~6 MHz με vestige 1.25 MHz.
+2. **Φθηνός receiver:** envelope detector + απλό κύκλωμα — κρίσιμο για mass-market TV.
+3. **Low-frequency content:** το video έχει σημαντικό DC και low-freq energy. Ο απότομος SSB filter δεν μπορεί να κόψει στο 0 Hz χωρίς distortion.
+
+Η VSB ήταν ο τέλειος συμβιβασμός. Με τη μετάβαση σε digital TV (DVB, ATSC) η VSB έδωσε τη θέση της σε digital modulation schemes — αλλά μέσα στο NTSC ζει ως ιστορική κληρονομιά.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="vsb-vs-ssb-tradeoff" year="Trade-off" weight="γιατί όχι SSB πάντα">
+**Ερώτηση:** Αν το SSB έχει το μικρότερο bandwidth και 100% efficiency, γιατί δεν χρησιμοποιείται **πάντα**;
+
+<Example title="Λύση">
+Δύο πραγματικά εμπόδια:
+
+1. **Απότομος sideband filter** ή ακριβής Hilbert transform. Για voice (200 Hz – 3 kHz) με κενό γύρω από το 0 Hz, ο filter μπορεί να μεταβεί στο stopband στα ~100 Hz — εφικτό. Για **video** που έχει DC content, χρειάζεται filter που κόβει στα 0 Hz με μηδενικό transition band — αδύνατο.
+
+2. **Coherent demodulation** πάντα — άρα χρειάζεται ακριβές carrier recovery στον δέκτη. Πιο ακριβός δέκτης από τα φθηνά envelope-detector receivers του AM ή του VSB.
+
+Σύντομα: **SSB ≈ best on paper, αλλά πληρώνεις σε complexity και δεν δουλεύει για low-frequency-rich signals**. Το VSB δίνει μια χρυσή τομή.
+</Example>
+</ExamProblem>
+
 <Recap>
 - **VSB** = πλήρης μία sideband + **vestige** (μικρό κατάλοιπο) της άλλης + (συνήθως) reduced carrier.
 - **Bandwidth ~ W + vestige**, ανάμεσα σε SSB ($W$) και AM/DSB ($2W$).

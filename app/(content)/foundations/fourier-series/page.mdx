@@ -402,6 +402,76 @@ $$
 
 Αυτό είναι το αντικείμενο του [επόμενου κεφαλαίου](/foundations/fourier-transform): η γενίκευση της Fourier ανάλυσης από periodic σε **οποιοδήποτε** σήμα. Και θα δούμε ότι η περίφημη $H(f)$ ενός LTI συστήματος, που εμφανίστηκε στο προηγούμενο κεφάλαιο, είναι **ακριβώς** ο Fourier transform της κρουστικής απόκρισης $h(t)$.
 
+## Εξάσκηση
+
+<ExerciseProgress slug="foundations/fourier-series" total={5} />
+
+Πέντε ερωτήσεις τύπου εξετάσεων. Δοκίμασέ τες πρώτα μόνος σου, μετά αποκάλυψε τη λύση.
+
+<ExamProblem id="tf-a0-mean" year="True/False" weight="βασικό">
+**Δήλωση:** Ο συντελεστής $a_0$ ενός periodic σήματος είναι πάντα ίσος με μηδέν.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Ο $a_0$ είναι ο **μέσος όρος** του σήματος σε μία περίοδο:
+$$a_0 = \frac{1}{T_0}\int_{T_0} x(t)\,dt$$
+Είναι μηδέν **μόνο** για zero-mean σήματα (όπως το $\cos(2\pi f_0 t)$). Για παράδειγμα, ο τετραγωνικός παλμός 50% που είδαμε έχει $a_0 = 1/2$, και ένα DC offset προστίθεται απευθείας στον $a_0$. Ο $a_0$ λέγεται και **DC συνιστώσα**.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="comp-fourier-coeffs" year="Computation" weight="κλασικό">
+**Ερώτηση:** Βρες τους Fourier συντελεστές του $x(t) = 3 + 4\cos(2\pi f_0 t) - 2\sin(4\pi f_0 t)$.
+
+<Example title="Λύση">
+Γράφουμε κάθε όρο σε exponential μορφή:
+- $3 = 3\,e^{j 0 \cdot 2\pi f_0 t}$ → συνεισφέρει στον $a_0 = 3$.
+- $4\cos(2\pi f_0 t) = 2\,e^{j 2\pi f_0 t} + 2\,e^{-j 2\pi f_0 t}$ → $a_1 = a_{-1} = 2$.
+- $-2\sin(4\pi f_0 t) = -2\sin(2\pi(2f_0)t) = j\,e^{j 2\pi(2f_0) t} - j\,e^{-j 2\pi(2f_0) t}$ → $a_2 = j$, $a_{-2} = -j$.
+
+Συνολικά:
+$$a_0 = 3,\quad a_{\pm 1} = 2,\quad a_2 = j,\quad a_{-2} = -j,\quad a_k = 0 \text{ αλλιώς.}$$
+
+**Έλεγχος συμμετρίας:** $a_{-1} = 2 = a_1^*$ ✓ (real). $a_{-2} = -j = j^* = a_2^*$ ✓.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-conjugate-symmetry" year="True/False" weight="conjugate symmetry">
+**Δήλωση:** Για ένα real periodic σήμα, ισχύει $|a_k| = |a_{-k}|$ και $\angle a_{-k} = -\angle a_k$.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Για real $x(t)$, παίρνοντας τον συζυγή και των δύο πλευρών της εξίσωσης ανάλυσης, προκύπτει:
+$$a_{-k} = a_k^*$$
+Από [conjugate symmetry](/reference/complex-numbers#section-5), ίδιο μέτρο και αντίθετη φάση. Γι' αυτό το **φάσμα πλάτους** είναι άρτια συνάρτηση και το **φάσμα φάσης** περιττή.
+
+Πρακτικό: μπορούμε να σχεδιάζουμε **μόνο το θετικό μισό** του φάσματος — το αρνητικό προκύπτει αυτόματα.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="square-wave-odd-only" year="Square wave" weight="γιατί μόνο περιττές">
+**Ερώτηση:** Γιατί ο τετραγωνικός παλμός 50% duty cycle περιέχει **μόνο περιττές** αρμονικές;
+
+<Example title="Λύση">
+Από τον υπολογισμό στο κεφάλαιο: $a_k = \frac{1}{2}\mathrm{sinc}(k/2)$.
+
+Το $\mathrm{sinc}(x) = \sin(\pi x)/(\pi x)$ μηδενίζεται όταν $\pi x$ είναι ακέραιο πολλαπλάσιο του $\pi$ (εκτός από $x = 0$) — δηλαδή όταν $x$ είναι μη-μηδενικός ακέραιος. Με $x = k/2$:
+- $k = 2$: $\mathrm{sinc}(1) = 0$ ✓
+- $k = 4$: $\mathrm{sinc}(2) = 0$ ✓
+- $k = 6, 8, \ldots$: όλα 0.
+
+Συνολικά κάθε **άρτιο μη-μηδενικό** $k$ δίνει $a_k = 0$. **Διαισθητικά:** ο τετραγωνικός παλμός 50% έχει half-wave συμμετρία ($x(t + T_0/2) = -x(t) + 1$ μετά από αφαίρεση του DC) — αυτή η συμμετρία ακυρώνει όλες τις άρτιες αρμονικές. Στη γενική περίπτωση duty cycle ≠ 50%, και άρτιες θα εμφανιστούν.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="lti-fourier-series-output" year="LTI + Fourier series" weight="key insight">
+**Ερώτηση:** Ένα LTI σύστημα με frequency response $H(f)$ δέχεται periodic είσοδο $x(t) = \sum_k a_k\,e^{j 2\pi k f_0 t}$. Τι είναι η έξοδος $y(t)$;
+
+<Example title="Λύση" defaultOpen={true}>
+Από την **eigenfunction property** των LTI: κάθε complex exponential $e^{j 2\pi k f_0 t}$ περνάει αναλλοίωτο, πολλαπλασιασμένο με τον αριθμό $H(kf_0)$. Από γραμμικότητα:
+$$y(t) = \sum_k a_k\,H(kf_0)\,e^{j 2\pi k f_0 t}$$
+
+Δηλαδή η έξοδος είναι **και αυτή periodic** με την ίδια θεμελιώδη και νέους συντελεστές $b_k = a_k\,H(kf_0)$. **Κάθε αρμονική «βλέπει» το σύστημα ξεχωριστά** — πολλαπλασιάζεται με το $H$ στη δική της συχνότητα. Αυτή είναι η πιο σημαντική επανειλημμένη ιδέα του κεφαλαίου: μετατρέψαμε ένα δύσκολο πρόβλημα στο time domain (συνέλιξη με $h(t)$) σε ένα τετριμμένο πρόβλημα στο frequency domain (πολλαπλασιασμός με $H$ ανά αρμονική).
+</Example>
+</ExamProblem>
+
 <Recap>
 - Ένα periodic σήμα μπορεί να γραφτεί σαν **άθροισμα από αρμονικά συσχετισμένες complex exponentials** (ή ισοδύναμα cosines):
   $$x(t) = \sum_k a_k\, e^{j 2\pi k f_0 t}$$

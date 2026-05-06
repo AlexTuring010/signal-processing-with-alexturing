@@ -257,6 +257,71 @@ $$
 
 Η DSB-SC σπάνια εμφανίζεται **standalone** σε εμπορικά ραδιόφωνα — το πραγματικό AM ραδιόφωνο είναι Conventional. Αλλά στην εξεταστική, η DSB-SC δοκιμάζεται **πάρα πολύ συχνά** σε πολυπλεξίας προβλήματα (FDM), όπου χρειάζεται για να μετατοπίζεις σήματα γύρω από διαφορετικούς carriers.
 
+## Εξάσκηση
+
+<ExerciseProgress slug="am/dsb-sc" total={5} />
+
+Πέντε ερωτήσεις για coherent demod, phase error, και τη διαφορά από conventional AM.
+
+<ExamProblem id="dsb-sc-power" year="Power" weight="100% efficient">
+**Ερώτηση:** Σήμα DSB-SC: $x(t) = 2 m(t)\cos(2\pi f_c t)$ με $m(t) = \cos(2\pi f_m t)$. Υπολόγισε τη συνολική ισχύ.
+
+<Example title="Λύση" defaultOpen={true}>
+Επεκτείνουμε με γινόμενο cosines:
+$$2 m(t)\cos(\omega_c t) = 2\cos(\omega_m t)\cos(\omega_c t) = \cos((\omega_c-\omega_m)t) + \cos((\omega_c+\omega_m)t)$$
+
+Δύο cosines σε διαφορετικές συχνότητες, καθένα πλάτους 1. Ισχύς κάθε cosine = $1/2$ W. Συνολικά:
+$$P_{DSB} = \tfrac{1}{2} + \tfrac{1}{2} = 1 \text{ W}$$
+
+Όλη στις sidebands, καμία στον carrier — αποδοτικότητα 100%.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="phase-error-output" year="Phase error" weight="κρίσιμο">
+**Ερώτηση:** DSB-SC σήμα $s(t) = m(t)\cos(\omega_c t)$ αποδιαμορφώνεται με τοπικό φέρον $\cos(\omega_c t + \varphi)$. Βρες την έξοδο μετά το LPF.
+
+<Example title="Λύση">
+Πολλαπλασιασμός:
+$$s(t)\cos(\omega_c t + \varphi) = m(t)\cos(\omega_c t)\cos(\omega_c t + \varphi)$$
+$$= \tfrac{m(t)}{2}\bigl[\cos\varphi + \cos(2\omega_c t + \varphi)\bigr]$$
+
+LPF κόβει τον $2\omega_c$ όρο. Έξοδος:
+$$y(t) = \tfrac{1}{2}m(t)\cos\varphi$$
+
+Το πλάτος βαθμολογείται με $\cos\varphi$. Στο $\varphi = 0$ τέλεια ανάκτηση, στο $\varphi = \pi/2$ μηδενική έξοδος (**quadrature null**). Γι' αυτό το DSB-SC χρειάζεται PLL ή Costas loop για carrier recovery.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-envelope-detector-dsb" year="True/False" weight="κλασική παγίδα">
+**Δήλωση:** Ένας envelope detector μπορεί να αποδιαμορφώσει DSB-SC.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Στο DSB-SC το «envelope» είναι $|m(t)|$ — δηλαδή η rectified απόλυτη τιμή του message. Όπου το $m(t)$ αλλάζει πρόσημο, το πραγματικό σήμα κάνει phase reversal $180°$, αλλά το envelope δεν διασταυρώνει το μηδέν επιστροφικά — απλώς ξανανεβαίνει. Άρα ο envelope detector παράγει $|m(t)|$, χάνοντας το πρόσημο.
+
+**Λύση:** χρειάζεται **coherent demodulation** (πολλαπλασιασμός με τοπικό cosine συγχρονισμένο με τον carrier). Αυτή είναι η βασική διαφορά κόστους/πολυπλοκότητας από το conventional AM.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="dsb-bandwidth" year="Bandwidth" weight="ίδιο με AM">
+**Ερώτηση:** Το DSB-SC εξοικονομεί ισχύ. Εξοικονομεί και bandwidth σε σχέση με το Conventional AM;
+
+<Example title="Λύση" defaultOpen={true}>
+**Όχι.** Το DSB-SC καταργεί μόνο το carrier impulse — και οι δύο sidebands εξακολουθούν να μεταδίδονται. Bandwidth = $2W$, ίδιο με Conventional AM.
+
+**Για bandwidth εξοικονόμηση** πρέπει να πάμε σε **SSB**, που πετάει την μία sideband και χρησιμοποιεί $W$ bandwidth (μισό).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="local-osc-amplitude" year="Coherent demod" weight="γιατί ×2">
+**Ερώτηση:** Στον coherent demodulator, γιατί συχνά πολλαπλασιάζουμε με $2\cos(\omega_c t)$ αντί για απλά $\cos(\omega_c t)$;
+
+<Example title="Λύση">
+Από τον υπολογισμό: $m(t)\cos(\omega_c t)\cdot \cos(\omega_c t) = \tfrac{m(t)}{2}[1 + \cos(2\omega_c t)]$. Μετά LPF: $y = m(t)/2$ — έχουμε χάσει έναν παράγοντα $1/2$.
+
+Πολλαπλασιάζοντας με $2\cos(\omega_c t)$ (διπλάσιο πλάτος τοπικού oscillator) ξαναβρίσκουμε ακριβώς $m(t)$. Είναι απλό **scaling** — όχι θεμελιώδες, αλλά καθαρός τύπος για την έξοδο. Στις πραγματικές υλοποιήσεις ο κανονικοποιός $\times 2$ τον αναλαμβάνει είτε ο oscillator είτε ένα μεταγενέστερο amplifier.
+</Example>
+</ExamProblem>
+
 <Recap>
 - **DSB-SC** = Conventional AM χωρίς το $A_c$ component: $x_{DSB}(t) = m(t)\cos(2\pi f_c t)$.
 - Στην I/Q canonical form: $x_I = A_c m(t)$, $x_Q = 0$.

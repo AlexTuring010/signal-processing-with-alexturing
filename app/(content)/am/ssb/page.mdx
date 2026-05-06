@@ -240,6 +240,76 @@ LSB ζει στα 99 kHz — κάτω από τον carrier. USB στα 101 kHz 
 
 </Example>
 
+## Εξάσκηση
+
+<ExerciseProgress slug="am/ssb" total={5} />
+
+Πέντε ερωτήσεις πάνω στις δύο μεθόδους παραγωγής, στο Hilbert, και στις παγίδες της SSB.
+
+<ExamProblem id="ssb-tone-frequency" year="Single tone" weight="βασικό">
+**Ερώτηση:** Message $m(t) = \cos(2\pi\cdot 2000\,t)$, carrier στα 50 kHz, **LSB**. Σε ποια συχνότητα ζει το αποτέλεσμα και ποιο το πλάτος του;
+
+<Example title="Λύση" defaultOpen={true}>
+$\hat{m}(t) = \sin(2\pi\cdot 2000\,t)$ (Hilbert του cosine είναι sine).
+
+LSB: $x_{LSB} = m\cos\omega_c t + \hat{m}\sin\omega_c t = \cos((\omega_c - \omega_m)t)$ από την ταυτότητα $\cos A\cos B + \sin A\sin B = \cos(A-B)$.
+
+$$x_{LSB}(t) = \cos(2\pi\cdot (50000 - 2000)\,t) = \cos(2\pi\cdot 48000\,t)$$
+
+Ζει στα **48 kHz** (κάτω από τον carrier — αυτό κάνει «Lower» η LSB), πλάτος 1.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="ssb-bandwidth-saving" year="Bandwidth" weight="γιατί μισό">
+**Ερώτηση:** Σήμα voice με $W = 3$ kHz εκπέμπεται με: (a) Conventional AM, (b) DSB-SC, (c) SSB. Πόσο bandwidth χρειάζεται καθένα;
+
+<Example title="Λύση" defaultOpen={true}>
+- (a) **AM:** $2W = 6$ kHz.
+- (b) **DSB-SC:** $2W = 6$ kHz (πετάει carrier, όχι sideband).
+- (c) **SSB:** $W = 3$ kHz (μόνο μία sideband).
+
+**Σε ένα HF κανάλι 30 kHz** χωράνε **10 ταυτόχρονα SSB voice channels** αλλά μόνο 5 DSB ή AM. Γι' αυτό το SSB είναι κανόνας στο HF (3–30 MHz).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="why-hilbert-needed" year="Hilbert" weight="phase-shift method">
+**Ερώτηση:** Στη phase-shift μέθοδο SSB γράφουμε $x_{USB} = m\cos\omega_c t - \hat{m}\sin\omega_c t$. Γιατί χρειάζεται ο Hilbert $\hat{m}$ — δεν αρκεί το ίδιο το $m$;
+
+<Example title="Λύση">
+Αν είχαμε απλά $m\cos\omega_c t - m\sin\omega_c t$, αυτό **δεν** θα ήταν SSB. Στη συχνότητα: $\frac{1}{2}[M(f-f_c)+M(f+f_c)] - \frac{1}{2j}[M(f-f_c)-M(f+f_c)]$ — δίνει ένα άθροισμα που **δεν** ακυρώνει τη μία sideband.
+
+Ο Hilbert κάνει ακριβώς το σωστό phase shift ($-\pi/2$ για $f>0$, $+\pi/2$ για $f<0$) ώστε όταν το $\hat{m}$ ζευγαρώσει με το $\sin\omega_c t$, ο όρος που προκύπτει να **ακυρώνει** την LSB και να αφήνει μόνο την USB. Δηλαδή ο Hilbert είναι ακριβώς το «μαθηματικό κλειδί» που δίνει τη single-sided δομή.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="ssb-coherent-demod" year="Demod" weight="recover m">
+**Ερώτηση:** USSB σήμα $x = m\cos\omega_c t - \hat{m}\sin\omega_c t$ πολλαπλασιάζεται με $2\cos\omega_c t$ και περνάει από LPF. Τι παίρνουμε;
+
+<Example title="Λύση">
+$$2x\cos\omega_c t = 2m\cos^2\omega_c t - 2\hat{m}\sin\omega_c t\cos\omega_c t$$
+$$= m[1 + \cos 2\omega_c t] - \hat{m}\sin 2\omega_c t$$
+
+Μετά από LPF (κρατάει μόνο τους baseband όρους):
+$$y(t) = m(t)$$
+
+**Τέλεια ανάκτηση** του message — αρκεί το τοπικό cosine να είναι σε φάση με τον carrier (όπως και στο DSB-SC). Phase error δίνει το ίδιο πρόβλημα: η ανάκτηση γίνεται ασθενέστερη και αναμιγνύεται με το $\hat{m}$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-ssb-iq" year="True/False" weight="canonical form">
+**Δήλωση:** Η SSB είναι η μόνη AM παραλλαγή που έχει $x_Q \neq 0$ (μη-μηδενικό quadrature component).
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Από τον πίνακα I/Q:
+- AM: $x_Q = 0$
+- DSB-SC: $x_Q = 0$
+- VSB: $x_Q = 0$ (στην standard περιγραφή)
+- **SSB**: $x_Q = \mp A_c \hat{m}/2$ (με Hilbert)
+
+Στο complex plane, το complex envelope $g(t) = x_I + j x_Q$ της SSB κινείται σε **μη-τετριμμένη τροχιά** (όχι μόνο στον πραγματικό άξονα όπως στα άλλα AM σχήματα). Αυτή η ιδιότητα είναι ακριβώς αυτό που δίνει τη single-sideband structure στο φάσμα.
+</Example>
+</ExamProblem>
+
 <Recap>
 - **SSB** = DSB-SC με μία από τις δύο sidebands αφαιρεμένη. Δύο εκδοχές: **USB** (πάνω από $f_c$), **LSB** (κάτω από $f_c$).
 - **Bandwidth = W** — μισό του AM/DSB. Power efficiency = 100% (διατηρεί τα πλεονεκτήματα του DSB-SC).

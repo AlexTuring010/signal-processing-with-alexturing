@@ -129,6 +129,76 @@ $$
 Στην [εισαγωγή](/intro#section-7) υποσχεθήκαμε «πλήρη μεταχείριση της AM και FM σε ξεχωριστά κεφάλαια». Αυτό το κεφάλαιο και τα 6 που ακολουθούν στην AM ομάδα κλείνουν το AM μισό αυτής της υπόσχεσης. Το FM μισό αρχίζει στο `/fm/idea` μετά το τέλος της AM ομάδας.
 </Callout>
 
+## Εξάσκηση
+
+<ExerciseProgress slug="am/overview" total={5} />
+
+Πέντε ερωτήσεις για να βεβαιωθείς ότι κατάλαβες τις διαφορές πριν βουτήξουμε σε καθεμία.
+
+<ExamProblem id="am-bandwidth-baseband" year="Bandwidth" weight="βασικό">
+**Ερώτηση:** Σήμα πληροφορίας έχει bandwidth $W = 10$ kHz. Πόσο είναι το bandwidth του διαμορφωμένου σήματος για: (a) Conventional AM, (b) DSB-SC, (c) SSB;
+
+<Example title="Λύση" defaultOpen={true}>
+- **(a) AM:** $B = 2W = 20$ kHz (carrier + USB + LSB).
+- **(b) DSB-SC:** $B = 2W = 20$ kHz (USB + LSB, χωρίς carrier — ίδιο εύρος).
+- **(c) SSB:** $B = W = 10$ kHz (μόνο μία sideband).
+
+**Παρατήρηση:** το DSB-SC δεν εξοικονομεί bandwidth σε σχέση με το AM, **εξοικονομεί ισχύ**. Το SSB εξοικονομεί και τα δύο.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-am-power-efficiency" year="True/False" weight="efficiency">
+**Δήλωση:** Στο conventional AM, λιγότερο από το 50% της ισχύος μεταφέρει χρήσιμη πληροφορία.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Στο μέγιστο (όριο $\mu = 1$), η αποδοτικότητα του conventional AM είναι:
+$$\eta_{max} = \frac{\mu^2/2}{1 + \mu^2/2}\bigg|_{\mu=1} = \frac{1/2}{3/2} = \tfrac{1}{3} \approx 33.3\%$$
+
+Δηλαδή **τουλάχιστον 67%** της ισχύος πάει στον carrier (που δεν φέρει πληροφορία). Γι' αυτό το DSB-SC και το SSB είναι ενεργειακά πολύ πιο αποδοτικά. Το conventional AM «πληρώνει» αυτή την κακή αποδοτικότητα ως αντάλλαγμα για την απλότητα του envelope detector.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="match-am-applications" year="Application matching" weight="real-world">
+**Ερώτηση:** Ταίριαξε κάθε σχήμα με την κύρια εφαρμογή του:
+- (1) Conventional AM
+- (2) DSB-SC
+- (3) SSB
+- (4) VSB
+
+(Α) NTSC αναλογική TV, (Β) AM ραδιόφωνο 540–1700 kHz, (Γ) Shortwave / ραδιοερασιτεχνικά HF, (Δ) Stereo FM subcarrier / color TV chrominance.
+
+<Example title="Λύση" defaultOpen={true}>
+- (1) Conventional AM ↔ **(Β)** AM ραδιόφωνο
+- (2) DSB-SC ↔ **(Δ)** Stereo FM / color TV chrominance
+- (3) SSB ↔ **(Γ)** Shortwave / ραδιοερασιτεχνικά HF
+- (4) VSB ↔ **(Α)** NTSC TV
+
+Το DSB-SC σπάνια χρησιμοποιείται **standalone** — εμφανίζεται όμως ως δομικός λίθος μέσα σε άλλα συστήματα.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="why-suppress-carrier" year="Conceptual" weight="γιατί DSB-SC">
+**Ερώτηση:** Γιατί το DSB-SC χρειάζεται **coherent** demodulation, ενώ το conventional AM όχι;
+
+<Example title="Λύση">
+**Conventional AM:** $x(t) = [A_c + m(t)]\cos(\omega_c t)$. Το envelope είναι $|A_c + m(t)|$ — και εφόσον $\mu \le 1$, το $A_c + m(t) \geq 0$, οπότε το envelope **είναι ίσο με** $A_c + m(t)$. Ένας απλός envelope detector (δίοδος + RC) ανακτά το message.
+
+**DSB-SC:** $x(t) = m(t)\cos(\omega_c t)$. Όταν το $m(t)$ αλλάζει πρόσημο, το «envelope» δεν αλλάζει πρόσημο (πάντα $\ge 0$) — αλλά η phase του carrier κάνει $180°$ flip. Ο envelope detector δίνει $|m(t)|$ αντί για $m(t)$, χάνοντας πληροφορία.
+
+**Λύση για DSB-SC:** πολλαπλασιασμός με τοπικό cosine ίδιας φάσης ($\cos(\omega_c t)$) και LPF — αυτό είναι coherent demod. Χρειάζεται phase-locked loop ή carrier recovery για να συγχρονιστεί.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="ssb-bandwidth-savings" year="SSB advantage" weight="γιατί SSB">
+**Ερώτηση:** Γιατί το SSB μπορεί να μεταδώσει την ίδια πληροφορία με **το μισό** bandwidth του DSB-SC;
+
+<Example title="Λύση" defaultOpen={true}>
+Για real $m(t)$, ισχύει conjugate symmetry: $M(-f) = M^*(f)$. Δηλαδή η αρνητική πλευρά του φάσματος **είναι ο μιγαδικός συζυγής** της θετικής — δεν φέρει νέα πληροφορία, είναι αναπαραγωγή.
+
+Στο DSB-SC γύρω από $f_c$, βλέπουμε δύο κατοπτρικές sidebands (USB και LSB) — η μία είναι **πλεονασμός** της άλλης. Το SSB πετάει τη μία (π.χ. κρατάει μόνο USB), και χρησιμοποιεί μόνο $W$ bandwidth αντί για $2W$. Στον δέκτη η coherent demodulation ανακτά το πλήρες $m(t)$ γιατί από τη μία sideband «ξαναχτίζεται» η άλλη μέσω της ίδιας conjugate symmetry.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Η **AM** κωδικοποιεί την πληροφορία στο **πλάτος** ενός carrier cosine: $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$.
 - Στη γλώσσα της I/Q canonical form: $x_I = A_c[1 + k_a m(t)]$, $x_Q = 0$ — όλη η πληροφορία στο envelope, μηδέν στη phase.

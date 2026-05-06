@@ -229,6 +229,80 @@ FM είναι **31 dB καλύτερο από AM** για ίδιο πομπό! (
 | FM out | $3\beta^2 \text{SNR}_{ref}$ |
 | FM gain over AM | $9\beta^2$ (μ=1) |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="noise/snr" total={5} />
+
+Πέντε ερωτήσεις πάνω στους υπολογισμούς SNR — αυτοί εμφανίζονται σε σχεδόν κάθε exam.
+
+<ExamProblem id="snr-db-conversion" year="Conversion" weight="γρήγορο">
+**Ερώτηση:** Μετάτρεψε σε dB: (a) SNR = 100, (b) SNR = 1, (c) SNR = 0.5. Τι σημαίνουν;
+
+<Example title="Λύση" defaultOpen={true}>
+- (a) $10\log_{10}(100) = 20$ dB — σήμα 100× ισχυρότερο από θόρυβο. Καλό.
+- (b) $10\log_{10}(1) = 0$ dB — ίσο σήμα και θόρυβος. Όριο.
+- (c) $10\log_{10}(0.5) = -3$ dB — θόρυβος **διπλάσιος** από σήμα. Κακό.
+
+**Πρακτικά κατώφλια:**
+- Voice: ≥ 10 dB acceptable, ≥ 20 dB excellent.
+- Audio HiFi: ≥ 60 dB.
+- Digital data (BER 10^-6): ~10 dB SNR.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="processing-gain" year="Processing gain" weight="δεσμευτικό">
+**Ερώτηση:** Ένα DSB-SC system με input SNR = 10 dB. Ποιο το output SNR αν συγκρίνουμε στο reference;
+
+<Example title="Λύση">
+Για DSB-SC: $\text{SNR}_{out} = \text{SNR}_{ref}$. Αλλά **input SNR ≠ reference SNR**:
+- Input SNR uses input bandwidth $B = 2W$.
+- Reference SNR uses message bandwidth $W$.
+- Λόγος: $\text{SNR}_{ref}/\text{SNR}_{in} = B/W = 2$ (3 dB).
+
+Άρα output SNR = SNR_ref = SNR_in + 3 dB = **13 dB**. **Processing gain = 3 dB** για DSB-SC — όχι από καλύτερη χρήση πληροφορίας, αλλά από το γεγονός ότι το output BPF έχει στενότερη ζώνη από το input BPF.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="fm-snr-improvement" year="FM gain" weight="τυπολόγιο">
+**Ερώτηση:** FM με $\beta = 5$ έναντι AM με $\mu = 1$. Πόσο dB κερδίζει η FM;
+
+<Example title="Λύση" defaultOpen={true}>
+$G = 9\beta^2 = 9\cdot 25 = 225$ → $10\log_{10}(225) \approx 23.5$ dB.
+
+**Σύγκριση:** για να μη γελιόμαστε, αυτή είναι σύγκριση **σε ίδιο** πομπό SNR_ref (output bandwidth για AM = $W$, για FM = $W$ — οπότε δίκαια). FM δίνει 23.5 dB καλύτερο audio σε weak-signal conditions, με το κόστος του 6× bandwidth.
+
+**Παγίδα:** η σύγκριση δεν είναι «AM vs FM σε ίδιο spectrum» — είναι «AM vs FM σε ίδιο transmitted SNR». Η FM παίρνει το extra bandwidth «δωρεάν» αφού το σύγκριση περιορίζεται στο output baseband.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="link-budget" year="Link budget" weight="practical">
+**Ερώτηση:** Πομπός $P_t = 100$ W, path loss $L = 120$ dB, receiver NF = 6 dB στα $T_0 = 290$ K, bandwidth $B = 200$ kHz. Βρες το input SNR.
+
+<Example title="Λύση">
+$P_t[\text{dBW}] = 10\log(100) = 20$ dBW = 50 dBm.
+
+$P_{rx}[\text{dBm}] = 50 - 120 = -70$ dBm.
+
+Noise floor: $-174 + 10\log(B) + NF = -174 + 10\log(2\cdot 10^5) + 6 = -174 + 53 + 6 = -115$ dBm.
+
+$\text{SNR}_{in} = -70 - (-115) = 45$ dB.
+
+**Παρατήρηση:** στον πραγματικό πομπό, additional losses (cable, antenna mismatch, fading) θα πέσουν το $P_{rx}$ σημαντικά. Σε real-world FM ραδιόφωνο, SNR_in συνήθως 20–40 dB, και πέρα από αυτό η ποιότητα είναι ήδη excellent.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="snr-vs-bandwidth-tradeoff" year="Trade-off" weight="key insight">
+**Δήλωση:** Διπλασιασμός του receiver bandwidth (κρατώντας ίδια ισχύ σήματος) διπλασιάζει το input SNR.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Διπλασιασμός του bandwidth διπλασιάζει την **ισχύ θορύβου** ($P_n = N_0 B$) — άρα SNR **διαιρείται** στο μισό (3 dB **χειρότερο**).
+
+**Σωστή κατεύθυνση:** στενότερο BW = καλύτερο SNR. Γι' αυτό SSB voice (BW = 3 kHz) έχει 3 dB καλύτερο SNR από AM voice (BW = 6 kHz) σε ίδιο πομπό.
+
+**Παγίδα:** δεν μπορούμε να μειώσουμε το BW κάτω από το message bandwidth $W$ χωρίς να χάσουμε σήμα. Άρα πιο στενά κανάλια ζητούν πιο στενά messages — π.χ. SSB voice 3 kHz (περιορισμένο audio quality) έναντι FM stereo 200 kHz (full HiFi).
+</Example>
+</ExamProblem>
+
 <Recap>
 - **SNR = signal power / noise power**, εκφράζεται σε dB με $10\log_{10}$.
 - **Input** vs **output** SNR — διαφορετικά σημεία του δέκτη, διαφορετικές τιμές.

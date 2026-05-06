@@ -114,6 +114,66 @@ import { Bookmark } from '@/components/layout/Bookmark'
 
 <TransformationWorkedExample />
 
+## Εξάσκηση
+
+<ExerciseProgress slug="foundations/signal-transformations" total={5} />
+
+Πέντε ερωτήσεις για να εμπεδώσεις τη σειρά scaling → shift και τα signs που μπερδεύουν.
+
+<ExamProblem id="tf-shift-direction" year="True/False" weight="κλασική παγίδα">
+**Δήλωση:** Το $x(t - 3)$ είναι το $x(t)$ ολισθημένο **προς τα αριστερά** κατά 3.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** $x(t - 3)$ είναι **προς τα δεξιά** (καθυστέρηση). Μνημονικό: «πότε γίνεται μηδέν αυτό που έχω μέσα στην παρένθεση;» — εδώ στο $t = 3$, οπότε ό,τι συνέβαινε στο $t = 0$ τώρα συμβαίνει στο $t = 3$. Η κλασική παγίδα: το αρνητικό πρόσημο στην παρένθεση ξεγελάει.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="scale-frequency" year="Time scaling" weight="συχνότητα">
+**Ερώτηση:** Έστω $x(t) = \cos(2\pi \cdot 10\,t)$ (cosine 10 Hz). Πόση είναι η συχνότητα του $y(t) = x(3t)$;
+
+<Example title="Λύση" defaultOpen={true}>
+$y(t) = \cos(2\pi \cdot 10 \cdot 3\,t) = \cos(2\pi \cdot 30\,t)$ — δηλαδή **30 Hz**.
+
+Συμπίεση στον χρόνο κατά $a = 3$ ⇒ ο χρόνος «τρέχει» 3× πιο γρήγορα ⇒ η συχνότητα **πολλαπλασιάζεται** επί 3. Αυτή η αντιστοιχία (time-scale ↔ frequency-scale με αντίστροφο παράγοντα) θα ξαναεμφανιστεί ως ιδιότητα του Fourier transform.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="comb-scale-shift" year="Combination" weight="σειρά μετασχηματισμών">
+**Ερώτηση:** Σχεδίασε το $y(t) = x(2t - 4)$ όταν το $x(t)$ είναι ορθογώνιος παλμός πλάτους 2 ($-1 \leq t \leq 1$, ύψος 1).
+
+<Example title="Λύση">
+Ξαναγράφω σαν $x\bigl(2(t - 2)\bigr)$. Πρώτα scaling κατά 2, μετά shift δεξιά κατά 2.
+
+- **Βήμα 1 — scaling:** ο παλμός $[-1, 1]$ συμπιέζεται στο $[-1/2, 1/2]$, ύψος αμετάβλητο.
+- **Βήμα 2 — shift δεξιά κατά 2:** ο παλμός μετατοπίζεται στο $[3/2, 5/2]$.
+
+Τελικός παλμός: ορθογώνιος ύψους 1, βάση $[1.5, 2.5]$ (πλάτος 1, στενότερος και μετακινημένος).
+
+**Σημείωση:** αν είχα κάνει shift πρώτα και scaling μετά, θα έβγαζα **λάθος** αποτέλεσμα. Πάντα scaling πρώτα.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-reverse-odd" year="Time reversal" weight="πρόσημα">
+**Δήλωση:** Αν $x(t)$ είναι **περιττό**, τότε $x(-t) = x(t)$.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Από τον ορισμό περιττού: $x(-t) = -x(t)$, **όχι** $x(t)$. Οι περιττές συναρτήσεις (όπως $\sin$, $t$, $t^3$) αλλάζουν πρόσημο όταν αναποδογυρίζουμε τον χρόνο. Οι **άρτιες** συναρτήσεις (όπως $\cos$, $\Pi$, $\Lambda$, $|t|$) μένουν αμετάβλητες: $x(-t) = x(t)$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="conv-flip-slide" year="Convolution motivation" weight="key insight">
+**Ερώτηση:** Στη συνέλιξη γράφουμε $h(t - \tau)$ ως συνάρτηση του $\tau$ (όπου $t$ είναι σταθερά). Τι «κάνει» αυτό στο $h$ ως συνάρτηση του $\tau$;
+
+<Example title="Λύση" defaultOpen={true}>
+$h(t - \tau) = h\bigl(-(\tau - t)\bigr)$ — βλέποντας το $\tau$ ως μεταβλητή:
+
+1. **Flip** του $h$ γύρω από το $\tau = 0$ (από το αρνητικό πρόσημο μπροστά στο $\tau$).
+2. **Shift δεξιά κατά $t$** (από τον όρο $-t$ μέσα στην παρένθεση).
+
+Αυτό είναι το περίφημο **flip-and-slide** της συνέλιξης: για κάθε τιμή του $t$, αναποδογυρίζεις και ολισθαίνεις το $h$, και μετά πολλαπλασιάζεις με το $x(\tau)$ και ολοκληρώνεις. Δες το ολόκληρο στη [/foundations/systems](/foundations/systems#sumelixi).
+</Example>
+</ExamProblem>
+
 ## Σχετικές σελίδες
 
 - Πρώτη εμφάνιση και πλήρης κουβέντα: [/foundations/signals §4.5](/foundations/signals#combinations).

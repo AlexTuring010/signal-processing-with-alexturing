@@ -243,6 +243,67 @@ $$
 Στο FT chapter αναφέρθηκε αόριστα ότι «τα bandpass signals και ο Hilbert ζουν σε επόμενο κεφάλαιο». Εδώ τα έχουμε όλα: ο Hilbert (Section 2) ορίστηκε ως phase-shifter στη συχνότητα, η pre-envelope (Section 3) τον χρησιμοποίησε για να φτιάξει one-sided spectrum, και η complex envelope (Section 4) τον περιέλαβε σιωπηρά μέσω της pre-envelope.
 </Callout>
 
+## Εξάσκηση
+
+<ExerciseProgress slug="modulation/bridge" total={5} />
+
+Πέντε ερωτήσεις για να εμπεδώσεις την canonical μορφή — από αυτή θα ξεκινούν όλα τα επόμενα κεφάλαια.
+
+<ExamProblem id="tf-baseband-vs-bandpass" year="True/False" weight="ορισμός">
+**Δήλωση:** Κάθε σήμα που μεταδίδεται από κεραία είναι **bandpass**.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό** (πρακτικά). Για να εκπέμψει η κεραία πρέπει το σήμα να ζει σε υψηλή συχνότητα ($f_c \gg W$) — αλλιώς θα χρειαζόταν εξωπραγματικά μεγάλη ($\lambda/4$ στα baseband Hz σημαίνει χιλιόμετρα). Ο μετασχηματισμός baseband → bandpass είναι ακριβώς αυτό που κάνει η **διαμόρφωση**: ανυψώνει το $m(t)$ γύρω από $f_c$ ώστε να γίνει εκπέμψιμο.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="hilbert-properties" year="Hilbert" weight="phase-shifter">
+**Ερώτηση:** Τι κάνει ο Hilbert transform σε ένα cosine $\cos(2\pi f_0 t)$ ($f_0 > 0$); Στο πλάτος $|X(f)|$;
+
+<Example title="Λύση">
+**Στο cosine:** $\widehat{\cos(2\pi f_0 t)} = \cos(2\pi f_0 t - \pi/2) = \sin(2\pi f_0 t)$. Δηλαδή ο Hilbert μετατρέπει cosine σε sine — είναι ένας $-\pi/2$ phase shift για **όλες** τις θετικές συχνότητες.
+
+**Στο πλάτος:** $|H_{Hilbert}(f)| = |-j\,\mathrm{sgn}(f)| = 1$ για κάθε $f \neq 0$. Άρα **το πλάτος δεν αλλάζει** — αλλάζει μόνο η φάση. Είναι τέλειος all-pass phase shifter.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="iq-fm-constant-envelope" year="I/Q" weight="FM hint">
+**Ερώτηση:** Στην FM, $x_I = A_c\cos\phi(t)$ και $x_Q = -A_c\sin\phi(t)$. Δείξε ότι το envelope $V(t)$ είναι **σταθερό**.
+
+<Example title="Λύση">
+$$V(t) = \sqrt{x_I^2 + x_Q^2} = \sqrt{A_c^2\cos^2\phi + A_c^2\sin^2\phi} = A_c\sqrt{\cos^2\phi + \sin^2\phi} = A_c$$
+
+Δηλαδή $V(t) = A_c$ ανεξάρτητα από το $\phi(t)$ — το complex envelope $g(t) = A_c\,e^{j\phi(t)}$ κινείται πάνω σε **κύκλο** ακτίνας $A_c$ στο complex plane.
+
+**Πρακτική συνέπεια:** ένας FM δέκτης μπορεί να χρησιμοποιεί **limiter** (κόβει όλες τις μεταβολές πλάτους) χωρίς να χάνει πληροφορία — όλη η πληροφορία είναι στη φάση. Γι' αυτό η FM είναι ανθεκτική σε amplitude noise.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="dsb-iq-form" year="DSB-SC" weight="canonical match">
+**Ερώτηση:** Γράψε το DSB-SC σήμα $x(t) = m(t)\cos(2\pi f_c t)$ στην canonical μορφή $x = x_I\cos(\omega_c t) - x_Q\sin(\omega_c t)$. Ποια είναι τα $x_I, x_Q$;
+
+<Example title="Λύση" defaultOpen={true}>
+Συγκρίνοντας με την canonical: $x_I = m(t)$, $x_Q = 0$.
+
+Αυτό αντιστοιχεί στη γραμμή **DSB-SC** του πίνακα στο §5b. Όλη η πληροφορία ζει στο in-phase channel· το quadrature είναι άδειο. Επειδή $V = |x_I| = |m(t)|$ μεταβάλλεται και αλλάζει πρόσημο, το «envelope» του DSB-SC δεν είναι ίδιο με το $m(t)$ — εμφανίζονται phase reversals όπου το $m$ αλλάζει πρόσημο. Γι' αυτό envelope detection **δεν** δουλεύει στο DSB-SC.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="pre-envelope-spectrum" year="Pre-envelope" weight="one-sided">
+**Δήλωση:** Η pre-envelope $x_p(t) = x(t) + j\hat{x}(t)$ έχει φάσμα μόνο στις θετικές συχνότητες.
+
+<Example title="Λύση">
+**Σωστό.** Από τον τύπο του $\hat{X}(f) = -j\,\mathrm{sgn}(f)\,X(f)$:
+$$X_p(f) = X(f) + j\cdot(-j\,\mathrm{sgn}(f))X(f) = X(f)[1 + \mathrm{sgn}(f)]$$
+
+- Για $f > 0$: $1 + \mathrm{sgn}(f) = 2$ → $X_p(f) = 2X(f)$.
+- Για $f < 0$: $1 + \mathrm{sgn}(f) = 0$ → $X_p(f) = 0$.
+- Στο $f = 0$: $X_p(0) = X(0)$.
+
+Άρα η pre-envelope έχει **μονόπλευρο φάσμα** (analytic signal). Αυτή η ιδιότητα είναι θεμέλιο για το SSB: όταν θέλουμε να μεταδώσουμε μόνο την upper sideband, χρησιμοποιούμε την pre-envelope του $m(t)$.
+</Example>
+</ExamProblem>
+
 ## 6. Recap + Next up
 
 <Recap>

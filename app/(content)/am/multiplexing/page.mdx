@@ -206,6 +206,74 @@ $G(f)$ έχει:
 
 Πρακτικά αφήνουμε **guard bands** (μικρά κενά) ανάμεσα σε κανάλια ώστε real (μη-ιδανικά) φίλτρα να μπορούν να ξεχωρίσουν τα κανάλια χωρίς απαιτήσεις απείρως απότομου cutoff.
 
+## Εξάσκηση
+
+<ExerciseProgress slug="am/multiplexing" total={5} />
+
+Πέντε ερωτήσεις πάνω στη συνθήκη μη-επικάλυψης και τη σχεδίαση φάσματος FDM — από τις πιο εξεταζόμενες ασκήσεις.
+
+<ExamProblem id="fdm-min-spacing" year="Spacing" weight="βασικό">
+**Ερώτηση:** Δύο voice κανάλια με $W = 4$ kHz εκπέμπονται με DSB-SC. Πόσο ελάχιστο carrier spacing $\Delta f = f_2 - f_1$ χρειάζεται;
+
+<Example title="Λύση" defaultOpen={true}>
+Κάθε DSB-SC κανάλι έχει bandwidth $2W = 8$ kHz (USB + LSB). Για να μην επικαλύπτονται, ο carrier του δεύτερου πρέπει να είναι τουλάχιστον $2W$ μακριά:
+$$\Delta f \geq 2W = 8 \text{ kHz}$$
+
+Αν χρησιμοποιούσαμε **SSB** αντί για DSB-SC, θα αρκούσε $\Delta f \geq W = 4$ kHz — διπλάσια χωρητικότητα στο ίδιο φάσμα. Γι' αυτό τα HF κανάλια στοιβάζονται 3 kHz μακριά (USSB voice 3 kHz).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="fdm-canonical-sinc-rect" year="Spectrum sketch" weight="canonical">
+**Ερώτηση:** $m_1(t) = \mathrm{sinc}(2Wt)$ διαμορφώνει με DSB-SC σε $f_1$, $m_2(t) = \mathrm{sinc}^2(Wt)$ διαμορφώνει με DSB-SC σε $f_2$. Ποιες οι ελάχιστες $f_1, f_2$ ώστε τα κανάλια να μην επικαλύπτονται και η αρνητική πλευρά κάθε σήματος να μη μπει στις θετικές συχνότητες;
+
+<Example title="Λύση">
+**Baseband bandwidths:**
+- $\mathrm{sinc}(2Wt) \leftrightarrow \frac{1}{2W}\mathrm{rect}(f/(2W))$ — bandwidth (one-sided) = $W$.
+- $\mathrm{sinc}^2(Wt) \leftrightarrow \frac{1}{W}\mathrm{tri}(f/W)$ — bandwidth (one-sided) = $W$.
+
+**DSB-SC bandwidth γύρω από κάθε carrier:** $2W$ ($[f_c - W, f_c + W]$).
+
+**Συνθήκες:**
+- Carrier 1: για να μη συγκρουστεί η αρνητική πλευρά του DSB(m_1) με τη θετική, χρειάζεται $f_1 \geq W$.
+- Carrier 2: ομοίως, $f_2 \geq W$.
+- Μη-επικάλυψη μεταξύ τους: $|f_2 - f_1| \geq 2W$.
+
+**Ελάχιστη επιλογή:** $f_1 = W$, $f_2 = 3W$. (Με $f_1 < f_2$ WLOG.)
+</Example>
+</ExamProblem>
+
+<ExamProblem id="fdm-ssb-vs-dsb" year="Trade-off" weight="capacity">
+**Ερώτηση:** Σε ένα κανάλι 60 kHz πόσα voice signals με $W = 3$ kHz μπορώ να στοιβάξω χρησιμοποιώντας: (a) DSB-SC, (b) SSB;
+
+<Example title="Λύση" defaultOpen={true}>
+- **(a) DSB-SC:** κάθε κανάλι παίρνει $2W = 6$ kHz. Στο 60 kHz total: $60/6 = 10$ κανάλια.
+- **(b) SSB:** κάθε κανάλι παίρνει $W = 3$ kHz. Στο 60 kHz total: $60/3 = 20$ κανάλια.
+
+**SSB διπλασιάζει τη χωρητικότητα.** Στην πράξη βάζουμε guard bands (~10–20% παραπάνω space) για non-ideal filters, οπότε οι αριθμοί είναι λίγο μικρότεροι.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="demux-bpf" year="Demultiplexing" weight="receiver">
+**Ερώτηση:** Πώς διαλέγει ο δέκτης ένα συγκεκριμένο κανάλι από ένα FDM σήμα;
+
+<Example title="Λύση">
+1. **Bandpass φιλτράρισμα** γύρω από τον carrier του ζητούμενου καναλιού (κανονικά αρκετά απότομο για να κόψει τα γειτονικά).
+2. **Demodulation** — ίδια διαδικασία με το ένα-κανάλι case (envelope detector για AM, coherent για DSB/SSB).
+
+**Πρακτικό πρόβλημα:** ένα ραδιόφωνο που πιάνει 540 kHz – 1700 kHz θα χρειαζόταν να tunáρει το κεντρικό του BPF σε όλα αυτά τα κανάλια — δύσκολο. Λύση: **superheterodyne** receiver — μικτής (mixer) μετατοπίζει το ζητούμενο κανάλι σε σταθερή **intermediate frequency (IF)**, όπου ένα fixed BPF (πιο εύκολο να χτιστεί) απομονώνει το σήμα. Τότε η demodulation γίνεται στην IF.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="guard-band" year="Guard band" weight="real-world">
+**Ερώτηση:** Γιατί στην πράξη βάζουμε guard bands μεταξύ FDM καναλιών;
+
+<Example title="Λύση" defaultOpen={true}>
+Τα ιδανικά BPF (απότομος cutoff στο edge κάθε καναλιού) δεν υπάρχουν. Real filters έχουν transition bands — gradual roll-off από passband σε stopband. Αν στοιβάξουμε τα κανάλια ακριβώς στο όριο της ελάχιστης μη-επικάλυψης, τα γειτονικά κανάλια θα «ματώνουν» μέσα στο pass band του BPF μας → cross-channel interference.
+
+**Λύση:** αφήνουμε ένα κενό ~10–20% του bandwidth ανάμεσα σε κανάλια (το **guard band**). Δίνει room στους filters να κάνουν το roll-off τους χωρίς να αφήσει το γειτονικό σήμα. Παράδειγμα: AM ραδιόφωνο, $W \approx 5$ kHz audio, channel spacing 10 kHz — αρκετός χώρος για roll-off + bandwidth-overlap.
+</Example>
+</ExamProblem>
+
 <Recap>
 - **FDM** = πολλά κανάλια στοιβαγμένα στο φάσμα γύρω από διαφορετικούς carriers, διαχωρίζονται με bandpass φιλτράρισμα στον δέκτη.
 - **Συνθήκη μη-επικάλυψης:** carrier spacing ≥ bandwidth ανά κανάλι.

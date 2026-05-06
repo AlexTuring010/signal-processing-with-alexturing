@@ -47,4 +47,5 @@ export const STORAGE_KEYS = {
   theme: 'spwa:theme',
   completed: 'spwa:completed',
   bookmarks: 'spwa:bookmarks',
+  solvedExercises: 'spwa:solvedExercises',
 } as const

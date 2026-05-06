@@ -517,7 +517,9 @@ fprintf('Affine?  max|Δ| = %.3e\n', max(abs(y_combined_aff - y_separate_aff)));
 
 ## Εξάσκηση
 
-<ExamProblem year="Linearity" weight="τυπικό">
+<ExerciseProgress slug="foundations/systems" total={5} />
+
+<ExamProblem id="lin-shift-sum" year="Linearity" weight="τυπικό">
 **Ερώτηση:** Είναι το σύστημα $y(t) = x(t - 1) + x(t + 1)$ γραμμικό;
 
 <Example title="Λύση" defaultOpen={true}>
@@ -529,7 +531,7 @@ $$= a_1 \bigl(x_1(t-1) + x_1(t+1)\bigr) + a_2 \bigl(x_2(t-1) + x_2(t+1)\bigr) = 
 </Example>
 </ExamProblem>
 
-<ExamProblem year="Time-invariance" weight="τυπικό">
+<ExamProblem id="ti-tx" year="Time-invariance" weight="τυπικό">
 **Ερώτηση:** Είναι το σύστημα $y(t) = t \cdot x(t)$ TI;
 
 <Example title="Λύση" defaultOpen={true}>
@@ -541,7 +543,7 @@ $$S\{z(t)\} = y(t - t_0) = (t - t_0)\,x(t - t_0)$$
 </Example>
 </ExamProblem>
 
-<ExamProblem year="Convolution" weight="κλασικό">
+<ExamProblem id="conv-rect-rect" year="Convolution" weight="κλασικό">
 **Ερώτηση:** Υπολόγισε τη συνέλιξη $\Pi(t/2) * \Pi(t/2)$, όπου $\Pi(t/2)$ είναι ορθογώνιος παλμός πλάτους 2 ($-1 \leq t \leq 1$).
 
 <Example title="Λύση">
@@ -559,7 +561,7 @@ $$y(t) = \int_{-\infty}^{\infty} \Pi(\tau/2)\,\Pi((t-\tau)/2)\,d\tau$$
 </Example>
 </ExamProblem>
 
-<ExamProblem year="Convolution με δ" weight="γρήγορο">
+<ExamProblem id="conv-delta-shift" year="Convolution με δ" weight="γρήγορο">
 **Ερώτηση:** Υπολόγισε $x(t) * \delta(t - 3)$, όπου $x(t) = e^{-t}\,u(t)$.
 
 <Example title="Λύση" defaultOpen={true}>
@@ -569,7 +571,7 @@ $$x(t) * \delta(t - 3) = x(t - 3) = e^{-(t-3)}\,u(t - 3)$$
 </Example>
 </ExamProblem>
 
-<ExamProblem year="Eigenfunction" weight="τυπικό">
+<ExamProblem id="eig-h-magnitude-phase" year="Eigenfunction" weight="τυπικό">
 **Ερώτηση:** Ένα LTI σύστημα δέχεται $x(t) = \cos(2\pi \cdot 10\,t)$ και βγάζει $y(t) = 0.5\,\cos(2\pi \cdot 10\,t - \pi/4)$. Πόσο είναι το $|H(10)|$ και το $\angle H(10)$;
 
 <Example title="Λύση" defaultOpen={true}>

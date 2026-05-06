@@ -274,6 +274,80 @@ $$
 | NB linearization | $x \approx A_c\cos(2\pi f_c t) - A_c\phi(t)\sin(2\pi f_c t)$ | ίδιο |
 | NB vs AM | sidebands σε quadrature με carrier | — |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="fm/pm" total={5} />
+
+Πέντε ερωτήσεις πάνω στη δυϊκότητα PM/FM και τη NBFM ↔ AM σύγκριση.
+
+<ExamProblem id="pm-fm-duality" year="Duality" weight="κλασικό">
+**Ερώτηση:** Δείξε ότι ένας FM modulator + integrator στην είσοδο = PM modulator (με κατάλληλη επιλογή σταθερών).
+
+<Example title="Λύση" defaultOpen={true}>
+**FM:** $\phi(t) = 2\pi K_f \int_{-\infty}^t m(\tau)\,d\tau$.
+
+Αν αντί για $m(t)$ τροφοδοτήσουμε στον FM modulator το $m'(t) = dm/dt$, τότε:
+$$\phi(t) = 2\pi K_f \int_{-\infty}^t \frac{dm}{d\tau}\,d\tau = 2\pi K_f\, m(t)$$
+
+Αυτή είναι η εξίσωση **PM** με $K_p = 2\pi K_f$. Δηλαδή: differentiator πριν FM = PM.
+
+**Αντίστροφα:** integrator πριν PM = FM. Οι δύο μπορούν να κατασκευαστούν ο ένας από τον άλλον — γι' αυτό λέμε ότι είναι **δυϊκές**.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="nbfm-am-similarity" year="NBFM ≈ AM?" weight="παγίδα">
+**Ερώτηση:** Ένα NBFM σήμα και ένα AM σήμα έχουν το ίδιο **φάσμα πλάτους** (carrier + 2 sidebands ίδιου ύψους). Είναι λοιπόν τα ίδια σήματα;
+
+<Example title="Λύση" defaultOpen={true}>
+**Όχι.** Τα μέτρα είναι ίδια αλλά οι **φάσεις διαφέρουν**:
+- **AM:** οι sidebands είναι **σε φάση** με τον carrier (το $\cos(\omega_c t)\cos(\omega_m t)$ δίνει cosines στο $f_c \pm f_m$).
+- **NBFM:** οι sidebands είναι **σε quadrature** με τον carrier (από τον όρο $-\phi(t)\sin\omega_c t$).
+
+Η διαφορά φάσης κάνει την NBFM **αναγνωρίσιμη** ως FM παρά ότι το spectrum magnitude φαίνεται ίδιο. Στο complex plane, το complex envelope της NBFM κινείται σε μικρό arc (φάση μεταβάλλεται), ενώ της AM κινείται κατά μήκος του real axis (envelope μεταβάλλεται).
+
+**Αυτή η διαφορά φάσης** είναι η ρίζα του γιατί η FM είναι ανθεκτική στον amplitude noise — ο limiter αφαιρεί τον amplitude noise αλλά κρατάει την phase information.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="pm-power" year="Power" weight="γρήγορο">
+**Ερώτηση:** PM σήμα $x(t) = 5\cos(2\pi f_c t + \phi(t))$. Ποια είναι η συνολική ισχύς, ανεξάρτητα από το $\phi(t)$;
+
+<Example title="Λύση" defaultOpen={true}>
+**Σταθερό envelope** $V = 5$ (το $\phi(t)$ είναι μέσα στο cosine). Ισχύς:
+$$P = \frac{V^2}{2} = \frac{25}{2} = 12.5 \text{ W}$$
+
+Σημαντικό: η ισχύς **δεν εξαρτάται** από το $\phi(t)$ — άρα ούτε από το $\beta$ ή το $m(t)$. Σε FM/PM, το modulation **δεν αλλάζει** την εκπεμπόμενη ισχύ. Όλη η πληροφορία ζει στη φάση, χωρίς ενεργειακό κόστος. Σύγκριση με Conventional AM, όπου modulation **αυξάνει** την ισχύ ($P_{AM} = P_c(1 + \mu^2/2)$).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="kp-from-beta" year="Computation" weight="K_p από β">
+**Ερώτηση:** PM σήμα με message $m(t) = 4\cos(2\pi f_m t)$ V και phase sensitivity $K_p = 0.5$ rad/V. Βρες το $\beta_p$ και το peak phase deviation σε μοίρες.
+
+<Example title="Λύση">
+$$\beta_p = K_p \cdot \max|m(t)| = 0.5 \cdot 4 = 2 \text{ rad}$$
+
+Σε μοίρες: $2 \cdot \frac{180°}{\pi} \approx 114.6°$. Δηλαδή η φάση ταλαντώνεται από $-114.6°$ μέχρι $+114.6°$ γύρω από τον carrier.
+
+Με $\beta_p = 2 > 1$ είναι **wideband PM**. Το φάσμα έχει σημαντικές sidebands πέρα από τις πρώτες — Carson's rule δίνει BW ≈ $2(\beta+1) f_m = 6 f_m$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="instantaneous-freq-pm" year="Inst freq" weight="δυϊκότητα">
+**Ερώτηση:** PM σήμα με $\phi(t) = K_p m(t)$ και $m(t) = A_m\cos(2\pi f_m t)$. Βρες τη στιγμιαία συχνότητα $f_i(t)$.
+
+<Example title="Λύση">
+$f_i(t) = f_c + \frac{1}{2\pi}\frac{d\phi}{dt}$.
+
+$$\frac{d\phi}{dt} = K_p \frac{dm}{dt} = K_p \cdot (-A_m \cdot 2\pi f_m \sin(2\pi f_m t)) = -2\pi K_p A_m f_m \sin(2\pi f_m t)$$
+
+$$f_i(t) = f_c - K_p A_m f_m \sin(2\pi f_m t)$$
+
+Η max frequency deviation: $\Delta f = K_p A_m f_m$.
+
+**Παρατήρηση:** στην PM, η $\Delta f$ είναι **ανάλογη του $f_m$**. Στην FM είναι **ανεξάρτητη** του $f_m$ ($\Delta f = K_f A_m$). Αυτή είναι η βασική διαφορά των δύο σχημάτων στη συμπεριφορά της δsstuff frequency για διαφορετικά baseband frequencies.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Η **PM** κωδικοποιεί την πληροφορία **απευθείας στη φάση** του carrier, σε αντίθεση με την FM που την κωδικοποιεί στη συχνότητα.
 - **β_p = K_p max|m|** σε rad. **K_p** σε rad/V είναι η phase sensitivity.

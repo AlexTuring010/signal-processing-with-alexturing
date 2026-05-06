@@ -249,6 +249,83 @@ $$
 | **Filter output PSD** | $S_Y(f) = \|H(f)\|^2\, S_X(f)$ |
 | Output power | $P_Y = \int \|H(f)\|^2 S_X(f) df$ |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="randomness/psd" total={5} />
+
+Πέντε ερωτήσεις πάνω στο PSD και τη σχέση του με autocorrelation και LTI φίλτρα.
+
+<ExamProblem id="psd-from-rx" year="Wiener-Khinchin" weight="τύπος">
+**Ερώτηση:** WSS process έχει $R_X(\tau) = e^{-a|\tau|}$ ($a > 0$). Βρες το $S_X(f)$.
+
+<Example title="Λύση" defaultOpen={true}>
+Από το γνωστό FT pair $e^{-a|\tau|} \leftrightarrow \frac{2a}{a^2 + (2\pi f)^2}$:
+
+$$S_X(f) = \frac{2a}{a^2 + (2\pi f)^2}$$
+
+**Σχήμα:** Lorentzian — μέγιστο στο $f = 0$ (ίσο με $2/a$), φθίνει σαν $1/f^2$ στις υψηλές συχνότητες. Συνολική ισχύς: $\int S_X df = R_X(0) = 1$ ✓ (μπορεί να επαληθευτεί με contour integral ή recognition του standard pair).
+
+Αυτό είναι το PSD μιας exponentially-correlated process — π.χ. RC-filtered θόρυβος.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="rx-from-psd" year="Inverse FT" weight="reverse">
+**Ερώτηση:** WSS process έχει $S_X(f) = N_0/2$ για $|f| < W$, αλλιώς 0 (bandlimited white). Βρες το $R_X(\tau)$.
+
+<Example title="Λύση">
+Από inverse FT του rect:
+$$R_X(\tau) = \int_{-W}^{W}\frac{N_0}{2}e^{j 2\pi f\tau}\,df = \frac{N_0}{2}\cdot\frac{e^{j 2\pi W\tau} - e^{-j 2\pi W\tau}}{j 2\pi\tau}$$
+
+$$= N_0\,W\cdot\frac{\sin(2\pi W\tau)}{2\pi W\tau} = N_0\,W\,\mathrm{sinc}(2W\tau)$$
+
+**Σχήμα:** sinc, φθίνει σαν $1/\tau$. Στο $\tau = 0$: $R_X(0) = N_0 W$ — η συνολική ισχύς που υπολογίσαμε για bandlimited white στο `/noise/white-noise`. ✓
+
+**Σημασία:** δείγματα του process στα $\tau = k/(2W)$ (δηλαδή Nyquist sample times) είναι **uncorrelated** — γι' αυτό sampling στον Nyquist rate δεν προσθέτει correlation στις samples του θορύβου.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="lti-output-psd" year="LTI" weight="κρίσιμο">
+**Ερώτηση:** White noise PSD $S_X(f) = N_0/2$ διέρχεται από LTI με $|H(f)|^2 = 1/(1 + (f/f_0)^2)$. Βρες το output PSD.
+
+<Example title="Λύση" defaultOpen={true}>
+$$S_Y(f) = |H(f)|^2 S_X(f) = \frac{N_0/2}{1 + (f/f_0)^2}$$
+
+**Σχήμα:** Lorentzian, μέγιστο $N_0/2$ στο $f=0$, half-power σε $|f| = f_0$ (το −3 dB σημείο του φίλτρου). Συνολική ισχύς:
+$$P_Y = \int_{-\infty}^{\infty}\frac{N_0/2}{1 + (f/f_0)^2}\,df = \frac{N_0}{2}\cdot\pi f_0 = \frac{\pi N_0 f_0}{2}$$
+
+(χρησιμοποιώντας $\int dx/(1+x^2) = \pi$ από $-\infty$ έως $\infty$ και αλλαγή μεταβλητής $x = f/f_0$).
+
+**Πρακτική σύγκριση:** ένα ιδανικό LP cutoff $f_0$ θα έδινε $P_Y = N_0 f_0$. Το real Lorentzian φίλτρο πιάνει $\pi/2 \approx 1.57\times$ περισσότερο noise (γιατί έχει tails πέρα από $f_0$).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="psd-properties" year="Properties" weight="reality check">
+**Δήλωση:** Για WSS process, το $S_X(f)$ μπορεί να πάρει αρνητικές τιμές αν το $R_X(\tau)$ έχει αρνητικές τιμές.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Από Wiener-Khinchin theorem, για WSS process το $S_X(f) \geq 0$ **πάντα**, ανεξαρτήτως αν το $R_X(\tau)$ έχει αρνητικά τμήματα.
+
+Αυτό είναι θεμελιώδης συνθήκη: το $S_X(f)$ αντιπροσωπεύει **πυκνότητα ισχύος ανά Hz** — και ισχύς δεν μπορεί να είναι αρνητική. Αυτή η non-negativity επιβάλλει περιορισμούς στο $R_X(\tau)$ — είναι **positive semi-definite** (Bochner's theorem), αλλά μπορεί να έχει αρνητικές τιμές σε κάποια $\tau$.
+
+**Παράδειγμα:** $R_X(\tau) = \cos(2\pi f_0 \tau)$ (random-phase cosine). Παίρνει αρνητικές τιμές. PSD: $S_X(f) = \frac{1}{2}[\delta(f-f_0) + \delta(f+f_0)]$ — όλα μη-αρνητικά (impulses ύψους 1/2).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="white-noise-correlation" year="White noise" weight="key insight">
+**Δήλωση:** Λευκός θόρυβος ($S_X(f) = N_0/2$ για κάθε $f$) έχει $R_X(\tau) = (N_0/2)\delta(\tau)$.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Inverse FT του σταθερού $N_0/2$ είναι ακριβώς $(N_0/2)\delta(\tau)$:
+$$\mathcal{F}^{-1}\{N_0/2\} = (N_0/2)\delta(\tau)$$
+
+**Σημασία:**
+- $R_X(\tau) = 0$ για κάθε $\tau \neq 0$ — **uncorrelated samples** σε διαφορετικά time points.
+- $R_X(0) = (N_0/2)\delta(0) = \infty$ — άπειρη ισχύς (γιατί ο λευκός θόρυβος έχει άπειρο bandwidth).
+
+Πρακτικά: ο πραγματικός θόρυβος είναι «λευκός» μόνο μέσα σε κάποιο πεπερασμένο bandwidth, οπότε το $R_X(\tau)$ είναι sinc στο πεπερασμένο εύρος ζώνης (όπως είδαμε στην προηγούμενη ερώτηση). Το «λευκό» μοντέλο είναι μαθηματική ιδανικοποίηση.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Για WSS random process, ορίζουμε **PSD** $S_X(f) = \mathcal{F}\{R_X(\tau)\}$ — η FT της αυτοσυσχέτισης.
 - **Wiener-Khinchin theorem** (random version): η ίδια FT-σχέση που ισχύει για ντετερμινιστικά energy signals (ESD ↔ R) εκτείνεται στο random/power case (PSD ↔ R_X).

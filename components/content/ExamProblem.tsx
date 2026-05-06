@@ -1,52 +1,119 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { ChevronDown, GraduationCap } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { ChevronDown, GraduationCap, CheckCircle2, Circle } from 'lucide-react'
+import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
 type Props = {
   year: string
   weight?: string
   title?: string
+  /**
+   * Stable per-page identifier. Used as part of the localStorage key for the
+   * "solved" toggle. If omitted we fall back to a hash of year+weight, which
+   * is fine when those props are unique within a page.
+   */
+  id?: string
   children: ReactNode
 }
 
 /**
- * A problem from a past exam. Worked solution lives behind a toggle so the
- * student can attempt it first.
+ * A problem from a past exam (or exam-style practice). Worked solution lives
+ * behind an open/close toggle so the student can attempt it first. A separate
+ * "Λυμένο" toggle marks the problem as solved — persisted in localStorage so
+ * the student sees at a glance which problems are still pending.
  *
  * Convention: the children should contain the problem statement and a
  * `<Example>` (or similar) for the solution. We don't auto-split — explicit is
  * easier to author.
  */
-export function ExamProblem({ year, weight, title = 'Θέμα εξετάσεων', children }: Props) {
+export function ExamProblem({
+  year,
+  weight,
+  title = 'Θέμα εξετάσεων',
+  id,
+  children,
+}: Props) {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname() ?? ''
+  // Strip leading slash to get a stable slug-like prefix.
+  const slug = pathname.replace(/^\//, '')
+  const fallbackId = `${year}|${weight ?? ''}`
+  const storageKey = `${slug}:${id ?? fallbackId}`
+
+  const hydrated = useAppStore((s) => s.hydrated)
+  const isSolved = useAppStore((s) => s.isExerciseSolved)
+  const toggleSolved = useAppStore((s) => s.toggleSolvedExercise)
+  const solved = hydrated && isSolved(storageKey)
+
   return (
-    <section className="my-6 overflow-hidden rounded-lg border border-accent/40 bg-accent-soft/20">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-2 px-4 py-3 text-left transition-colors hover:bg-accent-soft/40"
-        aria-expanded={open}
-      >
-        <GraduationCap className="h-4 w-4 text-accent" aria-hidden="true" />
-        <span className="flex-1 text-sm font-semibold tracking-tight">
-          {title} — {year}
-          {weight && (
-            <span className="ml-2 rounded-full bg-bg-elevated px-2 py-0.5 text-xs font-normal text-fg-muted">
-              {weight}
-            </span>
-          )}
-        </span>
-        <span className="text-xs text-fg-muted">{open ? 'Κρύψε' : 'Δες'}</span>
-        <ChevronDown
+    <section
+      className={cn(
+        'my-6 overflow-hidden rounded-lg border bg-accent-soft/20 transition-colors',
+        solved ? 'border-success/50 bg-success/5' : 'border-accent/40',
+      )}
+    >
+      <div className="flex w-full items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="flex flex-1 items-center gap-2 px-4 py-3 text-left transition-colors hover:bg-accent-soft/40"
+          aria-expanded={open}
+        >
+          <GraduationCap
+            className={cn(
+              'h-4 w-4 shrink-0',
+              solved ? 'text-success' : 'text-accent',
+            )}
+            aria-hidden="true"
+          />
+          <span className="flex-1 text-sm font-semibold tracking-tight">
+            {title} — {year}
+            {weight && (
+              <span className="ml-2 rounded-full bg-bg-elevated px-2 py-0.5 text-xs font-normal text-fg-muted">
+                {weight}
+              </span>
+            )}
+          </span>
+          <span className="text-xs text-fg-muted">{open ? 'Κρύψε' : 'Δες'}</span>
+          <ChevronDown
+            className={cn(
+              'h-4 w-4 text-fg-muted transition-transform',
+              open && 'rotate-180',
+            )}
+            aria-hidden="true"
+          />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleSolved(storageKey)
+          }}
           className={cn(
-            'h-4 w-4 text-fg-muted transition-transform',
-            open && 'rotate-180',
+            'mr-3 inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors',
+            solved
+              ? 'border-success/50 bg-success/10 text-success hover:bg-success/15'
+              : 'border-border bg-bg-elevated text-fg-muted hover:border-accent/50 hover:text-fg',
           )}
-          aria-hidden="true"
-        />
-      </button>
+          aria-pressed={solved}
+          title={solved ? 'Σήμανε ως άλυτο' : 'Σήμανε ως λυμένο'}
+        >
+          {solved ? (
+            <>
+              <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+              Λυμένο
+            </>
+          ) : (
+            <>
+              <Circle className="h-3.5 w-3.5" aria-hidden="true" />
+              Άλυτο
+            </>
+          )}
+        </button>
+      </div>
       {open && (
         <div className="animate-fade-in border-t border-accent/30 bg-bg px-4 py-4 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
           {children}

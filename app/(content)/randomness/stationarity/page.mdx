@@ -221,6 +221,84 @@ $$
 | **Ergodic στην autocorrelation** | $\frac{1}{2T}\int_{-T}^{T} x(t)x(t+\tau) dt \to R_X(\tau)$ |
 | Σχέσεις | SSS ⇒ WSS, ergodic ⇒ WSS. Για Gaussian: WSS ⇔ SSS. |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="randomness/stationarity" total={5} />
+
+Πέντε ερωτήσεις για να ξεχωρίσεις WSS από non-WSS και να καταλάβεις τι κάνει η ergodicity.
+
+<ExamProblem id="wss-criterion" year="WSS criterion" weight="ορισμός">
+**Ερώτηση:** Ποια είναι τα **δύο** κριτήρια για WSS;
+
+<Example title="Λύση" defaultOpen={true}>
+1. **Σταθερός μέσος:** $\mu_X(t) = \mu$ ανεξάρτητο του $t$.
+2. **Autocorrelation εξαρτάται μόνο από $\tau$:** $R_X(t_1, t_2) = R_X(t_1 - t_2) = R_X(\tau)$.
+
+**Δεν ζητάμε** να είναι σταθερή η variance ξεχωριστά — αυτό προκύπτει από το $R_X(0) - \mu^2 = $ σταθερό. Δεν ζητάμε ούτε να είναι Gaussian (παρά το ότι Gaussian + WSS ⇔ SSS).
+
+**Παράδειγμα (WSS):** random-phase cosine. **Αντι-παράδειγμα (όχι WSS):** $X(t) = A\cos(2\pi f_0 t)$ με $A \sim \mathcal{N}(0, 1)$ — ο μέσος είναι μηδέν, αλλά $R_X(t_1, t_2) = E[A^2]\cos(\omega_0 t_1)\cos(\omega_0 t_2)$ που εξαρτάται από **ξεχωριστά** $t_1, t_2$ όχι μόνο από τη διαφορά.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="random-phase-vs-amplitude" year="Comparison" weight="κλασικό">
+**Ερώτηση:** $X(t) = A\cos(2\pi f_0 t + \Theta)$ με $A$ σταθερό, $\Theta \sim U[0, 2\pi)$ — WSS;
+$Y(t) = A\cos(2\pi f_0 t)$ με $A \sim U[0, 2]$, σταθερό φάση — WSS;
+
+<Example title="Λύση">
+**$X$ (random phase):**
+- $\mu_X = 0$ (σταθερό) ✓
+- $R_X(\tau) = (A^2/2)\cos(2\pi f_0 \tau)$ (εξαρτάται μόνο από $\tau$) ✓
+- **WSS ✓**
+
+**$Y$ (random amplitude):**
+- $\mu_Y(t) = E[A]\cos(2\pi f_0 t) = 1\cdot\cos(2\pi f_0 t) = \cos(2\pi f_0 t)$ — **εξαρτάται από $t$** ✗
+- **Όχι WSS.**
+
+**Ηθικό:** η τυχαιότητα στη φάση «ομογενοποιεί» στατιστικά γύρω από τον χρόνο. Η τυχαιότητα στο πλάτος **όχι**. Γι' αυτό το random-phase cosine είναι το standard μοντέλο για carrier σε ανάλυση επικοινωνιών — αντί για το random-amplitude.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="ergodicity-implications" year="Ergodicity" weight="practical">
+**Δήλωση:** Αν ένα random process είναι ergodic στον μέσο, τότε η μέτρηση του time-average σε **μία** realization δίνει το ensemble mean.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Ergodicity ορίζεται ακριβώς έτσι:
+$$\lim_{T\to\infty}\frac{1}{2T}\int_{-T}^{T}x(t)\,dt = E[X(t)]$$
+
+για **κάθε** realization $x(t)$. Πρακτικά: μετράς πειραματικά τον time average από μία ηχογράφηση μεγάλης διάρκειας → παίρνεις τον ensemble mean χωρίς να χρειάζεσαι πολλές realizations.
+
+**Στις τηλεπικοινωνίες:** σχεδόν όλα τα WSS noise sources (Gaussian, thermal) είναι ergodic. Γι' αυτό μπορούμε να μετρήσουμε noise statistics από real-world recordings.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="autocorr-properties" year="R_X properties" weight="κλασικά">
+**Δήλωση:** Για WSS process: (a) $R_X(\tau) = R_X(-\tau)$, (b) $|R_X(\tau)| \leq R_X(0)$.
+
+<Example title="Λύση" defaultOpen={true}>
+**Και τα δύο σωστά.**
+
+**(a) Συμμετρία:** $R_X(\tau) = E[X(t)X(t+\tau)] = E[X(t+\tau)X(t)] = R_X(-\tau)$ μέσω αλλαγής μεταβλητών.
+
+**(b) Maximum at zero:** Cauchy-Schwarz: $|E[X(t)X(t+\tau)]| \le \sqrt{E[X^2(t)]E[X^2(t+\tau)]} = \sqrt{R_X(0)\cdot R_X(0)} = R_X(0)$.
+
+**Πρακτική σημασία:** το $R_X(0)$ είναι η μέση ισχύς, και κάθε άλλη autocorrelation timing point είναι μικρότερη. Σε σχέδια autocorrelation, **πάντα κορυφή στο 0**.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="sss-vs-wss" year="SSS vs WSS" weight="ιεραρχία">
+**Δήλωση:** Κάθε WSS process είναι και SSS.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος γενικά.** SSS είναι αυστηρότερη συνθήκη: όλες οι joint distributions πρέπει να είναι αμετάβλητες σε time shift. WSS απαιτεί μόνο μέσο και autocorrelation αμετάβλητα.
+
+**Ισχύει η αντίστροφη:** SSS ⇒ WSS (αφού όλες οι distributions ίδιες, και ο μέσος και το autocorrelation είναι ίδια).
+
+**Εξαίρεση:** για **jointly Gaussian** processes, οι δύο ταυτίζονται (Gaussian definition χρησιμοποιεί μόνο mean + covariance — αν αυτά είναι σταθερά, όλη η joint distribution είναι σταθερή). Γι' αυτό το Gaussian noise είναι ταυτόχρονα WSS και SSS.
+
+**Πρακτικά στο K21:** θεωρούμε WSS παντού· πάντα φτάνει για το θόρυβο.
+</Example>
+</ExamProblem>
+
 <Recap>
 - **WSS** είναι η πρακτική έννοια stationarity: σταθερός μέσος + autocorrelation που εξαρτάται μόνο από $\tau$.
 - **Random-phase cosine** είναι WSS. **Random-amplitude cosine** δεν είναι.

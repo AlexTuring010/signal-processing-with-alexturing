@@ -265,7 +265,7 @@ $$
 
 </Example>
 
-<ExamProblem year="2025-09" weight="10%" title="Sept 2025 Θ1.2 — AM ισχύς και modulation index">
+<ExamProblem id="sept-2025-th1-2" year="2025-09" weight="10%" title="Sept 2025 Θ1.2 — AM ισχύς και modulation index">
 
 **Εκφώνηση:** Για AM σήμα με $A_c = 10$ V και $m(t) = 5\cos(2\pi f_m t)$ V, υπολογίστε: (α) τον δείκτη διαμόρφωσης $\mu$, (β) την ισχύ του carrier, (γ) τη συνολική ισχύ του διαμορφωμένου σήματος.
 
@@ -279,6 +279,73 @@ $$
 
 </Example>
 
+</ExamProblem>
+
+## Εξάσκηση
+
+<ExerciseProgress slug="am/conventional" total={6} />
+
+Πέντε ερωτήσεις τύπου εξετάσεων — όλες πιθανές στις τελικές.
+
+<ExamProblem id="mu-from-amplitudes" year="Computation" weight="βασικό μ">
+**Ερώτηση:** Carrier $A_c = 8$ V, message single-tone με peak $A_m = 6$ V. Βρες το $\mu$ και πες αν υπάρχει overmodulation.
+
+<Example title="Λύση" defaultOpen={true}>
+$$\mu = \frac{A_m}{A_c} = \frac{6}{8} = 0.75$$
+
+$\mu = 0.75 < 1$, οπότε **όχι overmodulation**. 75% modulation — μέσα στα όρια όπου ο envelope detector δουλεύει σωστά.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-overmodulation" year="True/False" weight="phase reversal">
+**Δήλωση:** Στην overmodulation ($\mu > 1$), το envelope του AM σήματος αλλάζει πρόσημο.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος (technicality):** το envelope ως φυσική ποσότητα είναι **πάντα μη-αρνητικό** ($V(t) = |A_c + m(t)| \geq 0$). Αυτό όμως που αλλάζει πρόσημο είναι το «$A_c + m(t)$» — όταν $\mu > 1$, αυτό γίνεται αρνητικό σε κάποια διαστήματα, και ο envelope detector διαβάζει $|A_c + m(t)|$ αντί για $A_c + m(t)$. **Αποτέλεσμα:** phase reversals ορατά στο waveform, παραμόρφωση εξόδου του envelope detector.
+
+Αν η δήλωση εννοούσε «το $A_c + m(t)$ αλλάζει πρόσημο» τότε σωστό. Στην εξέταση η συνηθισμένη διατύπωση είναι «το envelope διασταυρώνει το μηδέν» — αυτό είναι ακριβές.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="eta-from-mu" year="Efficiency" weight="τύπος-σπρώχτης">
+**Ερώτηση:** Έχεις conventional AM με $\mu = 0.5$. Πόσο % της συνολικής ισχύος μεταφέρει πληροφορία;
+
+<Example title="Λύση">
+$$\eta = \frac{\mu^2/2}{1 + \mu^2/2} = \frac{0.125}{1.125} \approx 0.111 = 11.1\%$$
+
+Δηλαδή σχεδόν **89%** στον carrier. Πολύ κακή αποδοτικότητα — γι' αυτό σε high-power broadcasting θέλουμε όσο πιο κοντά στο $\mu = 1$ μπορούμε χωρίς overmodulation. Στο $\mu = 1$: $\eta_{max} = 33.3\%$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="am-spectrum-sketch" year="Spectrum" weight="σχεδίαση">
+**Ερώτηση:** Σχεδίασε το φάσμα πλάτους του $x(t) = [10 + 4\cos(2\pi\cdot 1000\,t)]\cos(2\pi\cdot 100\,000\,t)$ V (στις θετικές συχνότητες).
+
+<Example title="Λύση">
+$f_c = 100$ kHz, $f_m = 1$ kHz, $A_c = 10$ V, $A_m = 4$ V.
+
+Το σήμα: carrier ($10\cos\omega_c t$) + DSB-SC ($4\cos\omega_m t \cdot \cos\omega_c t = 2\cos((\omega_c-\omega_m)t) + 2\cos((\omega_c+\omega_m)t)$).
+
+**Φάσμα στις θετικές συχνότητες:**
+- Carrier impulse στο $f_c = 100$ kHz, μέτρο $A_c/2 = 5$.
+- LSB impulse στο $f_c - f_m = 99$ kHz, μέτρο $A_m/4 = 1$.
+- USB impulse στο $f_c + f_m = 101$ kHz, μέτρο $A_m/4 = 1$.
+
+Bandwidth = $2 f_m = 2$ kHz. Modulation index $\mu = A_m/A_c = 0.4$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="max-sideband-fraction" year="Theory" weight="γιατί 33.3%">
+**Ερώτηση:** Δείξε γιατί η αποδοτικότητα του conventional AM δεν μπορεί ποτέ να υπερβεί το 33.3% (single-tone, $\mu \leq 1$).
+
+<Example title="Λύση">
+Από τους τύπους:
+$$\eta(\mu) = \frac{\mu^2/2}{1 + \mu^2/2}$$
+
+Η $\eta$ είναι **αύξουσα συνάρτηση του $\mu$** στο $[0, 1]$ (παράγωγος θετική). Άρα μέγιστο στο όριο $\mu = 1$:
+$$\eta_{max} = \frac{1/2}{1 + 1/2} = \frac{1/2}{3/2} = \tfrac{1}{3}$$
+
+Πάνω από $\mu = 1$ έχουμε overmodulation (μη-αποδεκτό). Επομένως **κανένας single-tone conventional AM δεν ξεπερνάει 33.3%**. Για non-tone messages η ίδια αρχή ισχύει με $\mu = |\min m|/A_c$.
+</Example>
 </ExamProblem>
 
 ## 7. Recap

@@ -131,3 +131,82 @@ $$
 <Callout type="key" title="Πρακτικός κανόνας">
 Αν σου ζητηθεί να σχεδιάσεις φάσμα σε άσκηση, διάλεξε την **two-sided** σύμβαση εκτός αν λέει διαφορετικά — είναι αυτή που χρησιμοποιεί η θεωρία και το τυπολόγιο. Αν δοθεί one-sided, μπορείς να μετατρέψεις σε two-sided **διαιρώντας τα πλάτη των μη-DC συχνοτήτων με 2** και αντιγράφοντας στις αρνητικές συχνότητες ως μιγαδικά συζυγή.
 </Callout>
+
+## Εξάσκηση
+
+<ExerciseProgress slug="reference/spectrum-conventions" total={5} />
+
+Πέντε ερωτήσεις πάνω στις δύο συμβάσεις και τους ψεύτικους «αρνητικούς» τόνους.
+
+<ExamProblem id="cosine-spectrum-twosided" year="Two-sided" weight="κλασικό">
+**Ερώτηση:** Σχεδίασε το two-sided φάσμα του $x(t) = \cos(2\pi\cdot 100\,t)$.
+
+<Example title="Λύση" defaultOpen={true}>
+Από Euler: $\cos\omega_0 t = (e^{j\omega_0 t} + e^{-j\omega_0 t})/2$. Στη συχνότητα:
+$$X(f) = \tfrac{1}{2}[\delta(f - 100) + \delta(f + 100)]$$
+
+**Δύο impulses ύψους 1/2** στις $f = +100$ και $f = -100$ Hz. Συμμετρικά, real, even — όπως αναμένουμε για real-and-even signal.
+
+Στο **one-sided** σχήμα (ίδιο σήμα): ένα impulse ύψους 1 στα +100 Hz. Πληροφορία ίδια, διαφορετική σύμβαση.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="negative-frequency-meaning" year="Conceptual" weight="δυσκολο">
+**Δήλωση:** Οι αρνητικές συχνότητες είναι φυσικές πραγματικότητες — μπορείς να μετρήσεις ένα cosine στα $-100$ Hz.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Οι αρνητικές συχνότητες είναι **μαθηματική σύμβαση**, όχι φυσικές ποσότητες. Δεν υπάρχει «αρνητική συχνότητα» στη φυσική — δεν μπορεί να γυρίζει ένα ταλαντωτής με αρνητική συχνότητα.
+
+**Από πού προέρχονται:** το $\cos\omega_0 t$ γράφεται ως άθροισμα δύο complex exponentials, ένα στα $+\omega_0$ και ένα στα $-\omega_0$. Τα δύο μαζί ακυρώνουν τα imaginary parts και δίνουν το real cosine. Στη συχνότητα φαίνονται σαν δύο impulses — ένα από αυτά «ζει» στις αρνητικές συχνότητες αμιγώς από αυτή τη μαθηματική κατασκευή.
+
+**One-sided convention** αποφεύγει αυτή την αφηρημένη ιδέα διπλασιάζοντας το ύψος των μη-DC συχνοτήτων και ξεχνώντας το αρνητικό μισό.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="conversion-onesided" year="Conversion" weight="practical">
+**Ερώτηση:** Δίνεται **one-sided** φάσμα: impulse ύψους 4 στα 50 Hz. Μετάτρεψε σε two-sided.
+
+<Example title="Λύση">
+Κανόνας: για κάθε non-DC component, **διαιρείς το ύψος με 2** και αντιγράφεις στην αντίστοιχη αρνητική συχνότητα.
+
+**Two-sided φάσμα:** impulse ύψους 2 στα +50 Hz και ύψους 2 στα −50 Hz.
+
+**Έλεγχος:** το one-sided ύψος 4 στα 50 Hz σημαίνει cosine πλάτους 4: $4\cos(2\pi\cdot 50\,t)$. Two-sided: $4\cdot[(e^{j\omega t} + e^{-j\omega t})/2] = 2 e^{j\omega t} + 2 e^{-j\omega t}$ → impulses ύψους 2 σε κάθε πλευρά. ✓
+
+**Για DC:** δεν διαιρείς (το DC δεν έχει «αρνητικό» mirror).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="conjugate-sym-real-signal" year="Conjugate symmetry" weight="κλασικό">
+**Δήλωση:** Real σήμα στον χρόνο ⇒ $X(-f) = X^*(f)$ στη συχνότητα.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Από τον ορισμό του FT:
+$$X(-f) = \int x(t)e^{-j 2\pi(-f)t}dt = \int x(t)e^{j 2\pi f t}dt$$
+
+Συγκρίνοντας με τον συζυγή του $X(f)$:
+$$X^*(f) = \overline{\int x(t)e^{-j 2\pi f t}dt} = \int \bar{x}(t)e^{j 2\pi f t}dt$$
+
+Αν το $x(t)$ είναι **real** ($\bar{x} = x$), τα δύο ταυτίζονται: $X(-f) = X^*(f)$.
+
+**Συνέπειες:** $|X(-f)| = |X(f)|$ (πλάτος άρτιο), $\angle X(-f) = -\angle X(f)$ (φάση περιττή). Γι' αυτό σχεδιάζουμε μόνο το θετικό μισό σε one-sided σχήμα — κανείς πληροφορία δεν χάνεται.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="even-signal-real-spectrum" year="Even signal" weight="symmetry">
+**Δήλωση:** Real-and-even σήμα στον χρόνο έχει real-and-even φάσμα στη συχνότητα.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Συνδυάζοντας conjugate symmetry (από real) και even συμμετρία:
+- $X(-f) = X^*(f)$ από real.
+- $X(-f) = X(f)$ από even ($x(-t) = x(t)$ → $X(-f) = X(f)$).
+
+Συνδυάζοντας τα δύο: $X(f) = X^*(f)$ → **το $X(f)$ είναι real**. Επίσης άρτιο.
+
+**Παραδείγματα:**
+- $\mathrm{rect}(t) \leftrightarrow \mathrm{sinc}(f)$: real-and-even ↔ real-and-even ✓
+- $\cos(2\pi f_0 t) \leftrightarrow \tfrac{1}{2}[\delta(f-f_0) + \delta(f+f_0)]$: real-and-even ↔ real-and-even ✓
+
+Στις εξετάσεις, αν ένα σήμα είναι σαφώς real-and-even, μπορείς να αναμένεις ότι το spectrum θα είναι real και να χρησιμοποιήσεις αυτό ως sanity check.
+</Example>
+</ExamProblem>

@@ -511,9 +511,11 @@ fprintf('E ≈ %.3f\n', E);
 
 ## Εξάσκηση
 
+<ExerciseProgress slug="foundations/signals" total={5} />
+
 Πέντε ερωτήσεις τύπου εξετάσεων. Δοκίμασέ τες πρώτα μόνος σου, μετά αποκάλυψε τη λύση.
 
-<ExamProblem year="True/False" weight="τυπικό 1ο θέμα">
+<ExamProblem id="tf-cos-power" year="True/False" weight="τυπικό 1ο θέμα">
 **Δήλωση:** Το σήμα $m(t) = \cos(2\pi t)$ είναι σήμα ισχύος.
 
 <Example title="Λύση" defaultOpen={true}>
@@ -525,7 +527,7 @@ $$P = \frac{1}{T}\int_0^T \cos^2(2\pi t)\,dt = \frac{1}{2}$$
 </Example>
 </ExamProblem>
 
-<ExamProblem year="True/False" weight="παγίδα">
+<ExamProblem id="tf-irrational-period" year="True/False" weight="παγίδα">
 **Δήλωση:** Το άθροισμα $\cos(2\pi t) + \cos(2\pi\sqrt{2}\,t)$ είναι περιοδικό σήμα.
 
 <Example title="Λύση" defaultOpen={true}>
@@ -533,7 +535,7 @@ $$P = \frac{1}{T}\int_0^T \cos^2(2\pi t)\,dt = \frac{1}{2}$$
 </Example>
 </ExamProblem>
 
-<ExamProblem year="Computation" weight="κλασικό">
+<ExamProblem id="comp-mixed-cosines" year="Computation" weight="κλασικό">
 Υπολόγισε την ισχύ του $x(t) = A\cos(2\pi f_1 t) + B\sin(2\pi f_2 t)$ με $f_1 \neq f_2$.
 
 <Example title="Λύση">
@@ -553,7 +555,7 @@ $$\boxed{P = \frac{A^2}{2} + \frac{B^2}{2}}$$
 </Example>
 </ExamProblem>
 
-<ExamProblem year="Decomposition" weight="τυπικό">
+<ExamProblem id="even-odd-eu" year="Decomposition" weight="τυπικό">
 Σπάσε το $x(t) = e^t u(t)$ σε άρτιο και περιττό μέρος.
 
 <Example title="Λύση">
@@ -571,7 +573,7 @@ $$x_o(t) = \frac{x(t) - x(-t)}{2} = \frac{e^t u(t) - e^{-t} u(-t)}{2}$$
 </Example>
 </ExamProblem>
 
-<ExamProblem year="True/False" weight="ξεκάθαρο όταν ξέρεις">
+<ExamProblem id="tf-ramp" year="True/False" weight="ξεκάθαρο όταν ξέρεις">
 **Δήλωση:** Η ράμπα $x(t) = t \cdot u(t)$ είναι σήμα ενέργειας.
 
 <Example title="Λύση" defaultOpen={true}>

@@ -161,6 +161,84 @@ $$
 | Bandlimited white, ισχύς | $P = N_0 B$ |
 | AWGN (Gaussian + white) | πιο κοινό μοντέλο για θερμικό θόρυβο |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="noise/white-noise" total={5} />
+
+Πέντε ερωτήσεις πάνω στις παγίδες του «λευκού».
+
+<ExamProblem id="white-vs-gaussian" year="Vocabulary" weight="κλασική παγίδα">
+**Δήλωση:** «Λευκός θόρυβος» σημαίνει «Gaussian θόρυβος».
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Είναι **διαφορετικά concepts**:
+- **Λευκός:** flat PSD — προπαντός spectral property.
+- **Gaussian:** η first-order PDF είναι Gaussian — προπαντός amplitude property.
+
+Μπορείς να έχεις:
+- **White, non-Gaussian:** π.χ. uniform amplitude με flat PSD.
+- **Gaussian, non-white:** π.χ. RC-filtered Gaussian (PSD γίνεται Lorentzian).
+- **AWGN (white + Gaussian):** το πιο συχνό μοντέλο, και αυτό που ορίζει το standard "θερμικός θόρυβος".
+
+Στο K21, υποθέτουμε AWGN εκτός αν αναφέρεται διαφορετικά. Αλλά η **διάκριση** είναι κρίσιμη όταν εμφανίζεται σε εξετάσεις.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="white-noise-power-bw" year="Computation" weight="βασικό N₀B">
+**Ερώτηση:** Bandlimited λευκός θόρυβος με $N_0/2 = 10^{-10}$ W/Hz και bandwidth $B = 5$ MHz. Ποια είναι η συνολική ισχύς;
+
+<Example title="Λύση" defaultOpen={true}>
+$$P = N_0 B = 2\cdot 10^{-10}\cdot 5\cdot 10^6 = 10^{-3} \text{ W} = 1 \text{ mW}$$
+
+Σε dBm: $0$ dBm.
+
+**Παρατήρηση**: η formula $P = N_0 B$ χρησιμοποιεί το **single-sided** $N_0$, όχι το $N_0/2$. Σύχνο σφάλμα: να χρησιμοποιήσεις $N_0/2 \cdot 2B$ — δίνει το ίδιο (μέσω συμμετρικής ολοκλήρωσης), αλλά να ξέρεις τι κάνεις.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="bandlimited-autocorr" year="Bandlimited R" weight="sinc connection">
+**Ερώτηση:** Bandlimited white noise με $S_N(f) = N_0/2$ για $|f| \leq B$. Βρες $R_N(\tau)$ και την τιμή στα $\tau = 1/(2B)$.
+
+<Example title="Λύση">
+Inverse FT του rect:
+$$R_N(\tau) = N_0 B\,\mathrm{sinc}(2B\tau)$$
+
+Στο $\tau = 1/(2B)$: $\mathrm{sinc}(2B\cdot 1/(2B)) = \mathrm{sinc}(1) = 0$.
+
+**Πρακτική σημασία:** δείγματα του bandlimited θορύβου σε **Nyquist-rate** spacing $T_s = 1/(2B)$ είναι **uncorrelated**. Αυτό είναι κρίσιμο για discrete-time receiver design — μπορείς να επεξεργαστείς samples του θορύβου σαν ανεξάρτητες RVs (αν ο θόρυβος είναι Gaussian, uncorrelated ⇒ independent).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="white-noise-paradox" year="Paradox" weight="θεμελιώδες">
+**Δήλωση:** Αληθινά λευκός θόρυβος έχει πεπερασμένη μέση ισχύ.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** $P = \int S_N(f)\,df = \int (N_0/2)\,df = \infty$ (ολοκλήρωμα σταθεράς πάνω σε $\mathbb{R}$).
+
+Άρα ο αληθινά λευκός θόρυβος είναι **μαθηματική αφαίρεση** — δεν υπάρχει στη φύση. Στην πράξη πάντα υπάρχει κάποιο cutoff (από το physics: at high enough frequencies, quantum effects roll off the spectrum).
+
+**Πρακτικά χρησιμοποιούμε**: λευκός μοντέλο **μέσα στο** bandwidth ενδιαφέροντος (το receiver bandwidth), που είναι πάντα πεπερασμένο. Ο θερμικός θόρυβος είναι λευκός μέχρι THz, που είναι πέρα από κάθε RF δέκτη — άρα στις κανονικές συχνότητες, λευκό μοντέλο = ακριβής προσέγγιση.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="awgn-significance" year="AWGN" weight="why standard">
+**Ερώτηση:** Γιατί το AWGN είναι το standard noise μοντέλο σε communications;
+
+<Example title="Λύση">
+**Τέσσερις λόγοι:**
+
+1. **Φυσικά ακριβές:** ο θερμικός θόρυβος είναι ταυτόχρονα Gaussian (CLT πάνω σε πολλά ηλεκτρόνια) και white (flat έως THz). Δηλαδή θερμικός θόρυβος ≈ AWGN στην πράξη.
+
+2. **Worst-case:** για δεδομένη ισχύ θορύβου, το Gaussian ελαχιστοποιεί την επιτεύξιμη χωρητικότητα του καναλιού (από information theory). Άρα αν το system δουλεύει σε AWGN, δουλεύει και σε άλλα non-Gaussian θορύβους ίδιας ισχύος.
+
+3. **Αναλυτικά τραπεζίσιο:** η Gaussian PDF + linear systems = Gaussian output. Όλη η μηχανή του linear filtering δουλεύει αναλυτικά για AWGN.
+
+4. **CLT:** ακόμα κι αν οι noise sources είναι non-Gaussian, μετά από linear φιλτράρισμα (που αθροίζει πολλές contributions) tend to Gaussian.
+
+Συνδυασμένα κάνουν το AWGN το «cosine of noise models» — στάνταρ first-order λύση που δουλεύει ευρέως.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Ο **λευκός θόρυβος** ορίζεται από επίπεδη PSD $N_0/2$ — όλες οι συχνότητες ίσες.
 - **R(τ) = (N₀/2)δ(τ)** — καμία μνήμη.

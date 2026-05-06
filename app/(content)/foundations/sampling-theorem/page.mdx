@@ -196,6 +196,65 @@ $$
 
 </Example>
 
+## Εξάσκηση
+
+<ExerciseProgress slug="foundations/sampling-theorem" total={5} />
+
+Πέντε ερωτήσεις. Στο K21 **δεν** πέφτει, αλλά αξίζει για να ξέρεις τι σημαίνει «Nyquist» όταν το συναντήσεις.
+
+<ExamProblem id="nyquist-min-fs" year="Computation" weight="βασικό Nyquist">
+**Ερώτηση:** Σήμα ομιλίας έχει bandwidth $W = 4$ kHz. Πόσο είναι το ελάχιστο sample rate για τέλεια ανάκτηση;
+
+<Example title="Λύση" defaultOpen={true}>
+Από Nyquist: $f_s \geq 2W = 8$ kHz. Στην πράξη επιλέγουμε λίγο μεγαλύτερο, π.χ. **8 kHz** ή **16 kHz** για να αφήσουμε guard band για το anti-aliasing filter (το οποίο δεν είναι ιδανικό). Το CD audio χρησιμοποιεί 44.1 kHz για bandwidth ~22 kHz.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="aliased-frequency" year="Computation" weight="aliasing">
+**Ερώτηση:** Cosine στα 7 kHz σαμπλάρεται στα $f_s = 10$ kHz. Σε ποια συχνότητα φαίνεται μετά;
+
+<Example title="Λύση">
+Aliased frequency: το 7 kHz πέφτει εκτός Nyquist band $[0, f_s/2] = [0, 5]$ kHz. Επανατοποθετείται στο
+$$f_{alias} = |f_0 - k f_s| \text{ με } f_{alias} \in [0, f_s/2]$$
+Με $k = 1$: $|7 - 10| = 3$ kHz ✓ (μέσα στο $[0, 5]$).
+
+Άρα το σαμπλαρισμένο σήμα φαίνεται σαν **3 kHz cosine** — δεν μπορούμε να ξεχωρίσουμε αν ο πρωτότυπος ήταν 7 kHz ή 3 kHz. Αυτό είναι aliasing.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-aliasing-direction" year="True/False" weight="παγίδα">
+**Δήλωση:** Το aliasing πάντα κάνει την παρατηρούμενη συχνότητα **μικρότερη** από την πρωτότυπη.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό για τη συχνότητα όπως φαίνεται μέσα στο Nyquist band**, αλλά υπάρχει ένα subtlety: αν η πρωτότυπη ήταν π.χ. στα 12 kHz με $f_s = 10$ kHz, το alias είναι στα 2 kHz — συχνότητα μέσα στο $[0, 5]$ kHz. Σε όλες τις περιπτώσεις aliasing, η αναπαράσταση μέσα στο Nyquist band είναι από 0 έως $f_s/2$ — άρα ναι, μικρότερη ή ίση από $f_s/2$.
+
+(**Καλύτερη διατύπωση:** το alias ζει πάντα στο $[0, f_s/2]$.)
+</Example>
+</ExamProblem>
+
+<ExamProblem id="sinc-interp" year="Sinc interpolation" weight="reconstruction">
+**Ερώτηση:** Γιατί η ανακατασκευή με sinc interpolation δίνει **ακριβώς** το πρωτότυπο σήμα όταν $f_s \geq 2W$;
+
+<Example title="Λύση">
+Το σαμπλαρισμένο σήμα έχει spectrum που είναι replicas του $X(f)$ στις $\pm k f_s$. Αν $f_s \geq 2W$, οι replicas **δεν** επικαλύπτονται. Περνώντας μέσα από ένα ιδανικό **LPF** με cutoff $f_s/2$ απομονώνουμε την κεντρική replica = το πρωτότυπο $X(f)$.
+
+Στο time domain, το ιδανικό LPF έχει $h(t) = T_s\,\mathrm{sinc}(t/T_s)$. Συνέλιξη με το σαμπλαρισμένο σήμα $\sum_n x[n]\delta(t - nT_s)$ δίνει:
+$$x(t) = \sum_n x[n]\,\mathrm{sinc}\!\bigl((t - nT_s)/T_s\bigr)$$
+
+Αυτή είναι η **sinc interpolation formula**. Το sinc είναι «ζυγίζει» κάθε sample και τα συνδέει με συνέχεια.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="spectrum-replication" year="True/False" weight="key concept">
+**Δήλωση:** Όταν σαμπλάρουμε ένα σήμα με $f_s = 1/T_s$, το φάσμα γίνεται περιοδικό με περίοδο $f_s$.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Πολλαπλασιασμός με impulse train στον χρόνο = συνέλιξη με impulse train στη συχνότητα (από duality του Fourier). Το impulse train στη συχνότητα έχει impulses στις $kf_s$, οπότε η συνέλιξη επαναλαμβάνει το $X(f)$ σε κάθε $kf_s$ — δημιουργώντας **replicas**.
+
+Αυτό είναι το θεμελιώδες αποτέλεσμα: σαμπλάρισμα στον χρόνο = περιοδικότητα στη συχνότητα. Αν $f_s < 2W$, οι replicas **επικαλύπτονται** (aliasing).
+</Example>
+</ExamProblem>
+
 ## 8. Σύνοψη formulas
 
 | Έννοια | Τύπος |

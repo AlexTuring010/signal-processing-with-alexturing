@@ -213,6 +213,77 @@ $$
 | Noise figure → $T_e$ | $T_e = (F - 1) T_0$ |
 | Total noise temperature | $T_{total} = T_{antenna} + T_e$ |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="noise/sources" total={5} />
+
+Πέντε ερωτήσεις πάνω στις πηγές θορύβου και τους τύπους $kTB$, $T_e$, και $F$.
+
+<ExamProblem id="ktb-computation" year="Computation" weight="βασικό kTB">
+**Ερώτηση:** Resistor σε $T = 290$ K με bandwidth $B = 1$ MHz. Πόσο είναι το noise power σε dBm;
+
+<Example title="Λύση" defaultOpen={true}>
+$$P = kTB = (1.38\cdot 10^{-23})(290)(10^6) = 4\cdot 10^{-15} \text{ W}$$
+
+Σε dBm: $P[\text{dBm}] = 10\log_{10}(P[\text{W}]\cdot 10^3) = 10\log_{10}(4\cdot 10^{-12}) = 10\log_{10}(4) - 120 = 6 - 120 = -114$ dBm.
+
+**Πρακτικό όριο για RF receivers σε room temperature:** $-114$ dBm σε 1 MHz bandwidth. Λιγότερο από $-114$ dBm = κάτω από το noise floor → δεν ανιχνεύεται. Χρησιμοποιούμε ως reference για κάθε link budget.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-thermal-spectrum" year="True/False" weight="white">
+**Δήλωση:** Ο θερμικός θόρυβος είναι λευκός σε όλες τις συχνότητες.
+
+<Example title="Λύση" defaultOpen={true}>
+**Πρακτικά σωστό για τις συχνότητες που μας ενδιαφέρουν** (μέχρι THz). Ο πιο γενικός τύπος Nyquist είναι:
+$$S_n(f) = \frac{hf}{e^{hf/kT} - 1}$$
+
+που για $hf \ll kT$ (που ισχύει στις RF συχνότητες σε room T) γίνεται $\approx kT$ — επίπεδο, λευκό.
+
+**Στις σ.σ. του THz και άνω**, ο θερμικός θόρυβος αρχίζει να μειώνεται με τη συχνότητα — αυτή είναι η περιοχή του Planck radiation. Στο RF range των τηλεπικοινωνιών (kHz – GHz), το «λευκό» μοντέλο είναι ακριβές.
+
+Επίσης ο θερμικός θόρυβος είναι **Gaussian** — από το central limit theorem (μέγας αριθμός ηλεκτρονίων που συνεισφέρουν ανεξάρτητα).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="noise-figure-conversion" year="Noise figure" weight="τύπος">
+**Ερώτηση:** Amplifier με noise figure $F = 3$ dB στα room temperature ($T_0 = 290$ K). Βρες το equivalent noise temperature $T_e$.
+
+<Example title="Λύση">
+3 dB σε linear: $F_{lin} = 10^{3/10} = 2$.
+
+$$T_e = (F - 1)T_0 = (2 - 1)\cdot 290 = 290 \text{ K}$$
+
+**Πρακτικό:** ένα 3 dB NF amplifier προσθέτει "θόρυβο ίσο με room temperature" στο σύστημα. Ένα 0 dB NF (ιδανικό) θα είχε $T_e = 0$. Σε satellite communications χρησιμοποιούνται LNAs με NF $\approx 0.5$ dB → $T_e \approx 35$ K — σημαντικά κάτω από room temperature.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="noise-floor-bandwidth" year="Bandwidth scaling" weight="quick">
+**Ερώτηση:** Ένα RF receiver έχει noise floor $-114$ dBm σε bandwidth 1 MHz. Πόσο γίνεται σε bandwidth 10 MHz;
+
+<Example title="Λύση" defaultOpen={true}>
+Από $P = kTB$, διπλασιασμός του $B$ διπλασιάζει την ισχύ → +3 dB. 10× B → +10 dB.
+
+$$P_{10\text{MHz}} = -114 + 10 = -104 \text{ dBm}$$
+
+**Πρακτικά:** ένα wideband 10 MHz receiver είναι 10 dB πιο «θορυβώδες» από ένα narrowband 1 MHz σε ίδιο NF. Γι' αυτό **στενά κανάλια έχουν καλύτερο SNR** για ίδιο εκπεμπόμενο σήμα — και γι' αυτό SSB voice (3 kHz) είναι ανθεκτικότερο σε θόρυβο από AM voice (10 kHz).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="thermal-vs-other" year="Source comparison" weight="γιατί θερμικός">
+**Δήλωση:** Σε ένα τυπικό RF δέκτη, ο θερμικός θόρυβος δεν είναι ο κυρίαρχος.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Στις περισσότερες RF εφαρμογές ο **θερμικός κυριαρχεί**. Άλλες πηγές:
+
+- **Shot noise:** σχετίζεται με DC current ($P \propto I$), σε χαμηλά currents αμελητέος.
+- **Flicker (1/f) noise:** σημαντικός κάτω από ~1 kHz, αλλά αμελητέος στις RF.
+- **External (atmospheric, galactic, man-made):** σημαντικός κάτω από ~30 MHz (LF/HF) — εκεί ξεπερνάει τον θερμικό.
+
+**Στα receivers UHF/VHF/microwave** (που είναι το πεδίο εφαρμογής του K21), ο θερμικός είναι ο κυρίαρχος. Γι' αυτό σχεδόν όλη η ανάλυση SNR γίνεται με θερμικό θόρυβο μόνο, και χρησιμοποιούμε το $kTB$ ως single noise source.
+</Example>
+</ExamProblem>
+
 <Recap>
 - **Θερμικός θόρυβος** (Johnson-Nyquist) είναι η κυρίαρχη πηγή σε RF δέκτες. Gaussian, λευκός, με $N_0 = kT$.
 - **P = kTB** σου δίνει την ισχύ θορύβου σε ζώνη B.

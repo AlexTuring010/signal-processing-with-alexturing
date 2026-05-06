@@ -285,6 +285,81 @@ $$
 | n-οστή sideband power | $P_n = (A_c^2/2)\, J_n^2(\beta)$ |
 | Carrier zeros | β ≈ 2.405, 5.520, 8.654, … |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="fm/bessel" total={5} />
+
+Πέντε ερωτήσεις πάνω στο Bessel φάσμα — σχεδίαση, ισχύς, και τα carrier nulls.
+
+<ExamProblem id="bessel-carrier-zero" year="Carrier null" weight="ξεκάθαρο όταν ξέρεις">
+**Ερώτηση:** FM σήμα με $A_c = 10$ V και $\beta = 2.405$. Πόσο είναι το impulse στον carrier στη συχνότητα $f_c$;
+
+<Example title="Λύση" defaultOpen={true}>
+Το ύψος του carrier impulse είναι $A_c |J_0(\beta)|/2$. Στο $\beta = 2.405$ έχουμε $J_0(\beta) = 0$ (πρώτη ρίζα του $J_0$). Άρα **το carrier impulse εξαφανίζεται**.
+
+**Πρακτική σημασία:** ο modulation index μπορεί να μετρηθεί ακριβώς εξετάζοντας πότε το carrier «εξαφανίζεται» — ένα γνωστό πειραματικό trick. Πρώτα 3 carrier nulls του $J_0$: $\beta \approx 2.405, 5.520, 8.654$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="fm-power-bessel" year="Power" weight="energy identity">
+**Ερώτηση:** FM σήμα με $A_c = 4$ V, $\beta = 5$. Βρες τη συνολική ισχύ.
+
+<Example title="Λύση" defaultOpen={true}>
+Από την **energy identity** του Bessel: $\sum_n J_n^2(\beta) = 1$ για κάθε $\beta$.
+
+$$P_{FM} = \frac{A_c^2}{2}\sum_n J_n^2(\beta) = \frac{A_c^2}{2}\cdot 1 = \frac{16}{2} = 8 \text{ W}$$
+
+Σημαντικό: η ισχύς **είναι ανεξάρτητη** από το $\beta$! Αυτό αντανακλά το σταθερό envelope. Όσο μεγαλώνει το $\beta$, η ισχύς απλώς **μοιράζεται** σε περισσότερα sidebands — η συνολική ποσότητα παραμένει $A_c^2/2$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="bessel-sideband-symmetry" year="Symmetry" weight="J_-n">
+**Δήλωση:** Στο φάσμα FM, οι sidebands στα $f_c + n f_m$ και $f_c - n f_m$ έχουν πάντα ίδιο ύψος.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό σε μέτρο, με προσοχή στο πρόσημο.** Από την ταυτότητα $J_{-n}(\beta) = (-1)^n J_n(\beta)$:
+- Για **άρτιο $n$:** $J_{-n} = J_n$ (ίδιο πρόσημο).
+- Για **περιττό $n$:** $J_{-n} = -J_n$ (αντίθετο πρόσημο).
+
+Στο magnitude spectrum όμως φαίνονται όλες ίδιου ύψους $A_c|J_n(\beta)|/2$. Στα phase spectra εμφανίζεται η αλλαγή προσήμου ως phase shift κατά $\pi$.
+
+Για να μην παρερμηνεύσετε: στο **κλασικό σχήμα φάσματος πλάτους** που ζητείται στις εξετάσεις, βλέπεις πραγματικά συμμετρικό spectrum γύρω από $f_c$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="significant-sidebands" year="Counting" weight="προοίμιο Carson">
+**Ερώτηση:** Πόσα significant sidebands έχει ένα FM σήμα με $\beta = 5$ (κανόνας: $\sim \pm(\beta+1)$);
+
+<Example title="Λύση">
+$\pm(\beta + 1) = \pm 6$ — δηλαδή sidebands $J_{-6}, J_{-5}, \ldots, J_5, J_6$ συνολικά 13 (συμπεριλαμβανομένου του carrier).
+
+Τα μεγαλύτερου $|n|$ είναι αμελητέα: $J_n(\beta) \to 0$ γρήγορα όταν $|n| > \beta$. Πιο συγκεκριμένα, $J_n(\beta) < 0.01$ για $|n| > \beta + 1$ — αυτή είναι η heuristic που πίσω της κρύβεται το **Carson's rule** (επόμενο κεφάλαιο):
+$$B_{FM} \approx 2(\beta + 1) f_m$$
+
+Για $\beta = 5$, $f_m = 15$ kHz (FM ραδιόφωνο): $B \approx 2 \cdot 6 \cdot 15 = 180$ kHz — γι' αυτό τα FM channels έχουν 200 kHz spacing.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="bessel-spectrum-sketch" year="Spectrum" weight="σχεδίαση">
+**Ερώτηση:** $\beta = 1$, $f_c = 100$ kHz, $f_m = 5$ kHz, $A_c = 2$ V. Από τον πίνακα Bessel: $J_0(1) \approx 0.77$, $J_1(1) \approx 0.44$, $J_2(1) \approx 0.115$, $J_3(1) \approx 0.02$. Σχεδίασε το φάσμα στις θετικές συχνότητες (σημαντικά sidebands μόνο).
+
+<Example title="Λύση">
+Σημαντικά sidebands ($|J_n| > 0.05$): $n = -2, -1, 0, +1, +2$.
+
+| $f$ (kHz) | $n$ | $A_c|J_n|/2$ |
+|---|---|---|
+| 90 | −2 | $0.115$ |
+| 95 | −1 | $0.44$ |
+| **100 (carrier)** | 0 | $0.77$ |
+| 105 | +1 | $0.44$ |
+| 110 | +2 | $0.115$ |
+
+Το $n = \pm 3$ έχει ύψος $\approx 0.02$ — μόλις ορατό, αμελητέο.
+
+**Bandwidth (μετρώντας μέχρι σημαντικό sideband):** $f_c \pm 2 f_m = 90$ έως $110$ kHz, δηλαδή 20 kHz total. Carson's rule δίνει $B \approx 2(\beta+1)f_m = 4 \cdot 5 = 20$ kHz ✓.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Το $\cos[\beta\sin\theta]$ αναλύεται σε άθροισμα harmonics μέσω **Jacobi-Anger expansion**: $e^{j\beta\sin\theta} = \sum_n J_n(\beta) e^{jn\theta}$.
 - Το single-tone FM σήμα γίνεται $x_{FM}(t) = A_c\sum_n J_n(\beta)\cos[2\pi(f_c+nf_m)t]$.

@@ -787,6 +787,86 @@ $$
 2. Να συνδυάζεις δύο-τρεις ιδιότητες (π.χ. modulation theorem + time shift).
 3. Να σχεδιάζεις φάσμα από τύπο (και τανάπαλιν).
 
+## Εξάσκηση
+
+<ExerciseProgress slug="foundations/fourier-transform" total={5} />
+
+Πέντε ερωτήσεις — δοκίμασέ τες με το τυπολόγιο μπροστά σου, όπως στις εξετάσεις.
+
+<ExamProblem id="mod-theorem-rect" year="Modulation theorem" weight="κλασικό AM warm-up">
+**Ερώτηση:** Σήμα $m(t)$ έχει $M(f) = \mathrm{rect}(f/W)$. Βρες τον FT του $y(t) = m(t)\cos(2\pi f_c t)$ και σχεδίασέ τον (υπόθεσε $f_c \gg W$).
+
+<Example title="Λύση">
+Από το **modulation theorem** (✓ τυπολόγιο):
+$$Y(f) = \tfrac{1}{2}\bigl[M(f - f_c) + M(f + f_c)\bigr]$$
+
+Το $M(f - f_c)$ είναι rect κεντραρισμένο στο $f_c$ με εύρος $W$ (από $f_c - W/2$ έως $f_c + W/2$). Το $M(f + f_c)$ είναι το ίδιο γύρω από $-f_c$.
+
+**Σχήμα:** δύο ορθογώνια ύψους $1/2$, εύρους $W$ το καθένα, κεντραρισμένα στις $\pm f_c$. Δεν επικαλύπτονται γιατί $f_c \gg W$.
+
+Αυτή είναι η **καρδιά της AM**: ο πολλαπλασιασμός με cosine «ανυψώνει» το baseband φάσμα στις $\pm f_c$, και το bandwidth του διαμορφωμένου είναι ακριβώς $2W$ (διπλάσιο του baseband).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="conv-sinc-sinc" year="Convolution theorem" weight="key insight">
+**Ερώτηση:** Δίνεται $x(t) = \mathrm{sinc}(2Wt) * \mathrm{sinc}(2Wt)$ (συνέλιξη με τον εαυτό του). Βρες το $X(f)$ και απλοποίησε.
+
+<Example title="Λύση">
+Από το pair $\mathrm{sinc}(2Wt) \leftrightarrow \tfrac{1}{2W}\mathrm{rect}(f/(2W))$.
+
+Από το **convolution theorem**:
+$$X(f) = \mathcal{F}\{\mathrm{sinc}(2Wt)\}\cdot \mathcal{F}\{\mathrm{sinc}(2Wt)\} = \left[\tfrac{1}{2W}\mathrm{rect}(f/(2W))\right]^2$$
+
+Επειδή $\mathrm{rect}^2 = \mathrm{rect}$ (παίρνει τιμές 0 ή 1):
+$$X(f) = \frac{1}{4W^2}\mathrm{rect}(f/(2W))$$
+
+Δηλαδή: η συνέλιξη δύο ίδιων sinc στον χρόνο = ένα ορθογώνιο στη συχνότητα — που, ξανά μέσω inverse FT, είναι ένα sinc στον χρόνο. **Το sinc είναι «idempotent» ως προς συνέλιξη με τον εαυτό του** (μέχρι έναν παράγοντα). Αυτό εκμεταλλεύεται κάθε ιδανικό LP φίλτρο.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="tf-x-real-iff-x-real" year="True/False" weight="conjugate symmetry">
+**Δήλωση:** Για κάθε real σήμα $x(t)$, ο FT $X(f)$ είναι real-valued.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Για real $x(t)$ ισχύει **conjugate symmetry**: $X(-f) = X^*(f)$ — δηλαδή $|X(f)| = |X(-f)|$ (άρτιο πλάτος) και $\angle X(-f) = -\angle X(f)$ (περιττή φάση). Αυτό **δεν** σημαίνει ότι το $X(f)$ είναι real· σημαίνει μόνο ότι έχει συμμετρία.
+
+Το $X(f)$ είναι real **μόνο** όταν επιπλέον το $x(t)$ είναι **even** (δηλαδή real-and-even ↔ real-and-even). Παράδειγμα: rect (real & even) → sinc (real & even). Αντιπαράδειγμα: $u(t)\,e^{-t}$ (αιτιατό, ούτε άρτιο ούτε περιττό) → $1/(1 + j 2\pi f)$ (μιγαδικό). Το πλάτος είναι όντως άρτιο και η φάση περιττή, αλλά $X(f)$ ως μιγαδική.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="parseval-sinc-energy" year="Parseval" weight="energy">
+**Ερώτηση:** Υπολόγισε την ενέργεια του $x(t) = \mathrm{sinc}(2Wt)$ χρησιμοποιώντας Parseval.
+
+<Example title="Λύση">
+Από το pair: $\mathrm{sinc}(2Wt) \leftrightarrow \tfrac{1}{2W}\mathrm{rect}(f/(2W))$.
+
+Από Parseval:
+$$E = \int_{-\infty}^{\infty}|x(t)|^2\,dt = \int_{-\infty}^{\infty}|X(f)|^2\,df$$
+
+Στο frequency domain: $|X(f)|^2 = (1/2W)^2$ για $|f| < W$, αλλιώς 0. Άρα:
+$$E = \int_{-W}^{W}\frac{1}{4W^2}\,df = \frac{2W}{4W^2} = \frac{1}{2W}$$
+
+**Διαισθητικά:** όσο μεγαλύτερο το $W$, τόσο πιο στενό (πιο γρήγορο) το sinc στον χρόνο, και άρα μικρότερη ενέργεια. Ο υπολογισμός στον χρόνο θα ήταν δύσκολος — το frequency domain είναι παιχνιδάκι.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="lti-eat-cos" year="LTI + FT" weight="κλείνει το loop">
+**Ερώτηση:** LTI σύστημα έχει $h(t) = e^{-at}u(t)$ ($a > 0$). Είσοδος $x(t) = \cos(2\pi f_0 t)$. Βρες το πλάτος της εξόδου.
+
+<Example title="Λύση" defaultOpen={true}>
+Πρώτα βρίσκουμε το $H(f)$. Από το pair $e^{-at}u(t) \leftrightarrow 1/(a + j 2\pi f)$:
+$$H(f) = \frac{1}{a + j 2\pi f}, \qquad |H(f)| = \frac{1}{\sqrt{a^2 + (2\pi f)^2}}$$
+
+Το $\cos(2\pi f_0 t)$ είναι eigenfunction (μέσω complex exponentials). Η έξοδος είναι:
+$$y(t) = |H(f_0)|\cos(2\pi f_0 t + \angle H(f_0))$$
+
+με πλάτος:
+$$|H(f_0)| = \frac{1}{\sqrt{a^2 + (2\pi f_0)^2}}$$
+
+Παρατήρηση: για $f_0 \to 0$ (DC), $|H| \to 1/a$ — μέγιστο. Για $f_0 \to \infty$, $|H| \to 0$. Αυτό είναι ένα **lowpass** σύστημα — προοιωνός των φίλτρων που έρχονται στο επόμενο κεφάλαιο.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Ο **μετασχηματισμός Fourier** γενικεύει τη σειρά Fourier σε μη-periodic σήματα: το διακριτό φάσμα γίνεται συνεχές, το άθροισμα γίνεται ολοκλήρωμα.
 - Έχουμε **forward** ($X(f) = \int x(t)\,e^{-j 2\pi f t}\,dt$) και **inverse** ($x(t) = \int X(f)\,e^{+j 2\pi f t}\,df$) με συμμετρικές μορφές.

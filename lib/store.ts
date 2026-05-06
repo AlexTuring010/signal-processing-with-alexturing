@@ -20,6 +20,13 @@ type Store = {
   bookmarks: Set<string>
   toggleBookmark: (id: string) => void
   isBookmarked: (id: string) => boolean
+
+  /** Per-problem solved state. Key format: "<page-slug>:<problem-id>". */
+  solvedExercises: Set<string>
+  toggleSolvedExercise: (key: string) => void
+  isExerciseSolved: (key: string) => boolean
+  /** Count solved problems whose key prefix matches "<page-slug>:". */
+  countSolvedInSlug: (slug: string) => number
 }
 
 function applyThemeToDom(theme: Theme) {
@@ -38,17 +45,20 @@ export const useAppStore = create<Store>((set, get) => ({
   theme: 'dark',
   completed: new Set<string>(),
   bookmarks: new Set<string>(),
+  solvedExercises: new Set<string>(),
 
   hydrate: () => {
     if (get().hydrated) return
     const theme = (readJSON<Theme>(STORAGE_KEYS.theme, 'dark') ?? 'dark') as Theme
     const completedArr = readJSON<string[]>(STORAGE_KEYS.completed, [])
     const bookmarksArr = readJSON<string[]>(STORAGE_KEYS.bookmarks, [])
+    const solvedArr = readJSON<string[]>(STORAGE_KEYS.solvedExercises, [])
     set({
       hydrated: true,
       theme,
       completed: new Set(completedArr),
       bookmarks: new Set(bookmarksArr),
+      solvedExercises: new Set(solvedArr),
     })
     applyThemeToDom(theme)
   },
@@ -76,4 +86,19 @@ export const useAppStore = create<Store>((set, get) => ({
     set({ bookmarks: next })
   },
   isBookmarked: (id) => get().bookmarks.has(id),
+
+  toggleSolvedExercise: (key) => {
+    const next = new Set(get().solvedExercises)
+    if (next.has(key)) next.delete(key)
+    else next.add(key)
+    writeJSON(STORAGE_KEYS.solvedExercises, Array.from(next))
+    set({ solvedExercises: next })
+  },
+  isExerciseSolved: (key) => get().solvedExercises.has(key),
+  countSolvedInSlug: (slug) => {
+    const prefix = `${slug}:`
+    let n = 0
+    for (const k of get().solvedExercises) if (k.startsWith(prefix)) n++
+    return n
+  },
 }))

@@ -110,6 +110,74 @@ $$
 
 **Γιατί μας απασχολεί.** Όταν θα φτάσουμε στην AM demodulation, χρειαζόμαστε ένα LP φίλτρο για να ανακτήσουμε το μήνυμα μετά τον envelope detector. Δεν θα είναι ιδανικό — θα έχει αυτές τις προδιαγραφές, και πρέπει να ξέρεις τι σημαίνουν. Όταν φτάσουμε στον θόρυβο, ένα BP φίλτρο γύρω από τον carrier θα κρατάει το επιθυμητό σήμα και θα κόβει το θόρυβο εκτός ζώνης — η ποιότητα του φίλτρου θα καθορίζει πόσο θόρυβο πραγματικά κόβουμε.
 
+## Εξάσκηση
+
+<ExerciseProgress slug="foundations/filters" total={5} />
+
+Πέντε ερωτήσεις για να εμπεδώσεις το σχήμα των ιδανικών φίλτρων, την non-causality του sinc, και τα real-filter specs.
+
+<ExamProblem id="tf-ideal-causal" year="True/False" weight="non-causality">
+**Δήλωση:** Ένα ιδανικό LP φίλτρο μπορεί να υλοποιηθεί σε real-time ηλεκτρονικό κύκλωμα.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** Η κρουστική απόκριση του ιδανικού LP είναι $h_{LP}(t) = 2 f_c\,\mathrm{sinc}(2 f_c\, t)$ — sinc που εκτείνεται στο $\pm\infty$. Επειδή $h_{LP}(t) \neq 0$ για $t < 0$, το φίλτρο είναι **μη-αιτιατό**: για να δώσει έξοδο τη στιγμή $t$ χρειάζεται input από $t' > t$ (το μέλλον). Real-time κύκλωμα δεν μπορεί. Στην πράξη χρησιμοποιούμε **real filters** που προσεγγίζουν το ιδανικό με κάποιο compromise (transition band, ripple).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="even-h-real-h" year="Even/odd" weight="symmetry">
+**Ερώτηση:** Γιατί τα ιδανικά LP/HP/BP/BS φίλτρα έχουν **real** $H(f)$ (μηδενική φάση);
+
+<Example title="Λύση">
+Τα τέσσερα ιδανικά φίλτρα έχουν $|H(f)|$ που είναι **even** συνάρτηση (συμμετρική γύρω από το 0). Από τη γενική ιδιότητα του Fourier transform: real-and-even signal ↔ real-and-even spectrum. Δηλαδή even $|H(f)|$ → even $h(t)$ → **real** $H(f)$ (η phase μηδενίζεται).
+
+Πρακτική σημασία: μηδενική φάση = **zero phase distortion**, όλες οι συχνότητες που περνάνε φτάνουν με την ίδια χρονική ευθυγράμμιση. Είναι το «τέλειο» φίλτρο — αλλά δυστυχώς non-causal.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="lp-impulse-response" year="Computation" weight="κλασικό sinc">
+**Ερώτηση:** Δίνεται ιδανικό LP με cutoff $f_c$ και $H(f) = \mathrm{rect}(f / (2 f_c))$. Βρες την κρουστική απόκριση $h(t)$.
+
+<Example title="Λύση">
+Από το pair $\mathrm{rect}(f/(2 f_c)) \leftrightarrow$ inverse FT. Η inverse FT του rect είναι sinc:
+$$h(t) = \mathcal{F}^{-1}\{\mathrm{rect}(f/(2 f_c))\} = 2 f_c\,\mathrm{sinc}(2 f_c\, t)$$
+
+(Από duality του pair $\mathrm{rect}(t/T) \leftrightarrow T\,\mathrm{sinc}(fT)$ — εδώ ο ρόλος των $t$ και $f$ είναι αντίστροφος, και $T = 2f_c$.)
+
+Παρατήρησε:
+- Είναι **even** συνάρτηση του $t$ (η rect στη συχνότητα είναι even) → real $H(f)$ ✓.
+- Εκτείνεται στο $\pm\infty$ → **non-causal**.
+- Φθίνει σαν $1/t$ → ποτέ δεν μηδενίζεται τελείως.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="real-filter-tradeoffs" year="Trade-off" weight="real specs">
+**Ερώτηση:** Σε ένα real LP φίλτρο, τι συμβαίνει αν θέλω **πιο απότομο** transition band (μικρότερο $f_s - f_p$);
+
+<Example title="Λύση" defaultOpen={true}>
+**Πιο απότομο cutoff ⇒ μακρύτερη κρουστική απόκριση** ⇒ μεγαλύτερη μνήμη, μεγαλύτερη καθυστέρηση, πιο πολύπλοκο κύκλωμα/υλοποίηση.
+
+Διαισθητικά: το ιδανικό sinc εκτείνεται στο άπειρο. Για να πλησιάσουμε το ιδανικό σχήμα της rect (απότομη κορυφή), χρειαζόμαστε όλο και περισσότερο από το sinc — άρα όλο και πιο μακρύ $h(t)$. **Δεν υπάρχει «δωρεάν» απότομο φίλτρο.** Συγκεκριμένες σχεδιάσεις (Butterworth, Chebyshev, elliptic) ανταλλάσσουν αυτές τις παραμέτρους διαφορετικά.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="filter-classifier" year="Classification" weight="τυπικό">
+**Ερώτηση:** Έχω τέσσερα φίλτρα με τα παρακάτω $|H(f)|$. Ταξινόμησέ τα ως LP / HP / BP / BS.
+
+| Φίλτρο | $\lvert H(f) \rvert = 1$ στο | $\lvert H(f) \rvert = 0$ στο |
+|---|---|---|
+| A | $\lvert f \rvert > 1\,$kHz | $\lvert f \rvert < 1\,$kHz |
+| B | $\lvert f \rvert < 5\,$kHz | $\lvert f \rvert > 5\,$kHz |
+| C | $0.5 < \lvert f \rvert < 2\,$kHz | αλλιώς |
+| D | $\lvert f \rvert < 0.5$ ή $\lvert f \rvert > 2\,$kHz | $0.5 < \lvert f \rvert < 2\,$kHz |
+
+<Example title="Λύση" defaultOpen={true}>
+- **A → HP** (highpass): περνάει μόνο πάνω από 1 kHz.
+- **B → LP** (lowpass): περνάει μόνο κάτω από 5 kHz.
+- **C → BP** (bandpass): περνάει μόνο τη ζώνη 0.5–2 kHz.
+- **D → BS / Notch** (bandstop): κόβει τη ζώνη 0.5–2 kHz, αφήνει τα υπόλοιπα.
+</Example>
+</ExamProblem>
+
 ## 4. Recap + Next up
 
 <Recap>

@@ -8,6 +8,7 @@ import { LabBox } from '@/components/content/LabBox'
 import { Recap } from '@/components/content/Recap'
 import { NextUp } from '@/components/content/NextUp'
 import { ExamProblem } from '@/components/content/ExamProblem'
+import { ExerciseProgress } from '@/components/content/ExerciseProgress'
 import { Timeline } from '@/components/content/Timeline'
 import { Viz } from '@/components/viz/Viz'
 import { CommSystemDiagram } from '@/components/viz/CommSystemDiagram'
@@ -105,6 +106,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Recap,
     NextUp,
     ExamProblem,
+    ExerciseProgress,
     Timeline,
 
     // Math

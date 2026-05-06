@@ -244,6 +244,86 @@ $$
 - **Telemetry**: FM-FM telemetry για επιστημονικά πειράματα.
 - **Aircraft VHF**: στην πραγματικότητα AM, όχι FM (παράδοση από WW2 — FM δεν είχε αναπτυχθεί ακόμα). Αλλά UHF στρατιωτικά είναι FM.
 
+## Εξάσκηση
+
+<ExerciseProgress slug="fm/idea" total={5} />
+
+Πέντε ερωτήσεις πάνω στη στιγμιαία συχνότητα, το $\beta$, και τη διάκριση NBFM/WBFM.
+
+<ExamProblem id="instantaneous-frequency" year="Computation" weight="βασικό">
+**Ερώτηση:** FM σήμα $x(t) = A_c\cos[2\pi\cdot 100\,000\,t + 5\sin(2\pi\cdot 1000\,t)]$. Βρες το $f_c$, $f_m$, $\beta$, και τη μέγιστη frequency deviation $\Delta f$.
+
+<Example title="Λύση" defaultOpen={true}>
+Συγκρίνοντας με $x = A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]$:
+- $f_c = 100$ kHz
+- $f_m = 1$ kHz
+- $\beta = 5$
+- $\Delta f = \beta \cdot f_m = 5 \cdot 1000 = 5$ kHz
+
+Το **carrier ταλαντώνεται** μεταξύ $f_c \pm \Delta f = 95$ kHz και $105$ kHz με ρυθμό $f_m = 1$ kHz.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="constant-envelope" year="Envelope" weight="theory">
+**Δήλωση:** Το envelope ενός FM σήματος αλλάζει με τον χρόνο.
+
+<Example title="Λύση" defaultOpen={true}>
+**Λάθος.** $x_{FM}(t) = A_c\cos\phi(t)$ — το πλάτος είναι **σταθερό** $= A_c$ (το $\phi(t)$ είναι μέσα στο cosine, δεν αλλάζει το πλάτος). Από I/Q: $V(t) = \sqrt{x_I^2 + x_Q^2} = A_c$, σταθερό.
+
+**Πρακτική συνέπεια:** ο FM δέκτης χρησιμοποιεί **limiter** που αφαιρεί κάθε amplitude variation (συμπεριλαμβανομένου amplitude noise). Όλη η πληροφορία ζει στη φάση/συχνότητα — γι' αυτό η FM είναι ανθεκτική στον amplitude noise.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="nbfm-vs-wbfm" year="NBFM/WBFM" weight="classification">
+**Ερώτηση:** Ταξινόμησε τα παρακάτω FM σήματα ως NBFM ή WBFM:
+- (a) $\beta = 0.2$
+- (b) $\beta = 1.5$
+- (c) $\beta = 5$
+- (d) $\beta = 0.05$
+
+<Example title="Λύση" defaultOpen={true}>
+Σύμβαση: NBFM αν $\beta < 0.3$ (περίπου), WBFM αλλιώς.
+
+- (a) $\beta = 0.2$: **NBFM**
+- (b) $\beta = 1.5$: **WBFM**
+- (c) $\beta = 5$: **WBFM** (FM ραδιόφωνο)
+- (d) $\beta = 0.05$: **NBFM** (πολύ στενό)
+
+Πρακτικά: NBFM bandwidth $\approx 2 f_m$ (ίδιο με AM). WBFM bandwidth $\approx 2(\beta + 1) f_m = 2(\Delta f + f_m)$ (Carson's rule, επόμενο κεφάλαιο).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="freq-deviation" year="Δf vs β" weight="τύπος">
+**Ερώτηση:** Σχέση μεταξύ $\beta$ και $\Delta f$: αν διατηρήσω $\Delta f$ σταθερό αλλά διπλασιάσω το $f_m$, τι γίνεται με το $\beta$;
+
+<Example title="Λύση">
+$\beta = \Delta f / f_m$. Αν $\Delta f$ σταθερό και $f_m$ διπλασιάζεται, τότε $\beta$ **μισό**.
+
+**Παράδειγμα:** $\Delta f = 75$ kHz (FM ραδιόφωνο standard).
+- Για $f_m = 15$ kHz (highest audio): $\beta = 75/15 = 5$ — WBFM, βαθιά διαμόρφωση.
+- Για $f_m = 50$ Hz (low bass): $\beta = 75/0.05 = 1500$ — εξαιρετικά μεγάλο.
+
+Αυτό σημαίνει ότι **το ίδιο FM σήμα έχει διαφορετικό «$\beta$» για κάθε baseband συχνότητα** — κάτι που πρέπει να ξέρεις όταν εφαρμόζεις Carson's rule με ένα single value για $\beta$ (στην πράξη χρησιμοποιείς το maximum βaseband freq για $f_m$).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="fm-vs-am-noise" year="Trade-off" weight="γιατί FM">
+**Ερώτηση:** Τι κερδίζει η FM σε σχέση με την AM, και τι πληρώνει;
+
+<Example title="Λύση">
+**Κερδίζει:**
+- **Ανθεκτικότητα σε amplitude noise** — limiter στον δέκτη αφαιρεί amplitude θόρυβο. Σε ίδιες συνθήκες SNR, η FM έχει **καλύτερο output SNR** (factor $3\beta^2(\beta+1)$ improvement, ζει στο τυπολόγιο).
+- **Ομοιόμορφη αντιμετώπιση όλων των baseband συχνοτήτων** όσον αφορά το θόρυβο (παράγοντας **noise triangle** που εξετάζουμε στο `/fm/in-noise`).
+
+**Πληρώνει:**
+- **Μεγαλύτερο bandwidth** — από Carson, $B \approx 2(\beta+1) f_m$. Για WBFM $\beta = 5$, $B \approx 12 f_m$ έναντι $2 f_m$ για AM. **6× χειρότερη** χρήση φάσματος.
+- **Threshold effect** στο low SNR (όπως και η AM, αλλά εντονότερο). Κάτω από ~10 dB carrier-to-noise, η FM «καταρρέει» απότομα — clicks και noise bursts.
+- **Μεγαλύτερη πολυπλοκότητα** modulator και demodulator.
+
+**Σύνοψη:** η FM ανταλλάσσει bandwidth για SNR. Στο high-power broadcasting (όπου spectrum κοστίζει αλλά SNR είναι κρίσιμο), αξίζει.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Η **FM** κωδικοποιεί την πληροφορία στη **στιγμιαία συχνότητα** του carrier, με $f(t) = f_c + k_f m(t)$.
 - Η εξίσωση: $x_{FM}(t) = A_c\cos[2\pi f_c t + 2\pi k_f \int m\, d\tau]$. Για single-tone: $x_{FM}(t) = A_c\cos[2\pi f_c t + \beta\sin(2\pi f_m t)]$.

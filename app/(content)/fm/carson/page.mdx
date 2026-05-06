@@ -211,6 +211,78 @@ $$
 | FM ραδιόφωνο | $\Delta f = 75$ kHz, $W = 15$ kHz, $\beta = 5$, $B = 180$ kHz |
 | Two-way (NBFM) | $\Delta f \approx 5$ kHz, $W \approx 5$ kHz, $\beta \approx 1$, $B \approx 20$ kHz |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="fm/carson" total={5} />
+
+Πέντε ερωτήσεις για να εμπεδώσεις τον Carson type-of-question — εμφανίζεται σε σχεδόν κάθε εξέταση.
+
+<ExamProblem id="carson-fm-radio" year="Computation" weight="κλασικό FM ραδιόφωνο">
+**Ερώτηση:** FM ραδιόφωνο: $\Delta f = 75$ kHz, message audio $W = 15$ kHz. Πόσο bandwidth χρειάζεται κατά Carson;
+
+<Example title="Λύση" defaultOpen={true}>
+$\beta = \Delta f / W = 75/15 = 5$ (WBFM).
+
+$$B = 2(\Delta f + W) = 2(75 + 15) = 180 \text{ kHz}$$
+
+Ή ισοδύναμα: $B = 2(\beta + 1)W = 2 \cdot 6 \cdot 15 = 180$ kHz ✓.
+
+**Πραγματικό channel spacing FM ραδιοφώνου:** 200 kHz — αφήνει 20 kHz guard band για non-ideal filters.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="carson-narrowband" year="NBFM" weight="γρήγορο">
+**Ερώτηση:** NBFM σήμα με $\Delta f = 1$ kHz, $W = 4$ kHz. Πόσο είναι το $\beta$ και το $B_{Carson}$;
+
+<Example title="Λύση" defaultOpen={true}>
+$\beta = \Delta f/W = 1/4 = 0.25$ — NBFM (κάτω από 0.3).
+
+$$B = 2(\Delta f + W) = 2(1 + 4) = 10 \text{ kHz}$$
+
+Ή: $B = 2(\beta + 1)W = 2 \cdot 1.25 \cdot 4 = 10$ kHz ✓.
+
+**Παρατήρηση:** για NBFM, $B \approx 2W$ — σχεδόν σαν AM. Στο όριο $\beta \to 0$ έχουμε ακριβώς $B = 2W$. Το extra $2\beta W = 2\Delta f$ είναι το «modulation premium» που πληρώνεις για NBFM.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="wbfm-deviation-dominated" year="WBFM" weight="dominant Δf">
+**Ερώτηση:** Σε ένα WBFM σήμα, ποιο μέγεθος **κυριαρχεί** στο bandwidth: το $\Delta f$ ή το $W$;
+
+<Example title="Λύση">
+Για $\beta \gg 1$: $B = 2(\Delta f + W) \approx 2\Delta f$ αφού $\Delta f \gg W$.
+
+**Παράδειγμα:** $\Delta f = 75$ kHz, $W = 15$ kHz → $B = 180$ kHz, εκ των οποίων $150$ kHz από το $\Delta f$ και μόνο $30$ kHz από το $W$.
+
+**Συνέπεια:** για WBFM η μείωση του $\Delta f$ (μικρότερη deviation) μειώνει σημαντικά το bandwidth — αλλά μειώνει και το SNR gain ($\propto \beta^2$). Το trade-off είναι κρίσιμο στη σχεδίαση συστημάτων.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="fm-vs-am-bw-cost" year="Trade-off" weight="bandwidth premium">
+**Ερώτηση:** Πόσες φορές περισσότερο bandwidth χρησιμοποιεί το FM ραδιόφωνο σε σχέση με το AM ραδιόφωνο για ίδιο audio bandwidth;
+
+<Example title="Λύση" defaultOpen={true}>
+**FM ραδιόφωνο:** $W = 15$ kHz, $\Delta f = 75$ kHz, $B_{FM} = 180$ kHz.
+
+**AM ραδιόφωνο:** $W = 5$ kHz (χαμηλότερη ποιότητα audio), $B_{AM} = 2W = 10$ kHz.
+
+Λόγος: $B_{FM}/B_{AM} = 180/10 = 18\times$. Όμως αν συγκρίνουμε **για ίδιο** $W = 15$ kHz, $B_{AM} = 30$ kHz: $180/30 = 6\times$.
+
+**Συμπέρασμα:** το FM ραδιόφωνο πληρώνει 6× περισσότερο bandwidth από ίδιας ποιότητας AM, για να αποκτήσει την ανοσία στον θόρυβο και το stereo capability. Σε ένα 6 MHz κανάλι TV χωράνε 30 FM stations αλλά 200 AM stations — αλλά το FM πληρώνει αυτή τη χωρητικότητα με δραματικά καλύτερη ποιότητα.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="carson-design" year="Design" weight="reverse engineering">
+**Ερώτηση:** Διαθέσιμο channel spacing $B = 25$ kHz για NBFM voice. Audio bandwidth $W = 3$ kHz. Πόσο μέγιστο $\Delta f$ μπορώ να χρησιμοποιήσω;
+
+<Example title="Λύση">
+Από Carson: $B = 2(\Delta f + W)$ → $\Delta f = B/2 - W = 12.5 - 3 = 9.5$ kHz.
+
+Συντηρητικά αφήνουμε guard band, οπότε επιλέγουμε **$\Delta f \approx 5$ kHz** στην πράξη (αφήνει $25 - 2(5+3) = 9$ kHz guard). Αυτό δίνει $\beta = 5/3 \approx 1.67$ — βαθιά WBFM για voice channel.
+
+Αν θέλαμε higher SNR θα μεγαλώναμε το $\Delta f$ — αλλά τότε το BW θα ξεπερνούσε τα 25 kHz, και θα έσπαζε το guard για τα γειτονικά κανάλια. Trade-off SNR ↔ bandwidth ↔ channel spacing.
+</Example>
+</ExamProblem>
+
 <Recap>
 - **Carson's rule:** $B = 2(\Delta f + W) = 2(\beta+1)W$. Δίνει το πρακτικό bandwidth για ~98% της ενέργειας.
 - **NBFM** ($\beta \ll 1$): $B \approx 2W$, σχεδόν σαν AM. Quadrature sidebands → ανοσία στον amplitude θόρυβο.

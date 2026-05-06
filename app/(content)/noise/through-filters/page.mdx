@@ -324,6 +324,79 @@ $$
 | Equivalent noise bandwidth | $B_N = \int_0^\infty \|H\|^2 df / \|H(0)\|^2$ |
 | RC $B_N$ | $B_N^{RC} = (\pi/2) f_c$ |
 
+## Εξάσκηση
+
+<ExerciseProgress slug="noise/through-filters" total={5} />
+
+Πέντε ερωτήσεις πάνω στο $|H|^2$ θεώρημα και τους υπολογισμούς ισχύος θορύβου.
+
+<ExamProblem id="ideal-lpf-noise" year="Computation" weight="βασικό N₀W">
+**Ερώτηση:** White noise PSD $N_0/2 = 10^{-10}$ W/Hz, διέρχεται από ιδανικό LPF με $W = 8$ kHz. Βρες την ισχύ εξόδου.
+
+<Example title="Λύση" defaultOpen={true}>
+$$P_Y = \int_{-W}^{W}\frac{N_0}{2}\,df = N_0 W = 2\cdot 10^{-10}\cdot 8\cdot 10^3 = 1.6\cdot 10^{-6} \text{ W}$$
+
+Δηλαδή 1.6 μW = $-58$ dBm. Το ιδανικό LPF μετατρέπει τον λευκό άπειρης ισχύος σε bandlimited πεπερασμένης.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="rc-noise-power" year="RC filter" weight="non-ideal">
+**Ερώτηση:** White noise με $N_0/2$ PSD διέρχεται από RC LPF με $|H(f)|^2 = 1/(1 + (f/f_c)^2)$. Βρες την ισχύ εξόδου.
+
+<Example title="Λύση">
+$$P_Y = \int_{-\infty}^{\infty}\frac{N_0/2}{1 + (f/f_c)^2}\,df$$
+
+Αλλαγή μεταβλητής $u = f/f_c$, $df = f_c\,du$:
+$$P_Y = \frac{N_0}{2}\cdot f_c\int_{-\infty}^{\infty}\frac{du}{1 + u^2} = \frac{N_0 f_c}{2}\cdot\pi = \frac{\pi N_0 f_c}{2}$$
+
+**Σύγκριση με ιδανικό LPF cutoff $f_c$:** $P_{ideal} = N_0 f_c$. Λόγος: $P_{RC}/P_{ideal} = \pi/2 \approx 1.57$. Το real RC «φιλτράρει χειρότερα» — αφήνει περίπου 57% περισσότερο noise από το ιδανικό λόγω των tails.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="equivalent-noise-bw" year="B_N" weight="κρίσιμη ιδέα">
+**Ερώτηση:** Τι είναι το **equivalent noise bandwidth** $B_N$ ενός φίλτρου, και πόσο είναι για RC LPF με 3-dB cutoff $f_c$;
+
+<Example title="Λύση">
+**Ορισμός:** $B_N$ είναι το bandwidth ενός ιδανικού brick-wall φίλτρου με ίδιο peak gain που θα έδινε **ίδια ισχύ noise** στην έξοδο.
+
+$$B_N = \frac{\int_0^\infty |H(f)|^2\,df}{|H(0)|^2}$$
+
+**Για RC LPF:** $|H(0)| = 1$, και $\int_0^\infty\frac{df}{1+(f/f_c)^2} = \frac{\pi f_c}{2}$.
+
+$$B_N^{RC} = \frac{\pi}{2}f_c \approx 1.57 f_c$$
+
+**Σημασία:** για noise calculations, ένα RC LPF με $f_c = 1$ kHz «μετράει» σαν ιδανικό LPF με $W = 1.57$ kHz. Σε link budgets, αυτή η μετατροπή είναι κρίσιμη.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="cascade-filters" year="Cascade" weight="multiplicative">
+**Ερώτηση:** Δύο LTI σε cascade με $H_1, H_2$. Τι είναι το output PSD αν η είσοδος έχει PSD $S_X$;
+
+<Example title="Λύση" defaultOpen={true}>
+Cascade transfer function: $H_{total}(f) = H_1(f)\,H_2(f)$.
+
+$$S_Y(f) = |H_{total}(f)|^2 S_X(f) = |H_1(f)|^2 |H_2(f)|^2 S_X(f)$$
+
+**Δηλαδή:** οι squared magnitudes πολλαπλασιάζονται. Δεν είναι convolution! Αυτό είναι διαφορετικό από το cascade στο time domain (που είναι convolution).
+
+**Πρακτικό:** ένα receiver chain (LNA → BPF → mixer → IF filter → demodulator) έχει total noise filtering = γινόμενο όλων των $|H_i|^2$. Σχεδιάζοντας κάθε filter ξεχωριστά και πολλαπλασιάζοντας τα squared magnitudes παίρνεις το συνολικό response.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="bandpass-noise" year="Bandpass" weight="κρίσιμο για AM/FM">
+**Ερώτηση:** White noise διέρχεται από ιδανικό BPF με κέντρο $f_c$ και bandwidth $B$. Βρες την ισχύ εξόδου.
+
+<Example title="Λύση">
+Ο ιδανικός BPF κρατάει $|f| \in [f_c - B/2, f_c + B/2]$ — δηλαδή δύο rect στις $\pm f_c$, καθένα εύρους $B$.
+
+$$P_Y = 2\cdot\int_{f_c - B/2}^{f_c + B/2}\frac{N_0}{2}\,df = N_0\cdot B$$
+
+(Παράγοντας 2 για τις θετικές + αρνητικές συχνότητες.)
+
+**Παράδειγμα:** AM ραδιόφωνο receiver με 10 kHz bandpass γύρω από 1 MHz, σε noise floor $-174$ dBm/Hz: $P = N_0\cdot 10^4$ → $-174 + 10\log(10^4) = -134$ dBm. Αυτό είναι το noise floor μέσα στην ζώνη του ενός καναλιού.
+</Example>
+</ExamProblem>
+
 <Recap>
 - Το **κεντρικό θεώρημα** $S_Y = |H|^2 S_X$ είναι το βασικό εργαλείο για όλες τις θορυβικές αναλύσεις.
 - **Λευκός + ιδανικό LPF**: $P_Y = N_0 B$. Λευκός + RC LPF: $P_Y = \pi N_0 f_c/2$.
