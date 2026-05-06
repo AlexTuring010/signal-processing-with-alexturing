@@ -196,12 +196,53 @@ export const EXERCISES: Exercise[] = [
           περιοχή λειτουργίας, και ένα <strong>bandpass φίλτρο</strong> γύρω
           από <InlineMath>f_c</InlineMath>:
         </p>
-        <pre className="my-3 overflow-x-auto rounded border border-border bg-bg-subtle p-3 text-xs leading-snug">
-{`m(t) ──┐
-       ├──►(+)──►|◄|── R ──┬── BPF (κέντρο f_c, εύρος 2W) ──► x_AM(t)
-c(t) ──┘     v(t)    diode │
-                          GND`}
-        </pre>
+        <svg
+          viewBox="0 0 600 160"
+          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+          role="img"
+          aria-label="Square-law AM modulator: αθροιστής m(t)+c(t), δίοδος, αντίσταση R με γείωση, BPF γύρω από f_c, έξοδος x_AM(t)"
+        >
+          {/* m(t) input */}
+          <text x="10" y="50" fontSize="11" fill="currentColor" fillOpacity="0.85" fontStyle="italic">m(t)</text>
+          <line x1="42" y1="46" x2="80" y2="46" stroke="currentColor" strokeOpacity="0.6" />
+          <line x1="80" y1="46" x2="80" y2="68" stroke="currentColor" strokeOpacity="0.6" />
+          <line x1="80" y1="68" x2="96" y2="68" stroke="currentColor" strokeOpacity="0.6" />
+          {/* c(t) input */}
+          <text x="10" y="118" fontSize="11" fill="currentColor" fillOpacity="0.85" fontStyle="italic">c(t)</text>
+          <line x1="42" y1="114" x2="80" y2="114" stroke="currentColor" strokeOpacity="0.6" />
+          <line x1="80" y1="114" x2="80" y2="92" stroke="currentColor" strokeOpacity="0.6" />
+          <line x1="80" y1="92" x2="96" y2="92" stroke="currentColor" strokeOpacity="0.6" />
+          {/* adder */}
+          <circle cx="110" cy="80" r="14" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+          <text x="110" y="85" textAnchor="middle" fontSize="14" fill="currentColor" fillOpacity="0.85">+</text>
+          {/* adder → diode */}
+          <line x1="124" y1="80" x2="160" y2="80" stroke="currentColor" strokeOpacity="0.6" />
+          <text x="142" y="100" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">v(t)</text>
+          {/* diode block */}
+          <rect x="160" y="64" width="56" height="32" rx="3" fill="rgba(29, 78, 216, 0.10)" stroke="rgb(29, 78, 216)" strokeOpacity="0.7" />
+          <text x="188" y="84" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.9">diode</text>
+          {/* diode → R */}
+          <line x1="216" y1="80" x2="240" y2="80" stroke="currentColor" strokeOpacity="0.6" />
+          {/* R block */}
+          <rect x="240" y="64" width="36" height="32" rx="3" fill="rgba(29, 78, 216, 0.10)" stroke="rgb(29, 78, 216)" strokeOpacity="0.7" />
+          <text x="258" y="84" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.9">R</text>
+          {/* R → junction → BPF */}
+          <line x1="276" y1="80" x2="340" y2="80" stroke="currentColor" strokeOpacity="0.6" />
+          <circle cx="316" cy="80" r="2.5" fill="currentColor" fillOpacity="0.85" />
+          {/* BPF block */}
+          <rect x="340" y="64" width="160" height="32" rx="3" fill="rgba(29, 78, 216, 0.10)" stroke="rgb(29, 78, 216)" strokeOpacity="0.7" />
+          <text x="420" y="84" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.9">BPF (f_c, 2W)</text>
+          {/* BPF → output */}
+          <line x1="500" y1="80" x2="540" y2="80" stroke="currentColor" strokeOpacity="0.6" />
+          <polygon points="546,80 536,75 536,85" fill="currentColor" fillOpacity="0.7" />
+          <text x="552" y="84" fontSize="11" fill="currentColor" fillOpacity="0.85" fontStyle="italic">x_AM(t)</text>
+          {/* junction → GND */}
+          <line x1="316" y1="80" x2="316" y2="124" stroke="currentColor" strokeOpacity="0.6" />
+          <line x1="304" y1="124" x2="328" y2="124" stroke="currentColor" strokeOpacity="0.85" strokeWidth="2" />
+          <line x1="308" y1="130" x2="324" y2="130" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.5" />
+          <line x1="312" y1="136" x2="320" y2="136" stroke="currentColor" strokeOpacity="0.4" strokeWidth="1" />
+          <text x="334" y="130" fontSize="9" fill="currentColor" fillOpacity="0.65">GND</text>
+        </svg>
         <p>
           Στην εκθετική/τετραγωνική περιοχή της διόδου το ρεύμα έχει την μορφή{' '}
           <InlineMath>{'i(t) \\approx a_1 v(t) + a_2 v^2(t)'}</InlineMath>.
@@ -474,16 +515,40 @@ c(t) ──┘     v(t)    diode │
           <InlineMath>{'1/2'}</InlineMath> ακριβώς στις άκρες{' '}
           <InlineMath>{'f = \\pm 5'}</InlineMath> Hz.
         </p>
-        <pre className="my-3 overflow-x-auto rounded border border-border bg-bg-subtle p-3 text-xs leading-snug">
-{`     |M(f)|
-       ↑    ┃                         ┃
-   1/2 ┤    ┃   ───────────────       ┃
-       │    ┃   │             │       ┃
-  1/10 ┤────╂───┘             └───────╂────
-       │    ┃                         ┃
-       └────┸───────────────────────-─┸────► f
-           -5            0            +5  (Hz)`}
-        </pre>
+        <svg
+          viewBox="0 0 380 170"
+          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+          role="img"
+          aria-label="|M(f)|: ορθογώνιο ύψους 1/10 από −5 έως 5 Hz, και δύο impulses ύψους 1/2 στα ±5 Hz"
+        >
+          {/* x-axis */}
+          <line x1="36" y1="130" x2="358" y2="130" stroke="currentColor" strokeOpacity="0.45" />
+          <polygon points="364,130 354,126 354,134" fill="currentColor" fillOpacity="0.5" />
+          <text x="368" y="134" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f</text>
+          {/* y-axis at f=0 */}
+          <line x1="190" y1="130" x2="190" y2="20" stroke="currentColor" strokeOpacity="0.3" />
+          <polygon points="190,14 186,22 194,22" fill="currentColor" fillOpacity="0.5" />
+          {/* rect (sinc): 1/10 from f=-5 to f=+5 */}
+          <rect x="80" y="116" width="220" height="14" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.85" />
+          {/* impulses (sin): height 1/2 at f = ±5 */}
+          <line x1="80" y1="130" x2="80" y2="60" stroke="rgb(217, 119, 6)" strokeWidth="2" />
+          <polygon points="80,54 76,62 84,62" fill="rgb(217, 119, 6)" />
+          <line x1="300" y1="130" x2="300" y2="60" stroke="rgb(217, 119, 6)" strokeWidth="2" />
+          <polygon points="300,54 296,62 304,62" fill="rgb(217, 119, 6)" />
+          {/* tick marks */}
+          <line x1="80" y1="127" x2="80" y2="133" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="190" y1="127" x2="190" y2="133" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="300" y1="127" x2="300" y2="133" stroke="currentColor" strokeOpacity="0.5" />
+          {/* tick labels */}
+          <text x="80" y="146" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">−5 Hz</text>
+          <text x="190" y="146" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">0</text>
+          <text x="300" y="146" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">+5 Hz</text>
+          {/* y-axis amplitude labels */}
+          <text x="74" y="120" textAnchor="end" fontSize="10" fill="rgb(29, 78, 216)" fillOpacity="0.95">1/10</text>
+          <text x="306" y="64" fontSize="10" fill="rgb(217, 119, 6)" fillOpacity="0.95">1/2</text>
+          {/* spectrum label */}
+          <text x="196" y="28" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">|M(f)|</text>
+        </svg>
         <p>
           <strong>Ισχύς:</strong> ο όρος{' '}
           <InlineMath>{'\\sin(10\\pi t)'}</InlineMath> είναι περιοδικό
@@ -565,13 +630,38 @@ c(t) ──┘     v(t)    diode │
             Mirror στα αρνητικά γύρω από <InlineMath>{'-f_2'}</InlineMath>.
           </li>
         </ul>
-        <pre className="my-3 overflow-x-auto rounded border border-border bg-bg-subtle p-3 text-xs leading-snug">
-{`USSB(m):    ▭            ▭         (rect, πλάτος W/2)
-USSB(k):    ◢            ◣         (τρίγωνο, πλάτος W)
-
-           f_1   f_1+W/2      f_2     f_2+W
-─────|─────|─────|──────────|────────|────► f`}
-        </pre>
+        <svg
+          viewBox="0 0 480 140"
+          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+          role="img"
+          aria-label="USSB φάσματα: rect στο [f_1, f_1+W/2] για το m(t) και τρίγωνο με κορυφή στο f_2 και βάση στο f_2+W για το k(t)"
+        >
+          {/* x-axis */}
+          <line x1="20" y1="100" x2="438" y2="100" stroke="currentColor" strokeOpacity="0.45" />
+          <polygon points="444,100 434,96 434,104" fill="currentColor" fillOpacity="0.5" />
+          <text x="448" y="104" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f</text>
+          {/* origin tick */}
+          <line x1="40" y1="97" x2="40" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <text x="40" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.75">0</text>
+          {/* USSB(m) — rect [f_1, f_1+W/2], height 1/(2W) */}
+          <rect x="120" y="70" width="60" height="30" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
+          <text x="150" y="62" textAnchor="middle" fontSize="10" fill="rgb(29, 78, 216)" fillOpacity="0.95">USSB(m)</text>
+          {/* USSB(k) — right triangle: peak at f_2, drops to 0 at f_2+W */}
+          <path d="M 260 70 L 260 100 L 400 100 Z" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
+          <text x="296" y="62" fontSize="10" fill="rgb(220, 38, 38)" fillOpacity="0.95">USSB(k)</text>
+          {/* tick marks */}
+          <line x1="120" y1="97" x2="120" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="180" y1="97" x2="180" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="260" y1="97" x2="260" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="400" y1="97" x2="400" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          {/* tick labels */}
+          <text x="120" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_1</text>
+          <text x="180" y="116" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_1+W/2</text>
+          <text x="260" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_2</text>
+          <text x="400" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_2+W</text>
+          {/* note */}
+          <text x="240" y="132" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.6" fontStyle="italic">(+ καθρέφτης στις αρνητικές f γύρω από −f_1 και −f_2)</text>
+        </svg>
       </>
     ),
   },
@@ -671,16 +761,55 @@ USSB(k):    ◢            ◣         (τρίγωνο, πλάτος W)
             <InlineMath>{'[-f_2 - W,\\, -f_2]'}</InlineMath>.
           </li>
         </ul>
-        <pre className="my-3 overflow-x-auto rounded border border-border bg-bg-subtle p-3 text-xs leading-snug">
-{`         |G(f)|
-            ↑
-            ┃                                       ┃
-1/(2W) ─── ┃ ◢      ▭                  ▭      ◣ ─── ┃
-            ┃ /\\    │ │                │ │    /\\    ┃
-────────────┸/──\\───┘ └────────────────┘ └───/──\\───┸──► f
-        -f_2-W -f_2 -f_1-W/2 -f_1     f_1 f_1+W/2 f_2 f_2+W
-                          0`}
-        </pre>
+        <svg
+          viewBox="0 0 480 150"
+          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+          role="img"
+          aria-label="|G(f)|: USSB(m) ορθογώνιο γύρω από ±f_1 και USSB(k) τρίγωνο γύρω από ±f_2, με όλους τους κατόπτρους στις αρνητικές συχνότητες"
+        >
+          {/* x-axis */}
+          <line x1="20" y1="100" x2="438" y2="100" stroke="currentColor" strokeOpacity="0.45" />
+          <polygon points="444,100 434,96 434,104" fill="currentColor" fillOpacity="0.5" />
+          <text x="448" y="104" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f</text>
+          {/* y-axis at f=0 */}
+          <line x1="240" y1="100" x2="240" y2="22" stroke="currentColor" strokeOpacity="0.3" />
+          <polygon points="240,16 236,24 244,24" fill="currentColor" fillOpacity="0.5" />
+          {/* + side: USSB(m) rect [f_1, f_1+W/2] (compact: f_1+W/2 = f_2) */}
+          <rect x="280" y="70" width="40" height="30" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
+          {/* + side: USSB(k) triangle [f_2, f_2+W], peak at f_2 */}
+          <path d="M 320 70 L 320 100 L 400 100 Z" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
+          {/* − side mirror rect [-f_1-W/2, -f_1] */}
+          <rect x="160" y="70" width="40" height="30" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
+          {/* − side mirror triangle [-f_2-W, -f_2], peak at -f_2 */}
+          <path d="M 160 70 L 160 100 L 80 100 Z" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
+          {/* height label 1/(2W) on the rect */}
+          <text x="216" y="68" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.65" fontStyle="italic">1/(2W)</text>
+          {/* tick marks */}
+          <line x1="80" y1="97" x2="80" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="160" y1="97" x2="160" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="200" y1="97" x2="200" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="240" y1="97" x2="240" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="280" y1="97" x2="280" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="320" y1="97" x2="320" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          <line x1="400" y1="97" x2="400" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+          {/* tick labels — for compact packing f_2 = f_1+W/2 */}
+          <text x="80" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">−f_2−W</text>
+          <text x="160" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">−f_2</text>
+          <text x="200" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">−f_1</text>
+          <text x="240" y="114" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">0</text>
+          <text x="280" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_1</text>
+          <text x="320" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_2</text>
+          <text x="400" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_2+W</text>
+          {/* spectrum label */}
+          <text x="246" y="30" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">|G(f)|</text>
+          {/* legend */}
+          <rect x="20" y="20" width="10" height="8" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
+          <text x="34" y="28" fontSize="9" fill="currentColor" fillOpacity="0.85">USSB(m)</text>
+          <rect x="20" y="34" width="10" height="8" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
+          <text x="34" y="42" fontSize="9" fill="currentColor" fillOpacity="0.85">USSB(k)</text>
+          {/* compact-packing note */}
+          <text x="240" y="138" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.6" fontStyle="italic">οριακά compact: f_2 = f_1 + W/2</text>
+        </svg>
         <p>
           Στον δέκτη: για το <InlineMath>{'m(t)'}</InlineMath> χρησιμοποιούμε
           BPF γύρω από <InlineMath>{'[f_1,\\, f_1 + W/2]'}</InlineMath> και
