@@ -272,9 +272,9 @@ function HeadingWithCommentButton(level: 2 | 3) {
     }
     const sectionTitle = extractText(children).trim() || id
     return (
-      <Tag id={id} {...rest} className="group/heading scroll-mt-20">
+      <Tag id={id} {...rest} className="scroll-mt-20">
         {children}
-        <span className="ml-2 inline-flex align-middle opacity-0 transition group-hover/heading:opacity-100 focus-within:opacity-100">
+        <span className="ml-2 inline-flex align-middle">
           <SectionCommentButton sectionTitle={sectionTitle} sectionAnchor={id} />
         </span>
       </Tag>
