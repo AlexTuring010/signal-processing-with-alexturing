@@ -15,12 +15,15 @@ import {
   Sparkles,
   Trash2,
   MessageCircleOff,
+  EyeOff,
+  VenetianMask,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
 import { useSectionCommentsCtx } from './section-comments-context'
 import { UserAvatar } from './UserAvatar'
 import { ClaudeAvatar } from './ClaudeAvatar'
+import { ANON_DISPLAY_NAME } from '@/lib/supabase/types'
 
 const DELETE_WINDOW_MS = 10 * 60 * 1000
 
@@ -37,6 +40,7 @@ type ReplyRow = {
   created_at: string
   author_id: string
   is_claude_reply: boolean
+  is_anonymous: boolean
   author: Author | Author[] | null
 }
 
@@ -46,6 +50,8 @@ type SectionCommentRow = {
   created_at: string
   author_id: string
   status: 'pending' | 'resolved' | 'general'
+  visibility: 'public' | 'mod_only'
+  is_anonymous: boolean
   author: Author | Author[] | null
   replies: ReplyRow[]
 }
@@ -58,10 +64,38 @@ type Me = {
 }
 
 const COMMENT_SELECT =
-  'id, body, created_at, author_id, status, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role), replies(id, body, created_at, author_id, is_claude_reply, author:profiles!replies_author_id_fkey(id, display_name, avatar_url, role))'
+  'id, body, created_at, author_id, status, visibility, is_anonymous, author:profiles!comments_author_id_fkey(id, display_name, avatar_url, role), replies(id, body, created_at, author_id, is_claude_reply, is_anonymous, author:profiles!replies_author_id_fkey(id, display_name, avatar_url, role))'
 
 const REPLY_SELECT =
-  'id, body, created_at, author_id, is_claude_reply, author:profiles!replies_author_id_fkey(id, display_name, avatar_url, role)'
+  'id, body, created_at, author_id, is_claude_reply, is_anonymous, author:profiles!replies_author_id_fkey(id, display_name, avatar_url, role)'
+
+const ANON_AUTHOR: Author = {
+  id: '',
+  display_name: ANON_DISPLAY_NAME,
+  avatar_url: null,
+  role: 'user',
+}
+
+function stripAuthor<T extends { author: Author | Author[] | null }>(
+  row: T,
+  isAnonymous: boolean,
+  authorId: string,
+  viewer: Me | null,
+): T {
+  if (!isAnonymous) return row
+  if (viewer && (viewer.isModerator || viewer.id === authorId)) return row
+  return { ...row, author: ANON_AUTHOR }
+}
+
+function anonymize(rows: SectionCommentRow[], viewer: Me | null): SectionCommentRow[] {
+  return rows.map((c) => {
+    const replies = c.replies.map((r) =>
+      stripAuthor(r, r.is_anonymous, r.author_id, viewer),
+    )
+    const stripped = stripAuthor(c, c.is_anonymous, c.author_id, viewer)
+    return { ...stripped, replies }
+  })
+}
 
 type Props = {
   /** Heading anchor (id) — used as `comments.section_anchor`. */
@@ -95,6 +129,8 @@ export function SectionComments({
   const [me, setMe] = useState<Me | null | undefined>(undefined)
   const [text, setText] = useState('')
   const [noReview, setNoReview] = useState(false)
+  const [modOnly, setModOnly] = useState(false)
+  const [anonymous, setAnonymous] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -115,7 +151,7 @@ export function SectionComments({
         .order('created_at', { foreignTable: 'replies', ascending: true }),
       supabase.auth.getUser(),
     ])
-    setComments((rows ?? []) as unknown as SectionCommentRow[])
+    let viewer: Me | null = null
     if (userRes.data.user) {
       const { data: profile } = await supabase
         .from('profiles')
@@ -123,18 +159,18 @@ export function SectionComments({
         .eq('id', userRes.data.user.id)
         .maybeSingle()
       if (profile) {
-        setMe({
+        viewer = {
           id: profile.id,
           displayName: profile.display_name,
           avatarUrl: profile.avatar_url,
           isModerator: profile.role === 'moderator',
-        })
-      } else {
-        setMe(null)
+        }
       }
-    } else {
-      setMe(null)
     }
+    setMe(viewer)
+    setComments(
+      anonymize((rows ?? []) as unknown as SectionCommentRow[], viewer),
+    )
     setLoaded(true)
   }, [loaded, supabase, slug, anchor])
 
@@ -162,6 +198,8 @@ export function SectionComments({
         body,
         author_id: me.id,
         status: noReview ? 'general' : 'pending',
+        visibility: modOnly ? 'mod_only' : 'public',
+        is_anonymous: anonymous,
       })
       .select(COMMENT_SELECT)
       .single()
@@ -170,26 +208,33 @@ export function SectionComments({
       setError(insertError?.message ?? 'Δεν μπόρεσε να αποθηκευτεί το σχόλιο.')
       return
     }
+    // Optimistic insert: the author is `me`, so anonymize() would not
+    // strip anyway (shouldReveal returns true for self). Insert as-is.
     setComments((prev) => [data as unknown as SectionCommentRow, ...prev])
     setText('')
     setNoReview(false)
+    setModOnly(false)
+    setAnonymous(false)
   }
 
   const addReply = async (
     commentId: string,
     replyText: string,
     asClaude: boolean,
+    asAnonymous: boolean,
   ): Promise<boolean> => {
     if (!me) return false
     const trimmed = replyText.trim()
     if (!trimmed) return false
+    const isClaude = asClaude && me.isModerator
     const { data, error: insertError } = await supabase
       .from('replies')
       .insert({
         comment_id: commentId,
         body: trimmed,
         author_id: me.id,
-        is_claude_reply: asClaude && me.isModerator,
+        is_claude_reply: isClaude,
+        is_anonymous: asAnonymous && !isClaude,
       })
       .select(REPLY_SELECT)
       .single()
@@ -282,7 +327,9 @@ export function SectionComments({
                       key={c.id}
                       comment={c}
                       me={me ?? null}
-                      onReply={(t, asClaude) => addReply(c.id, t, asClaude)}
+                      onReply={(t, asClaude, asAnon) =>
+                        addReply(c.id, t, asClaude, asAnon)
+                      }
                       onRemoveReply={(rid) => removeReply(c.id, rid)}
                       onRemove={() => removeComment(c.id)}
                     />
@@ -323,24 +370,58 @@ export function SectionComments({
                     className="w-full resize-none rounded-md border border-border bg-bg px-2.5 py-1.5 text-sm outline-none focus:border-accent"
                     maxLength={2000}
                   />
-                  <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-fg-muted">
                     <label
-                      className="inline-flex items-center gap-1.5 text-[10px] text-fg-muted"
+                      className="inline-flex items-center gap-1.5"
                       title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
                     >
                       <input
                         type="checkbox"
                         checked={noReview}
-                        onChange={(e) => setNoReview(e.target.checked)}
-                        className="h-3 w-3"
+                        onChange={(e) => {
+                          setNoReview(e.target.checked)
+                          if (e.target.checked) setModOnly(false)
+                        }}
+                        disabled={modOnly}
+                        className="h-3 w-3 disabled:opacity-50"
                       />
                       <MessageCircleOff className="h-3 w-3" aria-hidden />
-                      Γενικό σχόλιο — δεν χρειάζεται review
+                      Γενικό
+                    </label>
+                    <label
+                      className="inline-flex items-center gap-1.5"
+                      title="Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο."
+                    >
+                      <input
+                        type="checkbox"
+                        checked={modOnly}
+                        onChange={(e) => {
+                          setModOnly(e.target.checked)
+                          if (e.target.checked) setNoReview(false)
+                        }}
+                        disabled={noReview}
+                        className="h-3 w-3 disabled:opacity-50"
+                      />
+                      <EyeOff className="h-3 w-3" aria-hidden />
+                      Mod-only
+                    </label>
+                    <label
+                      className="inline-flex items-center gap-1.5"
+                      title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
+                    >
+                      <input
+                        type="checkbox"
+                        checked={anonymous}
+                        onChange={(e) => setAnonymous(e.target.checked)}
+                        className="h-3 w-3"
+                      />
+                      <VenetianMask className="h-3 w-3" aria-hidden />
+                      Ανώνυμα
                     </label>
                     <button
                       type="submit"
                       disabled={!text.trim() || submitting}
-                      className="inline-flex items-center gap-1.5 rounded-md bg-accent px-2.5 py-1 text-[11px] font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+                      className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-accent px-2.5 py-1 text-[11px] font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
                     >
                       <Send className="h-3 w-3" aria-hidden />
                       {submitting ? 'Αποθήκευση…' : 'Στείλε'}
@@ -365,7 +446,11 @@ function SectionCommentItem({
 }: {
   comment: SectionCommentRow
   me: Me | null
-  onReply: (text: string, asClaude: boolean) => Promise<boolean>
+  onReply: (
+    text: string,
+    asClaude: boolean,
+    asAnonymous: boolean,
+  ) => Promise<boolean>
   onRemoveReply: (replyId: string) => void
   onRemove: () => void
 }) {
@@ -373,22 +458,28 @@ function SectionCommentItem({
   const [replyOpen, setReplyOpen] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [replyAsClaude, setReplyAsClaude] = useState(false)
+  const [replyAsAnonymous, setReplyAsAnonymous] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const isMod = me?.isModerator ?? false
   const isAuthor = me?.id === comment.author_id
   const createdMs = new Date(comment.created_at).getTime()
   const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
+  const anonShown = comment.is_anonymous
+  const nameSuffix =
+    (isAuthor && anonShown ? ' (εσύ)' : '') +
+    (anonShown && (isMod || isAuthor) ? ' (ανώνυμα)' : '')
 
   const handleReplySubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!replyText.trim()) return
     setSubmitting(true)
-    const ok = await onReply(replyText, replyAsClaude)
+    const ok = await onReply(replyText, replyAsClaude, replyAsAnonymous)
     setSubmitting(false)
     if (ok) {
       setReplyText('')
       setReplyOpen(false)
       setReplyAsClaude(false)
+      setReplyAsAnonymous(false)
     }
   }
 
@@ -401,12 +492,21 @@ function SectionCommentItem({
           size="xs"
         />
         <span className="font-semibold text-fg">
-          {author?.display_name ?? '—'}
+          {(author?.display_name ?? '—') + nameSuffix}
         </span>
         {author?.role === 'moderator' && (
           <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
             <ShieldCheck className="h-2.5 w-2.5" aria-hidden />
             mod
+          </span>
+        )}
+        {comment.visibility === 'mod_only' && (
+          <span
+            className="inline-flex items-center gap-1 rounded-full border border-blue-500/40 bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:text-blue-300"
+            title="Ορατό μόνο σε εσένα + στους moderators."
+          >
+            <EyeOff className="h-2.5 w-2.5" aria-hidden />
+            mod-only
           </span>
         )}
         <span className="ml-auto text-fg-subtle">
@@ -488,18 +588,37 @@ function SectionCommentItem({
 
       {replyOpen && me && (
         <form onSubmit={handleReplySubmit} className="mt-2 space-y-1.5">
-          {isMod && (
-            <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
+          <div className="flex flex-wrap gap-2">
+            {isMod && (
+              <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
+                <input
+                  type="checkbox"
+                  checked={replyAsClaude}
+                  onChange={(e) => {
+                    setReplyAsClaude(e.target.checked)
+                    if (e.target.checked) setReplyAsAnonymous(false)
+                  }}
+                  className="h-3 w-3"
+                />
+                <Sparkles className="h-3 w-3" aria-hidden />
+                Reply ως Claude
+              </label>
+            )}
+            <label
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-2 py-1 text-[10px] font-medium text-fg-muted"
+              title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
+            >
               <input
                 type="checkbox"
-                checked={replyAsClaude}
-                onChange={(e) => setReplyAsClaude(e.target.checked)}
-                className="h-3 w-3"
+                checked={replyAsAnonymous}
+                onChange={(e) => setReplyAsAnonymous(e.target.checked)}
+                disabled={replyAsClaude}
+                className="h-3 w-3 disabled:opacity-50"
               />
-              <Sparkles className="h-3 w-3" aria-hidden />
-              Reply ως Claude
+              <VenetianMask className="h-3 w-3" aria-hidden />
+              Ανώνυμα
             </label>
-          )}
+          </div>
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
@@ -546,6 +665,10 @@ function SectionReplyItem({
   const isMod = me?.isModerator ?? false
   const createdMs = new Date(reply.created_at).getTime()
   const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
+  const anonShown = reply.is_anonymous
+  const replySuffix =
+    (isAuthor && anonShown ? ' (εσύ)' : '') +
+    (anonShown && (isMod || isAuthor) ? ' (ανώνυμα)' : '')
 
   return (
     <li
@@ -572,7 +695,7 @@ function SectionReplyItem({
               size="xs"
             />
             <span className="font-semibold text-fg">
-              {author?.display_name ?? '—'}
+              {(author?.display_name ?? '—') + replySuffix}
             </span>
           </span>
         )}

@@ -18,18 +18,22 @@ import {
   LogIn,
   ShieldCheck,
   MessageCircleOff,
+  EyeOff,
+  VenetianMask,
 } from 'lucide-react'
 
 import { UserAvatar } from './UserAvatar'
 import { ClaudeAvatar } from './ClaudeAvatar'
 import { createClient } from '@/lib/supabase/client'
 import {
+  ANON_DISPLAY_NAME,
   CATEGORY_DEFAULT_POINTS,
   CATEGORY_LABELS,
   type CommentCategory,
   type CommentWithAuthor,
   type ReplyWithAuthor,
 } from '@/lib/supabase/types'
+import { anonymizeComments } from '@/lib/supabase/anonymize'
 
 const DELETE_WINDOW_MS = 10 * 60 * 1000
 
@@ -60,9 +64,16 @@ export function CommentsClient({
   const [comments, setComments] = useState<CommentWithAuthor[]>(initialComments)
   const [text, setText] = useState('')
   const [noReview, setNoReview] = useState(false)
+  const [modOnly, setModOnly] = useState(false)
+  const [anonymous, setAnonymous] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [moderate, setModerate] = useState(false)
+
+  const viewer = useMemo(
+    () => (me ? { id: me.id, isModerator: me.isModerator } : null),
+    [me?.id, me?.isModerator],
+  )
 
   // Re-sync if the server-rendered list changes (e.g. after navigation).
   useEffect(() => {
@@ -80,8 +91,11 @@ export function CommentsClient({
       .eq('slug', slug)
       .order('created_at', { ascending: false })
       .order('created_at', { foreignTable: 'replies', ascending: true })
-    if (data) setComments(data as unknown as CommentWithAuthor[])
-  }, [slug, supabase])
+    if (data)
+      setComments(
+        anonymizeComments(data as unknown as CommentWithAuthor[], viewer),
+      )
+  }, [slug, supabase, viewer])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -100,6 +114,8 @@ export function CommentsClient({
         body,
         author_id: me.id,
         status: noReview ? 'general' : 'pending',
+        visibility: modOnly ? 'mod_only' : 'public',
+        is_anonymous: anonymous,
       })
       .select('*')
       .single()
@@ -121,6 +137,8 @@ export function CommentsClient({
     setComments((prev) => [optimistic, ...prev])
     setText('')
     setNoReview(false)
+    setModOnly(false)
+    setAnonymous(false)
     router.refresh()
   }
 
@@ -183,6 +201,7 @@ export function CommentsClient({
     commentId: string,
     replyText: string,
     asClaude: boolean,
+    asAnonymous: boolean,
   ) => {
     if (!me) return
     const trimmed = replyText.trim()
@@ -194,6 +213,7 @@ export function CommentsClient({
         body: trimmed,
         author_id: me.id,
         is_claude_reply: asClaude && me.isModerator,
+        is_anonymous: asAnonymous && !(asClaude && me.isModerator),
       })
       .select('*')
       .single()
@@ -295,19 +315,55 @@ export function CommentsClient({
             className="w-full resize-none rounded-md border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-accent"
             maxLength={2000}
           />
-          <label
-            className="inline-flex items-center gap-1.5 text-[11px] text-fg-muted"
-            title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
-          >
-            <input
-              type="checkbox"
-              checked={noReview}
-              onChange={(e) => setNoReview(e.target.checked)}
-              className="h-3 w-3"
-            />
-            <MessageCircleOff className="h-3 w-3" aria-hidden />
-            Γενικό σχόλιο — δεν χρειάζεται review
-          </label>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-fg-muted">
+            <label
+              className="inline-flex items-center gap-1.5"
+              title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
+            >
+              <input
+                type="checkbox"
+                checked={noReview}
+                onChange={(e) => {
+                  setNoReview(e.target.checked)
+                  if (e.target.checked) setModOnly(false)
+                }}
+                disabled={modOnly}
+                className="h-3 w-3 disabled:opacity-50"
+              />
+              <MessageCircleOff className="h-3 w-3" aria-hidden />
+              Γενικό — χωρίς review
+            </label>
+            <label
+              className="inline-flex items-center gap-1.5"
+              title="Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο."
+            >
+              <input
+                type="checkbox"
+                checked={modOnly}
+                onChange={(e) => {
+                  setModOnly(e.target.checked)
+                  if (e.target.checked) setNoReview(false)
+                }}
+                disabled={noReview}
+                className="h-3 w-3 disabled:opacity-50"
+              />
+              <EyeOff className="h-3 w-3" aria-hidden />
+              Μόνο για moderators
+            </label>
+            <label
+              className="inline-flex items-center gap-1.5"
+              title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους — οι moderators ξέρουν ποιος έγραψε."
+            >
+              <input
+                type="checkbox"
+                checked={anonymous}
+                onChange={(e) => setAnonymous(e.target.checked)}
+                className="h-3 w-3"
+              />
+              <VenetianMask className="h-3 w-3" aria-hidden />
+              Ανώνυμα
+            </label>
+          </div>
           <div className="flex items-center justify-between">
             <span className="text-[11px] text-fg-subtle">
               {text.length}/2000 χαρακτήρες
@@ -359,7 +415,9 @@ export function CommentsClient({
               moderate={moderate && (me?.isModerator ?? false)}
               onToggleStatus={() => toggleStatus(c)}
               onRemove={() => removeComment(c.id)}
-              onReply={(t, asClaude) => addReply(c.id, t, asClaude)}
+              onReply={(t, asClaude, asAnon) =>
+                addReply(c.id, t, asClaude, asAnon)
+              }
               onRemoveReply={(rid) => removeReply(c.id, rid)}
               onReview={(cat, pts, reason) => reviewComment(c, cat, pts, reason)}
             />
@@ -385,13 +443,14 @@ function CommentItem({
   moderate: boolean
   onToggleStatus: () => void
   onRemove: () => void
-  onReply: (text: string, asClaude: boolean) => void
+  onReply: (text: string, asClaude: boolean, asAnonymous: boolean) => void
   onRemoveReply: (replyId: string) => void
   onReview: (cat: CommentCategory, points: number, reason: string) => void
 }) {
   const [replyOpen, setReplyOpen] = useState(false)
   const [replyText, setReplyText] = useState('')
   const [replyAsClaude, setReplyAsClaude] = useState(false)
+  const [replyAsAnonymous, setReplyAsAnonymous] = useState(false)
   const [reviewOpen, setReviewOpen] = useState(false)
   const [cat, setCat] = useState<CommentCategory>(
     comment.category ?? 'useful-clarification',
@@ -409,10 +468,11 @@ function CommentItem({
   const handleReplySubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!replyText.trim()) return
-    onReply(replyText, replyAsClaude)
+    onReply(replyText, replyAsClaude, replyAsAnonymous)
     setReplyText('')
     setReplyOpen(false)
     setReplyAsClaude(false)
+    setReplyAsAnonymous(false)
   }
 
   const handleReviewSubmit = (e: React.FormEvent) => {
@@ -428,6 +488,13 @@ function CommentItem({
         ? 'border-amber-500/40 bg-amber-500/5'
         : 'border-border bg-bg-soft/40'
 
+  // For anonymous comments shown to mod/author, the joined `author` is the
+  // real profile. The flag `comment.is_anonymous` tells us how the public
+  // sees it; we still render the real name (so mods know who) but tag it.
+  const anonShown = comment.is_anonymous
+  const youSuffix = isAuthor && anonShown ? ' (εσύ)' : ''
+  const anonSuffix = anonShown && (isMod || isAuthor) ? ' (ανώνυμα)' : ''
+
   return (
     <li className={`rounded-lg border p-3 transition ${tint}`}>
       <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs">
@@ -437,12 +504,21 @@ function CommentItem({
           size="sm"
         />
         <span className="font-semibold text-fg">
-          {comment.author?.display_name ?? '—'}
+          {(comment.author?.display_name ?? '—') + youSuffix + anonSuffix}
         </span>
         {comment.author?.role === 'moderator' && (
           <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
             <ShieldCheck className="h-2.5 w-2.5" aria-hidden />
             mod
+          </span>
+        )}
+        {comment.visibility === 'mod_only' && (
+          <span
+            className="inline-flex items-center gap-1 rounded-full border border-blue-500/40 bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:text-blue-300"
+            title="Ορατό μόνο σε εσένα + στους moderators."
+          >
+            <EyeOff className="h-2.5 w-2.5" aria-hidden />
+            mod-only
           </span>
         )}
         {comment.section_title && (
@@ -589,18 +665,37 @@ function CommentItem({
 
       {replyOpen && me && (
         <form onSubmit={handleReplySubmit} className="mt-2 space-y-2">
-          {isMod && (
-            <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
+          <div className="flex flex-wrap gap-2">
+            {isMod && (
+              <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
+                <input
+                  type="checkbox"
+                  checked={replyAsClaude}
+                  onChange={(e) => {
+                    setReplyAsClaude(e.target.checked)
+                    if (e.target.checked) setReplyAsAnonymous(false)
+                  }}
+                  className="h-3 w-3"
+                />
+                <Sparkles className="h-3 w-3" aria-hidden />
+                Reply ως Claude
+              </label>
+            )}
+            <label
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-2 py-1 text-[11px] font-medium text-fg-muted"
+              title="Το όνομά σου θα είναι κρυμμένο — οι moderators ξέρουν ποιος έγραψε."
+            >
               <input
                 type="checkbox"
-                checked={replyAsClaude}
-                onChange={(e) => setReplyAsClaude(e.target.checked)}
-                className="h-3 w-3"
+                checked={replyAsAnonymous}
+                onChange={(e) => setReplyAsAnonymous(e.target.checked)}
+                disabled={replyAsClaude}
+                className="h-3 w-3 disabled:opacity-50"
               />
-              <Sparkles className="h-3 w-3" aria-hidden />
-              Reply ως Claude
+              <VenetianMask className="h-3 w-3" aria-hidden />
+              Ανώνυμα
             </label>
-          )}
+          </div>
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
@@ -704,6 +799,10 @@ function ReplyItem({
   const isMod = me?.isModerator ?? false
   const createdMs = new Date(reply.created_at).getTime()
   const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
+  const anonShown = reply.is_anonymous
+  const replySuffix =
+    (isAuthor && anonShown ? ' (εσύ)' : '') +
+    (anonShown && (isMod || isAuthor) ? ' (ανώνυμα)' : '')
 
   return (
     <li
@@ -730,7 +829,7 @@ function ReplyItem({
               size="xs"
             />
             <span className="font-semibold text-fg">
-              {reply.author?.display_name ?? '—'}
+              {(reply.author?.display_name ?? '—') + replySuffix}
             </span>
           </span>
         )}

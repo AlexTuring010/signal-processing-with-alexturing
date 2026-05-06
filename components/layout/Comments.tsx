@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { CommentsClient, type Me } from './CommentsClient'
 import type { CommentWithAuthor } from '@/lib/supabase/types'
+import { anonymizeComments } from '@/lib/supabase/anonymize'
 
 type Props = {
   slug: string
@@ -58,12 +59,17 @@ export async function Comments({
     }
   }
 
+  const initialComments = anonymizeComments(
+    (comments ?? []) as unknown as CommentWithAuthor[],
+    me ? { id: me.id, isModerator: me.isModerator } : null,
+  )
+
   return (
     <CommentsClient
       slug={slug}
       pageTitle={pageTitle}
       title={title}
-      initialComments={(comments ?? []) as unknown as CommentWithAuthor[]}
+      initialComments={initialComments}
       me={me}
     />
   )

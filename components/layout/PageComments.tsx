@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { CommentsClient, type Me } from './CommentsClient'
 import { findSection } from '@/lib/content-index'
 import type { CommentWithAuthor } from '@/lib/supabase/types'
+import { anonymizeComments } from '@/lib/supabase/anonymize'
 
 /**
  * Bottom-of-page comments block, auto-mounted on every content page via
@@ -64,10 +65,11 @@ export function PageComments() {
       }
 
       if (cancelled) return
-      setData({
-        comments: (comments ?? []) as unknown as CommentWithAuthor[],
-        me,
-      })
+      const anonymized = anonymizeComments(
+        (comments ?? []) as unknown as CommentWithAuthor[],
+        me ? { id: me.id, isModerator: me.isModerator } : null,
+      )
+      setData({ comments: anonymized, me })
       setLoadedSlug(slug)
     })()
     return () => {

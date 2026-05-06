@@ -13,9 +13,9 @@ const { data, error } = await supabase
   .from('comments')
   .select(
     `id, slug, page_title, section_title, section_anchor,
-     body, status, created_at,
+     body, status, visibility, is_anonymous, created_at,
      author:profiles!comments_author_id_fkey(id, display_name),
-     replies(id, body, is_claude_reply, created_at,
+     replies(id, body, is_claude_reply, is_anonymous, created_at,
              author:profiles!replies_author_id_fkey(display_name))`,
   )
   .eq('status', 'pending')

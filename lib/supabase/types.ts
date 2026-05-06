@@ -1,5 +1,9 @@
 export type CommentStatus = 'pending' | 'resolved' | 'general'
 
+export type CommentVisibility = 'public' | 'mod_only'
+
+export const ANON_DISPLAY_NAME = 'Ανώνυμος Φοιτητής'
+
 export type CommentCategory =
   | 'valid-correction'
   | 'useful-clarification'
@@ -38,6 +42,8 @@ export type CommentRow = {
   reviewed_at: string | null
   reviewed_by: string | null
   created_at: string
+  visibility: CommentVisibility
+  is_anonymous: boolean
 }
 
 export type ReplyRow = {
@@ -46,6 +52,7 @@ export type ReplyRow = {
   body: string
   author_id: string
   is_claude_reply: boolean
+  is_anonymous: boolean
   created_at: string
 }
 
