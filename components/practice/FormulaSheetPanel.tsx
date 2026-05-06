@@ -39,7 +39,7 @@ export function FormulaSheetPanel() {
         type="button"
         aria-label="Close formula sheet"
         onClick={closeSheet}
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity ${
+        className={`fixed inset-0 z-40 bg-black/40 transition-opacity ${
           open ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       />
