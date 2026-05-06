@@ -30,8 +30,11 @@ yarn-error.log*
 # vercel
 .vercel
 
-# claude code local config
-.claude/
+# claude code local config — user-specific files only.
+# Project-shared tooling (skills, commands) is checked in.
+.claude/*
+!.claude/skills/
+!.claude/commands/
 
 # typescript
 *.tsbuildinfo
