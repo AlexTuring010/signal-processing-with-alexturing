@@ -13,8 +13,12 @@ const ANON_AUTHOR = {
   role: 'user' as const,
 }
 
-function shouldReveal(authorId: string, viewer: Viewer): boolean {
+function shouldReveal(
+  authorId: string | null,
+  viewer: Viewer,
+): boolean {
   if (!viewer) return false
+  if (authorId === null) return true // guest comments aren't anonymized
   return viewer.isModerator || viewer.id === authorId
 }
 

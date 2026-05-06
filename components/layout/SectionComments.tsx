@@ -17,6 +17,7 @@ import {
   MessageCircleOff,
   EyeOff,
   VenetianMask,
+  User as UserIcon,
 } from 'lucide-react'
 
 import { createClient } from '@/lib/supabase/client'
@@ -183,24 +184,28 @@ export function SectionComments({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!me) return
     const body = text.trim()
     if (!body) return
     setSubmitting(true)
     setError(null)
+    const payload = {
+      slug,
+      page_title: pageTitle,
+      section_title: sectionTitle,
+      section_anchor: anchor,
+      body,
+      author_id: (me?.id ?? null) as string | null,
+      status: (me && noReview ? 'general' : 'pending') as
+        | 'general'
+        | 'pending',
+      visibility: (me && modOnly ? 'mod_only' : 'public') as
+        | 'mod_only'
+        | 'public',
+      is_anonymous: !!me && anonymous,
+    }
     const { data, error: insertError } = await supabase
       .from('comments')
-      .insert({
-        slug,
-        page_title: pageTitle,
-        section_title: sectionTitle,
-        section_anchor: anchor,
-        body,
-        author_id: me.id,
-        status: noReview ? 'general' : 'pending',
-        visibility: modOnly ? 'mod_only' : 'public',
-        is_anonymous: anonymous,
-      })
+      .insert(payload as never)
       .select(COMMENT_SELECT)
       .single()
     setSubmitting(false)
@@ -208,8 +213,8 @@ export function SectionComments({
       setError(insertError?.message ?? 'Δεν μπόρεσε να αποθηκευτεί το σχόλιο.')
       return
     }
-    // Optimistic insert: the author is `me`, so anonymize() would not
-    // strip anyway (shouldReveal returns true for self). Insert as-is.
+    // Author is either `me` (no anonymization for self) or null (guest;
+    // not anonymizable). Either way, insert the row as returned.
     setComments((prev) => [data as unknown as SectionCommentRow, ...prev])
     setText('')
     setNoReview(false)
@@ -223,19 +228,19 @@ export function SectionComments({
     asClaude: boolean,
     asAnonymous: boolean,
   ): Promise<boolean> => {
-    if (!me) return false
     const trimmed = replyText.trim()
     if (!trimmed) return false
-    const isClaude = asClaude && me.isModerator
+    const isClaude = !!me && asClaude && me.isModerator
+    const payload = {
+      comment_id: commentId,
+      body: trimmed,
+      author_id: (me?.id ?? null) as string | null,
+      is_claude_reply: isClaude,
+      is_anonymous: !!me && asAnonymous && !isClaude,
+    }
     const { data, error: insertError } = await supabase
       .from('replies')
-      .insert({
-        comment_id: commentId,
-        body: trimmed,
-        author_id: me.id,
-        is_claude_reply: isClaude,
-        is_anonymous: asAnonymous && !isClaude,
-      })
+      .insert(payload as never)
       .select(REPLY_SELECT)
       .single()
     if (insertError || !data) {
@@ -344,24 +349,31 @@ export function SectionComments({
                 </div>
               )}
 
-              {me === undefined ? null : me === null ? (
-                <Link
-                  href="/sign-in"
-                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline"
-                >
-                  <LogIn className="h-3 w-3" aria-hidden />
-                  Συνδέσου για να σχολιάσεις
-                </Link>
-              ) : (
+              {me === undefined ? null : (
                 <form onSubmit={handleSubmit} className="mt-3 space-y-2">
-                  <div className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-                    <UserAvatar
-                      url={me.avatarUrl}
-                      name={me.displayName}
-                      size="xs"
-                    />
-                    <strong className="text-fg">{me.displayName}</strong>
-                  </div>
+                  {me ? (
+                    <div className="flex items-center gap-1.5 text-[11px] text-fg-muted">
+                      <UserAvatar
+                        url={me.avatarUrl}
+                        name={me.displayName}
+                        size="xs"
+                      />
+                      <strong className="text-fg">{me.displayName}</strong>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-fg-subtle/40 bg-bg-soft px-2 py-0.5 text-[10px] font-medium text-fg-muted">
+                        Posting ως Επισκέπτης
+                      </span>
+                      <Link
+                        href="/sign-in"
+                        className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent hover:underline"
+                      >
+                        <LogIn className="h-2.5 w-2.5" aria-hidden />
+                        Συνδέσου
+                      </Link>
+                    </div>
+                  )}
                   <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
@@ -371,53 +383,57 @@ export function SectionComments({
                     maxLength={2000}
                   />
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-fg-muted">
-                    <label
-                      className="inline-flex items-center gap-1.5"
-                      title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
-                    >
-                      <input
-                        type="checkbox"
-                        checked={noReview}
-                        onChange={(e) => {
-                          setNoReview(e.target.checked)
-                          if (e.target.checked) setModOnly(false)
-                        }}
-                        disabled={modOnly}
-                        className="h-3 w-3 disabled:opacity-50"
-                      />
-                      <MessageCircleOff className="h-3 w-3" aria-hidden />
-                      Γενικό
-                    </label>
-                    <label
-                      className="inline-flex items-center gap-1.5"
-                      title="Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο."
-                    >
-                      <input
-                        type="checkbox"
-                        checked={modOnly}
-                        onChange={(e) => {
-                          setModOnly(e.target.checked)
-                          if (e.target.checked) setNoReview(false)
-                        }}
-                        disabled={noReview}
-                        className="h-3 w-3 disabled:opacity-50"
-                      />
-                      <EyeOff className="h-3 w-3" aria-hidden />
-                      Mod-only
-                    </label>
-                    <label
-                      className="inline-flex items-center gap-1.5"
-                      title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
-                    >
-                      <input
-                        type="checkbox"
-                        checked={anonymous}
-                        onChange={(e) => setAnonymous(e.target.checked)}
-                        className="h-3 w-3"
-                      />
-                      <VenetianMask className="h-3 w-3" aria-hidden />
-                      Ανώνυμα
-                    </label>
+                    {me && (
+                      <>
+                        <label
+                          className="inline-flex items-center gap-1.5"
+                          title="Markαρε αν είναι απλά μια παρατήρηση/συζήτηση και δε χρειάζεται να μπει στην ουρά review."
+                        >
+                          <input
+                            type="checkbox"
+                            checked={noReview}
+                            onChange={(e) => {
+                              setNoReview(e.target.checked)
+                              if (e.target.checked) setModOnly(false)
+                            }}
+                            disabled={modOnly}
+                            className="h-3 w-3 disabled:opacity-50"
+                          />
+                          <MessageCircleOff className="h-3 w-3" aria-hidden />
+                          Γενικό
+                        </label>
+                        <label
+                          className="inline-flex items-center gap-1.5"
+                          title="Μόνο εσύ + οι moderators θα δείτε αυτό το σχόλιο."
+                        >
+                          <input
+                            type="checkbox"
+                            checked={modOnly}
+                            onChange={(e) => {
+                              setModOnly(e.target.checked)
+                              if (e.target.checked) setNoReview(false)
+                            }}
+                            disabled={noReview}
+                            className="h-3 w-3 disabled:opacity-50"
+                          />
+                          <EyeOff className="h-3 w-3" aria-hidden />
+                          Mod-only
+                        </label>
+                        <label
+                          className="inline-flex items-center gap-1.5"
+                          title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
+                        >
+                          <input
+                            type="checkbox"
+                            checked={anonymous}
+                            onChange={(e) => setAnonymous(e.target.checked)}
+                            className="h-3 w-3"
+                          />
+                          <VenetianMask className="h-3 w-3" aria-hidden />
+                          Ανώνυμα
+                        </label>
+                      </>
+                    )}
                     <button
                       type="submit"
                       disabled={!text.trim() || submitting}
@@ -461,7 +477,8 @@ function SectionCommentItem({
   const [replyAsAnonymous, setReplyAsAnonymous] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const isMod = me?.isModerator ?? false
-  const isAuthor = me?.id === comment.author_id
+  const isGuest = comment.author_id === null
+  const isAuthor = !isGuest && me?.id === comment.author_id
   const createdMs = new Date(comment.created_at).getTime()
   const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
   const anonShown = comment.is_anonymous
@@ -484,15 +501,34 @@ function SectionCommentItem({
   }
 
   return (
-    <li className="rounded-md border border-border/60 bg-bg p-2.5">
+    <li
+      className={`rounded-md p-2.5 ${
+        isGuest
+          ? 'border border-dashed border-fg-subtle/40 bg-bg-soft/30'
+          : 'border border-border/60 bg-bg'
+      }`}
+    >
       <div className="mb-1 flex flex-wrap items-center gap-2 text-[11px]">
-        <UserAvatar
-          url={author?.avatar_url}
-          name={author?.display_name}
-          size="xs"
-        />
-        <span className="font-semibold text-fg">
-          {(author?.display_name ?? '—') + nameSuffix}
+        {isGuest ? (
+          <span
+            aria-hidden
+            className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-dashed border-fg-subtle/50 bg-bg-soft text-fg-subtle"
+          >
+            <UserIcon className="h-2.5 w-2.5" aria-hidden />
+          </span>
+        ) : (
+          <UserAvatar
+            url={author?.avatar_url}
+            name={author?.display_name}
+            size="xs"
+          />
+        )}
+        <span
+          className={
+            isGuest ? 'font-medium text-fg-muted' : 'font-semibold text-fg'
+          }
+        >
+          {isGuest ? 'Επισκέπτης' : (author?.display_name ?? '—') + nameSuffix}
         </span>
         {author?.role === 'moderator' && (
           <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
@@ -562,63 +598,59 @@ function SectionCommentItem({
       )}
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        {me ? (
-          <button
-            type="button"
-            onClick={() => setReplyOpen((v) => !v)}
-            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-fg-muted hover:text-accent"
-          >
-            <Reply className="h-3 w-3" aria-hidden />
-            Απάντηση
-            <ChevronDown
-              className={`h-3 w-3 transition ${replyOpen ? 'rotate-180' : ''}`}
-              aria-hidden
-            />
-          </button>
-        ) : (
-          <Link
-            href="/sign-in"
-            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-fg-muted hover:text-accent"
-          >
-            <Reply className="h-3 w-3" aria-hidden />
-            Συνδέσου για απάντηση
-          </Link>
-        )}
+        <button
+          type="button"
+          onClick={() => setReplyOpen((v) => !v)}
+          className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-fg-muted hover:text-accent"
+        >
+          <Reply className="h-3 w-3" aria-hidden />
+          Απάντηση
+          <ChevronDown
+            className={`h-3 w-3 transition ${replyOpen ? 'rotate-180' : ''}`}
+            aria-hidden
+          />
+        </button>
       </div>
 
-      {replyOpen && me && (
+      {replyOpen && (
         <form onSubmit={handleReplySubmit} className="mt-2 space-y-1.5">
-          <div className="flex flex-wrap gap-2">
-            {isMod && (
-              <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
+          {me ? (
+            <div className="flex flex-wrap gap-2">
+              {isMod && (
+                <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
+                  <input
+                    type="checkbox"
+                    checked={replyAsClaude}
+                    onChange={(e) => {
+                      setReplyAsClaude(e.target.checked)
+                      if (e.target.checked) setReplyAsAnonymous(false)
+                    }}
+                    className="h-3 w-3"
+                  />
+                  <Sparkles className="h-3 w-3" aria-hidden />
+                  Reply ως Claude
+                </label>
+              )}
+              <label
+                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-2 py-1 text-[10px] font-medium text-fg-muted"
+                title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
+              >
                 <input
                   type="checkbox"
-                  checked={replyAsClaude}
-                  onChange={(e) => {
-                    setReplyAsClaude(e.target.checked)
-                    if (e.target.checked) setReplyAsAnonymous(false)
-                  }}
-                  className="h-3 w-3"
+                  checked={replyAsAnonymous}
+                  onChange={(e) => setReplyAsAnonymous(e.target.checked)}
+                  disabled={replyAsClaude}
+                  className="h-3 w-3 disabled:opacity-50"
                 />
-                <Sparkles className="h-3 w-3" aria-hidden />
-                Reply ως Claude
+                <VenetianMask className="h-3 w-3" aria-hidden />
+                Ανώνυμα
               </label>
-            )}
-            <label
-              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-2 py-1 text-[10px] font-medium text-fg-muted"
-              title="Το όνομά σου θα είναι κρυμμένο για τους υπόλοιπους."
-            >
-              <input
-                type="checkbox"
-                checked={replyAsAnonymous}
-                onChange={(e) => setReplyAsAnonymous(e.target.checked)}
-                disabled={replyAsClaude}
-                className="h-3 w-3 disabled:opacity-50"
-              />
-              <VenetianMask className="h-3 w-3" aria-hidden />
-              Ανώνυμα
-            </label>
-          </div>
+            </div>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-fg-subtle/40 bg-bg-soft px-2 py-0.5 text-[10px] font-medium text-fg-muted">
+              Reply ως Επισκέπτης
+            </span>
+          )}
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
@@ -661,7 +693,8 @@ function SectionReplyItem({
 }) {
   const author = Array.isArray(reply.author) ? reply.author[0] : reply.author
   const isClaude = reply.is_claude_reply
-  const isAuthor = me?.id === reply.author_id
+  const isGuest = !isClaude && reply.author_id === null
+  const isAuthor = me?.id !== undefined && me?.id === reply.author_id
   const isMod = me?.isModerator ?? false
   const createdMs = new Date(reply.created_at).getTime()
   const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
@@ -675,7 +708,9 @@ function SectionReplyItem({
       className={`rounded-md p-2 ${
         isClaude
           ? 'border border-purple-500/30 bg-purple-500/5'
-          : 'bg-bg-soft/60'
+          : isGuest
+            ? 'border border-dashed border-fg-subtle/40 bg-bg-soft/40'
+            : 'bg-bg-soft/60'
       }`}
     >
       <div className="mb-1 flex items-center gap-1.5 text-[11px]">
@@ -686,6 +721,16 @@ function SectionReplyItem({
             <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0 text-[9px] font-mono text-purple-700 dark:text-purple-300">
               AI
             </span>
+          </span>
+        ) : isGuest ? (
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              aria-hidden
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-dashed border-fg-subtle/50 bg-bg-soft text-fg-subtle"
+            >
+              <UserIcon className="h-2.5 w-2.5" aria-hidden />
+            </span>
+            <span className="font-medium text-fg-muted">Επισκέπτης</span>
           </span>
         ) : (
           <span className="inline-flex items-center gap-1.5">

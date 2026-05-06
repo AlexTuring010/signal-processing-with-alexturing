@@ -34,7 +34,7 @@ export type CommentRow = {
   section_title: string | null
   section_anchor: string | null
   body: string
-  author_id: string
+  author_id: string | null
   status: CommentStatus
   category: CommentCategory | null
   points_awarded: number
@@ -50,7 +50,7 @@ export type ReplyRow = {
   id: string
   comment_id: string
   body: string
-  author_id: string
+  author_id: string | null
   is_claude_reply: boolean
   is_anonymous: boolean
   created_at: string

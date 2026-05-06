@@ -20,6 +20,7 @@ import {
   MessageCircleOff,
   EyeOff,
   VenetianMask,
+  User as UserIcon,
 } from 'lucide-react'
 
 import { UserAvatar } from './UserAvatar'
@@ -99,24 +100,28 @@ export function CommentsClient({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!me) return
     const body = text.trim()
     if (!body) return
     setSubmitting(true)
     setError(null)
+    const payload = {
+      slug,
+      page_title: pageTitle ?? null,
+      section_title: null as string | null,
+      section_anchor: null as string | null,
+      body,
+      author_id: (me?.id ?? null) as string | null,
+      status: (me && noReview ? 'general' : 'pending') as
+        | 'general'
+        | 'pending',
+      visibility: (me && modOnly ? 'mod_only' : 'public') as
+        | 'mod_only'
+        | 'public',
+      is_anonymous: !!me && anonymous,
+    }
     const { data, error: insertError } = await supabase
       .from('comments')
-      .insert({
-        slug,
-        page_title: pageTitle ?? null,
-        section_title: null,
-        section_anchor: null,
-        body,
-        author_id: me.id,
-        status: noReview ? 'general' : 'pending',
-        visibility: modOnly ? 'mod_only' : 'public',
-        is_anonymous: anonymous,
-      })
+      .insert(payload as never)
       .select('*')
       .single()
     setSubmitting(false)
@@ -126,12 +131,14 @@ export function CommentsClient({
     }
     const optimistic: CommentWithAuthor = {
       ...(data as unknown as CommentWithAuthor),
-      author: {
-        id: me.id,
-        display_name: me.displayName,
-        avatar_url: me.avatarUrl,
-        role: me.isModerator ? 'moderator' : 'user',
-      },
+      author: me
+        ? {
+            id: me.id,
+            display_name: me.displayName,
+            avatar_url: me.avatarUrl,
+            role: me.isModerator ? 'moderator' : 'user',
+          }
+        : null,
       replies: [],
     }
     setComments((prev) => [optimistic, ...prev])
@@ -203,18 +210,19 @@ export function CommentsClient({
     asClaude: boolean,
     asAnonymous: boolean,
   ) => {
-    if (!me) return
     const trimmed = replyText.trim()
     if (!trimmed) return
+    const isClaude = !!me && asClaude && me.isModerator
+    const payload = {
+      comment_id: commentId,
+      body: trimmed,
+      author_id: (me?.id ?? null) as string | null,
+      is_claude_reply: isClaude,
+      is_anonymous: !!me && asAnonymous && !isClaude,
+    }
     const { data, error: insertError } = await supabase
       .from('replies')
-      .insert({
-        comment_id: commentId,
-        body: trimmed,
-        author_id: me.id,
-        is_claude_reply: asClaude && me.isModerator,
-        is_anonymous: asAnonymous && !(asClaude && me.isModerator),
-      })
+      .insert(payload as never)
       .select('*')
       .single()
     if (insertError || !data) {
@@ -223,12 +231,14 @@ export function CommentsClient({
     }
     const optimistic: ReplyWithAuthor = {
       ...(data as unknown as ReplyWithAuthor),
-      author: {
-        id: me.id,
-        display_name: me.displayName,
-        avatar_url: me.avatarUrl,
-        role: me.isModerator ? 'moderator' : 'user',
-      },
+      author: me
+        ? {
+            id: me.id,
+            display_name: me.displayName,
+            avatar_url: me.avatarUrl,
+            role: me.isModerator ? 'moderator' : 'user',
+          }
+        : null,
     }
     setComments((prev) =>
       prev.map((c) =>
@@ -294,8 +304,8 @@ export function CommentsClient({
         </div>
       </div>
 
-      {me ? (
-        <form id="comments-form" onSubmit={handleSubmit} className="mb-4 space-y-2">
+      <form id="comments-form" onSubmit={handleSubmit} className="mb-4 space-y-2">
+        {me ? (
           <div className="flex items-center gap-2 text-xs text-fg-muted">
             <span>Ως:</span>
             <UserAvatar url={me.avatarUrl} name={me.displayName} size="xs" />
@@ -307,14 +317,29 @@ export function CommentsClient({
               </span>
             )}
           </div>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Γενικό σχόλιο για όλη τη σελίδα — διόρθωση, tip, αναλογία, ή απλά κάτι που σκέφτηκες…"
-            rows={3}
-            className="w-full resize-none rounded-md border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-accent"
-            maxLength={2000}
-          />
+        ) : (
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-fg-subtle/40 bg-bg-soft px-2 py-0.5 text-[11px] font-medium text-fg-muted">
+              Posting ως Επισκέπτης — χωρίς πόντους
+            </span>
+            <Link
+              href="/sign-in"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
+            >
+              <LogIn className="h-3 w-3" aria-hidden />
+              Συνδέσου
+            </Link>
+          </div>
+        )}
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Γενικό σχόλιο για όλη τη σελίδα — διόρθωση, tip, αναλογία, ή απλά κάτι που σκέφτηκες…"
+          rows={3}
+          className="w-full resize-none rounded-md border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-accent"
+          maxLength={2000}
+        />
+        {me && (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-fg-muted">
             <label
               className="inline-flex items-center gap-1.5"
@@ -364,37 +389,21 @@ export function CommentsClient({
               Ανώνυμα
             </label>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] text-fg-subtle">
-              {text.length}/2000 χαρακτήρες
-            </span>
-            <button
-              type="submit"
-              disabled={!text.trim() || submitting}
-              className="inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
-            >
-              <Send className="h-3.5 w-3.5" aria-hidden />
-              {submitting ? 'Αποθήκευση…' : 'Υπόβαλε'}
-            </button>
-          </div>
-        </form>
-      ) : (
-        <div
-          id="comments-form"
-          className="mb-4 flex flex-wrap items-center gap-3 rounded-lg border border-dashed border-border bg-bg-soft px-4 py-3 text-sm"
-        >
-          <span className="text-fg-muted">
-            Συνδέσου για να αφήσεις σχόλιο.
+        )}
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] text-fg-subtle">
+            {text.length}/2000 χαρακτήρες
           </span>
-          <Link
-            href="/sign-in"
-            className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
+          <button
+            type="submit"
+            disabled={!text.trim() || submitting}
+            className="inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
           >
-            <LogIn className="h-3 w-3" aria-hidden />
-            Σύνδεση
-          </Link>
+            <Send className="h-3.5 w-3.5" aria-hidden />
+            {submitting ? 'Αποθήκευση…' : 'Υπόβαλε'}
+          </button>
         </div>
-      )}
+      </form>
 
       {error && (
         <div className="mb-3 flex items-start gap-2 rounded-md border border-rose-500/40 bg-rose-500/5 p-3 text-xs text-rose-700 dark:text-rose-300">
@@ -481,12 +490,15 @@ function CommentItem({
     setReviewOpen(false)
   }
 
+  const isGuest = comment.author_id === null
   const tint =
     comment.status === 'resolved'
       ? 'border-emerald-500/40 bg-emerald-500/5'
-      : isMod
-        ? 'border-amber-500/40 bg-amber-500/5'
-        : 'border-border bg-bg-soft/40'
+      : isGuest
+        ? 'border-dashed border-fg-subtle/40 bg-bg-soft/30'
+        : isMod
+          ? 'border-amber-500/40 bg-amber-500/5'
+          : 'border-border bg-bg-soft/40'
 
   // For anonymous comments shown to mod/author, the joined `author` is the
   // real profile. The flag `comment.is_anonymous` tells us how the public
@@ -498,13 +510,24 @@ function CommentItem({
   return (
     <li className={`rounded-lg border p-3 transition ${tint}`}>
       <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs">
-        <UserAvatar
-          url={comment.author?.avatar_url}
-          name={comment.author?.display_name}
-          size="sm"
-        />
-        <span className="font-semibold text-fg">
-          {(comment.author?.display_name ?? '—') + youSuffix + anonSuffix}
+        {isGuest ? (
+          <span
+            aria-hidden
+            className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-dashed border-fg-subtle/50 bg-bg-soft text-fg-subtle"
+          >
+            <UserIcon className="h-3 w-3" aria-hidden />
+          </span>
+        ) : (
+          <UserAvatar
+            url={comment.author?.avatar_url}
+            name={comment.author?.display_name}
+            size="sm"
+          />
+        )}
+        <span className={isGuest ? 'font-medium text-fg-muted' : 'font-semibold text-fg'}>
+          {isGuest
+            ? 'Επισκέπτης'
+            : (comment.author?.display_name ?? '—') + youSuffix + anonSuffix}
         </span>
         {comment.author?.role === 'moderator' && (
           <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300">
@@ -627,27 +650,17 @@ function CommentItem({
       )}
 
       <div className="mt-3 flex flex-wrap gap-3">
-        {me ? (
-          <button
-            type="button"
-            onClick={() => setReplyOpen((v) => !v)}
-            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-fg-muted hover:text-accent"
-          >
-            <Reply className="h-3.5 w-3.5" aria-hidden />
-            Απάντηση
-            <ChevronDown
-              className={`h-3.5 w-3.5 transition ${replyOpen ? 'rotate-180' : ''}`}
-            />
-          </button>
-        ) : (
-          <Link
-            href="/sign-in"
-            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-fg-muted hover:text-accent"
-          >
-            <Reply className="h-3.5 w-3.5" aria-hidden />
-            Συνδέσου για απάντηση
-          </Link>
-        )}
+        <button
+          type="button"
+          onClick={() => setReplyOpen((v) => !v)}
+          className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-fg-muted hover:text-accent"
+        >
+          <Reply className="h-3.5 w-3.5" aria-hidden />
+          Απάντηση
+          <ChevronDown
+            className={`h-3.5 w-3.5 transition ${replyOpen ? 'rotate-180' : ''}`}
+          />
+        </button>
         {moderate && (
           <button
             type="button"
@@ -663,39 +676,45 @@ function CommentItem({
         )}
       </div>
 
-      {replyOpen && me && (
+      {replyOpen && (
         <form onSubmit={handleReplySubmit} className="mt-2 space-y-2">
-          <div className="flex flex-wrap gap-2">
-            {isMod && (
-              <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
+          {me ? (
+            <div className="flex flex-wrap gap-2">
+              {isMod && (
+                <label className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
+                  <input
+                    type="checkbox"
+                    checked={replyAsClaude}
+                    onChange={(e) => {
+                      setReplyAsClaude(e.target.checked)
+                      if (e.target.checked) setReplyAsAnonymous(false)
+                    }}
+                    className="h-3 w-3"
+                  />
+                  <Sparkles className="h-3 w-3" aria-hidden />
+                  Reply ως Claude
+                </label>
+              )}
+              <label
+                className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-2 py-1 text-[11px] font-medium text-fg-muted"
+                title="Το όνομά σου θα είναι κρυμμένο — οι moderators ξέρουν ποιος έγραψε."
+              >
                 <input
                   type="checkbox"
-                  checked={replyAsClaude}
-                  onChange={(e) => {
-                    setReplyAsClaude(e.target.checked)
-                    if (e.target.checked) setReplyAsAnonymous(false)
-                  }}
-                  className="h-3 w-3"
+                  checked={replyAsAnonymous}
+                  onChange={(e) => setReplyAsAnonymous(e.target.checked)}
+                  disabled={replyAsClaude}
+                  className="h-3 w-3 disabled:opacity-50"
                 />
-                <Sparkles className="h-3 w-3" aria-hidden />
-                Reply ως Claude
+                <VenetianMask className="h-3 w-3" aria-hidden />
+                Ανώνυμα
               </label>
-            )}
-            <label
-              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-2 py-1 text-[11px] font-medium text-fg-muted"
-              title="Το όνομά σου θα είναι κρυμμένο — οι moderators ξέρουν ποιος έγραψε."
-            >
-              <input
-                type="checkbox"
-                checked={replyAsAnonymous}
-                onChange={(e) => setReplyAsAnonymous(e.target.checked)}
-                disabled={replyAsClaude}
-                className="h-3 w-3 disabled:opacity-50"
-              />
-              <VenetianMask className="h-3 w-3" aria-hidden />
-              Ανώνυμα
-            </label>
-          </div>
+            </div>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-fg-subtle/40 bg-bg-soft px-2 py-0.5 text-[11px] font-medium text-fg-muted">
+              Reply ως Επισκέπτης
+            </span>
+          )}
           <textarea
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
@@ -795,7 +814,8 @@ function ReplyItem({
   onRemove: () => void
 }) {
   const isClaude = reply.is_claude_reply
-  const isAuthor = me?.id === reply.author_id
+  const isGuest = !isClaude && reply.author_id === null
+  const isAuthor = me?.id !== undefined && me?.id === reply.author_id
   const isMod = me?.isModerator ?? false
   const createdMs = new Date(reply.created_at).getTime()
   const canDelete = isMod || (isAuthor && Date.now() - createdMs < DELETE_WINDOW_MS)
@@ -809,7 +829,9 @@ function ReplyItem({
       className={`rounded-md p-2 ${
         isClaude
           ? 'border border-purple-500/30 bg-purple-500/5'
-          : 'bg-bg-soft/60'
+          : isGuest
+            ? 'border border-dashed border-fg-subtle/40 bg-bg-soft/40'
+            : 'bg-bg-soft/60'
       }`}
     >
       <div className="mb-1 flex items-center gap-2 text-xs">
@@ -820,6 +842,16 @@ function ReplyItem({
             <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-0 text-[10px] font-mono text-purple-700 dark:text-purple-300">
               AI
             </span>
+          </span>
+        ) : isGuest ? (
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              aria-hidden
+              className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-dashed border-fg-subtle/50 bg-bg-soft text-fg-subtle"
+            >
+              <UserIcon className="h-2.5 w-2.5" aria-hidden />
+            </span>
+            <span className="font-medium text-fg-muted">Επισκέπτης</span>
           </span>
         ) : (
           <span className="inline-flex items-center gap-1.5">
