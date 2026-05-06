@@ -36,7 +36,10 @@ export function ExerciseCard({ exercise }: Props) {
   }
 
   return (
-    <article className="rounded-xl border border-border bg-bg-elevated p-5 shadow-sm transition hover:border-border/80">
+    <article
+      id={`exercise:${exercise.id}`}
+      className="scroll-mt-20 rounded-xl border border-border bg-bg-elevated p-5 shadow-sm transition hover:border-border/80"
+    >
       {/* Header row: badges */}
       <div className="mb-3 flex flex-wrap items-center gap-1.5">
         <span
