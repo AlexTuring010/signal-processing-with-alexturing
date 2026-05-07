@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Pencil, X, Check, Volume2, VolumeX } from 'lucide-react'
+import { Pencil, X, Check, Volume2, VolumeX, Gamepad2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { usePetStore, formatAge } from '@/lib/pet/store'
 import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
@@ -11,6 +11,7 @@ import { NeedBar } from './NeedBar'
 import { ActionRow } from './ActionRow'
 import { HatchDialog } from './HatchDialog'
 import { Particles, SleepZs } from './particles'
+import { MiniGame } from './MiniGame'
 
 type Props = {
   onClose: () => void
@@ -25,11 +26,14 @@ export function PetPanel({ onClose }: Props) {
   const rename = usePetStore((s) => s.rename)
   const reset = usePetStore((s) => s.reset)
 
+  const canPlayGame = usePetStore((s) => s.canPlayGame)
   const [editing, setEditing] = useState(false)
   const [draftName, setDraftName] = useState(state.name)
   const [confirmReset, setConfirmReset] = useState(false)
   const [soundOn, setSoundOn] = useState(false)
+  const [mode, setMode] = useState<'idle' | 'game'>('idle')
   const panelRef = useRef<HTMLDivElement>(null)
+  const gameStatus = canPlayGame()
 
   useEffect(() => {
     setSoundOn(getSoundEnabled())
@@ -105,6 +109,23 @@ export function PetPanel({ onClose }: Props) {
             </span>
           )}
         </div>
+        {state.stage !== 'egg' && mode === 'idle' && (
+          <button
+            type="button"
+            onClick={() => setMode('game')}
+            disabled={!gameStatus.ok}
+            title={gameStatus.ok ? 'Apple Catcher (−15 ενέργεια)' : gameStatus.reason}
+            aria-label="Άνοιξε το παιχνίδι"
+            className={cn(
+              'rounded p-1 transition-colors',
+              gameStatus.ok
+                ? 'text-fg-subtle hover:bg-accent-soft/40 hover:text-accent'
+                : 'cursor-not-allowed text-fg-subtle/50',
+            )}
+          >
+            <Gamepad2 className="h-4 w-4" />
+          </button>
+        )}
         <button
           type="button"
           onClick={onClose}
@@ -117,6 +138,8 @@ export function PetPanel({ onClose }: Props) {
 
       {state.stage === 'egg' ? (
         <HatchDialog />
+      ) : mode === 'game' ? (
+        <MiniGame onExit={() => setMode('idle')} />
       ) : (
         <>
           {/* Stage scene */}

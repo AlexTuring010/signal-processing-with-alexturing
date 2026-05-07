@@ -95,7 +95,20 @@ function playNotes(notes: Note[]) {
 }
 
 /** Play the SFX for a given action. Silently no-ops when muted. */
-export function playPetSound(kind: ActionKind | 'study' | 'click' | 'evolve'): void {
+export function playPetSound(
+  kind:
+    | ActionKind
+    | 'study'
+    | 'click'
+    | 'evolve'
+    | 'catch'
+    | 'goldcatch'
+    | 'rotten'
+    | 'miss'
+    | 'victory'
+    | 'newbest'
+    | 'tick',
+): void {
   switch (kind) {
     case 'feed':
       playNotes([
@@ -153,6 +166,49 @@ export function playPetSound(kind: ActionKind | 'study' | 'click' | 'evolve'): v
         { freq: 784, dur: 0.06, at: 0.14 },
         { freq: 1047, dur: 0.16, at: 0.21 },
       ])
+      break
+    case 'catch':
+      playNotes([{ freq: 988, dur: 0.05, type: 'square', vol: 0.55 }])
+      break
+    case 'goldcatch':
+      playNotes([
+        { freq: 1175, dur: 0.05, at: 0, type: 'triangle', vol: 0.7 },
+        { freq: 1568, dur: 0.05, at: 0.05, type: 'triangle', vol: 0.7 },
+        { freq: 2093, dur: 0.1, at: 0.1, type: 'triangle', vol: 0.6 },
+      ])
+      break
+    case 'rotten':
+      playNotes([
+        { freq: 196, dur: 0.12, type: 'sawtooth', vol: 0.55 },
+        { freq: 147, dur: 0.16, at: 0.08, type: 'sawtooth', vol: 0.55 },
+      ])
+      break
+    case 'miss':
+      playNotes([
+        { freq: 220, dur: 0.08, type: 'square', vol: 0.4 },
+        { freq: 165, dur: 0.1, at: 0.06, type: 'square', vol: 0.4 },
+      ])
+      break
+    case 'victory':
+      playNotes([
+        { freq: 523, dur: 0.08, at: 0 },
+        { freq: 659, dur: 0.08, at: 0.09 },
+        { freq: 784, dur: 0.08, at: 0.18 },
+        { freq: 1047, dur: 0.18, at: 0.27 },
+        { freq: 1319, dur: 0.22, at: 0.35, type: 'triangle' },
+      ])
+      break
+    case 'newbest':
+      playNotes([
+        { freq: 784, dur: 0.06, at: 0 },
+        { freq: 1047, dur: 0.06, at: 0.07 },
+        { freq: 1319, dur: 0.06, at: 0.14 },
+        { freq: 1568, dur: 0.06, at: 0.21 },
+        { freq: 2093, dur: 0.18, at: 0.28, type: 'triangle' },
+      ])
+      break
+    case 'tick':
+      playNotes([{ freq: 1320, dur: 0.03, type: 'square', vol: 0.35 }])
       break
   }
 }

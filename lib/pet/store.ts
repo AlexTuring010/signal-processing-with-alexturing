@@ -48,6 +48,14 @@ type Store = {
   mood: () => Mood
   /** Whether an action is currently allowed (cooldown / sleeping / stage rules). */
   canDo: (kind: ActionKind) => { ok: boolean; reason?: string }
+  /** Begin a minigame round. Deducts energy upfront; returns true if started. */
+  startGame: () => boolean
+  /** End a minigame round. Awards happiness based on score and persists high score. */
+  endGame: (score: number) => { reward: number; high: number; newBest: boolean }
+  /** Whether a minigame round can start right now. */
+  canPlayGame: () => { ok: boolean; reason?: string }
+  /** Read the persisted high score. */
+  getHighScore: () => number
 }
 
 let boostCounter = 0
@@ -294,6 +302,51 @@ export const usePetStore = create<Store>((set, get) => ({
         return { ok: true }
     }
   },
+
+  canPlayGame: () => {
+    const s = get().state
+    if (s.stage === 'egg') return { ok: false, reason: 'Δεν έχει κλωσσήσει.' }
+    if (s.sleeping) return { ok: false, reason: 'Κοιμάται.' }
+    if (s.sickSince !== null) return { ok: false, reason: 'Είναι άρρωστο.' }
+    if (s.needs.energy < 15) return { ok: false, reason: 'Δεν έχει αρκετή ενέργεια.' }
+    return { ok: true }
+  },
+
+  startGame: () => {
+    const now = Date.now()
+    let s = commit(get().state, now)
+    if (s.stage === 'egg' || s.sleeping || s.needs.energy < 15) return false
+    s = { ...s, needs: { ...s.needs, energy: clamp(s.needs.energy - 15) } }
+    persist(s)
+    set({ state: s })
+    return true
+  },
+
+  endGame: (score) => {
+    const now = Date.now()
+    let s = commit(get().state, now)
+    // Reward: 1.4x the score, modestly capped so a regular Play stays relevant
+    // for low scores. A genuinely good run beats a regular Play comfortably.
+    const reward = Math.max(0, Math.min(45, Math.round(score * 1.4)))
+    if (reward > 0) {
+      s = {
+        ...s,
+        needs: { ...s.needs, happiness: clamp(s.needs.happiness + reward) },
+        totalActions: s.totalActions + 1,
+      }
+      persist(s)
+    }
+
+    const prevHigh = readJSON<number>(STORAGE_KEYS.petGameHigh, 0) ?? 0
+    const newBest = score > prevHigh
+    if (newBest) writeJSON(STORAGE_KEYS.petGameHigh, score)
+    const high = newBest ? score : prevHigh
+
+    set({ state: s })
+    return { reward, high, newBest }
+  },
+
+  getHighScore: () => readJSON<number>(STORAGE_KEYS.petGameHigh, 0) ?? 0,
 }))
 
 /** Selector: any need < 20 OR sick → show the red attention dot on the collapsed button. */
