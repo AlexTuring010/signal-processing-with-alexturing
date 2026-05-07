@@ -62,10 +62,7 @@ function highlight(text: string, tokens: string[]): React.ReactNode {
   merged.forEach(([start, end], i) => {
     if (cursor < start) out.push(text.slice(cursor, start))
     out.push(
-      <mark
-        key={i}
-        className="rounded bg-accent-soft px-0.5 text-fg"
-      >
+      <mark key={i} className="rounded bg-accent-soft px-0.5 text-fg">
         {text.slice(start, end)}
       </mark>,
     )
@@ -82,7 +79,8 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
-  const panelRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
 
   const tokens = useMemo(() => {
     const q = normalize(query.trim())
@@ -103,6 +101,7 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
     setActive(0)
   }, [query])
 
+  // ⌘K to open, Esc to close.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -115,6 +114,16 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [])
+
+  // Close when a press starts outside the search container. Only listens while open.
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) setOpen(false)
+    }
+    window.addEventListener('mousedown', handler)
+    return () => window.removeEventListener('mousedown', handler)
+  }, [open])
 
   useEffect(() => {
     if (open) {
@@ -133,6 +142,7 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
   function go(entry: SearchEntry) {
     setOpen(false)
     router.push(entry.url)
+    triggerRef.current?.blur()
   }
 
   function onKey(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -151,15 +161,21 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
   }
 
   return (
-    <>
+    <div ref={containerRef} className="relative">
       <button
+        ref={triggerRef}
         type="button"
-        onClick={() => setOpen(true)}
-        className={cn(
-          'flex items-center gap-2 rounded-full border border-border bg-bg-soft px-3 py-1.5 text-sm text-fg-muted transition-colors hover:border-accent/50 hover:text-fg',
-          'min-w-0 sm:min-w-[16rem]',
-        )}
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="dialog"
+        aria-expanded={open}
         aria-label="Αναζήτηση"
+        className={cn(
+          'flex items-center gap-2 rounded-full border bg-bg-soft px-3 py-1.5 text-sm transition-colors',
+          'min-w-0 sm:min-w-[16rem]',
+          open
+            ? 'border-accent text-fg'
+            : 'border-border text-fg-muted hover:border-accent/50 hover:text-fg',
+        )}
       >
         <Search className="h-4 w-4 shrink-0" aria-hidden="true" />
         <span className="hidden flex-1 text-left sm:inline">Αναζήτηση...</span>
@@ -171,23 +187,12 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
       {open && (
         <div
           role="dialog"
-          aria-modal="true"
           aria-label="Αναζήτηση"
-          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[10vh]"
-          onMouseDown={(e) => {
-            if (!panelRef.current?.contains(e.target as Node)) setOpen(false)
-          }}
+          className="search-dropdown absolute left-1/2 top-full z-50 mt-2 w-[36rem] max-w-[calc(100vw-1.5rem)]"
         >
-          <div
-            className="dialog-backdrop absolute inset-0 bg-black/40 backdrop-blur-sm"
-            aria-hidden="true"
-          />
-          <div
-            ref={panelRef}
-            className="dialog-panel relative flex max-h-[70vh] w-full max-w-xl flex-col overflow-hidden rounded-xl border border-border bg-bg-elevated shadow-2xl"
-          >
-            <div className="flex items-center gap-2 border-b border-border px-4 py-3">
-              <Search className="h-4 w-4 text-fg-muted" aria-hidden="true" />
+          <div className="flex max-h-[70vh] flex-col overflow-hidden rounded-xl border border-border bg-bg-elevated shadow-xl ring-1 ring-black/5">
+            <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
+              <Search className="h-4 w-4 shrink-0 text-fg-muted" aria-hidden="true" />
               <input
                 ref={inputRef}
                 type="text"
@@ -195,7 +200,7 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKey}
-                className="flex-1 bg-transparent text-base outline-none placeholder:text-fg-subtle"
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-fg-subtle"
                 aria-controls="search-results"
                 aria-activedescendant={results[active] ? `search-result-${active}` : undefined}
                 role="combobox"
@@ -205,7 +210,7 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded p-1 text-fg-muted hover:bg-bg-soft hover:text-fg"
+                className="rounded p-1 text-fg-muted transition-colors hover:bg-bg-soft hover:text-fg"
                 aria-label="Κλείσιμο"
               >
                 <X className="h-4 w-4" />
@@ -213,16 +218,17 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
             </div>
 
             {tokens.length === 0 ? (
-              <div className="px-4 py-6 text-sm text-fg-muted">
+              <div className="px-4 py-5 text-sm text-fg-muted">
                 <p>Γράψε για να ψάξεις σε όλα τα κεφάλαια.</p>
                 <p className="mt-2 text-xs text-fg-subtle">
-                  Tip: δοκίμασε <kbd className="rounded border border-border bg-bg px-1 font-mono">fourier</kbd>,{' '}
+                  Tip: δοκίμασε{' '}
+                  <kbd className="rounded border border-border bg-bg px-1 font-mono">fourier</kbd>,{' '}
                   <kbd className="rounded border border-border bg-bg px-1 font-mono">am</kbd>, ή{' '}
                   <kbd className="rounded border border-border bg-bg px-1 font-mono">θόρυβος</kbd>.
                 </p>
               </div>
             ) : results.length === 0 ? (
-              <div className="px-4 py-6 text-center text-sm text-fg-muted">
+              <div className="px-4 py-5 text-center text-sm text-fg-muted">
                 Δεν βρέθηκαν αποτελέσματα για «{query}».
               </div>
             ) : (
@@ -271,7 +277,7 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
             )}
 
             {results.length > 0 && (
-              <div className="flex items-center justify-between gap-3 border-t border-border bg-bg-soft px-4 py-2 text-[11px] text-fg-subtle">
+              <div className="flex items-center justify-between gap-3 border-t border-border bg-bg-soft px-3 py-1.5 text-[11px] text-fg-subtle">
                 <span className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
                     <kbd className="rounded border border-border bg-bg px-1 font-mono">↑</kbd>
@@ -295,6 +301,6 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

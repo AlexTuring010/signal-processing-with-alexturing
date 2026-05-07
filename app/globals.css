@@ -309,24 +309,18 @@ html {
   top: 1rem;
 }
 
-/* Modal entrance — used by the search dialog */
-@keyframes dialog-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* Search dropdown — slides down + fades from the trigger button.
+   The element is centered horizontally with `left: 50%` + `translateX(-50%)`,
+   so the keyframes preserve that X offset while animating Y / scale. */
+@keyframes search-dropdown-in {
+  from { opacity: 0; transform: translate(-50%, -6px) scale(0.98); }
+  to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
 
-@keyframes dialog-pop-in {
-  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.dialog-backdrop {
-  animation: dialog-fade-in 140ms ease-out;
-}
-
-.dialog-panel {
-  animation: dialog-pop-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+.search-dropdown {
+  transform: translateX(-50%);
   transform-origin: top center;
+  animation: search-dropdown-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Music player — bouncing EQ bars + filled volume slider */
