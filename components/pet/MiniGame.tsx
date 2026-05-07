@@ -566,7 +566,8 @@ function ResultOverlay({
         Σκορ <span className="text-base font-bold tabular-nums">{result.score}</span>
       </p>
       <p className="text-[11px] text-fg-muted">
-        Επιβίωσες {formatSurvived(survivedMs)} · +{result.reward} χαρά · Best: {result.high}
+        Επιβίωσες {formatSurvived(survivedMs)} · +{result.reward} χαρά · Best:{' '}
+        {result.high}
       </p>
       <div className="mt-1 flex items-center gap-2">
         <button

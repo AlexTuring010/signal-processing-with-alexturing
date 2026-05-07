@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Pencil, X, Check, Volume2, VolumeX, Sparkles } from 'lucide-react'
+import { Pencil, X, Check, Volume2, VolumeX, Sparkles, Trees, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { usePetStore, formatAge, evolutionProgress } from '@/lib/pet/store'
 import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
 import { getSoundEnabled, setSoundEnabled, playPetSound } from '@/lib/pet/audio'
+import { refreshOrchardSoundFlag } from '@/lib/orchard/audio'
 import { PetSprite } from './PetSprite'
 import { NeedBar } from './NeedBar'
 import { ActionRow } from './ActionRow'
@@ -15,9 +16,10 @@ import { MiniGame } from './MiniGame'
 
 type Props = {
   onClose: () => void
+  onOpenOrchard: () => void
 }
 
-export function PetPanel({ onClose }: Props) {
+export function PetPanel({ onClose, onOpenOrchard }: Props) {
   const state = usePetStore((s) => s.state)
   const mood = usePetStore((s) => s.mood())
   const lastAction = usePetStore((s) => s.lastAction)
@@ -41,6 +43,9 @@ export function PetPanel({ onClose }: Props) {
     const next = !soundOn
     setSoundEnabled(next)
     setSoundOn(next)
+    // The orchard audio module caches the flag on first read — refresh it
+    // so flipping the toggle also (un)mutes orchard SFX without a reload.
+    refreshOrchardSoundFlag()
     if (next) playPetSound('click')
   }
 
@@ -63,7 +68,7 @@ export function PetPanel({ onClose }: Props) {
       ref={panelRef}
       role="dialog"
       aria-label="Σιγμάκι"
-      className="pet-panel-in absolute bottom-[68px] left-0 w-[280px] max-w-[calc(100vw-2rem)] origin-bottom-left rounded-2xl border border-border bg-bg-elevated shadow-xl"
+      className="pet-panel-in absolute bottom-[68px] left-0 flex max-h-[calc(100vh-90px)] w-[280px] max-w-[calc(100vw-2rem)] origin-bottom-left flex-col overflow-y-auto rounded-2xl border border-border bg-bg-elevated shadow-xl"
     >
       <header className="flex items-center justify-between gap-2 border-b border-border px-3 py-2">
         <div className="flex min-w-0 flex-1 items-center gap-1.5">
@@ -179,8 +184,38 @@ export function PetPanel({ onClose }: Props) {
           <EvolutionRow />
 
           {/* Actions */}
-          <div className="px-3 pb-2 pt-3">
+          <div className="px-3 pt-3">
             <ActionRow onPlay={() => setMode('game')} />
+          </div>
+
+          {/* Orchard entry — prominent CTA so it's discoverable */}
+          <div className="px-3 pb-3 pt-2">
+            <button
+              type="button"
+              onClick={onOpenOrchard}
+              aria-label="Άνοιξε το μποστάνι"
+              className="pet-orchard-cta group relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-emerald-400/40 bg-gradient-to-r from-emerald-500/15 via-emerald-400/10 to-amber-400/15 px-3 py-2 text-left text-sm font-medium text-fg shadow-sm transition-transform hover:scale-[1.01] active:scale-[0.99]"
+            >
+              <span
+                aria-hidden="true"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-300"
+              >
+                <Trees className="h-4 w-4" />
+              </span>
+              <span className="flex flex-1 flex-col leading-tight">
+                <span>Μποστάνι</span>
+                <span className="text-[10px] font-normal text-fg-subtle">
+                  Φύτεψε, μάζεψε, πούλα
+                </span>
+              </span>
+              <span className="rounded-full bg-warn px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                Νέο
+              </span>
+              <ChevronRight
+                aria-hidden="true"
+                className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
+              />
+            </button>
           </div>
         </>
       )}
