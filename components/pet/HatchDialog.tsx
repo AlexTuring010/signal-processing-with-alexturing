@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Egg } from 'lucide-react'
 import { usePetStore } from '@/lib/pet/store'
 import { DEFAULT_NAME, MAX_NAME_LENGTH } from '@/lib/pet/defaults'
+import { playPetSound } from '@/lib/pet/audio'
 import { PetSprite } from './PetSprite'
 
 /**
@@ -18,6 +19,9 @@ export function HatchDialog() {
 
   function startCrack() {
     setPhase('cracking')
+    // Play the rumble + cheep alongside the visual crack animation so they
+    // land together. The store fires its own quieter "click" on submit.
+    playPetSound('hatch')
     window.setTimeout(() => setPhase('naming'), 1100)
   }
 

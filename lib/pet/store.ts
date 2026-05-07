@@ -135,7 +135,10 @@ export const usePetStore = create<Store>((set, get) => ({
         totalActions: s.totalActions + 1,
       }
       persist(s)
-      playPetSound('hatch')
+      // The HatchDialog plays the louder rumble+cheep when the user clicks
+      // "Κλώσσα" (during the visual crack animation). Here, on name submit,
+      // we play a small welcome chirp.
+      playPetSound('study')
       set({ state: s, lastAction: { kind, at: now } })
       return
     }
