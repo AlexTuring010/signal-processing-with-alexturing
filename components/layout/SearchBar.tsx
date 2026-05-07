@@ -82,6 +82,7 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const tokens = useMemo(() => {
     const q = normalize(query.trim())
@@ -172,13 +173,19 @@ export function SearchBar({ index }: { index: SearchEntry[] }) {
           role="dialog"
           aria-modal="true"
           aria-label="Αναζήτηση"
-          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[12vh]"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(false)
+          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[10vh]"
+          onMouseDown={(e) => {
+            if (!panelRef.current?.contains(e.target as Node)) setOpen(false)
           }}
         >
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" aria-hidden="true" />
-          <div className="relative flex max-h-[70vh] w-full max-w-xl flex-col overflow-hidden rounded-xl border border-border bg-bg-elevated shadow-2xl">
+          <div
+            className="dialog-backdrop absolute inset-0 bg-black/40 backdrop-blur-sm"
+            aria-hidden="true"
+          />
+          <div
+            ref={panelRef}
+            className="dialog-panel relative flex max-h-[70vh] w-full max-w-xl flex-col overflow-hidden rounded-xl border border-border bg-bg-elevated shadow-2xl"
+          >
             <div className="flex items-center gap-2 border-b border-border px-4 py-3">
               <Search className="h-4 w-4 text-fg-muted" aria-hidden="true" />
               <input
