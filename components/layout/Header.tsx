@@ -5,6 +5,7 @@ import { SearchBar } from './SearchBar'
 import { MobileNav } from './MobileNav'
 import { UserMenu } from './UserMenu'
 import { MusicPlayer } from './MusicPlayer'
+import { buildSearchIndex } from '@/lib/search/build-index'
 import { createClient } from '@/lib/supabase/server'
 
 export async function Header() {
@@ -12,6 +13,7 @@ export async function Header() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const searchIndex = buildSearchIndex()
 
   let menuUser: {
     id: string
@@ -50,7 +52,7 @@ export async function Header() {
         </Link>
 
         <div className="flex flex-1 justify-center">
-          <SearchBar />
+          <SearchBar index={searchIndex} />
         </div>
 
         <div className="flex items-center gap-2">
