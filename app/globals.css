@@ -329,9 +329,9 @@ html {
   transform-origin: top center;
 }
 
-/* Music player — bouncing bars + slim volume slider */
+/* Music player — bouncing EQ bars + filled volume slider */
 @keyframes music-bar {
-  0%, 100% { transform: scaleY(0.35); }
+  0%, 100% { transform: scaleY(0.3); }
   50%      { transform: scaleY(1); }
 }
 
@@ -340,32 +340,66 @@ html {
   animation: music-bar 900ms ease-in-out infinite;
 }
 
-.music-volume {
+/* Volume slider — gradient-filled track + larger circular thumb.
+   `--vol` is set inline (e.g. "65%") to drive the filled portion. */
+.music-slider {
   -webkit-appearance: none;
   appearance: none;
-  background: rgb(var(--border));
+  width: 84px;
+  height: 6px;
   border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    rgb(var(--accent)) 0%,
+    rgb(var(--accent)) var(--vol, 50%),
+    rgb(var(--border-strong)) var(--vol, 50%),
+    rgb(var(--border-strong)) 100%
+  );
+  cursor: pointer;
+  outline: none;
+  transition: background 80ms linear;
 }
 
-.music-volume::-webkit-slider-thumb {
+.music-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+}
+
+.music-slider::-moz-range-track {
+  height: 6px;
+  background: transparent;
+  border: none;
+}
+
+.music-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
+  margin-top: -4px;
   border-radius: 999px;
   background: rgb(var(--accent));
-  border: none;
-  cursor: pointer;
+  border: 2px solid rgb(var(--bg-elevated));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+  transition: transform 100ms ease;
 }
 
-.music-volume::-moz-range-thumb {
-  width: 10px;
-  height: 10px;
+.music-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
   border-radius: 999px;
   background: rgb(var(--accent));
-  border: none;
-  cursor: pointer;
+  border: 2px solid rgb(var(--bg-elevated));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+  transition: transform 100ms ease;
 }
+
+.music-slider:hover::-webkit-slider-thumb { transform: scale(1.1); }
+.music-slider:hover::-moz-range-thumb { transform: scale(1.1); }
+.music-slider:active::-webkit-slider-thumb { cursor: grabbing; }
+.music-slider:active::-moz-range-thumb { cursor: grabbing; }
 
 /* Subtle scrollbar in dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {

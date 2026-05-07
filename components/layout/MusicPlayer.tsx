@@ -1,10 +1,12 @@
 'use client'
 
+import type { CSSProperties } from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { Music, Volume2, VolumeX } from 'lucide-react'
+import { Music, Pause } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const STORAGE_VOLUME = 'cs-music-volume'
+const BAR_REST_HEIGHTS = ['35%', '75%', '55%'] // ascending-ish silhouette when paused
 
 export function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -37,12 +39,9 @@ export function MusicPlayer() {
     }
   }
 
-  const muted = volume === 0
-  const VolumeIcon = muted ? VolumeX : Volume2
-
   return (
     <div
-      className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-elevated p-0.5 pr-2"
+      className="inline-flex items-center gap-2 rounded-full border border-border bg-bg-elevated p-1 sm:pr-3"
       role="group"
       aria-label="Lofi μουσική"
     >
@@ -54,46 +53,46 @@ export function MusicPlayer() {
         aria-pressed={playing}
         aria-label={playing ? 'Παύση μουσικής' : 'Αναπαραγωγή lofi μουσικής'}
         title={playing ? 'Παύση' : 'Αναπαραγωγή lofi'}
-        className={cn(
-          'flex h-7 w-7 items-center justify-center rounded-full transition-colors',
-          playing
-            ? 'bg-accent text-accent-fg'
-            : 'text-fg-muted hover:text-fg hover:bg-bg-soft',
-        )}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-accent-fg shadow-sm transition-transform hover:scale-105 active:scale-95"
       >
-        {playing ? <PlayingBars /> : <Music className="h-3.5 w-3.5" />}
+        {playing ? (
+          <Pause className="h-3.5 w-3.5 fill-current" />
+        ) : (
+          <Music className="h-3.5 w-3.5" />
+        )}
       </button>
 
-      <div className="hidden items-center gap-1 sm:flex">
-        <VolumeIcon
-          className="h-3.5 w-3.5 text-fg-subtle"
-          aria-hidden="true"
-        />
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
-          aria-label="Ένταση μουσικής"
-          className="music-volume h-1 w-16 cursor-pointer"
-          style={{ accentColor: 'rgb(var(--accent))' }}
-        />
-      </div>
-    </div>
-  )
-}
+      <span
+        className="hidden h-4 items-end gap-[3px] sm:flex"
+        aria-hidden="true"
+      >
+        {BAR_REST_HEIGHTS.map((rest, i) => (
+          <span
+            key={i}
+            className={cn(
+              'block w-[3px] rounded-full bg-accent transition-[height,opacity] duration-200',
+              playing && 'music-bar',
+            )}
+            style={{
+              animationDelay: `${i * 130}ms`,
+              height: playing ? '100%' : rest,
+              opacity: playing ? 1 : 0.55,
+            }}
+          />
+        ))}
+      </span>
 
-function PlayingBars() {
-  return (
-    <span
-      className="flex h-3.5 w-3.5 items-end justify-between gap-[2px]"
-      aria-hidden="true"
-    >
-      <span className="music-bar h-full w-[2px] rounded-sm bg-current" style={{ animationDelay: '0ms' }} />
-      <span className="music-bar h-full w-[2px] rounded-sm bg-current" style={{ animationDelay: '150ms' }} />
-      <span className="music-bar h-full w-[2px] rounded-sm bg-current" style={{ animationDelay: '300ms' }} />
-    </span>
+      <input
+        type="range"
+        min={0}
+        max={1}
+        step={0.01}
+        value={volume}
+        onChange={(e) => setVolume(Number(e.target.value))}
+        aria-label="Ένταση μουσικής"
+        className="music-slider hidden sm:block"
+        style={{ '--vol': `${Math.round(volume * 100)}%` } as CSSProperties}
+      />
+    </div>
   )
 }
