@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Pencil, X, Check, Volume2, VolumeX } from 'lucide-react'
+import { Pencil, X, Check, Volume2, VolumeX, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { usePetStore, formatAge } from '@/lib/pet/store'
+import { usePetStore, formatAge, evolutionProgress } from '@/lib/pet/store'
 import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
 import { getSoundEnabled, setSoundEnabled, playPetSound } from '@/lib/pet/audio'
 import { PetSprite } from './PetSprite'
@@ -176,6 +176,8 @@ export function PetPanel({ onClose }: Props) {
             <NeedBar label="Ενέργεια" emoji="⚡" value={state.needs.energy} />
           </div>
 
+          <EvolutionRow />
+
           {/* Actions */}
           <div className="px-3 pb-2 pt-3">
             <ActionRow onPlay={() => setMode('game')} />
@@ -230,6 +232,67 @@ export function PetPanel({ onClose }: Props) {
           </button>
         )}
       </footer>
+    </div>
+  )
+}
+
+/**
+ * Small "Εξέλιξη" indicator. Shown only for baby pets — eggs haven't hatched
+ * yet, adults are terminal. Bar reflects the *limiting* factor (min of
+ * time-progress and care-progress) so the user sees the bottleneck. A short
+ * hint underneath says which one to fix.
+ */
+function EvolutionRow() {
+  const state = usePetStore((s) => s.state)
+  const progress = evolutionProgress(state)
+  if (!progress) return null
+
+  const pct = Math.round(progress.progress * 100)
+  const ready = progress.progress >= 1
+  const hint = ready
+    ? 'Έτοιμο για εξέλιξη ✨'
+    : progress.bottleneck === 'care'
+      ? 'Φρόντισέ το λίγο καλύτερα'
+      : 'Χρειάζεται λίγος χρόνος ακόμη'
+
+  return (
+    <div className="px-3 pt-2">
+      <div className="flex items-center gap-2">
+        <Sparkles
+          className={cn('h-3 w-3', ready ? 'text-warn' : 'text-fg-subtle')}
+          aria-hidden="true"
+        />
+        <span className="w-14 text-[10px] uppercase tracking-wide text-fg-subtle">
+          Εξέλιξη
+        </span>
+        <div
+          role="progressbar"
+          aria-label="Πρόοδος εξέλιξης"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={pct}
+          className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-bg-soft"
+        >
+          <div
+            className={cn(
+              'absolute inset-y-0 left-0 rounded-full transition-[width,background-color] duration-300',
+              ready ? 'bg-warn' : 'bg-accent',
+            )}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        <span className="w-10 text-right text-[10px] tabular-nums text-fg-subtle">
+          {pct}%
+        </span>
+      </div>
+      <p
+        className={cn(
+          'pl-7 pt-0.5 text-[10px]',
+          ready ? 'font-medium text-warn' : 'text-fg-subtle',
+        )}
+      >
+        {hint}
+      </p>
     </div>
   )
 }

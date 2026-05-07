@@ -6,6 +6,8 @@ import { useAppStore } from '../store'
 import type { ActionKind, Mood, PetState } from './types'
 import {
   ACTION_EFFECT,
+  ADULT_AGE_MS,
+  ADULT_RECENT_AVG,
   COOLDOWN_MS,
   DEFAULT_NAME,
   MAX_NAME_LENGTH,
@@ -355,6 +357,27 @@ export function selectNeedsAttention(state: PetState, now: number = Date.now()):
   const { hunger, happiness, energy } = state.needs
   const low = hunger < 20 || happiness < 20 || energy < 20
   return low || isSick(state, now)
+}
+
+/**
+ * Progress toward becoming an adult, broken down by gating factor.
+ * Both `time` and `care` must reach 1 for the pet to evolve. The displayed
+ * `progress` is the limiting factor (the smaller of the two), so the bar
+ * always tells you "this is the next thing holding evolution back."
+ *
+ * Returns `null` for non-baby stages — eggs don't evolve, adults are terminal.
+ */
+export function evolutionProgress(
+  state: PetState,
+  now: number = Date.now(),
+): { time: number; care: number; progress: number; bottleneck: 'time' | 'care' } | null {
+  if (state.stage !== 'baby' || state.hatchedAt === null) return null
+  const ageMs = Math.max(0, now - state.hatchedAt)
+  const time = Math.max(0, Math.min(1, ageMs / ADULT_AGE_MS))
+  const care = Math.max(0, Math.min(1, avgNeed(state.needs) / ADULT_RECENT_AVG))
+  const progress = Math.min(time, care)
+  const bottleneck = time <= care ? 'time' : 'care'
+  return { time, care, progress, bottleneck }
 }
 
 /** Format pet age as "Xη Yω" / "Xω". */
