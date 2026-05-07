@@ -156,7 +156,7 @@ export function FormulaSheetButton() {
       type="button"
       onClick={toggleSheet}
       aria-label={open ? 'Κλείσε τυπολόγιο' : 'Άνοιξε τυπολόγιο'}
-      className="fixed bottom-5 left-5 z-30 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent text-white px-4 py-2.5 text-sm font-semibold shadow-lg transition hover:scale-105 hover:opacity-90"
+      className="fixed bottom-[5.5rem] left-4 z-30 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent text-white px-4 py-2.5 text-sm font-semibold shadow-lg transition hover:scale-105 hover:opacity-90"
     >
       <Sigma className="h-4 w-4" aria-hidden />
       Τυπολόγιο

@@ -15,6 +15,7 @@ import {
 } from './defaults'
 import { applyDecay, avgNeed, isSick } from './decay'
 import { maybeEvolve } from './evolve'
+import { playPetSound } from './audio'
 
 const clamp = (v: number) => Math.max(NEED_MIN, Math.min(NEED_MAX, v))
 
@@ -103,13 +104,15 @@ export const usePetStore = create<Store>((set, get) => ({
 
   tick: () => {
     const now = Date.now()
-    const next = commit(get().state, now)
-    if (next === get().state) {
+    const prev = get().state
+    const next = commit(prev, now)
+    if (next === prev) {
       // Even if state didn't change semantically, prune expired boosts
       const fresh = get().boosts.filter((b) => b.expiresAt > now)
       if (fresh.length !== get().boosts.length) set({ boosts: fresh })
       return
     }
+    if (prev.stage !== 'adult' && next.stage === 'adult') playPetSound('evolve')
     persist(next)
     const fresh = get().boosts.filter((b) => b.expiresAt > now)
     set({ state: next, boosts: fresh })
@@ -132,6 +135,7 @@ export const usePetStore = create<Store>((set, get) => ({
         totalActions: s.totalActions + 1,
       }
       persist(s)
+      playPetSound('hatch')
       set({ state: s, lastAction: { kind, at: now } })
       return
     }
@@ -141,6 +145,7 @@ export const usePetStore = create<Store>((set, get) => ({
     if (kind === 'sleep') {
       s = { ...s, sleeping: !s.sleeping, totalActions: s.totalActions + 1 }
       persist(s)
+      playPetSound('sleep')
       set({ state: s, lastAction: { kind, at: now } })
       return
     }
@@ -158,6 +163,7 @@ export const usePetStore = create<Store>((set, get) => ({
             totalActions: s.totalActions + 1,
           }
       persist(next)
+      playPetSound('pet')
       set({ state: next, lastAction: { kind, at: now } })
       return
     }
@@ -178,6 +184,7 @@ export const usePetStore = create<Store>((set, get) => ({
         totalActions: s.totalActions + 1,
       }
       persist(next)
+      playPetSound('heal')
       set({ state: next, lastAction: { kind, at: now } })
       return
     }
@@ -200,6 +207,7 @@ export const usePetStore = create<Store>((set, get) => ({
         totalActions: s.totalActions + 1,
       }
       persist(next)
+      playPetSound(kind)
       set({ state: next, lastAction: { kind, at: now } })
       return
     }
@@ -225,6 +233,7 @@ export const usePetStore = create<Store>((set, get) => ({
 
     const label = kind === 'completion' ? '+8 από διάβασμα' : '+5 από άσκηση'
     const boost: Boost = { id: ++boostCounter, label, expiresAt: now + 2400 }
+    playPetSound('study')
     set({ state: s, boosts: [...get().boosts, boost] })
   },
 

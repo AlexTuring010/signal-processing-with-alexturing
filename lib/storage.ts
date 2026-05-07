@@ -49,4 +49,5 @@ export const STORAGE_KEYS = {
   bookmarks: 'spwa:bookmarks',
   solvedExercises: 'spwa:solvedExercises',
   pet: 'spwa:pet',
+  petSound: 'spwa:pet-sound',
 } as const
