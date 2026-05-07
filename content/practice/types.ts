@@ -14,7 +14,6 @@ export type Topic =
   | 'fm'
   | 'random'
   | 'noise'
-  | 'sampling'
 
 export type Difficulty = 'easy' | 'medium' | 'hard'
 
@@ -44,7 +43,6 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   fm: 'FM / PM',
   random: 'Random processes',
   noise: 'Noise',
-  sampling: 'Sampling',
 }
 
 export const TOPIC_COLORS: Record<Topic, string> = {
@@ -54,7 +52,6 @@ export const TOPIC_COLORS: Record<Topic, string> = {
   fm: 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300',
   random: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
   noise: 'border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300',
-  sampling: 'border-teal-500/40 bg-teal-500/10 text-teal-700 dark:text-teal-300',
 }
 
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -162,7 +159,6 @@ export const SECTION_TITLES: Record<string, string> = {
   'foundations/fourier-series': 'Fourier series',
   'foundations/fourier-transform': 'Fourier transform',
   'foundations/filters': 'Φίλτρα',
-  'foundations/sampling-theorem': 'Sampling theorem',
   'modulation/bridge': 'Bandpass & I/Q canonical form',
   'am/overview': 'AM Overview',
   'am/conventional': 'Conventional AM',

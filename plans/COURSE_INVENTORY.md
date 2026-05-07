@@ -179,7 +179,6 @@ Use these as the canonical numbers in chapter frontmatter:
 ### Remaining (planned)
 | Chapter | Source slides | Notes |
 | --- | --- | --- |
-| `/foundations/sampling-light` | (none — synthesised, light intro before random) | ⚠️ Optional. Exams don't test sampling. Could be skipped or built minimal. |
 | `/randomness/random-processes` | session 9 (1–19) + session 10 recap | Foundation for noise. Not heavily tested standalone. |
 | `/randomness/stationarity-ergodicity` | session 9 (20–35) | WSS, ergodicity. |
 | `/randomness/psd` | session 9 (35+) + session 10 | PSD, Wiener-Khinchin generalised to random signals. **Closes commitment** from FT §10. |
@@ -217,9 +216,9 @@ Use these as the canonical numbers in chapter frontmatter:
 
 **Implication for chapter linkage:** Each modulation chapter (AM, DSB-SC, SSB, FM, PM) should open with a back-reference to bandpass §5b row, then derive the spectrum + bandwidth + modulator/demodulator from there. Don't re-derive the canonical form.
 
-### "Is `/foundations/sampling-light` worth building?" — **Optional, low priority.**
+### "Is a sampling-theorem chapter worth building?" — **No, dropped 2026-05-07.**
 
-**Evidence:** Past-exams agent confirmed sampling is **0%** of the exam corpus. The original `00-overview.md` plan included it as foundational coverage, but the empirical evidence from 7 past exams says it doesn't get tested. Build it last in Foundations (after AM/FM/Noise are done) if there's appetite for completeness. Not load-bearing for any other chapter.
+**Evidence:** Past-exams agent confirmed sampling is **0%** of the exam corpus. K21 has no slide deck covering Nyquist–Shannon. A `/foundations/sampling-theorem` chapter was authored as "for completeness" but was load-bearing for nothing — no other chapter listed it as a prerequisite, and the only inbound link was a broken `<NextUp slug="foundations/sampling-light" />` from `/foundations/filters` (slug never existed). Removed the page, its three vizzes (`SamplingExplorerViz`, `AliasingViz`, `SpectrumReplicaViz`), the `'sampling'` Topic enum, and the two practice questions that depended on it. `/foundations/filters` now points NextUp to `/randomness/why`.
 
 ### "Hilbert transform exam weight" — **Effectively 0%.**
 
@@ -242,7 +241,7 @@ Based on exam weight + dependency graph + commitments-to-close:
 5. **`/fm/*`** group — second-biggest exam topic. Bessel + Carson are recurring exam patterns.
 6. **`/randomness/*`** + **`/noise/*`** — third-biggest combined exam weight. Lab 5 deploys here.
 
-**Skip until later** (low exam priority): `/foundations/sampling-light`, `/sampling-adc/*`, `/digital/*`. Build only after the high-weight content is solid.
+**Skip** (no exam coverage, no downstream dependencies): sampling theorem, `/sampling-adc/*`, `/digital/*`.
 
 ---
 

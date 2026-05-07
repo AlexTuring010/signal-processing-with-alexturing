@@ -50,7 +50,6 @@ export const CHAPTERS: Chapter[] = [
       { slug: 'foundations/fourier-series', title: 'Fourier series', available: true },
       { slug: 'foundations/fourier-transform', title: 'Fourier transform', available: true, examWeight: 18 },
       { slug: 'foundations/filters', title: 'Φίλτρα', available: true, examWeight: 5 },
-      { slug: 'foundations/sampling-theorem', title: 'Sampling theorem', available: true, examWeight: 1 },
       {
         slug: 'foundations/signal-transformations',
         title: 'Μετασχηματισμοί σήματος',

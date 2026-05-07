@@ -115,13 +115,6 @@ export const FORMULA_SHEET: FormulaSection[] = [
           </>
         ),
       },
-      {
-        id: 'sampling-nyquist',
-        title: 'Nyquist criterion',
-        topic: 'sampling',
-        derivedIn: 'foundations/sampling-theorem',
-        content: <BlockMath>{'f_s \\geq 2W \\;\\Rightarrow\\; \\text{ανακατασκευή τέλεια}'}</BlockMath>,
-      },
     ],
   },
 

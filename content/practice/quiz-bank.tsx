@@ -95,26 +95,6 @@ export const QUIZ_BANK: QuizQuestion[] = [
       </>
     ),
   },
-  {
-    id: 'tf-found-5',
-    type: 'true-false',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: ['foundations/sampling-theorem'],
-    question: (
-      <>
-        Το Nyquist rate για σήμα bandlimited στα <InlineMath>{'\\pm W'}</InlineMath>{' '}
-        Hz είναι <InlineMath>{'f_s \\geq W'}</InlineMath>.
-      </>
-    ),
-    correctAnswer: false,
-    explanation: (
-      <>
-        <strong>Λάθος.</strong> Είναι <InlineMath>{'f_s \\geq 2W'}</InlineMath> (διπλάσιο).
-        Παγίδα συχνή σε εξετάσεις — προσοχή στον παράγοντα 2.
-      </>
-    ),
-  },
 
   // ─────────── AM T/F ───────────
   {
@@ -460,34 +440,6 @@ export const QUIZ_BANK: QuizQuestion[] = [
         <InlineMath>{'\\eta = \\mu^2/(2 + \\mu^2) = 1/3 \\approx 33.3\\%'}</InlineMath>.
         Αυτή είναι η <em>θεωρητική μέγιστη</em> για conventional AM — γι' αυτό η AM
         είναι «σπάταλη» σε ισχύ.
-      </>
-    ),
-  },
-  {
-    id: 'mcq-sampling-rate',
-    type: 'multiple-choice',
-    topic: 'sampling',
-    difficulty: 'easy',
-    prerequisites: ['foundations/sampling-theorem'],
-    question: (
-      <>
-        Φωνή τηλεφωνίας περιορίζεται με anti-aliasing filter στα{' '}
-        <InlineMath>{'W = 3.4'}</InlineMath> kHz. Τυπικό sample rate για ψηφιακή
-        τηλεφωνία;
-      </>
-    ),
-    choices: [
-      <>3.4 kHz</>,
-      <>6.8 kHz</>,
-      <>8 kHz</>,
-      <>44.1 kHz</>,
-    ],
-    correctAnswer: 2,
-    explanation: (
-      <>
-        <strong>8 kHz.</strong> Λίγο πάνω από το Nyquist 6.8 kHz — η διαφορά είναι
-        guard band για το anti-aliasing filter. Τα 44.1 kHz είναι standard CD audio
-        (W = 20 kHz).
       </>
     ),
   },

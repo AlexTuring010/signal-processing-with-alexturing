@@ -18,7 +18,6 @@ const ALL_TOPICS: Topic[] = [
   'fm',
   'random',
   'noise',
-  'sampling',
 ]
 
 export function TopicFilter({ selected, onChange, onClear, counts }: Props) {
