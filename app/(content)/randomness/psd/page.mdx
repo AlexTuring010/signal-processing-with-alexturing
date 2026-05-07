@@ -35,6 +35,13 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
+<SourceDoc
+  sources={[
+    { pdf: 'SE_session9_random1_upload.pdf', label: 'PSD ορισμός, Wiener–Khinchin για random processes' },
+    { pdf: 'SE_session10_noise.pdf', label: 'συνέχεια PSD και εφαρμογή στον θόρυβο' },
+  ]}
+/>
+
 Στο [FT chapter §10](/foundations/fourier-transform) είδαμε ότι για **ντετερμινιστικά energy signals**, η **autocorrelation** $R_x(\tau) = \int x(t)x(t+\tau)dt$ έχει FT ίση με την **Energy Spectral Density** $|X(f)|^2$:
 
 $$

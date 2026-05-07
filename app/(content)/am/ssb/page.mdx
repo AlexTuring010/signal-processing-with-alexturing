@@ -40,6 +40,13 @@ import Link from 'next/link'
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
+<SourceDoc
+  sources={[
+    { pdf: 'SE_session11&12&13.pdf', label: 'ενότητα «Η Παραλλαγή SSB-AM»' },
+    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM (πολυπλεξία SSB)' },
+  ]}
+/>
+
 Στο [DSB-SC](/am/dsb-sc) πετάξαμε τον carrier component και κερδίσαμε **όλη την ισχύ** στις sidebands. Αλλά και τα δύο σχήματα (Conventional + DSB-SC) έχουν το ίδιο **bandwidth = 2W** — διπλάσιο του message.
 
 Σε αυτό το κεφάλαιο πετάμε επιπλέον **τη μία από τις δύο sidebands**. Το αποτέλεσμα — SSB, *Single Sideband* — έχει **bandwidth = W** (μισό), διατηρεί **100% efficiency** της DSB-SC, και επιτρέπει **πολλαπλούς χρήστες σε στενότερο κανάλι**. Το κόστος: ακόμα πιο πολύπλοκη παραγωγή και demodulation.

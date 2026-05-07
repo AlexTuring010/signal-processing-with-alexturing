@@ -38,6 +38,14 @@ import Link from 'next/link'
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
+<SourceDoc
+  sources={{
+    pdf: 'SE_session7&8_theory_2025.pdf',
+    slides: 'ενότητα ιδανικών & πραγματικών φίλτρων (εντός 17–46)',
+    label: 'LP/HP/BP/BS, passband ripple, transition band',
+  }}
+/>
+
 Από το [κεφάλαιο των συστημάτων](/foundations/systems) ξέρουμε ότι ένα LTI σύστημα έχει κρουστική απόκριση $h(t)$, και από το [κεφάλαιο του Fourier transform](/foundations/fourier-transform#5b-convolution-multiplication-) ότι περιγράφεται στη συχνότητα από $H(f) = \mathcal{F}\{h(t)\}$ και η έξοδος είναι $Y(f) = X(f)\cdot H(f)$.
 
 Σε αυτό το κεφάλαιο ασχολούμαστε με μια **ειδική κατηγορία LTI** — εκείνα που σχεδιάζουμε επίτηδες ώστε **να αφήνουν να περάσουν μερικές συχνότητες και να αποκλείουν άλλες**. Λέγονται **φίλτρα**. Είναι το πιο συχνό LTI στην πράξη — υπάρχει σχεδόν σε κάθε δέκτη, σε κάθε αναλογικό στάδιο επεξεργασίας ήχου, και (όταν φτάσουμε στη demodulation) σε σχεδόν κάθε modulation σχήμα.

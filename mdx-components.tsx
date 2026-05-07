@@ -10,6 +10,7 @@ import { NextUp } from '@/components/content/NextUp'
 import { ExamProblem } from '@/components/content/ExamProblem'
 import { ExerciseProgress } from '@/components/content/ExerciseProgress'
 import { Timeline } from '@/components/content/Timeline'
+import { SourceDoc } from '@/components/content/SourceDoc'
 import { Viz } from '@/components/viz/Viz'
 import { CommSystemDiagram } from '@/components/viz/CommSystemDiagram'
 import { TimeFrequencyTeaser } from '@/components/viz/TimeFrequencyTeaser'
@@ -108,6 +109,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ExamProblem,
     ExerciseProgress,
     Timeline,
+    SourceDoc,
 
     // Math
     Eq,

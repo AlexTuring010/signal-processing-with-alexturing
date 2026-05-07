@@ -40,6 +40,13 @@ import Link from 'next/link'
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
+<SourceDoc
+  sources={[
+    { pdf: 'SE_session11&12&13.pdf', label: 'ενότητα «Η Παραλλαγή DSB-AM-SC»' },
+    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM' },
+  ]}
+/>
+
 Στην [Conventional AM](/am/conventional) είδαμε ότι **πάνω από 67% της ισχύος σπαταλιέται πάντα στον carrier** που δεν κουβαλάει πληροφορία. Σε αυτό το κεφάλαιο **τον πετάμε**.
 
 Το αποτέλεσμα — DSB-SC, *Double-Sideband Suppressed Carrier* — είναι το πιο φυσικό AM σχήμα μαθηματικά (απλά $m \cdot \cos$, χωρίς extra constants). Έχει $\eta = 100\%$ efficiency. Αλλά **πληρώνει το κόστος**: ο envelope detector δεν δουλεύει πια, και χρειαζόμαστε **coherent demodulation** στον δέκτη — απαιτητικό.
