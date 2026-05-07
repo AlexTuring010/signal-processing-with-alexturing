@@ -90,7 +90,7 @@ export type ResearchJob = {
 }
 
 export type OrchardState = {
-  version: 4
+  version: 5
   startedAt: number
   lastTickAt: number
   resources: Resources
@@ -104,6 +104,15 @@ export type OrchardState = {
   researchTree: {
     completed: string[]
     inProgress: ResearchJob | null
+  }
+  /** Petting buff expiry (ms epoch). null = no buff active. */
+  petBuffUntil: number | null
+  /** Daily caps for cross-system rewards. Reset at local midnight. */
+  dailyCaps: {
+    /** ISO date (YYYY-MM-DD) the cap window started. */
+    date: string
+    /** Stars earned today via Apple Catcher. */
+    minigameStars: number
   }
   /** Lifetime tally — used for prestige math in later phases. */
   lifetime: {

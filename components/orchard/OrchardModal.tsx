@@ -10,6 +10,8 @@ import { MarketPanel } from './panels/MarketPanel'
 import { BuildingsPanel } from './panels/BuildingsPanel'
 import { ResearchPanel } from './panels/ResearchPanel'
 import { ActionBar } from './ActionBar'
+import { PetFooter } from './PetFooter'
+import { SickBanner } from './SickBanner'
 import { Toasts } from './Toasts'
 
 type Props = {
@@ -84,10 +86,11 @@ export function OrchardModal({ open, onClose, onBackToPet }: Props) {
       role="dialog"
       aria-label="Μποστάνι"
       className="orchard-panel-in absolute bottom-[68px] left-0 flex w-[280px] max-w-[calc(100vw-2rem)] origin-bottom-left flex-col overflow-hidden rounded-2xl border border-border bg-bg-elevated shadow-xl"
-      style={{ height: 'min(480px, calc(100vh - 100px))' }}
+      style={{ height: 'min(520px, calc(100vh - 100px))' }}
     >
       <HUD onBackToPet={onBackToPet} onClose={onClose} />
       <TabBar active={tab} onChange={setTab} />
+      <SickBanner />
 
       <div className="relative flex flex-1 flex-col overflow-hidden">
         {tab === 'trees' && (
@@ -111,6 +114,7 @@ export function OrchardModal({ open, onClose, onBackToPet }: Props) {
         {tab === 'market' && <MarketPanel />}
       </div>
 
+      <PetFooter />
       <ActionBar />
       <Toasts anchor="panel" />
     </div>

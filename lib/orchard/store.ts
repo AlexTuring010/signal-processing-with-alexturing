@@ -30,9 +30,20 @@ import type { AutoSellRule } from './types'
 import { playOrchardSound } from './audio'
 import {
   effectiveBarnCapacity,
+  petBuffMult,
   priceForState,
   priceMultiplierForState,
 } from './effects'
+import { localDateKey } from './defaults'
+import {
+  PET_BUFF_MS,
+  PET_BUFF_COOLDOWN_MS,
+  MINIGAME_APPLES_PER_NORMAL,
+  MINIGAME_APPLES_PER_GOLDEN,
+  MINIGAME_SCORE_PER_STAR,
+  MINIGAME_STARS_PER_RUN_CAP,
+  MINIGAME_STARS_PER_DAY_CAP,
+} from './defaults'
 import { getResearchNode, isAvailable } from './research'
 
 /* -------------------------------------------------------------------------- */
@@ -88,6 +99,23 @@ type Store = {
   startResearch: (id: string) => boolean
   /** Cancel the in-flight research, refund 50% of cost. */
   cancelResearch: () => void
+  /**
+   * Pet the pet from inside the orchard footer. Forwards to pet.dispatch
+   * AND sets petBuffUntil so the next 5 min get a ×1.10 production bonus.
+   * 60-second cooldown — repeated taps within the cooldown don't re-stack.
+   */
+  petPet: () => void
+  /**
+   * Apple Catcher → orchard hook. Deposits caught apples into the barn at
+   * MINIGAME_APPLES_PER_NORMAL / _GOLDEN, and converts score to stars
+   * (capped per-run AND per-day). Returns the apples + stars actually
+   * granted so the minigame UI can show what happened.
+   */
+  applyMinigameReward: (
+    normalCaught: number,
+    goldenCaught: number,
+    score: number,
+  ) => { apples: number; stars: number }
   /** Wipe orchard state and start fresh (for debugging / reset). */
   reset: () => void
 
@@ -133,6 +161,15 @@ function loadInitial(): OrchardState {
       researchTree: { completed: [], inProgress: null },
     }
   }
+  if (s.version === 4) {
+    // v4 → v5: add pet petting buff + daily reward caps for the minigame hook.
+    s = {
+      ...s,
+      version: 5,
+      petBuffUntil: null,
+      dailyCaps: { date: localDateKey(), minigameStars: 0 },
+    }
+  }
   if (s.version !== VERSION) return freshOrchard()
   return s as OrchardState
 }
@@ -145,6 +182,22 @@ function nextBuildingId(kind: BuildingKind): string {
 
 function moodToMult(mood: Mood): number {
   return MOOD_MULT[mood] ?? 1.0
+}
+
+/**
+ * Read the pet store + orchard buff state once and return everything the
+ * reconcile needs: the combined mood multiplier (mood × petting buff) and
+ * the sleeping flag (used for the growth-time tradeoff). Centralizes what
+ * was previously a duplicated `moodToMult(usePetStore.getState().mood())`
+ * pattern across every action.
+ */
+function readPetMood(orchardState: OrchardState, now: number): {
+  moodMult: number
+  petSleeping: boolean
+} {
+  const pet = usePetStore.getState()
+  const moodMult = moodToMult(pet.mood()) * petBuffMult(orchardState, now)
+  return { moodMult, petSleeping: pet.state.sleeping }
 }
 
 function pushToast(
@@ -173,8 +226,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
     if (get().hydrated) return
     const now = Date.now()
     const loaded = loadInitial()
-    const moodNow = moodToMult(usePetStore.getState().mood())
-    const { state: ticked, gained } = reconcile(loaded, now, moodNow)
+    const { moodMult: moodNow, petSleeping } = readPetMood(loaded, now)
+    const { state: ticked, gained } = reconcile(loaded, now, moodNow, petSleeping)
     persist(ticked)
     let toasts: Toast[] = []
     if (gained >= 1 && loaded.lastTickAt > 0 && now - loaded.lastTickAt > 60_000) {
@@ -186,9 +239,9 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   tick: () => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
     const prev = get().state
-    let { state: ticked } = reconcile(prev, now, moodMult)
+    const { moodMult, petSleeping } = readPetMood(prev, now)
+    let { state: ticked } = reconcile(prev, now, moodMult, petSleeping)
 
     // Detect a research node that just completed during reconcile, so we
     // can fire SFX + a toast even though completion happens deep inside
@@ -267,8 +320,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   plant: (plotId, speciesId = 'classic') => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const plot = ticked.plots.find((p) => p.id === plotId)
     if (!plot || plot.tree) return false
     const owned = get().ownedCount(speciesId)
@@ -308,8 +361,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   harvest: (plotId) => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const plot = ticked.plots.find((p) => p.id === plotId)
     if (!plot || !plot.tree) return 0
     const tree = plot.tree
@@ -361,8 +414,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   harvestAll: () => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    let ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    let ticked = reconcile(get().state, now, moodMult, petSleeping).state
     let movedTotal = 0
     let wastedAny = false
 
@@ -405,8 +458,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   sellGood: (good, qty) => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const stock = ticked.resources[good] ?? 0
     const moved = Math.max(0, Math.min(qty, stock))
     if (moved <= 0) return 0
@@ -443,8 +496,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   buildBuilding: (kind) => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     if (!canBuild(kind, ticked.lifetime.coinsEarned, ticked.buildings)) {
       return false
     }
@@ -478,8 +531,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   upgradeBuilding: (id) => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const b = ticked.buildings.find((x) => x.id === id)
     if (!b) return false
     const cost = upgradeCostFor(b)
@@ -504,8 +557,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   toggleBuilding: (id) => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const next: OrchardState = {
       ...ticked,
       buildings: ticked.buildings.map((x) => {
@@ -532,8 +585,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   startResearch: (id) => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const node = getResearchNode(id)
     if (!node) return false
     if (ticked.researchTree.inProgress) return false
@@ -563,8 +616,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
 
   cancelResearch: () => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const job = ticked.researchTree.inProgress
     if (!job) return
     const node = getResearchNode(job.id)
@@ -584,10 +637,92 @@ export const useOrchardStore = create<Store>((set, get) => ({
     set({ state: next })
   },
 
+  petPet: () => {
+    const now = Date.now()
+    // Cooldown: if a buff is already active and was set within the last
+    // PET_BUFF_COOLDOWN_MS window, don't extend it. (We approximate "set
+    // recently" by checking that more than PET_BUFF_MS - PET_BUFF_COOLDOWN_MS
+    // remains.)
+    const remaining =
+      get().state.petBuffUntil !== null
+        ? get().state.petBuffUntil! - now
+        : 0
+    const onCooldown = remaining > PET_BUFF_MS - PET_BUFF_COOLDOWN_MS
+    // Always forward the pet action so the heart animation + happiness gain
+    // fire even if we don't extend the buff. The pet store enforces its own
+    // sprite-click 800-ms anti-spam.
+    usePetStore.getState().dispatch('pet')
+    if (onCooldown) return
+    const next: OrchardState = {
+      ...get().state,
+      petBuffUntil: now + PET_BUFF_MS,
+    }
+    persist(next)
+    set({ state: next })
+  },
+
+  applyMinigameReward: (normalCaught, goldenCaught, score) => {
+    const now = Date.now()
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    let ticked = reconcile(get().state, now, moodMult, petSleeping).state
+
+    // Daily cap rollover — reset stars if we've crossed local midnight.
+    const todayKey = localDateKey(now)
+    if (ticked.dailyCaps.date !== todayKey) {
+      ticked = {
+        ...ticked,
+        dailyCaps: { date: todayKey, minigameStars: 0 },
+      }
+    }
+
+    // Apples — clipped by barn capacity, surplus discarded.
+    const wantApples =
+      normalCaught * MINIGAME_APPLES_PER_NORMAL +
+      goldenCaught * MINIGAME_APPLES_PER_GOLDEN
+    const barnCap = effectiveBarnCapacity(ticked)
+    const barnSpace = Math.max(0, barnCap - ticked.resources.apples)
+    const appleGrant = Math.floor(Math.min(wantApples, barnSpace))
+
+    // Stars — per-run cap + per-day cap.
+    const wantStars = Math.floor(score / MINIGAME_SCORE_PER_STAR)
+    const runStars = Math.min(wantStars, MINIGAME_STARS_PER_RUN_CAP)
+    const dayRoom = Math.max(
+      0,
+      MINIGAME_STARS_PER_DAY_CAP - ticked.dailyCaps.minigameStars,
+    )
+    const starGrant = Math.min(runStars, dayRoom)
+
+    if (appleGrant <= 0 && starGrant <= 0) {
+      // Nothing to deposit (barn full + day cap hit). Persist nothing.
+      set({ state: ticked })
+      return { apples: 0, stars: 0 }
+    }
+
+    const next: OrchardState = {
+      ...ticked,
+      resources: {
+        ...ticked.resources,
+        apples: ticked.resources.apples + appleGrant,
+        stars: ticked.resources.stars + starGrant,
+      },
+      lifetime: {
+        ...ticked.lifetime,
+        applesHarvested: ticked.lifetime.applesHarvested + appleGrant,
+      },
+      dailyCaps: {
+        date: todayKey,
+        minigameStars: ticked.dailyCaps.minigameStars + starGrant,
+      },
+    }
+    persist(next)
+    set({ state: next })
+    return { apples: appleGrant, stars: starGrant }
+  },
+
   collectOutput: (id) => {
     const now = Date.now()
-    const moodMult = moodToMult(usePetStore.getState().mood())
-    const ticked = reconcile(get().state, now, moodMult).state
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
     const b = ticked.buildings.find((x) => x.id === id)
     if (!b || b.storedOutput <= 0) return 0
     const def = getBuildingDef(b.kind)
@@ -616,7 +751,9 @@ export const useOrchardStore = create<Store>((set, get) => ({
     set({ state: fresh, toasts: [], lastShakeAt: {} })
   },
 
-  currentMoodMult: () => moodToMult(usePetStore.getState().mood()),
+  currentMoodMult: () =>
+    moodToMult(usePetStore.getState().mood()) *
+    petBuffMult(get().state, Date.now()),
 
   ownedCount: (speciesId) =>
     get().state.plots.reduce(

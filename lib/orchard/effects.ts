@@ -1,7 +1,7 @@
 import type { Building, GoodKey, OrchardState, Tree } from './types'
 import { hasResearch } from './research'
 import { getSpecies } from './trees'
-import { GOOD_PRICE } from './defaults'
+import { GOOD_PRICE, PET_BUFF_MULT, SLEEPING_GROWTH_MULT } from './defaults'
 import { MULT_MAX, MULT_MIN, priceHistory, priceMultiplier } from './market'
 
 /* -------------------------------------------------------------------------- */
@@ -13,9 +13,22 @@ import { MULT_MAX, MULT_MIN, priceHistory, priceMultiplier } from './market'
 /*  is applied consistently across reconcile, store actions, and UI.          */
 /* -------------------------------------------------------------------------- */
 
-/** Multiplier on tree growth durations. `richer-soil` = ×0.9 (faster). */
-export function growthTimeMult(state: OrchardState): number {
-  return hasResearch(state, 'richer-soil') ? 0.9 : 1.0
+/**
+ * Multiplier on tree growth durations.
+ *  - `richer-soil` research: ×0.9 (faster).
+ *  - Pet sleeping: ×SLEEPING_GROWTH_MULT (faster) — the strategic tradeoff
+ *    against the ×0.5 production penalty while asleep.
+ *
+ * Caller passes `petSleeping` so this stays a pure function (no store reads).
+ */
+export function growthTimeMult(
+  state: OrchardState,
+  petSleeping: boolean = false,
+): number {
+  let m = 1.0
+  if (hasResearch(state, 'richer-soil')) m *= 0.9
+  if (petSleeping) m *= SLEEPING_GROWTH_MULT
+  return m
 }
 
 /** Effective per-tree storage cap (level + research). */
@@ -36,13 +49,25 @@ export function effectiveBarnCapacity(state: OrchardState): number {
 export function effectiveGrowthMs(
   tree: Tree,
   state: OrchardState,
+  petSleeping: boolean = false,
 ): { toSmall: number; toMature: number } {
   const sp = getSpecies(tree.speciesId)
-  const m = growthTimeMult(state)
+  const m = growthTimeMult(state, petSleeping)
   return {
     toSmall: Math.round(sp.growthMs.toSmall * m),
     toMature: Math.round(sp.growthMs.toMature * m),
   }
+}
+
+/**
+ * Multiplier applied on top of the pet's mood mult while a petting buff is
+ * active. Returns PET_BUFF_MULT when `petBuffUntil > now`, else 1.0.
+ */
+export function petBuffMult(
+  state: OrchardState,
+  now: number = Date.now(),
+): number {
+  return state.petBuffUntil && state.petBuffUntil > now ? PET_BUFF_MULT : 1.0
 }
 
 /** Building batch yield with research bumps and partnership chance. */
@@ -94,13 +119,14 @@ export function autoHarvestEnabled(state: OrchardState): boolean {
  */
 export const RESEARCH_PER_MIN_MATURE = 0.2
 
-/** State-aware version of `stageAt`. Honors research-driven growth speed. */
+/** State-aware version of `stageAt`. Honors research + sleeping growth speed. */
 export function stageAtForState(
   tree: Tree,
   now: number,
   state: OrchardState,
+  petSleeping: boolean = false,
 ): Tree['growthStage'] {
-  const ms = effectiveGrowthMs(tree, state)
+  const ms = effectiveGrowthMs(tree, state, petSleeping)
   const age = now - tree.plantedAt
   if (age < ms.toSmall) return 0
   if (age < ms.toMature) return 1
@@ -112,8 +138,9 @@ export function msToNextStageForState(
   tree: Tree,
   now: number,
   state: OrchardState,
+  petSleeping: boolean = false,
 ): number | null {
-  const ms = effectiveGrowthMs(tree, state)
+  const ms = effectiveGrowthMs(tree, state, petSleeping)
   const age = now - tree.plantedAt
   if (age < ms.toSmall) return ms.toSmall - age
   if (age < ms.toMature) return ms.toMature - age

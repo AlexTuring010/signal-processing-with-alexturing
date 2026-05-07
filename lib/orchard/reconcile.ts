@@ -51,8 +51,12 @@ export function effectiveElapsedMs(elapsedMs: number): number {
 
 /* ------------------------------ Trees ----------------------------------- */
 
-function stageTransitionTimes(tree: Tree, state: OrchardState): number[] {
-  const ms = effectiveGrowthMs(tree, state)
+function stageTransitionTimes(
+  tree: Tree,
+  state: OrchardState,
+  petSleeping: boolean,
+): number[] {
+  const ms = effectiveGrowthMs(tree, state, petSleeping)
   return [tree.plantedAt + ms.toSmall, tree.plantedAt + ms.toMature]
 }
 
@@ -62,6 +66,7 @@ export function tickTree(
   windowEnd: number,
   mood: number,
   state: OrchardState,
+  petSleeping: boolean,
 ): { tree: Tree; produced: number } {
   if (windowEnd <= windowStart) return { tree, produced: 0 }
 
@@ -71,7 +76,7 @@ export function tickTree(
   }
 
   const transitions: number[] = []
-  for (const ts of stageTransitionTimes(tree, state)) {
+  for (const ts of stageTransitionTimes(tree, state, petSleeping)) {
     if (ts > windowStart && ts < windowEnd) transitions.push(ts)
   }
   const segments: Array<{ from: number; to: number }> = []
@@ -88,7 +93,7 @@ export function tickTree(
 
   for (const seg of segments) {
     if (stored >= cap) break
-    const stage = stageAtForState(tree, seg.from, state)
+    const stage = stageAtForState(tree, seg.from, state, petSleeping)
     const sm = stageMult(stage)
     if (sm === 0) {
       lastHarvest = Math.max(lastHarvest, seg.to)
@@ -246,6 +251,7 @@ function researchTrickle(
   state: OrchardState,
   windowStart: number,
   windowEnd: number,
+  petSleeping: boolean,
 ): number {
   if (windowEnd <= windowStart) return 0
   const minutes = (windowEnd - windowStart) / 60000
@@ -255,7 +261,7 @@ function researchTrickle(
     // We use the END-of-window stage as a rough proxy. This slightly over-
     // counts for trees that just matured during the window — fine for the
     // gentle trickle we want.
-    const stage = stageAtForState(plot.tree, windowEnd, state)
+    const stage = stageAtForState(plot.tree, windowEnd, state, petSleeping)
     if (stage === 2) total += RESEARCH_PER_MIN_MATURE
   }
   return total * minutes
@@ -330,6 +336,7 @@ export function reconcile(
   rawState: OrchardState,
   now: number,
   mood: number,
+  petSleeping: boolean = false,
 ): ReconcileResult {
   const realElapsed = Math.max(0, now - rawState.lastTickAt)
   if (realElapsed === 0) return { state: rawState, wasted: 0, gained: 0 }
@@ -340,7 +347,13 @@ export function reconcile(
   // --- 1) Research production (drip 🧪 into resources). Computed against
   // the window so a long offline period accrues research as expected.
   let state: OrchardState = rawState
-  const trickle = researchTrickle(state.plots, state, state.lastTickAt, effectiveEnd)
+  const trickle = researchTrickle(
+    state.plots,
+    state,
+    state.lastTickAt,
+    effectiveEnd,
+    petSleeping,
+  )
   if (trickle > 0) {
     state = {
       ...state,
@@ -375,6 +388,7 @@ export function reconcile(
       effectiveEnd,
       mood,
       state,
+      petSleeping,
     )
     totalGained += produced
     return { ...p, tree: { ...tree, lastHarvestAt: now } }

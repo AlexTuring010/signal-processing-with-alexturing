@@ -1,6 +1,23 @@
 import type { GoodKey, OrchardState, Plot, Resources } from './types'
 
-export const VERSION = 4 as const
+export const VERSION = 5 as const
+
+/** Petting buff: 5 minutes long, ×1.10 on top of the mood multiplier. */
+export const PET_BUFF_MS = 5 * 60 * 1000
+export const PET_BUFF_MULT = 1.1
+/** Cooldown before another pet press grants a fresh buff. */
+export const PET_BUFF_COOLDOWN_MS = 60 * 1000
+
+/** Apple Catcher → orchard hooks. */
+export const MINIGAME_APPLES_PER_NORMAL = 0.5
+export const MINIGAME_APPLES_PER_GOLDEN = 1.5
+/** Stars: 1 per `MINIGAME_SCORE_PER_STAR` score, capped per run + per real day. */
+export const MINIGAME_SCORE_PER_STAR = 10
+export const MINIGAME_STARS_PER_RUN_CAP = 5
+export const MINIGAME_STARS_PER_DAY_CAP = 10
+
+/** Sleeping pet trades production speed (×0.5 mood) for faster growth (-30%). */
+export const SLEEPING_GROWTH_MULT = 0.7
 
 export const STARTING_PLOTS = 12
 export const STARTING_BARN = 50
@@ -62,6 +79,15 @@ export function makePlots(count: number, cols = 4): Plot[] {
   return plots
 }
 
+/** Local-timezone "YYYY-MM-DD" key for daily-cap rollover. */
+export function localDateKey(t: number = Date.now()): string {
+  const d = new Date(t)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 export function freshResources(): Resources {
   return {
     apples: STARTING_APPLES,
@@ -87,6 +113,8 @@ export function freshOrchard(now: number = Date.now()): OrchardState {
     buildings: [],
     autoSell: {},
     researchTree: { completed: [], inProgress: null },
+    petBuffUntil: null,
+    dailyCaps: { date: localDateKey(now), minigameStars: 0 },
     lifetime: {
       applesHarvested: 0,
       coinsEarned: 0,

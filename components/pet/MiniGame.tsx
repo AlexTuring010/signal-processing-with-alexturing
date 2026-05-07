@@ -5,6 +5,7 @@ import { ArrowLeft, Heart, Play, RotateCcw, Trophy, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { usePetStore } from '@/lib/pet/store'
 import { playPetSound } from '@/lib/pet/audio'
+import { useOrchardStore } from '@/lib/orchard/store'
 import { PetSprite } from './PetSprite'
 
 /* -------------------------------------------------------------------------- */
@@ -72,6 +73,9 @@ type GameRef = {
   pops: Pop[]
   score: number
   caught: number
+  /** Caught counts split by type — feed the orchard reward hook. */
+  caughtNormal: number
+  caughtGolden: number
   combo: number
   bestCombo: number
   lives: number
@@ -98,7 +102,17 @@ export function MiniGame({ onExit }: Props) {
   const [phase, setPhase] = useState<Phase>('intro')
   const [, force] = useReducer((n: number) => n + 1, 0)
   const [highScore, setHighScore] = useState(0)
-  const [result, setResult] = useState<{ score: number; reward: number; high: number; newBest: boolean } | null>(null)
+  const [result, setResult] = useState<
+    | {
+        score: number
+        reward: number
+        high: number
+        newBest: boolean
+        /** Set when the orchard is in play and absorbed the round. */
+        bonus?: { apples: number; stars: number }
+      }
+    | null
+  >(null)
 
   const ref = useRef<GameRef>(makeInitialRef())
   const rafRef = useRef<number | null>(null)
@@ -128,7 +142,16 @@ export function MiniGame({ onExit }: Props) {
     g.finalSurvivedMs = performance.now() - g.startedAt - g.pauseDebt
     const score = Math.max(0, g.score)
     const r = endGame(score)
-    setResult({ score, ...r })
+    // If the orchard is in play, deposit the run's caught apples into the
+    // barn AND convert score to ⭐ (capped per-run + per-day). The pet
+    // happiness reward `r` still fires regardless — the two payouts
+    // complement each other rather than replace.
+    const orchard = useOrchardStore.getState()
+    let bonus = { apples: 0, stars: 0 }
+    if (orchard.hydrated) {
+      bonus = orchard.applyMinigameReward(g.caughtNormal, g.caughtGolden, score)
+    }
+    setResult({ score, ...r, bonus })
     setHighScore(r.high)
     if (r.newBest && score > 0) playPetSound('newbest')
     else playPetSound('victory')
@@ -549,11 +572,19 @@ function ResultOverlay({
   onRetry,
   onExit,
 }: {
-  result: { score: number; reward: number; high: number; newBest: boolean }
+  result: {
+    score: number
+    reward: number
+    high: number
+    newBest: boolean
+    bonus?: { apples: number; stars: number }
+  }
   survivedMs: number
   onRetry: () => void
   onExit: () => void
 }) {
+  const hasBonus =
+    result.bonus && (result.bonus.apples > 0 || result.bonus.stars > 0)
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-bg-elevated/90 px-6 text-center backdrop-blur-sm">
       {result.newBest && result.score > 0 && (
@@ -569,6 +600,13 @@ function ResultOverlay({
         Επιβίωσες {formatSurvived(survivedMs)} · +{result.reward} χαρά · Best:{' '}
         {result.high}
       </p>
+      {hasBonus && (
+        <p className="inline-flex flex-wrap items-center justify-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-medium text-success">
+          🌳 Στο μποστάνι
+          {result.bonus!.apples > 0 && <> · +{result.bonus!.apples} 🍎</>}
+          {result.bonus!.stars > 0 && <> · +{result.bonus!.stars} ⭐</>}
+        </p>
+      )}
       <div className="mt-1 flex items-center gap-2">
         <button
           type="button"
@@ -671,6 +709,8 @@ function makeInitialRef(): GameRef {
     pops: [],
     score: 0,
     caught: 0,
+    caughtNormal: 0,
+    caughtGolden: 0,
     combo: 0,
     bestCombo: 0,
     lives: STARTING_LIVES,
@@ -727,6 +767,8 @@ function handleCatch(g: GameRef, a: Apple, t: number) {
   const pts = base * mult
   g.score += pts
   g.caught += 1
+  if (a.type === 'golden') g.caughtGolden += 1
+  else g.caughtNormal += 1
 
   if (a.type === 'golden') {
     playPetSound('goldcatch')
