@@ -12,6 +12,7 @@ import {
   priceTrendForState,
 } from '@/lib/orchard/effects'
 import { effectiveMultRange } from '@/lib/orchard/effects'
+import { playOrchardSound } from '@/lib/orchard/audio'
 import type { GoodKey, OrchardState } from '@/lib/orchard/types'
 
 const SELLABLE: GoodKey[] = ['apples', 'juice', 'cider', 'jam', 'pies']
@@ -214,9 +215,10 @@ function AutoSellToggle({
   return (
     <button
       type="button"
-      onClick={() =>
+      onClick={() => {
+        playOrchardSound('click')
         onChange(active ? null : { minMult: 1.0, minStock: 0 })
-      }
+      }}
       title={active ? 'Απενεργοποίηση auto-sell' : 'Ενεργοποίηση auto-sell'}
       aria-pressed={active}
       className={cn(

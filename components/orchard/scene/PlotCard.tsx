@@ -15,6 +15,7 @@ import {
   msToNextStageForState,
   stageAtForState,
 } from '@/lib/orchard/effects'
+import { playOrchardSound } from '@/lib/orchard/audio'
 import { TreeSprite } from './TreeSprite'
 
 type Props = {
@@ -52,8 +53,11 @@ export function PlotCard({ plot, selected, now, onClick }: Props) {
   function onTap(e: React.MouseEvent) {
     e.stopPropagation()
     if (tree && stored > 0) {
+      // harvest() plays its own SFX in the store
       harvest(plot.id)
     } else {
+      // No fruit to pick → tap opens the per-plot detail card. Soft click.
+      playOrchardSound('click')
       onClick()
     }
   }

@@ -7,6 +7,7 @@ import { usePetStore, formatAge, evolutionProgress } from '@/lib/pet/store'
 import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
 import { getSoundEnabled, setSoundEnabled, playPetSound } from '@/lib/pet/audio'
 import { refreshOrchardSoundFlag } from '@/lib/orchard/audio'
+import { useOrchardStore } from '@/lib/orchard/store'
 import { PetSprite } from './PetSprite'
 import { NeedBar } from './NeedBar'
 import { ActionRow } from './ActionRow'
@@ -208,9 +209,6 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
                   Φύτεψε, μάζεψε, πούλα
                 </span>
               </span>
-              <span className="rounded-full bg-warn px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
-                Νέο
-              </span>
               <ChevronRight
                 aria-hidden="true"
                 className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
@@ -241,7 +239,10 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
             <button
               type="button"
               onClick={() => {
+                // Wipe both stores so a "start over" really starts over —
+                // pet AND orchard return to their fresh state.
                 reset()
+                useOrchardStore.getState().reset()
                 setConfirmReset(false)
               }}
               className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-danger hover:bg-danger/10"

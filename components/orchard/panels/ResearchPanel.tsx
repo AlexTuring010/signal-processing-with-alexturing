@@ -12,6 +12,7 @@ import {
   type ResearchNode,
   type ResearchTier,
 } from '@/lib/orchard/research'
+import { playOrchardSound } from '@/lib/orchard/audio'
 
 /**
  * Research tab. Lists all 12 nodes by tier with inline status / actions.
@@ -68,7 +69,10 @@ export function ResearchPanel() {
             </span>
             <button
               type="button"
-              onClick={() => cancelResearch()}
+              onClick={() => {
+                playOrchardSound('click')
+                cancelResearch()
+              }}
               title="Ακύρωση (επιστροφή 50% κόστους)"
               aria-label="Ακύρωση έρευνας"
               className="inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] text-fg-subtle hover:bg-bg-soft hover:text-fg"

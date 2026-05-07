@@ -529,18 +529,17 @@ function IntroOverlay({
   highScore: number
 }) {
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-bg-elevated/85 px-6 text-center backdrop-blur-sm">
-      <div className="text-2xl">🍎🎯</div>
-      <h3 className="text-sm font-semibold">Apple Catcher</h3>
-      <p className="text-[11px] leading-relaxed text-fg-muted">
-        Πιάσε όσα μήλα μπορείς. Έχεις <strong>5 ζωές</strong>.
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-bg-elevated/85 px-4 text-center backdrop-blur-sm">
+      <div className="text-xl leading-none">🍎🎯</div>
+      <h3 className="text-[13px] font-semibold leading-tight">Apple Catcher</h3>
+      <p className="text-[10px] leading-snug text-fg-muted">
+        Πιάσε όσα μήλα μπορείς. <strong>5 ζωές</strong>. Χάνεις ζωή αν
+        χάσεις κόκκινο ή πιάσεις σάπιο.
         <br />
-        Χάνεις ζωή αν χάσεις κόκκινο μήλο ή πιάσεις σάπιο.
-        <br />
-        🍎 +1 · ✨ χρυσό +3 · 5 σερί = combo ×2.
+        🍎 +1 · ✨ χρυσό +3 · 5 σερί = ×2.
       </p>
       {highScore > 0 && (
-        <span className="inline-flex items-center gap-1 rounded-full bg-bg-soft px-2 py-0.5 text-[10px] text-fg-subtle">
+        <span className="inline-flex items-center gap-0.5 rounded-full bg-bg-soft px-1.5 py-0.5 text-[10px] text-fg-subtle">
           <Trophy className="h-3 w-3" /> Best: {highScore}
         </span>
       )}
@@ -550,18 +549,18 @@ function IntroOverlay({
         disabled={!!disabledReason}
         title={disabledReason}
         className={cn(
-          'mt-1 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium shadow-sm transition-transform',
+          'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium shadow-sm transition-transform',
           disabledReason
             ? 'cursor-not-allowed bg-bg-soft text-fg-subtle'
             : 'bg-accent text-accent-fg hover:scale-105 active:scale-95',
         )}
       >
-        <Play className="h-3.5 w-3.5 fill-current" />
+        <Play className="h-3 w-3 fill-current" />
         Ξεκίνα
+        <span className="inline-flex items-center gap-0.5 rounded-full bg-white/25 px-1.5 py-0.5 text-[9px]">
+          <Zap className="h-2.5 w-2.5" /> −15
+        </span>
       </button>
-      <span className="inline-flex items-center gap-1 text-[10px] text-fg-subtle">
-        <Zap className="h-3 w-3" /> −15 ενέργεια
-      </span>
     </div>
   )
 }

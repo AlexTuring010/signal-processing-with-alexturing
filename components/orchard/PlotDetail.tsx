@@ -6,6 +6,7 @@ import { useOrchardStore } from '@/lib/orchard/store'
 import { plotStats } from './scene/PlotCard'
 import { TreeSprite } from './scene/TreeSprite'
 import { stageAtForState } from '@/lib/orchard/effects'
+import { playOrchardSound } from '@/lib/orchard/audio'
 
 type Props = {
   plotId: string | null
@@ -48,7 +49,10 @@ export function PlotDetail({ plotId, now, onClose }: Props) {
       <header className="flex items-center gap-2 border-b border-border px-3 py-2">
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => {
+            playOrchardSound('click')
+            onClose()
+          }}
           aria-label="Πίσω στο μποστάνι"
           className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs text-fg-muted hover:bg-bg-soft hover:text-fg"
         >

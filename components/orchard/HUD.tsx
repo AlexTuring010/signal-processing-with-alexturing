@@ -6,6 +6,7 @@ import { effectiveBarnCapacity } from '@/lib/orchard/effects'
 import { usePetStore } from '@/lib/pet/store'
 import type { Mood } from '@/lib/pet/types'
 import { cn } from '@/lib/utils'
+import { playOrchardSound } from '@/lib/orchard/audio'
 
 type Props = {
   /** Closes the orchard and reopens the pet panel in its place. */
@@ -33,7 +34,10 @@ export function HUD({ onBackToPet, onClose }: Props) {
       <div className="flex items-center gap-1">
         <button
           type="button"
-          onClick={onBackToPet}
+          onClick={() => {
+            playOrchardSound('click')
+            onBackToPet()
+          }}
           aria-label={`Πίσω στο ${petName}`}
           title={`Πίσω στο ${petName}`}
           className="inline-flex items-center gap-1 rounded-full bg-bg-soft px-2 py-1 text-[11px] font-medium text-fg-muted transition-colors hover:bg-accent-soft/60 hover:text-fg"
@@ -49,7 +53,10 @@ export function HUD({ onBackToPet, onClose }: Props) {
 
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => {
+            playOrchardSound('click')
+            onClose()
+          }}
           aria-label="Κλείσε"
           className="rounded-full p-1 text-fg-subtle transition-colors hover:bg-bg-soft hover:text-fg"
         >

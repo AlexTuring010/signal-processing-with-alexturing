@@ -20,6 +20,7 @@ import {
   recipeSummary,
   upgradeCost as upgradeCostFor,
 } from '@/lib/orchard/buildings'
+import { playOrchardSound } from '@/lib/orchard/audio'
 import type { Building, BuildingKind } from '@/lib/orchard/types'
 import { MAX_BUILDING_LEVEL } from '@/lib/orchard/defaults'
 
@@ -183,7 +184,10 @@ function BuiltCard({ building }: { building: Building }) {
         </button>
         <button
           type="button"
-          onClick={() => toggleBuilding(building.id)}
+          onClick={() => {
+            playOrchardSound('click')
+            toggleBuilding(building.id)
+          }}
           title={building.active ? 'Σταμάτα' : 'Ξεκίνα'}
           className={cn(
             'inline-flex shrink-0 items-center justify-center rounded-full p-1.5 transition-colors',

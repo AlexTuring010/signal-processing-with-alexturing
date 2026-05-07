@@ -74,6 +74,16 @@ export function OrchardModal({ open, onClose, onBackToPet }: Props) {
     if (tab !== 'trees') setSelectedPlot(null)
   }, [tab])
 
+  // Whenever the panel is dismissed, drop transient UI state so reopening
+  // always lands on a clean default screen (Δέντρα tab, no plot drilled-in,
+  // no leftover plot detail from the previous session).
+  useEffect(() => {
+    if (!open) {
+      setTab('trees')
+      setSelectedPlot(null)
+    }
+  }, [open])
+
   // Live-tick clock for growth timers etc.
   const now = useNowHeartbeat(open, 1000)
 
