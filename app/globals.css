@@ -309,6 +309,44 @@ html {
   top: 1rem;
 }
 
+/* Music player — bouncing bars + slim volume slider */
+@keyframes music-bar {
+  0%, 100% { transform: scaleY(0.35); }
+  50%      { transform: scaleY(1); }
+}
+
+.music-bar {
+  transform-origin: bottom;
+  animation: music-bar 900ms ease-in-out infinite;
+}
+
+.music-volume {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgb(var(--border));
+  border-radius: 999px;
+}
+
+.music-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgb(var(--accent));
+  border: none;
+  cursor: pointer;
+}
+
+.music-volume::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgb(var(--accent));
+  border: none;
+  cursor: pointer;
+}
+
 /* Subtle scrollbar in dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {
   width: 10px;

@@ -4,6 +4,7 @@ import { ThemeToggle } from './ThemeToggle'
 import { SearchBar } from './SearchBar'
 import { MobileNav } from './MobileNav'
 import { UserMenu } from './UserMenu'
+import { MusicPlayer } from './MusicPlayer'
 import { createClient } from '@/lib/supabase/server'
 
 export async function Header() {
@@ -53,6 +54,7 @@ export async function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          <MusicPlayer />
           <ThemeToggle />
           <UserMenu user={menuUser} />
         </div>
