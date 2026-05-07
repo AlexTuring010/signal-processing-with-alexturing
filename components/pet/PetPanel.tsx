@@ -8,6 +8,7 @@ import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
 import { getSoundEnabled, setSoundEnabled, playPetSound } from '@/lib/pet/audio'
 import { refreshOrchardSoundFlag } from '@/lib/orchard/audio'
 import { useOrchardStore } from '@/lib/orchard/store'
+import { getBrainrot, setBrainrot, BRAINROT_EVENT } from '@/lib/storage'
 import { PetSprite } from './PetSprite'
 import { NeedBar } from './NeedBar'
 import { ActionRow } from './ActionRow'
@@ -33,11 +34,22 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
   const [draftName, setDraftName] = useState(state.name)
   const [confirmReset, setConfirmReset] = useState(false)
   const [soundOn, setSoundOn] = useState(false)
+  const [brainrotOn, setBrainrotOn] = useState(false)
   const [mode, setMode] = useState<'idle' | 'game'>('idle')
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setSoundOn(getSoundEnabled())
+    setBrainrotOn(getBrainrot())
+  }, [])
+
+  // Sync if the brainrot flag flips elsewhere (e.g. the panel's own close X).
+  useEffect(() => {
+    function refresh() {
+      setBrainrotOn(getBrainrot())
+    }
+    window.addEventListener(BRAINROT_EVENT, refresh)
+    return () => window.removeEventListener(BRAINROT_EVENT, refresh)
   }, [])
 
   function toggleSound() {
@@ -48,6 +60,13 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
     // so flipping the toggle also (un)mutes orchard SFX without a reload.
     refreshOrchardSoundFlag()
     if (next) playPetSound('click')
+  }
+
+  function toggleBrainrot() {
+    const next = !brainrotOn
+    setBrainrot(next)
+    setBrainrotOn(next)
+    playPetSound('click')
   }
 
   // Esc to close
@@ -219,20 +238,40 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
       )}
 
       <footer className="flex items-center justify-between gap-2 border-t border-border px-3 py-1.5 text-[10px] text-fg-subtle">
-        <button
-          type="button"
-          onClick={toggleSound}
-          aria-pressed={soundOn}
-          aria-label={soundOn ? 'Σώπασε ήχους' : 'Ενεργοποίησε ήχους'}
-          title={soundOn ? 'Ήχοι: ON' : 'Ήχοι: OFF'}
-          className="inline-flex items-center gap-1 rounded px-1 py-0.5 hover:bg-bg-soft hover:text-fg"
-        >
-          {soundOn ? (
-            <Volume2 className="h-3.5 w-3.5" />
-          ) : (
-            <VolumeX className="h-3.5 w-3.5" />
-          )}
-        </button>
+        <div className="flex items-center gap-0.5">
+          <button
+            type="button"
+            onClick={toggleSound}
+            aria-pressed={soundOn}
+            aria-label={soundOn ? 'Σώπασε ήχους' : 'Ενεργοποίησε ήχους'}
+            title={soundOn ? 'Ήχοι: ON' : 'Ήχοι: OFF'}
+            className="inline-flex items-center gap-1 rounded px-1 py-0.5 hover:bg-bg-soft hover:text-fg"
+          >
+            {soundOn ? (
+              <Volume2 className="h-3.5 w-3.5" />
+            ) : (
+              <VolumeX className="h-3.5 w-3.5" />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={toggleBrainrot}
+            aria-pressed={brainrotOn}
+            aria-label={
+              brainrotOn ? 'Κλείσε brainrot mode' : 'Άνοιξε brainrot mode'
+            }
+            title={brainrotOn ? 'Brainrot: ON' : 'Brainrot: OFF'}
+            className={
+              brainrotOn
+                ? 'inline-flex items-center rounded px-1 py-0.5 text-fg hover:bg-bg-soft'
+                : 'inline-flex items-center rounded px-1 py-0.5 hover:bg-bg-soft hover:text-fg'
+            }
+          >
+            <span className="text-[13px] leading-none" aria-hidden="true">
+              🧠
+            </span>
+          </button>
+        </div>
         <span className="flex-1 truncate text-center">Μόνο στον browser.</span>
         {confirmReset ? (
           <span className="flex items-center gap-1">
