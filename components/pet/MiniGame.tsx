@@ -1,25 +1,19 @@
 'use client'
 
 import { useEffect, useReducer, useRef, useState } from 'react'
-import { ArrowLeft, Play, RotateCcw, Trophy, Zap } from 'lucide-react'
+import { ArrowLeft, Heart, Play, RotateCcw, Trophy, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { usePetStore } from '@/lib/pet/store'
 import { playPetSound } from '@/lib/pet/audio'
 import { PetSprite } from './PetSprite'
 
 /* -------------------------------------------------------------------------- */
-/*  Apple Catcher — 30-second arcade minigame embedded in the pet panel.      */
+/*  Apple Catcher — survival arcade minigame embedded in the pet panel.       */
 /*                                                                            */
-/*  Layout (inside the pet panel, below the shared header):                   */
-/*                                                                            */
-/*    ┌──────────────────────────────────────┐                                */
-/*    │  ← Πίσω · Σκορ · Best · Χρόνος       │ HUD                            */
-/*    ├──────────────────────────────────────┤                                */
-/*    │  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │ play area                      */
-/*    │  ░ apples fall here, pet runs at  ░  │                                */
-/*    │  ░ the bottom, tap zones overlay  ░  │                                */
-/*    │  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │                                */
-/*    └──────────────────────────────────────┘                                */
+/*  Lives, not time. You start with 5 ❤. Missing a normal apple or catching  */
+/*  a rotten one costs a life. Game ends when lives reach 0. Difficulty       */
+/*  ramps continuously, so a skilled run can theoretically last forever —     */
+/*  the score ceiling is your skill, not the RNG of a 30-second window.       */
 /*                                                                            */
 /*  All hot game state lives in a `ref`; the React tree only re-renders on    */
 /*  the rAF tick (via a counter) and on phase transitions. This keeps the     */
@@ -32,8 +26,22 @@ const PET_W = 60
 const PET_H = 56
 const APPLE_R = 13
 const PET_SPEED = 240 // px/s
-const ROUND_MS = 30_000
+const STARTING_LIVES = 5
 const COMBO_THRESHOLD = 5
+
+/** Spawn interval (ms) as a function of elapsed seconds. Linear ramp with a floor. */
+function spawnIntervalFor(elapsedS: number) {
+  return Math.max(220, 1100 - elapsedS * 22)
+}
+/** Apple base fall speed (px/s) as a function of elapsed seconds. Linear ramp with a cap. */
+function fallSpeedFor(elapsedS: number) {
+  return Math.min(340, 110 + elapsedS * 4)
+}
+/** Probability of a *second* apple spawning at the same instant (kicks in late game). */
+function doubleSpawnProbFor(elapsedS: number) {
+  if (elapsedS < 45) return 0
+  return Math.min(0.3, (elapsedS - 45) / 60)
+}
 
 type AppleType = 'normal' | 'golden' | 'rotten'
 type Phase = 'intro' | 'playing' | 'result'
@@ -66,11 +74,13 @@ type GameRef = {
   caught: number
   combo: number
   bestCombo: number
+  lives: number
   startedAt: number
   lastFrameAt: number
   lastSpawnAt: number
   pausedAt: number | null // timestamp when tab hidden, null otherwise
   pauseDebt: number       // total ms spent paused
+  finalSurvivedMs: number // captured at game-end so the result screen can show it
   appleSeq: number
   popSeq: number
 }
@@ -114,7 +124,9 @@ export function MiniGame({ onExit }: Props) {
   }
 
   function finishRound() {
-    const score = Math.max(0, ref.current.score)
+    const g = ref.current
+    g.finalSurvivedMs = performance.now() - g.startedAt - g.pauseDebt
+    const score = Math.max(0, g.score)
     const r = endGame(score)
     setResult({ score, ...r })
     setHighScore(r.high)
@@ -139,8 +151,8 @@ export function MiniGame({ onExit }: Props) {
       g.lastFrameAt = t
 
       const elapsed = t - g.startedAt - g.pauseDebt
-      const remaining = ROUND_MS - elapsed
-      if (remaining <= 0) {
+      const elapsedS = elapsed / 1000
+      if (g.lives <= 0) {
         rafRef.current = null
         finishRound()
         return
@@ -151,12 +163,16 @@ export function MiniGame({ onExit }: Props) {
       if (g.petX < 0) g.petX = 0
       if (g.petX > PLAY_W - PET_W) g.petX = PLAY_W - PET_W
 
-      // ---- Spawn apples (interval lerps from 1100ms → 380ms) ----
-      const progress = elapsed / ROUND_MS
-      const spawnInterval = lerp(1100, 380, progress)
+      // ---- Spawn apples ----
+      const spawnInterval = spawnIntervalFor(elapsedS)
+      const baseFall = fallSpeedFor(elapsedS)
       if (t - g.lastSpawnAt >= spawnInterval) {
         g.lastSpawnAt = t
-        g.apples.push(spawnApple(g, progress))
+        g.apples.push(spawnApple(g, baseFall))
+        // Late-game double-spawn for an extra bit of chaos.
+        if (Math.random() < doubleSpawnProbFor(elapsedS)) {
+          g.apples.push(spawnApple(g, baseFall))
+        }
       }
 
       // ---- Apple physics + collision ----
@@ -282,10 +298,8 @@ export function MiniGame({ onExit }: Props) {
   // ---- Render -----------------------------------------------------------------
 
   const g = ref.current
-  const remainingMs = phase === 'playing' ? Math.max(0, ROUND_MS - (performance.now() - g.startedAt - g.pauseDebt)) : ROUND_MS
-  const remainingS = Math.ceil(remainingMs / 1000)
   const inCombo = g.combo >= COMBO_THRESHOLD
-  const lowTime = phase === 'playing' && remainingMs <= 5000
+  const livesLow = phase === 'playing' && g.lives === 1
 
   return (
     <div className="flex flex-col">
@@ -294,8 +308,11 @@ export function MiniGame({ onExit }: Props) {
         <button
           type="button"
           onClick={() => {
-            if (phase === 'playing') finishRound()
-            else onExit()
+            if (phase === 'playing') {
+              ref.current.lives = 0 // ends the round at next frame
+            } else {
+              onExit()
+            }
           }}
           className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-fg-muted hover:bg-bg-soft hover:text-fg"
           aria-label="Πίσω"
@@ -307,16 +324,13 @@ export function MiniGame({ onExit }: Props) {
           <span className="inline-flex items-center gap-1 font-semibold tabular-nums">
             🍎 {g.score}
           </span>
+          <Lives
+            current={phase === 'result' ? 0 : g.lives}
+            max={STARTING_LIVES}
+            pulsing={livesLow}
+          />
           <span className="inline-flex items-center gap-1 text-fg-subtle">
             <Trophy className="h-3 w-3" /> {phase === 'result' && result ? result.high : highScore}
-          </span>
-          <span
-            className={cn(
-              'tabular-nums',
-              lowTime && 'pet-time-pulse text-danger font-semibold',
-            )}
-          >
-            ⏱ {remainingS}s
           </span>
         </div>
       </div>
@@ -433,6 +447,7 @@ export function MiniGame({ onExit }: Props) {
         {phase === 'result' && result && (
           <ResultOverlay
             result={result}
+            survivedMs={ref.current.finalSurvivedMs}
             onRetry={() => {
               setResult(null)
               setPhase('intro')
@@ -454,6 +469,29 @@ export function MiniGame({ onExit }: Props) {
   )
 }
 
+function Lives({ current, max, pulsing }: { current: number; max: number; pulsing: boolean }) {
+  return (
+    <span
+      className={cn('inline-flex items-center gap-0.5', pulsing && 'pet-time-pulse')}
+      aria-label={`Ζωές: ${current} από ${max}`}
+    >
+      {Array.from({ length: max }).map((_, i) => {
+        const filled = i < current
+        return (
+          <Heart
+            key={i}
+            className={cn(
+              'h-3 w-3 transition-colors',
+              filled ? 'fill-danger text-danger' : 'text-fg-subtle/40',
+            )}
+            aria-hidden="true"
+          />
+        )
+      })}
+    </span>
+  )
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Sub-components                                                            */
 /* -------------------------------------------------------------------------- */
@@ -472,10 +510,11 @@ function IntroOverlay({
       <div className="text-2xl">🍎🎯</div>
       <h3 className="text-sm font-semibold">Apple Catcher</h3>
       <p className="text-[11px] leading-relaxed text-fg-muted">
-        Πιάσε όσα μήλα μπορείς σε <strong>30 δευτερόλεπτα</strong>.
+        Πιάσε όσα μήλα μπορείς. Έχεις <strong>5 ζωές</strong>.
         <br />
-        Χρυσά μήλα = +3 · σάπια = −2.
-        <br />5 σερί = combo ×2.
+        Χάνεις ζωή αν χάσεις κόκκινο μήλο ή πιάσεις σάπιο.
+        <br />
+        🍎 +1 · ✨ χρυσό +3 · 5 σερί = combo ×2.
       </p>
       {highScore > 0 && (
         <span className="inline-flex items-center gap-1 rounded-full bg-bg-soft px-2 py-0.5 text-[10px] text-fg-subtle">
@@ -506,10 +545,12 @@ function IntroOverlay({
 
 function ResultOverlay({
   result,
+  survivedMs,
   onRetry,
   onExit,
 }: {
   result: { score: number; reward: number; high: number; newBest: boolean }
+  survivedMs: number
   onRetry: () => void
   onExit: () => void
 }) {
@@ -522,10 +563,10 @@ function ResultOverlay({
       )}
       <div className="text-3xl">🍎</div>
       <p className="text-sm">
-        Έπιασες <span className="text-base font-bold tabular-nums">{result.score}</span> μήλα
+        Σκορ <span className="text-base font-bold tabular-nums">{result.score}</span>
       </p>
       <p className="text-[11px] text-fg-muted">
-        +{result.reward} χαρά · Best: {result.high}
+        Επιβίωσες {formatSurvived(survivedMs)} · +{result.reward} χαρά · Best: {result.high}
       </p>
       <div className="mt-1 flex items-center gap-2">
         <button
@@ -631,23 +672,20 @@ function makeInitialRef(): GameRef {
     caught: 0,
     combo: 0,
     bestCombo: 0,
+    lives: STARTING_LIVES,
     startedAt: 0,
     lastFrameAt: 0,
     lastSpawnAt: 0,
     pausedAt: null,
     pauseDebt: 0,
+    finalSurvivedMs: 0,
     appleSeq: 0,
     popSeq: 0,
   }
 }
 
-function lerp(a: number, b: number, t: number) {
-  return a + (b - a) * Math.max(0, Math.min(1, t))
-}
-
-function spawnApple(g: GameRef, progress: number): Apple {
-  const baseSpeed = lerp(110, 240, progress)
-  const vy = baseSpeed * (0.85 + Math.random() * 0.35)
+function spawnApple(g: GameRef, baseFall: number): Apple {
+  const vy = baseFall * (0.85 + Math.random() * 0.35)
   const r = Math.random()
   const type: AppleType = r < 0.1 ? 'golden' : r < 0.2 ? 'rotten' : 'normal'
   const margin = APPLE_R + 4
@@ -664,57 +702,69 @@ function spawnApple(g: GameRef, progress: number): Apple {
 }
 
 function handleCatch(g: GameRef, a: Apple, t: number) {
-  let pts = 0
-  let tone: Pop['tone'] = 'good'
-  let text = '+1'
-
   if (a.type === 'rotten') {
-    pts = -2
-    tone = 'bad'
-    text = '−2'
+    // Rotten = pure life-loss hazard. Score is unchanged so the leaderboard
+    // can never go negative, but combo breaks and you lose a heart.
     g.combo = 0
+    g.lives = Math.max(0, g.lives - 1)
     playPetSound('rotten')
-  } else {
-    const base = a.type === 'golden' ? 3 : 1
-    g.combo += 1
-    if (g.combo > g.bestCombo) g.bestCombo = g.combo
-    const mult = g.combo >= COMBO_THRESHOLD ? 2 : 1
-    pts = base * mult
-    if (a.type === 'golden') {
-      tone = 'great'
-      text = `+${pts}`
-      playPetSound('goldcatch')
-    } else {
-      text = `+${pts}`
-      playPetSound('catch')
-    }
+    g.pops.push({
+      id: ++g.popSeq,
+      x: a.x,
+      y: PLAY_H - PET_H - 4,
+      text: '−♥',
+      tone: 'bad',
+      bornAt: t,
+    })
+    return
   }
 
+  const base = a.type === 'golden' ? 3 : 1
+  g.combo += 1
+  if (g.combo > g.bestCombo) g.bestCombo = g.combo
+  const mult = g.combo >= COMBO_THRESHOLD ? 2 : 1
+  const pts = base * mult
   g.score += pts
   g.caught += 1
+
+  if (a.type === 'golden') {
+    playPetSound('goldcatch')
+  } else {
+    playPetSound('catch')
+  }
+
   g.pops.push({
     id: ++g.popSeq,
     x: a.x,
     y: PLAY_H - PET_H - 4,
-    text,
-    tone,
+    text: `+${pts}`,
+    tone: a.type === 'golden' ? 'great' : 'good',
     bornAt: t,
   })
 }
 
 function handleMiss(g: GameRef, a: Apple, t: number) {
   if (a.type === 'normal') {
-    // missing a normal apple breaks combo and shows a small fade
     g.combo = 0
+    g.lives = Math.max(0, g.lives - 1)
     playPetSound('miss')
     g.pops.push({
       id: ++g.popSeq,
       x: a.x,
       y: PLAY_H - 14,
-      text: '×',
+      text: '−♥',
       tone: 'bad',
       bornAt: t,
     })
   }
-  // Missing a rotten: silent (you avoided it). Missing a golden: silent (lost bonus, no penalty).
+  // Missing a rotten: silent — you avoided it (good).
+  // Missing a golden: silent — lost bonus but no penalty.
+}
+
+function formatSurvived(ms: number): string {
+  const total = Math.max(0, Math.round(ms / 1000))
+  if (total < 60) return `${total}s`
+  const m = Math.floor(total / 60)
+  const s = total % 60
+  return `${m}:${s.toString().padStart(2, '0')}`
 }
