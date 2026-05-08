@@ -2,8 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import { isWearable } from '@/lib/collectibles/registry'
-import type { Collectible } from '@/lib/collectibles/types'
-import { PetSprite } from '@/components/pet/PetSprite'
+import type { Collectible, WearableSlot } from '@/lib/collectibles/types'
 
 type Props = {
   item: Collectible
@@ -14,13 +13,13 @@ type Props = {
 }
 
 /**
- * Visual preview for one collectible. Wearables are previewed on a
- * mini pet sprite (so a hat reads as a hat, not a floating shape);
- * decorations render their self-contained SVG directly.
+ * Visual preview for one collectible — shows ONLY the item, not the
+ * pet wearing it. Wearables render inside a slot-specific cropped
+ * viewBox so the item fills the preview cleanly (a hat looks like a
+ * hat, not a tiny pet with a hat). Decorations render their
+ * self-contained SVG directly.
  *
- * The `silhouette` mode applies a CSS filter to render an unfound
- * item as a dark, low-detail shape — the player gets a hint about
- * the silhouette without spoiling colors or details.
+ * The `silhouette` mode applies a CSS filter to dim unfound items.
  */
 export function ItemPreview({ item, silhouette = false, size = 64 }: Props) {
   const className = silhouette
@@ -29,31 +28,20 @@ export function ItemPreview({ item, silhouette = false, size = 64 }: Props) {
 
   if (isWearable(item)) {
     return (
-      <div
-        className={cn(
-          'flex items-center justify-center',
-          silhouette && 'opacity-40',
-        )}
-        style={{ width: size, height: size }}
+      <svg
+        viewBox={SLOT_PREVIEW_VIEWBOX[item.slot]}
+        width={size}
+        height={size}
+        className={cn(className)}
+        aria-hidden="true"
       >
-        <PetSprite
-          stage="baby"
-          mood="neutral"
-          size={size - 4}
-          still
-          equippedOverride={{
-            head: item.slot === 'head' ? item.id : null,
-            eyes: item.slot === 'eyes' ? item.id : null,
-            body: item.slot === 'body' ? item.id : null,
-            accessory: item.slot === 'accessory' ? item.id : null,
-          }}
-          className={className}
-        />
-      </div>
+        <item.Sprite stage="baby" mood="neutral" adult={false} />
+      </svg>
     )
   }
 
-  // Decoration — render its own SVG. Wrap in a fixed-size box.
+  // Decoration — already returns a self-contained <svg> with its own
+  // viewBox, so just render it inside a fixed-size container.
   return (
     <div
       className={cn('flex items-center justify-center', className)}
@@ -64,4 +52,17 @@ export function ItemPreview({ item, silhouette = false, size = 64 }: Props) {
       </div>
     </div>
   )
+}
+
+/**
+ * Slot-specific viewBoxes that crop the pet's `0 0 120 110` coord
+ * space down to just the region where each kind of item is drawn.
+ * The item's sprite uses pet coords as usual; this just crops to its
+ * footprint so it fills the preview.
+ */
+const SLOT_PREVIEW_VIEWBOX: Record<WearableSlot, string> = {
+  head: '30 4 60 36',
+  eyes: '34 38 52 22',
+  body: '14 56 92 48',
+  accessory: '78 48 36 26',
 }

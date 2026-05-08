@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import type { ItemRenderProps } from '@/lib/collectibles/types'
 
 /**
@@ -20,7 +21,10 @@ export function AmJacket({ adult }: ItemRenderProps) {
   // converge; upper button is 5 px above on the centerline.
   const lowerButtonY = ctrlY - 2
   const upperButtonY = lowerButtonY - 5
-  const gradId = `am-jacket-fill-${adult ? 'a' : 'b'}`
+  // Unique per render so multiple instances on a page (catalog grid)
+  // don't collide on the same SVG `id`.
+  const reactId = useId()
+  const gradId = `am-jacket-fill-${reactId.replace(/[^a-zA-Z0-9-]/g, '-')}-${adult ? 'a' : 'b'}`
   return (
     <g transform="translate(60 60)" aria-hidden="true">
       <defs>
