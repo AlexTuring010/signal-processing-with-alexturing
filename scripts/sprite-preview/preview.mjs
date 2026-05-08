@@ -254,6 +254,110 @@ const ITEMS = {
       `
     },
   },
+  // ---------- Decoration sprites — return their own <svg> ----------
+  'fdm-rug': {
+    slot: 'floor',
+    decorViewBox: '0 0 240 28',
+    decorContent: `
+      <line x1="6" y1="6" x2="6" y2="22" stroke="#7e6747" stroke-width="1" />
+      <line x1="3" y1="8" x2="3" y2="20" stroke="#7e6747" stroke-width="1" />
+      <line x1="9" y1="8" x2="9" y2="20" stroke="#7e6747" stroke-width="1" />
+      <line x1="234" y1="6" x2="234" y2="22" stroke="#7e6747" stroke-width="1" />
+      <line x1="231" y1="8" x2="231" y2="20" stroke="#7e6747" stroke-width="1" />
+      <line x1="237" y1="8" x2="237" y2="20" stroke="#7e6747" stroke-width="1" />
+      <rect x="12" y="4" width="216" height="20" rx="2" fill="#a17b5e" />
+      <rect x="14" y="6" width="212" height="16" rx="1.5" fill="none" stroke="#5d4633" stroke-width="0.6" opacity="0.7" />
+      <rect x="16" y="8" width="208" height="2.2" fill="#cda07f" opacity="0.85" />
+      <rect x="16" y="11" width="208" height="2.2" fill="#b78b65" opacity="0.85" />
+      <rect x="16" y="14" width="208" height="2.2" fill="#cda07f" opacity="0.85" />
+      <rect x="16" y="17" width="208" height="2.2" fill="#b78b65" opacity="0.85" />
+      <rect x="16" y="20" width="208" height="1.8" fill="#cda07f" opacity="0.7" />
+    `,
+  },
+  'modulation-portrait': {
+    slot: 'wall',
+    decorViewBox: '0 0 60 40',
+    decorContent: `
+      <rect x="2" y="2" width="56" height="36" rx="2" fill="#8a6f3a" />
+      <rect x="4" y="4" width="52" height="32" rx="1" fill="none" stroke="#5a4720" stroke-width="0.6" />
+      <rect x="6" y="6" width="48" height="28" fill="#dde9f0" />
+      <path d="M 8 20 Q 10 14 12 20 Q 14 26 16 20 Q 18 13 20 20 Q 22 27 24 20 Q 26 12 28 20 Q 30 28 32 20 Q 34 13 36 20 Q 38 27 40 20 Q 42 14 44 20 Q 46 26 48 20 Q 50 16 52 20"
+        stroke="#3a5e96" stroke-width="0.9" fill="none" stroke-linecap="round" />
+      <path d="M 8 12 Q 30 6 52 12" stroke="#162a52" stroke-width="0.7" fill="none" stroke-dasharray="1.2 1.4" opacity="0.7" />
+      <path d="M 8 28 Q 30 34 52 28" stroke="#162a52" stroke-width="0.7" fill="none" stroke-dasharray="1.2 1.4" opacity="0.7" />
+      <line x1="4" y1="4" x2="4" y2="36" stroke="#c5a36a" stroke-width="0.6" opacity="0.6" />
+    `,
+  },
+  'diode-frame': {
+    slot: 'wall',
+    decorViewBox: '0 0 60 40',
+    decorContent: `
+      <rect x="2" y="2" width="56" height="36" rx="2" fill="#3d3a36" />
+      <rect x="4" y="4" width="52" height="32" rx="1" fill="none" stroke="#1f1d1a" stroke-width="0.6" />
+      <rect x="6" y="6" width="48" height="28" fill="#dde6e7" />
+      <line x1="10" y1="20" x2="22" y2="20" stroke="#2a3540" stroke-width="1" stroke-linecap="round" />
+      <path d="M 22 14 L 22 26 L 32 20 Z" fill="#2a3540" />
+      <line x1="32" y1="14" x2="32" y2="26" stroke="#2a3540" stroke-width="1.4" stroke-linecap="round" />
+      <line x1="32" y1="20" x2="50" y2="20" stroke="#2a3540" stroke-width="1" stroke-linecap="round" />
+      <text x="14" y="14" font-size="5" fill="#2a3540" font-family="serif">+</text>
+      <text x="44" y="14" font-size="5" fill="#2a3540" font-family="serif">-</text>
+    `,
+  },
+  'realizations-armchair': {
+    slot: 'chair',
+    decorViewBox: '0 0 50 60',
+    decorContent: `
+      <rect x="9" y="6" width="32" height="32" rx="6" fill="#a87f9c" />
+      <rect x="6" y="32" width="38" height="14" rx="3" fill="#8e6783" />
+      <rect x="3" y="26" width="6" height="20" rx="2" fill="#8e6783" />
+      <rect x="41" y="26" width="6" height="20" rx="2" fill="#8e6783" />
+      <rect x="6" y="46" width="4" height="6" fill="#5a3f51" />
+      <rect x="40" y="46" width="4" height="6" fill="#5a3f51" />
+      <path d="M 12 20 Q 25 22 38 20" stroke="#5a3f51" stroke-width="0.7" fill="none" opacity="0.6" />
+      <path d="M 12 14 Q 17 11 22 14 Q 27 17 32 14 Q 37 11 38 13" stroke="#dac2d0" stroke-width="0.7" fill="none" stroke-linecap="round" />
+      <path d="M 12 24 Q 18 27 24 24 Q 30 21 38 26" stroke="#dac2d0" stroke-width="0.7" fill="none" stroke-linecap="round" opacity="0.85" />
+      <path d="M 12 30 Q 19 28 26 31 Q 33 34 38 30" stroke="#dac2d0" stroke-width="0.7" fill="none" stroke-linecap="round" opacity="0.7" />
+      <ellipse cx="16" cy="14" rx="6" ry="3" fill="white" opacity="0.18" />
+    `,
+  },
+  'static-lamp': {
+    slot: 'lamp',
+    decorViewBox: '0 0 50 60',
+    decorContent: `
+      <ellipse cx="25" cy="14" rx="22" ry="10" fill="#ffe9b3" opacity="0.25" />
+      <path d="M 12 6 L 38 6 L 42 22 L 8 22 Z" fill="#cbb78a" />
+      <path d="M 14 8 L 36 8 L 37 12 L 13 12 Z" fill="white" opacity="0.25" />
+      <line x1="8" y1="22" x2="42" y2="22" stroke="#7a6845" stroke-width="0.8" />
+      <rect x="24" y="22" width="2" height="28" fill="#8a724b" />
+      <ellipse cx="25" cy="52" rx="9" ry="3" fill="#5d4d31" />
+      <ellipse cx="25" cy="52" rx="6" ry="1.6" fill="#7a6845" />
+      <circle cx="6" cy="14" r="0.7" fill="white" opacity="0.7" />
+      <circle cx="9" cy="20" r="0.5" fill="white" opacity="0.6" />
+      <circle cx="44" cy="16" r="0.6" fill="white" opacity="0.7" />
+      <circle cx="41" cy="22" r="0.5" fill="white" opacity="0.6" />
+      <circle cx="3" cy="20" r="0.5" fill="white" opacity="0.5" />
+      <circle cx="47" cy="20" r="0.5" fill="white" opacity="0.5" />
+      <circle cx="20" cy="3" r="0.4" fill="white" opacity="0.5" />
+      <circle cx="32" cy="2" r="0.5" fill="white" opacity="0.6" />
+    `,
+  },
+  'snr-lamp': {
+    slot: 'lamp',
+    decorViewBox: '0 0 50 60',
+    decorContent: `
+      <ellipse cx="20" cy="22" rx="16" ry="9" fill="#cfe6f5" opacity="0.32" />
+      <path d="M 8 14 L 32 8 L 34 18 L 10 24 Z" fill="#3a5e96" />
+      <path d="M 10 15 L 30 10 L 31 13 L 11 18 Z" fill="white" opacity="0.22" />
+      <line x1="8" y1="14" x2="10" y2="24" stroke="#162a52" stroke-width="0.8" />
+      <text x="14" y="20" font-size="6" fill="white" font-family="sans-serif" font-weight="700" opacity="0.85">S/N</text>
+      <line x1="33" y1="13" x2="38" y2="30" stroke="#5d6f8a" stroke-width="1.4" stroke-linecap="round" />
+      <line x1="38" y1="30" x2="32" y2="48" stroke="#5d6f8a" stroke-width="1.4" stroke-linecap="round" />
+      <ellipse cx="32" cy="50" rx="9" ry="2.6" fill="#162a52" />
+      <ellipse cx="32" cy="50" rx="6" ry="1.4" fill="#3a5e96" />
+      <circle cx="33" cy="13" r="1.2" fill="#162a52" />
+      <circle cx="32" cy="48" r="1.4" fill="#162a52" />
+    `,
+  },
   'spectrum-glasses': {
     slot: 'eyes',
     render: () => `
@@ -275,6 +379,23 @@ const ITEMS = {
       </g>
     `,
   },
+}
+
+// ---------- DECORATION CARD ----------
+function buildDecorationCard(item) {
+  const W = 320
+  const H = 240
+  return `
+<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" width="${W * 2}" height="${H * 2}">
+  <rect width="${W}" height="${H}" fill="${COLORS.bg}" />
+  <text x="12" y="20" font-size="11" fill="${COLORS.fg}" font-family="sans-serif">${item.slot} · ${item.decorViewBox}</text>
+  <g transform="translate(40 50)">
+    <svg viewBox="${item.decorViewBox}" width="240" height="160" preserveAspectRatio="xMidYMid meet">
+      ${item.decorContent}
+    </svg>
+  </g>
+</svg>
+  `.trim()
 }
 
 // ---------- COMPOSITION ----------
@@ -360,25 +481,29 @@ if ('all' in args) {
   for (const id of Object.keys(ITEMS)) {
     if (id.startsWith('_')) continue // skip debug placeholders
     const item = ITEMS[id]
-    const equippedForItem = {
-      head: null,
-      eyes: null,
-      body: null,
-      accessory: null,
-    }
-    if (
-      item.slot === 'head' ||
-      item.slot === 'eyes' ||
-      item.slot === 'body' ||
-      item.slot === 'accessory'
-    ) {
+    const isWearable = ['head', 'eyes', 'body', 'accessory'].includes(item.slot)
+    if (isWearable) {
+      const equippedForItem = {
+        head: null,
+        eyes: null,
+        body: null,
+        accessory: null,
+      }
       equippedForItem[item.slot] = id
+      const svg = buildGrid(equippedForItem)
+      const png = await sharp(Buffer.from(svg)).png().toBuffer()
+      const outPath = `${dir}/${id}.png`
+      writeFileSync(outPath, png)
+      console.log('Wrote', outPath)
+    } else {
+      // Decorations don't equip on the pet — render them inside their
+      // own viewBox on a soft background card.
+      const svg = buildDecorationCard(item)
+      const png = await sharp(Buffer.from(svg)).png().toBuffer()
+      const outPath = `${dir}/${id}.png`
+      writeFileSync(outPath, png)
+      console.log('Wrote', outPath)
     }
-    const svg = buildGrid(equippedForItem)
-    const png = await sharp(Buffer.from(svg)).png().toBuffer()
-    const outPath = `${dir}/${id}.png`
-    writeFileSync(outPath, png)
-    console.log('Wrote', outPath)
   }
 } else {
   const equipped = {

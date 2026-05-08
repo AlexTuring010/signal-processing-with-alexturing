@@ -1,4 +1,9 @@
-import type { Collectible, CollectibleId } from './types'
+import type {
+  Collectible,
+  CollectibleId,
+  DecorationCollectible,
+  WearableCollectible,
+} from './types'
 
 // Phase 1 debug placeholders.
 import { TestHat } from '@/components/collectibles/sprites/head/_TestHat'
@@ -11,6 +16,14 @@ import { FmHeadphones } from '@/components/collectibles/sprites/head/FmHeadphone
 import { SpectrumGlasses } from '@/components/collectibles/sprites/eyes/SpectrumGlasses'
 import { SignalShirt } from '@/components/collectibles/sprites/body/SignalShirt'
 import { AmJacket } from '@/components/collectibles/sprites/body/AmJacket'
+
+// Phase 3 — six per-page decorations.
+import { FdmRug } from '@/components/collectibles/sprites/decor/FdmRug'
+import { ModulationPortrait } from '@/components/collectibles/sprites/decor/ModulationPortrait'
+import { DiodeFrame } from '@/components/collectibles/sprites/decor/DiodeFrame'
+import { RealizationsArmchair } from '@/components/collectibles/sprites/decor/RealizationsArmchair'
+import { StaticLamp } from '@/components/collectibles/sprites/decor/StaticLamp'
+import { SnrLamp } from '@/components/collectibles/sprites/decor/SnrLamp'
 
 /**
  * The full collectibles catalog. Phase 2 adds the six per-page real
@@ -96,6 +109,62 @@ export const COLLECTIBLES: Collectible[] = [
     Sprite: FmHeadphones,
     rarity: 'common',
   },
+
+  // ---------- Phase 3 decorations ----------
+  {
+    id: 'fdm-rug',
+    name: 'FDM Ταπέτο',
+    description: 'Ταπέτο με παράλληλες ζώνες — μία ανά κανάλι.',
+    source: { kind: 'page', slug: 'am/multiplexing' },
+    slot: 'floor',
+    Sprite: FdmRug,
+    rarity: 'common',
+  },
+  {
+    id: 'modulation-portrait',
+    name: 'Πορτρέτο Modulation',
+    description: 'Κορνιζαρισμένο σχέδιο με σήμα AM και την περιβάλλουσα.',
+    source: { kind: 'page', slug: 'am/overview' },
+    slot: 'wall',
+    Sprite: ModulationPortrait,
+    rarity: 'common',
+  },
+  {
+    id: 'diode-frame',
+    name: 'Διοδική Κορνίζα',
+    description: 'Μικρό σχηματικό με δίοδο — πολικότητα, διέλευση.',
+    source: { kind: 'page', slug: 'am/modulator-demodulator' },
+    slot: 'wall',
+    Sprite: DiodeFrame,
+    rarity: 'common',
+  },
+  {
+    id: 'realizations-armchair',
+    name: 'Πολυθρόνα Realizations',
+    description: 'Τρεις διαφορετικές τροχιές, ένα κάθισμα.',
+    source: { kind: 'page', slug: 'randomness/random-processes' },
+    slot: 'chair',
+    Sprite: RealizationsArmchair,
+    rarity: 'rare',
+  },
+  {
+    id: 'static-lamp',
+    name: 'Στατικό Αμπαζούρ',
+    description: 'Πηγή με λευκό θόρυβο — αχνά κουκκιδάκια στο σκιάδι.',
+    source: { kind: 'page', slug: 'noise/sources' },
+    slot: 'lamp',
+    Sprite: StaticLamp,
+    rarity: 'common',
+  },
+  {
+    id: 'snr-lamp',
+    name: 'Φωτιστικό SNR',
+    description: 'Σύγχρονο φωτιστικό με «S/N» χαραγμένο στο σκιάδι.',
+    source: { kind: 'page', slug: 'noise/snr' },
+    slot: 'lamp',
+    Sprite: SnrLamp,
+    rarity: 'rare',
+  },
 ]
 
 const BY_ID: Record<string, Collectible> = Object.fromEntries(
@@ -112,4 +181,30 @@ export function collectiblesForSlug(slug: string): Collectible[] {
   return COLLECTIBLES.filter(
     (c) => c.source.kind === 'page' && c.source.slug === slug,
   )
+}
+
+const WEARABLE_SLOTS = new Set(['head', 'eyes', 'body', 'accessory'])
+
+export function isWearable(c: Collectible): c is WearableCollectible {
+  return WEARABLE_SLOTS.has(c.slot)
+}
+
+export function isDecoration(c: Collectible): c is DecorationCollectible {
+  return !WEARABLE_SLOTS.has(c.slot)
+}
+
+/** Narrowed lookup — returns only wearable items. */
+export function getWearable(
+  id: CollectibleId | null | undefined,
+): WearableCollectible | undefined {
+  const item = getCollectible(id)
+  return item && isWearable(item) ? item : undefined
+}
+
+/** Narrowed lookup — returns only decoration items. */
+export function getDecoration(
+  id: CollectibleId | null | undefined,
+): DecorationCollectible | undefined {
+  const item = getCollectible(id)
+  return item && isDecoration(item) ? item : undefined
 }

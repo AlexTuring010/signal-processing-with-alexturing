@@ -59,7 +59,7 @@ export type ItemRenderProps = {
   adult: boolean
 }
 
-export type Collectible = {
+type CollectibleBase = {
   id: CollectibleId
   /** Greek display name. */
   name: string
@@ -67,13 +67,34 @@ export type Collectible = {
   description: string
   /** Where + how the player earns this item. */
   source: CollectibleSource
-  /** Slot kind — determines whether it equips on the pet or drops into a room slot. */
-  slot: Slot
-  /** SVG fragment renderer. Returns elements *inside* the pet's `0 0 120 110` viewBox. */
-  Sprite: ComponentType<ItemRenderProps>
   /** Purely descriptive flavor — no mechanical effect in v1. */
   rarity: 'common' | 'rare' | 'special'
 }
+
+/**
+ * Wearable item — equips onto the pet sprite. Sprite returns SVG
+ * elements *inside* the pet's `0 0 120 110` viewBox using the
+ * anchors from `lib/collectibles/anchors.ts`.
+ */
+export type WearableCollectible = CollectibleBase & {
+  slot: WearableSlot
+  Sprite: ComponentType<ItemRenderProps>
+}
+
+/**
+ * Decoration item — drops into a room slot. Sprite returns its own
+ * complete `<svg>` element with a viewBox sized to the slot kind:
+ *   - floor: 240×28
+ *   - wall: 60×40
+ *   - bed/desk/chair/lamp: 50×60
+ *   - tabletop: 30×30
+ */
+export type DecorationCollectible = CollectibleBase & {
+  slot: DecorSlot
+  Sprite: ComponentType
+}
+
+export type Collectible = WearableCollectible | DecorationCollectible
 
 /** Currently equipped on the pet sprite. At most one per slot. */
 export type EquippedSlots = {

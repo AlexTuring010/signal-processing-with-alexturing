@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import type { Mood, Stage } from '@/lib/pet/types'
 import { useCollectiblesStore } from '@/lib/collectibles/store'
-import { getCollectible } from '@/lib/collectibles/registry'
+import { getWearable } from '@/lib/collectibles/registry'
 import {
   MIN_ACCESSORY_RENDER_SIZE,
   MIN_BODY_RENDER_SIZE,
@@ -108,12 +108,12 @@ function BodySvg({
   const stage: ItemRenderProps['stage'] = adult ? 'adult' : 'baby'
   const itemProps: ItemRenderProps = { stage, mood, adult }
 
-  const headItem = getCollectible(equipped.head)
-  const eyesItem = getCollectible(equipped.eyes)
+  const headItem = getWearable(equipped.head)
+  const eyesItem = getWearable(equipped.eyes)
   const bodyItem =
-    size >= MIN_BODY_RENDER_SIZE ? getCollectible(equipped.body) : undefined
+    size >= MIN_BODY_RENDER_SIZE ? getWearable(equipped.body) : undefined
   const accessoryItem =
-    size >= MIN_ACCESSORY_RENDER_SIZE ? getCollectible(equipped.accessory) : undefined
+    size >= MIN_ACCESSORY_RENDER_SIZE ? getWearable(equipped.accessory) : undefined
 
   return (
     <svg

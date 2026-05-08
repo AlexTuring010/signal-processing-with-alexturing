@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Pencil, X, Check, Volume2, VolumeX, Sparkles, Trees, ChevronRight } from 'lucide-react'
+import { Pencil, X, Check, Volume2, VolumeX, Sparkles, Trees, ChevronRight, ArrowLeft, Home } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { usePetStore, formatAge, evolutionProgress } from '@/lib/pet/store'
 import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
@@ -14,6 +14,7 @@ import { ActionRow } from './ActionRow'
 import { HatchDialog } from './HatchDialog'
 import { Particles, SleepZs } from './particles'
 import { MiniGame } from './MiniGame'
+import { Room } from '@/components/collectibles/Room/Room'
 
 type Props = {
   onClose: () => void
@@ -33,7 +34,7 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
   const [draftName, setDraftName] = useState(state.name)
   const [confirmReset, setConfirmReset] = useState(false)
   const [soundOn, setSoundOn] = useState(false)
-  const [mode, setMode] = useState<'idle' | 'game'>('idle')
+  const [mode, setMode] = useState<'idle' | 'game' | 'room'>('idle')
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -127,6 +128,19 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
         <HatchDialog />
       ) : mode === 'game' ? (
         <MiniGame onExit={() => setMode('idle')} />
+      ) : mode === 'room' ? (
+        <div className="flex flex-col gap-2 p-3">
+          <button
+            type="button"
+            onClick={() => setMode('idle')}
+            aria-label="Πίσω"
+            className="inline-flex items-center gap-1 self-start rounded-full bg-bg-soft px-2 py-1 text-[11px] font-medium text-fg-muted hover:text-fg"
+          >
+            <ArrowLeft className="h-3 w-3" />
+            Πίσω
+          </button>
+          <Room />
+        </div>
       ) : (
         <>
           {/* Stage scene */}
@@ -190,7 +204,7 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
           </div>
 
           {/* Orchard entry — prominent CTA so it's discoverable */}
-          <div className="px-3 pb-3 pt-2">
+          <div className="space-y-2 px-3 pb-3 pt-2">
             <button
               type="button"
               onClick={onOpenOrchard}
@@ -207,6 +221,29 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
                 <span>Μποστάνι</span>
                 <span className="text-[10px] font-normal text-fg-subtle">
                   Φύτεψε, μάζεψε, πούλα
+                </span>
+              </span>
+              <ChevronRight
+                aria-hidden="true"
+                className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
+              />
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('room')}
+              aria-label="Άνοιξε το δωμάτιο"
+              className="group relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-accent/40 bg-gradient-to-r from-accent/15 via-accent/5 to-accent-soft/30 px-3 py-2 text-left text-sm font-medium text-fg shadow-sm transition-transform hover:scale-[1.01] active:scale-[0.99]"
+            >
+              <span
+                aria-hidden="true"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/20 text-accent"
+              >
+                <Home className="h-4 w-4" />
+              </span>
+              <span className="flex flex-1 flex-col leading-tight">
+                <span>Δωμάτιο</span>
+                <span className="text-[10px] font-normal text-fg-subtle">
+                  Διακόσμησε τον χώρο
                 </span>
               </span>
               <ChevronRight
