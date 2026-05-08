@@ -99,16 +99,17 @@ function BodySvg({
   const tilt = mood === 'sick' ? -6 : 0
 
   // Resolve currently equipped items. Suppression rules:
-  //   - eyes layer hidden while asleep (eyes themselves are closed)
   //   - body layer hidden below MIN_BODY_RENDER_SIZE (reads as noise)
   //   - accessory layer hidden below MIN_ACCESSORY_RENDER_SIZE
+  // Eyes-slot items render through every mood including asleep —
+  // glasses-on-a-sleeping-pet is a tasteful read, not a glitch.
   // The `egg` stage short-circuits before we get here.
   const equipped = useCollectiblesStore((s) => s.state.equipped)
   const stage: ItemRenderProps['stage'] = adult ? 'adult' : 'baby'
   const itemProps: ItemRenderProps = { stage, mood, adult }
 
   const headItem = getCollectible(equipped.head)
-  const eyesItem = mood === 'asleep' ? undefined : getCollectible(equipped.eyes)
+  const eyesItem = getCollectible(equipped.eyes)
   const bodyItem =
     size >= MIN_BODY_RENDER_SIZE ? getCollectible(equipped.body) : undefined
   const accessoryItem =

@@ -8,11 +8,7 @@ import { EYES_ANCHOR } from '@/lib/collectibles/anchors'
  *
  * Replaced by real per-page eyewear in Phase 5.
  */
-export function TestGlasses({ mood }: ItemRenderProps) {
-  // The pet's eyes already disappear when asleep; the PetSprite wrapper
-  // suppresses this layer in that case, but we still render nothing
-  // defensively if mood somehow flows through.
-  if (mood === 'asleep') return null
+export function TestGlasses(_: ItemRenderProps) {
   const { x, y } = EYES_ANCHOR
   return (
     <g aria-hidden="true">

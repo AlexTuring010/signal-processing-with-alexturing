@@ -6,8 +6,7 @@ import { EYES_ANCHOR } from '@/lib/collectibles/anchors'
  * soft prism gradient (red → green → blue). A nod to the spectrum
  * idea on the Fourier-transform page.
  */
-export function SpectrumGlasses({ mood }: ItemRenderProps) {
-  if (mood === 'asleep') return null
+export function SpectrumGlasses(_: ItemRenderProps) {
   const { x, y } = EYES_ANCHOR
   return (
     <g aria-hidden="true">
