@@ -52,20 +52,4 @@ export const STORAGE_KEYS = {
   petSound: 'spwa:pet-sound',
   petGameHigh: 'spwa:pet-game-high',
   orchard: 'spwa:orchard',
-  brainrot: 'spwa:brainrot',
 } as const
-
-/** Custom event fired by setBrainrot() so in-tab listeners can react without
- *  waiting for the next render or a localStorage cross-tab event. */
-export const BRAINROT_EVENT = 'spwa:brainrot-changed'
-
-export function getBrainrot(): boolean {
-  return readJSON<boolean>(STORAGE_KEYS.brainrot, false)
-}
-
-export function setBrainrot(enabled: boolean): void {
-  writeJSON(STORAGE_KEYS.brainrot, enabled)
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new Event(BRAINROT_EVENT))
-  }
-}
