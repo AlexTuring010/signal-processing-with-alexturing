@@ -9,7 +9,10 @@ import {
   MIN_ACCESSORY_RENDER_SIZE,
   MIN_BODY_RENDER_SIZE,
 } from '@/lib/collectibles/anchors'
-import type { ItemRenderProps } from '@/lib/collectibles/types'
+import type {
+  EquippedSlots,
+  ItemRenderProps,
+} from '@/lib/collectibles/types'
 
 type Props = {
   stage: Stage
@@ -19,6 +22,12 @@ type Props = {
   /** When true, suppress the constant idle bob (used inside the small collapsed button). */
   still?: boolean
   className?: string
+  /**
+   * Override what's equipped on this sprite. When provided, the
+   * sprite ignores the player's actual equipment — useful for
+   * preview cards in /collection that show different items per card.
+   */
+  equippedOverride?: Partial<EquippedSlots>
 }
 
 /**
@@ -31,7 +40,14 @@ type Props = {
  * call sites don't have to pass an `equipped` prop — every PetSprite in the
  * app picks them up automatically.
  */
-export function PetSprite({ stage, mood, size = 96, still = false, className }: Props) {
+export function PetSprite({
+  stage,
+  mood,
+  size = 96,
+  still = false,
+  className,
+  equippedOverride,
+}: Props) {
   // Lazy-hydrate the collectibles store on first sprite mount. Cheap and
   // idempotent — the store guards against double hydration internally.
   const hydrate = useCollectiblesStore((s) => s.hydrate)
@@ -48,6 +64,7 @@ export function PetSprite({ stage, mood, size = 96, still = false, className }: 
       mood={mood}
       adult={stage === 'adult'}
       className={cn(!still && 'pet-idle-bob', className)}
+      equippedOverride={equippedOverride}
     />
   )
 }
@@ -86,11 +103,13 @@ function BodySvg({
   mood,
   adult,
   className,
+  equippedOverride,
 }: {
   size: number
   mood: Mood
   adult: boolean
   className?: string
+  equippedOverride?: Partial<EquippedSlots>
 }) {
   const bodyW = adult ? 78 : 70
   const bodyH = adult ? 76 : 68
@@ -104,7 +123,13 @@ function BodySvg({
   // Eyes-slot items render through every mood including asleep —
   // glasses-on-a-sleeping-pet is a tasteful read, not a glitch.
   // The `egg` stage short-circuits before we get here.
-  const equipped = useCollectiblesStore((s) => s.state.equipped)
+  const storeEquipped = useCollectiblesStore((s) => s.state.equipped)
+  const equipped: EquippedSlots = {
+    head: equippedOverride?.head ?? storeEquipped.head,
+    eyes: equippedOverride?.eyes ?? storeEquipped.eyes,
+    body: equippedOverride?.body ?? storeEquipped.body,
+    accessory: equippedOverride?.accessory ?? storeEquipped.accessory,
+  }
   const stage: ItemRenderProps['stage'] = adult ? 'adult' : 'baby'
   const itemProps: ItemRenderProps = { stage, mood, adult }
 

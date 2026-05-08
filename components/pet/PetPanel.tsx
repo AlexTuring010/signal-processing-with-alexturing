@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Pencil, X, Check, Volume2, VolumeX, Sparkles, Trees, ChevronRight, ArrowLeft, Home } from 'lucide-react'
+import { Pencil, X, Check, Volume2, VolumeX, Sparkles, Trees, ChevronRight, ArrowLeft, Home, BookOpen } from 'lucide-react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { usePetStore, formatAge, evolutionProgress } from '@/lib/pet/store'
 import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
@@ -251,6 +252,29 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
                 className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
               />
             </button>
+            <Link
+              href="/collection"
+              onClick={onClose}
+              aria-label="Άνοιξε τη συλλογή"
+              className="group relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-warn/40 bg-gradient-to-r from-warn/15 via-warn/5 to-warn/0 px-3 py-2 text-left text-sm font-medium text-fg shadow-sm transition-transform hover:scale-[1.01] active:scale-[0.99]"
+            >
+              <span
+                aria-hidden="true"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-warn/20 text-warn"
+              >
+                <BookOpen className="h-4 w-4" />
+              </span>
+              <span className="flex flex-1 flex-col leading-tight">
+                <span>Συλλογή</span>
+                <span className="text-[10px] font-normal text-fg-subtle">
+                  Δες τι έχεις βρει — και τι λείπει
+                </span>
+              </span>
+              <ChevronRight
+                aria-hidden="true"
+                className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
+              />
+            </Link>
           </div>
         </>
       )}

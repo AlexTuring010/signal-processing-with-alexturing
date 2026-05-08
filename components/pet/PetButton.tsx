@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import { usePetStore, selectNeedsAttention } from '@/lib/pet/store'
+import { useCollectiblesStore } from '@/lib/collectibles/store'
 import { PetSprite } from './PetSprite'
 
 type Props = {
@@ -13,6 +14,9 @@ export function PetButton({ open, onClick }: Props) {
   const state = usePetStore((s) => s.state)
   const mood = usePetStore((s) => s.mood())
   const attention = selectNeedsAttention(state)
+  const newCollectibles = useCollectiblesStore(
+    (s) => s.state.newSinceSeen.length > 0,
+  )
 
   const moodEmoji = (() => {
     if (state.stage === 'egg') return '🥚'
@@ -65,11 +69,22 @@ export function PetButton({ open, onClick }: Props) {
         {moodEmoji}
       </span>
 
-      {/* Attention dot */}
+      {/* Attention dot — pet needs care (red) */}
       {attention && (
         <span
           aria-hidden="true"
           className="pet-attention absolute -top-0.5 right-0 h-2.5 w-2.5 rounded-full bg-danger ring-2 ring-bg"
+        />
+      )}
+      {/* New-collectible dot — orange, slightly offset so both can show */}
+      {newCollectibles && (
+        <span
+          aria-hidden="true"
+          title="Νέο συλλεκτικό"
+          className={cn(
+            'absolute h-2.5 w-2.5 rounded-full bg-warn ring-2 ring-bg',
+            attention ? '-top-0.5 left-0' : '-top-0.5 left-0',
+          )}
         />
       )}
     </button>
