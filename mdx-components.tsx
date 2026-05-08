@@ -94,6 +94,7 @@ import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
+import { Collectible } from '@/components/collectibles/Collectible'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -116,6 +117,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // UI
     Tabs,
     Collapsible,
+
+    // Collectibles
+    Collectible,
 
     // Visualizations — intro
     Viz,

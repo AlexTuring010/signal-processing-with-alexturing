@@ -6,6 +6,7 @@ import { ThemeInitScript } from '@/components/layout/theme-init-script'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tamagotchi } from '@/components/pet/Tamagotchi'
+import { FindBanner } from '@/components/collectibles/FindBanner'
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext', 'greek', 'greek-ext'],
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="content">{children}</main>
         <Footer />
         <Tamagotchi />
+        <FindBanner />
       </body>
     </html>
   )
