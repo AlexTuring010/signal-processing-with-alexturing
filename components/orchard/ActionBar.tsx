@@ -33,6 +33,13 @@ export function ActionBar() {
     return () => window.clearInterval(id)
   }, [])
 
+  // Local pop state for the "+N 🪙" feedback above the sell button. The HUD
+  // counter rolls smoothly via NumberRoll; this label just gives an instant
+  // confirmation right where the click happened.
+  const [coinPop, setCoinPop] = useState<{ n: number; key: number } | null>(
+    null,
+  )
+
   const proceeds =
     Math.floor(apples) * priceForState('apples', startedAt, now, state)
 
@@ -59,25 +66,39 @@ export function ActionBar() {
         )}
       </button>
 
-      <button
-        type="button"
-        onClick={() => sellAll()}
-        disabled={apples <= 0}
-        className={cn(
-          'inline-flex flex-1 items-center justify-center gap-1 rounded-full px-2 py-1.5 text-xs font-medium transition-transform',
-          apples > 0
-            ? 'bg-accent text-accent-fg shadow-sm hover:scale-[1.01] active:scale-95'
-            : 'cursor-not-allowed bg-bg-soft text-fg-subtle',
-        )}
-      >
-        <Coins className="h-3.5 w-3.5" aria-hidden="true" />
-        <span>Πούλα</span>
-        {apples > 0 && (
-          <span className="rounded-full bg-white/25 px-1 py-0.5 text-[10px] tabular-nums">
-            {formatCoins(proceeds)}🪙
+      <div className="relative flex-1">
+        <button
+          type="button"
+          onClick={() => {
+            const earned = sellAll()
+            if (earned > 0) setCoinPop({ n: earned, key: Date.now() })
+          }}
+          disabled={apples <= 0}
+          className={cn(
+            'inline-flex w-full items-center justify-center gap-1 rounded-full px-2 py-1.5 text-xs font-medium transition-transform',
+            apples > 0
+              ? 'bg-accent text-accent-fg shadow-sm hover:scale-[1.01] active:scale-95'
+              : 'cursor-not-allowed bg-bg-soft text-fg-subtle',
+          )}
+        >
+          <Coins className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>Πούλα</span>
+          {apples > 0 && (
+            <span className="rounded-full bg-white/25 px-1 py-0.5 text-[10px] tabular-nums">
+              {formatCoins(proceeds)}🪙
+            </span>
+          )}
+        </button>
+        {coinPop && (
+          <span
+            key={`coin:${coinPop.key}`}
+            aria-hidden="true"
+            className="orchard-pop-label pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 text-[11px] font-bold text-amber-500 dark:text-amber-300"
+          >
+            +{formatCoins(coinPop.n)} 🪙
           </span>
         )}
-      </button>
+      </div>
     </footer>
   )
 }
