@@ -171,7 +171,7 @@ export type EventsState = {
 }
 
 export type OrchardState = {
-  version: 9
+  version: 10
   startedAt: number
   lastTickAt: number
   resources: Resources
@@ -213,5 +213,9 @@ export type OrchardState = {
     seenIntro: boolean
     seenFirstHarvest: boolean
     seenFirstSale: boolean
+    /** One-shot tips that fire at most once per orchard. */
+    seenBarnFullTip: boolean
+    seenIdleCoinsTip: boolean
+    seenCompostUnlockTip: boolean
   }
 }

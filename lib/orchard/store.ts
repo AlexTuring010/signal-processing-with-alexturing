@@ -46,6 +46,7 @@ import {
 } from './effects'
 import { getResearchNode, isAvailable } from './research'
 import {
+  compostUnlocked,
   getSeedShopItem,
   getStarWish,
   ownedCount,
@@ -269,6 +270,21 @@ function loadInitial(): OrchardState {
       prestige: {
         ...s.prestige,
         wishesOwned: s.prestige?.wishesOwned ?? {},
+      },
+    }
+  }
+  if (s.version === 9) {
+    // v9 → v10: extend flags with one-shot contextual tips. Existing
+    // players are assumed to already know the basics, so the tips are
+    // pre-marked as seen — fresh runs see them as designed.
+    s = {
+      ...s,
+      version: 10,
+      flags: {
+        ...s.flags,
+        seenBarnFullTip: true,
+        seenIdleCoinsTip: true,
+        seenCompostUnlockTip: true,
       },
     }
   }
@@ -581,6 +597,49 @@ export const useOrchardStore = create<Store>((set, get) => ({
         },
       }
       playOrchardSound('research-done')
+    }
+
+    // ----- One-shot contextual tips --------------------------------------
+    // Each tip fires at most once per orchard. Conditions are evaluated
+    // against the post-reconcile state so the first time a player crosses
+    // the line — barn maxed mid-idle, coins crossing 1000, compost tab
+    // unlocking — they get a single nudge.
+    const flags = ticked.flags
+    if (!flags.seenBarnFullTip) {
+      const cap = effectiveBarnCapacity(ticked)
+      if (Math.floor(ticked.resources.apples) >= cap && cap > 0) {
+        toastQueue = pushToast(
+          toastQueue,
+          '📦 Η αποθήκη γέμισε. Πούλα ή χτίσε μεγαλύτερη.',
+          'warn',
+          5000,
+        )
+        ticked = { ...ticked, flags: { ...flags, seenBarnFullTip: true } }
+      }
+    }
+    if (!ticked.flags.seenIdleCoinsTip && ticked.resources.coins >= 1000) {
+      toastQueue = pushToast(
+        toastQueue,
+        '💡 Με 1000+ 🪙 μπορείς να χτίσεις στυφτήρι.',
+        'good',
+        5000,
+      )
+      ticked = {
+        ...ticked,
+        flags: { ...ticked.flags, seenIdleCoinsTip: true },
+      }
+    }
+    if (!ticked.flags.seenCompostUnlockTip && compostUnlocked(ticked)) {
+      toastQueue = pushToast(
+        toastQueue,
+        '✨ Ο compost ξεκλείδωσε. Δες τη νέα καρτέλα.',
+        'good',
+        5000,
+      )
+      ticked = {
+        ...ticked,
+        flags: { ...ticked.flags, seenCompostUnlockTip: true },
+      }
     }
 
     if (ticked !== prev) persist(ticked)
