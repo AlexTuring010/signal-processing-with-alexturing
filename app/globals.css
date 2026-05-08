@@ -617,6 +617,14 @@ html {
 }
 .orchard-compost-spark { animation: orchard-compost-spark 2.4s ease-out both; }
 
+/* "+N" pop label that floats up from a freshly-harvested tree. */
+@keyframes orchard-pop-label {
+  0%   { opacity: 0; transform: translate(-50%, 0) scale(0.85); }
+  20%  { opacity: 1; transform: translate(-50%, -4px) scale(1.05); }
+  100% { opacity: 0; transform: translate(-50%, -22px) scale(1); }
+}
+.orchard-pop-label { animation: orchard-pop-label 900ms ease-out both; }
+
 /* Day/night tint — extremely slow background overlay over the orchard
    scene. Cycles dawn → noon → dusk → night → dawn over 20 minutes.
    Decorative only; the global prefers-reduced-motion override above

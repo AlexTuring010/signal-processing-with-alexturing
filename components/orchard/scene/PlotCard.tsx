@@ -36,6 +36,7 @@ export function PlotCard({ plot, selected, now, onClick }: Props) {
   const lastShake = useOrchardStore((s) => s.lastShakeAt[plot.id])
   const state = useOrchardStore((s) => s.state)
   const [shakeNonce, setShakeNonce] = useState(0)
+  const [pop, setPop] = useState<{ n: number; key: number } | null>(null)
 
   // Whenever the store records a new shake on this plot, bump the nonce so
   // React replays the keyframe (animation only fires once per remount).
@@ -53,8 +54,9 @@ export function PlotCard({ plot, selected, now, onClick }: Props) {
   function onTap(e: React.MouseEvent) {
     e.stopPropagation()
     if (tree && stored > 0) {
-      // harvest() plays its own SFX in the store
-      harvest(plot.id)
+      // harvest() plays its own SFX in the store and returns moved apples.
+      const n = harvest(plot.id)
+      if (n > 0) setPop({ n, key: Date.now() })
     } else {
       // No fruit to pick → tap opens the per-plot detail card. Soft click.
       playOrchardSound('click')
@@ -133,6 +135,18 @@ export function PlotCard({ plot, selected, now, onClick }: Props) {
             </>
           )}
         </div>
+      )}
+
+      {/* "+N" pop label on tap-harvest. Re-mounts each tap via the key so
+          the keyframe replays even when the same N is harvested twice. */}
+      {pop && (
+        <span
+          key={`pop:${pop.key}`}
+          aria-hidden="true"
+          className="orchard-pop-label pointer-events-none absolute left-1/2 top-1 -translate-x-1/2 text-[11px] font-bold text-emerald-600 dark:text-emerald-400"
+        >
+          +{pop.n}
+        </span>
       )}
 
       {/* Storage progress bar */}
