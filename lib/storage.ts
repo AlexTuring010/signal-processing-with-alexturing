@@ -52,4 +52,5 @@ export const STORAGE_KEYS = {
   petSound: 'spwa:pet-sound',
   petGameHigh: 'spwa:pet-game-high',
   orchard: 'spwa:orchard',
+  collectibles: 'spwa:collectibles',
 } as const

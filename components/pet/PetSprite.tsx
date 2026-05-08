@@ -1,7 +1,15 @@
 'use client'
 
+import { useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import type { Mood, Stage } from '@/lib/pet/types'
+import { useCollectiblesStore } from '@/lib/collectibles/store'
+import { getCollectible } from '@/lib/collectibles/registry'
+import {
+  MIN_ACCESSORY_RENDER_SIZE,
+  MIN_BODY_RENDER_SIZE,
+} from '@/lib/collectibles/anchors'
+import type { ItemRenderProps } from '@/lib/collectibles/types'
 
 type Props = {
   stage: Stage
@@ -17,8 +25,20 @@ type Props = {
  * The pet sprite. SVG with smooth shapes, theme-aware via currentColor on the
  * accent body and a few CSS-variable fills. Adult is a slightly larger /
  * differentiated baby; the egg is its own shape.
+ *
+ * Phase 1 of `plans/99c-collectibles.md` adds layered cosmetic items on top
+ * of the existing body. Items are read from `useCollectiblesStore` here so
+ * call sites don't have to pass an `equipped` prop — every PetSprite in the
+ * app picks them up automatically.
  */
 export function PetSprite({ stage, mood, size = 96, still = false, className }: Props) {
+  // Lazy-hydrate the collectibles store on first sprite mount. Cheap and
+  // idempotent — the store guards against double hydration internally.
+  const hydrate = useCollectiblesStore((s) => s.hydrate)
+  useEffect(() => {
+    hydrate()
+  }, [hydrate])
+
   if (stage === 'egg') {
     return <EggSvg size={size} className={cn('pet-egg-wobble', className)} />
   }
@@ -78,6 +98,22 @@ function BodySvg({
   const eyeOpen = mood !== 'asleep'
   const tilt = mood === 'sick' ? -6 : 0
 
+  // Resolve currently equipped items. Suppression rules:
+  //   - eyes layer hidden while asleep (eyes themselves are closed)
+  //   - body layer hidden below MIN_BODY_RENDER_SIZE (reads as noise)
+  //   - accessory layer hidden below MIN_ACCESSORY_RENDER_SIZE
+  // The `egg` stage short-circuits before we get here.
+  const equipped = useCollectiblesStore((s) => s.state.equipped)
+  const stage: ItemRenderProps['stage'] = adult ? 'adult' : 'baby'
+  const itemProps: ItemRenderProps = { stage, mood, adult }
+
+  const headItem = getCollectible(equipped.head)
+  const eyesItem = mood === 'asleep' ? undefined : getCollectible(equipped.eyes)
+  const bodyItem =
+    size >= MIN_BODY_RENDER_SIZE ? getCollectible(equipped.body) : undefined
+  const accessoryItem =
+    size >= MIN_ACCESSORY_RENDER_SIZE ? getCollectible(equipped.accessory) : undefined
+
   return (
     <svg
       viewBox="0 0 120 110"
@@ -98,6 +134,7 @@ function BodySvg({
         </radialGradient>
       </defs>
 
+      {/* Sick-tilt group: body geometry + body-slot clothing tilt together. */}
       <g transform={`translate(60 60) rotate(${tilt}) translate(-60 -60)`}>
         {/* feet (small nubs) */}
         <ellipse cx={60 - bodyW * 0.28} cy={60 + bodyH * 0.46} rx="6" ry="3.5" fill="rgb(var(--accent))" />
@@ -112,6 +149,10 @@ function BodySvg({
         {/* arms */}
         <ellipse cx={60 - bodyW * 0.5 + 2} cy="62" rx="5" ry="7" fill="rgb(var(--accent))" />
         <ellipse cx={60 + bodyW * 0.5 - 2} cy="62" rx="5" ry="7" fill="rgb(var(--accent))" />
+
+        {/* Body-slot item (capes, shirts, scarves) — covers body + arms but
+            sits below the face/antenna so faces stay readable. */}
+        {bodyItem && <bodyItem.Sprite {...itemProps} />}
 
         {/* adult antenna tuft */}
         {adult && (
@@ -174,6 +215,14 @@ function BodySvg({
           </g>
         )}
       </g>
+
+      {/* OUTSIDE the tilt group — head/eyes/accessory items stay upright
+          when the pet wobbles sick. Body-slot items already rendered above.
+          Per plans/99c-collectibles.md: hats hover on top, glasses don't
+          tilt with a slumped head, held items stay level. */}
+      {eyesItem && <eyesItem.Sprite {...itemProps} />}
+      {headItem && <headItem.Sprite {...itemProps} />}
+      {accessoryItem && <accessoryItem.Sprite {...itemProps} />}
     </svg>
   )
 }
