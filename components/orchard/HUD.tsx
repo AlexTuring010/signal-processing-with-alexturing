@@ -7,6 +7,7 @@ import { usePetStore } from '@/lib/pet/store'
 import type { Mood } from '@/lib/pet/types'
 import { cn } from '@/lib/utils'
 import { playOrchardSound } from '@/lib/orchard/audio'
+import { NumberRoll } from './NumberRoll'
 
 type Props = {
   /** Closes the orchard and reopens the pet panel in its place. */
@@ -22,6 +23,8 @@ type Props = {
 export function HUD({ onBackToPet, onClose }: Props) {
   const apples = useOrchardStore((s) => s.state.resources.apples)
   const coins = useOrchardStore((s) => s.state.resources.coins)
+  const seeds = useOrchardStore((s) => s.state.resources.seeds)
+  const stars = useOrchardStore((s) => s.state.resources.stars)
   const barnCap = useOrchardStore((s) => effectiveBarnCapacity(s.state))
   const barnFrac = useOrchardStore((s) => selectBarnFraction(s.state))
   const moodMult = useOrchardStore((s) => s.currentMoodMult())
@@ -69,15 +72,25 @@ export function HUD({ onBackToPet, onClose }: Props) {
         <Resource
           icon="🍎"
           label="Μήλα"
-          value={Math.floor(apples).toLocaleString('el-GR')}
+          rollValue={apples}
           suffix={`/${barnCap}`}
           warn={barnFrac >= 0.95}
         />
         <Resource
           icon="🪙"
           label="Κέρματα"
-          value={coins.toFixed(coins < 10 ? 2 : 1)}
+          rollValue={coins}
+          rollFormat={(n) => n.toFixed(n < 10 ? 2 : 1)}
         />
+        {/* Stars + seeds: only render when > 0 so the early-game HUD stays
+            uncluttered. They're scarce currencies so the chip becoming
+            visible itself signals the unlock. */}
+        {stars > 0 && (
+          <Resource icon="⭐" label="Άστρα" rollValue={stars} />
+        )}
+        {seeds > 0 && (
+          <Resource icon="🌱" label="Σπόροι" rollValue={seeds} />
+        )}
         <span
           aria-label={`Διάθεση ${petName}: πολλαπλασιαστής ×${moodMult.toFixed(2)}`}
           title={`${petName}: ×${moodMult.toFixed(2)}`}
@@ -94,13 +107,15 @@ export function HUD({ onBackToPet, onClose }: Props) {
 function Resource({
   icon,
   label,
-  value,
+  rollValue,
+  rollFormat,
   suffix,
   warn,
 }: {
   icon: string
   label: string
-  value: string
+  rollValue: number
+  rollFormat?: (n: number) => string
   suffix?: string
   warn?: boolean
 }) {
@@ -113,7 +128,7 @@ function Resource({
       )}
     >
       <span aria-hidden="true">{icon}</span>
-      <span className="font-semibold">{value}</span>
+      <NumberRoll value={rollValue} format={rollFormat} className="font-semibold" />
       {suffix && (
         <span className="text-[10px] text-fg-subtle">{suffix}</span>
       )}

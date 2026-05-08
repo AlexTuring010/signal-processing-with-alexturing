@@ -28,13 +28,14 @@ export function seedReward(state: OrchardState): number {
   return Math.floor(Math.sqrt(c / 1000))
 }
 
-/** Permanent global yield multiplier from the compost-run tier ladder. */
+/** Permanent global yield multiplier from compost-run tier × star-wish bonus. */
 export function permanentYieldMult(state: OrchardState): number {
   let mult = 1.0
   for (const [threshold, m] of COMPOST_YIELD_TIERS) {
     if (state.prestige.compostRun >= threshold) mult = m
   }
-  return mult
+  // Apply the star-wish "Αιώνια ευλογία" bonus on top of the compost ladder.
+  return mult * wishYieldMult(state)
 }
 
 /** Whether the player has earned access to the Compost tab. */
@@ -149,4 +150,80 @@ export function barnBonusShop(state: OrchardState): number {
 /** Extra hours added to the offline-full-rate cap. */
 export function offlineCapBonusHours(state: OrchardState): number {
   return ownedCount(state, 'offline-cap')
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Star Wishes (Ευχές) — spend ⭐                                            */
+/*                                                                            */
+/*  ⭐ are awarded by quests, achievements, the minigame, and click events.   */
+/*  Wishes give them a use — instant boons + a stackable permanent buff.      */
+/* -------------------------------------------------------------------------- */
+
+export type StarWishId =
+  | 'wish-research-skip'
+  | 'wish-extra-seeds'
+  | 'wish-yield-bonus'
+
+export type StarWish = {
+  id: StarWishId
+  /** Greek display name. */
+  name: string
+  /** Greek description with the per-purchase effect. */
+  description: string
+  /** Stars per purchase. */
+  cost: number
+  /** Soft cap (Infinity for re-usable wishes like research-skip). */
+  maxOwned: number
+  /** Single-emoji visual. */
+  emoji: string
+  /** True for wishes that have a stackable persistent effect; false for
+   *  one-shots that only fire at purchase time. */
+  stackable: boolean
+}
+
+export const STAR_WISHES: StarWish[] = [
+  {
+    id: 'wish-research-skip',
+    name: 'Άμεση ολοκλήρωση έρευνας',
+    description: 'Τελείωσε αμέσως την τρέχουσα έρευνα.',
+    cost: 3,
+    maxOwned: Infinity,
+    emoji: '🧪',
+    stackable: false,
+  },
+  {
+    id: 'wish-extra-seeds',
+    name: 'Δώρο σπόρων',
+    description: '+5 🌱 σπόροι αμέσως.',
+    cost: 5,
+    maxOwned: Infinity,
+    emoji: '🌱',
+    stackable: false,
+  },
+  {
+    id: 'wish-yield-bonus',
+    name: 'Αιώνια ευλογία',
+    description: '+5% μόνιμη παραγωγή ανά αγορά (μέχρι +25%).',
+    cost: 10,
+    maxOwned: 5,
+    emoji: '✨',
+    stackable: true,
+  },
+]
+
+const STAR_WISHES_BY_ID: Record<string, StarWish> = Object.fromEntries(
+  STAR_WISHES.map((w) => [w.id, w]),
+)
+
+export function getStarWish(id: string): StarWish | undefined {
+  return STAR_WISHES_BY_ID[id]
+}
+
+export function wishOwned(state: OrchardState, id: StarWishId): number {
+  return state.prestige.wishesOwned[id] ?? 0
+}
+
+/** Permanent yield boost from the wish-yield-bonus wish (max +25%). */
+export function wishYieldMult(state: OrchardState): number {
+  return 1 + 0.05 * wishOwned(state, 'wish-yield-bonus')
 }

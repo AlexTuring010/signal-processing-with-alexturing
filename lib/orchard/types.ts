@@ -109,6 +109,8 @@ export type Prestige = {
   /** lifetime.coinsEarned snapshot at the most recent compost. Subtract from
    *  current lifetime.coinsEarned to get this-run earnings. */
   lastCompostLifetime: number
+  /** Per-id purchase counts in the Star Wish shop (Ευχές). */
+  wishesOwned: Partial<Record<string, number>>
 }
 
 /**
@@ -169,7 +171,7 @@ export type EventsState = {
 }
 
 export type OrchardState = {
-  version: 8
+  version: 9
   startedAt: number
   lastTickAt: number
   resources: Resources

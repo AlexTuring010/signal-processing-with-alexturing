@@ -45,7 +45,13 @@ import {
   priceMultiplierForState,
 } from './effects'
 import { getResearchNode, isAvailable } from './research'
-import { getSeedShopItem, ownedCount, seedReward } from './prestige'
+import {
+  getSeedShopItem,
+  getStarWish,
+  ownedCount,
+  seedReward,
+  wishOwned,
+} from './prestige'
 import { checkNewAchievements } from './achievements'
 import {
   allDoneToday,
@@ -143,6 +149,9 @@ type Store = {
   compost: () => number
   /** Purchase one tier of a Seed Shop item. Gated by maxOwned and seed cost. */
   buySeedShopItem: (id: string) => boolean
+  /** Spend ⭐ on a Star Wish. One-shots fire effects immediately;
+   *  stackable wishes increment wishesOwned and apply via effects.ts. */
+  claimWish: (id: string) => boolean
   /** Wipe orchard state and start fresh (for debugging / reset). */
   reset: () => void
 
@@ -247,6 +256,17 @@ function loadInitial(): OrchardState {
         nextScheduledAt: Date.now() + 5 * 60 * 1000,
         active: null,
         log: [],
+      },
+    }
+  }
+  if (s.version === 8) {
+    // v8 → v9: add wish-shop tracking on prestige.
+    s = {
+      ...s,
+      version: 9,
+      prestige: {
+        ...s.prestige,
+        wishesOwned: s.prestige?.wishesOwned ?? {},
       },
     }
   }
@@ -1040,6 +1060,7 @@ export const useOrchardStore = create<Store>((set, get) => ({
         seedShopOwned: ticked.prestige.seedShopOwned,
         blueprints,
         lastCompostLifetime: ticked.lifetime.coinsEarned,
+        wishesOwned: ticked.prestige.wishesOwned,
       },
     }
     persist(next)
@@ -1079,6 +1100,67 @@ export const useOrchardStore = create<Store>((set, get) => ({
     persist(next)
     playOrchardSound('upgrade')
     set({ state: next })
+    return true
+  },
+
+  claimWish: (id) => {
+    const wish = getStarWish(id)
+    if (!wish) return false
+    const state = get().state
+    if (state.resources.stars < wish.cost) return false
+    if (
+      wish.maxOwned !== Infinity &&
+      wishOwned(state, id as never) >= wish.maxOwned
+    ) {
+      return false
+    }
+    // Wish-specific side-effects.
+    let next: OrchardState = {
+      ...state,
+      resources: {
+        ...state.resources,
+        stars: state.resources.stars - wish.cost,
+      },
+      prestige: {
+        ...state.prestige,
+        wishesOwned: {
+          ...state.prestige.wishesOwned,
+          [id]: wishOwned(state, id as never) + 1,
+        },
+      },
+    }
+    if (id === 'wish-research-skip') {
+      // No active job → wish is wasted; refuse so the player doesn't lose ⭐.
+      const job = state.researchTree.inProgress
+      if (!job) return false
+      next = {
+        ...next,
+        researchTree: {
+          ...next.researchTree,
+          // Set startedAt so the timer reads "0 ms remaining" — tick() will
+          // mark the job complete on its next pass and play the SFX/toast.
+          inProgress: { ...job, startedAt: Date.now() - job.durationMs },
+        },
+      }
+    } else if (id === 'wish-extra-seeds') {
+      next = {
+        ...next,
+        resources: { ...next.resources, seeds: next.resources.seeds + 5 },
+      }
+    }
+    // wish-yield-bonus: tracked in wishesOwned and applied by permanentYieldMult.
+
+    persist(next)
+    playOrchardSound('research-done')
+    set({
+      state: next,
+      toasts: pushToast(
+        get().toasts,
+        `${wish.emoji} ${wish.name} ✓`,
+        'good',
+        3000,
+      ),
+    })
     return true
   },
 

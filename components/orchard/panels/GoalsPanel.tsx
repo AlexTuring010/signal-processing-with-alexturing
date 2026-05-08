@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, Lock, Star, Target, Trophy } from 'lucide-react'
+import { Check, Lock, Sparkles, Star, Target, Trophy } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useOrchardStore } from '@/lib/orchard/store'
 import { usePetStore } from '@/lib/pet/store'
@@ -10,6 +10,7 @@ import {
   type AchievementGroup,
 } from '@/lib/orchard/achievements'
 import { getQuest } from '@/lib/orchard/quests'
+import { STAR_WISHES, wishOwned } from '@/lib/orchard/prestige'
 
 /**
  * Single "Στόχοι" tab combining today's quests + lifetime achievements.
@@ -122,6 +123,22 @@ export function GoalsPanel() {
         })}
       </ul>
 
+      {/* ---------- Wishes (spend ⭐) ---------- */}
+      <div className="mt-2 flex items-center justify-between text-[11px]">
+        <span className="inline-flex items-center gap-1 font-semibold">
+          <Sparkles className="h-3 w-3 text-emerald-500" aria-hidden="true" />
+          Ευχές
+        </span>
+        <span className="text-fg-subtle tabular-nums">
+          {state.resources.stars} ⭐ διαθέσιμα
+        </span>
+      </div>
+      <ul className="flex flex-col gap-1">
+        {STAR_WISHES.map((wish) => (
+          <WishCard key={wish.id} id={wish.id} />
+        ))}
+      </ul>
+
       {/* ---------- Achievements ---------- */}
       <div className="mt-2 flex items-center justify-between text-[11px]">
         <span className="inline-flex items-center gap-1 font-semibold">
@@ -187,5 +204,63 @@ export function GoalsPanel() {
         )
       })}
     </section>
+  )
+}
+
+function WishCard({ id }: { id: string }) {
+  const wish = STAR_WISHES.find((w) => w.id === id)!
+  const stars = useOrchardStore((s) => s.state.resources.stars)
+  const owned = useOrchardStore((s) => wishOwned(s.state, wish.id))
+  const claim = useOrchardStore((s) => s.claimWish)
+  const inProgress = useOrchardStore((s) => s.state.researchTree.inProgress)
+
+  const maxed = owned >= wish.maxOwned
+  const canAfford = stars >= wish.cost
+  // Research-skip is wasted with no in-flight job; gate the button.
+  const skipBlocked = wish.id === 'wish-research-skip' && !inProgress
+  const can = !maxed && canAfford && !skipBlocked
+
+  return (
+    <li className="flex items-center gap-2 rounded-lg border border-border bg-bg-soft/40 px-2 py-1.5">
+      <span aria-hidden="true" className="text-base leading-none">
+        {wish.emoji}
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1 text-[11px] font-semibold leading-tight">
+          <span className="truncate">{wish.name}</span>
+          {wish.stackable && (
+            <span className="rounded-full bg-bg-elevated px-1 py-0.5 text-[9px] font-bold text-fg-subtle tabular-nums">
+              {owned}/{wish.maxOwned === Infinity ? '∞' : wish.maxOwned}
+            </span>
+          )}
+        </div>
+        <p className="mt-0.5 text-[10px] leading-snug text-fg-muted">
+          {wish.description}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => claim(wish.id)}
+        disabled={!can}
+        title={
+          maxed
+            ? 'Στο μέγιστο'
+            : skipBlocked
+              ? 'Δεν τρέχει έρευνα'
+              : !canAfford
+                ? `Χρειάζονται ${wish.cost} ⭐`
+                : `Πάρε για ${wish.cost} ⭐`
+        }
+        className={cn(
+          'inline-flex shrink-0 items-center gap-0.5 rounded-full px-2 py-1 text-[10px] font-medium transition-transform',
+          can
+            ? 'bg-emerald-500 text-white shadow-sm hover:scale-[1.02] active:scale-95'
+            : 'cursor-not-allowed bg-bg-elevated text-fg-subtle',
+        )}
+      >
+        <Star className="h-2.5 w-2.5 fill-current" aria-hidden="true" />
+        {maxed ? 'max' : `${wish.cost}`}
+      </button>
+    </li>
   )
 }

@@ -1,6 +1,6 @@
 import type { GoodKey, OrchardState, Plot, Resources } from './types'
 
-export const VERSION = 8 as const
+export const VERSION = 9 as const
 
 /** Random-event scheduling window. A new event rolls between min and max
  *  ms after the last one cleared, plus a small initial delay on first run. */
@@ -150,6 +150,7 @@ export function freshOrchard(now: number = Date.now()): OrchardState {
       seedShopOwned: {},
       blueprints: [],
       lastCompostLifetime: 0,
+      wishesOwned: {},
     },
     petBuffUntil: null,
     dailyCaps: { date: localDateKey(now), minigameStars: 0 },
