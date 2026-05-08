@@ -617,6 +617,22 @@ html {
 }
 .orchard-compost-spark { animation: orchard-compost-spark 2.4s ease-out both; }
 
+/* Day/night tint — extremely slow background overlay over the orchard
+   scene. Cycles dawn → noon → dusk → night → dawn over 20 minutes.
+   Decorative only; the global prefers-reduced-motion override above
+   freezes it (animation-duration: 0.01ms !important). */
+@keyframes orchard-daynight {
+  0%   { background: rgba(255, 170, 110, 0.10); } /* dawn */
+  25%  { background: rgba(255, 255, 255, 0.00); } /* noon */
+  50%  { background: rgba(255, 130,  80, 0.10); } /* dusk */
+  75%  { background: rgba( 40,  60, 120, 0.16); } /* night */
+  100% { background: rgba(255, 170, 110, 0.10); } /* dawn (loop) */
+}
+.orchard-daynight {
+  animation: orchard-daynight 1200s linear infinite;
+  pointer-events: none;
+}
+
 /* Subtle scrollbar in dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {
   width: 10px;

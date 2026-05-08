@@ -42,7 +42,9 @@ export function Scene({ selectedPlotId, onSelect, now }: Props) {
   )
 }
 
-/** Soft pastel sky-and-hill backdrop. Theme-aware via existing tokens. */
+/** Soft pastel sky-and-hill backdrop. Theme-aware via existing tokens.
+ *  A second absolutely-positioned layer cycles a faint day/night tint
+ *  (orchard-daynight) over a 20-minute loop. Reduced-motion freezes it. */
 function HillBackground() {
   return (
     <div
@@ -69,6 +71,9 @@ function HillBackground() {
           opacity="0.5"
         />
       </svg>
+      {/* Decorative day/night tint overlay — sits above hills but below
+          the plot grid (Scene gives plots z-10). */}
+      <div className="orchard-daynight absolute inset-0" />
     </div>
   )
 }
