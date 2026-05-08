@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Pencil, X, Check, Volume2, VolumeX, Sparkles, Trees, ChevronRight, ArrowLeft, Home, BookOpen } from 'lucide-react'
-import Link from 'next/link'
+import { Pencil, X, Check, Volume2, VolumeX, Sparkles, Trees, ChevronRight, ArrowLeft, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { usePetStore, formatAge, evolutionProgress } from '@/lib/pet/store'
 import { MAX_NAME_LENGTH } from '@/lib/pet/defaults'
@@ -15,7 +14,8 @@ import { ActionRow } from './ActionRow'
 import { HatchDialog } from './HatchDialog'
 import { Particles, SleepZs } from './particles'
 import { MiniGame } from './MiniGame'
-import { Room } from '@/components/collectibles/Room/Room'
+import { CollectionView } from '@/components/collectibles/CollectionView'
+import { useCollectiblesStore } from '@/lib/collectibles/store'
 
 type Props = {
   onClose: () => void
@@ -35,7 +35,10 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
   const [draftName, setDraftName] = useState(state.name)
   const [confirmReset, setConfirmReset] = useState(false)
   const [soundOn, setSoundOn] = useState(false)
-  const [mode, setMode] = useState<'idle' | 'game' | 'room'>('idle')
+  const [mode, setMode] = useState<'idle' | 'game' | 'collection'>('idle')
+  const newCollectibles = useCollectiblesStore(
+    (s) => s.state.newSinceSeen.length > 0,
+  )
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -129,7 +132,7 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
         <HatchDialog />
       ) : mode === 'game' ? (
         <MiniGame onExit={() => setMode('idle')} />
-      ) : mode === 'room' ? (
+      ) : mode === 'collection' ? (
         <div className="flex flex-col gap-2 p-3">
           <button
             type="button"
@@ -140,7 +143,7 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
             <ArrowLeft className="h-3 w-3" />
             Πίσω
           </button>
-          <Room />
+          <CollectionView />
         </div>
       ) : (
         <>
@@ -177,8 +180,27 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
             {state.sleeping && <SleepZs />}
             <Particles trigger={lastAction} />
 
-            {/* Boost toasts */}
-            <div className="pointer-events-none absolute right-2 top-2 flex flex-col items-end gap-1">
+            {/* Collection entry — small button in the top-right corner
+                of the pet stage. The orange dot pulses when there's a
+                newly-found item the player hasn't viewed yet. */}
+            <button
+              type="button"
+              onClick={() => setMode('collection')}
+              aria-label="Συλλογή"
+              title="Συλλογή"
+              className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full border border-border bg-bg-elevated/85 text-fg-muted shadow-sm backdrop-blur-sm transition-transform hover:scale-110 hover:text-fg active:scale-95"
+            >
+              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+              {newCollectibles && (
+                <span
+                  aria-hidden="true"
+                  className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-warn ring-2 ring-bg-elevated"
+                />
+              )}
+            </button>
+
+            {/* Boost toasts — moved a bit lower to clear the button */}
+            <div className="pointer-events-none absolute left-2 top-2 flex flex-col items-start gap-1">
               {boosts.map((b) => (
                 <span
                   key={b.id}
@@ -205,7 +227,7 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
           </div>
 
           {/* Orchard entry — prominent CTA so it's discoverable */}
-          <div className="space-y-2 px-3 pb-3 pt-2">
+          <div className="px-3 pb-3 pt-2">
             <button
               type="button"
               onClick={onOpenOrchard}
@@ -229,52 +251,6 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
                 className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
               />
             </button>
-            <button
-              type="button"
-              onClick={() => setMode('room')}
-              aria-label="Άνοιξε το δωμάτιο"
-              className="group relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-accent/40 bg-gradient-to-r from-accent/15 via-accent/5 to-accent-soft/30 px-3 py-2 text-left text-sm font-medium text-fg shadow-sm transition-transform hover:scale-[1.01] active:scale-[0.99]"
-            >
-              <span
-                aria-hidden="true"
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/20 text-accent"
-              >
-                <Home className="h-4 w-4" />
-              </span>
-              <span className="flex flex-1 flex-col leading-tight">
-                <span>Δωμάτιο</span>
-                <span className="text-[10px] font-normal text-fg-subtle">
-                  Διακόσμησε τον χώρο
-                </span>
-              </span>
-              <ChevronRight
-                aria-hidden="true"
-                className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
-              />
-            </button>
-            <Link
-              href="/collection"
-              onClick={onClose}
-              aria-label="Άνοιξε τη συλλογή"
-              className="group relative flex w-full items-center gap-2 overflow-hidden rounded-xl border border-warn/40 bg-gradient-to-r from-warn/15 via-warn/5 to-warn/0 px-3 py-2 text-left text-sm font-medium text-fg shadow-sm transition-transform hover:scale-[1.01] active:scale-[0.99]"
-            >
-              <span
-                aria-hidden="true"
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-warn/20 text-warn"
-              >
-                <BookOpen className="h-4 w-4" />
-              </span>
-              <span className="flex flex-1 flex-col leading-tight">
-                <span>Συλλογή</span>
-                <span className="text-[10px] font-normal text-fg-subtle">
-                  Δες τι έχεις βρει — και τι λείπει
-                </span>
-              </span>
-              <ChevronRight
-                aria-hidden="true"
-                className="h-4 w-4 text-fg-subtle transition-transform group-hover:translate-x-0.5"
-              />
-            </Link>
           </div>
         </>
       )}
