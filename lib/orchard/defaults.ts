@@ -1,6 +1,13 @@
 import type { GoodKey, OrchardState, Plot, Resources } from './types'
 
-export const VERSION = 6 as const
+export const VERSION = 7 as const
+
+/** Bonus stars granted when all 3 daily quests are completed in one day. */
+export const QUEST_ALL_DONE_BONUS = 2
+/** Stars per individual quest. */
+export const QUEST_STAR_REWARD = 1
+/** How many quests are picked from the pool each day. */
+export const QUESTS_PER_DAY = 3
 
 /** Lifetime coins required before the Compost tab becomes visible. The plan
  *  cites 100 k coins; in practice 5 k is reachable in a focused early-session
@@ -140,6 +147,22 @@ export function freshOrchard(now: number = Date.now()): OrchardState {
     },
     petBuffUntil: null,
     dailyCaps: { date: localDateKey(now), minigameStars: 0 },
+    achieved: [],
+    quests: {
+      date: localDateKey(now),
+      selected: [],
+      baseline: {
+        coinsEarned: 0,
+        applesHarvested: 0,
+        treesPlanted: 0,
+        compostRun: 0,
+        researchCompleted: 0,
+        petActions: 0,
+        seedShopBought: 0,
+      },
+      completed: [],
+      bonusClaimedDate: null,
+    },
     lifetime: {
       applesHarvested: 0,
       coinsEarned: 0,

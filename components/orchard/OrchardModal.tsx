@@ -10,6 +10,7 @@ import { MarketPanel } from './panels/MarketPanel'
 import { BuildingsPanel } from './panels/BuildingsPanel'
 import { ResearchPanel } from './panels/ResearchPanel'
 import { CompostPanel } from './panels/CompostPanel'
+import { GoalsPanel } from './panels/GoalsPanel'
 import { ActionBar } from './ActionBar'
 import { PetFooter } from './PetFooter'
 import { SickBanner } from './SickBanner'
@@ -124,6 +125,7 @@ export function OrchardModal({ open, onClose, onBackToPet }: Props) {
         {tab === 'research' && <ResearchPanel />}
         {tab === 'market' && <MarketPanel />}
         {tab === 'compost' && <CompostPanel />}
+        {tab === 'goals' && <GoalsPanel />}
       </div>
 
       <PetFooter />

@@ -1,6 +1,13 @@
 'use client'
 
-import { Trees, Store, Hammer, FlaskConical, Recycle } from 'lucide-react'
+import {
+  Trees,
+  Store,
+  Hammer,
+  FlaskConical,
+  Recycle,
+  Target,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { playOrchardSound } from '@/lib/orchard/audio'
 import { useOrchardStore } from '@/lib/orchard/store'
@@ -12,6 +19,7 @@ export type OrchardTab =
   | 'buildings'
   | 'research'
   | 'compost'
+  | 'goals'
 
 type TabSpec = {
   id: OrchardTab | string
@@ -26,6 +34,7 @@ const STATIC_TABS: TabSpec[] = [
   { id: 'buildings', label: 'Κτίρια', icon: <Hammer className="h-3.5 w-3.5" /> },
   { id: 'research', label: 'Έρευνα', icon: <FlaskConical className="h-3.5 w-3.5" /> },
   { id: 'market', label: 'Αγορά', icon: <Store className="h-3.5 w-3.5" /> },
+  { id: 'goals', label: 'Στόχοι', icon: <Target className="h-3.5 w-3.5" /> },
 ]
 
 type Props = {

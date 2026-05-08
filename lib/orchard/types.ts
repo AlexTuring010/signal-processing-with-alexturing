@@ -111,8 +111,35 @@ export type Prestige = {
   lastCompostLifetime: number
 }
 
+/**
+ * Snapshot of "lifetime/today-baseline" counters captured at the start of
+ * the current daily-quest window. Quest progress = current value − baseline.
+ */
+export type QuestBaseline = {
+  coinsEarned: number
+  applesHarvested: number
+  treesPlanted: number
+  compostRun: number
+  researchCompleted: number
+  petActions: number
+  seedShopBought: number
+}
+
+/** Daily-quest state. `selected` = the 3 quest ids chosen for `date`. */
+export type QuestsState = {
+  /** Local YYYY-MM-DD that `selected` + `baseline` belong to. */
+  date: string
+  /** Quest ids picked for today. */
+  selected: string[]
+  baseline: QuestBaseline
+  /** Ids completed today (subset of `selected`). */
+  completed: string[]
+  /** Last date the all-3-done bonus was paid (avoids double-paying). */
+  bonusClaimedDate: string | null
+}
+
 export type OrchardState = {
-  version: 6
+  version: 7
   startedAt: number
   lastTickAt: number
   resources: Resources
@@ -129,6 +156,10 @@ export type OrchardState = {
   }
   /** Prestige state (compost runs + seed shop + blueprints). */
   prestige: Prestige
+  /** Earned achievement ids — set semantics, persisted as array. */
+  achieved: string[]
+  /** Today's daily-quest selection + progress baselines. */
+  quests: QuestsState
   /** Petting buff expiry (ms epoch). null = no buff active. */
   petBuffUntil: number | null
   /** Daily caps for cross-system rewards. Reset at local midnight. */

@@ -46,6 +46,14 @@ import {
 } from './effects'
 import { getResearchNode, isAvailable } from './research'
 import { getSeedShopItem, ownedCount, seedReward } from './prestige'
+import { checkNewAchievements } from './achievements'
+import {
+  allDoneToday,
+  getQuest,
+  pickDailyQuests,
+  snapshotBaseline,
+} from './quests'
+import { QUEST_ALL_DONE_BONUS } from './defaults'
 
 /* -------------------------------------------------------------------------- */
 /*  Orchard zustand store — Phase 1                                            */
@@ -195,6 +203,31 @@ function loadInitial(): OrchardState {
       },
     }
   }
+  if (s.version === 6) {
+    // v6 → v7: add achievements + daily quests. Quests start with empty
+    // selection; tick() will pick the day's quests on first run after load.
+    const today = localDateKey()
+    s = {
+      ...s,
+      version: 7,
+      achieved: [],
+      quests: {
+        date: today,
+        selected: [],
+        baseline: {
+          coinsEarned: s.lifetime?.coinsEarned ?? 0,
+          applesHarvested: s.lifetime?.applesHarvested ?? 0,
+          treesPlanted: s.lifetime?.treesPlanted ?? 0,
+          compostRun: s.prestige?.compostRun ?? 0,
+          researchCompleted: s.researchTree?.completed?.length ?? 0,
+          petActions: 0,
+          seedShopBought: 0,
+        },
+        completed: [],
+        bonusClaimedDate: null,
+      },
+    }
+  }
   if (s.version !== VERSION) return freshOrchard()
   return s as OrchardState
 }
@@ -334,6 +367,103 @@ export const useOrchardStore = create<Store>((set, get) => ({
         },
       }
       playOrchardSound('autosell')
+    }
+
+    // ----- Daily quest rollover + selection ------------------------------
+    const todayKey = localDateKey(now)
+    const pet = usePetStore.getState().state
+    if (ticked.quests.date !== todayKey || ticked.quests.selected.length === 0) {
+      ticked = {
+        ...ticked,
+        quests: {
+          date: todayKey,
+          selected: pickDailyQuests(todayKey),
+          baseline: snapshotBaseline(ticked, pet),
+          completed: [],
+          // bonusClaimedDate carries over so we don't re-pay for the
+          // previous day after a midnight rollover; cleared only when paid.
+          bonusClaimedDate: ticked.quests.bonusClaimedDate,
+        },
+      }
+    }
+
+    // Quest completion check.
+    let questStars = 0
+    const newlyComplete: string[] = []
+    for (const id of ticked.quests.selected) {
+      if (ticked.quests.completed.includes(id)) continue
+      const q = getQuest(id)
+      if (!q) continue
+      const p = q.progress(ticked, ticked.quests.baseline, pet)
+      if (p >= q.target) {
+        newlyComplete.push(id)
+        questStars += q.starReward
+        toastQueue = pushToast(
+          toastQueue,
+          `🎯 ${q.name} +${q.starReward}⭐`,
+          'good',
+          3200,
+        )
+      }
+    }
+    if (newlyComplete.length > 0) {
+      ticked = {
+        ...ticked,
+        quests: {
+          ...ticked.quests,
+          completed: [...ticked.quests.completed, ...newlyComplete],
+        },
+        resources: {
+          ...ticked.resources,
+          stars: ticked.resources.stars + questStars,
+        },
+      }
+      playOrchardSound('upgrade')
+    }
+    // All-3 bonus, paid once per local day.
+    if (
+      allDoneToday(ticked) &&
+      ticked.quests.bonusClaimedDate !== todayKey
+    ) {
+      ticked = {
+        ...ticked,
+        quests: { ...ticked.quests, bonusClaimedDate: todayKey },
+        resources: {
+          ...ticked.resources,
+          stars: ticked.resources.stars + QUEST_ALL_DONE_BONUS,
+        },
+      }
+      toastQueue = pushToast(
+        toastQueue,
+        `🏆 Όλοι οι στόχοι +${QUEST_ALL_DONE_BONUS}⭐`,
+        'good',
+        4000,
+      )
+      playOrchardSound('research-done')
+    }
+
+    // ----- Achievement detection -----------------------------------------
+    const newAchievements = checkNewAchievements(ticked, pet)
+    if (newAchievements.length > 0) {
+      let starsFromAch = 0
+      for (const a of newAchievements) {
+        starsFromAch += a.starReward
+        toastQueue = pushToast(
+          toastQueue,
+          `🏅 ${a.name} +${a.starReward}⭐`,
+          'good',
+          4000,
+        )
+      }
+      ticked = {
+        ...ticked,
+        achieved: [...ticked.achieved, ...newAchievements.map((a) => a.id)],
+        resources: {
+          ...ticked.resources,
+          stars: ticked.resources.stars + starsFromAch,
+        },
+      }
+      playOrchardSound('research-done')
     }
 
     if (ticked !== prev) persist(ticked)
