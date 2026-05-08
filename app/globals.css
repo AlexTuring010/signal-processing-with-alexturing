@@ -58,6 +58,20 @@ body {
   min-height: 100dvh;
 }
 
+/* Default the site to 80% zoom — the user prefers this density.
+   `zoom` is the actual browser-zoom equivalent (scales layout + render
+   together), so fixed-position widgets, scrollbars, click targets, and
+   vh/vw units all stay coherent. Disabled for print so hard copies are
+   not shrunk. */
+html {
+  zoom: 0.8;
+}
+@media print {
+  html {
+    zoom: 1;
+  }
+}
+
 /* Smooth, but not aggressive */
 html {
   scroll-behavior: smooth;
