@@ -12,8 +12,11 @@ type Props = {
 }
 
 /**
- * The orchard scene: a 4×3 grid of plots over a soft pastel hill background.
- * The grid is responsive — on narrow screens it falls back to 3 columns.
+ * The orchard scene: a 3-column grid of plots over a soft pastel hill
+ * background. Rows are a fixed pixel height so cells stay legible even
+ * when plot count grows past the initial 12 (after `bigger-orchard`
+ * research adds another 12). The grid scrolls vertically when the row
+ * count exceeds what fits in the panel's flex space.
  */
 export function Scene({ selectedPlotId, onSelect, now }: Props) {
   const plots = useOrchardStore((s) => s.state.plots)
@@ -22,19 +25,18 @@ export function Scene({ selectedPlotId, onSelect, now }: Props) {
     <div className="relative flex-1 overflow-hidden">
       <HillBackground />
 
-      {/* 3×4 grid that distributes rows evenly across the available height
-          (no aspect-square — cells are slightly tall-ish rectangles so the
-          whole grid fits without overflowing the panel). */}
-      <div className="relative z-10 grid h-full min-h-0 grid-cols-3 grid-rows-4 gap-1.5 px-2 py-2">
-        {plots.map((p) => (
-          <PlotCard
-            key={p.id}
-            plot={p}
-            selected={selectedPlotId === p.id}
-            now={now}
-            onClick={() => onSelect(p.id)}
-          />
-        ))}
+      <div className="relative z-10 h-full overflow-y-auto px-2 py-2">
+        <div className="grid grid-cols-3 auto-rows-[78px] gap-1.5">
+          {plots.map((p) => (
+            <PlotCard
+              key={p.id}
+              plot={p}
+              selected={selectedPlotId === p.id}
+              now={now}
+              onClick={() => onSelect(p.id)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
