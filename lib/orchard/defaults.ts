@@ -1,6 +1,25 @@
 import type { GoodKey, OrchardState, Plot, Resources } from './types'
 
-export const VERSION = 5 as const
+export const VERSION = 6 as const
+
+/** Lifetime coins required before the Compost tab becomes visible. The plan
+ *  cites 100 k coins; in practice 5 k is reachable in a focused early-session
+ *  and gives the player time to feel the early loop before prestige enters. */
+export const COMPOST_THRESHOLD = 5000
+
+/** Compost-run thresholds for the permanent global yield bonus. Each entry
+ *  is `[compostRunCount, multiplier]`; we pick the largest that applies. */
+export const COMPOST_YIELD_TIERS: ReadonlyArray<readonly [number, number]> = [
+  [1, 1.10],
+  [5, 1.25],
+  [10, 1.50],
+  [25, 1.75],
+] as const
+
+/** Blueprint discount on rebuild — buildings owned at level ≥ 3 at the time
+ *  of compost cost half as many coins to construct on the next run. */
+export const BLUEPRINT_DISCOUNT = 0.5
+export const BLUEPRINT_LEVEL_GATE = 3
 
 /** Petting buff: 5 minutes long, ×1.10 on top of the mood multiplier. */
 export const PET_BUFF_MS = 5 * 60 * 1000
@@ -113,6 +132,12 @@ export function freshOrchard(now: number = Date.now()): OrchardState {
     buildings: [],
     autoSell: {},
     researchTree: { completed: [], inProgress: null },
+    prestige: {
+      compostRun: 0,
+      seedShopOwned: {},
+      blueprints: [],
+      lastCompostLifetime: 0,
+    },
     petBuffUntil: null,
     dailyCaps: { date: localDateKey(now), minigameStars: 0 },
     lifetime: {

@@ -3,8 +3,15 @@
 import { Trees, Store, Hammer, FlaskConical, Recycle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { playOrchardSound } from '@/lib/orchard/audio'
+import { useOrchardStore } from '@/lib/orchard/store'
+import { compostUnlocked } from '@/lib/orchard/prestige'
 
-export type OrchardTab = 'trees' | 'market' | 'buildings' | 'research'
+export type OrchardTab =
+  | 'trees'
+  | 'market'
+  | 'buildings'
+  | 'research'
+  | 'compost'
 
 type TabSpec = {
   id: OrchardTab | string
@@ -14,17 +21,11 @@ type TabSpec = {
   comingSoon?: boolean
 }
 
-const TABS: TabSpec[] = [
+const STATIC_TABS: TabSpec[] = [
   { id: 'trees', label: 'Δέντρα', icon: <Trees className="h-3.5 w-3.5" /> },
   { id: 'buildings', label: 'Κτίρια', icon: <Hammer className="h-3.5 w-3.5" /> },
   { id: 'research', label: 'Έρευνα', icon: <FlaskConical className="h-3.5 w-3.5" /> },
   { id: 'market', label: 'Αγορά', icon: <Store className="h-3.5 w-3.5" /> },
-  {
-    id: 'compost',
-    label: 'Compost',
-    icon: <Recycle className="h-3.5 w-3.5" />,
-    comingSoon: true,
-  },
 ]
 
 type Props = {
@@ -33,12 +34,24 @@ type Props = {
 }
 
 export function TabBar({ active, onChange }: Props) {
+  const showCompost = useOrchardStore((s) => compostUnlocked(s.state))
+  const tabs: TabSpec[] = showCompost
+    ? [
+        ...STATIC_TABS,
+        {
+          id: 'compost',
+          label: 'Compost',
+          icon: <Recycle className="h-3.5 w-3.5" />,
+        },
+      ]
+    : STATIC_TABS
+
   return (
     <nav
       aria-label="Καρτέλες μποστανιού"
       className="flex shrink-0 gap-1 overflow-x-auto border-b border-border bg-bg-elevated px-3 py-1.5"
     >
-      {TABS.map((t) => {
+      {tabs.map((t) => {
         const isActive = !t.comingSoon && active === (t.id as OrchardTab)
         return (
           <button

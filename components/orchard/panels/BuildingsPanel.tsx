@@ -20,6 +20,7 @@ import {
   recipeSummary,
   upgradeCost as upgradeCostFor,
 } from '@/lib/orchard/buildings'
+import { buildCostFor } from '@/lib/orchard/effects'
 import { playOrchardSound } from '@/lib/orchard/audio'
 import type { Building, BuildingKind } from '@/lib/orchard/types'
 import { MAX_BUILDING_LEVEL } from '@/lib/orchard/defaults'
@@ -244,11 +245,14 @@ function UnbuiltCard({
   buildings: Building[]
 }) {
   const def = getBuildingDef(kind)
-  const coins = useOrchardStore((s) => s.state.resources.coins)
+  const state = useOrchardStore((s) => s.state)
+  const coins = state.resources.coins
   const buildBuilding = useOrchardStore((s) => s.buildBuilding)
 
   const unlocked = isUnlocked(kind, lifetimeCoins, buildings)
-  const canAfford = coins >= def.buildCost
+  const cost = buildCostFor(kind, state)
+  const discounted = cost < def.buildCost
+  const canAfford = coins >= cost
   const requiresMet = !def.requires || buildings.some((b) => b.kind === def.requires)
 
   // Why is it locked? (gives the player a clear hint to chase)
@@ -310,7 +314,7 @@ function UnbuiltCard({
           )}
         >
           <Hammer className="h-3 w-3" aria-hidden="true" />
-          Χτίσε ({def.buildCost} 🪙)
+          Χτίσε ({cost} 🪙{discounted && ' · blueprint'})
         </button>
       ) : (
         <p className="rounded-full bg-bg-elevated px-2 py-1 text-center text-[10px] text-fg-subtle">

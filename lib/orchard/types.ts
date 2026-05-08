@@ -89,8 +89,30 @@ export type ResearchJob = {
   durationMs: number
 }
 
+/** Per-item purchase counts in the Seed Shop. Missing key = 0. */
+export type SeedShopOwned = Partial<Record<string, number>>
+
+/**
+ * Prestige state — survives compost. The orchard's "you've done this before"
+ * memory: how many times you've reset, what blueprints carry over (so a
+ * rebuilt building is half-price), what permanent shop bonuses you own,
+ * and the lifetime-coins snapshot at last compost (so we can derive the
+ * current run's coin total without a duplicate counter).
+ */
+export type Prestige = {
+  /** Total times the player has composted. 0 = never. */
+  compostRun: number
+  /** Per-item purchase counts in the Seed Shop. */
+  seedShopOwned: SeedShopOwned
+  /** Building kinds owned at level ≥ 3 at the most recent compost. */
+  blueprints: BuildingKind[]
+  /** lifetime.coinsEarned snapshot at the most recent compost. Subtract from
+   *  current lifetime.coinsEarned to get this-run earnings. */
+  lastCompostLifetime: number
+}
+
 export type OrchardState = {
-  version: 5
+  version: 6
   startedAt: number
   lastTickAt: number
   resources: Resources
@@ -105,6 +127,8 @@ export type OrchardState = {
     completed: string[]
     inProgress: ResearchJob | null
   }
+  /** Prestige state (compost runs + seed shop + blueprints). */
+  prestige: Prestige
   /** Petting buff expiry (ms epoch). null = no buff active. */
   petBuffUntil: number | null
   /** Daily caps for cross-system rewards. Reset at local midnight. */

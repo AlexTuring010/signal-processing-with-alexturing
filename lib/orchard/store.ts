@@ -13,11 +13,20 @@ import type {
   Tree,
 } from './types'
 import {
+  BLUEPRINT_LEVEL_GATE,
+  MINIGAME_APPLES_PER_GOLDEN,
+  MINIGAME_APPLES_PER_NORMAL,
+  MINIGAME_SCORE_PER_STAR,
+  MINIGAME_STARS_PER_DAY_CAP,
+  MINIGAME_STARS_PER_RUN_CAP,
   MOOD_MULT,
+  PET_BUFF_COOLDOWN_MS,
+  PET_BUFF_MS,
   SHAKE_BONUS,
+  VERSION,
   freshOrchard,
   freshResources,
-  VERSION,
+  localDateKey,
 } from './defaults'
 import { reconcile } from './reconcile'
 import { plantCost, stageAt, treeStorage, getSpecies } from './trees'
@@ -29,22 +38,14 @@ import {
 import type { AutoSellRule } from './types'
 import { playOrchardSound } from './audio'
 import {
+  buildCostFor,
   effectiveBarnCapacity,
   petBuffMult,
   priceForState,
   priceMultiplierForState,
 } from './effects'
-import { localDateKey } from './defaults'
-import {
-  PET_BUFF_MS,
-  PET_BUFF_COOLDOWN_MS,
-  MINIGAME_APPLES_PER_NORMAL,
-  MINIGAME_APPLES_PER_GOLDEN,
-  MINIGAME_SCORE_PER_STAR,
-  MINIGAME_STARS_PER_RUN_CAP,
-  MINIGAME_STARS_PER_DAY_CAP,
-} from './defaults'
 import { getResearchNode, isAvailable } from './research'
+import { getSeedShopItem, ownedCount, seedReward } from './prestige'
 
 /* -------------------------------------------------------------------------- */
 /*  Orchard zustand store — Phase 1                                            */
@@ -116,6 +117,15 @@ type Store = {
     goldenCaught: number,
     score: number,
   ) => { apples: number; stars: number }
+  /**
+   * Compost the orchard. Wipes plots/buildings/research/auto-sell/in-flight
+   * jobs and most resources; preserves seeds/stars + prestige state. Awards
+   * floor(sqrt(currentRunCoins / 1000)) seeds and snapshots blueprints
+   * (kinds at level ≥ 3) for half-cost rebuilds. Returns the seeds gained.
+   */
+  compost: () => number
+  /** Purchase one tier of a Seed Shop item. Gated by maxOwned and seed cost. */
+  buySeedShopItem: (id: string) => boolean
   /** Wipe orchard state and start fresh (for debugging / reset). */
   reset: () => void
 
@@ -168,6 +178,21 @@ function loadInitial(): OrchardState {
       version: 5,
       petBuffUntil: null,
       dailyCaps: { date: localDateKey(), minigameStars: 0 },
+    }
+  }
+  if (s.version === 5) {
+    // v5 → v6: add prestige state. Existing lifetime stays intact —
+    // lastCompostLifetime starts at 0 so the player's accumulated coins
+    // count toward their first compost reward.
+    s = {
+      ...s,
+      version: 6,
+      prestige: {
+        compostRun: 0,
+        seedShopOwned: {},
+        blueprints: [],
+        lastCompostLifetime: 0,
+      },
     }
   }
   if (s.version !== VERSION) return freshOrchard()
@@ -502,7 +527,8 @@ export const useOrchardStore = create<Store>((set, get) => ({
       return false
     }
     const def = getBuildingDef(kind)
-    if (ticked.resources.coins < def.buildCost) return false
+    const cost = buildCostFor(kind, ticked) // honors prestige blueprint discount
+    if (ticked.resources.coins < cost) return false
 
     const newBuilding: Building = {
       id: nextBuildingId(kind),
@@ -516,7 +542,7 @@ export const useOrchardStore = create<Store>((set, get) => ({
       ...ticked,
       resources: {
         ...ticked.resources,
-        coins: ticked.resources.coins - def.buildCost,
+        coins: ticked.resources.coins - cost,
       },
       buildings: [...ticked.buildings, newBuilding],
     }
@@ -717,6 +743,85 @@ export const useOrchardStore = create<Store>((set, get) => ({
     persist(next)
     set({ state: next })
     return { apples: appleGrant, stars: starGrant }
+  },
+
+  compost: () => {
+    const now = Date.now()
+    const { moodMult, petSleeping } = readPetMood(get().state, now)
+    const ticked = reconcile(get().state, now, moodMult, petSleeping).state
+
+    const seeds = seedReward(ticked)
+    if (seeds <= 0) return 0
+
+    // Snapshot blueprints — building kinds at level ≥ BLUEPRINT_LEVEL_GATE
+    // get a permanent rebuild discount on future runs.
+    const earned = ticked.buildings
+      .filter((b) => b.level >= BLUEPRINT_LEVEL_GATE)
+      .map((b) => b.kind)
+    const blueprintSet = new Set([...ticked.prestige.blueprints, ...earned])
+    const blueprints = Array.from(blueprintSet)
+
+    // Wipe most run state. Preserve: prestige (with new compostRun + seeds),
+    // stars (high-tier currency), high score, and the lifetime tally itself
+    // (which acts as the "career" counter and is the basis of seed math via
+    // the `lastCompostLifetime` snapshot).
+    const fresh = freshOrchard(now)
+    const next: OrchardState = {
+      ...fresh,
+      // Resources: reset volatile goods, preserve seeds + stars (gain new seeds).
+      resources: {
+        ...fresh.resources,
+        seeds: ticked.resources.seeds + seeds,
+        stars: ticked.resources.stars,
+      },
+      // Lifetime stays cumulative — it's the career counter.
+      lifetime: ticked.lifetime,
+      // Prestige snapshot.
+      prestige: {
+        compostRun: ticked.prestige.compostRun + 1,
+        seedShopOwned: ticked.prestige.seedShopOwned,
+        blueprints,
+        lastCompostLifetime: ticked.lifetime.coinsEarned,
+      },
+    }
+    persist(next)
+    playOrchardSound('research-done')
+    set({
+      state: next,
+      toasts: pushToast(
+        get().toasts,
+        `🌱 Compost: +${seeds} σπόρους`,
+        'good',
+        4000,
+      ),
+    })
+    return seeds
+  },
+
+  buySeedShopItem: (id) => {
+    const item = getSeedShopItem(id)
+    if (!item) return false
+    const state = get().state
+    if (ownedCount(state, id as never) >= item.maxOwned) return false
+    if (state.resources.seeds < item.cost) return false
+    const next: OrchardState = {
+      ...state,
+      resources: {
+        ...state.resources,
+        seeds: state.resources.seeds - item.cost,
+      },
+      prestige: {
+        ...state.prestige,
+        seedShopOwned: {
+          ...state.prestige.seedShopOwned,
+          [id]: ownedCount(state, id as never) + 1,
+        },
+      },
+    }
+    persist(next)
+    playOrchardSound('upgrade')
+    set({ state: next })
+    return true
   },
 
   collectOutput: (id) => {

@@ -1,8 +1,26 @@
-import type { Building, GoodKey, OrchardState, Tree } from './types'
+import type {
+  Building,
+  BuildingKind,
+  GoodKey,
+  OrchardState,
+  Tree,
+} from './types'
 import { hasResearch } from './research'
 import { getSpecies } from './trees'
-import { GOOD_PRICE, PET_BUFF_MULT, SLEEPING_GROWTH_MULT } from './defaults'
+import {
+  BLUEPRINT_DISCOUNT,
+  GOOD_PRICE,
+  PET_BUFF_MULT,
+  SLEEPING_GROWTH_MULT,
+} from './defaults'
+import { getBuildingDef } from './buildings'
 import { MULT_MAX, MULT_MIN, priceHistory, priceMultiplier } from './market'
+import {
+  appleYieldShopMult,
+  barnBonusShop,
+  permanentYieldMult,
+  productYieldShopMult,
+} from './prestige'
 
 /* -------------------------------------------------------------------------- */
 /*  Research effect helpers                                                    */
@@ -39,10 +57,43 @@ export function effectiveTreeStorage(tree: Tree, state: OrchardState): number {
   return Math.floor(base * mult)
 }
 
-/** Effective barn capacity (base × research multiplier). */
+/**
+ * Coin cost to construct a building of `kind`. Halved (BLUEPRINT_DISCOUNT)
+ * when the player carries a blueprint for it from a previous compost run.
+ */
+export function buildCostFor(
+  kind: BuildingKind,
+  state: OrchardState,
+): number {
+  const base = getBuildingDef(kind).buildCost
+  const discounted = state.prestige.blueprints.includes(kind)
+  return Math.ceil(base * (discounted ? BLUEPRINT_DISCOUNT : 1))
+}
+
+/** Effective barn capacity (base × research multiplier + Seed Shop additive). */
 export function effectiveBarnCapacity(state: OrchardState): number {
   const mult = hasResearch(state, 'bigger-barn') ? 2.0 : 1.0
-  return Math.floor(state.barnCapacity * mult)
+  return Math.floor(state.barnCapacity * mult + barnBonusShop(state))
+}
+
+/**
+ * Combined yield multiplier that applies to **all** production:
+ *  - permanent compost-tier bonus (+10/+25/+50/+75%)
+ *  - active petting buff (×1.10)
+ *  Caller multiplies the resource-specific shop bonus on top.
+ */
+export function globalProductionMult(state: OrchardState): number {
+  return permanentYieldMult(state) * petBuffMult(state)
+}
+
+/** Tree (apple) yield multiplier — global × apple-yield seed shop. */
+export function appleYieldMult(state: OrchardState): number {
+  return permanentYieldMult(state) * appleYieldShopMult(state)
+}
+
+/** Building output yield multiplier — global × product-yield seed shop. */
+export function productYieldMult(state: OrchardState): number {
+  return permanentYieldMult(state) * productYieldShopMult(state)
 }
 
 /** Effective tree growth milestones (sapling→small, small→mature). */
@@ -70,7 +121,11 @@ export function petBuffMult(
   return state.petBuffUntil && state.petBuffUntil > now ? PET_BUFF_MULT : 1.0
 }
 
-/** Building batch yield with research bumps and partnership chance. */
+/**
+ * Building batch yield with research bumps + prestige + seed-shop multipliers.
+ * Returns a possibly-fractional number; storedOutput accumulates fractions and
+ * collectOutput floors at the boundary, so nothing is lost over many batches.
+ */
 export function effectiveBatchYield(
   building: Building,
   state: OrchardState,
@@ -79,7 +134,7 @@ export function effectiveBatchYield(
   if (building.kind === 'cidery' && hasResearch(state, 'vintner')) y += 1
   if (building.kind === 'jam' && hasResearch(state, 'jam-tech')) y += 1
   if (building.kind === 'bakery' && hasResearch(state, 'bakery-tech')) y += 1
-  return y
+  return y * productYieldMult(state)
 }
 
 /**

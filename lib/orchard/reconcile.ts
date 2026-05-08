@@ -11,6 +11,7 @@ import { intervalS, stageMult, yieldPerCycle } from './trees'
 import { batchMs, getBuildingDef } from './buildings'
 import {
   RESEARCH_PER_MIN_MATURE,
+  appleYieldMult,
   autoHarvestEnabled,
   effectiveBarnCapacity,
   effectiveBatchYield,
@@ -20,6 +21,10 @@ import {
   stageAtForState,
 } from './effects'
 import { getResearchNode } from './research'
+import {
+  offlineCapBonusHours,
+  researchRateShopMult,
+} from './prestige'
 
 /* -------------------------------------------------------------------------- */
 /*  Idle catch-up                                                              */
@@ -39,14 +44,23 @@ export type ReconcileResult = {
   gained: number
 }
 
-export function effectiveElapsedMs(elapsedMs: number): number {
+/**
+ * Offline rate scaler. Default `OFFLINE_FULL_MS` cap can be extended by the
+ * "Καλύτερη συντήρηση" Seed Shop item (one extra hour per purchase, soft-
+ * capped at the half-rate ceiling).
+ */
+export function effectiveElapsedMs(
+  elapsedMs: number,
+  fullRateMs: number = OFFLINE_FULL_MS,
+): number {
   if (elapsedMs <= 0) return 0
-  if (elapsedMs <= OFFLINE_FULL_MS) return elapsedMs
+  const fullCap = Math.min(fullRateMs, OFFLINE_HALF_MS)
+  if (elapsedMs <= fullCap) return elapsedMs
   if (elapsedMs <= OFFLINE_HALF_MS) {
-    const overflow = elapsedMs - OFFLINE_FULL_MS
-    return OFFLINE_FULL_MS + overflow * 0.5
+    const overflow = elapsedMs - fullCap
+    return fullCap + overflow * 0.5
   }
-  return OFFLINE_FULL_MS + (OFFLINE_HALF_MS - OFFLINE_FULL_MS) * 0.5
+  return fullCap + (OFFLINE_HALF_MS - fullCap) * 0.5
 }
 
 /* ------------------------------ Trees ----------------------------------- */
@@ -106,7 +120,9 @@ export function tickTree(
     if (segMs <= 0) continue
     const cyclesByTime = Math.floor(segMs / effectiveIntervalMs)
     if (cyclesByTime <= 0) continue
-    const perCycle = yieldPerCycle(tree)
+    // Effective per-cycle yield folds in prestige + apple-yield seed shop.
+    const perCycle = yieldPerCycle(tree) * appleYieldMult(state)
+    if (perCycle <= 0) continue
     const cyclesByCap = Math.floor((cap - stored) / perCycle)
     const cycles = Math.min(cyclesByTime, cyclesByCap)
     if (cycles <= 0) {
@@ -255,14 +271,12 @@ function researchTrickle(
 ): number {
   if (windowEnd <= windowStart) return 0
   const minutes = (windowEnd - windowStart) / 60000
+  const ratePerMin = RESEARCH_PER_MIN_MATURE * researchRateShopMult(state)
   let total = 0
   for (const plot of plots) {
     if (!plot.tree) continue
-    // We use the END-of-window stage as a rough proxy. This slightly over-
-    // counts for trees that just matured during the window — fine for the
-    // gentle trickle we want.
     const stage = stageAtForState(plot.tree, windowEnd, state, petSleeping)
-    if (stage === 2) total += RESEARCH_PER_MIN_MATURE
+    if (stage === 2) total += ratePerMin
   }
   return total * minutes
 }
@@ -341,7 +355,10 @@ export function reconcile(
   const realElapsed = Math.max(0, now - rawState.lastTickAt)
   if (realElapsed === 0) return { state: rawState, wasted: 0, gained: 0 }
 
-  const effective = effectiveElapsedMs(realElapsed)
+  // Apply the Seed Shop offline-cap bonus (each purchase = +1h to full-rate).
+  const fullRateMs =
+    OFFLINE_FULL_MS + offlineCapBonusHours(rawState) * 60 * 60 * 1000
+  const effective = effectiveElapsedMs(realElapsed, fullRateMs)
   const effectiveEnd = rawState.lastTickAt + effective
 
   // --- 1) Research production (drip 🧪 into resources). Computed against
