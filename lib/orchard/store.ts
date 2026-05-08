@@ -54,6 +54,12 @@ import {
   snapshotBaseline,
 } from './quests'
 import { QUEST_ALL_DONE_BONUS } from './defaults'
+import {
+  getEventDef,
+  rollEvent,
+  scheduleNextEvent,
+} from './events'
+import { isSick } from '../pet/decay'
 
 /* -------------------------------------------------------------------------- */
 /*  Orchard zustand store — Phase 1                                            */
@@ -125,6 +131,9 @@ type Store = {
     goldenCaught: number,
     score: number,
   ) => { apples: number; stars: number }
+  /** Claim a click-style random event (shooting star, hedgehog). No-op when
+   *  the active event isn't claimable or its window has expired. */
+  claimEvent: (id: string) => boolean
   /**
    * Compost the orchard. Wipes plots/buildings/research/auto-sell/in-flight
    * jobs and most resources; preserves seeds/stars + prestige state. Awards
@@ -225,6 +234,19 @@ function loadInitial(): OrchardState {
         },
         completed: [],
         bonusClaimedDate: null,
+      },
+    }
+  }
+  if (s.version === 7) {
+    // v7 → v8: add random-events scheduler. Schedule the first event a
+    // few minutes out so freshly-migrated saves don't fire instantly.
+    s = {
+      ...s,
+      version: 8,
+      events: {
+        nextScheduledAt: Date.now() + 5 * 60 * 1000,
+        active: null,
+        log: [],
       },
     }
   }
@@ -367,6 +389,79 @@ export const useOrchardStore = create<Store>((set, get) => ({
         },
       }
       playOrchardSound('autosell')
+    }
+
+    // ----- Random events: resolve expired + roll new ---------------------
+    // Pet sickness gates "spice" events, per design — when sick, scheduler
+    // simply pushes nextScheduledAt forward each tick.
+    const petAlive = usePetStore.getState().state
+    const eventsState = ticked.events
+    let active = eventsState.active
+    let nextScheduledAt = eventsState.nextScheduledAt
+    let log = eventsState.log
+
+    if (active && now >= active.expiresAt) {
+      // Expired naturally — push to log and clear.
+      log = [
+        ...log.slice(-19),
+        { kind: active.kind, firedAt: active.startedAt, claimed: active.claimed },
+      ]
+      active = null
+      nextScheduledAt = scheduleNextEvent(now)
+    }
+    if (!active && now >= nextScheduledAt) {
+      if (isSick(petAlive, now)) {
+        // Pet's sick — defer the next roll without firing anything.
+        nextScheduledAt = scheduleNextEvent(now)
+      } else {
+        const candidate = rollEvent(ticked, now)
+        if (candidate) {
+          // Apply instant events at fire time so the side-effect lands now,
+          // and the banner just shows briefly before auto-clearing.
+          const def = getEventDef(candidate.kind)
+          let withFire = ticked
+          if (def?.applyOnFire) {
+            withFire = def.applyOnFire(withFire)
+          }
+          ticked = {
+            ...withFire,
+            events: {
+              nextScheduledAt: scheduleNextEvent(now), // schedule the next slot now
+              active: candidate,
+              log,
+            },
+          }
+          // Inform the player immediately. The banner UI is the primary
+          // surface; the toast helps when the panel is closed (future).
+          toastQueue = pushToast(
+            toastQueue,
+            `${def?.emoji ?? ''} ${def?.name ?? candidate.kind}`,
+            'info',
+            3500,
+          )
+          playOrchardSound(
+            def?.category === 'debuff' || def?.category === 'instant'
+              ? 'error'
+              : 'click',
+          )
+          // Skip the post-loop assignment below (we already placed events).
+          active = candidate
+        } else {
+          nextScheduledAt = scheduleNextEvent(now)
+        }
+      }
+    }
+    // Sync any tweaks back into ticked.events (the fire branch above already
+    // assigned ticked.events; this guards the no-fire paths).
+    if (
+      ticked.events.active !== active ||
+      ticked.events.nextScheduledAt !== nextScheduledAt ||
+      ticked.events.log !== log
+    ) {
+      ticked = {
+        ...ticked,
+        events: { ...ticked.events, active, nextScheduledAt, log },
+      }
     }
 
     // ----- Daily quest rollover + selection ------------------------------
@@ -873,6 +968,39 @@ export const useOrchardStore = create<Store>((set, get) => ({
     persist(next)
     set({ state: next })
     return { apples: appleGrant, stars: starGrant }
+  },
+
+  claimEvent: (id) => {
+    const state = get().state
+    const ev = state.events.active
+    if (!ev || ev.id !== id || ev.claimed) return false
+    const def = getEventDef(ev.kind)
+    if (!def || def.category !== 'click') return false
+    const now = Date.now()
+    if (now >= ev.expiresAt) return false
+    let next: OrchardState = state
+    if (def.applyOnClaim) {
+      next = def.applyOnClaim(next)
+    }
+    next = {
+      ...next,
+      events: {
+        ...next.events,
+        active: { ...ev, claimed: true },
+      },
+    }
+    persist(next)
+    playOrchardSound('research-done')
+    set({
+      state: next,
+      toasts: pushToast(
+        get().toasts,
+        `${def.emoji} ${def.name} ✓`,
+        'good',
+        2400,
+      ),
+    })
+    return true
   },
 
   compost: () => {

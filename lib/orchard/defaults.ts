@@ -1,6 +1,12 @@
 import type { GoodKey, OrchardState, Plot, Resources } from './types'
 
-export const VERSION = 7 as const
+export const VERSION = 8 as const
+
+/** Random-event scheduling window. A new event rolls between min and max
+ *  ms after the last one cleared, plus a small initial delay on first run. */
+export const EVENT_INTERVAL_MIN_MS = 10 * 60 * 1000
+export const EVENT_INTERVAL_MAX_MS = 30 * 60 * 1000
+export const EVENT_FIRST_DELAY_MS = 5 * 60 * 1000
 
 /** Bonus stars granted when all 3 daily quests are completed in one day. */
 export const QUEST_ALL_DONE_BONUS = 2
@@ -148,6 +154,11 @@ export function freshOrchard(now: number = Date.now()): OrchardState {
     petBuffUntil: null,
     dailyCaps: { date: localDateKey(now), minigameStars: 0 },
     achieved: [],
+    events: {
+      nextScheduledAt: now + EVENT_FIRST_DELAY_MS,
+      active: null,
+      log: [],
+    },
     quests: {
       date: localDateKey(now),
       selected: [],

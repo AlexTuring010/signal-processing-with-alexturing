@@ -21,6 +21,7 @@ import {
   permanentYieldMult,
   productYieldShopMult,
 } from './prestige'
+import { eventGrowthMult, eventOutputMult } from './events'
 
 /* -------------------------------------------------------------------------- */
 /*  Research effect helpers                                                    */
@@ -36,8 +37,7 @@ import {
  *  - `richer-soil` research: ×0.9 (faster).
  *  - Pet sleeping: ×SLEEPING_GROWTH_MULT (faster) — the strategic tradeoff
  *    against the ×0.5 production penalty while asleep.
- *
- * Caller passes `petSleeping` so this stays a pure function (no store reads).
+ *  - Active rain event: ×0.8 (faster).
  */
 export function growthTimeMult(
   state: OrchardState,
@@ -46,6 +46,7 @@ export function growthTimeMult(
   let m = 1.0
   if (hasResearch(state, 'richer-soil')) m *= 0.9
   if (petSleeping) m *= SLEEPING_GROWTH_MULT
+  m *= eventGrowthMult(state)
   return m
 }
 
@@ -86,14 +87,22 @@ export function globalProductionMult(state: OrchardState): number {
   return permanentYieldMult(state) * petBuffMult(state)
 }
 
-/** Tree (apple) yield multiplier — global × apple-yield seed shop. */
+/** Tree (apple) yield multiplier — global × apple-yield seed shop × event. */
 export function appleYieldMult(state: OrchardState): number {
-  return permanentYieldMult(state) * appleYieldShopMult(state)
+  return (
+    permanentYieldMult(state) *
+    appleYieldShopMult(state) *
+    eventOutputMult(state)
+  )
 }
 
-/** Building output yield multiplier — global × product-yield seed shop. */
+/** Building output yield multiplier — global × product-yield seed shop × event. */
 export function productYieldMult(state: OrchardState): number {
-  return permanentYieldMult(state) * productYieldShopMult(state)
+  return (
+    permanentYieldMult(state) *
+    productYieldShopMult(state) *
+    eventOutputMult(state)
+  )
 }
 
 /** Effective tree growth milestones (sapling→small, small→mature). */

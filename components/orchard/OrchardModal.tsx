@@ -14,6 +14,7 @@ import { GoalsPanel } from './panels/GoalsPanel'
 import { ActionBar } from './ActionBar'
 import { PetFooter } from './PetFooter'
 import { SickBanner } from './SickBanner'
+import { EventBanner } from './EventBanner'
 import { Toasts } from './Toasts'
 
 type Props = {
@@ -103,6 +104,7 @@ export function OrchardModal({ open, onClose, onBackToPet }: Props) {
       <HUD onBackToPet={onBackToPet} onClose={onClose} />
       <TabBar active={tab} onChange={setTab} />
       <SickBanner />
+      <EventBanner />
 
       <div className="relative flex flex-1 flex-col overflow-hidden">
         {tab === 'trees' && (

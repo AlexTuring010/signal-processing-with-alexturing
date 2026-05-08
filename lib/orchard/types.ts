@@ -138,8 +138,38 @@ export type QuestsState = {
   bonusClaimedDate: string | null
 }
 
+/**
+ * Random-event categories. Phase 7b ships:
+ *  - `buff`/`debuff`: apply an effect for a window then auto-resolve (rain, storm, festival)
+ *  - `instant`: applied immediately at fire-time, then visible briefly (squirrel)
+ *  - `click`: appears with a claim button + countdown (shooting star, hedgehog)
+ */
+export type EventCategory = 'buff' | 'debuff' | 'instant' | 'click'
+
+/** Single in-flight event instance. */
+export type EventInstance = {
+  /** Unique id (per fire). */
+  id: string
+  /** Registry key. */
+  kind: string
+  startedAt: number
+  /** Auto-resolves at this timestamp. */
+  expiresAt: number
+  /** Set when the player claims a `click` event so the banner can show success. */
+  claimed: boolean
+}
+
+export type EventsState = {
+  /** Roll a new event after this timestamp. */
+  nextScheduledAt: number
+  /** Currently visible/affecting event, or null. One event at a time in v1. */
+  active: EventInstance | null
+  /** Tail of recent fires for variety; capped at 20. */
+  log: { kind: string; firedAt: number; claimed: boolean }[]
+}
+
 export type OrchardState = {
-  version: 7
+  version: 8
   startedAt: number
   lastTickAt: number
   resources: Resources
@@ -160,6 +190,8 @@ export type OrchardState = {
   achieved: string[]
   /** Today's daily-quest selection + progress baselines. */
   quests: QuestsState
+  /** Random-event scheduler + active event slot. */
+  events: EventsState
   /** Petting buff expiry (ms epoch). null = no buff active. */
   petBuffUntil: number | null
   /** Daily caps for cross-system rewards. Reset at local midnight. */
