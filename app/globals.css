@@ -593,6 +593,30 @@ html {
 }
 .orchard-grow-pulse { animation: orchard-grow-pulse 1.6s ease-in-out infinite; }
 
+/* Compost ceremony — short overlay during the prestige reset. */
+@keyframes orchard-compost-bg {
+  from { opacity: 0; }
+  20%  { opacity: 1; }
+  90%  { opacity: 1; }
+  to   { opacity: 0; }
+}
+.orchard-compost-bg { animation: orchard-compost-bg 2.8s ease-in-out both; }
+
+@keyframes orchard-compost-icon {
+  0%   { transform: scale(0.6) rotate(-12deg); opacity: 0; }
+  35%  { transform: scale(1.2) rotate(0deg); opacity: 1; }
+  60%  { transform: scale(1.0) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1.4) rotate(8deg); opacity: 0; }
+}
+.orchard-compost-icon { animation: orchard-compost-icon 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes orchard-compost-spark {
+  from { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  20%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)) scale(1); }
+}
+.orchard-compost-spark { animation: orchard-compost-spark 2.4s ease-out both; }
+
 /* Subtle scrollbar in dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {
   width: 10px;

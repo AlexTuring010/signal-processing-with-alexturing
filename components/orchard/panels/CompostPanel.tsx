@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Recycle, Sprout, Lock, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useOrchardStore } from '@/lib/orchard/store'
@@ -31,6 +31,20 @@ export function CompostPanel() {
   const compost = useOrchardStore((s) => s.compost)
 
   const [confirming, setConfirming] = useState(false)
+  const [composting, setComposting] = useState<{
+    seeds: number
+  } | null>(null)
+
+  // Run the actual compost after the overlay has been visible long enough
+  // to feel ceremonial. The overlay is the entire side-effect window.
+  useEffect(() => {
+    if (!composting) return
+    const id = window.setTimeout(() => {
+      compost()
+      setComposting(null)
+    }, 2400)
+    return () => window.clearTimeout(id)
+  }, [composting, compost])
 
   // Locked banner if the player hasn't crossed the threshold yet.
   if (!compostUnlocked(state)) {
@@ -59,7 +73,8 @@ export function CompostPanel() {
   const ownedSeeds = state.resources.seeds
 
   return (
-    <section className="flex h-full flex-col gap-2 overflow-y-auto p-2.5">
+    <section className="relative flex h-full flex-col gap-2 overflow-y-auto p-2.5">
+      {composting && <CompostOverlay seeds={composting.seeds} />}
       <header>
         <h3 className="text-xs font-semibold">Compost · σπόροι</h3>
         <p className="mt-0.5 text-[10px] leading-snug text-fg-muted">
@@ -111,8 +126,10 @@ export function CompostPanel() {
               <button
                 type="button"
                 onClick={() => {
+                  // Capture the projected seeds NOW so the overlay can
+                  // display them while the timer counts down.
+                  setComposting({ seeds })
                   setConfirming(false)
-                  compost()
                 }}
                 className="inline-flex flex-1 items-center justify-center gap-1 rounded-full bg-danger px-2 py-1 text-[11px] font-semibold text-white shadow-sm transition-transform hover:scale-[1.01] active:scale-95"
               >
@@ -196,6 +213,50 @@ export function CompostPanel() {
         </ul>
       </div>
     </section>
+  )
+}
+
+/** Sparkle + fade-out overlay shown for ~2.4 s when the player commits a
+ *  compost. The store action runs at the end so the visual lands first. */
+function CompostOverlay({ seeds }: { seeds: number }) {
+  const sparks = Array.from({ length: 12 }).map((_, i) => {
+    const angle = (i / 12) * Math.PI * 2
+    const dist = 60 + Math.random() * 30
+    return {
+      id: i,
+      dx: Math.cos(angle) * dist,
+      dy: Math.sin(angle) * dist,
+      delay: Math.random() * 0.4,
+    }
+  })
+  return (
+    <div className="orchard-compost-bg pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center bg-bg-elevated/90 backdrop-blur-sm">
+      <div className="relative flex flex-col items-center gap-2">
+        {sparks.map((s) => (
+          <span
+            key={s.id}
+            aria-hidden="true"
+            className="orchard-compost-spark absolute text-base"
+            style={
+              {
+                '--dx': `${s.dx}px`,
+                '--dy': `${s.dy}px`,
+                animationDelay: `${s.delay}s`,
+              } as React.CSSProperties
+            }
+          >
+            ✨
+          </span>
+        ))}
+        <span aria-hidden="true" className="orchard-compost-icon text-6xl leading-none">
+          🌱
+        </span>
+        <p className="text-xs font-semibold text-fg">
+          +{seeds} σπόροι
+        </p>
+        <p className="text-[10px] text-fg-muted">Νέο μποστάνι αρχίζει…</p>
+      </div>
+    </div>
   )
 }
 

@@ -92,9 +92,46 @@ export function PlotCard({ plot, selected, now, onClick }: Props) {
         <div
           // Re-mount on shake to replay the keyframe
           key={`${plot.id}:shake:${shakeNonce}`}
-          className={cn(shakeNonce > 0 && 'orchard-tree-shake')}
+          className={cn('relative', shakeNonce > 0 && 'orchard-tree-shake')}
         >
           <TreeSprite tree={{ ...tree, growthStage: stage }} size={56} full={full} />
+          {/* Fruit-fall particles fire on each harvest. The wrapping key
+              above re-mounts this subtree so the keyframe replays. */}
+          {shakeNonce > 0 && (
+            <>
+              <span
+                aria-hidden="true"
+                className="orchard-fruit-fall pointer-events-none absolute left-1/2 top-1/3 text-xs"
+                style={{ '--dx': '-10px' } as React.CSSProperties}
+              >
+                🍎
+              </span>
+              <span
+                aria-hidden="true"
+                className="orchard-fruit-fall pointer-events-none absolute left-1/2 top-1/3 text-xs"
+                style={
+                  {
+                    '--dx': '10px',
+                    animationDelay: '60ms',
+                  } as React.CSSProperties
+                }
+              >
+                🍎
+              </span>
+              <span
+                aria-hidden="true"
+                className="orchard-fruit-fall pointer-events-none absolute left-1/2 top-1/4 text-xs"
+                style={
+                  {
+                    '--dx': '0px',
+                    animationDelay: '120ms',
+                  } as React.CSSProperties
+                }
+              >
+                🍎
+              </span>
+            </>
+          )}
         </div>
       )}
 
