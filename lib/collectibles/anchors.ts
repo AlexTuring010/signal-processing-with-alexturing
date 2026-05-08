@@ -14,8 +14,17 @@ export const EYES_ANCHOR = { x: 60, y: 50 } as const
 /** Body center — used by body-slot items (capes, scarves, shirts). */
 export const BODY_CENTER = { x: 60, y: 60 } as const
 
-/** Accessory anchor — sits to the right of the body. */
-export const ACCESSORY_ANCHOR = { x: 92, y: 60 } as const
+/**
+ * Accessory anchor — sits just *outside* the body's right edge so a
+ * held item doesn't float on top of the belly. Stage-aware because the
+ * adult body is wider (rx 39 vs baby's rx 35), so x=92 — inside both
+ * bodies — would be wrong.
+ */
+export function accessoryAnchor(adult: boolean): { x: number; y: number } {
+  // Right edge of body: cx 60 + bodyW/2. Baby ends at x=95; adult at x=99.
+  // Anchor a few px outside that edge so the item reads as held, not stuck.
+  return { x: adult ? 102 : 98, y: 60 }
+}
 
 /** Top of the head — sits just above the body, scaled by stage. */
 export function headAnchor(adult: boolean): { x: number; y: number } {
@@ -35,6 +44,22 @@ export const SICK_THERMOMETER_ZONE = {
   y: 26,
   width: 18,
   height: 20,
+} as const
+
+/**
+ * Adult-only keep-out zone for the antenna tuft (line from y=22→y=14
+ * plus the ball at (60, 12) r=3). Head-slot sprites that target the
+ * adult stage must either leave a hole around this zone, sit forward
+ * (lower y) so the antenna pokes out the top, or be designed so the
+ * antenna naturally pierces the silhouette.
+ *
+ * Baby has no antenna — head sprites can fill the area freely.
+ */
+export const ADULT_ANTENNA_ZONE = {
+  x: 57,
+  y: 9,
+  width: 6,
+  height: 13,
 } as const
 
 /**
