@@ -1,54 +1,52 @@
 import type { ItemRenderProps } from '@/lib/collectibles/types'
-import { BODY_CENTER } from '@/lib/collectibles/anchors'
 
 /**
- * Σακάκι AM — a small formal jacket with two lapels and a single
- * button. Reads as "evening attire" against the soft pastel body.
- * Body-slot, so it tilts with the sick-mood wobble.
+ * Σακάκι AM — formal burgundy jacket with a U-neckline and two
+ * gold buttons stacked on the centerline.
+ *
+ * Same body-silhouette + U-neck contract as SignalShirt (see
+ * scripts/sprite-preview): arc with sweep-flag=0 traces the lower
+ * body, a Q-curve dips the neckline below the mouth.
  */
 export function AmJacket({ adult }: ItemRenderProps) {
-  const { x, y } = BODY_CENTER
-  const w = adult ? 32 : 28
-  const h = adult ? 26 : 22
+  const rx = adult ? 39 : 35
+  const ry = adult ? 38 : 34
+  const sideY = 8
+  const ctrlY = adult ? 32 : 30
+  const xAtSide = rx * Math.sqrt(Math.max(0, 1 - (sideY / ry) ** 2))
+  const STITCH = '#15050a'
+  const BUTTON = '#d4a857'
+  // Lower button sits just below where the V of the U-neck would
+  // converge; upper button is 5 px above on the centerline.
+  const lowerButtonY = ctrlY - 2
+  const upperButtonY = lowerButtonY - 5
+  const gradId = `am-jacket-fill-${adult ? 'a' : 'b'}`
   return (
-    <g transform={`translate(${x} ${y})`} aria-hidden="true">
-      {/* Jacket body — slightly darker than the shirt for contrast */}
+    <g transform="translate(60 60)" aria-hidden="true">
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#5a2533" />
+          <stop offset="100%" stopColor="#2a0e16" />
+        </linearGradient>
+      </defs>
       <path
-        d={`M${-w / 2} ${-h / 2 + 4}
-             Q${-w / 2} ${-h / 2} ${-w / 2 + 4} ${-h / 2}
-             L${w / 2 - 4} ${-h / 2}
-             Q${w / 2} ${-h / 2} ${w / 2} ${-h / 2 + 4}
-             L${w / 2} ${h / 2}
-             Q${w / 2} ${h / 2 + 4} ${w / 2 - 3} ${h / 2 + 4}
-             L${-w / 2 + 3} ${h / 2 + 4}
-             Q${-w / 2} ${h / 2 + 4} ${-w / 2} ${h / 2}
-             Z`}
-        fill="rgb(var(--accent))"
+        d={`M ${-xAtSide} ${sideY}
+            A ${rx} ${ry} 0 0 0 ${xAtSide} ${sideY}
+            Q 0 ${ctrlY} ${-xAtSide} ${sideY}
+            Z`}
+        fill={`url(#${gradId})`}
       />
-      {/* V-shaped opening showing inner shirt color */}
+      <circle cx="0" cy={lowerButtonY} r="2" fill={BUTTON} />
+      <circle cx="-0.5" cy={lowerButtonY - 0.5} r="0.7" fill="white" opacity="0.75" />
+      <circle cx="0" cy={upperButtonY} r="2" fill={BUTTON} />
+      <circle cx="-0.5" cy={upperButtonY - 0.5} r="0.7" fill="white" opacity="0.75" />
       <path
-        d={`M-7 ${-h / 2 + 1} L0 ${h / 2 - 6} L7 ${-h / 2 + 1} Z`}
-        fill="rgb(var(--bg-elevated))"
-      />
-      {/* Lapels */}
-      <path
-        d={`M-7 ${-h / 2 + 1} L-2 ${-h / 2 + 6} L-3 ${h / 2 - 9} L-7 ${h / 2 - 5} Z`}
-        fill="rgb(var(--accent-soft))"
-      />
-      <path
-        d={`M7 ${-h / 2 + 1} L2 ${-h / 2 + 6} L3 ${h / 2 - 9} L7 ${h / 2 - 5} Z`}
-        fill="rgb(var(--accent-soft))"
-      />
-      {/* Single button at the V tip */}
-      <circle cx="0" cy={h / 2 - 7} r="1.4" fill="rgb(var(--warn))" />
-      <circle cx="-0.3" cy={h / 2 - 7.3} r="0.5" fill="white" opacity="0.7" />
-      {/* Subtle shoulder highlight */}
-      <path
-        d={`M${-w / 2 + 4} ${-h / 2 + 3} Q${-w / 4} ${-h / 2 + 1} -3 ${-h / 2 + 2}`}
-        stroke="white"
-        strokeWidth="0.8"
+        d={`M ${-xAtSide + 1} ${sideY}
+            Q 0 ${ctrlY - 1} ${xAtSide - 1} ${sideY}`}
+        stroke={STITCH}
+        strokeWidth="1.4"
         fill="none"
-        opacity="0.35"
+        strokeLinecap="round"
       />
     </g>
   )

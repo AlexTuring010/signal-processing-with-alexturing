@@ -167,33 +167,58 @@ const ITEMS = {
       `
     },
   },
-  // NOTE: this mirrors the *current* AmJacket.tsx (rectangular shape +
-  // V-cut filled with bg-elevated). It does not yet follow the U-neck
-  // body-silhouette contract used by SignalShirt; that retrofit is a
-  // separate user-reviewed task.
   'am-jacket': {
     slot: 'body',
     render: ({ adult }) => {
-      const w = adult ? 32 : 28
-      const h = adult ? 26 : 22
+      const rx = adult ? 39 : 35
+      const ry = adult ? 38 : 34
+      const sideY = 8
+      const ctrlY = adult ? 32 : 30
+      const xAtSide = rx * Math.sqrt(Math.max(0, 1 - (sideY / ry) ** 2))
+      // Charcoal-burgundy gradient — distinctly formal, contrasting
+      // both the body and the signal-shirt.
+      const JACKET_TOP = '#5a2533'
+      const JACKET_BOTTOM = '#2a0e16'
+      const STITCH = '#15050a'
+      const LAPEL = '#7d3447'
+      const BUTTON = '#d4a857'
+      // Lapel V tip — just inside the U-neck apex, so the lapels
+      // wrap the neckline without poking past it.
+      const lapelInnerX = 5
+      const lapelOuterX = adult ? 14 : 12
+      const lapelTipY = ctrlY - 4
+      // Button sits just below the V — where the lapels visually
+      // converge — not floating down near the hem.
+      const buttonY = lapelTipY + 2
+      const gradId = `am-jacket-fill-${adult ? 'a' : 'b'}`
       return `
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${JACKET_TOP}" />
+            <stop offset="100%" stop-color="${JACKET_BOTTOM}" />
+          </linearGradient>
+        </defs>
         <g transform="translate(60 60)">
+          <!-- Jacket body: same U-neck silhouette as the shirt. -->
           <path
-            d="M${-w / 2} ${-h / 2 + 4}
-               Q${-w / 2} ${-h / 2} ${-w / 2 + 4} ${-h / 2}
-               L${w / 2 - 4} ${-h / 2}
-               Q${w / 2} ${-h / 2} ${w / 2} ${-h / 2 + 4}
-               L${w / 2} ${h / 2}
-               Q${w / 2} ${h / 2 + 4} ${w / 2 - 3} ${h / 2 + 4}
-               L${-w / 2 + 3} ${h / 2 + 4}
-               Q${-w / 2} ${h / 2 + 4} ${-w / 2} ${h / 2}
+            d="M ${-xAtSide} ${sideY}
+               A ${rx} ${ry} 0 0 0 ${xAtSide} ${sideY}
+               Q 0 ${ctrlY} ${-xAtSide} ${sideY}
                Z"
-            fill="${COLORS.accent}" />
-          <path d="M-7 ${-h / 2 + 1} L0 ${h / 2 - 6} L7 ${-h / 2 + 1} Z" fill="${COLORS.bgElevated}" />
-          <path d="M-7 ${-h / 2 + 1} L-2 ${-h / 2 + 6} L-3 ${h / 2 - 9} L-7 ${h / 2 - 5} Z" fill="${COLORS.accentSoft}" />
-          <path d="M7 ${-h / 2 + 1} L2 ${-h / 2 + 6} L3 ${h / 2 - 9} L7 ${h / 2 - 5} Z" fill="${COLORS.accentSoft}" />
-          <circle cx="0" cy="${h / 2 - 7}" r="1.4" fill="${COLORS.warn}" />
-          <circle cx="-0.3" cy="${h / 2 - 7.3}" r="0.5" fill="${COLORS.white}" opacity="0.7" />
+            fill="url(#${gradId})" />
+          <!-- Lower button — anchors the front of the jacket. -->
+          <circle cx="0" cy="${buttonY}" r="2" fill="${BUTTON}" />
+          <circle cx="-0.5" cy="${buttonY - 0.5}" r="0.7" fill="${COLORS.white}" opacity="0.75" />
+          <!-- Upper button — sits above the lower button on the
+               centerline, completing the two-button layout. -->
+          <circle cx="0" cy="${buttonY - 5}" r="2" fill="${BUTTON}" />
+          <circle cx="-0.5" cy="${buttonY - 5.5}" r="0.7" fill="${COLORS.white}" opacity="0.75" />
+          <!-- Stitched neckline — thicker than the shirt's, traces the
+               U curve so the jacket reads as structured fabric. -->
+          <path
+            d="M ${-xAtSide + 1} ${sideY}
+               Q 0 ${ctrlY - 1} ${xAtSide - 1} ${sideY}"
+            stroke="${STITCH}" stroke-width="1.4" fill="none" stroke-linecap="round" />
         </g>
       `
     },
