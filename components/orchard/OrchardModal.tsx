@@ -15,6 +15,7 @@ import { ActionBar } from './ActionBar'
 import { PetFooter } from './PetFooter'
 import { SickBanner } from './SickBanner'
 import { EventBanner } from './EventBanner'
+import { TutorialBanner } from './TutorialBanner'
 import { Toasts } from './Toasts'
 
 type Props = {
@@ -105,6 +106,7 @@ export function OrchardModal({ open, onClose, onBackToPet }: Props) {
       <TabBar active={tab} onChange={setTab} />
       <SickBanner />
       <EventBanner />
+      <TutorialBanner currentTab={tab} onChangeTab={setTab} />
 
       <div className="relative flex flex-1 flex-col overflow-hidden">
         {tab === 'trees' && (

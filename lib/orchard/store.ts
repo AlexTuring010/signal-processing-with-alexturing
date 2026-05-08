@@ -152,6 +152,8 @@ type Store = {
   /** Spend ⭐ on a Star Wish. One-shots fire effects immediately;
    *  stackable wishes increment wishesOwned and apply via effects.ts. */
   claimWish: (id: string) => boolean
+  /** Mark the 4-step intro tutorial as seen (skip button or final step). */
+  dismissIntro: () => void
   /** Wipe orchard state and start fresh (for debugging / reset). */
   reset: () => void
 
@@ -1162,6 +1164,17 @@ export const useOrchardStore = create<Store>((set, get) => ({
       ),
     })
     return true
+  },
+
+  dismissIntro: () => {
+    const state = get().state
+    if (state.flags.seenIntro) return
+    const next: OrchardState = {
+      ...state,
+      flags: { ...state.flags, seenIntro: true },
+    }
+    persist(next)
+    set({ state: next })
   },
 
   collectOutput: (id) => {
