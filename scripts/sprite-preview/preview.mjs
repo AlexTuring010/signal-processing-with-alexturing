@@ -129,103 +129,71 @@ const ITEMS = {
     render: ({ adult }) => {
       const rx = adult ? 39 : 35
       const ry = adult ? 38 : 34
-      // Neckline geometry: high on the sides (just below the arms),
-      // dipping down in the middle to pass *under* the mouth. Solves
-      // the "shirt covers face vs shirt is too small" tradeoff that
-      // a flat-chord ellipse can't avoid.
-      //
-      //   sideY    — y where the neckline meets the body silhouette
-      //   ctrlY    — Q-bezier control point pulling the curve down at
-      //              center; apex of the curve sits roughly halfway
-      //              between sideY and ctrlY.
-      const sideY = adult ? 8 : 8     // shoulder line (below arms)
-      const ctrlY = adult ? 32 : 30   // pulls curve under the mouth
+      const sideY = 8
+      const ctrlY = adult ? 32 : 30
       const xAtSide = rx * Math.sqrt(Math.max(0, 1 - (sideY / ry) ** 2))
-      const SHIRT = '#3eb371'         // saturated mint green
-      const SHIRT_OUTLINE = '#1f6e44'
+      // Dark blue gradient — distinct from the body's lighter blue.
+      const STITCH = '#0f2447'
+      const waveY = adult ? 26 : 24
+      const waveHalfW = adult ? 9 : 8
+      const gradId = `signal-shirt-fill-${adult ? 'a' : 'b'}`
       return `
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3a5e96" />
+            <stop offset="100%" stop-color="#162a52" />
+          </linearGradient>
+        </defs>
         <g transform="translate(60 60)">
-          <!-- Shirt: lower body silhouette (arc, sweep=0 to go through
-               the bottom of the body) + U-shaped neckline (Q curve
-               dipping under the mouth). -->
+          <!-- Shirt fill: lower body silhouette + U-neck Q curve. -->
           <path
             d="M ${-xAtSide} ${sideY}
                A ${rx} ${ry} 0 0 0 ${xAtSide} ${sideY}
                Q 0 ${ctrlY} ${-xAtSide} ${sideY}
                Z"
-            fill="${SHIRT}" />
-          <!-- Stitched neckline accent following the same curve. -->
+            fill="url(#${gradId})" />
+          <!-- Centered sine wave print. -->
+          <path
+            d="M ${-waveHalfW} ${waveY}
+               Q ${-waveHalfW * 0.5} ${waveY - 2.2} 0 ${waveY}
+               Q ${waveHalfW * 0.5} ${waveY + 2.2} ${waveHalfW} ${waveY}"
+            stroke="${STITCH}" stroke-width="1.3" fill="none" stroke-linecap="round" />
+          <!-- Stitched neckline — traces the U-curve boundary. -->
           <path
             d="M ${-xAtSide + 1} ${sideY}
                Q 0 ${ctrlY - 1} ${xAtSide - 1} ${sideY}"
-            stroke="${SHIRT_OUTLINE}" stroke-width="1.2" fill="none" stroke-linecap="round" />
-          <!-- Small sine wave print on the front of the shirt. Baby's
-               shirt is shorter, so push the wave up a touch on baby. -->
-          <path
-            d="M ${-xAtSide * 0.5} ${adult ? 26 : 23}
-               Q ${-xAtSide * 0.25} ${adult ? 23 : 20} 0 ${adult ? 26 : 23}
-               Q ${xAtSide * 0.25} ${adult ? 29 : 26} ${xAtSide * 0.5} ${adult ? 26 : 23}"
-            stroke="${SHIRT_OUTLINE}" stroke-width="1.3" fill="none" stroke-linecap="round" />
+            stroke="${STITCH}" stroke-width="1.2" fill="none" stroke-linecap="round" />
         </g>
       `
     },
   },
+  // NOTE: this mirrors the *current* AmJacket.tsx (rectangular shape +
+  // V-cut filled with bg-elevated). It does not yet follow the U-neck
+  // body-silhouette contract used by SignalShirt; that retrofit is a
+  // separate user-reviewed task.
   'am-jacket': {
     slot: 'body',
     render: ({ adult }) => {
-      const rx = adult ? 39 : 35
-      const ry = adult ? 38 : 34
-      // Jacket sits a touch higher than the t-shirt — formal piece up
-      // at the chest, but still below the cheek line.
-      const sideY = 8
-      const xAtSide = rx * Math.sqrt(Math.max(0, 1 - (sideY / ry) ** 2))
-      const JACKET = '#a87f5a' // muted tan
-      const JACKET_DARK = '#6b4f37'
-      const LAPEL = '#bd987a'
-      // V-cut: deep V from the neckline down to (0, vTipY). The path is
-      // a single closed shape with the V as a notch, so body color
-      // shows through naturally.
-      const vTipY = 22 // below the mouth (mouth bottom y_rel=18)
-      const vHalfW = 8 // neckline opening half-width at sideY
+      const w = adult ? 32 : 28
+      const h = adult ? 26 : 22
       return `
         <g transform="translate(60 60)">
-          <!-- Jacket: lower body silhouette with a V notch at the top. -->
           <path
-            fill="${JACKET}"
-            d="M ${-xAtSide} ${sideY}
-               A ${rx} ${ry} 0 0 1 ${xAtSide} ${sideY}
-               L ${vHalfW} ${sideY}
-               L 0 ${vTipY}
-               L ${-vHalfW} ${sideY}
-               Z" />
-          <!-- Neckline stitching along the shoulder chords (left and
-               right of the V opening). -->
-          <path
-            d="M ${-xAtSide + 1} ${sideY} L ${-vHalfW} ${sideY}
-               M ${vHalfW} ${sideY} L ${xAtSide - 1} ${sideY}"
-            stroke="${JACKET_DARK}" stroke-width="1.2" stroke-linecap="round" />
-          <!-- Lapels: thin triangles flanking the V notch, sitting on
-               top of the jacket fabric. -->
-          <path
-            d="M ${-vHalfW} ${sideY}
-               L ${-vHalfW - 5} ${sideY + 5}
-               L 0 ${vTipY}
+            d="M${-w / 2} ${-h / 2 + 4}
+               Q${-w / 2} ${-h / 2} ${-w / 2 + 4} ${-h / 2}
+               L${w / 2 - 4} ${-h / 2}
+               Q${w / 2} ${-h / 2} ${w / 2} ${-h / 2 + 4}
+               L${w / 2} ${h / 2}
+               Q${w / 2} ${h / 2 + 4} ${w / 2 - 3} ${h / 2 + 4}
+               L${-w / 2 + 3} ${h / 2 + 4}
+               Q${-w / 2} ${h / 2 + 4} ${-w / 2} ${h / 2}
                Z"
-            fill="${LAPEL}" />
-          <path
-            d="M ${vHalfW} ${sideY}
-               L ${vHalfW + 5} ${sideY + 5}
-               L 0 ${vTipY}
-               Z"
-            fill="${LAPEL}" />
-          <!-- Single button below the V tip. -->
-          <circle cx="0" cy="${vTipY + 5}" r="1.6" fill="${COLORS.warn}" />
-          <circle cx="-0.4" cy="${vTipY + 4.6}" r="0.6" fill="${COLORS.white}" opacity="0.75" />
-          <!-- Soft fabric highlight on the upper-left. -->
-          <path
-            d="M ${-xAtSide * 0.85} ${sideY + 4}
-               Q ${-xAtSide * 0.55} ${sideY + 10} ${-xAtSide * 0.25} ${sideY + 16}"
-            stroke="${COLORS.white}" stroke-width="1" fill="none" opacity="0.3" stroke-linecap="round" />
+            fill="${COLORS.accent}" />
+          <path d="M-7 ${-h / 2 + 1} L0 ${h / 2 - 6} L7 ${-h / 2 + 1} Z" fill="${COLORS.bgElevated}" />
+          <path d="M-7 ${-h / 2 + 1} L-2 ${-h / 2 + 6} L-3 ${h / 2 - 9} L-7 ${h / 2 - 5} Z" fill="${COLORS.accentSoft}" />
+          <path d="M7 ${-h / 2 + 1} L2 ${-h / 2 + 6} L3 ${h / 2 - 9} L7 ${h / 2 - 5} Z" fill="${COLORS.accentSoft}" />
+          <circle cx="0" cy="${h / 2 - 7}" r="1.4" fill="${COLORS.warn}" />
+          <circle cx="-0.3" cy="${h / 2 - 7.3}" r="0.5" fill="${COLORS.white}" opacity="0.7" />
         </g>
       `
     },
@@ -381,20 +349,50 @@ function parseArgs() {
 }
 
 const args = parseArgs()
-const equipped = {
-  head: args.head ?? null,
-  eyes: args.eyes ?? null,
-  body: args.body ?? null,
-  accessory: args.accessory ?? null,
-}
-
-const svg = buildGrid(equipped)
 const here = dirname(fileURLToPath(import.meta.url))
-const outPath = `${here}/tmp/preview.png`
-mkdirSync(`${here}/tmp`, { recursive: true })
 
-const png = await sharp(Buffer.from(svg)).png().toBuffer()
-writeFileSync(outPath, png)
-writeFileSync(`${here}/tmp/preview.svg`, svg)
-console.log('Wrote', outPath)
-console.log('Equipped:', equipped)
+if ('all' in args) {
+  // Generate one preview PNG per item in the registry, into a
+  // committed `previews/` directory so we have a persistent visual
+  // catalog of every accessory shipped to date.
+  const dir = `${here}/previews`
+  mkdirSync(dir, { recursive: true })
+  for (const id of Object.keys(ITEMS)) {
+    if (id.startsWith('_')) continue // skip debug placeholders
+    const item = ITEMS[id]
+    const equippedForItem = {
+      head: null,
+      eyes: null,
+      body: null,
+      accessory: null,
+    }
+    if (
+      item.slot === 'head' ||
+      item.slot === 'eyes' ||
+      item.slot === 'body' ||
+      item.slot === 'accessory'
+    ) {
+      equippedForItem[item.slot] = id
+    }
+    const svg = buildGrid(equippedForItem)
+    const png = await sharp(Buffer.from(svg)).png().toBuffer()
+    const outPath = `${dir}/${id}.png`
+    writeFileSync(outPath, png)
+    console.log('Wrote', outPath)
+  }
+} else {
+  const equipped = {
+    head: args.head ?? null,
+    eyes: args.eyes ?? null,
+    body: args.body ?? null,
+    accessory: args.accessory ?? null,
+  }
+  const svg = buildGrid(equipped)
+  const outPath = `${here}/tmp/preview.png`
+  mkdirSync(`${here}/tmp`, { recursive: true })
+  const png = await sharp(Buffer.from(svg)).png().toBuffer()
+  writeFileSync(outPath, png)
+  writeFileSync(`${here}/tmp/preview.svg`, svg)
+  console.log('Wrote', outPath)
+  console.log('Equipped:', equipped)
+}
