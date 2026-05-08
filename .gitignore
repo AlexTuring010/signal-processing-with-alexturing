@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts.local
+
+# sprite preview renders (the script is checked in; outputs are throwaway)
+scripts/sprite-preview/tmp/

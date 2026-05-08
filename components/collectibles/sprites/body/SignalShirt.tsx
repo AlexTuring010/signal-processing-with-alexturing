@@ -1,66 +1,55 @@
 import type { ItemRenderProps } from '@/lib/collectibles/types'
-import { BODY_CENTER } from '@/lib/collectibles/anchors'
 
 /**
- * Φανέλα Σήματος — a soft pastel t-shirt that hugs the lower half of
- * the pet's body silhouette, topped by a clean neckline. The shirt's
- * outline traces the body's own ellipse so it reads as fabric over
- * the body instead of an oval pasted on top.
+ * Φανέλα Σήματος — saturated mint t-shirt with a sine-wave print on
+ * the chest.
  *
- * Body-slot, so it tilts with the pet during the sick-mood wobble
- * (rendered inside the tilt group). Eye + mouth + cheek features
- * draw on top so the face stays readable.
+ * Shape contract for body-slot items (see scripts/sprite-preview):
+ *   - Lower-body silhouette via SVG arc (rx, ry MUST match the body
+ *     ellipse in PetSprite.tsx). Use sweep-flag=0 so the arc goes
+ *     through the *bottom* of the body, not the top.
+ *   - U-shape neckline via a Q-curve closing the path: high at the
+ *     sides (under the arms), dipping down at the center to clear
+ *     the mouth.
+ *   - Arms render *on top of* this layer in PetSprite, so the cuff
+ *     of any sleeve is the inner side of the arm nubs.
  */
 export function SignalShirt({ adult }: ItemRenderProps) {
-  const { x, y } = BODY_CENTER
-  // These MUST match the body ellipse dimensions in PetSprite.tsx.
-  // baby:  bodyW=70, bodyH=68 → rx=35, ry=34
-  // adult: bodyW=78, bodyH=76 → rx=39, ry=38
   const rx = adult ? 39 : 35
   const ry = adult ? 38 : 34
-  // Chest line (relative y where the neckline sits). Below the cheeks
-  // (y_rel ≈ -2) and a little above the mouth (y_rel ≈ 12-18).
-  const chestRel = 10
-  // x where the body ellipse meets the chest line — used as both the
-  // start point of the neckline chord and the arc endpoint.
-  const xAtChest = rx * Math.sqrt(Math.max(0, 1 - (chestRel / ry) ** 2))
-
+  // sideY: y where the neckline meets the body silhouette (under the
+  // arms). ctrlY: Q-control point pulling the curve down at center,
+  // apex sits roughly halfway between sideY and ctrlY (~y=20 here),
+  // i.e. clearly below the mouth (y_rel 12-18).
+  const sideY = 8
+  const ctrlY = adult ? 32 : 30
+  const xAtSide = rx * Math.sqrt(Math.max(0, 1 - (sideY / ry) ** 2))
+  const SHIRT = '#3eb371'
+  const SHIRT_OUTLINE = '#1f6e44'
+  const waveY = adult ? 26 : 23
   return (
-    <g transform={`translate(${x} ${y})`} aria-hidden="true">
-      {/* Shirt body: lower portion of the body ellipse capped by a
-          horizontal neckline. The arc follows the body silhouette
-          exactly (same rx/ry) so the shirt reads as wrapping the body. */}
+    <g transform="translate(60 60)" aria-hidden="true">
       <path
-        d={`M ${-xAtChest} ${chestRel}
-             A ${rx} ${ry} 0 0 1 ${xAtChest} ${chestRel}
-             Z`}
-        fill="rgb(var(--accent-soft))"
+        d={`M ${-xAtSide} ${sideY}
+            A ${rx} ${ry} 0 0 0 ${xAtSide} ${sideY}
+            Q 0 ${ctrlY} ${-xAtSide} ${sideY}
+            Z`}
+        fill={SHIRT}
       />
-      {/* Crisp neckline edge — accents the chord. */}
       <path
-        d={`M ${-xAtChest + 1} ${chestRel} L ${xAtChest - 1} ${chestRel}`}
-        stroke="rgb(var(--accent))"
-        strokeWidth="1"
-        opacity="0.55"
-        strokeLinecap="round"
-      />
-      {/* Soft highlight curve along the upper-left of the shirt. */}
-      <path
-        d={`M ${-xAtChest * 0.85} ${chestRel + 5}
-             Q ${-xAtChest * 0.55} ${chestRel + 12} ${-xAtChest * 0.25} ${chestRel + 18}`}
-        stroke="white"
-        strokeWidth="1.4"
+        d={`M ${-xAtSide + 1} ${sideY}
+            Q 0 ${ctrlY - 1} ${xAtSide - 1} ${sideY}`}
+        stroke={SHIRT_OUTLINE}
+        strokeWidth="1.2"
         fill="none"
-        opacity="0.32"
         strokeLinecap="round"
       />
-      {/* Sine wave print — single visible cycle across the chest. */}
       <path
-        d={`M ${-xAtChest * 0.7} ${chestRel + 9}
-             Q ${-xAtChest * 0.35} ${chestRel + 5} 0 ${chestRel + 9}
-             Q ${xAtChest * 0.35} ${chestRel + 13} ${xAtChest * 0.7} ${chestRel + 9}`}
-        stroke="rgb(var(--accent))"
-        strokeWidth="1.6"
+        d={`M ${-xAtSide * 0.5} ${waveY}
+            Q ${-xAtSide * 0.25} ${waveY - 3} 0 ${waveY}
+            Q ${xAtSide * 0.25} ${waveY + 3} ${xAtSide * 0.5} ${waveY}`}
+        stroke={SHIRT_OUTLINE}
+        strokeWidth="1.3"
         fill="none"
         strokeLinecap="round"
       />

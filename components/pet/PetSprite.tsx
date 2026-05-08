@@ -147,13 +147,15 @@ function BodySvg({
         {/* belly highlight */}
         <ellipse cx="50" cy="48" rx="14" ry="18" fill="white" opacity="0.18" />
 
+        {/* Body-slot item (shirts, jackets, scarves) — drawn before the
+            arms so the arm nubs poke out on top of the fabric, like
+            short sleeves. Sits below the face/antenna so the face
+            stays readable. */}
+        {bodyItem && <bodyItem.Sprite {...itemProps} />}
+
         {/* arms */}
         <ellipse cx={60 - bodyW * 0.5 + 2} cy="62" rx="5" ry="7" fill="rgb(var(--accent))" />
         <ellipse cx={60 + bodyW * 0.5 - 2} cy="62" rx="5" ry="7" fill="rgb(var(--accent))" />
-
-        {/* Body-slot item (capes, shirts, scarves) — covers body + arms but
-            sits below the face/antenna so faces stay readable. */}
-        {bodyItem && <bodyItem.Sprite {...itemProps} />}
 
         {/* adult antenna tuft */}
         {adult && (
