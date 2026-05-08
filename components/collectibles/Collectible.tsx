@@ -11,12 +11,15 @@ type Props = {
   id: CollectibleId
   /**
    * Placement strategy:
-   *  - 'sticky' (default): floats in the right margin, sticks to the
-   *    viewport top while scrolling within the section.
-   *  - 'inline': renders inline at its location in the markdown flow.
-   *    Use when the page layout doesn't have room for a margin float.
+   *  - 'float' (default): floats in the right margin, prose wraps
+   *    around it. Scrolls naturally with the surrounding text — the
+   *    icon is visible when you arrive at that section and slides
+   *    away as you read past it.
+   *  - 'inline': renders at its insertion point in the markdown flow.
+   *    Use when the layout doesn't have room for a margin float, or
+   *    when you want the icon embedded in a specific paragraph.
    */
-  position?: 'sticky' | 'inline'
+  position?: 'float' | 'inline'
 }
 
 /**
@@ -33,7 +36,7 @@ type Props = {
  * — exactly the same flag that drives the existing CompleteToggle. We
  * never write to that store from here, only read.
  */
-export function Collectible({ id, position = 'sticky' }: Props) {
+export function Collectible({ id, position = 'float' }: Props) {
   const item = getCollectible(id)
   const completed = useAppStore((s) => s.completed)
   const hydrated = useAppStore((s) => s.hydrated)
@@ -98,11 +101,12 @@ export function Collectible({ id, position = 'sticky' }: Props) {
   )
 }
 
-function containerClass(position: 'sticky' | 'inline'): string {
+function containerClass(position: 'float' | 'inline'): string {
   if (position === 'inline') {
     return 'inline-flex align-middle mx-1'
   }
-  // Sticky float in the right margin. `float-right` so prose text
-  // wraps around it cleanly; `sticky` keeps it visible on scroll.
-  return 'float-right ml-3 mb-2 sticky top-24 z-10 not-prose'
+  // Float in the right margin so prose wraps around it. Scrolls with
+  // the page — the icon is a section marker, not a viewport-pinned
+  // attention grabber.
+  return 'float-right ml-3 mb-2 mt-1 not-prose'
 }
