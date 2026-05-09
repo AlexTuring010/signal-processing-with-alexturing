@@ -56,13 +56,18 @@ export function ItemPreview({ item, silhouette = false, size = 64 }: Props) {
 
 /**
  * Slot-specific viewBoxes that crop the pet's `0 0 120 110` coord
- * space down to just the region where each kind of item is drawn.
- * The item's sprite uses pet coords as usual; this just crops to its
- * footprint so it fills the preview.
+ * space down to a tight box centered on where each kind of item is
+ * drawn. The viewBox center matches the visual center of the item
+ * content, so the default `xMidYMid meet` aspect-fit lands the item
+ * centered in the preview viewport rather than slumped to one edge.
  */
 const SLOT_PREVIEW_VIEWBOX: Record<WearableSlot, string> = {
-  head: '30 4 60 36',
-  eyes: '34 38 52 22',
-  body: '14 56 92 48',
-  accessory: '78 48 36 26',
+  // Hat content spans roughly y=9–32, x=42–78 across baby+adult.
+  head: '42 9 36 23',
+  // Glasses/eyewear sit at y≈45–56, x≈44–76.
+  eyes: '40 42 40 18',
+  // Body item path traces y=68–94, x=26–94 for both stages.
+  body: '18 62 84 36',
+  // Held accessories live at x≈84–112, y≈48–72.
+  accessory: '82 48 32 24',
 }

@@ -5,7 +5,8 @@ import { Sparkles, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useCollectiblesStore } from '@/lib/collectibles/store'
 import { getCollectible } from '@/lib/collectibles/registry'
-import type { CollectibleId, ItemRenderProps } from '@/lib/collectibles/types'
+import type { CollectibleId } from '@/lib/collectibles/types'
+import { ItemPreview } from './ItemPreview'
 
 const AUTO_DISMISS_MS = 5000
 
@@ -55,11 +56,6 @@ function SingleBanner({
     return null
   }
 
-  // We render the item's sprite at small scale by inlining the SVG
-  // viewBox and translating the item's anchor down toward the visible
-  // window. Phase 5's real sprites will be readable at this size.
-  const itemProps: ItemRenderProps = { stage: 'baby', mood: 'neutral', adult: false }
-
   return (
     <div
       role="status"
@@ -76,18 +72,12 @@ function SingleBanner({
           leaving ? 'find-banner-out' : 'find-banner-in',
         )}
       >
-        {/* Item sprite preview — rendered at 36 px in a tiny SVG. The
-            sprite's anchored coordinates land it in the viewBox center
-            after a small translation. */}
-        <svg
-          viewBox="40 18 40 50"
-          width="36"
-          height="36"
-          aria-hidden="true"
-          className="shrink-0 rounded-full bg-white/15 p-0.5"
-        >
-          <item.Sprite {...itemProps} />
-        </svg>
+        {/* Item preview — uses the same slot-aware renderer as the
+            catalog cards so wearables AND decorations both show
+            correctly. */}
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 p-0.5">
+          <ItemPreview item={item} size={32} />
+        </span>
         <span className="flex flex-1 flex-col text-left leading-tight">
           <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider opacity-80">
             <Sparkles className="h-3 w-3" aria-hidden="true" />
