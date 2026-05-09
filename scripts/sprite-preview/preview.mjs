@@ -32,7 +32,7 @@ const COLORS = {
 }
 
 // ---------- BODY SVG ----------
-function bodySvg(stage, mood) {
+function bodySvg(stage, mood, skinAccent) {
   const adult = stage === 'adult'
   const bodyW = adult ? 78 : 70
   const bodyH = adult ? 76 : 68
@@ -45,6 +45,7 @@ function bodySvg(stage, mood) {
 
   const cheekColor = `url(#cheek-${stage}-${mood})`
   const bodyFill = `url(#body-${stage}-${mood})`
+  const accent = skinAccent || COLORS.accent
 
   const eyes = eyeOpen
     ? `
@@ -77,8 +78,8 @@ function bodySvg(stage, mood) {
 
   const antenna = adult
     ? `
-        <line x1="60" y1="${60 - ryOuter}" x2="60" y2="${60 - ryOuter - 8}" stroke="${COLORS.accent}" stroke-width="2" stroke-linecap="round" />
-        <circle cx="60" cy="${60 - ryOuter - 10}" r="3" fill="${COLORS.accent}" />
+        <line x1="60" y1="${60 - ryOuter}" x2="60" y2="${60 - ryOuter - 8}" stroke="${accent}" stroke-width="2" stroke-linecap="round" />
+        <circle cx="60" cy="${60 - ryOuter - 10}" r="3" fill="${accent}" />
       `
     : ''
 
@@ -105,14 +106,14 @@ function bodySvg(stage, mood) {
       </radialGradient>
     `,
     insideTilt: ({ skin, bodySlot }) => `
-      <ellipse cx="${60 - bodyW * 0.28}" cy="${60 + bodyH * 0.46}" rx="6" ry="3.5" fill="${COLORS.accent}" />
-      <ellipse cx="${60 + bodyW * 0.28}" cy="${60 + bodyH * 0.46}" rx="6" ry="3.5" fill="${COLORS.accent}" />
+      <ellipse cx="${60 - bodyW * 0.28}" cy="${60 + bodyH * 0.46}" rx="6" ry="3.5" fill="${accent}" />
+      <ellipse cx="${60 + bodyW * 0.28}" cy="${60 + bodyH * 0.46}" rx="6" ry="3.5" fill="${accent}" />
       <ellipse cx="60" cy="60" rx="${rxOuter}" ry="${ryOuter}" fill="${bodyFill}" />
       ${skin ?? ''}
       <ellipse cx="50" cy="48" rx="14" ry="18" fill="${COLORS.white}" opacity="0.18" />
       ${bodySlot ?? ''}
-      <ellipse cx="${60 - bodyW * 0.5 + 2}" cy="62" rx="5" ry="7" fill="${COLORS.accent}" />
-      <ellipse cx="${60 + bodyW * 0.5 - 2}" cy="62" rx="5" ry="7" fill="${COLORS.accent}" />
+      <ellipse cx="${60 - bodyW * 0.5 + 2}" cy="62" rx="5" ry="7" fill="${accent}" />
+      <ellipse cx="${60 + bodyW * 0.5 - 2}" cy="62" rx="5" ry="7" fill="${accent}" />
       ${antenna}
       ${cheeks}
       ${eyes}
@@ -387,6 +388,7 @@ const ITEMS = {
   // ---------- Phase 5a skin sprites ----------
   'galaxy-skin': {
     slot: 'skin',
+    accentColor: '#3a2c70',
     render: ({ adult }) => {
       const bodyW = adult ? 78 : 70
       const bodyH = adult ? 76 : 68
@@ -415,6 +417,7 @@ const ITEMS = {
   },
   'sunset-skin': {
     slot: 'skin',
+    accentColor: '#c66b56',
     render: ({ adult }) => {
       const bodyW = adult ? 78 : 70
       const bodyH = adult ? 76 : 68
@@ -436,6 +439,7 @@ const ITEMS = {
   },
   'forest-skin': {
     slot: 'skin',
+    accentColor: '#3f8052',
     render: ({ adult }) => {
       const bodyW = adult ? 78 : 70
       const bodyH = adult ? 76 : 68
@@ -500,7 +504,8 @@ function buildDecorationCard(item) {
 // ---------- COMPOSITION ----------
 function buildPetSvg(stage, mood, equipped) {
   const adult = stage === 'adult'
-  const body = bodySvg(stage, mood)
+  const skinAccent = equipped.skin ? ITEMS[equipped.skin]?.accentColor : null
+  const body = bodySvg(stage, mood, skinAccent)
   const itemProps = { stage, mood, adult }
 
   const skinItem = equipped.skin ? ITEMS[equipped.skin]?.render(itemProps) : ''

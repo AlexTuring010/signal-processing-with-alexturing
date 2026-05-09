@@ -17,6 +17,7 @@ import { MiniGame } from './MiniGame'
 import { CollectionView } from '@/components/collectibles/CollectionView'
 import { PetStageDecorations } from '@/components/collectibles/PetStageDecorations'
 import { useCollectiblesStore } from '@/lib/collectibles/store'
+import { getCollectible } from '@/lib/collectibles/registry'
 
 type Props = {
   onClose: () => void
@@ -39,6 +40,11 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
   const [mode, setMode] = useState<'idle' | 'game' | 'collection'>('idle')
   const newCollectibles = useCollectiblesStore(
     (s) => s.state.newSinceSeen.length > 0,
+  )
+  // Hide the ground line whenever a floor-slot decoration is placed —
+  // it would otherwise draw over the rug.
+  const hasFloorDecor = useCollectiblesStore((s) =>
+    s.state.placed.some((id) => getCollectible(id)?.slot === 'floor'),
   )
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -155,10 +161,12 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
             }}
           >
             <PetStageDecorations />
-            <div
-              aria-hidden="true"
-              className="absolute inset-x-3 bottom-3 h-0.5 rounded-full bg-border"
-            />
+            {!hasFloorDecor && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-3 bottom-3 h-0.5 rounded-full bg-border"
+              />
+            )}
             <div className="absolute inset-0 flex items-end justify-center pb-3">
               <PetSprite stage={state.stage} mood={mood} size={88} still />
             </div>
@@ -181,11 +189,14 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
                 when not in collection mode. */}
             <PetStageDecorations />
 
-            {/* "ground" line */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-x-3 bottom-3 h-0.5 rounded-full bg-border"
-            />
+            {/* "ground" line — hidden when a floor decoration is
+                placed so it doesn't draw over the rug. */}
+            {!hasFloorDecor && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-3 bottom-3 h-0.5 rounded-full bg-border"
+              />
+            )}
             <button
               type="button"
               onClick={() => dispatch('pet')}

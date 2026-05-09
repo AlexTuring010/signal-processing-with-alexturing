@@ -116,6 +116,11 @@ function BodySvg({
   const accessoryItem =
     size >= MIN_ACCESSORY_RENDER_SIZE ? getWearable(equipped.accessory) : undefined
 
+  // When a skin is equipped, its `accentColor` overrides the pet's
+  // default --accent for arms, feet, and antenna so the whole pet
+  // takes on the skin's palette (not just the body fill).
+  const accentFill = skinItem?.accentColor ?? 'rgb(var(--accent))'
+
   return (
     <svg
       viewBox="0 0 120 110"
@@ -139,8 +144,8 @@ function BodySvg({
       {/* Sick-tilt group: body geometry + body-slot clothing tilt together. */}
       <g transform={`translate(60 60) rotate(${tilt}) translate(-60 -60)`}>
         {/* feet (small nubs) */}
-        <ellipse cx={60 - bodyW * 0.28} cy={60 + bodyH * 0.46} rx="6" ry="3.5" fill="rgb(var(--accent))" />
-        <ellipse cx={60 + bodyW * 0.28} cy={60 + bodyH * 0.46} rx="6" ry="3.5" fill="rgb(var(--accent))" />
+        <ellipse cx={60 - bodyW * 0.28} cy={60 + bodyH * 0.46} rx="6" ry="3.5" fill={accentFill} />
+        <ellipse cx={60 + bodyW * 0.28} cy={60 + bodyH * 0.46} rx="6" ry="3.5" fill={accentFill} />
 
         {/* body */}
         <ellipse cx="60" cy="60" rx={bodyW / 2} ry={bodyH / 2} fill="url(#body-fill)" />
@@ -160,8 +165,8 @@ function BodySvg({
         {bodyItem && <bodyItem.Sprite {...itemProps} />}
 
         {/* arms */}
-        <ellipse cx={60 - bodyW * 0.5 + 2} cy="62" rx="5" ry="7" fill="rgb(var(--accent))" />
-        <ellipse cx={60 + bodyW * 0.5 - 2} cy="62" rx="5" ry="7" fill="rgb(var(--accent))" />
+        <ellipse cx={60 - bodyW * 0.5 + 2} cy="62" rx="5" ry="7" fill={accentFill} />
+        <ellipse cx={60 + bodyW * 0.5 - 2} cy="62" rx="5" ry="7" fill={accentFill} />
 
         {/* adult antenna tuft */}
         {adult && (
@@ -171,11 +176,11 @@ function BodySvg({
               y1={60 - bodyH / 2}
               x2="60"
               y2={60 - bodyH / 2 - 8}
-              stroke="rgb(var(--accent))"
+              stroke={accentFill}
               strokeWidth="2"
               strokeLinecap="round"
             />
-            <circle cx="60" cy={60 - bodyH / 2 - 10} r="3" fill="rgb(var(--accent))" />
+            <circle cx="60" cy={60 - bodyH / 2 - 10} r="3" fill={accentFill} />
           </g>
         )}
 

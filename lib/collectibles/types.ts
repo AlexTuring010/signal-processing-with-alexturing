@@ -78,10 +78,15 @@ type CollectibleBase = {
  * Wearable item — equips onto the pet sprite. Sprite returns SVG
  * elements *inside* the pet's `0 0 120 110` viewBox using the
  * anchors from `lib/collectibles/anchors.ts`.
+ *
+ * For `slot: 'skin'`, `accentColor` (optional) overrides the pet's
+ * default `--accent` for hands, feet, and antenna so the whole pet
+ * — not just the body fill — picks up the skin's palette.
  */
 export type WearableCollectible = CollectibleBase & {
   slot: WearableSlot
   Sprite: ComponentType<ItemRenderProps>
+  accentColor?: string
 }
 
 /**

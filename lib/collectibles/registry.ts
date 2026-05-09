@@ -189,6 +189,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'skin',
     Sprite: GalaxySkin,
     rarity: 'rare',
+    accentColor: '#3a2c70',
   },
   {
     id: 'sunset-skin',
@@ -198,6 +199,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'skin',
     Sprite: SunsetSkin,
     rarity: 'rare',
+    accentColor: '#c66b56',
   },
   {
     id: 'forest-skin',
@@ -207,6 +209,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'skin',
     Sprite: ForestSkin,
     rarity: 'common',
+    accentColor: '#3f8052',
   },
 ]
 
