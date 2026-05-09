@@ -575,6 +575,145 @@ const ITEMS = {
       `
     },
   },
+  'convolution-skin': {
+    slot: 'skin',
+    accentColor: '#5a4a8c',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `conv-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <radialGradient id="${gradId}" cx="42%" cy="38%" r="65%">
+            <stop offset="0%" stop-color="#a799d4" />
+            <stop offset="100%" stop-color="#2a1f5e" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <path d="M 28 56 Q 38 48 48 56 Q 58 64 68 56 Q 78 48 88 56" stroke="white" stroke-width="1.1" fill="none" opacity="0.55" stroke-linecap="round" />
+        <path d="M 28 76 Q 35 70 42 76 Q 49 82 56 76 Q 63 70 70 76 Q 77 82 84 76 Q 88 73 92 75" stroke="white" stroke-width="1.1" fill="none" opacity="0.5" stroke-linecap="round" />
+      `
+    },
+  },
+  'two-sided-skin': {
+    slot: 'skin',
+    accentColor: '#6b5a3a',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const clipId = `two-sided-skin-clip-${adult ? 'a' : 'b'}`
+      const bars = [
+        { x: 60, w: 6, fill: '#fff7d8' },
+        { x: 50, w: 4, fill: '#f5d49a' },
+        { x: 64, w: 4, fill: '#f5d49a' },
+        { x: 42, w: 3, fill: '#d39966' },
+        { x: 71, w: 3, fill: '#d39966' },
+        { x: 35, w: 3, fill: '#7a583a' },
+        { x: 78, w: 3, fill: '#7a583a' },
+      ]
+      const barRects = bars
+        .map(
+          (b) =>
+            `<rect x="${b.x - b.w / 2}" y="${60 - bodyH / 2}" width="${b.w}" height="${bodyH}" fill="${b.fill}" />`,
+        )
+        .join('')
+      return `
+        <defs>
+          <clipPath id="${clipId}">
+            <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" />
+          </clipPath>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="#1c1830" />
+        <g clip-path="url(#${clipId})">${barRects}</g>
+      `
+    },
+  },
+  'vsb-skin': {
+    slot: 'skin',
+    accentColor: '#3a6f78',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const clipId = `vsb-skin-clip-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <clipPath id="${clipId}">
+            <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" />
+          </clipPath>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="#3a6f78" />
+        <g clip-path="url(#${clipId})">
+          <rect x="28" y="${60 - bodyH / 2}" width="6" height="${bodyH}" fill="#cfeae0" />
+          <rect x="36" y="${60 - bodyH / 2}" width="6" height="${bodyH}" fill="#9bc8c0" />
+          <rect x="44" y="${60 - bodyH / 2}" width="6" height="${bodyH}" fill="#cfeae0" />
+          <rect x="52" y="${60 - bodyH / 2}" width="6" height="${bodyH}" fill="#9bc8c0" />
+          <rect x="62" y="${60 - bodyH / 2}" width="4" height="${bodyH}" fill="#cfeae0" opacity="0.7" />
+          <rect x="68" y="${60 - bodyH / 2}" width="3" height="${bodyH}" fill="#9bc8c0" opacity="0.5" />
+          <rect x="73" y="${60 - bodyH / 2}" width="2" height="${bodyH}" fill="#cfeae0" opacity="0.3" />
+        </g>
+      `
+    },
+  },
+  'triangle-skin': {
+    slot: 'skin',
+    accentColor: '#8a4724',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `tri-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <radialGradient id="${gradId}" cx="50%" cy="50%" r="65%">
+            <stop offset="0%" stop-color="#ffe0a3" />
+            <stop offset="100%" stop-color="#7a3424" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <path d="M 60 90 L 44 60 L 60 60 Z" fill="white" opacity="0.18" />
+        <path d="M 60 90 L 76 60 L 60 60 Z" fill="white" opacity="0.18" />
+        <path d="M 60 60 L 50 36 L 70 36 Z" fill="white" opacity="0.22" />
+        <line x1="60" y1="60" x2="60" y2="90" stroke="white" stroke-width="0.5" opacity="0.4" />
+        <line x1="60" y1="60" x2="60" y2="36" stroke="white" stroke-width="0.5" opacity="0.4" />
+      `
+    },
+  },
+  'complex-frame': {
+    slot: 'wall',
+    decorViewBox: '0 0 60 40',
+    decorContent: `
+      <rect x="2" y="2" width="56" height="36" rx="2" fill="#3a3550" />
+      <rect x="4" y="4" width="52" height="32" rx="1" fill="none" stroke="#1c1830" stroke-width="0.6" />
+      <rect x="6" y="6" width="48" height="28" fill="#f0eaf5" />
+      <line x1="10" y1="20" x2="50" y2="20" stroke="#5a4f7a" stroke-width="0.6" />
+      <line x1="30" y1="9" x2="30" y2="32" stroke="#5a4f7a" stroke-width="0.6" />
+      <circle cx="30" cy="20" r="9" fill="none" stroke="#5a4f7a" stroke-width="0.7" />
+      <line x1="30" y1="20" x2="${30 + 9 * Math.cos((35 * Math.PI) / 180)}" y2="${20 - 9 * Math.sin((35 * Math.PI) / 180)}" stroke="#a14d6e" stroke-width="1.1" stroke-linecap="round" />
+      <circle cx="${30 + 9 * Math.cos((35 * Math.PI) / 180)}" cy="${20 - 9 * Math.sin((35 * Math.PI) / 180)}" r="1.2" fill="#a14d6e" />
+      <text x="48" y="24" font-size="3.5" fill="#5a4f7a" font-family="serif" font-style="italic">Re</text>
+      <text x="32" y="11" font-size="3.5" fill="#5a4f7a" font-family="serif" font-style="italic">Im</text>
+    `,
+  },
+  'carson-frame': {
+    slot: 'wall',
+    decorViewBox: '0 0 60 40',
+    decorContent: `
+      <rect x="2" y="2" width="56" height="36" rx="2" fill="#4d3f2a" />
+      <rect x="4" y="4" width="52" height="32" rx="1" fill="none" stroke="#2a2014" stroke-width="0.6" />
+      <rect x="6" y="6" width="48" height="28" fill="#f5ecdb" />
+      <line x1="30" y1="22" x2="30" y2="28" stroke="#7a4d20" stroke-width="1.2" />
+      <line x1="26" y1="24" x2="26" y2="28" stroke="#7a4d20" stroke-width="0.9" />
+      <line x1="34" y1="24" x2="34" y2="28" stroke="#7a4d20" stroke-width="0.9" />
+      <line x1="22" y1="25" x2="22" y2="28" stroke="#7a4d20" stroke-width="0.7" />
+      <line x1="38" y1="25" x2="38" y2="28" stroke="#7a4d20" stroke-width="0.7" />
+      <line x1="18" y1="26" x2="18" y2="28" stroke="#7a4d20" stroke-width="0.5" />
+      <line x1="42" y1="26" x2="42" y2="28" stroke="#7a4d20" stroke-width="0.5" />
+      <line x1="10" y1="28" x2="50" y2="28" stroke="#7a4d20" stroke-width="0.4" />
+      <line x1="14" y1="31" x2="46" y2="31" stroke="#a14d2c" stroke-width="0.7" />
+      <line x1="14" y1="30" x2="14" y2="32" stroke="#a14d2c" stroke-width="0.7" />
+      <line x1="46" y1="30" x2="46" y2="32" stroke="#a14d2c" stroke-width="0.7" />
+      <text x="22" y="11" font-size="3.5" fill="#7a4d20" font-family="serif" font-style="italic">B = 2(Δf + fm)</text>
+    `,
+  },
   'phasor-skin': {
     slot: 'skin',
     accentColor: '#3f3175',

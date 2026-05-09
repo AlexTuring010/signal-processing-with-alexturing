@@ -42,6 +42,14 @@ import { PhasorSkin } from '@/components/collectibles/sprites/skin/PhasorSkin'
 import { PsdPoster } from '@/components/collectibles/sprites/decor/PsdPoster'
 import { SsbMonocle } from '@/components/collectibles/sprites/eyes/SsbMonocle'
 
+// Phase 5d — final page-tied items.
+import { ConvolutionSkin } from '@/components/collectibles/sprites/skin/ConvolutionSkin'
+import { TwoSidedSkin } from '@/components/collectibles/sprites/skin/TwoSidedSkin'
+import { VsbSkin } from '@/components/collectibles/sprites/skin/VsbSkin'
+import { TriangleSkin } from '@/components/collectibles/sprites/skin/TriangleSkin'
+import { ComplexFrame } from '@/components/collectibles/sprites/decor/ComplexFrame'
+import { CarsonFrame } from '@/components/collectibles/sprites/decor/CarsonFrame'
+
 /**
  * The full collectibles catalog. Phase 2 adds the six per-page real
  * wearables on top of the Phase 1 debug placeholders. Real catalog
@@ -328,6 +336,68 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'eyes',
     Sprite: SsbMonocle,
     rarity: 'rare',
+  },
+
+  // ---------- Phase 5d final page-tied items ----------
+  {
+    id: 'convolution-skin',
+    name: 'Συνέλιξη σκιν',
+    description: 'Δύο επικαλυπτόμενα κύματα σε σκούρο μωβ — η συνέλιξη δράσει.',
+    source: { kind: 'page', slug: 'foundations/systems' },
+    slot: 'skin',
+    Sprite: ConvolutionSkin,
+    rarity: 'common',
+    accentColor: '#5a4a8c',
+  },
+  {
+    id: 'two-sided-skin',
+    name: 'Δίφασμα σκιν',
+    description: 'Συμμετρικές κάθετες ζώνες — αναπαριστά two-sided spectrum.',
+    source: { kind: 'page', slug: 'reference/spectrum-conventions' },
+    slot: 'skin',
+    Sprite: TwoSidedSkin,
+    rarity: 'rare',
+    accentColor: '#6b5a3a',
+  },
+  {
+    id: 'vsb-skin',
+    name: 'VSB σκιν',
+    description: 'Ασύμμετρες ζώνες — full sideband αριστερά, vestige δεξιά.',
+    source: { kind: 'page', slug: 'am/vsb' },
+    slot: 'skin',
+    Sprite: VsbSkin,
+    rarity: 'rare',
+    accentColor: '#3a6f78',
+  },
+  {
+    id: 'triangle-skin',
+    name: 'Τριγωνικό σκιν',
+    description: 'Τρίγωνα ακτινωτά — η f² καμπύλη του FM noise.',
+    source: { kind: 'page', slug: 'fm/in-noise' },
+    slot: 'skin',
+    Sprite: TriangleSkin,
+    rarity: 'rare',
+    accentColor: '#8a4724',
+  },
+  {
+    id: 'complex-frame',
+    name: 'Μιγαδικός πίνακας',
+    description: 'Κορνιζαρισμένο μιγαδικό επίπεδο με μοναδιαίο κύκλο και phasor.',
+    source: { kind: 'page', slug: 'reference/complex-numbers' },
+    slot: 'wall',
+    Sprite: ComplexFrame,
+    rarity: 'common',
+    placement: { x: 50, y: 4, w: 38, h: 26 },
+  },
+  {
+    id: 'carson-frame',
+    name: 'Carson κορνίζα',
+    description: 'Φάσμα FM με labeled bracket — B = 2(Δf + fm).',
+    source: { kind: 'page', slug: 'fm/carson' },
+    slot: 'wall',
+    Sprite: CarsonFrame,
+    rarity: 'common',
+    placement: { x: 130, y: 4, w: 38, h: 26 },
   },
 ]
 
