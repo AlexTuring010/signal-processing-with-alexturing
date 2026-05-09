@@ -36,7 +36,10 @@ export function PetStageDecorations({
     >
       {placed.map((id) => {
         const item = getDecoration(id)
-        if (!item) return null
+        // Defensive: skip if the id doesn't resolve to a decoration
+        // (e.g. stale data from before slot kinds settled) or if the
+        // item is missing a placement (registry author oversight).
+        if (!item || !item.placement) return null
         const { x, y, w, h } = item.placement
         return (
           <div
