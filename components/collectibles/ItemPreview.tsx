@@ -70,4 +70,6 @@ const SLOT_PREVIEW_VIEWBOX: Record<WearableSlot, string> = {
   body: '18 62 84 36',
   // Held accessories live at x≈84–112, y≈48–72.
   accessory: '82 48 32 24',
+  // Skin recolors the entire body — show the full body silhouette.
+  skin: '20 24 80 72',
 }

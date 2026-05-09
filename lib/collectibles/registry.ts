@@ -25,6 +25,11 @@ import { RealizationsArmchair } from '@/components/collectibles/sprites/decor/Re
 import { StaticLamp } from '@/components/collectibles/sprites/decor/StaticLamp'
 import { SnrLamp } from '@/components/collectibles/sprites/decor/SnrLamp'
 
+// Phase 5a — pet skins (recolor + pattern the body).
+import { GalaxySkin } from '@/components/collectibles/sprites/skin/GalaxySkin'
+import { SunsetSkin } from '@/components/collectibles/sprites/skin/SunsetSkin'
+import { ForestSkin } from '@/components/collectibles/sprites/skin/ForestSkin'
+
 /**
  * The full collectibles catalog. Phase 2 adds the six per-page real
  * wearables on top of the Phase 1 debug placeholders. Real catalog
@@ -173,6 +178,35 @@ export const COLLECTIBLES: Collectible[] = [
     Sprite: SnrLamp,
     rarity: 'rare',
     placement: { x: 168, y: 50, w: 28, h: 44 },
+  },
+
+  // ---------- Phase 5a skins ----------
+  {
+    id: 'galaxy-skin',
+    name: 'Νυχτερινό σκιν',
+    description: 'Σκούρο μωβ σώμα με αχνά αστέρια — λευκός θόρυβος ως κοσμικό σκόνη.',
+    source: { kind: 'page', slug: 'noise/white-noise' },
+    slot: 'skin',
+    Sprite: GalaxySkin,
+    rarity: 'rare',
+  },
+  {
+    id: 'sunset-skin',
+    name: 'Ηλιοβασίλεμα σκιν',
+    description: 'Θερμό gradient από κοραλλί σε μαβί — διαμόρφωση στο φως.',
+    source: { kind: 'page', slug: 'am/dsb-sc' },
+    slot: 'skin',
+    Sprite: SunsetSkin,
+    rarity: 'rare',
+  },
+  {
+    id: 'forest-skin',
+    name: 'Δάσος σκιν',
+    description: 'Πράσινο σώμα με μικρά φύλλα — όπου ξεκινάει η τύχη.',
+    source: { kind: 'page', slug: 'randomness/why' },
+    slot: 'skin',
+    Sprite: ForestSkin,
+    rarity: 'common',
   },
 ]
 

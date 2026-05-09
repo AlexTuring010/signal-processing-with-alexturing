@@ -108,6 +108,7 @@ function BodySvg({
   const stage: ItemRenderProps['stage'] = adult ? 'adult' : 'baby'
   const itemProps: ItemRenderProps = { stage, mood, adult }
 
+  const skinItem = getWearable(equipped.skin)
   const headItem = getWearable(equipped.head)
   const eyesItem = getWearable(equipped.eyes)
   const bodyItem =
@@ -143,6 +144,11 @@ function BodySvg({
 
         {/* body */}
         <ellipse cx="60" cy="60" rx={bodyW / 2} ry={bodyH / 2} fill="url(#body-fill)" />
+
+        {/* Skin overlay — recolors / patterns the body. Drawn over
+            the default body fill, before the belly highlight so it
+            still picks up the soft white shine on top. */}
+        {skinItem && <skinItem.Sprite {...itemProps} />}
 
         {/* belly highlight */}
         <ellipse cx="50" cy="48" rx="14" ry="18" fill="white" opacity="0.18" />

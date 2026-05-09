@@ -104,10 +104,11 @@ function bodySvg(stage, mood) {
         <stop offset="100%" stop-color="${COLORS.danger}" stop-opacity="0" />
       </radialGradient>
     `,
-    insideTilt: ({ bodySlot }) => `
+    insideTilt: ({ skin, bodySlot }) => `
       <ellipse cx="${60 - bodyW * 0.28}" cy="${60 + bodyH * 0.46}" rx="6" ry="3.5" fill="${COLORS.accent}" />
       <ellipse cx="${60 + bodyW * 0.28}" cy="${60 + bodyH * 0.46}" rx="6" ry="3.5" fill="${COLORS.accent}" />
       <ellipse cx="60" cy="60" rx="${rxOuter}" ry="${ryOuter}" fill="${bodyFill}" />
+      ${skin ?? ''}
       <ellipse cx="50" cy="48" rx="14" ry="18" fill="${COLORS.white}" opacity="0.18" />
       ${bodySlot ?? ''}
       <ellipse cx="${60 - bodyW * 0.5 + 2}" cy="62" rx="5" ry="7" fill="${COLORS.accent}" />
@@ -383,6 +384,79 @@ const ITEMS = {
       <circle cx="32" cy="48" r="1.4" fill="#162a52" />
     `,
   },
+  // ---------- Phase 5a skin sprites ----------
+  'galaxy-skin': {
+    slot: 'skin',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `galaxy-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <radialGradient id="${gradId}" cx="42%" cy="38%" r="65%">
+            <stop offset="0%" stop-color="#7c5fbf" />
+            <stop offset="60%" stop-color="#3a2c70" />
+            <stop offset="100%" stop-color="#160e30" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <circle cx="44" cy="52" r="0.9" fill="white" opacity="0.9" />
+        <circle cx="68" cy="62" r="0.7" fill="white" opacity="0.8" />
+        <circle cx="55" cy="78" r="0.9" fill="white" opacity="0.85" />
+        <circle cx="76" cy="48" r="0.6" fill="white" opacity="0.7" />
+        <circle cx="40" cy="74" r="0.6" fill="white" opacity="0.7" />
+        <circle cx="60" cy="42" r="0.5" fill="white" opacity="0.6" />
+        <circle cx="50" cy="68" r="0.4" fill="white" opacity="0.55" />
+        <circle cx="78" cy="74" r="0.5" fill="white" opacity="0.65" />
+        <circle cx="46" cy="86" r="0.4" fill="white" opacity="0.5" />
+        <circle cx="72" cy="86" r="0.5" fill="white" opacity="0.6" />
+      `
+    },
+  },
+  'sunset-skin': {
+    slot: 'skin',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `sunset-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffd28a" />
+            <stop offset="40%" stop-color="#ff8e6d" />
+            <stop offset="100%" stop-color="#7e2c5f" />
+          </linearGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <ellipse cx="60" cy="62" rx="${bodyW / 2 - 4}" ry="1.2" fill="white" opacity="0.4" />
+        <circle cx="48" cy="48" r="3.5" fill="#ffe0a8" opacity="0.65" />
+        <circle cx="48" cy="48" r="1.5" fill="#fff5d8" opacity="0.95" />
+      `
+    },
+  },
+  'forest-skin': {
+    slot: 'skin',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `forest-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <radialGradient id="${gradId}" cx="42%" cy="38%" r="65%">
+            <stop offset="0%" stop-color="#84c896" />
+            <stop offset="60%" stop-color="#3f8052" />
+            <stop offset="100%" stop-color="#1d3f28" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <ellipse cx="46" cy="58" rx="2.2" ry="0.8" fill="#a8e0b4" opacity="0.7" transform="rotate(-30 46 58)" />
+        <ellipse cx="74" cy="64" rx="2" ry="0.7" fill="#a8e0b4" opacity="0.65" transform="rotate(20 74 64)" />
+        <ellipse cx="56" cy="78" rx="2.2" ry="0.8" fill="#a8e0b4" opacity="0.7" transform="rotate(-10 56 78)" />
+        <ellipse cx="68" cy="50" rx="1.8" ry="0.6" fill="#a8e0b4" opacity="0.6" transform="rotate(40 68 50)" />
+        <ellipse cx="50" cy="86" rx="1.6" ry="0.6" fill="#a8e0b4" opacity="0.55" transform="rotate(15 50 86)" />
+      `
+    },
+  },
   'spectrum-glasses': {
     slot: 'eyes',
     render: () => `
@@ -429,6 +503,7 @@ function buildPetSvg(stage, mood, equipped) {
   const body = bodySvg(stage, mood)
   const itemProps = { stage, mood, adult }
 
+  const skinItem = equipped.skin ? ITEMS[equipped.skin]?.render(itemProps) : ''
   const headItem = equipped.head ? ITEMS[equipped.head]?.render(itemProps) : ''
   const eyesItem = equipped.eyes ? ITEMS[equipped.eyes]?.render(itemProps) : ''
   const bodySlotItem = equipped.body ? ITEMS[equipped.body]?.render(itemProps) : ''
@@ -440,7 +515,7 @@ function buildPetSvg(stage, mood, equipped) {
     <g>
       <defs>${body.defs}</defs>
       <g transform="translate(60 60) rotate(${body.tilt}) translate(-60 -60)">
-        ${body.insideTilt({ bodySlot: bodySlotItem })}
+        ${body.insideTilt({ skin: skinItem, bodySlot: bodySlotItem })}
       </g>
       ${eyesItem}
       ${headItem}
@@ -506,13 +581,14 @@ if ('all' in args) {
   for (const id of Object.keys(ITEMS)) {
     if (id.startsWith('_')) continue // skip debug placeholders
     const item = ITEMS[id]
-    const isWearable = ['head', 'eyes', 'body', 'accessory'].includes(item.slot)
+    const isWearable = ['head', 'eyes', 'body', 'accessory', 'skin'].includes(item.slot)
     if (isWearable) {
       const equippedForItem = {
         head: null,
         eyes: null,
         body: null,
         accessory: null,
+        skin: null,
       }
       equippedForItem[item.slot] = id
       const svg = buildGrid(equippedForItem)

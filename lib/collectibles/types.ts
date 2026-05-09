@@ -12,8 +12,11 @@
 import type { ComponentType } from 'react'
 import type { Mood, Stage } from '../pet/types'
 
-/** Wearable slots — at most one item per slot, equipped on the pet sprite. */
-export type WearableSlot = 'head' | 'eyes' | 'body' | 'accessory'
+/** Wearable slots — at most one item per slot, equipped on the pet sprite.
+ *  - `skin` recolors / patterns the body itself (stars, gradient, etc).
+ *  - `body` covers the body with a shirt/jacket on top of any skin.
+ *  - `head`, `eyes`, `accessory` add wearables on top of the body. */
+export type WearableSlot = 'head' | 'eyes' | 'body' | 'accessory' | 'skin'
 
 /**
  * Decoration slots — items that drop into the room rather than onto the
@@ -102,10 +105,11 @@ export type EquippedSlots = {
   eyes: CollectibleId | null
   body: CollectibleId | null
   accessory: CollectibleId | null
+  skin: CollectibleId | null
 }
 
 export type CollectiblesState = {
-  version: 2
+  version: 3
   /** ms epoch — first time the player picked any item up. */
   startedAt: number | null
   /** Per-id pickup time. Stable order ⇒ first-found ordering. */

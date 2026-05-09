@@ -17,6 +17,7 @@ const WEARABLE_SLOTS: ReadonlySet<Slot> = new Set([
   'eyes',
   'body',
   'accessory',
+  'skin',
 ])
 
 function isWearableSlot(slot: Slot): slot is WearableSlot {
@@ -70,7 +71,7 @@ type Store = {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function loadInitial(): CollectiblesState {
-  const raw = readJSON<any>(STORAGE_KEYS.collectibles, null)
+  let raw = readJSON<any>(STORAGE_KEYS.collectibles, null)
   if (!raw) return freshCollectibles()
   // v1 → v2: roomLayout is replaced by `placed` (a flat list of ids).
   // Carry over any decoration ids that were placed in the old slotted
@@ -89,7 +90,7 @@ function loadInitial(): CollectiblesState {
       }
     }
     if (room.tabletop) placed.push(room.tabletop)
-    return {
+    raw = {
       version: 2,
       startedAt: raw.startedAt ?? null,
       found: raw.found ?? {},
@@ -101,6 +102,15 @@ function loadInitial(): CollectiblesState {
       },
       placed,
       newSinceSeen: raw.newSinceSeen ?? [],
+    }
+  }
+  if (raw.version === 2) {
+    // v2 → v3: add the `skin` equip slot. Existing equipment carries
+    // forward; skin starts unequipped.
+    raw = {
+      ...raw,
+      version: 3,
+      equipped: { ...raw.equipped, skin: raw.equipped?.skin ?? null },
     }
   }
   if (raw.version !== VERSION) return freshCollectibles()
