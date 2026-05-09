@@ -34,6 +34,14 @@ import { StripesSkin } from '@/components/collectibles/sprites/skin/StripesSkin'
 import { AquaSkin } from '@/components/collectibles/sprites/skin/AquaSkin'
 import { WaveSkin } from '@/components/collectibles/sprites/skin/WaveSkin'
 
+// Phase 5c — six more page-tied items across uncovered chapters.
+import { BesselSkin } from '@/components/collectibles/sprites/skin/BesselSkin'
+import { StationarySkin } from '@/components/collectibles/sprites/skin/StationarySkin'
+import { IqSkin } from '@/components/collectibles/sprites/skin/IqSkin'
+import { PhasorSkin } from '@/components/collectibles/sprites/skin/PhasorSkin'
+import { PsdPoster } from '@/components/collectibles/sprites/decor/PsdPoster'
+import { SsbMonocle } from '@/components/collectibles/sprites/eyes/SsbMonocle'
+
 /**
  * The full collectibles catalog. Phase 2 adds the six per-page real
  * wearables on top of the Phase 1 debug placeholders. Real catalog
@@ -256,6 +264,70 @@ export const COLLECTIBLES: Collectible[] = [
     Sprite: WaveSkin,
     rarity: 'rare',
     accentColor: '#7f5cb8',
+  },
+
+  // ---------- Phase 5c more page-tied items ----------
+  {
+    id: 'bessel-skin',
+    name: 'Bessel σκιν',
+    description: 'Χρυσό σώμα με ομόκεντρους δακτυλίους — οι sidebands του Bessel.',
+    source: { kind: 'page', slug: 'fm/bessel' },
+    slot: 'skin',
+    Sprite: BesselSkin,
+    rarity: 'rare',
+    accentColor: '#a47a2c',
+  },
+  {
+    id: 'stationary-skin',
+    name: 'Στάσιμο σκιν',
+    description: 'Ομοιόμορφο taupe — χωρίς χωρική μεταβολή. Στατικότητα.',
+    source: { kind: 'page', slug: 'randomness/stationarity' },
+    slot: 'skin',
+    Sprite: StationarySkin,
+    rarity: 'common',
+    accentColor: '#7d6f55',
+  },
+  {
+    id: 'iq-skin',
+    name: 'IQ σκιν',
+    description: 'Σώμα κομμένο στη μέση — μπλε I, ρόδινο Q.',
+    source: { kind: 'page', slug: 'modulation/bridge' },
+    slot: 'skin',
+    Sprite: IqSkin,
+    rarity: 'rare',
+    accentColor: '#85508f',
+  },
+  {
+    id: 'phasor-skin',
+    name: 'Φάσορ σκιν',
+    description: 'Indigo σώμα με τρία περιστρεφόμενα phasors — phase modulation.',
+    source: { kind: 'page', slug: 'fm/pm' },
+    slot: 'skin',
+    Sprite: PhasorSkin,
+    rarity: 'rare',
+    accentColor: '#3f3175',
+  },
+  {
+    id: 'psd-poster',
+    name: 'Πόστερ PSD',
+    description: 'Κορνιζαρισμένο διάγραμμα φάσματος ισχύος — σαν PSD bars.',
+    source: { kind: 'page', slug: 'randomness/psd' },
+    slot: 'wall',
+    Sprite: PsdPoster,
+    rarity: 'common',
+    // Centered above pet head, between the two existing wall items.
+    // Partly hidden behind the pet's antenna on adults — fine, the
+    // pet renders on top.
+    placement: { x: 88, y: 2, w: 40, h: 22 },
+  },
+  {
+    id: 'ssb-monocle',
+    name: 'Μονόκλ SSB',
+    description: 'Ένα γυαλάκι μόνο, με αλυσίδα — μονό sideband, μονό φακό.',
+    source: { kind: 'page', slug: 'am/ssb' },
+    slot: 'eyes',
+    Sprite: SsbMonocle,
+    rarity: 'rare',
   },
 ]
 

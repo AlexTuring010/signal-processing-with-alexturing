@@ -514,6 +514,134 @@ const ITEMS = {
       `
     },
   },
+  'bessel-skin': {
+    slot: 'skin',
+    accentColor: '#a47a2c',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `bessel-skin-${adult ? 'a' : 'b'}`
+      const ring = (drx, dry, op) =>
+        `<ellipse cx="60" cy="60" rx="${bodyW / 2 - drx}" ry="${bodyH / 2 - dry}" fill="none" stroke="white" stroke-width="0.7" opacity="${op}" />`
+      return `
+        <defs>
+          <radialGradient id="${gradId}" cx="42%" cy="38%" r="65%">
+            <stop offset="0%" stop-color="#fde08e" />
+            <stop offset="100%" stop-color="#9c6a1e" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        ${ring(4, 3, 0.45)}
+        ${ring(10, 8, 0.4)}
+        ${ring(16, 13, 0.35)}
+        ${ring(22, 18, 0.3)}
+      `
+    },
+  },
+  'stationary-skin': {
+    slot: 'skin',
+    accentColor: '#7d6f55',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      return `<ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="#a59679" />`
+    },
+  },
+  'iq-skin': {
+    slot: 'skin',
+    accentColor: '#85508f',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const clipId = `iq-skin-clip-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <clipPath id="${clipId}">
+            <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" />
+          </clipPath>
+          <linearGradient id="iq-skin-mid-${adult ? 'a' : 'b'}" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#5d8cd4" stop-opacity="0.6" />
+            <stop offset="50%" stop-color="#a87cb0" stop-opacity="0.4" />
+            <stop offset="100%" stop-color="#d46c8c" stop-opacity="0.6" />
+          </linearGradient>
+        </defs>
+        <g clip-path="url(#${clipId})">
+          <rect x="${60 - bodyW / 2}" y="${60 - bodyH / 2}" width="${bodyW / 2}" height="${bodyH}" fill="#5d8cd4" />
+          <rect x="60" y="${60 - bodyH / 2}" width="${bodyW / 2}" height="${bodyH}" fill="#d46c8c" />
+          <rect x="56" y="${60 - bodyH / 2}" width="8" height="${bodyH}" fill="url(#iq-skin-mid-${adult ? 'a' : 'b'})" />
+        </g>
+        <text x="46" y="58" font-size="6" fill="white" font-family="serif" font-style="italic" opacity="0.85">I</text>
+        <text x="72" y="58" font-size="6" fill="white" font-family="serif" font-style="italic" opacity="0.85">Q</text>
+      `
+    },
+  },
+  'phasor-skin': {
+    slot: 'skin',
+    accentColor: '#3f3175',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `phasor-skin-${adult ? 'a' : 'b'}`
+      const arrows = [60, 180, 300]
+        .map((deg) => {
+          const rad = (deg * Math.PI) / 180
+          const len = 14
+          const x2 = 60 + Math.cos(rad) * len
+          const y2 = 60 + Math.sin(rad) * len
+          const ahLen = 2.2
+          const tx1 = x2 + Math.cos(rad + Math.PI - 0.45) * ahLen
+          const ty1 = y2 + Math.sin(rad + Math.PI - 0.45) * ahLen
+          const tx2 = x2 + Math.cos(rad + Math.PI + 0.45) * ahLen
+          const ty2 = y2 + Math.sin(rad + Math.PI + 0.45) * ahLen
+          return `
+            <line x1="60" y1="60" x2="${x2}" y2="${y2}" stroke="white" stroke-width="1.2" opacity="0.85" stroke-linecap="round" />
+            <path d="M ${x2} ${y2} L ${tx1} ${ty1} L ${tx2} ${ty2} Z" fill="white" opacity="0.85" />
+          `
+        })
+        .join('')
+      return `
+        <defs>
+          <radialGradient id="${gradId}" cx="50%" cy="50%" r="65%">
+            <stop offset="0%" stop-color="#7d6cb8" />
+            <stop offset="100%" stop-color="#1c1248" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        ${arrows}
+        <circle cx="60" cy="60" r="2" fill="white" opacity="0.9" />
+      `
+    },
+  },
+  'psd-poster': {
+    slot: 'wall',
+    decorViewBox: '0 0 60 40',
+    decorContent: `
+      <rect x="2" y="2" width="56" height="36" rx="2" fill="#2d4763" />
+      <rect x="4" y="4" width="52" height="32" rx="1" fill="none" stroke="#162a52" stroke-width="0.6" />
+      <rect x="6" y="6" width="48" height="28" fill="#eef3f8" />
+      <line x1="9" y1="30" x2="51" y2="30" stroke="#5a6d82" stroke-width="0.6" />
+      <line x1="9" y1="9" x2="9" y2="30" stroke="#5a6d82" stroke-width="0.6" />
+      <rect x="12" y="22" width="3" height="8" fill="#3a5e96" />
+      <rect x="16" y="14" width="3" height="16" fill="#3a5e96" />
+      <rect x="20" y="10" width="3" height="20" fill="#3a5e96" />
+      <rect x="24" y="13" width="3" height="17" fill="#3a5e96" />
+      <rect x="28" y="20" width="3" height="10" fill="#3a5e96" />
+      <rect x="32" y="24" width="3" height="6" fill="#3a5e96" />
+      <rect x="36" y="22" width="3" height="8" fill="#3a5e96" />
+      <rect x="40" y="26" width="3" height="4" fill="#3a5e96" />
+      <rect x="44" y="27" width="3" height="3" fill="#3a5e96" />
+      <rect x="48" y="28" width="3" height="2" fill="#3a5e96" />
+      <text x="11" y="13" font-size="3.5" fill="#5a6d82" font-family="serif" font-style="italic">S(f)</text>
+    `,
+  },
+  'ssb-monocle': {
+    slot: 'eyes',
+    render: () => `
+      <circle cx="70" cy="50" r="6" fill="#dde9f0" fill-opacity="0.4" stroke="#2a3540" stroke-width="1.4" />
+      <circle cx="68" cy="48" r="1.2" fill="white" opacity="0.85" />
+      <path d="M 74 54 Q 82 62 90 68" stroke="#2a3540" stroke-width="0.8" fill="none" stroke-dasharray="1 1" opacity="0.85" />
+    `,
+  },
   'wave-skin': {
     slot: 'skin',
     accentColor: '#7f5cb8',
