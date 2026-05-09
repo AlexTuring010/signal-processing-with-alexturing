@@ -1,19 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Lock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useCollectiblesStore } from '@/lib/collectibles/store'
 import {
   COLLECTIBLES,
   isWearable,
+  isDecoration,
 } from '@/lib/collectibles/registry'
-import type {
-  Collectible,
-  CollectibleId,
-  DecorSlot,
-} from '@/lib/collectibles/types'
-import { Room } from './Room/Room'
+import type { Collectible } from '@/lib/collectibles/types'
 import { ItemPreview } from './ItemPreview'
 
 type Chapter =
@@ -54,54 +50,39 @@ function chapterFor(item: Collectible): Chapter {
 }
 
 /**
- * In-panel Collection view. Combines the room scene (top) with the
- * full chapter-grouped catalog (bottom). Tapping a found wearable
- * equips/unequips it; tapping a found decoration enters place-mode
- * — the next tap on a valid room slot drops it in. Unfound items
- * show as silhouettes and don't respond to taps.
+ * In-panel Collection view — purely the chapter-grouped catalog grid.
+ * The pet stage above (rendered by PetPanel itself) is the room: any
+ * decoration the player toggles on shows up there, persistent across
+ * panel modes.
+ *
+ * Tapping a found wearable equips/unequips it; tapping a found
+ * decoration toggles it on the pet stage. Unfound items are
+ * silhouettes and don't respond to taps.
  */
 export function CollectionView() {
   const found = useCollectiblesStore((s) => s.state.found)
   const equipped = useCollectiblesStore((s) => s.state.equipped)
+  const placed = useCollectiblesStore((s) => s.state.placed)
   const setEquipped = useCollectiblesStore((s) => s.setEquipped)
-  const placeDecoration = useCollectiblesStore((s) => s.placeDecoration)
-  const clearSlot = useCollectiblesStore((s) => s.clearSlot)
+  const togglePlaced = useCollectiblesStore((s) => s.togglePlaced)
   const hydrated = useCollectiblesStore((s) => s.hydrated)
   const markAllSeen = useCollectiblesStore((s) => s.markAllSeen)
 
-  const [pendingDecoration, setPendingDecoration] =
-    useState<CollectibleId | null>(null)
-
-  // Visiting the collection clears the orange "new item" dot.
   useEffect(() => {
     if (hydrated) markAllSeen()
   }, [hydrated, markAllSeen])
 
   function handleItemTap(item: Collectible) {
-    if (!found[item.id]) return // unfound — no-op
-
+    if (!found[item.id]) return
     if (isWearable(item)) {
-      // Toggle equip on the matching slot.
       const isEquipped = equipped[item.slot] === item.id
       setEquipped(item.slot, isEquipped ? null : item.id)
-      // If a decoration was pending, cancel it — switching context.
-      if (pendingDecoration) setPendingDecoration(null)
       return
     }
-    // Decoration: toggle place-mode.
-    setPendingDecoration(pendingDecoration === item.id ? null : item.id)
+    togglePlaced(item.id)
   }
 
-  function handleSlotClick(slot: DecorSlot, wallIndex?: 0 | 1 | 2) {
-    if (pendingDecoration) {
-      placeDecoration(pendingDecoration, wallIndex)
-      setPendingDecoration(null)
-    } else {
-      clearSlot(slot, wallIndex)
-    }
-  }
-
-  // Catalog excludes debug placeholders.
+  // Drop the `_test-*` debug placeholders.
   const items = COLLECTIBLES.filter((c) => !c.id.startsWith('_'))
   const groups = new Map<Chapter, Collectible[]>()
   for (const it of items) {
@@ -113,26 +94,6 @@ export function CollectionView() {
 
   return (
     <div className="flex flex-col gap-2">
-      <Room
-        pendingDecoration={pendingDecoration}
-        onSlotClick={handleSlotClick}
-      />
-
-      {/* Place-mode hint */}
-      {pendingDecoration && (
-        <div className="rounded-md bg-accent/15 px-2 py-1 text-center text-[10px] text-accent">
-          Πάτησε ένα slot για να το τοποθετήσεις
-          <button
-            type="button"
-            onClick={() => setPendingDecoration(null)}
-            className="ml-2 underline"
-          >
-            Άκυρο
-          </button>
-        </div>
-      )}
-
-      {/* Progress strip */}
       <div className="flex items-baseline justify-between px-1 text-[10px] uppercase tracking-wider text-fg-subtle">
         <span>Συλλογή</span>
         <span className="tabular-nums">
@@ -140,7 +101,6 @@ export function CollectionView() {
         </span>
       </div>
 
-      {/* Chapter-grouped catalog */}
       <div className="flex flex-col gap-2">
         {CHAPTER_ORDER.filter((ch) => groups.has(ch)).map((ch) => (
           <ChapterGroup
@@ -149,7 +109,7 @@ export function CollectionView() {
             items={groups.get(ch)!}
             found={found}
             equipped={equipped}
-            pending={pendingDecoration}
+            placed={placed}
             onTap={handleItemTap}
           />
         ))}
@@ -163,16 +123,17 @@ function ChapterGroup({
   items,
   found,
   equipped,
-  pending,
+  placed,
   onTap,
 }: {
   title: Chapter
   items: Collectible[]
   found: Record<string, number>
   equipped: ReturnType<typeof useCollectiblesStore.getState>['state']['equipped']
-  pending: CollectibleId | null
+  placed: string[]
   onTap: (item: Collectible) => void
 }) {
+  const placedSet = new Set(placed)
   const got = items.filter((c) => found[c.id]).length
   return (
     <section className="rounded-lg border border-border bg-bg-soft/40 p-2">
@@ -185,16 +146,16 @@ function ChapterGroup({
       <div className="grid grid-cols-4 gap-1.5">
         {items.map((item) => {
           const isFound = Boolean(found[item.id])
-          const isEquipped =
-            isWearable(item) && equipped[item.slot] === item.id
-          const isPending = pending === item.id
+          const isSelected =
+            isWearable(item)
+              ? equipped[item.slot] === item.id
+              : isDecoration(item) && placedSet.has(item.id)
           return (
             <ItemCard
               key={item.id}
               item={item}
               found={isFound}
-              equipped={isEquipped}
-              pending={isPending}
+              selected={isSelected}
               onTap={() => onTap(item)}
             />
           )
@@ -207,14 +168,12 @@ function ChapterGroup({
 function ItemCard({
   item,
   found,
-  equipped,
-  pending,
+  selected,
   onTap,
 }: {
   item: Collectible
   found: boolean
-  equipped: boolean
-  pending: boolean
+  selected: boolean
   onTap: () => void
 }) {
   return (
@@ -223,13 +182,12 @@ function ItemCard({
       onClick={onTap}
       disabled={!found}
       title={found ? item.name : '???'}
-      aria-pressed={equipped || pending}
+      aria-pressed={selected}
       className={cn(
         'group relative flex aspect-square items-center justify-center rounded-md border bg-bg-elevated transition-colors',
         !found && 'cursor-not-allowed opacity-70',
-        found && !equipped && !pending && 'border-border hover:border-accent/60',
-        equipped && 'border-success ring-2 ring-success/40',
-        pending && 'border-accent ring-2 ring-accent/40',
+        found && !selected && 'border-border hover:border-accent/60',
+        selected && 'border-success ring-2 ring-success/40',
       )}
     >
       <div className="h-full w-full p-1">
@@ -240,7 +198,7 @@ function ItemCard({
           <Lock className="h-2 w-2" aria-hidden="true" />
         </span>
       )}
-      {equipped && (
+      {selected && (
         <span className="absolute right-0.5 top-0.5 rounded-full bg-success px-1 py-0.5 text-[7px] font-bold leading-none text-white">
           ✓
         </span>

@@ -3,12 +3,11 @@
 import { create } from 'zustand'
 import { readJSON, writeJSON, STORAGE_KEYS } from '../storage'
 import { VERSION, freshCollectibles } from './defaults'
-import { getCollectible } from './registry'
+import { getCollectible, isDecoration } from './registry'
 import { playCollectibleSound } from './audio'
 import type {
   CollectibleId,
   CollectiblesState,
-  DecorSlot,
   Slot,
   WearableSlot,
 } from './types'
@@ -46,10 +45,9 @@ type Store = {
   /** Lazy hydration on first PetSprite mount. */
   hydrate: () => void
   /**
-   * Pick up a collectible. Sets `found[id]`, queues a banner, plays the
-   * discover SFX, auto-equips wearables (replacing any existing item in
-   * that slot), auto-places decorations into empty slots. No-op if the
-   * id is unknown or already found.
+   * Pick up a collectible. Sets `found[id]`, queues a banner, plays
+   * the discover SFX, and auto-equips wearables. Decorations are NOT
+   * auto-placed — the player toggles them on from the catalog.
    */
   find: (id: CollectibleId) => boolean
   /** Mark `newSinceSeen` as cleared — called when /collection is opened. */
@@ -57,14 +55,11 @@ type Store = {
   /** Dismiss the head-of-queue banner. */
   dismissBanner: (seq: number) => void
   /**
-   * Place a decoration into a room slot. The item must already be in
-   * `state.found` and its declared slot kind must match. Returns true
-   * if placed. For `wall`, picks the first empty slot when `wallIndex`
-   * is omitted; pass an explicit index to overwrite a specific wall slot.
+   * Toggle a decoration on/off the pet stage. The item must already
+   * be in `state.found` and must be a decoration. Returns true if
+   * the action took effect.
    */
-  placeDecoration: (id: CollectibleId, wallIndex?: 0 | 1 | 2) => boolean
-  /** Remove the decoration in a slot, returning it to inventory. */
-  clearSlot: (slot: DecorSlot, wallIndex?: 0 | 1 | 2) => boolean
+  togglePlaced: (id: CollectibleId) => boolean
   /**
    * Phase 1 debug-only: directly set equipment without going through
    * find. Kept available for development scenarios where you want to
@@ -77,8 +72,37 @@ type Store = {
 function loadInitial(): CollectiblesState {
   const raw = readJSON<any>(STORAGE_KEYS.collectibles, null)
   if (!raw) return freshCollectibles()
-  // Future migrations live here. Keep the switch shape so a v2 schema
-  // change has a one-branch home.
+  // v1 → v2: roomLayout is replaced by `placed` (a flat list of ids).
+  // Carry over any decoration ids that were placed in the old slotted
+  // layout so the player doesn't lose their setup. Wearables and
+  // `found` are unchanged.
+  if (raw.version === 1) {
+    const room = raw.roomLayout ?? {}
+    const placed: CollectibleId[] = []
+    if (room.floor) placed.push(room.floor)
+    if (Array.isArray(room.wall)) {
+      for (const w of room.wall) if (w) placed.push(w)
+    }
+    if (room.furniture) {
+      for (const id of Object.values(room.furniture)) {
+        if (id) placed.push(id as CollectibleId)
+      }
+    }
+    if (room.tabletop) placed.push(room.tabletop)
+    return {
+      version: 2,
+      startedAt: raw.startedAt ?? null,
+      found: raw.found ?? {},
+      equipped: raw.equipped ?? {
+        head: null,
+        eyes: null,
+        body: null,
+        accessory: null,
+      },
+      placed,
+      newSinceSeen: raw.newSinceSeen ?? [],
+    }
+  }
   if (raw.version !== VERSION) return freshCollectibles()
   return raw as CollectiblesState
 }
@@ -86,50 +110,6 @@ function loadInitial(): CollectiblesState {
 
 function persist(state: CollectiblesState) {
   writeJSON(STORAGE_KEYS.collectibles, state)
-}
-
-/**
- * Drop a decoration into the first compatible empty slot. If every
- * matching slot is already filled, the item is still recorded as found
- * but not auto-placed — the player can swap it in via the wardrobe
- * (Phase 3). Tabletop items are silently dropped to the inventory if
- * no desk is placed yet — they'll appear when one is.
- */
-function placeDecoration(
-  state: CollectiblesState,
-  slot: Slot,
-  id: CollectibleId,
-): CollectiblesState {
-  const room = state.roomLayout
-  switch (slot) {
-    case 'floor':
-      if (room.floor !== null) return state
-      return { ...state, roomLayout: { ...room, floor: id } }
-    case 'wall': {
-      const idx = room.wall.findIndex((s) => s === null)
-      if (idx === -1) return state
-      const wall = [...room.wall] as typeof room.wall
-      wall[idx] = id
-      return { ...state, roomLayout: { ...room, wall } }
-    }
-    case 'bed':
-    case 'desk':
-    case 'chair':
-    case 'lamp':
-      if (room.furniture[slot] !== null) return state
-      return {
-        ...state,
-        roomLayout: {
-          ...room,
-          furniture: { ...room.furniture, [slot]: id },
-        },
-      }
-    case 'tabletop':
-      if (room.furniture.desk === null || room.tabletop !== null) return state
-      return { ...state, roomLayout: { ...room, tabletop: id } }
-    default:
-      return state
-  }
 }
 
 export const useCollectiblesStore = create<Store>((set, get) => ({
@@ -159,17 +139,15 @@ export const useCollectiblesStore = create<Store>((set, get) => ({
     }
 
     if (isWearableSlot(item.slot)) {
-      // Wearables auto-equip. The previous occupant of the slot is
-      // implicitly returned to inventory (it's still in `found`).
+      // Wearables auto-equip on find — the previous occupant of the
+      // slot stays in `found` (i.e. inventory).
       next = {
         ...next,
         equipped: { ...next.equipped, [item.slot]: id },
       }
-    } else {
-      // Decorations attempt auto-placement; failure is silent — they
-      // sit in inventory until the wardrobe places them.
-      next = placeDecoration(next, item.slot, id)
     }
+    // Decorations: do nothing else. The player toggles them on from
+    // the catalog when they want them visible.
 
     persist(next)
     playCollectibleSound('discover')
@@ -192,92 +170,19 @@ export const useCollectiblesStore = create<Store>((set, get) => ({
     set({ banners: get().banners.filter((b) => b.seq !== seq) })
   },
 
-  placeDecoration: (id, wallIndex) => {
+  togglePlaced: (id) => {
     const item = getCollectible(id)
-    if (!item) return false
-    if (isWearableSlot(item.slot)) return false
+    if (!item || !isDecoration(item)) return false
     const state = get().state
     if (!state.found[id]) return false
 
-    const room = state.roomLayout
-    let nextRoom = room
-    switch (item.slot) {
-      case 'floor':
-        nextRoom = { ...room, floor: id }
-        break
-      case 'wall': {
-        const wall = [...room.wall] as typeof room.wall
-        const idx =
-          wallIndex !== undefined
-            ? wallIndex
-            : (wall.findIndex((s) => s === null) as 0 | 1 | 2 | -1)
-        if (idx === -1) return false
-        wall[idx] = id
-        nextRoom = { ...room, wall }
-        break
-      }
-      case 'bed':
-      case 'desk':
-      case 'chair':
-      case 'lamp':
-        nextRoom = {
-          ...room,
-          furniture: { ...room.furniture, [item.slot]: id },
-        }
-        break
-      case 'tabletop':
-        if (room.furniture.desk === null) return false
-        nextRoom = { ...room, tabletop: id }
-        break
-      default:
-        return false
+    const isPlaced = state.placed.includes(id)
+    const next: CollectiblesState = {
+      ...state,
+      placed: isPlaced
+        ? state.placed.filter((p) => p !== id)
+        : [...state.placed, id],
     }
-    const next: CollectiblesState = { ...state, roomLayout: nextRoom }
-    persist(next)
-    playCollectibleSound('place')
-    set({ state: next })
-    return true
-  },
-
-  clearSlot: (slot, wallIndex) => {
-    const state = get().state
-    const room = state.roomLayout
-    let nextRoom = room
-    switch (slot) {
-      case 'floor':
-        if (room.floor === null) return false
-        nextRoom = { ...room, floor: null }
-        break
-      case 'wall': {
-        const idx = wallIndex ?? 0
-        if (room.wall[idx] === null) return false
-        const wall = [...room.wall] as typeof room.wall
-        wall[idx] = null
-        nextRoom = { ...room, wall }
-        break
-      }
-      case 'bed':
-      case 'desk':
-      case 'chair':
-      case 'lamp':
-        if (room.furniture[slot] === null) return false
-        nextRoom = {
-          ...room,
-          furniture: { ...room.furniture, [slot]: null },
-        }
-        // Removing the desk also un-places any tabletop item.
-        if (slot === 'desk' && room.tabletop !== null) {
-          nextRoom = { ...nextRoom, tabletop: null }
-        }
-        break
-      case 'tabletop':
-        if (room.tabletop === null) return false
-        nextRoom = { ...room, tabletop: null }
-        break
-      default:
-        return false
-    }
-    const next: CollectiblesState = { ...state, roomLayout: nextRoom }
     persist(next)
     playCollectibleSound('place')
     set({ state: next })

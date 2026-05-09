@@ -15,6 +15,7 @@ import { HatchDialog } from './HatchDialog'
 import { Particles, SleepZs } from './particles'
 import { MiniGame } from './MiniGame'
 import { CollectionView } from '@/components/collectibles/CollectionView'
+import { PetStageDecorations } from '@/components/collectibles/PetStageDecorations'
 import { useCollectiblesStore } from '@/lib/collectibles/store'
 
 type Props = {
@@ -143,6 +144,25 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
             <ArrowLeft className="h-3 w-3" />
             Πίσω
           </button>
+          {/* Live preview — same dimensions as the idle pet stage so
+              toggling decorations from the catalog below shows up
+              immediately at the size the user will see them in. */}
+          <div
+            className="relative h-[124px] overflow-hidden rounded-xl border border-border"
+            style={{
+              background:
+                'linear-gradient(180deg, rgb(var(--accent-soft) / 0.35) 0%, rgb(var(--bg-soft)) 60%, rgb(var(--bg-soft)) 100%)',
+            }}
+          >
+            <PetStageDecorations />
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-3 bottom-3 h-0.5 rounded-full bg-border"
+            />
+            <div className="absolute inset-0 flex items-end justify-center pb-3">
+              <PetSprite stage={state.stage} mood={mood} size={88} still />
+            </div>
+          </div>
           <CollectionView />
         </div>
       ) : (
@@ -155,6 +175,12 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
                 'linear-gradient(180deg, rgb(var(--accent-soft) / 0.35) 0%, rgb(var(--bg-soft)) 60%, rgb(var(--bg-soft)) 100%)',
             }}
           >
+            {/* Decoration layer — sits behind the pet but above the
+                background gradient. Pet stage doubles as the "room",
+                so anything the player has placed shows up here even
+                when not in collection mode. */}
+            <PetStageDecorations />
+
             {/* "ground" line */}
             <div
               aria-hidden="true"

@@ -82,16 +82,16 @@ export type WearableCollectible = CollectibleBase & {
 }
 
 /**
- * Decoration item — drops into a room slot. Sprite returns its own
- * complete `<svg>` element with a viewBox sized to the slot kind:
- *   - floor: 240×28
- *   - wall: 60×40
- *   - bed/desk/chair/lamp: 50×60
- *   - tabletop: 30×30
+ * Decoration item — sits in the pet-stage background at a fixed
+ * position when placed. The Sprite returns its own complete `<svg>`
+ * with whatever viewBox suits the item; the `placement` field below
+ * tells the stage where to draw it (in 256×124 pet-stage coords).
  */
 export type DecorationCollectible = CollectibleBase & {
   slot: DecorSlot
   Sprite: ComponentType
+  /** Fixed position + size in the pet-stage's 256×124 coord space. */
+  placement: { x: number; y: number; w: number; h: number }
 }
 
 export type Collectible = WearableCollectible | DecorationCollectible
@@ -104,29 +104,17 @@ export type EquippedSlots = {
   accessory: CollectibleId | null
 }
 
-/** Currently placed in the room. */
-export type RoomLayout = {
-  floor: CollectibleId | null
-  /** 3 wall slots, left-to-right along the back wall. */
-  wall: [CollectibleId | null, CollectibleId | null, CollectibleId | null]
-  furniture: {
-    bed: CollectibleId | null
-    desk: CollectibleId | null
-    chair: CollectibleId | null
-    lamp: CollectibleId | null
-  }
-  /** Tabletop only available when a desk is placed. */
-  tabletop: CollectibleId | null
-}
-
 export type CollectiblesState = {
-  version: 1
+  version: 2
   /** ms epoch — first time the player picked any item up. */
   startedAt: number | null
   /** Per-id pickup time. Stable order ⇒ first-found ordering. */
   found: Record<CollectibleId, number>
   equipped: EquippedSlots
-  roomLayout: RoomLayout
+  /** Decoration ids currently placed in the pet stage. Each
+   *  decoration has a fixed `placement` from the registry; this is
+   *  just an on/off list of which ones are showing. */
+  placed: CollectibleId[]
   /** Items found but not yet viewed in /collection. Drives the
    *  pet-button orange dot. */
   newSinceSeen: CollectibleId[]

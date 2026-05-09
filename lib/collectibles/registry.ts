@@ -111,6 +111,9 @@ export const COLLECTIBLES: Collectible[] = [
   },
 
   // ---------- Phase 3 decorations ----------
+  // Each decoration has a `placement` in the 256×124 pet-stage coord
+  // space — its fixed home when placed. Pet sprite sits centered at
+  // x=84–172, y=32–112, so decorations live around / behind it.
   {
     id: 'fdm-rug',
     name: 'FDM Ταπέτο',
@@ -119,6 +122,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'floor',
     Sprite: FdmRug,
     rarity: 'common',
+    placement: { x: 18, y: 104, w: 220, h: 20 },
   },
   {
     id: 'modulation-portrait',
@@ -128,6 +132,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'wall',
     Sprite: ModulationPortrait,
     rarity: 'common',
+    placement: { x: 8, y: 6, w: 40, h: 26 },
   },
   {
     id: 'diode-frame',
@@ -137,6 +142,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'wall',
     Sprite: DiodeFrame,
     rarity: 'common',
+    placement: { x: 208, y: 6, w: 40, h: 26 },
   },
   {
     id: 'realizations-armchair',
@@ -146,6 +152,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'chair',
     Sprite: RealizationsArmchair,
     rarity: 'rare',
+    placement: { x: 204, y: 56, w: 44, h: 48 },
   },
   {
     id: 'static-lamp',
@@ -155,6 +162,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'lamp',
     Sprite: StaticLamp,
     rarity: 'common',
+    placement: { x: 10, y: 58, w: 28, h: 44 },
   },
   {
     id: 'snr-lamp',
@@ -164,6 +172,7 @@ export const COLLECTIBLES: Collectible[] = [
     slot: 'lamp',
     Sprite: SnrLamp,
     rarity: 'rare',
+    placement: { x: 168, y: 50, w: 28, h: 44 },
   },
 ]
 
