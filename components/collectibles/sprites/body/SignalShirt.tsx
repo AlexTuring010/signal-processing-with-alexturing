@@ -1,4 +1,3 @@
-import { useId } from 'react'
 import type { ItemRenderProps } from '@/lib/collectibles/types'
 
 /**
@@ -24,11 +23,10 @@ export function SignalShirt({ adult }: ItemRenderProps) {
   const STITCH = '#0f2447'
   const waveY = adult ? 26 : 24
   const waveHalfW = adult ? 9 : 8
-  // useId() returns a stable per-instance identifier — needed because
-  // the catalog grid renders this component multiple times and SVG
-  // ids must be unique within the document.
-  const reactId = useId()
-  const gradId = `signal-shirt-fill-${reactId.replace(/[^a-zA-Z0-9-]/g, '-')}-${adult ? 'a' : 'b'}`
+  // Static id is fine — the gradient stops are identical for every
+  // instance, so even if catalog + pet render the same component
+  // both reference the same defs and look right.
+  const gradId = `signal-shirt-fill-${adult ? 'a' : 'b'}`
   return (
     <g transform="translate(60 60)" aria-hidden="true">
       <defs>
