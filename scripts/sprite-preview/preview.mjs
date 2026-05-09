@@ -437,6 +437,103 @@ const ITEMS = {
       `
     },
   },
+  'polka-skin': {
+    slot: 'skin',
+    accentColor: '#c8628c',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `polka-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <radialGradient id="${gradId}" cx="42%" cy="38%" r="65%">
+            <stop offset="0%" stop-color="#ffc1d4" />
+            <stop offset="100%" stop-color="#c8628c" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <circle cx="44" cy="50" r="2.4" fill="white" opacity="0.92" />
+        <circle cx="72" cy="56" r="2" fill="white" opacity="0.88" />
+        <circle cx="56" cy="74" r="2.6" fill="white" opacity="0.92" />
+        <circle cx="80" cy="74" r="1.8" fill="white" opacity="0.85" />
+        <circle cx="40" cy="70" r="1.6" fill="white" opacity="0.8" />
+        <circle cx="60" cy="44" r="1.4" fill="white" opacity="0.78" />
+        <circle cx="74" cy="42" r="1.2" fill="white" opacity="0.7" />
+        <circle cx="48" cy="86" r="1.6" fill="white" opacity="0.8" />
+        <circle cx="68" cy="86" r="1.4" fill="white" opacity="0.75" />
+      `
+    },
+  },
+  'stripes-skin': {
+    slot: 'skin',
+    accentColor: '#c08a4a',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const clipId = `stripes-skin-clip-${adult ? 'a' : 'b'}`
+      const stripeW = bodyW / 6
+      const stripes = []
+      for (let i = 0; i < 6; i++) {
+        const x = 60 - bodyW / 2 + i * stripeW
+        stripes.push({ x, color: i % 2 === 0 ? '#f5b072' : '#fff0d8' })
+      }
+      const stripeRects = stripes
+        .map(
+          (s) =>
+            `<rect x="${s.x}" y="${60 - bodyH / 2}" width="${stripeW + 0.6}" height="${bodyH}" fill="${s.color}" />`,
+        )
+        .join('')
+      return `
+        <defs>
+          <clipPath id="${clipId}">
+            <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" />
+          </clipPath>
+        </defs>
+        <g clip-path="url(#${clipId})">${stripeRects}</g>
+      `
+    },
+  },
+  'aqua-skin': {
+    slot: 'skin',
+    accentColor: '#2f7a8c',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `aqua-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#86dde0" />
+            <stop offset="100%" stop-color="#1c4f64" />
+          </linearGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <path d="M 30 56 Q 60 52 90 56" stroke="white" stroke-width="0.7" fill="none" opacity="0.35" stroke-linecap="round" />
+        <path d="M 28 70 Q 60 66 92 70" stroke="white" stroke-width="0.7" fill="none" opacity="0.3" stroke-linecap="round" />
+        <path d="M 32 84 Q 60 80 88 84" stroke="white" stroke-width="0.7" fill="none" opacity="0.25" stroke-linecap="round" />
+      `
+    },
+  },
+  'wave-skin': {
+    slot: 'skin',
+    accentColor: '#7f5cb8',
+    render: ({ adult }) => {
+      const bodyW = adult ? 78 : 70
+      const bodyH = adult ? 76 : 68
+      const gradId = `wave-skin-${adult ? 'a' : 'b'}`
+      return `
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffd4a8" />
+            <stop offset="50%" stop-color="#e6a4d8" />
+            <stop offset="100%" stop-color="#7f5cb8" />
+          </linearGradient>
+        </defs>
+        <ellipse cx="60" cy="60" rx="${bodyW / 2}" ry="${bodyH / 2}" fill="url(#${gradId})" />
+        <path d="M 30 64 Q 40 56 50 64 Q 60 72 70 64 Q 80 56 90 64" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.85" />
+      `
+    },
+  },
   'forest-skin': {
     slot: 'skin',
     accentColor: '#3f8052',

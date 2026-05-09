@@ -25,10 +25,14 @@ import { RealizationsArmchair } from '@/components/collectibles/sprites/decor/Re
 import { StaticLamp } from '@/components/collectibles/sprites/decor/StaticLamp'
 import { SnrLamp } from '@/components/collectibles/sprites/decor/SnrLamp'
 
-// Phase 5a — pet skins (recolor + pattern the body).
+// Phase 5a/b — pet skins (recolor + pattern the body).
 import { GalaxySkin } from '@/components/collectibles/sprites/skin/GalaxySkin'
 import { SunsetSkin } from '@/components/collectibles/sprites/skin/SunsetSkin'
 import { ForestSkin } from '@/components/collectibles/sprites/skin/ForestSkin'
+import { PolkaSkin } from '@/components/collectibles/sprites/skin/PolkaSkin'
+import { StripesSkin } from '@/components/collectibles/sprites/skin/StripesSkin'
+import { AquaSkin } from '@/components/collectibles/sprites/skin/AquaSkin'
+import { WaveSkin } from '@/components/collectibles/sprites/skin/WaveSkin'
 
 /**
  * The full collectibles catalog. Phase 2 adds the six per-page real
@@ -210,6 +214,48 @@ export const COLLECTIBLES: Collectible[] = [
     Sprite: ForestSkin,
     rarity: 'common',
     accentColor: '#3f8052',
+  },
+
+  // ---------- Phase 5b skins ----------
+  {
+    id: 'polka-skin',
+    name: 'Πόλκα σκιν',
+    description: 'Ροζ σώμα με λευκές κουκκίδες σκορπισμένες — ανεξάρτητα δείγματα.',
+    source: { kind: 'page', slug: 'randomness/random-variables' },
+    slot: 'skin',
+    Sprite: PolkaSkin,
+    rarity: 'common',
+    accentColor: '#c8628c',
+  },
+  {
+    id: 'stripes-skin',
+    name: 'Ριγέ σκιν',
+    description: 'Κάθετες ζώνες — passband bars σε ένα φίλτρο.',
+    source: { kind: 'page', slug: 'foundations/filters' },
+    slot: 'skin',
+    Sprite: StripesSkin,
+    rarity: 'common',
+    accentColor: '#c08a4a',
+  },
+  {
+    id: 'aqua-skin',
+    name: 'Θαλασσί σκιν',
+    description: 'Ομαλό teal με αχνά κύματα — ο θόρυβος αφού περάσει από φίλτρο.',
+    source: { kind: 'page', slug: 'noise/through-filters' },
+    slot: 'skin',
+    Sprite: AquaSkin,
+    rarity: 'rare',
+    accentColor: '#2f7a8c',
+  },
+  {
+    id: 'wave-skin',
+    name: 'Καμπύλο σκιν',
+    description: 'Χρωματιστό σώμα με ένα ξεκάθαρο κύμα — όταν το σήμα μετασχηματίζεται.',
+    source: { kind: 'page', slug: 'foundations/signal-transformations' },
+    slot: 'skin',
+    Sprite: WaveSkin,
+    rarity: 'rare',
+    accentColor: '#7f5cb8',
   },
 ]
 
