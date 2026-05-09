@@ -825,6 +825,77 @@ const ITEMS = {
       `
     },
   },
+  'night-cap': {
+    slot: 'head',
+    render: ({ adult }) => {
+      const headY = adult ? 22 : 26
+      return `
+        <g transform="translate(60 ${headY})">
+          <path d="M-15 1 L-15 5 Q-15 7 -13 7 L13 7 Q15 7 15 5 L15 1 Z" fill="#1c2c52" />
+          <path d="M-13 1 Q-12 -10 -2 -14 Q4 -16 8 -8 L13 1 Z" fill="#26396b" />
+          <circle cx="-3" cy="-15" r="2" fill="#fff5d8" />
+          <circle cx="0" cy="-3" r="2.4" fill="#fff5d8" />
+          <circle cx="1.2" cy="-3.2" r="1.9" fill="#26396b" />
+        </g>
+      `
+    },
+  },
+  'compost-crown': {
+    slot: 'head',
+    render: ({ adult }) => {
+      const headY = adult ? 22 : 26
+      return `
+        <g transform="translate(60 ${headY - 2})">
+          <path d="M-13 0 L-13 4 Q-13 6 -11 6 L11 6 Q13 6 13 4 L13 0 Z" fill="#7d5a32" />
+          <path d="M-11 0 Q-9 -8 -7 0 Z" fill="#5a8a3a" />
+          <path d="M-5 -1 Q-3 -10 -1 -1 Z" fill="#7a4a2a" />
+          <path d="M0 -2 Q2 -12 4 -2 Z" fill="#5a8a3a" />
+          <path d="M5 -1 Q7 -10 9 -1 Z" fill="#7a4a2a" />
+          <path d="M9 0 Q11 -8 13 0 Z" fill="#5a8a3a" />
+          <circle cx="2" cy="-12" r="1.4" fill="#c33b4a" />
+        </g>
+      `
+    },
+  },
+  'lucky-cap': {
+    slot: 'head',
+    render: ({ adult }) => {
+      const headY = adult ? 22 : 26
+      return `
+        <g transform="translate(60 ${headY})">
+          <path d="M-22 3 Q-22 6 -18 6 L18 6 Q22 6 22 3 Z" fill="#2c6e3a" />
+          <path d="M-17 3 Q-15 -8 0 -10 Q15 -8 17 3 Z" fill="#3a8a4a" />
+          <ellipse cx="-5" cy="-4" rx="6" ry="2.5" fill="white" opacity="0.25" />
+          <circle cx="0" cy="-4" r="1.4" fill="#fff5d8" />
+          <circle cx="-2" cy="-2" r="1.4" fill="#fff5d8" />
+          <circle cx="2" cy="-2" r="1.4" fill="#fff5d8" />
+          <circle cx="0" cy="0" r="1.4" fill="#fff5d8" />
+          <circle cx="0" cy="-2" r="0.6" fill="#3a8a4a" />
+        </g>
+      `
+    },
+  },
+  'studious-vest': {
+    slot: 'body',
+    render: ({ adult }) => {
+      const rx = adult ? 39 : 35
+      const ry = adult ? 38 : 34
+      const sideY = 8
+      const ctrlY = adult ? 32 : 30
+      const xAtSide = rx * Math.sqrt(Math.max(0, 1 - (sideY / ry) ** 2))
+      return `
+        <g transform="translate(60 60)">
+          <path d="M ${-xAtSide} ${sideY} A ${rx} ${ry} 0 0 0 ${xAtSide} ${sideY} Q 0 ${ctrlY} ${-xAtSide} ${sideY} Z" fill="#7a5a36" />
+          <g transform="translate(0 22)">
+            <path d="M-6 0 L-1 -2 L-1 4 L-6 6 Z" fill="#fff7e6" stroke="#3a2a18" stroke-width="0.5" />
+            <path d="M6 0 L1 -2 L1 4 L6 6 Z" fill="#fff7e6" stroke="#3a2a18" stroke-width="0.5" />
+            <line x1="0" y1="-2" x2="0" y2="5" stroke="#3a2a18" stroke-width="0.6" />
+          </g>
+          <path d="M ${-xAtSide + 1} ${sideY} Q 0 ${ctrlY - 1} ${xAtSide - 1} ${sideY}" stroke="#3a2a18" stroke-width="1.2" fill="none" stroke-linecap="round" />
+        </g>
+      `
+    },
+  },
   'spectrum-glasses': {
     slot: 'eyes',
     render: () => `

@@ -41,6 +41,18 @@ export function PetPanel({ onClose, onOpenOrchard }: Props) {
   const newCollectibles = useCollectiblesStore(
     (s) => s.state.newSinceSeen.length > 0,
   )
+  const checkCrossTies = useCollectiblesStore((s) => s.checkCrossTies)
+  const collectiblesHydrated = useCollectiblesStore((s) => s.hydrated)
+
+  // Cross-tied eligibility tick — runs once on hydrate and every 30s
+  // while the panel is mounted. Cheap (4 simple checks); auto-grants
+  // anything the player has earned since last visit.
+  useEffect(() => {
+    if (!collectiblesHydrated) return
+    checkCrossTies()
+    const id = window.setInterval(checkCrossTies, 30_000)
+    return () => window.clearInterval(id)
+  }, [collectiblesHydrated, checkCrossTies])
   // Hide the ground line whenever a floor-slot decoration is placed —
   // it would otherwise draw over the rug.
   const hasFloorDecor = useCollectiblesStore((s) =>

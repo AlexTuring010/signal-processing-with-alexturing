@@ -50,6 +50,12 @@ import { TriangleSkin } from '@/components/collectibles/sprites/skin/TriangleSki
 import { ComplexFrame } from '@/components/collectibles/sprites/decor/ComplexFrame'
 import { CarsonFrame } from '@/components/collectibles/sprites/decor/CarsonFrame'
 
+// Phase 5e — cross-tied items (achievement / time / event triggers).
+import { NightCap } from '@/components/collectibles/sprites/head/NightCap'
+import { CompostCrown } from '@/components/collectibles/sprites/head/CompostCrown'
+import { LuckyCap } from '@/components/collectibles/sprites/head/LuckyCap'
+import { StudiousVest } from '@/components/collectibles/sprites/body/StudiousVest'
+
 /**
  * The full collectibles catalog. Phase 2 adds the six per-page real
  * wearables on top of the Phase 1 debug placeholders. Real catalog
@@ -398,6 +404,44 @@ export const COLLECTIBLES: Collectible[] = [
     Sprite: CarsonFrame,
     rarity: 'common',
     placement: { x: 130, y: 4, w: 38, h: 26 },
+  },
+
+  // ---------- Phase 5e cross-tied items ----------
+  {
+    id: 'night-cap',
+    name: 'Νυχτερινό Σκουφάκι',
+    description: 'Σκούρο μπλε σκουφάκι με μισοφέγγαρο. Άνοιξε το site μετά τα μεσάνυχτα.',
+    source: { kind: 'time', window: { startHour: 0, endHour: 6 } },
+    slot: 'head',
+    Sprite: NightCap,
+    rarity: 'special',
+  },
+  {
+    id: 'compost-crown',
+    name: 'Κορώνα Compost',
+    description: 'Στέμμα από φύλλα και κλαδιά. Compost ≥ 5 φορές.',
+    source: { kind: 'achievement', achievementId: 'compost-5' },
+    slot: 'head',
+    Sprite: CompostCrown,
+    rarity: 'special',
+  },
+  {
+    id: 'lucky-cap',
+    name: 'Lucky Cap',
+    description: 'Πράσινο καπέλο με τετράφυλλο τριφύλλι. Apple Catcher score ≥ 100.',
+    source: { kind: 'achievement', achievementId: 'apple-catcher-100' },
+    slot: 'head',
+    Sprite: LuckyCap,
+    rarity: 'special',
+  },
+  {
+    id: 'studious-vest',
+    name: 'Φιλομαθής Φανέλα',
+    description: 'Καφέ φανέλα με βιβλίο. Σήμανε ως ολοκληρωμένο το ≥ 50% των κεφαλαίων.',
+    source: { kind: 'achievement', achievementId: 'half-completed' },
+    slot: 'body',
+    Sprite: StudiousVest,
+    rarity: 'special',
   },
 ]
 

@@ -5,6 +5,7 @@ import { readJSON, writeJSON, STORAGE_KEYS } from '../storage'
 import { VERSION, freshCollectibles } from './defaults'
 import { getCollectible, isDecoration } from './registry'
 import { playCollectibleSound } from './audio'
+import { ELIGIBILITY } from './eligibility'
 import type {
   CollectibleId,
   CollectiblesState,
@@ -61,6 +62,13 @@ type Store = {
    * the action took effect.
    */
   togglePlaced: (id: CollectibleId) => boolean
+  /**
+   * Run cross-tied eligibility checks (compost-run thresholds, study
+   * progress, time-of-day, etc). Auto-grants any item whose check
+   * passes that the player doesn't own yet. Cheap — just runs the
+   * functions in `eligibility.ts` and calls `find()` on hits.
+   */
+  checkCrossTies: () => void
   /**
    * Phase 1 debug-only: directly set equipment without going through
    * find. Kept available for development scenarios where you want to
@@ -209,6 +217,19 @@ export const useCollectiblesStore = create<Store>((set, get) => ({
     playCollectibleSound('place')
     set({ state: next })
     return true
+  },
+
+  checkCrossTies: () => {
+    const state = get().state
+    for (const [id, check] of Object.entries(ELIGIBILITY)) {
+      if (state.found[id]) continue
+      try {
+        if (check()) get().find(id)
+      } catch {
+        // Defensive: a sibling store might be mid-hydrate; skip and
+        // re-check on the next tick.
+      }
+    }
   },
 
   setEquipped: (slot, id) => {
