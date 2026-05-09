@@ -226,7 +226,7 @@ export function collectiblesForSlug(slug: string): Collectible[] {
   )
 }
 
-const WEARABLE_SLOTS = new Set(['head', 'eyes', 'body', 'accessory'])
+const WEARABLE_SLOTS = new Set(['head', 'eyes', 'body', 'accessory', 'skin'])
 
 export function isWearable(c: Collectible): c is WearableCollectible {
   return WEARABLE_SLOTS.has(c.slot)

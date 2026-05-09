@@ -114,6 +114,18 @@ function loadInitial(): CollectiblesState {
     }
   }
   if (raw.version !== VERSION) return freshCollectibles()
+  // Self-clean: drop any ids in `placed` that don't resolve to a
+  // decoration (defensive against past bugs where wearables — esp.
+  // skins — slipped in before the slot enforcement was correct).
+  if (Array.isArray(raw.placed)) {
+    const cleaned = raw.placed.filter((id: string) => {
+      const item = getCollectible(id)
+      return Boolean(item && isDecoration(item))
+    })
+    if (cleaned.length !== raw.placed.length) {
+      raw = { ...raw, placed: cleaned }
+    }
+  }
   return raw as CollectiblesState
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
