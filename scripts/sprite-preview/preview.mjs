@@ -140,8 +140,8 @@ const ITEMS = {
       return `
         <defs>
           <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#3a5e96" />
-            <stop offset="100%" stop-color="#162a52" />
+            <stop offset="0%" stop-color="#5b85bf" />
+            <stop offset="100%" stop-color="#1f3a76" />
           </linearGradient>
         </defs>
         <g transform="translate(60 60)">
