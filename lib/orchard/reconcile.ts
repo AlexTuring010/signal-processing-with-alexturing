@@ -115,7 +115,14 @@ export function tickTree(
     }
     const baseInterval = intervalS(tree)
     const effectiveIntervalMs = (baseInterval / Math.max(0.0001, mood * sm)) * 1000
-    const since = Math.max(seg.from, lastHarvest)
+    // Anchor to the actual last-cycle time, not the window start.
+    // Partial-cycle progress carries across reconciles — without
+    // this, with tick interval (5s) shorter than tree interval
+    // (8s+), no single window fits a full cycle and trees never
+    // produce. The previous code used Math.max(seg.from, lastHarvest)
+    // which clipped lastHarvest forward to the window start, losing
+    // every accrued partial-cycle period.
+    const since = lastHarvest
     const segMs = seg.to - since
     if (segMs <= 0) continue
     const cyclesByTime = Math.floor(segMs / effectiveIntervalMs)
@@ -408,7 +415,10 @@ export function reconcile(
       petSleeping,
     )
     totalGained += produced
-    return { ...p, tree: { ...tree, lastHarvestAt: now } }
+    // Trust tickTree's lastHarvestAt — overriding to `now` would
+    // discard partial-cycle progress every reconcile (the bug that
+    // froze tree production).
+    return { ...p, tree }
   })
 
   // --- 4) Auto-harvest (if research unlocked) — sweep full trees to barn.
