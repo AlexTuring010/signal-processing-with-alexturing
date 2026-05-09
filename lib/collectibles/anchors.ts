@@ -63,14 +63,15 @@ export const ADULT_ANTENNA_ZONE = {
 } as const
 
 /**
- * Below this size (px), body-slot items render without the small detail
- * passes (stitching, prints, embroidery). Item authors may also skip
- * the layer entirely if it would read as visual noise.
+ * Body-slot items render at any size — even on the small pet button
+ * and the orchard footer. The threshold was originally set to 64 to
+ * avoid visual noise on tiny sprites, but the user explicitly wanted
+ * the shirt visible everywhere the pet appears.
  */
-export const MIN_BODY_RENDER_SIZE = 64
+export const MIN_BODY_RENDER_SIZE = 0
 
 /**
- * Below this size, accessory items don't render at all — too small to
- * read. The pet button uses ~36 px so it's well below this floor.
+ * Same reasoning for held accessories — render everywhere unless the
+ * pet's truly miniscule.
  */
-export const MIN_ACCESSORY_RENDER_SIZE = 80
+export const MIN_ACCESSORY_RENDER_SIZE = 0

@@ -31,8 +31,8 @@ export function SignalShirt({ adult }: ItemRenderProps) {
     <g transform="translate(60 60)" aria-hidden="true">
       <defs>
         <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#3a5e96" />
-          <stop offset="100%" stopColor="#162a52" />
+          <stop offset="0%" stopColor="#5b85bf" />
+          <stop offset="100%" stopColor="#1f3a76" />
         </linearGradient>
       </defs>
       <path
