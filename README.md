@@ -46,14 +46,49 @@ supabase/migrations Postgres schema + RLS policies
 scripts/review/     Moderator workflow CLI — list-pending, reply, resolve
 ```
 
-The moderator scripts in `scripts/review/` are an unusual touch — `npm run comments:list` shows pending classmate comments, `comments:reply` posts a moderator/Claude reply, `comments:resolve` closes the thread. Built so comment moderation isn't a click-through chore.
+## Built with Claude Code — and the `/comments-review` skill
+
+The whole site is an experiment in **collaborative authoring with Claude Code**. I write the pedagogical plans in `plans/` one section at a time, hand each plan to Claude as the input for a focused drafting session, and review/edit the resulting MDX before it ships. The site grew section-by-section this way, not in one big push.
+
+The most interesting piece is the **closed loop with my readers**:
+
+```
+classmate spots an error or confusion          /comments-review skill
+   in a section                                                │
+        │                                                      │
+        ▼                                                      ▼
+   posts a comment            ──── stored in Supabase ────▶  fetches pending
+   (magic-link auth, free text)                              comments by section
+                                                              │
+                                                              ▼
+                                                       analyzes against
+                                                       the source MDX
+                                                              │
+                                                              ▼
+                                                       proposes site changes
+                                                       (typo fix, clarification,
+                                                        new example, …)
+                                                              │
+                                                              ▼
+                                                       I review + accept
+                                                              │
+                                                              ▼
+                                                       comment marked resolved
+                                                       with the diff that
+                                                       addressed it
+```
+
+The skill that runs this is invoked as `/comments-review` from Claude Code. Under the hood it uses the same moderator endpoints that `npm run comments:list / comments:reply / comments:resolve` expose, but instead of replying *to* the comment, it reads the comment, reads the relevant section's MDX, and **proposes the edit that resolves the underlying issue**. The original commenter then sees the change shipped on the site, not just a reply text.
+
+This is the part of the site I'm proudest of architecturally. The moderation pipeline is the same one `is_claude_reply` toggles in the Supabase schema — Claude's edits are first-class citizens, not bolted on.
 
 ## Project artefacts (the "how" of the work)
 
 - **`CLAUDE.md`** — the hard rules for working on the site (audience definition, tech stack, naming conventions, pedagogy non-negotiables)
 - **`COMMITMENTS.md`** — what the site promises its users; the bar everything new must clear
+- **`plans/`** — per-section pedagogical plans, written by me, consumed by Claude one at a time
 
-These are the same project-discipline-as-document pattern from [ai-class-hw2](https://github.com/AlexTuring010/ai-class-hw2) — works well for projects with a long surface area and a single author.
+The disciplined-process-as-document pattern is the same one from [ai-class-hw2](https://github.com/AlexTuring010/ai-class-hw2) — works well for projects with a long surface area and a single human author.
 
 ## Develop
 
