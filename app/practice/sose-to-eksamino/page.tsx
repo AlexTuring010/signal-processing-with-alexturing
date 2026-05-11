@@ -1,6 +1,10 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { SoseClient } from '@/components/sose/SoseClient'
+import {
+  FormulaSheetPanel,
+  FormulaSheetButton,
+} from '@/components/practice/FormulaSheetPanel'
 import { SOSE_PATH, TOTAL_EXAM_WEIGHT, TOPIC_TOTALS } from '@/lib/sose'
 import { coachingFor, relatedFor, positionOf } from '@/lib/sose'
 
@@ -35,12 +39,16 @@ export default function SoseToEksaminoPage() {
   }))
 
   return (
-    <Suspense fallback={null}>
-      <SoseClient
-        problems={problems}
-        totalExamWeight={TOTAL_EXAM_WEIGHT}
-        topicTotals={TOPIC_TOTALS}
-      />
-    </Suspense>
+    <>
+      <FormulaSheetPanel />
+      <FormulaSheetButton />
+      <Suspense fallback={null}>
+        <SoseClient
+          problems={problems}
+          totalExamWeight={TOTAL_EXAM_WEIGHT}
+          topicTotals={TOPIC_TOTALS}
+        />
+      </Suspense>
+    </>
   )
 }
