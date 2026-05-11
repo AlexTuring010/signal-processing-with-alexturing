@@ -40,6 +40,31 @@ function applyThemeToDom(theme: Theme) {
   document.documentElement.setAttribute('data-theme', resolved)
 }
 
+/**
+ * Wrap a theme change with the `.theme-transitioning` class so the swap
+ * fades. The class is added before flipping `data-theme` and removed
+ * after the CSS transition completes (~240ms in globals.css, with a
+ * small buffer). Caller can pass `instant: true` to skip the animation
+ * — used on hydrate so initial paint never animates.
+ */
+let pendingThemeTransitionHandle: number | null = null
+function transitionTheme(theme: Theme, opts: { instant?: boolean } = {}) {
+  if (typeof document === 'undefined' || opts.instant) {
+    applyThemeToDom(theme)
+    return
+  }
+  const html = document.documentElement
+  html.classList.add('theme-transitioning')
+  applyThemeToDom(theme)
+  if (pendingThemeTransitionHandle !== null) {
+    window.clearTimeout(pendingThemeTransitionHandle)
+  }
+  pendingThemeTransitionHandle = window.setTimeout(() => {
+    html.classList.remove('theme-transitioning')
+    pendingThemeTransitionHandle = null
+  }, 280)
+}
+
 export const useAppStore = create<Store>((set, get) => ({
   hydrated: false,
   theme: 'dark',
@@ -65,7 +90,7 @@ export const useAppStore = create<Store>((set, get) => ({
 
   setTheme: (theme) => {
     writeJSON(STORAGE_KEYS.theme, theme)
-    applyThemeToDom(theme)
+    transitionTheme(theme)
     set({ theme })
   },
 

@@ -666,6 +666,24 @@ html {
 }
 .find-banner-out { animation: find-banner-out 220ms ease-in both; }
 
+/* Smooth theme switch — enabled only while the toggle is firing.
+   The store adds `theme-transitioning` to <html>, swaps `data-theme`,
+   and removes the class after the transition. We avoid a permanent
+   universal transition because it would compete with hover/focus
+   transitions on individual elements (laggy buttons, double-fades). */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    background-color 240ms ease,
+    color 240ms ease,
+    border-color 240ms ease,
+    fill 240ms ease,
+    stroke 240ms ease,
+    box-shadow 240ms ease !important;
+}
+
 /* Subtle scrollbar in dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {
   width: 10px;
