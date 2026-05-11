@@ -184,6 +184,7 @@ export function SoseClient({ problems, totalExamWeight, topicTotals }: Props) {
 
       <div className="mt-6">
         <SoseProblemCard
+          key={current.exercise.id}
           payload={current}
           solved={isSolved(current.exercise.id)}
           onToggleSolved={() =>
