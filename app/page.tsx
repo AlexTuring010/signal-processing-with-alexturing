@@ -267,7 +267,7 @@ export default function HomePage() {
           </h2>
         </div>
         <p className="mb-4 text-sm text-fg-muted">
-          Με βάση το βάρος στις προηγούμενες εξετάσεις (8 περιόδους
+          Με βάση το βάρος στις προηγούμενες εξετάσεις (6 περιόδους
           αναλύθηκαν). Ξεκίνα από τα μεγάλα ποσοστά.
         </p>
         <div className="flex flex-wrap gap-2">
