@@ -1,5 +1,11 @@
 import Link from 'next/link'
-import { GraduationCap, ListChecks, Brain, ChevronRight } from 'lucide-react'
+import {
+  GraduationCap,
+  ListChecks,
+  Brain,
+  ChevronRight,
+  Flame,
+} from 'lucide-react'
 import { ExerciseLibrary } from '@/components/practice/ExerciseLibrary'
 import {
   FormulaSheetPanel,
@@ -45,7 +51,27 @@ export default function PracticePage() {
         </header>
 
         {/* Quick navigation cards */}
-        <div className="mb-10 grid gap-3 sm:grid-cols-2">
+        <div className="mb-10 grid gap-3 sm:grid-cols-3">
+          <Link
+            href="/practice/sose-to-eksamino"
+            className="group relative rounded-xl border-2 border-rose-500/40 bg-gradient-to-br from-rose-500/10 to-bg-elevated p-5 transition hover:border-rose-500 hover:shadow-md"
+          >
+            <span className="absolute -top-2 right-3 inline-flex items-center gap-1 rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+              <Flame className="h-2.5 w-2.5" aria-hidden />
+              Νέο
+            </span>
+            <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-md bg-rose-500/15 text-rose-600 dark:text-rose-300">
+              <Flame className="h-5 w-5" aria-hidden />
+            </div>
+            <h2 className="flex items-center gap-1 font-semibold tracking-tight">
+              Σώσε το εξάμηνο
+              <ChevronRight className="ml-auto h-4 w-4 text-fg-subtle transition group-hover:translate-x-0.5 group-hover:text-rose-500" />
+            </h2>
+            <p className="mt-1 text-sm text-fg-muted">
+              Just-in-time learning για last-minute. 75 ασκήσεις σε σειρά
+              θεωρητικής δυσκολίας με coaching ανά πρόβλημα.
+            </p>
+          </Link>
           <a
             href="#exercises"
             className="group rounded-xl border border-border bg-bg-elevated p-5 transition hover:border-accent/50 hover:shadow-md"

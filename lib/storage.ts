@@ -53,4 +53,6 @@ export const STORAGE_KEYS = {
   petGameHigh: 'spwa:pet-game-high',
   orchard: 'spwa:orchard',
   collectibles: 'spwa:collectibles',
+  sosePosition: 'spwa:sosePosition',
+  soseSkipped: 'spwa:soseSkipped',
 } as const

@@ -117,6 +117,29 @@ export type Exercise = {
   memorizationNote?: ReactNode
   statement: ReactNode
   solution: ReactNode
+  /**
+   * «Σώσε το εξάμηνο» coaching content. These live in `sose-coaching.tsx`
+   * and are merged in by `lib/sose.ts` — keeping the canonical exercise
+   * definitions free of crunch-mode-specific prose.
+   */
+}
+
+/**
+ * Per-exercise coaching that powers the «Σώσε το εξάμηνο» (crunch) flow.
+ * Stored separately from the exercise itself so the canonical definition
+ * stays focused on the problem + solution.
+ *
+ * - `takeaway`: the durable pattern the student should walk away with.
+ *   2–3 sentences. NOT a restatement of the solution — the lesson behind it.
+ * - `examRadar`: recognition cues. 2–3 sentences. «Αν δεις X στην εκφώνηση,
+ *   το πρώτο πράγμα που σκέφτεσαι είναι Y.»
+ * - `relatedIds`: optional override of the auto-derived "παρόμοιες" list.
+ *   When absent, `findRelated()` derives it from topic + prereq overlap.
+ */
+export type ExerciseCoaching = {
+  takeaway?: ReactNode
+  examRadar?: ReactNode
+  relatedIds?: string[]
 }
 
 /**

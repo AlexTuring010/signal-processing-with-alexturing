@@ -1,7 +1,9 @@
+import { Suspense } from 'react'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TableOfContents } from '@/components/layout/TableOfContents'
 import { PageComments } from '@/components/layout/PageComments'
 import { SectionCommentsProvider } from '@/components/layout/section-comments-context'
+import { SoseReturnBanner } from '@/components/sose/SoseReturnBanner'
 
 /**
  * Layout for all educational content pages.
@@ -31,6 +33,9 @@ export default function ContentLayout({
       </aside>
 
       <article className="prose-content min-w-0 max-w-prose">
+        <Suspense fallback={null}>
+          <SoseReturnBanner />
+        </Suspense>
         <SectionCommentsProvider>{children}</SectionCommentsProvider>
         <PageComments />
       </article>

@@ -27,14 +27,24 @@ const SectionCommentsContext = createContext<Ctx | null>(null)
  * and fetches per-section comment counts client-side, so navigations
  * between sibling pages always show fresh badges (the (content) layout
  * is reused across navigations and would otherwise serve stale counts).
+ *
+ * `slugOverride` is used by flows that render exercises under a different
+ * URL (e.g. «Σώσε το εξάμηνο» under /practice/sose-to-eksamino) but want
+ * the underlying comments to share the canonical slug=practice thread
+ * — so a comment left in either place is visible from both.
  */
 export function SectionCommentsProvider({
   children,
+  slugOverride,
+  pageTitleOverride,
 }: {
   children: React.ReactNode
+  slugOverride?: string
+  pageTitleOverride?: string
 }) {
   const pathname = usePathname()
-  const slug = pathname.replace(/^\/+/, '').replace(/\/$/, '')
+  const slug =
+    slugOverride ?? pathname.replace(/^\/+/, '').replace(/\/$/, '')
   const section = slug ? findSection(slug) : undefined
   const supabase = useMemo(() => createClient(), [])
   const [counts, setCounts] = useState<Record<string, number>>({})
@@ -69,7 +79,11 @@ export function SectionCommentsProvider({
 
   return (
     <SectionCommentsContext.Provider
-      value={{ slug, pageTitle: section?.title, counts }}
+      value={{
+        slug,
+        pageTitle: pageTitleOverride ?? section?.title,
+        counts,
+      }}
     >
       {children}
     </SectionCommentsContext.Provider>

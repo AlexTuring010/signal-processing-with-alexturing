@@ -132,6 +132,11 @@ export const CHAPTERS: Chapter[] = [
     title: '8. Exam prep',
     blurb: 'Παλιά θέματα & tips',
     sections: [
+      {
+        slug: 'practice/sose-to-eksamino',
+        title: '🔥 Σώσε το εξάμηνο',
+        available: true,
+      },
       { slug: 'practice', title: 'Practice hub', available: true },
       { slug: 'formulas', title: 'Formula sheet', available: true },
     ],

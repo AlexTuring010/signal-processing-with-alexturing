@@ -12,6 +12,7 @@ import {
   Flame,
   MessageSquare,
   Trophy,
+  Zap,
 } from 'lucide-react'
 import { CHAPTERS, AVAILABLE_COUNT, ALL_SECTIONS } from '@/lib/content-index'
 import { Comments } from '@/components/layout/Comments'
@@ -80,6 +81,14 @@ export default function HomePage() {
             </Link>
           )}
           <Link
+            href="/practice/sose-to-eksamino"
+            className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-rose-600"
+          >
+            <Flame className="h-4 w-4" aria-hidden />
+            Σώσε το εξάμηνο
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+          <Link
             href="/practice"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-bg-elevated px-5 py-2.5 text-sm font-medium text-fg transition-colors hover:border-accent/50"
           >
@@ -99,6 +108,85 @@ export default function HomePage() {
           >
             <Sigma className="h-4 w-4" aria-hidden />
             Τυπολόγιο
+          </Link>
+        </div>
+      </section>
+
+      {/* Two paths — pick how you want to study */}
+      <section className="mx-auto mt-14 max-w-5xl">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Πώς θες να μελετήσεις;
+          </h2>
+          <span className="text-xs text-fg-subtle">
+            Δύο τρόποι — διάλεξε αυτόν που σου ταιριάζει
+          </span>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Path 1: theory first (existing) */}
+          {FIRST_AVAILABLE && (
+            <Link
+              href={`/${FIRST_AVAILABLE.slug}`}
+              className="group flex flex-col rounded-2xl border border-border bg-bg-elevated p-6 transition hover:border-accent/50 hover:shadow-md"
+            >
+              <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-sky-500/15 text-sky-600 dark:text-sky-300">
+                <BookOpen className="h-5 w-5" aria-hidden />
+              </div>
+              <h3 className="text-xl font-bold tracking-tight">
+                Από τη θεωρία προς τις ασκήσεις
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-fg-muted">
+                Ο κλασικός τρόπος. Διαβάζεις σε σειρά κεφαλαίων, χτίζεις
+                βαθιά κατανόηση, λύνεις ασκήσεις στο τέλος. Δίπλα σε κάθε
+                ενότητα έχεις viz, formula sheet και comments.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                <PathChip>📚 Σε βάθος</PathChip>
+                <PathChip>🧠 Καταλαβαίνεις, δεν αποστηθίζεις</PathChip>
+                <PathChip>⏱ Όλο το εξάμηνο</PathChip>
+              </div>
+              <div className="mt-auto flex items-center gap-1.5 pt-5 text-sm font-semibold text-sky-600 dark:text-sky-400">
+                Ξεκίνα από την αρχή
+                <ArrowRight
+                  className="h-4 w-4 transition group-hover:translate-x-0.5"
+                  aria-hidden
+                />
+              </div>
+            </Link>
+          )}
+          {/* Path 2: sose to eksamino (new, urgent framing) */}
+          <Link
+            href="/practice/sose-to-eksamino"
+            className="group relative flex flex-col rounded-2xl border-2 border-rose-500/50 bg-gradient-to-br from-rose-500/10 via-orange-500/5 to-bg-elevated p-6 shadow-md transition hover:border-rose-500 hover:shadow-lg"
+          >
+            <span className="absolute -top-3 right-4 inline-flex items-center gap-1 rounded-full border border-rose-500/40 bg-rose-500 px-2.5 py-0.5 text-[11px] font-bold text-white shadow-sm">
+              <Flame className="h-3 w-3" aria-hidden />
+              Last-minute friendly
+            </span>
+            <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-lg bg-rose-500/15 text-rose-600 dark:text-rose-300">
+              <Zap className="h-5 w-5" aria-hidden />
+            </div>
+            <h3 className="text-xl font-bold tracking-tight">
+              Σώσε το εξάμηνο
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-fg-muted">
+              <em>Just-in-time learning</em>. Ξεκίνα από την πιο εύκολη
+              άσκηση. Κολλάς; Σου λέμε ακριβώς ποιο κομμάτι θεωρίας
+              χρειάζεσαι. Επιστρέφεις, λύνεις, επόμενη. Κάθε άσκηση = ένα
+              εργαλείο που μπορεί να πέσει στην εξέταση.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              <PathChip accent>🛠 75 ασκήσεις</PathChip>
+              <PathChip accent>📊 Παρακολούθηση εξετ. βάρους</PathChip>
+              <PathChip accent>🎯 Coaching ανά άσκηση</PathChip>
+            </div>
+            <div className="mt-auto flex items-center gap-1.5 pt-5 text-sm font-semibold text-rose-600 dark:text-rose-400">
+              Ξεκίνα από Άσκηση 1
+              <ArrowRight
+                className="h-4 w-4 transition group-hover:translate-x-0.5"
+                aria-hidden
+              />
+            </div>
           </Link>
         </div>
       </section>
@@ -318,5 +406,25 @@ function QuickDest({
       </h3>
       <p className="mt-1 text-xs leading-relaxed text-fg-muted">{subtitle}</p>
     </Link>
+  )
+}
+
+function PathChip({
+  children,
+  accent,
+}: {
+  children: React.ReactNode
+  accent?: boolean
+}) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium ${
+        accent
+          ? 'border-rose-500/30 bg-rose-500/5 text-rose-700 dark:text-rose-300'
+          : 'border-border bg-bg-soft text-fg-muted'
+      }`}
+    >
+      {children}
+    </span>
   )
 }
