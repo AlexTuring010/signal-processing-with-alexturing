@@ -1,0 +1,317 @@
+export const metadata = {
+  title: 'Lab 6 — AM modulation στο MATLAB',
+  description:
+    'Conventional AM (με φέρον) και περιβάλλουσα, DSB-SC (χωρίς φέρον), φάσμα με fft, SSB με φιλτράρισμα ή με μετασχηματισμό Hilbert. Bonus: FM γρήγορη εφαρμογή.',
+}
+
+export const frontmatter = {
+  title: 'Lab 6 — AM στο MATLAB',
+  slug: 'labs/06-am-modulation',
+  order: 6,
+  prerequisites: ['am/conventional', 'am/dsb-sc', 'am/ssb', 'fm/idea'],
+  estimatedReadTime: 35,
+  lastUpdated: '2026-05-18',
+}
+
+import Link from 'next/link'
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Lab · 6 of 6</span>
+  <span>·</span>
+  <span>~35 min</span>
+</div>
+
+# Lab 6 — AM modulation στο MATLAB
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="labs/06-am-modulation" />
+  <Bookmark id="labs/06-am-modulation" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+Από τη θεωρία ξέρουμε ότι **διαμόρφωση** σημαίνει να αλλάζουμε ένα χαρακτηριστικό (πλάτος, φάση, ή συχνότητα) ενός **φέροντος** σήματος `c(t)` σύμφωνα με ένα **σήμα πληροφορίας** `m(t)`. Εδώ θα δούμε αυτά τα διαμορφωμένα σήματα **πραγματικά** στο MATLAB — και θα δούμε ότι **το φάσμα είναι αυτό που τα ξεχωρίζει**.
+
+## Conventional AM — με φέρον
+
+Από τη θεωρία:
+
+$$
+s(t) = A_c [1 + \mu \cos(2\pi f_m t)] \cos(2\pi f_c t)
+$$
+
+για ένα ημίτονο σήμα διαμόρφωσης. Η **περιβάλλουσα** είναι:
+
+$$
+x_{env}(t) = A_c |1 + \mu \cos(2\pi f_m t)|
+$$
+
+```matlab
+Ac = 2;       % πλάτος φέροντος
+mu = 0.7;     % συντελεστής διαμόρφωσης (modulation index)
+fc = 25;      % συχνότητα φέροντος (kHz)
+fm = 2;       % συχνότητα μηνύματος (kHz)
+
+t = 0:0.001:1;
+s = Ac * (1 + mu*cos(2*pi*fm*t)) .* cos(2*pi*fc*t);
+env = abs(Ac * (1 + mu*cos(2*pi*fm*t)));
+
+plot(t, s, '-', t, env, 'm--');
+xlabel('time (ms)'), ylabel('Amplitude')
+legend('AM signal', 'Envelope')
+title('Tone-modulated AM, \mu = 0.7')
+grid on
+```
+
+<Callout type="key" title="Παρατηρήσεις για διαφορετικές τιμές μ">
+Δοκίμασε ξανά τον ίδιο κώδικα αλλάζοντας μόνο το `mu`:
+
+- **μ = 0.1** (μικρή διαμόρφωση): η περιβάλλουσα μετά βίας ταλαντώνεται γύρω από το `Ac = 2` — το σήμα της πληροφορίας ξεχωρίζει δύσκολα.
+- **μ = 0.7** (σωστή διαμόρφωση): η περιβάλλουσα ταλαντώνεται καθαρά μεταξύ `Ac(1-μ) = 0.6` και `Ac(1+μ) = 3.4`.
+- **μ = 1.0** (κρίσιμη τιμή): η περιβάλλουσα φτάνει το 0.
+- **μ > 1** (overmodulation): η περιβάλλουσα **διασταυρώνεται** — δεν μπορεί να ανακτηθεί απλά με envelope detector. Παγίδα!
+
+Δες και το theory page [Conventional AM](/am/conventional) για διαμόρφωση + φάσμα.
+</Callout>
+
+### Πολλαπλοί τόνοι στο μήνυμα
+
+```matlab
+Ac = 4.648;
+fc = 10;
+fm1 = 1;
+fm2 = 2;
+t = 0:0.001:2;
+
+% Μήνυμα με 2 τόνους
+m = 3*cos(2*pi*fm1*t - pi/6) + 2*sin(2*pi*fm2*t);
+
+% AM με «added» μήνυμα (όχι ka·m, αλλά απευθείας s = (Ac + m)·cos(2πfc·t))
+s = (Ac + m) .* cos(2*pi*fc*t);
+env = abs(Ac + m);
+
+subplot(2,1,1);
+plot(t, m), grid on, title('m(t)')
+
+subplot(2,1,2);
+plot(t, s, '-', t, env, 'm--')
+title('AM signal + envelope')
+legend('AM', 'Envelope'), grid on
+```
+
+## DSB-SC — Καταπιεσμένο φέρον (χωρίς φέρον)
+
+Από τη θεωρία: αν αφαιρέσεις το «`1 + μ`» τμήμα και αφήσεις απλά **m(t)·c(t)**, παίρνεις DSB-SC, που χρησιμοποιεί όλη την ισχύ μετάδοσης για πληροφορία.
+
+$$
+s_{DSB-SC}(t) = m(t) \cdot c(t)
+$$
+
+```matlab
+fs = 2000;                                % συχνότητα δειγματοληψίας
+t = -0.5:1/fs:0.5;
+
+% Μήνυμα
+fm = 0.5;
+m = cos(2*pi*fm*t) - 0.25;
+
+% Φέρον
+fc = 20;
+c = cos(2*pi*fc*t);
+
+% DSB-SC: απλό γινόμενο (προσοχή στο .* !)
+u = m .* c;
+
+subplot(3,1,1), plot(t, m), title('Message m(t)')
+subplot(3,1,2), plot(t, c), title('Carrier c(t)')
+subplot(3,1,3), plot(t, u), title('DSB-SC: u(t) = m(t) c(t)')
+```
+
+<Callout type="warning" title="Η πιο συχνή παγίδα του Lab 6">
+Όταν πολλαπλασιάζεις δύο **διανύσματα** (όχι αριθμούς) χρειάζεσαι **οπωσδήποτε** το `.*` (τελεία). Αν γράψεις `m * c` παίρνεις error «inner matrix dimensions must agree». Είναι το ίδιο λάθος που πέφτει συνέχεια στις εξετάσεις του [Lab 1](/labs/01-intro).
+</Callout>
+
+## Φάσμα ενός διαμορφωμένου σήματος — `fft`
+
+Από τη θεωρία ξέρουμε ότι το φάσμα της `u = m·c` έχει **τη μορφή του φάσματος του m**, αλλά **μετατοπισμένο** στις `±fc`. Επιβεβαιώνουμε αυτό αριθμητικά.
+
+```matlab
+% Συνάρτηση για φάσμα ενός σήματος
+function X = am_spectrum(x)
+    X = abs(fftshift(fft(x)));    % fftshift κεντράρει το DC στο 0
+end
+```
+
+```matlab
+M = am_spectrum(m);
+C = am_spectrum(c);
+U = am_spectrum(u);
+
+% Άξονας συχνότητας — από -fs/2 ως +fs/2
+N = length(u);
+f = (-fs/2) : (fs/N) : (fs/2 - fs/N);
+
+subplot(3,1,1), plot(f, M), title('|M(f)|'), xlim([-fs/2 fs/2])
+subplot(3,1,2), plot(f, C), title('|C(f)|'), xlim([-fs/2 fs/2])
+subplot(3,1,3), plot(f, U), title('|U(f)|'), xlim([-fs/2 fs/2])
+```
+
+**Τι θα δεις:** Το `|M(f)|` έχει αιχμή στο `f = 0.5` (η συχνότητα του μηνύματος). Το `|C(f)|` έχει αιχμές στις `±20`. Το `|U(f)|` έχει αιχμές στις `±19.5` και `±20.5` — δηλαδή το φάσμα του μηνύματος **μετατοπισμένο** εκατέρωθεν του φέροντος.
+
+<Callout type="key" title="Το «θεώρημα διαμόρφωσης» σε δράση">
+$$
+m(t) \cos(2\pi f_c t) \xleftrightarrow{\mathcal{F}} \tfrac{1}{2}[M(f - f_c) + M(f + f_c)]
+$$
+
+Αυτό ακριβώς βλέπεις στο φάσμα του `u`. Η μετατόπιση συχνότητας **είναι** το «καρδιακό σημείο» της AM modulation.
+</Callout>
+
+## SSB — Διαμόρφωση μίας πλευρικής ζώνης
+
+Από τη θεωρία: η DSB-SC έχει συμμετρικές πλευρικές ζώνες (η ίδια πληροφορία στις δύο πλευρές του φέροντος). Άρα μπορούμε να κρατήσουμε **μόνο τη μία** και να ξανακερδίσουμε όλη την πληροφορία — εξοικονομώντας μισό εύρος ζώνης. Αυτό είναι το **SSB**.
+
+### Μέθοδος 1 — Φιλτράρισμα
+
+Παίρνουμε το DSB-SC και τρέχουμε ένα **υψηπερατό** φίλτρο για να κρατήσουμε την **άνω** πλευρική ζώνη (USB), ή **χαμηλοπερατό** για την **κάτω** (LSB).
+
+```matlab
+% Φτιάχνουμε πρώτα μια helper για το βήμα
+function u = us(t)
+    u = 1 * (t >= 0);
+end
+```
+
+```matlab
+% Σήμα: τετραγωνικός παλμός
+t = 0:0.001:0.1;
+x = us(t) - us(t - 0.05) - 2 * (us(t - 0.05) - us(t - 0.1));
+
+% Διαμόρφωση
+fc = 350;
+fo = 1000;     % "συχνότητα αναφοράς" του fft window
+x_am = x .* cos(2*pi*fc*t);
+
+% FFT
+X = fft(x_am, 128);
+freq = -fo/2 : (fo/128) : (fo/2 - fo/128);
+
+% Υψηπερατό για την άνω ζώνη
+filter_hp = us(freq - fc) + us(-(freq + fc));   % 1 στις ζώνες έξω από |freq| < fc
+X_shifted = abs(fftshift(X));
+X_upper = X_shifted .* filter_hp;
+
+% Πίσω στο χρόνο
+x_usb = real(ifft(X_upper));
+
+subplot(2,1,1), plot(freq, X_upper), title('USB στο φάσμα')
+subplot(2,1,2), plot(x_usb), title('USB στο χρόνο')
+```
+
+Για την **κάτω** πλευρική ζώνη αλλάζεις σε χαμηλοπερατό:
+
+```matlab
+filter_lp = us(freq + fc) - us(freq - fc);   % 1 μόνο στο |freq| < fc
+```
+
+### Μέθοδος 2 — Hilbert transform
+
+Πιο κομψά, χρησιμοποιώντας τη φόρμουλα:
+
+$$
+x_{SSB}(t) = \tfrac{A_c}{2} m(t) \cos(2\pi f_c t) \mp \tfrac{A_c}{2} \hat{m}(t) \sin(2\pi f_c t)
+$$
+
+όπου `m̂(t)` είναι ο [μετασχηματισμός Hilbert](/modulation/bridge) του μηνύματος. Το αρνητικό πρόσημο δίνει **άνω** πλευρική ζώνη, το θετικό δίνει **κάτω**.
+
+```matlab
+m_hat = imag(hilbert(m));        % Hilbert transform — το imag() γιατί η hilbert επιστρέφει αναλυτικό σήμα
+
+x_USB = 0.5 * m .* cos(2*pi*fc*t) - 0.5 * m_hat .* sin(2*pi*fc*t);
+x_LSB = 0.5 * m .* cos(2*pi*fc*t) + 0.5 * m_hat .* sin(2*pi*fc*t);
+```
+
+<Callout type="note" title="Γιατί `imag(hilbert(...))`;">
+Στο MATLAB η εντολή `hilbert(x)` επιστρέφει το **αναλυτικό σήμα** `x + j·x̂` (μιγαδικό), όχι μόνο το `x̂`. Άρα παίρνουμε το φανταστικό μέρος (`imag`) για να απομονώσουμε το Hilbert transform.
+</Callout>
+
+## Σύγχρονη φώραση (coherent detection)
+
+Για να ανακτήσουμε το `m(t)` από ένα διαμορφωμένο σήμα:
+
+1. Πολλαπλασιάζουμε με ένα τοπικό συνημίτονο **ίδιας συχνότητας και φάσης** με το φέρον.
+2. Περνάμε από **χαμηλοπερατό φίλτρο** για να κρατήσουμε μόνο τους όρους χαμηλής συχνότητας.
+
+```matlab
+% Δεδομένο: το DSB-SC από νωρίτερα (s = m * cos(2πfc·t))
+s = m .* cos(2*pi*fc*t);
+
+% Πολλαπλασιάζω ξανά με τον φέροντα
+v = s .* cos(2*pi*fc*t);
+% v = m * cos²(2πfc·t) = (m/2) + (m/2)·cos(4πfc·t)
+
+% Φιλτράρισμα — χαμηλοπερατό
+[b, a] = butter(6, 0.05);            % Butterworth τάξης 6, fc-norm = 0.05
+m_recovered = 2 * filter(b, a, v);    % πολλαπλασιάζω με 2 για να ξανακερδίσω την αρχική κλίμακα
+
+plot(t, m_recovered)
+hold on
+plot(t, m, 'r--')
+legend('Ανακτημένο', 'Αρχικό')
+title('Coherent demodulation — σύγκριση')
+```
+
+## Bonus — FM στο MATLAB
+
+Από [θεωρία FM](/fm/idea):
+
+$$
+s_{FM}(t) = A_c \cos\left(2\pi f_c t + \beta \sin(2\pi f_m t)\right)
+$$
+
+για ημίτονο μήνυμα, όπου `β = Δf / fm` είναι ο **modulation index**.
+
+```matlab
+fc = 400;
+fm = 25;
+beta = 10;       % βαθιά FM
+t = 0:0.0001:0.1;
+
+s_fm = cos(2*pi*fc*t + beta*sin(2*pi*fm*t));
+
+subplot(3,1,1), plot(t, cos(2*pi*fm*t)), title('Μήνυμα m(t)')
+subplot(3,1,2), plot(t, cos(2*pi*fc*t)), title('Φέρον c(t)')
+subplot(3,1,3), plot(t, s_fm), title('FM signal')
+```
+
+Αν δοκιμάσεις `beta = 0.5`, βλέπεις στο φάσμα **μόνο** ένα ζευγάρι sidebands `fc ± fm` (narrowband FM). Αν δοκιμάσεις `beta = 10`, βλέπεις πολλές sidebands — αυτό είναι το **Bessel spectrum** για το wideband FM.
+
+```matlab
+% Φάσμα FM signal
+X = abs(fft(s_fm));
+N = length(X);
+fVals = (1/0.0001) * (-N/2 : N/2-1) / N;     % άξονας σε Hz
+plot(fVals, fftshift(X))
+xlabel('Hz'), title(sprintf('Φάσμα FM, \\beta = %g', beta))
+```
+
+## Quick recap
+
+- **Conventional AM** = `Ac·(1 + μ·m(t))·cos(2πfc·t)`. Η περιβάλλουσα είναι `Ac·|1 + μ·m(t)|`.
+- **DSB-SC** = απλό γινόμενο `m(t)·c(t)`. Όλη η ισχύς πάει στην πληροφορία.
+- **SSB** = είτε με φιλτράρισμα της μίας ζώνης, είτε με τον τύπο Hilbert.
+- **Coherent demodulation** = πολλαπλασιασμός με `cos(2πfc·t)` + χαμηλοπερατό φίλτρο.
+- **`fft` + `fftshift`** για να δεις το φάσμα. `abs(fftshift(fft(x)))` δίνει συμμετρικό φάσμα γύρω από το 0.
+- **FM**: `cos(2πfc·t + β·sin(2πfm·t))`. Όσο μεγαλώνει το β, εμφανίζονται περισσότερες sidebands.
+
+<div className="mt-10 rounded-xl border border-border bg-bg-elevated p-5">
+  <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Επόμενο</div>
+  <Link href="/labs/practice" className="mt-1 inline-block text-lg font-semibold tracking-tight text-accent hover:underline">
+    Lab practice — εξάσκηση για την εξέταση →
+  </Link>
+  <p className="mt-1 text-sm text-fg-muted">
+    Multiple choice ερωτήσεις πάνω σε MATLAB syntax + «γράψε το script» θέματα, από παλιές εξετάσεις (2018-19, 2020-21, 2023, 2024).
+  </p>
+</div>

@@ -1,0 +1,99 @@
+export const metadata = {
+  title: 'Lab 0 — Εγκατάσταση MATLAB',
+  description:
+    'Πώς εγκαθιστάς το MATLAB δωρεάν μέσω ΕΚΠΑ, και εναλλακτικές αν δεν θέλεις να το εγκαταστήσεις τοπικά (MATLAB Online, Octave).',
+}
+
+export const frontmatter = {
+  title: 'Lab 0 — Εγκατάσταση MATLAB',
+  slug: 'labs/00-install',
+  order: 1,
+  prerequisites: [],
+  estimatedReadTime: 5,
+  lastUpdated: '2026-05-18',
+}
+
+import Link from 'next/link'
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Lab · 0 of 6</span>
+  <span>·</span>
+  <span>~5 min</span>
+</div>
+
+# Lab 0 — Εγκατάσταση MATLAB
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="labs/00-install" />
+  <Bookmark id="labs/00-install" />
+</div>
+
+Πριν κάνουμε οτιδήποτε με κώδικα, χρειαζόμαστε το MATLAB. Η καλή είδηση: το παίρνεις **δωρεάν** ως φοιτητής/τρια του ΕΚΠΑ. Δεν χρειάζεται να αγοράσεις τίποτα.
+
+## Επίσημος τρόπος — άδεια ΕΚΠΑ
+
+Το ΕΚΠΑ έχει διαθέσιμες **105 ταυτόχρονες άδειες** για όλα τα μέλη του (φοιτητές + προσωπικό). Διανέμεται για **Windows**, **macOS** (Intel + Apple Silicon) και **Linux**.
+
+<Callout type="key" title="Όλες οι οδηγίες — από την επίσημη πηγή">
+Πήγαινε στο [cc.uoa.gr/logismika/matlab](https://www.cc.uoa.gr/logismika/matlab) και ακολούθησε τα βήματα από εκεί. Είναι λεπτομερή και ενημερωμένα, οπότε δεν τα ξαναγράφουμε εδώ — θα γερνούσαν.
+
+Η σελίδα σε καθοδηγεί να:
+1. Δημιουργήσεις λογαριασμό MathWorks με το **πανεπιστημιακό σου email** (`<username>@uoa.gr`).
+2. Συνδέσεις τον λογαριασμό με την άδεια του ΕΚΠΑ.
+3. Κατεβάσεις τον installer και ενεργοποιήσεις τοπικά.
+</Callout>
+
+<Callout type="warning" title="Παλιό μηχάνημα Windows 32-bit;">
+Η τρέχουσα έκδοση (R2025b) δεν τρέχει σε 32-bit Windows. Αν έχεις παλιό laptop με 32-bit Windows, **πρέπει** να μείνεις στην έκδοση R2015b. Για 99% των αναγνωστών αυτό δεν ισχύει — αν δεν ξέρεις τι σημαίνει 32-bit Windows, σχεδόν σίγουρα έχεις 64-bit.
+</Callout>
+
+## Εναλλακτικές αν δεν θέλεις να εγκαταστήσεις τίποτα
+
+Η εγκατάσταση του MATLAB είναι μεγάλη (~5-10 GB ανάλογα με τα toolboxes). Αν δεν θες να σου φάει χώρο, υπάρχουν εναλλακτικές:
+
+### MATLAB Online (από browser)
+
+Το MathWorks προσφέρει **MATLAB Online** — τρέχει στον browser, δεν χρειάζεται εγκατάσταση. Με την άδεια του ΕΚΠΑ συνδέεσαι κανονικά. Είναι λίγο πιο αργό από το desktop, αλλά για το επίπεδο των ασκήσεων που κάνουμε σε αυτό το μάθημα **είναι μια χαρά**.
+
+URL: [matlab.mathworks.com](https://matlab.mathworks.com) — σύνδεση με τον ίδιο λογαριασμό MathWorks που έφτιαξες παραπάνω.
+
+### GNU Octave (free & open-source εναλλακτική)
+
+Το **Octave** είναι δωρεάν λογισμικό που τρέχει σχεδόν 100% του ίδιου κώδικα με το MATLAB. Για όλα τα labs αυτού του εξαμήνου, **τίποτα δεν θα σε σταματήσει να χρησιμοποιήσεις Octave αντί για MATLAB**.
+
+- Site: [octave.org](https://octave.org/)
+- Εγκατάσταση: Windows/macOS/Linux installers, ~300 MB
+- Διαφορές: μερικά εξωτικά toolboxes δεν υπάρχουν στο Octave (π.χ. Simulink), αλλά για **όλα** όσα κάνουμε εδώ είναι ισοδύναμο.
+
+<Callout type="note" title="Πρακτική σύσταση">
+Αν θέλεις τη minimum-friction διαδρομή: **MATLAB Online**. Αν θέλεις να δουλέψεις offline και δεν σε νοιάζει να εγκαταστήσεις λογισμικό: **κανονικό MATLAB μέσω ΕΚΠΑ**. Αν θες να αποφύγεις εντελώς τη γραφειοκρατία λογαριασμών MathWorks: **Octave**.
+</Callout>
+
+## Έλεγχος ότι όλα δουλεύουν
+
+Αφού εγκαταστήσεις και ανοίξεις το MATLAB, στο Command Window πληκτρολόγησε:
+
+```matlab
+>> 2 + 2
+```
+
+Αν δεις:
+
+```text
+ans =
+     4
+```
+
+είσαι έτοιμος. Στο επόμενο lab βλέπουμε τι σημαίνουν αυτά τα `>>`, τι είναι το `ans`, και πώς κάνεις το πρώτο σου plot.
+
+<div className="mt-10 rounded-xl border border-border bg-bg-elevated p-5">
+  <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Επόμενο</div>
+  <Link href="/labs/01-intro" className="mt-1 inline-block text-lg font-semibold tracking-tight text-accent hover:underline">
+    Lab 1 — Εισαγωγή στο MATLAB →
+  </Link>
+  <p className="mt-1 text-sm text-fg-muted">
+    Πίνακες, διανύσματα, βασικές πράξεις, plotting, scripts vs functions.
+  </p>
+</div>

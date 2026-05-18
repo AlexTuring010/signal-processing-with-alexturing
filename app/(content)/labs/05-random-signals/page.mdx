@@ -1,0 +1,353 @@
+export const metadata = {
+  title: 'Lab 5 — Τυχαία σήματα & θόρυβος στο MATLAB',
+  description:
+    'Γεννήτριες τυχαίων (rand/randn/normrnd), ιστόγραμμα, μέση τιμή/διασπορά/τυπική απόκλιση, συσχέτιση, τυχαία σήματα με τυχαίο πλάτος/φάση/συχνότητα, λευκός θόρυβος, εκτίμηση PSD με periodogram, θόρυβος μέσα από φίλτρα.',
+}
+
+export const frontmatter = {
+  title: 'Lab 5 — Τυχαία σήματα & θόρυβος',
+  slug: 'labs/05-random-signals',
+  order: 5,
+  prerequisites: ['randomness/random-variables', 'randomness/random-processes', 'randomness/psd', 'noise/white-noise'],
+  estimatedReadTime: 35,
+  lastUpdated: '2026-05-18',
+}
+
+import Link from 'next/link'
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Lab · 5 of 6</span>
+  <span>·</span>
+  <span>~35 min</span>
+</div>
+
+# Lab 5 — Τυχαία σήματα & θόρυβος
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="labs/05-random-signals" />
+  <Bookmark id="labs/05-random-signals" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<Callout type="note" title="Γιατί δεν υπάρχει Lab 4;">
+Στις διαφάνειες ο διδάσκων πάει από Lab 3 κατευθείαν στο Lab 5. Δεν είναι λάθος στη σελίδα — έτσι είναι η αρίθμηση των slides.
+</Callout>
+
+Στη θεωρία είδαμε [τυχαίες μεταβλητές](/randomness/random-variables), [τυχαίες διαδικασίες](/randomness/random-processes), [PSD](/randomness/psd) και [λευκό θόρυβο](/noise/white-noise). Εδώ τα φέρνουμε όλα στο MATLAB.
+
+## Γεννήτριες τυχαίων αριθμών
+
+| Εντολή | Τι κάνει |
+|---|---|
+| `rand(M, N)` | M×N πίνακας από **ομοιόμορφη** στο `(0, 1)` |
+| `randn(M, N)` | M×N πίνακας από **κανονική** N(0, 1) |
+| `randi(K, M, N)` | M×N πίνακας από **διακριτή ομοιόμορφη** στο `{1, 2, ..., K}` |
+| `normrnd(μ, σ, M, N)` | Κανονική με μέση τιμή μ και τυπική απόκλιση σ |
+| `unifrnd(a, b, M, N)` | Ομοιόμορφη στο `(a, b)` |
+| `exprnd(λ, M, N)` | Εκθετική κατανομή |
+| `binornd(n, p, M, N)` | Διωνυμική |
+| `poissrnd(λ, M, N)` | Poisson |
+
+**Παράδειγμα:**
+
+```matlab
+x = rand(100, 1);      % 100 τιμές U(0,1)
+stem(x)                 % διακριτές τιμές
+figure
+hist(x, 100)           % ιστόγραμμα με 100 bins
+```
+
+<Callout type="warning" title="Οι «τυχαίοι» αριθμοί είναι **ψευδοτυχαίοι**">
+Το MATLAB χρησιμοποιεί έναν deterministic γεννήτορα. Κάθε φορά που κάνεις restart, ξεκινάει από το ίδιο seed — οπότε **οι ίδιοι αριθμοί**. Αν θέλεις διαφορετικά αποτελέσματα κάθε φορά:
+
+```matlab
+rng('shuffle')      % νέο seed από το ρολόι
+```
+
+Για **επαναληψιμότητα** (π.χ. όταν αναπτύσσεις και θες σταθερά αποτελέσματα για debug):
+
+```matlab
+rng(42)             % συγκεκριμένο seed
+```
+</Callout>
+
+## Στατιστικά: mean, var, std
+
+```matlab
+x = randn(1, 10000);            % 10000 τιμές N(0,1)
+mean(x)                          % ≈ 0
+var(x)                           % ≈ 1
+std(x)                           % ≈ 1
+median(x)                        % ≈ 0
+```
+
+Για κανονική N(μ, σ²) με μ=2, σ=4:
+
+```matlab
+y = normrnd(2, 4, 1, 10000);
+mean(y)     % ≈ 2
+std(y)      % ≈ 4
+var(y)      % ≈ 16
+```
+
+**Σύγκριση δύο διανυσμάτων** — covariance και correlation:
+
+```matlab
+% Covariance
+cov(x, y)
+% Επιστρέφει 2x2 πίνακα: [var(x), cov(x,y); cov(x,y), var(y)]
+
+% Correlation coefficient
+corrcoef(x, y)
+% Ομοίως 2x2 πίνακας, με ρ μεταξύ -1 και +1 στο off-diagonal
+```
+
+<Callout type="key" title="Τι σου λέει η συσχέτιση ρ;">
+- `ρ = +1`: τέλεια θετική γραμμική σχέση `y = αx + β` με α > 0
+- `ρ = -1`: τέλεια αρνητική γραμμική σχέση `y = -αx + β`
+- `ρ = 0`: ασυσχέτιστα (γραμμικά)
+- Ενδιάμεσες τιμές: ασθενέστερη γραμμική σχέση
+
+Πρόσεξε: ρ = 0 **δεν** σημαίνει «ανεξάρτητα» — μόνο «χωρίς γραμμική σχέση». Δύο τυχαίες μπορεί να έχουν ισχυρή μη γραμμική σχέση και ρ ≈ 0.
+</Callout>
+
+## Τυχαία σήματα — generation patterns
+
+Από τη θεωρία ξέρουμε ότι ένα τυχαίο σήμα έχει **πραγματοποιήσεις** (realizations). Στο MATLAB φτιάχνουμε πολλές πραγματοποιήσεις δοκιμάζοντας ξανά και ξανά.
+
+### Σήμα με τυχαίο πλάτος
+
+$$
+X(t) = A \cos(2\pi \cdot 4 \cdot t), \quad A \sim \text{Uniform}\{1, 2, 3, 4\}
+$$
+
+```matlab
+NUM_REAL = 4;                            % πόσες πραγματοποιήσεις
+N = 1024;                                 % δείγματα ανά πραγματοποίηση
+t = 0:(1/N):(1 - 1/N);                   % ένα δευτερόλεπτο
+
+figure;
+for k = 1:NUM_REAL
+    A = randi(4);                         % τυχαίο A από {1,2,3,4}
+    x = A * cos(2*pi*4*t);
+    subplot(NUM_REAL, 1, k);
+    plot(t, x);
+    title(sprintf('Πραγματοποίηση %d, A = %d', k, A));
+end
+```
+
+### Σήμα με τυχαία φάση
+
+$$
+X(t) = \cos(2\pi \cdot 4 \cdot t + \Theta), \quad \Theta \sim \text{Uniform}[-\pi, \pi]
+$$
+
+```matlab
+for k = 1:NUM_REAL
+    theta = unifrnd(-pi, pi);             % τυχαία φάση
+    x = cos(2*pi*4*t + theta);
+    subplot(NUM_REAL, 1, k);
+    plot(t, x);
+end
+```
+
+### Σήμα με τυχαία συχνότητα
+
+```matlab
+for k = 1:NUM_REAL
+    f = randi(4);                         % τυχαία ακέραια συχνότητα 1-4
+    x = cos(2*pi*f*t);
+    subplot(NUM_REAL, 1, k);
+    plot(t, x);
+end
+```
+
+## Λευκός Gaussian θόρυβος (WGN)
+
+Από τη θεωρία: ο λευκός θόρυβος έχει **σταθερή PSD** σε όλες τις συχνότητες (διπλάσιο νόημα: «λευκός» όπως το λευκό φως). Οι τιμές του είναι IID, και αν είναι Gaussian κάθε δείγμα είναι N(0, σ²).
+
+```matlab
+N = 1024;
+sigma = 1;
+n = sigma * randn(1, N);                 % WGN με τυπική απόκλιση σ
+
+figure;
+subplot(2,1,1);
+plot(n)
+title('White Gaussian Noise')
+
+subplot(2,1,2);
+hist(n, 50)
+title('Ιστόγραμμα — πρέπει να μοιάζει με καμπύλη Gauss')
+```
+
+## Σήμα + θόρυβος
+
+```matlab
+fs = 1000;                                % συχνότητα δειγματοληψίας
+t = 0:1/fs:0.5;                           % 0.5 s
+A1 = 3; f1 = 270;
+A2 = 8; f2 = 175;
+signal = A1*cos(2*pi*f1*t) + A2*cos(2*pi*f2*t);
+
+% Προσθήκη θορύβου με μέση τιμή 3 και διασπορά 25
+noise = 5*randn(size(t)) + 3;             % σ=5 ⟹ σ²=25, μ=3
+X = signal + noise;
+
+plot(t, X)
+title('Σήμα + θόρυβος — φαίνεται "βρώμικο"')
+```
+
+Το ωραίο: στο γράφημα φαίνεται απλώς θόρυβος. Στο πεδίο των συχνοτήτων όμως, οι 2 τόνοι (στις 175 και 270 Hz) εμφανίζονται καθαρά. Αυτό μας το δείχνει το **PSD**.
+
+## Εκτίμηση PSD με `periodogram`
+
+Από τη θεωρία: PSD = μετασχηματισμός Fourier της αυτοσυσχέτισης. Στο MATLAB υπάρχει έτοιμη εκτιμήτρια — το **περιοδόγραμμα**.
+
+```matlab
+[S, w] = periodogram(X, [], 1024, 1);     % () placeholder, 1024 FFT points, fs=1
+plot(w, S)
+xlabel('\omega'), ylabel('PSD'), grid on
+title('Εκτίμηση PSD')
+```
+
+<Callout type="key" title="Πώς διαβάζεις το periodogram">
+- Ο **οριζόντιος άξονας** είναι κανονικοποιημένη συχνότητα (από 0 ως 0.5 = fs/2).
+- Ο **κάθετος άξονας** είναι «πόση ισχύς» έχει το σήμα σε κάθε συχνότητα.
+- Για **λευκό θόρυβο** βλέπεις σχεδόν επίπεδη γραμμή — η ισχύς είναι ομοιόμορφα κατανεμημένη.
+- Για **καθαρό ημίτονο** βλέπεις μια **αιχμή** στη συχνότητά του.
+- Για **σήμα + θόρυβος** βλέπεις τις αιχμές πάνω από το επίπεδο του θορύβου — γι' αυτό είναι τόσο χρήσιμο.
+</Callout>
+
+### Παράδειγμα — δύο ημίτονα μέσα σε θόρυβο
+
+```matlab
+fs = 1000;
+t = 0:1/fs:0.5;
+X = 5*randn(size(t)) + 3 + 3*cos(2*pi*270*t) + 8*cos(2*pi*175*t);
+
+[S, w] = periodogram(X, [], 1024, 1);
+
+subplot(2,1,1)
+plot(t, X), title('Σήμα στο χρόνο — δεν διακρίνονται οι τόνοι')
+
+subplot(2,1,2)
+plot(-2*w, S, 2*w, S), grid on
+title('PSD — οι τόνοι ξεχωρίζουν καθαρά στις 175 και 270 Hz')
+xlabel('\omega/\pi')
+```
+
+## Θόρυβος μέσα από φίλτρα
+
+Όταν φιλτράρουμε λευκό θόρυβο, **διαμορφώνουμε** το φάσμα του θορύβου. Λευκός θόρυβος = επίπεδη PSD. Μετά από LP φίλτρο → η PSD γίνεται «χαμηλοπερατή» (μόνο χαμηλές συχνότητες απομένουν).
+
+```matlab
+% Δημιουργία λευκού θορύβου
+fs = 1000;
+t = 0:1/fs:0.5;
+X = 2*randn(size(t)) + 4;                 % μ=4, σ=2
+
+% Κατασκευή χαμηλοπερατού φίλτρου τάξης 150, συχνότητα αποκοπής Wn=0.5
+h = fir1(150, 0.5);                       % FIR filter
+Y = filter(h, 1, X);                      % πέρασμα μέσα από φίλτρο
+
+% PSD πριν και μετά
+[SX, w] = periodogram(X, [], 1024, 1);
+[SY, w] = periodogram(Y, [], 1024, 1);
+
+subplot(2,1,1)
+plot(-2*w, SX, 2*w, SX), grid on
+title('PSD εισόδου — επίπεδη (λευκός θόρυβος)')
+
+subplot(2,1,2)
+plot(-2*w, SY, 2*w, SY), grid on
+title('PSD εξόδου — αποκόπηκαν οι υψηλές συχνότητες')
+xlabel('\omega/\pi')
+```
+
+Για **υψηπερατό** φίλτρο, αρκεί:
+
+```matlab
+h = fir1(150, 0.5, 'high');
+```
+
+## Συνάρτηση αυτοσυσχέτισης
+
+Από τη θεωρία: η αυτοσυσχέτιση `R_X(τ) = E[X(t)X(t+τ)]` είναι **το βασικό εργαλείο** για στατιστικές διεργασίες. Στο MATLAB υπολογίζεται με `xcorr`.
+
+```matlab
+X = randn(1, 10000);                      % WGN
+r = xcorr(X, 'biased');                   % unbiased option = κανονικοποιημένη
+
+% Εστίαση γύρω από το lag = 0
+N = 100;
+mid = length(r)/2;                        % κέντρο
+stem(-N:N, r(mid-N:mid+N))
+title('Αυτοσυσχέτιση WGN — μοιάζει με δέλτα(τ)')
+xlabel('lag τ'), ylabel('R(\tau)')
+```
+
+Για **λευκό** θόρυβο, η αυτοσυσχέτιση είναι σχεδόν 0 παντού **εκτός** του `τ = 0`, όπου έχει αιχμή ίση με την διασπορά. Αυτό ΕΙΝΑΙ η μαθηματική έκφραση του «άσχετα μεταξύ τους δείγματα».
+
+## Ασκήσεις δοκιμής
+
+<Example title="Άσκηση 1 — έλεγχος της κεντρικής οριακής θεώρησης">
+Φτιάξε ένα διάνυσμα **10000 τιμών**, όπου κάθε τιμή είναι **το άθροισμα 12 ομοιόμορφων αριθμών στο (0,1)**. Σχεδίασε το ιστόγραμμα. Τι παρατηρείς;
+
+<Example title="Λύση" defaultOpen={true}>
+```matlab
+N = 10000;
+samples = sum(rand(12, N), 1);            % άθροισε 12 γραμμές ομοιόμορφων
+hist(samples, 50)
+title('Άθροισμα 12 ομοιόμορφων ≈ Gaussian')
+mean(samples)    % ≈ 6
+std(samples)     % ≈ 1
+```
+
+Το ιστόγραμμα μοιάζει με **καμπύλη του Gauss** (μ=6, σ≈1) — αυτό **είναι** το κεντρικό οριακό θεώρημα σε δράση. Είναι και ένας από τους πρώτους τρόπους που χρησιμοποιούταν για να παραχθεί N(0,1) πριν υπάρξει η `randn`.
+</Example>
+</Example>
+
+<Example title="Άσκηση 2 — PSD ημιτόνου σε θόρυβο">
+Δημιούργησε ένα σήμα `x(t) = 5cos(2π·100t)` δειγματοληπτημένο στα `fs = 1000 Hz` για 1 δευτερόλεπτο. Πρόσθεσε λευκό Gaussian θόρυβο με τυπική απόκλιση `σ = 2`. Υπολόγισε και σχεδίασε το PSD. Πού φαίνεται η συχνότητα του ημιτόνου;
+
+<Example title="Λύση" defaultOpen={true}>
+```matlab
+fs = 1000;
+t = 0:1/fs:1;
+x = 5*cos(2*pi*100*t);
+noise = 2*randn(size(t));
+y = x + noise;
+
+[S, w] = periodogram(y, [], 1024, fs);    % εδώ δίνουμε fs σε Hz → άξονας σε Hz
+plot(w, S), grid on
+xlabel('Συχνότητα (Hz)'), ylabel('PSD')
+title('Ημίτονο 100 Hz μέσα σε θόρυβο')
+```
+
+Στο γράφημα βλέπεις μια **αιχμή** στα 100 Hz πάνω από επίπεδο θόρυβο. Όσο μικρότερο το `σ` του θορύβου, τόσο πιο καθαρή η αιχμή.
+</Example>
+</Example>
+
+## Quick recap
+
+- **Γεννήτορες**: `rand` (ομοιόμορφη), `randn` (κανονική), `randi` (διακριτή ομοιόμορφη), `normrnd`, `unifrnd` για πιο γενικά.
+- **Στατιστικά**: `mean`, `var`, `std`, `cov`, `corrcoef`.
+- **WGN**: `sigma * randn(1, N)` δίνει λευκό Gaussian θόρυβο με τυπική απόκλιση σ.
+- **PSD**: `periodogram(X, [], NFFT, fs)` εκτιμά το φάσμα.
+- **Φιλτράρισμα θορύβου**: `fir1(N, Wn)` κατασκευάζει το φίλτρο, `filter(h, 1, X)` φιλτράρει.
+- **Αυτοσυσχέτιση**: `xcorr(X, 'biased')`.
+
+<div className="mt-10 rounded-xl border border-border bg-bg-elevated p-5">
+  <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Επόμενο</div>
+  <Link href="/labs/06-am-modulation" className="mt-1 inline-block text-lg font-semibold tracking-tight text-accent hover:underline">
+    Lab 6 — AM στο MATLAB →
+  </Link>
+  <p className="mt-1 text-sm text-fg-muted">
+    Conventional AM, περιβάλλουσα, DSB-SC, SSB με φιλτράρισμα ή Hilbert, και ένα bonus για FM.
+  </p>
+</div>

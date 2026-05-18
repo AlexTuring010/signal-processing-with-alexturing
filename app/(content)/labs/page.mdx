@@ -1,0 +1,152 @@
+export const metadata = {
+  title: 'Lab Hub — MATLAB μέρος του μαθήματος',
+  description:
+    'Από πού να ξεκινήσεις αν παρακολουθείς το προαιρετικό εργαστήριο. Όλα τα labs, η σειρά τους, ποια θεωρία θέλει το καθένα.',
+}
+
+export const frontmatter = {
+  title: 'Lab Hub',
+  slug: 'labs',
+  order: 0,
+  prerequisites: [],
+  estimatedReadTime: 5,
+  lastUpdated: '2026-05-18',
+}
+
+import Link from 'next/link'
+import { FlaskConical, BookOpen, GraduationCap } from 'lucide-react'
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Lab · Hub</span>
+  <span>·</span>
+  <span>~5 min read</span>
+</div>
+
+# 🧪 Lab Hub — MATLAB μέρος του μαθήματος
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="labs" />
+  <Bookmark id="labs" />
+</div>
+
+<Callout type="note" title="Είναι προαιρετικό">
+Το lab μέρος του K21 **δεν είναι υποχρεωτικό** — μπορείς να περάσεις το μάθημα μόνο με τη θεωρία. Αν όμως επέλεξες να το παρακολουθείς, έχεις και ξεχωριστή εξέταση στο τέλος του εξαμήνου πάνω στο MATLAB. Αυτή η ενότητα είναι **μόνο για το lab μέρος**.
+</Callout>
+
+## Τι είναι το lab μέρος και γιατί υπάρχει αυτή η ενότητα
+
+Στο lab μάθαμε να χρησιμοποιούμε MATLAB για να φτιάχνουμε και να μελετάμε σήματα. Δεν είναι ένας ξεχωριστός κόσμος — είναι ακριβώς τα ίδια πράγματα με τη θεωρία, αλλά αντί για χαρτί χρησιμοποιούμε εντολές. Ένα cosine στο χαρτί λέγεται `cos(2*pi*f*t)` στο MATLAB. Ένα convolution λέγεται `conv(x, h)`. Ένα plot λέγεται `plot(t, x)`. Αυτό είναι όλο.
+
+Η εξέταση του lab είναι συνήθως **πολύ πιο εύκολη** από τη θεωρία. Ο στόχος του διδάσκοντα δεν είναι να σε παγιδέψει — είναι να δει ότι **κάθεσαι σε ένα MATLAB και ξέρεις τι κάνεις**. Αν έχεις δει τα labs και τις ασκήσεις τους μία φορά, είσαι ΟΚ.
+
+<Callout type="intuition" title="Σκέψου το έτσι">
+Στη θεωρία ρωτάμε «τι είναι η συνέλιξη;» — απαντάς με ολοκλήρωμα.
+Στο lab ρωτάμε «βάλε ένα τετραγωνικό σήμα μέσα σε έναν χαμηλοπερατό φίλτρο και δες την έξοδο» — απαντάς με κώδικα. Ίδιο πράγμα, διαφορετική γλώσσα.
+</Callout>
+
+## Πώς διαβάζεται αυτή η ενότητα
+
+Κάθε lab έχει τη δική του σελίδα, και κάθε σελίδα ακολουθεί το ίδιο πατρόν:
+
+1. **Quick theory refresh** — μια σύντομη ανακεφαλαίωση της θεωρίας που χρειάζεται. Δεν αντικαθιστά τη θεωρητική σελίδα· υποθέτουμε ότι την έχεις δει. Αν όχι, πάνω-πάνω σε κάθε lab υπάρχει chip με link στις σχετικές θεωρητικές σελίδες.
+2. **Walk-through με κώδικα** — οι ίδιες εντολές που είδαμε στις διαφάνειες, αλλά με σχόλια για το **γιατί** κάνουμε κάθε βήμα.
+3. **Δοκίμασέ το** — μικρές ασκήσεις με toggle-to-reveal λύση. Δοκίμασε πρώτα μόνος/η σου στο MATLAB πριν δεις τη λύση.
+4. **Recap + επόμενο lab** — τι κράτησες από το lab και πού πας μετά.
+
+Το **lab practice** στο τέλος έχει ερωτήσεις παλιών εξετάσεων του εργαστηρίου — multiple choice για syntax και «γράψε αυτό το script» θέματα.
+
+## Η σειρά των labs
+
+<div className="my-6 grid gap-3 sm:grid-cols-2">
+  <Link
+    href="/labs/00-install"
+    className="group rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-accent/50 hover:shadow-md"
+  >
+    <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Lab 0</div>
+    <div className="mt-1 font-semibold tracking-tight group-hover:text-accent">Εγκατάσταση MATLAB</div>
+    <p className="mt-1 text-sm text-fg-muted">Πώς παίρνεις δωρεάν άδεια από ΕΚΠΑ, εναλλακτικές για όσους δεν θέλουν να εγκαταστήσουν.</p>
+  </Link>
+  <Link
+    href="/labs/01-intro"
+    className="group rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-accent/50 hover:shadow-md"
+  >
+    <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Lab 1</div>
+    <div className="mt-1 font-semibold tracking-tight group-hover:text-accent">Εισαγωγή στο MATLAB</div>
+    <p className="mt-1 text-sm text-fg-muted">Πίνακες, διανύσματα, βασικές πράξεις, plotting, scripts vs functions, flow control. Όλα τα βασικά που χρειάζεσαι.</p>
+  </Link>
+  <Link
+    href="/labs/02-signals"
+    className="group rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-accent/50 hover:shadow-md"
+  >
+    <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Lab 2</div>
+    <div className="mt-1 font-semibold tracking-tight group-hover:text-accent">Συνεχή & διακριτά σήματα</div>
+    <p className="mt-1 text-sm text-fg-muted">Χρονικά διανύσματα, plot vs stem, βασικά σήματα (cos, step, ράμπα, ορθογώνιο), περιοδικότητα, ενέργεια με trapz.</p>
+  </Link>
+  <Link
+    href="/labs/03-systems"
+    className="group rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-accent/50 hover:shadow-md"
+  >
+    <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Lab 3</div>
+    <div className="mt-1 font-semibold tracking-tight group-hover:text-accent">Γραμμικά συστήματα</div>
+    <p className="mt-1 text-sm text-fg-muted">Έλεγχος γραμμικότητας & χρονικής αμεταβλητότητας με anonymous functions. Convolution στο MATLAB.</p>
+  </Link>
+  <Link
+    href="/labs/05-random-signals"
+    className="group rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-accent/50 hover:shadow-md"
+  >
+    <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Lab 5</div>
+    <div className="mt-1 font-semibold tracking-tight group-hover:text-accent">Τυχαία σήματα & θόρυβος</div>
+    <p className="mt-1 text-sm text-fg-muted">rand/randn, ιστογράμματα, μέση τιμή/διασπορά, συσχέτιση, λευκός θόρυβος, periodogram & PSD, θόρυβος μέσα από φίλτρα.</p>
+  </Link>
+  <Link
+    href="/labs/06-am-modulation"
+    className="group rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-accent/50 hover:shadow-md"
+  >
+    <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Lab 6</div>
+    <div className="mt-1 font-semibold tracking-tight group-hover:text-accent">AM στο MATLAB</div>
+    <p className="mt-1 text-sm text-fg-muted">Conventional AM, περιβάλλουσα, DSB-SC, φάσμα με fft, SSB με φιλτράρισμα ή Hilbert, FM.</p>
+  </Link>
+</div>
+
+<div className="my-6">
+  <Link
+    href="/labs/practice"
+    className="group flex flex-col rounded-2xl border-2 border-violet-500/40 bg-gradient-to-br from-violet-500/10 to-bg-elevated p-5 transition hover:border-violet-500 hover:shadow-md"
+  >
+    <div className="flex items-center gap-2 text-violet-600 dark:text-violet-300">
+      <GraduationCap className="h-5 w-5" />
+      <span className="text-xs font-semibold uppercase tracking-wider">Lab practice</span>
+    </div>
+    <div className="mt-2 text-lg font-semibold tracking-tight group-hover:text-violet-600 dark:group-hover:text-violet-300">
+      🧪 Εξάσκηση για την εξέταση του lab
+    </div>
+    <p className="mt-1 text-sm text-fg-muted">
+      Ερωτήσεις από παλαιότερες εξετάσεις (2018-19, 2020-21, 2023) — multiple choice πάνω σε MATLAB syntax + «γράψε αυτό το script» θέματα. Με τοggle-to-reveal λύσεις.
+    </p>
+  </Link>
+</div>
+
+## Πόσο σοβαρά πρέπει να το πάρω;
+
+Από όσα ξέρουμε ακούγοντας μεγαλύτερους χρόνια:
+
+- Το lab μέρος έχει **μικρότερο βάρος** στον τελικό βαθμό από τη θεωρία.
+- Η εξέταση είναι **σύντομη** (συνήθως ~30 λεπτά) και συχνά γίνεται **στους υπολογιστές** του εργαστηρίου.
+- Η μορφή αλλάζει χρόνο με χρόνο — άλλες φορές είναι **multiple choice** πάνω σε syntax (όπως 2020-21, 2023), άλλες είναι **«φτιάξε ένα m-file»** όπου σου δίνουν ένα σήμα και ζητάνε να το σχεδιάσεις (όπως 2018-19).
+- Σχεδόν τίποτα δεν είναι «παγίδα». Αν έχεις γράψει ποτέ έστω μία φορά τις εντολές των slides, θα τα πας μια χαρά.
+
+<Callout type="warning" title="Δεν είναι «μηχανική απομνημόνευση»">
+Αυτό που σε σώζει είναι να **πληκτρολογήσεις** τις εντολές των labs μία φορά στο πραγματικό MATLAB. Όχι να τις διαβάσεις. Όχι να τις αντιγράψεις. Να τις γράψεις και να δεις τι βγαίνει. Αυτό είναι 10× πιο αποτελεσματικό από το να ξανακοιτάς τις διαφάνειες.
+</Callout>
+
+## Σχέση με τη θεωρία
+
+Κάθε lab έχει στο πάνω μέρος ένα chip με τη θεωρητική σελίδα που το «τροφοδοτεί». Αν διαβάζεις και τα δύο, μια καλή ροή είναι:
+
+1. Διαβάζεις τη θεωρητική σελίδα μέχρι να καταλάβεις την έννοια.
+2. Πας στο αντίστοιχο lab και βλέπεις πώς γίνεται στο MATLAB.
+3. Επιστρέφεις στη θεωρία να ολοκληρώσεις τις ασκήσεις της.
+
+Αν παρακολουθείς **μόνο** τη θεωρία και δεν σε νοιάζει το lab, μπορείς να αγνοήσεις όλη αυτή την ενότητα χωρίς να χάσεις τίποτα — το χρώμιο της σελίδας έχει σχεδιαστεί για να μη γίνεται ζόρι.

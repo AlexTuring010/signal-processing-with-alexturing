@@ -141,6 +141,21 @@ export const CHAPTERS: Chapter[] = [
       { slug: 'formulas', title: 'Formula sheet', available: true },
     ],
   },
+  {
+    id: 'lab',
+    title: '9. Lab — Προαιρετικό',
+    blurb: 'MATLAB μέρος — μόνο αν παρακολουθείς το lab',
+    sections: [
+      { slug: 'labs', title: 'Lab hub — από πού να ξεκινήσω', available: true },
+      { slug: 'labs/00-install', title: 'Lab 0 · Εγκατάσταση MATLAB', available: true },
+      { slug: 'labs/01-intro', title: 'Lab 1 · Εισαγωγή στο MATLAB', available: true },
+      { slug: 'labs/02-signals', title: 'Lab 2 · Συνεχή & διακριτά σήματα', available: true },
+      { slug: 'labs/03-systems', title: 'Lab 3 · Γραμμικά συστήματα', available: true },
+      { slug: 'labs/05-random-signals', title: 'Lab 5 · Τυχαία σήματα & θόρυβος', available: true },
+      { slug: 'labs/06-am-modulation', title: 'Lab 6 · AM στο MATLAB', available: true },
+      { slug: 'labs/practice', title: '🧪 Lab practice — εξάσκηση', available: true },
+    ],
+  },
 ]
 
 export const ALL_SECTIONS: Section[] = CHAPTERS.flatMap((c) => c.sections)

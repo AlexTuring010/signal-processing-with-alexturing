@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Trophy,
   Zap,
+  FlaskConical,
 } from 'lucide-react'
 import { CHAPTERS, AVAILABLE_COUNT, ALL_SECTIONS } from '@/lib/content-index'
 import { Comments } from '@/components/layout/Comments'
@@ -256,6 +257,33 @@ export default function HomePage() {
           subtitle="Σημαδεμένες σελίδες για γρήγορη πρόσβαση"
           accent="bg-amber-500/15 text-amber-600 dark:text-amber-300"
         />
+      </section>
+
+      {/* Lab track — optional MATLAB part */}
+      <section className="mx-auto mt-12 max-w-5xl rounded-2xl border-2 border-violet-500/30 bg-gradient-to-br from-violet-500/5 via-bg-elevated to-bg-elevated p-5 sm:p-6">
+        <div className="grid items-center gap-5 sm:grid-cols-[auto_1fr_auto]">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-violet-500/15 text-violet-600 dark:text-violet-300">
+            <FlaskConical className="h-6 w-6" aria-hidden />
+          </div>
+          <div>
+            <div className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">
+              Προαιρετικό · MATLAB lab
+            </div>
+            <h3 className="text-lg font-bold tracking-tight sm:text-xl">
+              Παρακολουθείς το εργαστήριο;
+            </h3>
+            <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+              Ξεχωριστή ενότητα για το <strong>MATLAB μέρος</strong> του μαθήματος — όλα τα labs σε πλήρη μορφή, ασκήσεις από παλιές εξετάσεις του εργαστηρίου, και ένας σύντομος guide για την εγκατάσταση. Αν δεν παρακολουθείς, μπορείς να το αγνοήσεις τελείως.
+            </p>
+          </div>
+          <Link
+            href="/labs"
+            className="inline-flex items-center gap-1.5 rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-violet-700"
+          >
+            Lab Hub
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+        </div>
       </section>
 
       {/* Exam priority banner */}
