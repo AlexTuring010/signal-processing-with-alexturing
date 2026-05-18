@@ -18,7 +18,8 @@ type Props = {
 const PDF_BASE = '/slides/'
 
 function pdfHref(pdf: string) {
-  return PDF_BASE + encodeURIComponent(pdf)
+  // Encode each path segment separately so subdirectory separators survive.
+  return PDF_BASE + pdf.split('/').map(encodeURIComponent).join('/')
 }
 
 export function SourceDoc({ sources, note }: Props) {
