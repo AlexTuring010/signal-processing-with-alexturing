@@ -89,6 +89,33 @@ function Panel({ label, expr, peak, halfBase, color = 'rgb(37 99 235)', baseLabe
           stroke="rgb(var(--border))"
           strokeWidth="1"
         />
+        {/* y axis at t = 0 */}
+        <line
+          x1={xPx(0)}
+          y1={PAD_TOP}
+          x2={xPx(0)}
+          y2={yBaseline}
+          stroke="rgb(var(--border))"
+          strokeWidth="1"
+        />
+        {/* y tick at value = 1 */}
+        <line
+          x1={xPx(0) - 2}
+          y1={yPx(1)}
+          x2={xPx(0) + 2}
+          y2={yPx(1)}
+          stroke="rgb(var(--fg-subtle))"
+          strokeWidth="1"
+        />
+        <text
+          x={xPx(0) - 4}
+          y={yPx(1) + 3}
+          fontSize="9"
+          textAnchor="end"
+          fill="rgb(var(--fg-subtle))"
+        >
+          1
+        </text>
         {/* tick marks at integers */}
         {[-3, -2, -1, 0, 1, 2, 3].map((t) => (
           <g key={t}>
