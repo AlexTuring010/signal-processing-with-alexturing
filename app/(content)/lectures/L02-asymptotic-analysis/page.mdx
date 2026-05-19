@@ -1,15 +1,16 @@
 export const metadata = {
-  title: "L02 · Ασυμπτωτική Ανάλυση",
-  description: "Η γλώσσα με την οποία συγκρίνουμε αλγορίθμους: $O$, $\\Theta$, $\\Omega$, οριακές σχέσεις και βασικά παραδείγματα.",
+  title: 'L02 · Ασυμπτωτική Ανάλυση',
+  description:
+    'Η γλώσσα με την οποία συγκρίνουμε αλγορίθμους: O, Θ, Ω, o, ω, η ιεραρχία πολυπλοκοτήτων, και η οριακή προσέγγιση με L\'Hôpital.',
 }
 
 export const frontmatter = {
-  title: "L02 · Ασυμπτωτική Ανάλυση",
-  slug: "lectures/L02-asymptotic-analysis",
+  title: 'L02 · Ασυμπτωτική Ανάλυση',
+  slug: 'lectures/L02-asymptotic-analysis',
   order: 2,
-  prerequisites: ["lectures/L01-eisagogika"],
+  prerequisites: ['lectures/L01-eisagogika'],
   examWeight: 8,
-  estimatedReadTime: 0,
+  estimatedReadTime: 30,
   lastUpdated: '2026-05-19',
 }
 
@@ -21,6 +22,8 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   <span>Asymptotic analysis</span>
   <span>·</span>
   <span>Διάλεξη 2</span>
+  <span>·</span>
+  <span>~30 min read</span>
 </div>
 
 # L02 · Ασυμπτωτική Ανάλυση
@@ -33,23 +36,570 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
 <SourceDoc
-  sources={{ pdf: "L02 - Ασυμπτωτική Ανάλυση.pdf" }}
+  sources={{ pdf: 'L02 - Ασυμπτωτική Ανάλυση.pdf' }}
 />
 
-<Callout type="note">
-  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
-  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
-  `plans/L02-asymptotic-analysis.md` για το roadmap. Στο μεταξύ, οι παρακάτω
-  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+## Η ερώτηση που θέλουμε να απαντήσουμε
+
+> **Πώς επηρεάζεται η απόδοση ενός αλγόριθμου όταν ο όγκος των δεδομένων που λαμβάνει αυξάνεται;**
+
+Στη [L01](/lectures/L01-eisagogika) είπαμε ότι η πολυπλοκότητα εκφράζεται ως συνάρτηση της διάστασης $n$. Εδώ θα μάθουμε να *συγκρίνουμε* τέτοιες συναρτήσεις χωρίς να μας ενδιαφέρουν σταθεροί συντελεστές ή όροι χαμηλότερης τάξης — γιατί όταν το $n$ μεγαλώνει, μόνο ο **κυρίαρχος όρος** μετράει.
+
+<Callout type="intuition">
+Σκέψου ότι κρίνεις δύο φοιτητές για τα μαθηματικά: ο ένας λύνει σύνθετα προβλήματα σε 5 λεπτά, ο άλλος σε 5 λεπτά και 30 δευτερόλεπτα. Αν όλη η ζωή ήταν μαθηματικά, η διαφορά θα ήταν ασήμαντη. Αλλά αν ο πρώτος λύνει σε 5 λεπτά και ο δεύτερος σε **2 ώρες**, ο πρώτος είναι ασύγκριτα καλύτερος — όχι κατά λίγο, αλλά σε *διαφορετική κλίμακα*. Η ασυμπτωτική ανάλυση μετρά ακριβώς αυτή τη διαφορά κλίμακας.
 </Callout>
 
-## Τι θα δούμε
+## Γιατί δεν αρκούν οι σταθερές
 
-Η γλώσσα με την οποία συγκρίνουμε αλγορίθμους: $O$, $\Theta$, $\Omega$, οριακές σχέσεις και βασικά παραδείγματα.
+<Example>
+**Δύο αλγόριθμοι για το ίδιο πρόβλημα.**
 
-> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
-> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
-> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
-> προς διαφάνεια.
+- $A_1$ τρέχει σε $T_1(n) = 100n$ στοιχειώδεις πράξεις.
+- $A_2$ τρέχει σε $T_2(n) = n^2$.
+
+Για ποιο $n$ είναι καλύτερος ο καθένας;
+
+Λύνουμε $100n = n^2 \Rightarrow n = 100$. Άρα:
+
+- Για $n < 100$ ο $A_2$ είναι ταχύτερος.
+- Για $n = 100$ είναι ισοδύναμοι.
+- Για $n > 100$ ο $A_1$ είναι ταχύτερος — και η διαφορά **μεγαλώνει συνεχώς**.
+
+Αν θέσουμε ότι μία στοιχειώδης πράξη παίρνει $10^{-6}$ sec:
+
+| $n$ | $A_1$ ($100n$) | $A_2$ ($n^2$) | Λόγος $A_2/A_1$ |
+|---|---|---|---|
+| 1.000 | 0.1 sec | 1 sec | 10× |
+| 100.000 | 10 sec | 10.000 sec ≈ 2.8 ώρες | 1.000× |
+
+Παρά τη μεγάλη σταθερά (100) στον $A_1$, για μεγάλο $n$ ο $A_1$ νικάει σε ακαριαία βάση. **Η σταθερά δεν σώζει έναν αλγόριθμο με χειρότερη τάξη μεγέθους.**
+</Example>
+
+Αυτό το παράδειγμα είναι ο λόγος που η ασυμπτωτική ανάλυση **αγνοεί** σταθερές. Αν η ένα μέτρηση είναι $100n$ και η άλλη $n^2$, η σταθερά 100 είναι μικρή σε σχέση με τη διαφορά «γραμμικό vs τετραγωνικό».
+
+## Οπτική σύγκριση συναρτήσεων
+
+Πριν τους τυπικούς ορισμούς, ας δούμε πώς συμπεριφέρονται οι κλασικές κλάσεις πολυπλοκότητας:
+
+<svg viewBox="0 0 720 420" className="my-4 w-full max-w-3xl" role="img" aria-label="Growth rate comparison of common complexity classes">
+  <style>{`
+    .gx-axis { stroke: rgb(var(--border-strong)); stroke-width: 1; }
+    .gx-grid { stroke: rgb(var(--border)); stroke-width: 0.5; stroke-dasharray: 2 3; }
+    .gx-label { font-family: ui-sans-serif, sans-serif; font-size: 11px; fill: rgb(var(--fg-muted)); }
+    .gx-title { font-family: ui-sans-serif, sans-serif; font-size: 12px; font-weight: 600; fill: rgb(var(--fg)); }
+    .gx-axis-label { font-family: ui-sans-serif, sans-serif; font-size: 11px; fill: rgb(var(--fg)); }
+    .gx-fn { fill: none; stroke-width: 2; }
+    .gx-tag { font-family: ui-monospace, monospace; font-size: 12px; font-weight: 600; }
+  `}</style>
+  {/* Frame: x is 0..30, y is 0..200 (capped). Plot area: 60,40 → 660,360 */}
+  {/* Grid */}
+  {[0, 50, 100, 150, 200].map((v) => (
+    <g key={`gy-${v}`}>
+      <line x1="60" x2="660" y1={360 - (v / 200) * 320} y2={360 - (v / 200) * 320} className="gx-grid" />
+      <text x="55" y={364 - (v / 200) * 320} className="gx-label" textAnchor="end">{v}</text>
+    </g>
+  ))}
+  {[0, 5, 10, 15, 20, 25, 30].map((v) => (
+    <g key={`gx-${v}`}>
+      <line x1={60 + (v / 30) * 600} x2={60 + (v / 30) * 600} y1="40" y2="360" className="gx-grid" />
+      <text x={60 + (v / 30) * 600} y="378" className="gx-label" textAnchor="middle">{v}</text>
+    </g>
+  ))}
+  <line x1="60" x2="660" y1="360" y2="360" className="gx-axis" />
+  <line x1="60" x2="60" y1="40" y2="360" className="gx-axis" />
+  <text x="20" y="200" className="gx-axis-label" transform="rotate(-90, 20, 200)">πράξεις (capped @ 200)</text>
+  <text x="360" y="402" className="gx-axis-label" textAnchor="middle">n</text>
+  <text x="360" y="22" className="gx-title" textAnchor="middle">Ρυθμοί αύξησης κλασικών κλάσεων πολυπλοκότητας</text>
+  {/* Functions — sampling at 1..30, y clipped at 200 */}
+  {/* O(log n) */}
+  <path className="gx-fn" stroke="rgb(34 197 94)" d={(() => {
+    const pts = []
+    for (let n = 1; n <= 30; n++) {
+      const y = Math.min(Math.log2(n) * 10, 200)
+      pts.push(`${60 + (n / 30) * 600},${360 - (y / 200) * 320}`)
+    }
+    return 'M ' + pts.join(' L ')
+  })()} />
+  <text x="640" y="335" className="gx-tag" fill="rgb(34 197 94)">log n</text>
+  {/* O(n) */}
+  <path className="gx-fn" stroke="rgb(59 130 246)" d={(() => {
+    const pts = []
+    for (let n = 1; n <= 30; n++) {
+      const y = Math.min(n * 4, 200)
+      pts.push(`${60 + (n / 30) * 600},${360 - (y / 200) * 320}`)
+    }
+    return 'M ' + pts.join(' L ')
+  })()} />
+  <text x="630" y="200" className="gx-tag" fill="rgb(59 130 246)">n</text>
+  {/* O(n log n) */}
+  <path className="gx-fn" stroke="rgb(168 85 247)" d={(() => {
+    const pts = []
+    for (let n = 1; n <= 30; n++) {
+      const y = Math.min(n * Math.log2(n + 1) * 2, 200)
+      pts.push(`${60 + (n / 30) * 600},${360 - (y / 200) * 320}`)
+    }
+    return 'M ' + pts.join(' L ')
+  })()} />
+  <text x="600" y="100" className="gx-tag" fill="rgb(168 85 247)">n log n</text>
+  {/* O(n²) */}
+  <path className="gx-fn" stroke="rgb(234 88 12)" d={(() => {
+    const pts = []
+    for (let n = 1; n <= 30; n++) {
+      const y = Math.min(n * n * 0.3, 200)
+      pts.push(`${60 + (n / 30) * 600},${360 - (y / 200) * 320}`)
+    }
+    return 'M ' + pts.join(' L ')
+  })()} />
+  <text x="500" y="55" className="gx-tag" fill="rgb(234 88 12)">n²</text>
+  {/* O(2^n) */}
+  <path className="gx-fn" stroke="rgb(244 63 94)" d={(() => {
+    const pts = []
+    for (let n = 1; n <= 30; n++) {
+      const y = Math.min(Math.pow(2, n) * 0.02, 200)
+      pts.push(`${60 + (n / 30) * 600},${360 - (y / 200) * 320}`)
+    }
+    return 'M ' + pts.join(' L ')
+  })()} />
+  <text x="240" y="55" className="gx-tag" fill="rgb(244 63 94)">2ⁿ</text>
+</svg>
+
+Παρατήρησε πώς η εκθετική $2^n$ ξεπερνά τα όρια του γραφήματος για $n \approx 13$, ενώ η λογαριθμική κάμπτεται σχεδόν αμέσως. Αυτή η οπτική είναι όλο το παιχνίδι.
+
+## Οι τυπικοί ορισμοί
+
+Έστω $f, T: \mathbb{N} \to \mathbb{R}^+$. Ορίζουμε **τρεις κλάσεις συναρτήσεων** σε σχέση με την $f$:
+
+$$
+O(f(n)) = \{T : \exists n_0 \in \mathbb{N}, \exists c \in \mathbb{R}^+, \forall n \ge n_0,\ T(n) \le c \cdot f(n)\}
+$$
+
+$$
+\Omega(f(n)) = \{T : \exists n_0 \in \mathbb{N}, \exists c \in \mathbb{R}^+, \forall n \ge n_0,\ T(n) \ge c \cdot f(n)\}
+$$
+
+$$
+\Theta(f(n)) = O(f(n)) \cap \Omega(f(n))
+$$
+
+Σε απλά Ελληνικά:
+
+- $T(n) = O(f(n))$ — η $T$ «δεν αυξάνεται γρηγορότερα» από την $f$. Άνω φράγμα.
+- $T(n) = \Omega(f(n))$ — η $T$ «δεν αυξάνεται πιο αργά» από την $f$. Κάτω φράγμα.
+- $T(n) = \Theta(f(n))$ — η $T$ αυξάνεται **στον ίδιο ρυθμό** με την $f$ (μέχρι σταθερά).
+
+<Callout type="key">
+**Σταθερά + $n_0$ είναι ο πυρήνας του ορισμού.** Η συνθήκη ισχύει «τελικά» — από κάποιο σημείο $n_0$ και μετά — και «έως σταθεράς $c$». Έτσι σταθερές και αρχικές διαφορές δεν μετράνε. Μετράει μόνο η **ασυμπτωτική** συμπεριφορά.
+</Callout>
+
+## Παραδείγματα ορισμού (από την πρώτη σελίδα κάθε λύσης)
+
+<Example>
+**Πρόβλημα.** Έστω $T(n) = 3n^2 - 100n + 6$. Δείξε ότι:
+
+1. $T(n) \in O(n^2)$ — γιατί $3n^2 - 100n + 6 < 3n^2$ για κάθε $n \ge 1$. (Πάρε $c = 3$, $n_0 = 1$.)
+2. $T(n) \in O(n^3)$ — για κάθε σταθερά $c > 0$, ισχύει $3n^2 - 100n + 6 < c \cdot n^3$ για αρκετά μεγάλο $n$. Δηλαδή το $O(n^3)$ ισχύει αλλά είναι «ξεκάθαρα ασθενέστερο» από το $O(n^2)$.
+3. $T(n) \notin O(n)$ — γιατί για κάθε σταθερά $c$, ισχύει $c \cdot n < 3n^2$ για $n > c$. Άρα ο $T$ ξεπερνά τελικά κάθε γραμμική σταθερά.
+
+**Μάθημα:** όταν λέμε «$T(n) = O(g(n))$» δεν λέμε *την ακριβή τάξη*, λέμε *ένα άνω φράγμα*. Το $O(n^3)$ ισχύει αλλά είναι χαλαρό. Στο εξεταστικό ζητάμε πάντα **το «καλύτερο» (πιο σφιχτό) $O$**, που συνήθως είναι το $\Theta$.
+</Example>
+
+## Η ιεραρχία πολυπλοκοτήτων
+
+Σε αυξανόμενη σειρά ρυθμού αύξησης:
+
+<svg viewBox="0 0 800 220" className="my-4 w-full max-w-3xl" role="img" aria-label="Complexity hierarchy from constant to factorial">
+  <style>{`
+    .h-box { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--accent)); stroke-width: 1.5; }
+    .h-good { fill: rgb(34 197 94 / 0.15); stroke: rgb(34 197 94); stroke-width: 1.5; }
+    .h-bad { fill: rgb(244 63 94 / 0.15); stroke: rgb(244 63 94); stroke-width: 1.5; }
+    .h-label { font-family: ui-monospace, monospace; font-size: 13px; font-weight: 600; fill: rgb(var(--fg)); }
+    .h-name { font-family: ui-sans-serif, sans-serif; font-size: 11px; fill: rgb(var(--fg-muted)); }
+    .h-arrow { stroke: rgb(var(--border-strong)); stroke-width: 1.5; marker-end: url(#h-arrow-head); }
+    .h-band { font-family: ui-sans-serif, sans-serif; font-size: 11px; font-weight: 600; }
+  `}</style>
+  <defs>
+    <marker id="h-arrow-head" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L6,4 L0,8 z" fill="rgb(var(--border-strong))" />
+    </marker>
+  </defs>
+  <text x="400" y="20" textAnchor="middle" className="h-band" fill="rgb(34 197 94)">← πολυωνυμικό (καλό) ───────── εκθετικό (κακό) →</text>
+  <g>
+    <rect x="20" y="80" width="100" height="60" rx="8" className="h-good" />
+    <text x="70" y="108" textAnchor="middle" className="h-label">1</text>
+    <text x="70" y="128" textAnchor="middle" className="h-name">σταθερό</text>
+  </g>
+  <g>
+    <rect x="130" y="80" width="100" height="60" rx="8" className="h-good" />
+    <text x="180" y="108" textAnchor="middle" className="h-label">log n</text>
+    <text x="180" y="128" textAnchor="middle" className="h-name">λογαριθμικό</text>
+  </g>
+  <g>
+    <rect x="240" y="80" width="100" height="60" rx="8" className="h-good" />
+    <text x="290" y="108" textAnchor="middle" className="h-label">n</text>
+    <text x="290" y="128" textAnchor="middle" className="h-name">γραμμικό</text>
+  </g>
+  <g>
+    <rect x="350" y="80" width="100" height="60" rx="8" className="h-good" />
+    <text x="400" y="108" textAnchor="middle" className="h-label">n log n</text>
+    <text x="400" y="128" textAnchor="middle" className="h-name">«γραμμικο-λογ»</text>
+  </g>
+  <g>
+    <rect x="460" y="80" width="100" height="60" rx="8" className="h-good" />
+    <text x="510" y="108" textAnchor="middle" className="h-label">n²</text>
+    <text x="510" y="128" textAnchor="middle" className="h-name">τετραγωνικό</text>
+  </g>
+  <g>
+    <rect x="570" y="80" width="100" height="60" rx="8" className="h-bad" />
+    <text x="620" y="108" textAnchor="middle" className="h-label">2ⁿ</text>
+    <text x="620" y="128" textAnchor="middle" className="h-name">εκθετικό</text>
+  </g>
+  <g>
+    <rect x="680" y="80" width="100" height="60" rx="8" className="h-bad" />
+    <text x="730" y="108" textAnchor="middle" className="h-label">n!</text>
+    <text x="730" y="128" textAnchor="middle" className="h-name">παραγοντικό</text>
+  </g>
+  <line x1="120" y1="110" x2="130" y2="110" className="h-arrow" />
+  <line x1="230" y1="110" x2="240" y2="110" className="h-arrow" />
+  <line x1="340" y1="110" x2="350" y2="110" className="h-arrow" />
+  <line x1="450" y1="110" x2="460" y2="110" className="h-arrow" />
+  <line x1="560" y1="110" x2="570" y2="110" className="h-arrow" />
+  <line x1="670" y1="110" x2="680" y2="110" className="h-arrow" />
+  <text x="400" y="180" textAnchor="middle" className="h-name">Κάθε κουτί «κυριαρχείται» από το επόμενο: σταθερό ≺ log n ≺ n ≺ n log n ≺ n² ≺ 2ⁿ ≺ n!</text>
+  <text x="400" y="200" textAnchor="middle" className="h-name" fontStyle="italic">Δηλαδή για κάθε ζευγάρι: το αριστερό ∈ o(δεξιό)</text>
+</svg>
+
+<Callout type="key">
+**Ο πρακτικός κανόνας του μαθήματος:**
+
+- **Πολυωνυμική** πολυπλοκότητα ($n^c$ για σταθερά $c$) → **καλή**.
+- **Εκθετική** ($a^n$ για $a > 1$) → **κακή**.
+
+Η διαχωριστική γραμμή είναι αυτή. Όλοι οι αλγόριθμοι που θα δούμε στόχευουν πολυωνυμική πολυπλοκότητα.
+</Callout>
+
+## Wheat and chessboard — γιατί το εκθετικό είναι «καταστροφή»
+
+<Example>
+**Ο μύθος.** Λέγεται ότι ο εφευρέτης του σκακιού ζήτησε ως αμοιβή από τον βασιλιά: 1 κόκκο σιταριού στο πρώτο τετράγωνο, 2 στο δεύτερο, 4 στο τρίτο, ... διπλασιάζοντας μέχρι το 64ο τετράγωνο. Ο βασιλιάς, που νόμιζε ότι το αίτημα ήταν ασήμαντο, δέχτηκε.
+
+Το συνολικό σιτάρι:
+
+$$
+T_{64} = 1 + 2 + 4 + \dots + 2^{63} = 2^{64} - 1 \approx 1.8 \times 10^{19}
+$$
+
+Δηλαδή **18 δισ. δισ. κόκκοι** — περισσότερο σιτάρι από όσο έχει παραχθεί ποτέ στην ιστορία της ανθρωπότητας. Ο βασιλιάς δεν είχε τρόπο να πληρώσει.
+</Example>
+
+Αυτό είναι το $2^n$ σε δράση. Αν ένας αλγόριθμος είναι $O(2^n)$, αρκεί να αυξήσεις το $n$ κατά 1 για να **διπλασιαστεί** ο χρόνος εκτέλεσης.
+
+## Η «πικρή πραγματικότητα»: γιατί δεν μας σώζουν οι ταχύτεροι υπολογιστές
+
+Μια εντονη παρανόηση είναι ότι «οι αλγόριθμοι δεν έχουν τόση σημασία γιατί οι υπολογιστές γίνονται όλο και ταχύτεροι». Ας το ελέγξουμε: **έστω υπολογιστής 1000 φορές ταχύτερος από τον σημερινό**. Πόσο μεγαλύτερο πρόβλημα μπορούμε να λύσουμε στον ίδιο χρόνο;
+
+| Πολυπλοκότητα | Τωρινό μέγεθος που λύνουμε | Μελλοντικό μέγεθος (×1000 ταχύτητα) |
+|---|---|---|
+| $O(n)$ | $n$ | $1000n$ |
+| $O(n^2)$ | $n$ | $n \cdot \sqrt{1000} \approx 31.6 n$ |
+| $O(n^3)$ | $n$ | $n \cdot 1000^{1/3} \approx 10n$ |
+| $O(n^4)$ | $n$ | $n \cdot 1000^{1/4} \approx 5.6n$ |
+| $O(2^n)$ | $n$ | $n + \log_2 1000 \approx n + 10$ |
+| $O(3^n)$ | $n$ | $n + \log_3 1000 \approx n + 6.3$ |
+| $O(n!)$ | $n$ | $\approx n$ (ουσιαστικά αμετάβλητο) |
+
+<Callout type="warning">
+Με 1000× ταχύτερο μηχάνημα, ένας **γραμμικός** αλγόριθμος λύνει 1000 φορές μεγαλύτερο πρόβλημα. Ένας **εκθετικός** αλγόριθμος λύνει πρόβλημα **10 παραπάνω εισόδων**. Καμία υλική ταχύτητα δεν σώζει έναν εκθετικό αλγόριθμο. Γι' αυτό μετράει ο αλγόριθμος, όχι το μηχάνημα.
+</Callout>
+
+## Ιδιότητες των τάξεων μεγέθους
+
+Έστω $f, f_1, f_2: \mathbb{N} \to \mathbb{R}^+$. Όλα τα παρακάτω αποδεικνύονται κατευθείαν από τον ορισμό:
+
+1. $f(n) \in O(f(n))$ — κάθε συνάρτηση «κυριαρχείται από τον εαυτό της».
+2. $f(n) \in \Theta(f(n))$ — και «είναι ίσης τάξης με τον εαυτό της».
+3. $O(c \cdot f(n)) = O(f(n))$ — οι σταθεροί συντελεστές απορροφώνται.
+4. $O(f(n) + f(n)) = O(f(n))$ — διπλασιάζοντας μια συνάρτηση δεν αλλάζει τάξη.
+5. $O(f_1(n) + f_2(n)) = O(\max\{f_1(n), f_2(n)\})$ — σε άθροισμα μετράει ο κυρίαρχος όρος.
+6. $O(f_1(n)) \cdot O(f_2(n)) = O(f_1(n) \cdot f_2(n))$ — οι τάξεις πολλαπλασιάζονται.
+
+Επίσης:
+
+7. $f(n) \in O(g(n)) \iff g(n) \in \Omega(f(n))$ — $O$ και $\Omega$ είναι ντουαλισμός.
+8. $f(n) \in \Theta(g(n)) \iff f(n) \in O(g(n))$ ΚΑΙ $g(n) \in O(f(n))$ — $\Theta$ θέλει και τις δύο κατευθύνσεις.
+9. $f(n) \in \Theta(g(n)) \iff g(n) \in \Theta(f(n))$ — το $\Theta$ είναι συμμετρικό.
+10. $f(n) \in \Theta(g(n))$ και $g(n) \in \Theta(h(n))$ $\Rightarrow$ $f(n) \in \Theta(h(n))$ — μεταβατικότητα.
+
+<Example>
+**Απόδειξη της 5ης ιδιότητας** ($O(f_1 + f_2) = O(\max\{f_1, f_2\})$).
+
+Έστω $g(n) \in O(f_1(n))$ και $g(n) \in O(f_2(n))$. Από τον ορισμό:
+
+$$
+\exists c_1, n_1: \forall n \ge n_1,\ g(n) \le c_1 f_1(n)
+$$
+$$
+\exists c_2, n_2: \forall n \ge n_2,\ g(n) \le c_2 f_2(n)
+$$
+
+Πάρε $c_0 = \max\{c_1, c_2\}$, $n_0 = \max\{n_1, n_2\}$. Τότε για κάθε $n \ge n_0$:
+
+$$
+g(n) \le c_0 (f_1(n) + f_2(n)) \le 2 c_0 \max\{f_1(n), f_2(n)\}
+$$
+
+Άρα $g(n) \in O(\max\{f_1(n), f_2(n)\})$. $\blacksquare$
+</Example>
+
+## Είναι κάθε δύο συναρτήσεις ασυμπτωτικά συγκρίσιμες;
+
+**Όχι.** Υπάρχουν συναρτήσεις που η μία δεν είναι ούτε $O$ ούτε $\Omega$ της άλλης.
+
+<Example>
+**Αντιπαράδειγμα.** Έστω $f(n) = n$ και $g(n) = n^{1 + \sin(n)}$. Ο εκθέτης $1 + \sin(n)$ ταλαντώνεται μεταξύ 0 και 2:
+
+- Όταν $\sin(n) \approx 1$, η $g(n) \approx n^2$ (αυξάνεται πολύ πιο γρήγορα από $f$).
+- Όταν $\sin(n) \approx -1$, η $g(n) \approx n^0 = 1$ (αυξάνεται πολύ πιο αργά από $f$).
+
+Άρα δεν μπορούμε να πούμε ούτε «η $g$ είναι $O(n)$» ούτε «η $g$ είναι $\Omega(n)$». **Αυτές οι δύο συναρτήσεις είναι ασυμπτωτικά ασύγκριτες.**
+</Example>
+
+## Πρακτικές ασκήσεις
+
+<Example>
+**Άσκηση 1.** Να δειχθεί ότι αν $a > 1$ και $f(n) \in O(\log_a n)$, τότε $f(n) \in O(\log_2 n)$. (Με άλλα λόγια: η βάση του λογάριθμου δεν παίζει ρόλο στο $O$.)
+
+**Λύση.** Από τον ορισμό: $f(n) \le c \log_a n$ για κάποια σταθερά $c$.
+
+Με αλλαγή βάσης: $\log_a n = \dfrac{\log_2 n}{\log_2 a}$. Άρα:
+
+$$
+f(n) \le c \cdot \frac{\log_2 n}{\log_2 a} = c' \cdot \log_2 n
+$$
+
+όπου $c' = c / \log_2 a$ είναι σταθερά (γιατί $a > 1$ δίνει $\log_2 a > 0$). Άρα $f(n) \in O(\log_2 n)$. $\blacksquare$
+
+**Συμπέρασμα.** Γράφουμε απλά $O(\log n)$ — δεν χρειάζεται να γράψουμε τη βάση.
+</Example>
+
+<Example>
+**Άσκηση 2.** Να δειχθεί ότι $\log(n!) \in O(n \log n)$.
+
+**Λύση.** Παρατήρησε:
+
+$$
+n! = 1 \cdot 2 \cdot 3 \cdots n \le n \cdot n \cdot n \cdots n = n^n
+$$
+
+Αφού η λογαριθμική συνάρτηση είναι αύξουσα:
+
+$$
+\log(n!) \le \log(n^n) = n \log n
+$$
+
+Άρα $\log(n!) \in O(n \log n)$ με σταθερά $c=1$. $\blacksquare$
+
+**Bonus.** Η αντίστροφη κατεύθυνση ισχύει επίσης ($\log(n!) \in \Omega(n \log n)$), οπότε $\log(n!) \in \Theta(n \log n)$ — αυτό θα το χρειαστούμε όταν αποδείξουμε ότι η ταξινόμηση με συγκρίσεις απαιτεί τουλάχιστον $\Omega(n \log n)$ συγκρίσεις (κάτω φράγμα).
+</Example>
+
+<Example>
+**Άσκηση 3.** Βρες τον καλύτερο (πιο σφιχτό) $O$-συμβολισμό για κάθε έκφραση:
+
+(α) $2 \log n - 4n + 3n \log n$
+
+**Λύση.** Ο κυρίαρχος όρος είναι ο $3n \log n$ (κάθε άλλος είναι χαμηλότερης τάξης). Άρα $O(n \log n)$. (Στην πραγματικότητα και $\Theta(n \log n)$.)
+
+(β) $2 + 4 + \dots + 2n = 2(1 + 2 + \dots + n) = 2 \cdot \frac{n(n+1)}{2} = n^2 + n$
+
+**Λύση.** $\Theta(n^2)$.
+
+(γ) $2 + 4 + 8 + \dots + 2^n = 2^{n+1} - 2$
+
+**Λύση.** $\Theta(2^n)$. Παρατήρησε ότι το αλγεβρικό ταυτότητας γεωμετρικής σειράς δίνει ακριβές αποτέλεσμα.
+</Example>
+
+<Example>
+**Άσκηση 4.** Δείξε ότι:
+
+(α) $\sum_{k=1}^n k \cdot n \in O(n^3)$
+
+**Λύση.** $\sum_{k=1}^n k \cdot n = n \sum_{k=1}^n k = n \cdot \frac{n(n+1)}{2} = \frac{n^2(n+1)}{2} \le n^3$. Άρα $O(n^3)$.
+
+(β) Αν $f(n) = O(n)$, τότε $(f(n))^2 = O(n^2)$.
+
+**Λύση.** Αν $f(n) \le c \cdot n$, τότε $(f(n))^2 \le c^2 \cdot n^2$. Άρα $(f(n))^2 = O(n^2)$.
+
+(γ) $3^n \notin O(2^n)$.
+
+**Λύση.** Λόγος: $\dfrac{3^n}{2^n} = (3/2)^n \to \infty$. Άρα δεν υπάρχει σταθερά $c$ με $3^n \le c \cdot 2^n$ για κάθε $n \ge n_0$ — το $3^n$ ξεπερνά τελικά κάθε σταθερό πολλαπλάσιο του $2^n$.
+</Example>
+
+## Εναλλακτική προσέγγιση: οριακές σχέσεις
+
+Αντί να δείξουμε τυπικά «υπάρχει $c$ και $n_0$», μπορούμε να χρησιμοποιήσουμε **όρια**. Έστω $f, g: \mathbb{N} \to \mathbb{R}^+$:
+
+$$
+\lim_{n \to \infty} \frac{f(n)}{g(n)} = \alpha \ne 0 \Rightarrow f \in \Theta(g)
+$$
+
+$$
+\lim_{n \to \infty} \frac{f(n)}{g(n)} = 0 \Rightarrow f \in O(g)\ \text{και}\ f \notin \Theta(g)
+$$
+
+$$
+\lim_{n \to \infty} \frac{f(n)}{g(n)} = \infty \Rightarrow g \in O(f)\ \text{και}\ g \notin \Theta(f)
+$$
+
+Οι μεσαίες περιπτώσεις (όριο 0 ή $\infty$) δίνουν τους **«αυστηρά μικρότερα»** συμβολισμούς:
+
+- $\lim \to 0$ → γράφουμε $f(n) \in o(g(n))$ («μικρό-ο»). Διαβάζεται «η $f$ είναι **αυστηρά** μικρότερης τάξης από τη $g$».
+- $\lim \to \infty$ → γράφουμε $f(n) \in \omega(g(n))$ («μικρό-ωμέγα»). Διαβάζεται «η $f$ είναι **αυστηρά** μεγαλύτερης τάξης».
+
+Πιο τυπικά:
+
+$$
+o(f(n)) = \{g : \forall c > 0,\ \exists n_0,\ \forall n \ge n_0,\ g(n) < c \cdot f(n)\}
+$$
+
+$$
+\omega(f(n)) = \{g : \forall c > 0,\ \exists n_0,\ \forall n \ge n_0,\ g(n) > c \cdot f(n)\}
+$$
+
+<Callout type="key">
+**Η διαφορά $O$ vs $o$:**
+
+- $g \in O(f)$ → υπάρχει *κάποιο* $c$ με $g(n) \le c f(n)$ τελικά. Η $g$ ίσως είναι «του ίδιου ρυθμού».
+- $g \in o(f)$ → για *κάθε* $c$ μικρό, ισχύει $g(n) < c f(n)$ τελικά. Η $g$ είναι **αυστηρά** πιο αργή.
+
+Το $\Theta$ αποκλείεται με $o$. Το $\Theta$ επιτρέπεται με $O$.
+</Callout>
+
+## Υπενθύμιση — Κανόνας του L'Hôpital
+
+Πολλά από τα όρια που χρειαζόμαστε δίνουν απροσδιοριστία $\infty/\infty$ ή $0/0$. Σε αυτές τις περιπτώσεις:
+
+> Αν $\lim_{x \to \infty} f(x) = +\infty$ και $\lim_{x \to \infty} g(x) = +\infty$, και οι $f, g$ είναι παραγωγίσιμες, τότε:
+>
+> $$\lim_{x \to \infty} \frac{f(x)}{g(x)} = \lim_{x \to \infty} \frac{f'(x)}{g'(x)}$$
+
+Όταν η απροσδιοριστία επιμένει, εφαρμόζουμε ξανά. Το χρησιμοποιούμε αμέσως παρακάτω.
+
+## Δύο σημαντικά αποτελέσματα για τους ρυθμούς αύξησης
+
+### Εκθετικό κυριαρχεί πάνω σε πολυωνυμικό
+
+> **Κάθε εκθετική συνάρτηση με βάση μεγαλύτερη του 1 αυξάνεται γρηγορότερα από κάθε πολυωνυμική συνάρτηση.**
+
+Τυπικά, για κάθε $a > 1$ και $b \in \mathbb{R}$:
+
+$$
+\lim_{n \to \infty} \frac{n^b}{a^n} = 0 \quad \Leftrightarrow \quad n^b \in o(a^n)
+$$
+
+<Example>
+**Απόδειξη.** Εφαρμόζουμε L'Hôpital επανειλημμένα:
+
+$$
+\lim_{x \to \infty} \frac{x^b}{a^x} = \lim_{x \to \infty} \frac{b \cdot x^{b-1}}{a^x \ln a} = \lim_{x \to \infty} \frac{b(b-1) x^{b-2}}{a^x \ln^2 a} = \dots = \lim_{x \to \infty} \frac{b!}{a^x \ln^b a} = 0
+$$
+
+Μετά από $\lceil b \rceil$ εφαρμογές του L'Hôpital, ο αριθμητής γίνεται σταθερά και ο παρονομαστής εξακολουθεί να αυξάνεται εκθετικά — το όριο είναι 0. $\blacksquare$
+</Example>
+
+### Πολυωνυμικό κυριαρχεί πάνω σε πολυλογαριθμικό
+
+Μια συνάρτηση $f$ είναι **πολυλογαριθμικά φραγμένη** αν υπάρχει σταθερά $c$ με $f(n) \le \log^c n$.
+
+> **Κάθε πολυωνυμική συνάρτηση αυξάνεται γρηγορότερα από κάθε πολυλογαριθμική.**
+
+Τυπικά, για $a > 0, b > 0$:
+
+$$
+\lim_{n \to \infty} \frac{\log^b n}{n^a} = 0 \quad \Leftrightarrow \quad \log^b n \in o(n^a)
+$$
+
+<Example>
+**Απόδειξη (περίληψη).** Θέλουμε να δείξουμε ότι υπάρχει $n_0$ τέτοιο ώστε για κάθε $n \ge n_0$:
+
+$$(\ln n)^b \le n^a \iff b \ln \ln n \le a \ln n \iff \ln \ln n \le \tfrac{a}{b} \ln n$$
+
+Με L'Hôpital (χρησιμοποιώντας ότι $(\ln x)' = 1/x$ και τον κανόνα αλυσίδας):
+
+$$\lim_{x \to \infty} \frac{\ln \ln x}{\tfrac{a}{b} \ln x} = \frac{b}{a} \lim_{x \to \infty} \frac{1/(x \ln x)}{1/x} = \frac{b}{a} \lim_{x \to \infty} \frac{1}{\ln x} = 0$$
+
+Άρα ο λόγος τείνει στο 0, που σημαίνει ότι ο παρονομαστής τελικά «νικάει». $\blacksquare$
+</Example>
+
+<Callout type="key">
+**Συνδυάζοντας τα δύο αποτελέσματα:**
+
+$$\log^c n \prec n^\epsilon \prec n^c \prec a^n \prec n!$$
+
+για οποιεσδήποτε σταθερές $c > 0, \epsilon > 0, a > 1$. Αυτή είναι η «**βασική ιεραρχία**» που χρησιμοποιούμε διαρκώς.
+</Callout>
+
+## Η έννοια του βέλτιστου αλγορίθμου
+
+> Για ένα πρόβλημα $\Pi$ ζητάμε **τον καλύτερο** αλγόριθμο που το επιλύει — αυτόν με την καλύτερη πολυπλοκότητα.
+
+Πιο τυπικά: αν *κάθε* αλγόριθμος που επιλύει το $\Pi$ έχει ασυμπτωτική πολυπλοκότητα $\Omega(f(n))$ — αυτό είναι **κάτω φράγμα του προβλήματος** — τότε ένας αλγόριθμος με πολυπλοκότητα $O(f(n))$ είναι **(ασυμπτωτικά) βέλτιστος**: ακουμπάει το θεωρητικό όριο.
+
+<Callout type="intuition">
+**Παράδειγμα.** Για την ταξινόμηση συγκρίσεων, αποδεικνύεται ότι κάθε αλγόριθμος χρειάζεται $\Omega(n \log n)$ συγκρίσεις στη χείριστη περίπτωση (κάτω φράγμα). Η συγχωνευτική ταξινόμηση τρέχει σε $O(n \log n)$ — άρα είναι **ασυμπτωτικά βέλτιστη**. Θα το αποδείξουμε στο [L03](/lectures/L03-divide-and-conquer-i).
+</Callout>
+
+## Κλείσιμο: πολλαπλασιασμός τετραγωνικών πινάκων
+
+Ένα εξαιρετικό παράδειγμα του γιατί η ασυμπτωτική ανάλυση είναι **ζωντανό** ερευνητικό αντικείμενο.
+
+<Example>
+**Πρόβλημα.** Δοθέντων δύο $n \times n$ πινάκων $A = (a_{ij})$, $B = (b_{ij})$, υπολόγισε τον πίνακα $C = A \cdot B$, όπου:
+
+$$
+c_{ij} = \sum_{k=1}^n a_{ik} \cdot b_{kj}
+$$
+
+**Naive αλγόριθμος.**
+```
+Για i = 1 έως n:
+  Για j = 1 έως n:
+    c_ij ← 0
+    Για k = 1 έως n:
+      c_ij ← c_ij + a_ik · b_kj
+```
+
+**Ανάλυση.** Τρεις φωλιασμένοι βρόχοι μέχρι το $n$ → $n^3$ πολλαπλασιασμοί → $\Theta(n^3)$.
+
+**Κάτω φράγμα.** Χρειαζόμαστε να υπολογίσουμε $n^2$ στοιχεία του $C$. Άρα κάθε αλγόριθμος είναι τουλάχιστον $\Omega(n^2)$. **Δεν γνωρίζουμε αλγόριθμο που να επιτυγχάνει $O(n^2)$.**
+</Example>
+
+Το **χάσμα** $[\Omega(n^2), O(n^3)]$ είναι από τα πιο διάσημα ανοιχτά προβλήματα. Η ιστορία του:
+
+| Έτος | Ερευνητές | Πολυπλοκότητα |
+|---|---|---|
+| 1969 | Strassen | $O(n^{2.81})$ |
+| 1986 | Coppersmith &amp; Winograd | $O(n^{2.379})$ |
+| 2011 | V. V. Williams | $O(n^{2.373})$ |
+| 2023 | Williams, Xu, Xu, Zhou | $O(n^{2.371552})$ |
+| **2025** | **Alman, Duan, Williams, Xu, Xu, Zhou** | $O(n^{2.371339})$ |
+
+Κάθε δεκαετές μικρο-βελτιώσεις στον εκθέτη. Δεν ξέρουμε αν το $\Omega(n^2)$ είναι το πραγματικό κάτω φράγμα — αλλά **πολλοί ερευνητές πιστεύουν ότι είναι** και ότι κάποτε θα φτάσουμε εκεί.
+
+<Recap>
+**Τι κρατάμε από αυτή τη διάλεξη**
+
+1. **$O, \Omega, \Theta$**: άνω, κάτω, και ακριβές ασυμπτωτικό φράγμα. Ο ορισμός βασίζεται σε σταθερά $c$ και αρχικό $n_0$.
+2. **Σταθερές δεν μετράνε**: $O(100n) = O(n)$. Μόνο ο **κυρίαρχος όρος** μετράει.
+3. **Πολυωνυμικό vs εκθετικό**: η μεγάλη διαχωριστική γραμμή. Ταχύτερος υπολογιστής δεν σώζει εκθετικό αλγόριθμο.
+4. **Ιεραρχία**: $1 \prec \log n \prec n \prec n \log n \prec n^2 \prec \dots \prec 2^n \prec n!$.
+5. **Όρια ως εργαλείο**: $\lim f/g = 0$ → $f \in o(g)$· $\lim = c$ → $f \in \Theta(g)$· $\lim = \infty$ → $f \in \omega(g)$.
+6. **L'Hôpital**: λύνει σχεδόν όλα τα όρια που χρειαζόμαστε.
+7. **Βέλτιστος αλγόριθμος**: αν το κάτω φράγμα του προβλήματος είναι $\Omega(f)$ και υπάρχει αλγόριθμος $O(f)$, είναι ασυμπτωτικά βέλτιστος.
+</Recap>
+
+<NextUp
+  href="/lectures/L03-divide-and-conquer-i"
+  title="L03 · Διαίρει και Κυρίευε I — Mergesort &amp; Master Theorem"
+  blurb="Το πρώτο σχήμα σχεδίασης αλγορίθμων. Συγχωνευτική ταξινόμηση, αναδρομικές σχέσεις, και το Master Theorem ως «καρφί στο τοίχο»."
+/>
 
 <LectureExercises lectureSlug="lectures/L02-asymptotic-analysis" />

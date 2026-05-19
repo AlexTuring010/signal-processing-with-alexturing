@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Radio } from 'lucide-react'
+import { Network } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
 import { SearchBar } from './SearchBar'
 import { MobileNav } from './MobileNav'
@@ -45,8 +45,8 @@ export async function Header() {
           href="/"
           className="flex items-center gap-2 text-sm font-semibold tracking-tight"
         >
-          <Radio className="h-5 w-5 text-accent" aria-hidden="true" />
-          <span className="hidden sm:inline">Signal Processing</span>
+          <Network className="h-5 w-5 text-accent" aria-hidden="true" />
+          <span className="hidden sm:inline">Algorithms and Complexity</span>
           <span className="hidden text-fg-subtle sm:inline">·</span>
           <span className="text-accent">Class Hub</span>
         </Link>

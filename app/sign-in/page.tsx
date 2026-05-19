@@ -41,11 +41,36 @@ function SignInForm() {
     setError(null)
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo },
+      options: {
+        redirectTo,
+        // Explicit scopes — `openid` enables the OIDC flow Supabase prefers,
+        // `email profile` populates `user_metadata.full_name` / `avatar_url`
+        // so the profile auto-create trigger has values to write.
+        scopes: 'openid email profile',
+        // Refresh-token flow: `offline` asks Google to issue a refresh token,
+        // `prompt: consent` makes Google show the consent screen every time
+        // (without this, returning users skip consent and Google does NOT
+        // re-issue a refresh token if one was revoked).
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
     })
     if (error) {
       setLoading(false)
-      setError(error.message)
+      // Friendly diagnostic for the most common config mistake — Google
+      // provider not enabled on the Supabase backend. Surfacing the raw
+      // error message ("Unsupported provider: provider is not enabled")
+      // is unhelpful for end users.
+      if (/provider is not enabled/i.test(error.message)) {
+        setError(
+          'Η σύνδεση μέσω Google δεν είναι ενεργοποιημένη ακόμα στον server. ' +
+          'Δοκίμασε προς το παρόν με magic link στο email σου.',
+        )
+      } else {
+        setError(error.message)
+      }
     }
   }
 
