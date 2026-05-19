@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L12 · Άπληστοι II — Huffman, κωδικοποίηση",
+  description: "Huffman coding ως καθαρά άπληστος αλγόριθμος. Prefix-free κωδικοποιήσεις, βέλτιστα δέντρα και αποδείξεις βελτιστότητας.",
+}
+
+export const frontmatter = {
+  title: "L12 · Άπληστοι II — Huffman, κωδικοποίηση",
+  slug: "lectures/L12-greedy-ii",
+  order: 12,
+  prerequisites: ["lectures/L11-greedy-i"],
+  examWeight: 5,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Greedy</span>
+  <span>·</span>
+  <span>Διάλεξη 12</span>
+</div>
+
+# L12 · Άπληστοι II — Huffman, κωδικοποίηση
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L12-greedy-ii" />
+  <Bookmark id="lectures/L12-greedy-ii" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L12 - Άπληστοι Αλγόριθμοι II.pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L12-greedy-ii.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+Huffman coding ως καθαρά άπληστος αλγόριθμος. Prefix-free κωδικοποιήσεις, βέλτιστα δέντρα και αποδείξεις βελτιστότητας.
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L12-greedy-ii" />

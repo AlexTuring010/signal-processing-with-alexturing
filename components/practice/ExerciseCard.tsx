@@ -8,6 +8,9 @@ import {
   BookOpen,
   CheckCircle2,
   Circle,
+  ExternalLink,
+  FileText,
+  Flame,
 } from 'lucide-react'
 import {
   TOPIC_COLORS,
@@ -16,6 +19,7 @@ import {
   SOURCE_LABELS,
   ORIGIN_LABELS,
   ORIGIN_COLORS,
+  RECENT_SOURCES,
 } from '@/content/practice/types'
 import type { Exercise } from '@/content/practice/types'
 import { PrereqChips } from './PrereqChips'
@@ -80,6 +84,16 @@ export function ExerciseCard({ exercise }: Props) {
               {SOURCE_LABELS[exercise.source]}
             </span>
           )}
+          {exercise.source && RECENT_SOURCES.has(exercise.source) && (
+            <span
+              className="inline-flex items-center gap-1 rounded-full border border-rose-500/40 bg-rose-500 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm"
+              title="Πρόσφατο θέμα — υψηλή προτεραιότητα"
+            >
+              <Flame className="h-3 w-3" aria-hidden />
+              Θέμα Εξετάσεων{' '}
+              {exercise.source.endsWith('-2025') ? '2025' : '2024'}
+            </span>
+          )}
           {exercise.problemNumber && (
             <span className="rounded-full border border-border bg-bg-soft px-2 py-0.5 text-[11px] font-mono font-semibold text-fg-muted">
               {exercise.problemNumber}
@@ -130,10 +144,32 @@ export function ExerciseCard({ exercise }: Props) {
       {/* Title */}
       <h3 className="mb-2 text-base font-semibold tracking-tight">{exercise.title}</h3>
 
-      {/* Statement */}
-      <div className="prose-content max-w-none text-[15px] leading-relaxed text-fg">
-        {exercise.statement}
-      </div>
+      {/* Statement — either inline transcription, or a link to the original */}
+      {exercise.statement !== null ? (
+        <div className="prose-content max-w-none text-[15px] leading-relaxed text-fg">
+          {exercise.statement}
+        </div>
+      ) : exercise.sourceFile ? (
+        <div className="rounded-lg border border-dashed border-border bg-bg-soft/60 p-4 text-sm">
+          <p className="mb-3 flex items-center gap-2 text-fg-muted">
+            <FileText className="h-4 w-4 shrink-0" aria-hidden />
+            Η εκφώνηση δεν έχει ακόμα μεταγραφεί — άνοιξε το πρωτότυπο PDF/εικόνα.
+          </p>
+          <a
+            href={exercise.sourceFile}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-accent/50 hover:text-fg"
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden />
+            Άνοιξε το πρωτότυπο
+          </a>
+        </div>
+      ) : (
+        <p className="text-sm italic text-fg-subtle">
+          Εκφώνηση δεν έχει ακόμα μεταγραφεί.
+        </p>
+      )}
 
       {/* Prerequisite chips */}
       <div className="mt-3">
@@ -142,18 +178,31 @@ export function ExerciseCard({ exercise }: Props) {
 
       {/* Action row */}
       <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-accent/50 hover:text-fg"
-          aria-expanded={open}
-        >
-          <ChevronDown
-            className={`h-4 w-4 transition ${open ? 'rotate-180' : ''}`}
-            aria-hidden
-          />
-          {open ? 'Απόκρυψη λύσης' : 'Δες τη λύση'}
-        </button>
+        {exercise.solution !== null && (
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-soft px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-accent/50 hover:text-fg"
+            aria-expanded={open}
+          >
+            <ChevronDown
+              className={`h-4 w-4 transition ${open ? 'rotate-180' : ''}`}
+              aria-hidden
+            />
+            {open ? 'Απόκρυψη λύσης' : 'Δες τη λύση'}
+          </button>
+        )}
+        {exercise.sourceFile && exercise.statement !== null && (
+          <a
+            href={exercise.sourceFile}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-accent/50 hover:text-fg"
+          >
+            <ExternalLink className="h-4 w-4" aria-hidden />
+            Πρωτότυπο
+          </a>
+        )}
         {hasFormulaIds && (
           <button
             type="button"

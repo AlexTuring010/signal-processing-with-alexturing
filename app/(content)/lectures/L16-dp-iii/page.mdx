@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L16 · DP III — LCS, edit distance",
+  description: "DP σε δύο ακολουθίες: longest common subsequence, edit distance (Levenshtein). Πώς διαβάζουμε το πίνακα DP για να ανακτήσουμε τη λύση.",
+}
+
+export const frontmatter = {
+  title: "L16 · DP III — LCS, edit distance",
+  slug: "lectures/L16-dp-iii",
+  order: 16,
+  prerequisites: ["lectures/L15-dp-ii"],
+  examWeight: 7,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Dynamic programming</span>
+  <span>·</span>
+  <span>Διάλεξη 16</span>
+</div>
+
+# L16 · DP III — LCS, edit distance
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L16-dp-iii" />
+  <Bookmark id="lectures/L16-dp-iii" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L16 - Δυναμικός Προγραμματισμός ΙII.pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L16-dp-iii.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+DP σε δύο ακολουθίες: longest common subsequence, edit distance (Levenshtein). Πώς διαβάζουμε το πίνακα DP για να ανακτήσουμε τη λύση.
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L16-dp-iii" />

@@ -12,12 +12,13 @@ type Props = {
 }
 
 const ALL_TOPICS: Topic[] = [
-  'foundations',
-  'modulation',
-  'am',
-  'fm',
-  'random',
-  'noise',
+  'intro',
+  'asymptotics',
+  'divide-conquer',
+  'graphs',
+  'data-structures',
+  'greedy',
+  'dp',
 ]
 
 export function TopicFilter({ selected, onChange, onClear, counts }: Props) {

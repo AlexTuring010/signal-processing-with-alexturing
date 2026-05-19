@@ -16,17 +16,17 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Signal Processing Class Hub',
-    template: '%s · Signal Processing Class Hub',
+    default: 'Algorithms Class Hub',
+    template: '%s · Algorithms Class Hub',
   },
   description:
-    'Συνεργατικός οδηγός για το μάθημα K21 — Συστήματα Επικοινωνιών (ΕΚΠΑ, DIT). Φτιαγμένος από συμφοιτητές, βελτιώνεται με σχόλια.',
-  applicationName: 'Signal Processing Class Hub',
+    'Συνεργατικός οδηγός για το μάθημα K17 — Αλγόριθμοι και Πολυπλοκότητα (ΕΚΠΑ, DIT). Φτιαγμένος από συμφοιτητές, βελτιώνεται με σχόλια.',
+  applicationName: 'Algorithms Class Hub',
   authors: [{ name: 'Class Hub contributors' }],
   openGraph: {
-    title: 'Signal Processing Class Hub',
+    title: 'Algorithms Class Hub',
     description:
-      'Συνεργατικός οδηγός για Συστήματα Επικοινωνιών — από το μηδέν, με visualizations και σχόλια από συμφοιτητές.',
+      'Συνεργατικός οδηγός για Αλγορίθμους και Πολυπλοκότητα — από το μηδέν, με visualizations και σχόλια από συμφοιτητές.',
     type: 'website',
     locale: 'el_GR',
   },

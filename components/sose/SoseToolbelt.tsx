@@ -22,12 +22,13 @@ type Props = {
 }
 
 const TOPIC_ORDER: Topic[] = [
-  'foundations',
-  'modulation',
-  'am',
-  'fm',
-  'random',
-  'noise',
+  'intro',
+  'asymptotics',
+  'divide-conquer',
+  'graphs',
+  'data-structures',
+  'greedy',
+  'dp',
 ]
 
 /**

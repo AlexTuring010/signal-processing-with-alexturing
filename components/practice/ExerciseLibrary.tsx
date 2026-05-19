@@ -23,12 +23,12 @@ type Props = {
 type OriginFilter = 'all' | Origin
 
 const SOURCE_ORDER: ExamSource[] = [
-  'proodos-april-2026',
-  'jan-2026',
   'sept-2025',
   'june-2025',
-  'proodos-b-2025',
-  'proodos-a-2025',
+  'sept-2024',
+  'june-2024',
+  'sept-2023',
+  'june-2023',
 ]
 
 export function ExerciseLibrary({ exercises }: Props) {

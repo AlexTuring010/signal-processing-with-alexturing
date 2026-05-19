@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L07 · Γραφήματα II — DFS, τοπολογική ταξινόμηση, SCC",
+  description: "DFS, τα είδη ακμών, τοπολογική ταξινόμηση σε DAGs, και αλγόριθμος ισχυρά συνεκτικών συνιστωσών (Kosaraju / Tarjan).",
+}
+
+export const frontmatter = {
+  title: "L07 · Γραφήματα II — DFS, τοπολογική ταξινόμηση, SCC",
+  slug: "lectures/L07-graphs-ii",
+  order: 7,
+  prerequisites: ["lectures/L06-graphs-i"],
+  examWeight: 10,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Graphs</span>
+  <span>·</span>
+  <span>Διάλεξη 7</span>
+</div>
+
+# L07 · Γραφήματα II — DFS, τοπολογική ταξινόμηση, SCC
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L07-graphs-ii" />
+  <Bookmark id="lectures/L07-graphs-ii" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L07 - Αλγόριθμοι σε Γραφήματα ΙΙ.pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L07-graphs-ii.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+DFS, τα είδη ακμών, τοπολογική ταξινόμηση σε DAGs, και αλγόριθμος ισχυρά συνεκτικών συνιστωσών (Kosaraju / Tarjan).
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L07-graphs-ii" />

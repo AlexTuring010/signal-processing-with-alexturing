@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L05 · D&C III — Closest pair of points",
+  description: "Το πλησιέστερο ζεύγος σημείων σε δύο διαστάσεις — το αρχέτυπο γεωμετρικό D&C με το «strip» επιχείρημα.",
+}
+
+export const frontmatter = {
+  title: "L05 · D&C III — Closest pair of points",
+  slug: "lectures/L05-divide-and-conquer-iii",
+  order: 5,
+  prerequisites: ["lectures/L04-divide-and-conquer-ii"],
+  examWeight: 4,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Divide & Conquer</span>
+  <span>·</span>
+  <span>Διάλεξη 5</span>
+</div>
+
+# L05 · D&C III — Closest pair of points
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L05-divide-and-conquer-iii" />
+  <Bookmark id="lectures/L05-divide-and-conquer-iii" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L05 - Διαίρει και Κυρίευε ΙΙΙ (Πλησιέστερο Ζεύγος Σημείων).pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L05-divide-and-conquer-iii.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+Το πλησιέστερο ζεύγος σημείων σε δύο διαστάσεις — το αρχέτυπο γεωμετρικό D&C με το «strip» επιχείρημα.
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L05-divide-and-conquer-iii" />

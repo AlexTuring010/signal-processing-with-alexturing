@@ -1,11 +1,13 @@
 /**
  * Single source of truth for site navigation.
  *
- * Each `Chapter` is a top-level group in the sidebar (Foundations, Randomness, etc.).
- * Each `Section` is one MDX page. `slug` here matches the route segment
- * (e.g. "foundations/signals" → /foundations/signals).
+ * Each `Chapter` is a top-level group in the sidebar (Asymptotic Analysis,
+ * Divide & Conquer, Graphs, etc.). Each `Section` is one MDX page.
+ * `slug` here matches the route segment (e.g. "lectures/L03-divide-and-conquer-i"
+ * → /lectures/L03-divide-and-conquer-i).
  *
- * Add new sections here when you create their MDX page.
+ * Lecture slugs follow the convention `lectures/LNN-english-topic`. The
+ * `LNN-` prefix encodes the source PDF in `material/Notes2026/`.
  */
 
 export type Section = {
@@ -13,6 +15,7 @@ export type Section = {
   title: string
   /** When false, the link still renders but as a "coming soon" / disabled item. */
   available: boolean
+  /** Rough exam weight, used for the home-page priority chips. */
   examWeight?: number
   prerequisites?: string[]
   /**
@@ -21,6 +24,8 @@ export type Section = {
    * the sidebar so the linear flow stays clean.
    */
   group?: 'reference'
+  /** Filename in /public/material/Notes2026 — used by the lecture's SourceDoc. */
+  pdf?: string
 }
 
 export type Chapter = {
@@ -35,102 +40,191 @@ export const CHAPTERS: Chapter[] = [
   {
     id: 'intro',
     title: '1. Intro',
-    blurb: 'Why we study communications',
+    blurb: 'Τι είναι αλγόριθμος, πώς τον αναλύουμε',
     sections: [
-      { slug: 'intro', title: 'Τι είναι ένα σύστημα επικοινωνιών', available: true },
-    ],
-  },
-  {
-    id: 'foundations',
-    title: '2. Foundations',
-    blurb: 'SP1 από την αρχή, σωστά',
-    sections: [
-      { slug: 'foundations/signals', title: 'Σήματα', available: true },
-      { slug: 'foundations/systems', title: 'Συστήματα & convolution', available: true },
-      { slug: 'foundations/fourier-series', title: 'Fourier series', available: true },
-      { slug: 'foundations/fourier-transform', title: 'Fourier transform', available: true, examWeight: 18 },
-      { slug: 'foundations/filters', title: 'Φίλτρα', available: true, examWeight: 5 },
       {
-        slug: 'foundations/signal-transformations',
-        title: 'Μετασχηματισμοί σήματος',
+        slug: 'lectures/L01-eisagogika',
+        title: 'L01 · Εισαγωγικά',
         available: true,
-        group: 'reference',
-      },
-      {
-        slug: 'reference/complex-numbers',
-        title: 'Μιγαδικοί αριθμοί',
-        available: true,
-        group: 'reference',
-      },
-      {
-        slug: 'reference/spectrum-conventions',
-        title: 'Συμβάσεις φάσματος',
-        available: true,
-        group: 'reference',
+        examWeight: 2,
+        pdf: 'L01 - Εισαγωγικά.pdf',
       },
     ],
   },
   {
-    id: 'randomness',
-    title: '3. Randomness',
-    blurb: 'Πιθανότητα στα σήματα',
+    id: 'asymptotics',
+    title: '2. Asymptotic analysis',
+    blurb: 'O, Θ, Ω — η γλώσσα της πολυπλοκότητας',
     sections: [
-      { slug: 'randomness/why', title: 'Γιατί χρειαζόμαστε πιθανότητα', available: true, examWeight: 1 },
-      { slug: 'randomness/random-variables', title: 'Random variables', available: true, examWeight: 1 },
-      { slug: 'randomness/random-processes', title: 'Random processes', available: true, examWeight: 2 },
-      { slug: 'randomness/stationarity', title: 'Stationarity & ergodicity', available: true, examWeight: 2 },
-      { slug: 'randomness/psd', title: 'Power spectral density', available: true, examWeight: 3 },
+      {
+        slug: 'lectures/L02-asymptotic-analysis',
+        title: 'L02 · Ασυμπτωτική Ανάλυση',
+        available: true,
+        examWeight: 8,
+        prerequisites: ['lectures/L01-eisagogika'],
+        pdf: 'L02 - Ασυμπτωτική Ανάλυση.pdf',
+      },
     ],
   },
   {
-    id: 'noise',
-    title: '4. Noise',
-    blurb: 'Από πού έρχεται ο θόρυβος',
+    id: 'divide-conquer',
+    title: '3. Divide & Conquer',
+    blurb: 'Διαίρει και κυρίευε — από mergesort μέχρι closest pair',
     sections: [
-      { slug: 'noise/sources', title: 'Πηγές θορύβου', available: true, examWeight: 3 },
-      { slug: 'noise/white-noise', title: 'White noise', available: true, examWeight: 4 },
-      { slug: 'noise/through-filters', title: 'Θόρυβος μέσα από φίλτρα', available: true, examWeight: 4 },
-      { slug: 'noise/snr', title: 'SNR', available: true, examWeight: 3 },
+      {
+        slug: 'lectures/L03-divide-and-conquer-i',
+        title: 'L03 · D&C I — Mergesort, master theorem',
+        available: true,
+        examWeight: 6,
+        prerequisites: ['lectures/L02-asymptotic-analysis'],
+        pdf: 'L03 - Διαίρει και Κυρίευε Ι (Συγχωνευτική Ταξινόμηση, Αναδρομικές Σχέσεις και Master Theorem).pdf',
+      },
+      {
+        slug: 'lectures/L04-divide-and-conquer-ii',
+        title: 'L04 · D&C II — Inversions, dominant colour, multiplication',
+        available: true,
+        examWeight: 5,
+        prerequisites: ['lectures/L03-divide-and-conquer-i'],
+        pdf: 'L04 - Διαίρει και Κυρίευε ΙΙ (Μέτρηση Αντιστροφών, Κυρίαρχο Χρώμα και Πολλαπλασιασμός).pdf',
+      },
+      {
+        slug: 'lectures/L05-divide-and-conquer-iii',
+        title: 'L05 · D&C III — Closest pair of points',
+        available: true,
+        examWeight: 4,
+        prerequisites: ['lectures/L04-divide-and-conquer-ii'],
+        pdf: 'L05 - Διαίρει και Κυρίευε ΙΙΙ (Πλησιέστερο Ζεύγος Σημείων).pdf',
+      },
     ],
   },
   {
-    id: 'modulation',
-    title: '5. Modulation',
-    blurb: 'Η γέφυρα από Foundations στη διαμόρφωση',
+    id: 'graphs',
+    title: '4. Graphs',
+    blurb: 'BFS, DFS, SCC, topo, shortest paths, MST',
     sections: [
-      { slug: 'modulation/bridge', title: 'Bandpass & I/Q canonical form', available: true, examWeight: 5 },
+      {
+        slug: 'lectures/L06-graphs-i',
+        title: 'L06 · Γραφήματα I — αναπαράσταση, BFS',
+        available: true,
+        examWeight: 8,
+        prerequisites: ['lectures/L02-asymptotic-analysis'],
+        pdf: 'L06 - Αλγόριθμοι σε Γραφήματα Ι.pdf',
+      },
+      {
+        slug: 'lectures/L07-graphs-ii',
+        title: 'L07 · Γραφήματα II — DFS, τοπολογική, SCC',
+        available: true,
+        examWeight: 10,
+        prerequisites: ['lectures/L06-graphs-i'],
+        pdf: 'L07 - Αλγόριθμοι σε Γραφήματα ΙΙ.pdf',
+      },
+      {
+        slug: 'lectures/L08-graphs-iii',
+        title: 'L08 · Γραφήματα III — shortest paths (Dijkstra, Bellman-Ford)',
+        available: true,
+        examWeight: 10,
+        prerequisites: ['lectures/L07-graphs-ii'],
+        pdf: 'L08 - Αλγόριθμοι σε Γραφήματα ΙIΙ.pdf',
+      },
+      {
+        slug: 'lectures/L09-graphs-iv',
+        title: 'L09 · Γραφήματα IV — MST (Prim, Kruskal)',
+        available: true,
+        examWeight: 8,
+        prerequisites: ['lectures/L08-graphs-iii'],
+        pdf: 'L09 - Αλγόριθμοι σε Γραφήματα ΙV.pdf',
+      },
     ],
   },
   {
-    id: 'am',
-    title: '6. AM',
-    blurb: 'Amplitude modulation',
+    id: 'data-structures',
+    title: '5. Data structures',
+    blurb: 'Heaps, BSTs, union-find — τα εργαλεία πίσω από όλα',
     sections: [
-      { slug: 'am/overview', title: 'AM Overview', available: true, examWeight: 5 },
-      { slug: 'am/conventional', title: 'Conventional AM', available: true, examWeight: 15 },
-      { slug: 'am/dsb-sc', title: 'DSB-SC', available: true, examWeight: 5 },
-      { slug: 'am/ssb', title: 'SSB', available: true, examWeight: 5 },
-      { slug: 'am/vsb', title: 'VSB', available: true, examWeight: 2 },
-      { slug: 'am/modulator-demodulator', title: 'Modulator & Demodulator + AM in noise', available: true, examWeight: 8 },
-      { slug: 'am/multiplexing', title: 'Multiplexing (FDM)', available: true, examWeight: 5 },
+      {
+        slug: 'lectures/L10-data-structures',
+        title: 'L10 · Δομές Δεδομένων',
+        available: true,
+        examWeight: 5,
+        prerequisites: ['lectures/L02-asymptotic-analysis'],
+        pdf: 'L10 - Δομές Δεδομένων.pdf',
+      },
     ],
   },
   {
-    id: 'fm',
-    title: '7. FM',
-    blurb: 'Frequency modulation',
+    id: 'greedy',
+    title: '6. Greedy',
+    blurb: 'Άπληστοι αλγόριθμοι — exchange argument',
     sections: [
-      { slug: 'fm/idea', title: 'Η ιδέα του FM + modulation index β', available: true, examWeight: 8 },
-      { slug: 'fm/pm', title: 'PM + δυϊκότητα με FM', available: true, examWeight: 2 },
-      { slug: 'fm/bessel', title: 'Bessel expansion + sidebands', available: true, examWeight: 10 },
-      { slug: 'fm/carson', title: "Carson's rule + NBFM vs WBFM", available: true, examWeight: 5 },
-      { slug: 'fm/in-noise', title: 'FM στον θόρυβο + vs AM', available: true, examWeight: 5 },
+      {
+        slug: 'lectures/L11-greedy-i',
+        title: 'L11 · Άπληστοι I — interval scheduling, exchange argument',
+        available: true,
+        examWeight: 7,
+        prerequisites: ['lectures/L02-asymptotic-analysis'],
+        pdf: 'L11 - Άπληστοι Αλγόριθμοι.pdf',
+      },
+      {
+        slug: 'lectures/L12-greedy-ii',
+        title: 'L12 · Άπληστοι II — Huffman, κωδικοποίηση',
+        available: true,
+        examWeight: 5,
+        prerequisites: ['lectures/L11-greedy-i'],
+        pdf: 'L12 - Άπληστοι Αλγόριθμοι II.pdf',
+      },
+      {
+        slug: 'lectures/L13-greedy-iii',
+        title: 'L13 · Άπληστοι III',
+        available: true,
+        examWeight: 4,
+        prerequisites: ['lectures/L12-greedy-ii'],
+        pdf: 'L13 - Άπληστοι Αλγόριθμοι III.pdf',
+      },
+    ],
+  },
+  {
+    id: 'dp',
+    title: '7. Dynamic programming',
+    blurb: 'Δυναμικός προγραμματισμός — από memoization σε bottom-up',
+    sections: [
+      {
+        slug: 'lectures/L14-dp-i',
+        title: 'L14 · DP I — η ιδέα + 1D προβλήματα',
+        available: true,
+        examWeight: 8,
+        prerequisites: ['lectures/L02-asymptotic-analysis'],
+        pdf: 'L14 - Δυναμικός Προγραμματισμός Ι.pdf',
+      },
+      {
+        slug: 'lectures/L15-dp-ii',
+        title: 'L15 · DP II — knapsack family',
+        available: true,
+        examWeight: 7,
+        prerequisites: ['lectures/L14-dp-i'],
+        pdf: 'L15 - Δυναμικός Προγραμματισμός ΙI.pdf',
+      },
+      {
+        slug: 'lectures/L16-dp-iii',
+        title: 'L16 · DP III — LCS, edit distance',
+        available: true,
+        examWeight: 7,
+        prerequisites: ['lectures/L15-dp-ii'],
+        pdf: 'L16 - Δυναμικός Προγραμματισμός ΙII.pdf',
+      },
+      {
+        slug: 'lectures/L17-dp-iv',
+        title: 'L17 · DP IV — DP σε γραφήματα',
+        available: true,
+        examWeight: 6,
+        prerequisites: ['lectures/L16-dp-iii', 'lectures/L09-graphs-iv'],
+        pdf: 'L17 - Δυναμικός Προγραμματισμός ΙV.pdf',
+      },
     ],
   },
   {
     id: 'exam',
     title: '8. Exam prep',
-    blurb: 'Παλιά θέματα & tips',
+    blurb: 'Παλιά θέματα & σωσε-το-εξάμηνο',
     sections: [
       {
         slug: 'practice/sose-to-eksamino',
@@ -138,22 +232,7 @@ export const CHAPTERS: Chapter[] = [
         available: true,
       },
       { slug: 'practice', title: 'Practice hub', available: true },
-      { slug: 'formulas', title: 'Formula sheet', available: true },
-    ],
-  },
-  {
-    id: 'lab',
-    title: '9. Lab — Προαιρετικό',
-    blurb: 'MATLAB μέρος — μόνο αν παρακολουθείς το lab',
-    sections: [
-      { slug: 'labs', title: 'Lab hub — από πού να ξεκινήσω', available: true },
-      { slug: 'labs/00-install', title: 'Lab 0 · Εγκατάσταση MATLAB', available: true },
-      { slug: 'labs/01-intro', title: 'Lab 1 · Εισαγωγή στο MATLAB', available: true },
-      { slug: 'labs/02-signals', title: 'Lab 2 · Συνεχή & διακριτά σήματα', available: true },
-      { slug: 'labs/03-systems', title: 'Lab 3 · Γραμμικά συστήματα', available: true },
-      { slug: 'labs/05-random-signals', title: 'Lab 5 · Τυχαία σήματα & θόρυβος', available: true },
-      { slug: 'labs/06-am-modulation', title: 'Lab 6 · AM στο MATLAB', available: true },
-      { slug: 'labs/practice', title: '🧪 Lab practice — εξάσκηση', available: true },
+      { slug: 'formulas', title: 'Cheat sheet (O/Θ/Ω, master theorem)', available: true },
     ],
   },
 ]
@@ -166,3 +245,8 @@ export function findSection(slug: string): Section | undefined {
 
 /** Total count of sections that are actually available (have a real page). */
 export const AVAILABLE_COUNT = ALL_SECTIONS.filter((s) => s.available).length
+
+/** Convenience: just the lecture sections, in order. */
+export const LECTURES: Section[] = CHAPTERS.filter(
+  (c) => !['exam'].includes(c.id),
+).flatMap((c) => c.sections)

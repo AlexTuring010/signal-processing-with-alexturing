@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L10 · Δομές Δεδομένων",
+  description: "Heaps, BSTs, hash tables, union-find: τα εργαλεία που κάθονται κάτω από τους αλγορίθμους που έχουμε δει. Amortized analysis και πότε «ακόμα και linear» δεν είναι αρκετά γρήγορο.",
+}
+
+export const frontmatter = {
+  title: "L10 · Δομές Δεδομένων",
+  slug: "lectures/L10-data-structures",
+  order: 10,
+  prerequisites: ["lectures/L02-asymptotic-analysis"],
+  examWeight: 5,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Data structures</span>
+  <span>·</span>
+  <span>Διάλεξη 10</span>
+</div>
+
+# L10 · Δομές Δεδομένων
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L10-data-structures" />
+  <Bookmark id="lectures/L10-data-structures" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L10 - Δομές Δεδομένων.pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L10-data-structures.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+Heaps, BSTs, hash tables, union-find: τα εργαλεία που κάθονται κάτω από τους αλγορίθμους που έχουμε δει. Amortized analysis και πότε «ακόμα και linear» δεν είναι αρκετά γρήγορο.
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L10-data-structures" />

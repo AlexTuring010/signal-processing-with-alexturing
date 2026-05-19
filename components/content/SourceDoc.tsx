@@ -15,10 +15,14 @@ type Props = {
   note?: string
 }
 
-const PDF_BASE = '/slides/'
+const PDF_BASE = '/material/Notes2026/'
 
 function pdfHref(pdf: string) {
-  // Encode each path segment separately so subdirectory separators survive.
+  // Absolute paths (starting with '/') are used as-is — useful for files
+  // outside the lecture-notes directory (e.g. /material/exercises/...).
+  if (pdf.startsWith('/')) {
+    return pdf.split('/').map((seg, i) => (i === 0 ? '' : encodeURIComponent(seg))).join('/')
+  }
   return PDF_BASE + pdf.split('/').map(encodeURIComponent).join('/')
 }
 

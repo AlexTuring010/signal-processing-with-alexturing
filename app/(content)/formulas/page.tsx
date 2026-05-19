@@ -6,9 +6,9 @@ import { TOPIC_COLORS, SECTION_TITLES } from '@/content/practice/types'
 import { SectionComments } from '@/components/layout/SectionComments'
 
 export const metadata = {
-  title: 'Τυπολόγιο',
+  title: 'Cheat sheet',
   description:
-    'Το επίσημο τυπολόγιο του μαθήματος, οργανωμένο ανά κεφάλαιο. Κάθε τύπος έχει σύνδεσμο προς την ενότητα όπου παράγεται και πεδίο σχολίων για διορθώσεις, διευκρινίσεις ή tips.',
+    'Γρήγορη αναφορά για ορισμούς (O / Θ / Ω), Master Theorem, βασικές αναδρομικές σχέσεις, και εργαλεία ανά κεφάλαιο. Κάθε εγγραφή συνδέεται με τη διάλεξη όπου παράγεται.',
 }
 
 export default function FormulasPage() {
@@ -18,12 +18,13 @@ export default function FormulasPage() {
         <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft/60 text-accent">
           <Sigma className="h-5 w-5" aria-hidden />
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">Τυπολόγιο</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Cheat sheet</h1>
         <p className="mt-2 text-fg-muted">
-          Όσα <em>δεν</em> χρειάζεται να μάθεις απέξω — δίνονται στην
-          εξέταση. Κάθε τύπος συνδέεται με την ενότητα όπου παράγεται, ώστε
-          να βλέπεις πώς προκύπτει αν ξεχάσεις. Άσε σχόλιο σε όποιον τύπο
-          σε δυσκόλεψε.
+          Η εξέταση του K17 είναι <strong>χωρίς βοηθήματα</strong> — αυτή
+          είναι σελίδα <em>μελέτης</em>, όχι τυπολόγιο που σου δίνεται μέσα
+          στην αίθουσα. Χρησιμοποίησέ την για να ξαναθυμηθείς γρήγορα
+          ορισμούς και βασικά εργαλεία. Άσε σχόλιο σε όποια εγγραφή σε
+          δυσκόλεψε.
         </p>
       </header>
 
@@ -39,43 +40,49 @@ export default function FormulasPage() {
             <span
               className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${TOPIC_COLORS[section.topic]}`}
             >
-              {section.entries.length} τύποι
+              {section.entries.length} εγγραφές
             </span>
           </div>
-          <div className="space-y-3">
-            {section.entries.map((entry) => (
-              <article
-                key={entry.id}
-                id={`formula:${entry.id}`}
-                className="scroll-mt-20 rounded-lg border border-border bg-bg-elevated p-4"
-              >
-                <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="text-sm font-semibold tracking-tight">
-                    {entry.title}
-                  </h3>
-                  {entry.derivedIn && (
-                    <Link
-                      href={`/${entry.derivedIn}`}
-                      className="inline-flex items-center gap-1 text-[11px] text-fg-muted transition hover:text-accent"
-                      title={`Παραγωγή στο ${SECTION_TITLES[entry.derivedIn] ?? entry.derivedIn}`}
-                    >
-                      <BookOpen className="h-3 w-3" aria-hidden />
-                      {SECTION_TITLES[entry.derivedIn] ?? 'Δες παραγωγή'}
-                    </Link>
-                  )}
-                </div>
-                <div className="text-sm">{entry.content}</div>
-                <div className="mt-3 border-t border-border pt-2">
-                  <SectionComments
-                    anchor={`formula:${entry.id}`}
-                    sectionTitle={entry.title}
-                    className=""
-                    emptyLabel="Σχόλιο για τον τύπο"
-                  />
-                </div>
-              </article>
-            ))}
-          </div>
+          {section.entries.length === 0 ? (
+            <p className="text-sm text-fg-subtle italic">
+              Έρχονται σύντομα μαζί με τις αντίστοιχες διαλέξεις.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {section.entries.map((entry) => (
+                <article
+                  key={entry.id}
+                  id={`formula:${entry.id}`}
+                  className="scroll-mt-20 rounded-lg border border-border bg-bg-elevated p-4"
+                >
+                  <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 className="text-sm font-semibold tracking-tight">
+                      {entry.title}
+                    </h3>
+                    {entry.derivedIn && (
+                      <Link
+                        href={`/${entry.derivedIn}`}
+                        className="inline-flex items-center gap-1 text-[11px] text-fg-muted transition hover:text-accent"
+                        title={`Παραγωγή στο ${SECTION_TITLES[entry.derivedIn] ?? entry.derivedIn}`}
+                      >
+                        <BookOpen className="h-3 w-3" aria-hidden />
+                        {SECTION_TITLES[entry.derivedIn] ?? 'Δες παραγωγή'}
+                      </Link>
+                    )}
+                  </div>
+                  <div className="text-sm">{entry.content}</div>
+                  <div className="mt-3 border-t border-border pt-2">
+                    <SectionComments
+                      anchor={`formula:${entry.id}`}
+                      sectionTitle={entry.title}
+                      className=""
+                      emptyLabel="Σχόλιο για την εγγραφή"
+                    />
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       ))}
     </>

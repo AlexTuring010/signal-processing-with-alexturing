@@ -66,8 +66,9 @@ const DIFFICULTY_RANK: Record<Difficulty, number> = {
 
 const ORIGIN_RANK: Record<Origin, number> = {
   'past-exam': 0,
-  lecture: 1,
-  'ai-generated': 2,
+  frontistirio: 1,
+  lecture: 2,
+  'ai-generated': 3,
 }
 
 /**
@@ -155,12 +156,13 @@ export function relatedFor(ex: Exercise, k = 3): Exercise[] {
  */
 export const TOPIC_TOTALS: Record<Topic, number> = (() => {
   const t: Record<Topic, number> = {
-    foundations: 0,
-    modulation: 0,
-    am: 0,
-    fm: 0,
-    random: 0,
-    noise: 0,
+    intro: 0,
+    asymptotics: 0,
+    'divide-conquer': 0,
+    graphs: 0,
+    'data-structures': 0,
+    greedy: 0,
+    dp: 0,
   }
   for (const ex of SOSE_PATH) t[ex.topic]++
   return t
@@ -196,12 +198,13 @@ export type CoverageStats = {
  */
 export function coverageStats(solvedKeys: Set<string>): CoverageStats {
   const perTopic: Record<Topic, number> = {
-    foundations: 0,
-    modulation: 0,
-    am: 0,
-    fm: 0,
-    random: 0,
-    noise: 0,
+    intro: 0,
+    asymptotics: 0,
+    'divide-conquer': 0,
+    graphs: 0,
+    'data-structures': 0,
+    greedy: 0,
+    dp: 0,
   }
   let solvedCount = 0
   let weightCovered = 0

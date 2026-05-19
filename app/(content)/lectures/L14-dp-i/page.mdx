@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L14 · DP I — η ιδέα + 1D προβλήματα",
+  description: "Δυναμικός προγραμματισμός από την αρχή: αναδρομή με memoization, μετά bottom-up. Πρώτα παραδείγματα σε 1D (Fibonacci, rod cutting, weighted interval scheduling).",
+}
+
+export const frontmatter = {
+  title: "L14 · DP I — η ιδέα + 1D προβλήματα",
+  slug: "lectures/L14-dp-i",
+  order: 14,
+  prerequisites: ["lectures/L02-asymptotic-analysis"],
+  examWeight: 8,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Dynamic programming</span>
+  <span>·</span>
+  <span>Διάλεξη 14</span>
+</div>
+
+# L14 · DP I — η ιδέα + 1D προβλήματα
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L14-dp-i" />
+  <Bookmark id="lectures/L14-dp-i" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L14 - Δυναμικός Προγραμματισμός Ι.pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L14-dp-i.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+Δυναμικός προγραμματισμός από την αρχή: αναδρομή με memoization, μετά bottom-up. Πρώτα παραδείγματα σε 1D (Fibonacci, rod cutting, weighted interval scheduling).
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L14-dp-i" />

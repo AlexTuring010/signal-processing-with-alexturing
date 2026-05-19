@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L01 · Εισαγωγικά",
+  description: "Η πρώτη διάλεξη: τι είναι αλγόριθμος, τι σημαίνει «πολυπλοκότητα», και πώς θα κινηθούμε το εξάμηνο.",
+}
+
+export const frontmatter = {
+  title: "L01 · Εισαγωγικά",
+  slug: "lectures/L01-eisagogika",
+  order: 1,
+  prerequisites: [],
+  examWeight: 2,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Intro</span>
+  <span>·</span>
+  <span>Διάλεξη 1</span>
+</div>
+
+# L01 · Εισαγωγικά
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L01-eisagogika" />
+  <Bookmark id="lectures/L01-eisagogika" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L01 - Εισαγωγικά.pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L01-eisagogika.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+Η πρώτη διάλεξη: τι είναι αλγόριθμος, τι σημαίνει «πολυπλοκότητα», και πώς θα κινηθούμε το εξάμηνο.
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L01-eisagogika" />

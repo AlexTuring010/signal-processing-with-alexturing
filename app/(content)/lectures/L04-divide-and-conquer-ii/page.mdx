@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L04 · D&C II — Inversions, dominant colour, multiplication",
+  description: "Τρία κλασικά D&C προβλήματα: μέτρηση αντιστροφών, εύρεση κυρίαρχου χρώματος, και πολλαπλασιασμός κατά Karatsuba.",
+}
+
+export const frontmatter = {
+  title: "L04 · D&C II — Inversions, dominant colour, multiplication",
+  slug: "lectures/L04-divide-and-conquer-ii",
+  order: 4,
+  prerequisites: ["lectures/L03-divide-and-conquer-i"],
+  examWeight: 5,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Divide & Conquer</span>
+  <span>·</span>
+  <span>Διάλεξη 4</span>
+</div>
+
+# L04 · D&C II — Inversions, dominant colour, multiplication
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L04-divide-and-conquer-ii" />
+  <Bookmark id="lectures/L04-divide-and-conquer-ii" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L04 - Διαίρει και Κυρίευε ΙΙ (Μέτρηση Αντιστροφών, Κυρίαρχο Χρώμα και Πολλαπλασιασμός).pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L04-divide-and-conquer-ii.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+Τρία κλασικά D&C προβλήματα: μέτρηση αντιστροφών, εύρεση κυρίαρχου χρώματος, και πολλαπλασιασμός κατά Karatsuba.
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L04-divide-and-conquer-ii" />

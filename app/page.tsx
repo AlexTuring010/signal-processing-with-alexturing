@@ -13,7 +13,6 @@ import {
   MessageSquare,
   Trophy,
   Zap,
-  FlaskConical,
 } from 'lucide-react'
 import { CHAPTERS, AVAILABLE_COUNT, ALL_SECTIONS } from '@/lib/content-index'
 import { Comments } from '@/components/layout/Comments'
@@ -23,28 +22,34 @@ const FIRST_AVAILABLE = ALL_SECTIONS.find((s) => s.available)
 
 const EXAM_PRIORITY = [
   {
-    label: 'AM',
-    weight: '35–40%',
-    href: '/am/conventional',
+    label: 'Graphs',
+    weight: '30–35%',
+    href: '/lectures/L06-graphs-i',
+    color: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
+  },
+  {
+    label: 'DP',
+    weight: '25–30%',
+    href: '/lectures/L14-dp-i',
+    color: 'border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300',
+  },
+  {
+    label: 'Greedy',
+    weight: '15–20%',
+    href: '/lectures/L11-greedy-i',
     color: 'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300',
   },
   {
-    label: 'FM',
-    weight: '25–30%',
-    href: '/fm/idea',
-    color: 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300',
+    label: 'D&C',
+    weight: '10–15%',
+    href: '/lectures/L03-divide-and-conquer-i',
+    color: 'border-purple-500/40 bg-purple-500/10 text-purple-700 dark:text-purple-300',
   },
   {
-    label: 'Fourier',
-    weight: '15%',
-    href: '/foundations/fourier-transform',
+    label: 'Asymptotic',
+    weight: '5–10%',
+    href: '/lectures/L02-asymptotic-analysis',
     color: 'border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300',
-  },
-  {
-    label: 'Noise',
-    weight: '12–15%',
-    href: '/noise/sources',
-    color: 'border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300',
   },
 ]
 
@@ -57,19 +62,19 @@ export default function HomePage() {
       <section className="mx-auto max-w-3xl text-center">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-soft px-3 py-1 text-xs font-medium tracking-wide text-fg-muted">
           <Sparkles className="h-3.5 w-3.5 text-accent" aria-hidden />
-          K21 — Συστήματα Επικοινωνιών · ΕΚΠΑ DIT
+          K17 — Αλγόριθμοι και Πολυπλοκότητα · ΕΚΠΑ DIT
         </span>
         <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
-          Signal Processing{' '}
+          Algorithms{' '}
           <span className="bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent">
             Class Hub
           </span>
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-lg text-fg-muted">
           Φτιαγμένο για να καταλάβουμε{' '}
-          <em>πραγματικά</em> το μάθημα — όχι απλώς να αποστηθίσουμε τύπους.
-          Κάτι ασαφές; Κάποιο λάθος; Άσε σχόλιο και θα βελτιωθεί. Όσο
-          περισσότερα μάτια, τόσο πιο καλό γίνεται για όλους.
+          <em>πραγματικά</em> το μάθημα — όχι απλώς να αποστηθίσουμε
+          αλγορίθμους. Κάτι ασαφές; Κάποιο λάθος; Άσε σχόλιο και θα
+          βελτιωθεί. Όσο περισσότερα μάτια, τόσο πιο καλό γίνεται για όλους.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           {FIRST_AVAILABLE && (
@@ -108,7 +113,7 @@ export default function HomePage() {
             className="inline-flex items-center gap-2 rounded-full border border-border bg-bg-elevated px-5 py-2.5 text-sm font-medium text-fg transition-colors hover:border-accent/50"
           >
             <Sigma className="h-4 w-4" aria-hidden />
-            Τυπολόγιο
+            Cheat sheet
           </Link>
         </div>
       </section>
@@ -124,7 +129,7 @@ export default function HomePage() {
           </span>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          {/* Path 1: theory first (existing) */}
+          {/* Path 1: theory first */}
           {FIRST_AVAILABLE && (
             <Link
               href={`/${FIRST_AVAILABLE.slug}`}
@@ -137,9 +142,10 @@ export default function HomePage() {
                 Από τη θεωρία προς τις ασκήσεις
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-fg-muted">
-                Ο κλασικός τρόπος. Διαβάζεις σε σειρά κεφαλαίων, χτίζεις
-                βαθιά κατανόηση, λύνεις ασκήσεις στο τέλος. Δίπλα σε κάθε
-                ενότητα έχεις viz, formula sheet και comments.
+                Ο κλασικός τρόπος. Διαβάζεις σε σειρά διαλέξεων (L01 → L17),
+                χτίζεις βαθιά κατανόηση, και στο τέλος κάθε διάλεξης
+                βρίσκεις τις ασκήσεις από φροντιστήρια και παλαιότερες
+                εξεταστικές που εξετάζουν αυτό το κομμάτι ύλης.
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 <PathChip>📚 Σε βάθος</PathChip>
@@ -147,7 +153,7 @@ export default function HomePage() {
                 <PathChip>⏱ Όλο το εξάμηνο</PathChip>
               </div>
               <div className="mt-auto flex items-center gap-1.5 pt-5 text-sm font-semibold text-sky-600 dark:text-sky-400">
-                Ξεκίνα από την αρχή
+                Ξεκίνα από L01
                 <ArrowRight
                   className="h-4 w-4 transition group-hover:translate-x-0.5"
                   aria-hidden
@@ -155,7 +161,7 @@ export default function HomePage() {
               </div>
             </Link>
           )}
-          {/* Path 2: sose to eksamino (new, urgent framing) */}
+          {/* Path 2: sose to eksamino */}
           <Link
             href="/practice/sose-to-eksamino"
             className="group relative flex flex-col rounded-2xl border-2 border-rose-500/50 bg-gradient-to-br from-rose-500/10 via-orange-500/5 to-bg-elevated p-6 shadow-md transition hover:border-rose-500 hover:shadow-lg"
@@ -171,15 +177,15 @@ export default function HomePage() {
               Σώσε το εξάμηνο
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-fg-muted">
-              <em>Just-in-time learning</em>. Ξεκίνα από την πιο εύκολη
-              άσκηση. Κολλάς; Σου λέμε ακριβώς ποιο κομμάτι θεωρίας
-              χρειάζεσαι. Επιστρέφεις, λύνεις, επόμενη. Κάθε άσκηση = ένα
-              εργαλείο που μπορεί να πέσει στην εξέταση.
+              <em>Just-in-time learning</em>, exercise-first. Ξεκίνα από
+              την πιο εύκολη άσκηση. Κάθε άσκηση σου λέει ακριβώς ποιες
+              διαλέξεις πρέπει να ξέρεις (L01–L17) για να τη λύσεις. Δεν
+              χρειάζεται να ξέρεις όλη τη θεωρία πριν αρχίσεις.
             </p>
             <div className="mt-4 flex flex-wrap gap-1.5">
-              <PathChip accent>🛠 75 ασκήσεις</PathChip>
-              <PathChip accent>📊 Παρακολούθηση εξετ. βάρους</PathChip>
-              <PathChip accent>🎯 Coaching ανά άσκηση</PathChip>
+              <PathChip accent>🛠 Φροντιστήρια + παλαιές εξεταστικές</PathChip>
+              <PathChip accent>🏷️ 2024/2025 με badge</PathChip>
+              <PathChip accent>🎯 Προαπαιτούμενες διαλέξεις ανά άσκηση</PathChip>
             </div>
             <div className="mt-auto flex items-center gap-1.5 pt-5 text-sm font-semibold text-rose-600 dark:text-rose-400">
               Ξεκίνα από Άσκηση 1
@@ -192,7 +198,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Collaborative manifesto — compact, two-column */}
+      {/* Collaborative manifesto */}
       <section className="mx-auto mt-12 max-w-5xl rounded-2xl border border-accent/30 bg-accent-soft/15 p-5 sm:p-6">
         <div className="grid gap-5 sm:grid-cols-[1.1fr_1fr] sm:gap-7">
           <div>
@@ -207,8 +213,8 @@ export default function HomePage() {
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-fg-muted">
               Αν μπερδεύτηκες σε κάτι, αυτό είναι <em>χρήσιμη πληροφορία</em>:
-              η εξήγηση χρειάζεται δουλειά. Άσε σχόλιο και θα φτιαχτεί. Στις
-              θεωρητικές σελίδες υπάρχει κουμπί{' '}
+              η εξήγηση χρειάζεται δουλειά. Άσε σχόλιο και θα φτιαχτεί. Σε
+              κάθε διάλεξη υπάρχει κουμπί{' '}
               <em className="whitespace-nowrap">«Σχόλιο»</em> δίπλα σε κάθε
               ενότητα — χρησιμοποίησέ το για να ξέρουμε{' '}
               <em>για ποιο σημείο</em> μιλάς.
@@ -232,22 +238,22 @@ export default function HomePage() {
         <QuickDest
           href="/practice"
           Icon={ListChecks}
-          title="Λυμένες ασκήσεις"
-          subtitle="Παλαιότερα θέματα εξετάσεων με χρονιά + βάρος, φιλτραρίσιμα"
+          title="Παλαιά θέματα"
+          subtitle="Φροντιστήρια + παλαιότερες εξεταστικές με χρονιά και προαπαιτούμενα"
           accent="bg-emerald-500/15 text-emerald-600 dark:text-emerald-300"
         />
         <QuickDest
           href="/practice/quiz"
           Icon={Brain}
           title="Quiz mode"
-          subtitle="Σ/Λ + πολλαπλής επιλογής σε 3 modes (static / timed / one-by-one)"
+          subtitle="Σ/Λ + πολλαπλής επιλογής (έρχονται σύντομα)"
           accent="bg-purple-500/15 text-purple-600 dark:text-purple-300"
         />
         <QuickDest
           href="/formulas"
           Icon={Sigma}
-          title="Τυπολόγιο"
-          subtitle="Όλες οι κρίσιμες εξισώσεις. Διαθέσιμο και ως slide-out στο /practice"
+          title="Cheat sheet"
+          subtitle="O/Θ/Ω, master theorem, σύνθετες δομές — γρήγορη αναφορά"
           accent="bg-sky-500/15 text-sky-600 dark:text-sky-300"
         />
         <QuickDest
@@ -259,33 +265,6 @@ export default function HomePage() {
         />
       </section>
 
-      {/* Lab track — optional MATLAB part */}
-      <section className="mx-auto mt-12 max-w-5xl rounded-2xl border-2 border-violet-500/30 bg-gradient-to-br from-violet-500/5 via-bg-elevated to-bg-elevated p-5 sm:p-6">
-        <div className="grid items-center gap-5 sm:grid-cols-[auto_1fr_auto]">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-violet-500/15 text-violet-600 dark:text-violet-300">
-            <FlaskConical className="h-6 w-6" aria-hidden />
-          </div>
-          <div>
-            <div className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">
-              Προαιρετικό · MATLAB lab
-            </div>
-            <h3 className="text-lg font-bold tracking-tight sm:text-xl">
-              Παρακολουθείς το εργαστήριο;
-            </h3>
-            <p className="mt-1 text-sm leading-relaxed text-fg-muted">
-              Ξεχωριστή ενότητα για το <strong>MATLAB μέρος</strong> του μαθήματος — όλα τα labs σε πλήρη μορφή, ασκήσεις από παλιές εξετάσεις του εργαστηρίου, και ένας σύντομος guide για την εγκατάσταση. Αν δεν παρακολουθείς, μπορείς να το αγνοήσεις τελείως.
-            </p>
-          </div>
-          <Link
-            href="/labs"
-            className="inline-flex items-center gap-1.5 rounded-full bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-violet-700"
-          >
-            Lab Hub
-            <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
-        </div>
-      </section>
-
       {/* Exam priority banner */}
       <section className="mx-auto mt-12 max-w-5xl rounded-xl border border-border bg-bg-elevated p-5">
         <div className="mb-3 flex items-center gap-2">
@@ -295,8 +274,8 @@ export default function HomePage() {
           </h2>
         </div>
         <p className="mb-4 text-sm text-fg-muted">
-          Με βάση το βάρος στις προηγούμενες εξετάσεις (6 περιόδους
-          αναλύθηκαν). Ξεκίνα από τα μεγάλα ποσοστά.
+          Με βάση το βάρος σε παλαιότερες εξεταστικές (2020 → 2025).
+          Ξεκίνα από τα μεγάλα ποσοστά.
         </p>
         <div className="flex flex-wrap gap-2">
           {EXAM_PRIORITY.map((p) => (

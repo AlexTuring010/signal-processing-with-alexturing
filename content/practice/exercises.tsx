@@ -1,3000 +1,574 @@
 /**
- * Exercise bank — past-exam problems (priority) + lecture worked examples.
+ * Exercise bank — past-exam problems + frontistiria.
  *
- * Past-exam problems are transcribed verbatim from the original papers:
- *   - Πρόοδος · April 2026 (13 problems — most recent midterm)
- *   - Sept 2025 (11 problems)
- *   - Jan 2026 Επί Πτυχίω (16 problems)
- *   - June 2025 Α (16 problems)
- *   - Πρόοδος A · May 2025 (~10 problems — first half of syllabus)
- *   - Πρόοδος B · May 2025 (~12 problems — second half + nonlinear AM)
+ * SCOPE NOTE
+ * ----------
+ * The original NKUA past-exam papers (all under `material/exercises/`) are
+ * scanned images / hand-set typography with no extractable text. We can't
+ * mechanically transcribe them. So this bank is, for now, an *index* of
+ * every original artifact:
  *
- * Each problem carries:
- *   - origin: 'past-exam' | 'lecture' | 'ai-generated'
- *   - source + problemNumber + weight (% of exam)
- *   - prerequisites (links into theory sections)
- *   - formulaIds (lights up relevant entries when assist mode is on)
+ *   - One entry per past-exam paper (multi-problem) and per frontistirio.
+ *   - `statement` and `solution` are `null` — the UI falls back to the
+ *     "Άνοιξε το πρωτότυπο" link to `sourceFile`.
+ *   - `prerequisites` is inferred from the date of the paper (everything
+ *     up to that point in the academic year was fair game) or, for
+ *     frontistiria, from the slide-deck title we extracted.
  *
- * AI-generated variations DO NOT GO HERE — they live in `ai-variants.tsx`
- * so students never confuse them with real exam material.
+ * As we transcribe problems lecture-by-lecture, replace the paper-level
+ * entries with per-problem ones (one card per «ΘΕΜΑ» / «Άσκηση»). The shape
+ * is ready: id, title, problemNumber, weight, statement, solution.
+ *
+ * BADGES
+ * ------
+ * 2024 / 2025 sources are surfaced with the «Θέμα Εξετάσεων 2024/2025»
+ * badge — see `RECENT_SOURCES` in `types.ts` and the `<ExerciseCard>`
+ * rendering. They sort first in the practice hub.
  */
 
-import { BlockMath, InlineMath } from '@/components/math'
 import type { Exercise } from './types'
+
+/**
+ * Every lecture slug, in order. Used so a paper that hits "all lectures"
+ * doesn't need to enumerate 17 strings by hand.
+ */
+const ALL_LECTURES = [
+  'lectures/L01-eisagogika',
+  'lectures/L02-asymptotic-analysis',
+  'lectures/L03-divide-and-conquer-i',
+  'lectures/L04-divide-and-conquer-ii',
+  'lectures/L05-divide-and-conquer-iii',
+  'lectures/L06-graphs-i',
+  'lectures/L07-graphs-ii',
+  'lectures/L08-graphs-iii',
+  'lectures/L09-graphs-iv',
+  'lectures/L10-data-structures',
+  'lectures/L11-greedy-i',
+  'lectures/L12-greedy-ii',
+  'lectures/L13-greedy-iii',
+  'lectures/L14-dp-i',
+  'lectures/L15-dp-ii',
+  'lectures/L16-dp-iii',
+  'lectures/L17-dp-iv',
+]
 
 export const EXERCISES: Exercise[] = [
   // ═══════════════════════════════════════════════════════════════════════
-  // ΠΡΟΟΔΟΣ · ΑΠΡΙΛΙΟΣ 2026 (13 problems · 100% · 1 ώρα)
+  // ΦΡΟΝΤΙΣΤΗΡΙΑ 2023–24 (Έφη Μαλέσιου) — topic-scoped, ordered like the syllabus
   // ═══════════════════════════════════════════════════════════════════════
   {
-    id: 'proodos26-1',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 1',
-    weight: 6,
-    title: 'Δείκτης διαμόρφωσης από A_c και A_m',
-    topic: 'am',
+    id: 'frontistirio-f1',
+    title: 'Φροντιστήριο 1 · Ασυμπτωτικός συμβολισμός (1/2)',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F1',
     difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-mu', 'am-signal'],
-    statement: (
-      <p>
-        Αν το πλάτος του φέροντος σήματος είναι 10V και το πλάτος του σήματος
-        πληροφορίας είναι 5V, ποιος είναι ο δείκτης διαμόρφωσης{' '}
-        <InlineMath>m</InlineMath>;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>Από τον ορισμό για ημιτονικό message:</p>
-        <BlockMath>{'m = \\frac{A_m}{A_c} = \\frac{5}{10} = 0.5'}</BlockMath>
-        <p>
-          Δηλαδή 50% modulation, μέσα στα όρια <InlineMath>{'m \\le 1'}</InlineMath>{' '}
-          ώστε ο envelope detector να δουλεύει σωστά.
-        </p>
-      </>
-    ),
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    sourceFile: '/material/exercises/inclass/F1__2023_24__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-2',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 2',
-    weight: 6,
-    title: 'Συνολική ισχύς AM για P_c=100W, m=1',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-power', 'am-mu', 'am-eta'],
-    statement: (
-      <p>
-        Ποια είναι η συνολική ισχύς <InlineMath>P</InlineMath> ενός σήματος AM
-        αν η ισχύς του φέροντος είναι <InlineMath>{'P_c = 100'}</InlineMath> W
-        και ο δείκτης διαμόρφωσης <InlineMath>{'m = 1'}</InlineMath>;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>Για single-tone modulation:</p>
-        <BlockMath>{'P_{AM} = P_c\\left(1 + \\frac{m^2}{2}\\right)'}</BlockMath>
-        <p>
-          Αντικαθιστώντας <InlineMath>{'P_c = 100'}</InlineMath> W,{' '}
-          <InlineMath>{'m = 1'}</InlineMath>:
-        </p>
-        <BlockMath>{'P_{AM} = 100\\left(1 + \\tfrac{1}{2}\\right) = 150\\text{ W}'}</BlockMath>
-        <p>
-          Η carrier κουβαλάει 100 W, οι δύο sidebands μαζί άλλα 50 W (25 W η
-          κάθε μία). Αυτό είναι και το μέγιστο: παραπάνω από <InlineMath>m=1</InlineMath>{' '}
-          δεν μπορούμε να πάμε χωρίς overmodulation.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'proodos26-3',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 3',
-    weight: 6,
-    title: 'Τι σημαίνει m=1',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional', 'am/modulator-demodulator'],
-    formulaIds: ['am-mu', 'am-signal'],
-    statement: (
-      <p>
-        Τι συμβαίνει όταν ο δείκτης διαμόρφωσης{' '}
-        <InlineMath>{'m = 1'}</InlineMath>;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Το <InlineMath>{'m=1'}</InlineMath> είναι το <strong>όριο πλήρους
-          διαμόρφωσης</strong>: το πλάτος του message ισούται με το πλάτος του
-          carrier (<InlineMath>{'A_m = A_c'}</InlineMath>), οπότε η περιβάλλουσα{' '}
-          <InlineMath>{'A_c + m(t)'}</InlineMath> ακουμπάει στο μηδέν στις
-          κοιλάδες και φτάνει στο <InlineMath>{'2A_c'}</InlineMath> στις κορυφές.
-        </p>
-        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
-          <li>
-            Ο envelope detector δουλεύει ακόμα σωστά (το envelope δεν αλλάζει
-            πρόσημο).
-          </li>
-          <li>
-            Είναι το <strong>βέλτιστο σημείο</strong> για conventional AM: η
-            ισχύς στα sidebands μεγιστοποιείται (η αποδοτικότητα φτάνει το
-            33%).
-          </li>
-          <li>
-            Για <InlineMath>{'m > 1'}</InlineMath> έχουμε{' '}
-            <strong>overmodulation</strong>: η περιβάλλουσα αλλάζει πρόσημο,
-            phase reversals, και ο envelope detector παράγει παραμορφωμένη
-            έξοδο.
-          </li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    id: 'proodos26-4',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 4',
-    weight: 6,
-    title: 'Μέγιστο ποσοστό ισχύος στα sidebands',
-    topic: 'am',
+    id: 'frontistirio-f2',
+    title: 'Φροντιστήριο 2 · Ασυμπτωτικός συμβολισμός (2/2)',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F2',
     difficulty: 'medium',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-power', 'am-eta'],
-    statement: (
-      <p>
-        Ποιο είναι το μέγιστο ποσοστό της συνολικής ισχύος που μπορεί να
-        περιέχεται στις πλευρικές ζώνες στην κανονική AM χωρίς υπερδιαμόρφωση;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>Για single-tone modulation:</p>
-        <BlockMath>{'\\eta = \\frac{P_{sb}}{P_{AM}} = \\frac{m^2/2}{1 + m^2/2}'}</BlockMath>
-        <p>
-          Η <InlineMath>\eta</InlineMath> είναι αύξουσα στο{' '}
-          <InlineMath>m</InlineMath>, οπότε μεγιστοποιείται όταν{' '}
-          <InlineMath>{'m=1'}</InlineMath> (όριο πριν την υπερδιαμόρφωση):
-        </p>
-        <BlockMath>{'\\eta_{max} = \\frac{1/2}{3/2} = \\frac{1}{3} \\approx 33.3\\%'}</BlockMath>
-        <p>
-          Δύο τρίτα της ισχύος (66.7%) πάνε στον carrier και «χάνονται» — δεν
-          κουβαλάει πληροφορία. Γι' αυτό η DSB-SC και η SSB είναι ενεργειακά
-          πολύ πιο αποδοτικές.
-        </p>
-      </>
-    ),
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    sourceFile: '/material/exercises/inclass/F2__2023_24.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-5',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 5',
-    weight: 7,
-    title: 'AM modulator με δίοδο (square-law)',
-    topic: 'am',
+    id: 'frontistirio-f3',
+    title: 'Φροντιστήριο 3 · Διαίρει και Κυρίευε',
+    topic: 'divide-conquer',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F3',
     difficulty: 'medium',
-    prerequisites: ['am/modulator-demodulator', 'am/conventional'],
-    formulaIds: ['am-signal'],
-    statement: (
-      <p>
-        Σχεδιάστε το κύκλωμα που χρησιμοποιείται συνήθως για τη διαμόρφωση ενός
-        σήματος AM με τη χρήση διόδου και εξηγήστε πώς δουλεύει.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>Square-law (μη-γραμμικός) AM modulator</strong>: αθροιστής
-          για <InlineMath>{'c(t) + m(t)'}</InlineMath>, μια δίοδος σε μη-γραμμική
-          περιοχή λειτουργίας, και ένα <strong>bandpass φίλτρο</strong> γύρω
-          από <InlineMath>f_c</InlineMath>:
-        </p>
-        <svg
-          viewBox="0 0 600 160"
-          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
-          role="img"
-          aria-label="Square-law AM modulator: αθροιστής m(t)+c(t), δίοδος, αντίσταση R με γείωση, BPF γύρω από f_c, έξοδος x_AM(t)"
-        >
-          {/* m(t) input */}
-          <text x="10" y="50" fontSize="11" fill="currentColor" fillOpacity="0.85" fontStyle="italic">m(t)</text>
-          <line x1="42" y1="46" x2="80" y2="46" stroke="currentColor" strokeOpacity="0.6" />
-          <line x1="80" y1="46" x2="80" y2="68" stroke="currentColor" strokeOpacity="0.6" />
-          <line x1="80" y1="68" x2="96" y2="68" stroke="currentColor" strokeOpacity="0.6" />
-          {/* c(t) input */}
-          <text x="10" y="118" fontSize="11" fill="currentColor" fillOpacity="0.85" fontStyle="italic">c(t)</text>
-          <line x1="42" y1="114" x2="80" y2="114" stroke="currentColor" strokeOpacity="0.6" />
-          <line x1="80" y1="114" x2="80" y2="92" stroke="currentColor" strokeOpacity="0.6" />
-          <line x1="80" y1="92" x2="96" y2="92" stroke="currentColor" strokeOpacity="0.6" />
-          {/* adder */}
-          <circle cx="110" cy="80" r="14" fill="none" stroke="currentColor" strokeOpacity="0.7" />
-          <text x="110" y="85" textAnchor="middle" fontSize="14" fill="currentColor" fillOpacity="0.85">+</text>
-          {/* adder → diode */}
-          <line x1="124" y1="80" x2="160" y2="80" stroke="currentColor" strokeOpacity="0.6" />
-          <text x="142" y="100" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">v(t)</text>
-          {/* diode block */}
-          <rect x="160" y="64" width="56" height="32" rx="3" fill="rgba(29, 78, 216, 0.10)" stroke="rgb(29, 78, 216)" strokeOpacity="0.7" />
-          <text x="188" y="84" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.9">diode</text>
-          {/* diode → R */}
-          <line x1="216" y1="80" x2="240" y2="80" stroke="currentColor" strokeOpacity="0.6" />
-          {/* R block */}
-          <rect x="240" y="64" width="36" height="32" rx="3" fill="rgba(29, 78, 216, 0.10)" stroke="rgb(29, 78, 216)" strokeOpacity="0.7" />
-          <text x="258" y="84" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.9">R</text>
-          {/* R → junction → BPF */}
-          <line x1="276" y1="80" x2="340" y2="80" stroke="currentColor" strokeOpacity="0.6" />
-          <circle cx="316" cy="80" r="2.5" fill="currentColor" fillOpacity="0.85" />
-          {/* BPF block */}
-          <rect x="340" y="64" width="160" height="32" rx="3" fill="rgba(29, 78, 216, 0.10)" stroke="rgb(29, 78, 216)" strokeOpacity="0.7" />
-          <text x="420" y="84" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.9">BPF (f_c, 2W)</text>
-          {/* BPF → output */}
-          <line x1="500" y1="80" x2="540" y2="80" stroke="currentColor" strokeOpacity="0.6" />
-          <polygon points="546,80 536,75 536,85" fill="currentColor" fillOpacity="0.7" />
-          <text x="552" y="84" fontSize="11" fill="currentColor" fillOpacity="0.85" fontStyle="italic">x_AM(t)</text>
-          {/* junction → GND */}
-          <line x1="316" y1="80" x2="316" y2="124" stroke="currentColor" strokeOpacity="0.6" />
-          <line x1="304" y1="124" x2="328" y2="124" stroke="currentColor" strokeOpacity="0.85" strokeWidth="2" />
-          <line x1="308" y1="130" x2="324" y2="130" stroke="currentColor" strokeOpacity="0.6" strokeWidth="1.5" />
-          <line x1="312" y1="136" x2="320" y2="136" stroke="currentColor" strokeOpacity="0.4" strokeWidth="1" />
-          <text x="334" y="130" fontSize="9" fill="currentColor" fillOpacity="0.65">GND</text>
-        </svg>
-        <p>
-          Στην εκθετική/τετραγωνική περιοχή της διόδου το ρεύμα έχει την μορφή{' '}
-          <InlineMath>{'i(t) \\approx a_1 v(t) + a_2 v^2(t)'}</InlineMath>.
-          Με <InlineMath>{'v(t) = c(t) + m(t)'}</InlineMath>:
-        </p>
-        <BlockMath>{'i(t) \\approx a_1[A_c\\cos\\omega_c t + m(t)] + a_2[A_c\\cos\\omega_c t + m(t)]^2'}</BlockMath>
-        <p>
-          Το τετράγωνο παράγει cross-term <InlineMath>{'2a_2 A_c m(t)\\cos\\omega_c t'}</InlineMath>.
-          Μετά το BPF γύρω από <InlineMath>f_c</InlineMath> (που σβήνει DC,
-          <InlineMath>{'m(t)'}</InlineMath>, <InlineMath>{'m^2(t)'}</InlineMath>{' '}
-          και τον <InlineMath>{'2f_c'}</InlineMath> harmonic) μένει:
-        </p>
-        <BlockMath>{'y(t) = a_1 A_c \\cos\\omega_c t + 2a_2 A_c m(t)\\cos\\omega_c t = A_c\\big[a_1 + 2a_2 m(t)\\big]\\cos\\omega_c t'}</BlockMath>
-        <p>
-          Αυτό είναι ακριβώς <strong>conventional AM</strong> με effective
-          modulation index <InlineMath>{'(2a_2/a_1)\\,m(t)'}</InlineMath>. Ο
-          ρόλος της διόδου είναι να δώσει τη μη-γραμμικότητα· χωρίς αυτή το{' '}
-          <InlineMath>{'c(t) + m(t)'}</InlineMath> δεν θα παρήγαγε ποτέ
-          πολλαπλασιαστικό όρο.
-        </p>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L03-divide-and-conquer-i',
+      'lectures/L04-divide-and-conquer-ii',
+    ],
+    sourceFile: '/material/exercises/inclass/F3__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-6',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 6',
-    weight: 7,
-    title: 'Λευκός θόρυβος μέσα από ιδανικό LPF',
-    topic: 'noise',
-    difficulty: 'easy',
-    prerequisites: ['noise/white-noise', 'noise/through-filters', 'foundations/filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd'],
-    statement: (
-      <p>
-        Λευκός θόρυβος με PSD <InlineMath>{'S_n(f) = N_0/2'}</InlineMath>{' '}
-        διέρχεται από ιδανικό χαμηλοπερατό φίλτρο με εύρος ζώνης{' '}
-        <InlineMath>W</InlineMath>. Ποια είναι η συνολική ισχύς του στην έξοδο
-        του φίλτρου;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>Το PSD της εξόδου ενός LTI με input PSD και transfer function:</p>
-        <BlockMath>{'S_y(f) = |H(f)|^2 S_n(f)'}</BlockMath>
-        <p>
-          Για το ιδανικό LPF, <InlineMath>{'|H(f)|^2 = 1'}</InlineMath> για{' '}
-          <InlineMath>{'|f| < W'}</InlineMath>, αλλιώς 0. Άρα{' '}
-          <InlineMath>{'S_y(f) = N_0/2'}</InlineMath> στη ζώνη{' '}
-          <InlineMath>{'[-W, W]'}</InlineMath>.
-        </p>
-        <p>Συνολική ισχύς (ολοκλήρωμα του PSD σε όλες τις συχνότητες):</p>
-        <BlockMath>{'P_y = \\int_{-W}^{W} \\frac{N_0}{2}\\,df = N_0 W'}</BlockMath>
-        <p>
-          Δηλαδή το ιδανικό LPF μετατρέπει τον λευκό (άπειρης ισχύος) θόρυβο σε
-          bandlimited θόρυβο με <strong>πεπερασμένη</strong> ισχύ{' '}
-          <InlineMath>{'N_0 W'}</InlineMath>. Αυτό το αποτέλεσμα θα γυρίσει σε
-          κάθε SNR υπολογισμό σε noise problems.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'proodos26-7',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 7',
-    weight: 9,
-    title: 'DSB-SC: σφάλμα φάσης φ στον σύμφωνο αποδιαμορφωτή',
-    topic: 'am',
+    id: 'frontistirio-f4',
+    title: 'Φροντιστήριο 4 · Διαίρει και Κυρίευε (2/2)',
+    topic: 'divide-conquer',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F4',
     difficulty: 'medium',
-    prerequisites: ['am/dsb-sc', 'am/modulator-demodulator'],
-    formulaIds: ['dsb-sc-signal'],
-    statement: (
-      <p>
-        Σε έναν σύμφωνο αποδιαμορφωτή AM-DSB-SC, αν υπάρξει σφάλμα φάσης{' '}
-        <InlineMath>\varphi</InlineMath> στο τοπικό φέρον, πώς επηρεάζεται το
-        πλάτος του σήματος εξόδου;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Έστω <InlineMath>{'s(t) = m(t)\\cos(2\\pi f_c t)'}</InlineMath> το
-          DSB-SC σήμα και <InlineMath>{'\\cos(2\\pi f_c t + \\varphi)'}</InlineMath>{' '}
-          το τοπικό φέρον με σφάλμα φάσης. Πολλαπλασιάζουμε:
-        </p>
-        <BlockMath>{'s(t)\\cos(2\\pi f_c t + \\varphi) = m(t)\\cos(\\omega_c t)\\cos(\\omega_c t + \\varphi)'}</BlockMath>
-        <BlockMath>{'= \\tfrac{m(t)}{2}\\big[\\cos\\varphi + \\cos(2\\omega_c t + \\varphi)\\big]'}</BlockMath>
-        <p>Μετά το LPF (κόβει τον όρο στο <InlineMath>{'2f_c'}</InlineMath>):</p>
-        <BlockMath>{'y(t) = \\tfrac{1}{2}\\,m(t)\\cos\\varphi'}</BlockMath>
-        <p>
-          Δηλαδή το πλάτος εξόδου <strong>πολλαπλασιάζεται με{' '}
-          <InlineMath>\cos\varphi</InlineMath></strong>:
-        </p>
-        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
-          <li>
-            <InlineMath>{'\\varphi = 0'}</InlineMath>: πλήρης ανάκτηση.
-          </li>
-          <li>
-            <InlineMath>{'\\varphi = \\pi/4'}</InlineMath>: εξασθένηση κατά{' '}
-            <InlineMath>{'\\sqrt{2}/2 \\approx 70\\%'}</InlineMath>.
-          </li>
-          <li>
-            <InlineMath>{'\\varphi = \\pi/2'}</InlineMath>: μηδενική έξοδος{' '}
-            (<em>quadrature null</em>) — εντελώς χαμένο σήμα.
-          </li>
-        </ul>
-        <p>
-          Για αυτό το λόγο η σύμφωνη αποδιαμόρφωση χρειάζεται phase-locked
-          loop ή carrier recovery — αλλιώς ένα slow drift της φάσης κάνει το
-          σήμα να ξεθωριάζει.
-        </p>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L03-divide-and-conquer-i',
+      'lectures/L04-divide-and-conquer-ii',
+      'lectures/L05-divide-and-conquer-iii',
+    ],
+    sourceFile: '/material/exercises/inclass/F4__2023_24__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-8',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 8',
-    weight: 7,
-    title: 'Εύρος του φάσματος του m²(t)',
-    topic: 'foundations',
+    id: 'frontistirio-f5',
+    title: 'Φροντιστήριο 5 · Αναζήτηση, ταξινόμηση και γραφήματα',
+    topic: 'graphs',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F5',
     difficulty: 'medium',
-    prerequisites: ['foundations/fourier-transform'],
-    formulaIds: ['fourier-convolution', 'fourier-modulation-theorem'],
-    statement: (
-      <p>
-        Αν <InlineMath>W</InlineMath> είναι το εύρος του σήματος βασικής ζώνης{' '}
-        <InlineMath>m(t)</InlineMath>, πόσο είναι το εύρος του φάσματος του
-        σήματος <InlineMath>{'m^2(t)'}</InlineMath>;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Πολλαπλασιασμός στον χρόνο ⇔ συνέλιξη στη συχνότητα (modulation /
-          convolution theorem):
-        </p>
-        <BlockMath>{'m^2(t) = m(t)\\cdot m(t) \\;\\xleftrightarrow{\\mathcal{F}}\\; M(f) * M(f)'}</BlockMath>
-        <p>
-          Αν <InlineMath>{'M(f)'}</InlineMath> έχει στήριγμα{' '}
-          <InlineMath>{'[-W, W]'}</InlineMath>, η συνέλιξη{' '}
-          <InlineMath>{'M(f)*M(f)'}</InlineMath> έχει στήριγμα το άθροισμα των
-          δύο διαστημάτων:
-        </p>
-        <BlockMath>{'\\text{supp}(M*M) = [-W, W] + [-W, W] = [-2W,\\, 2W]'}</BlockMath>
-        <p>
-          Άρα το εύρος (one-sided) διπλασιάζεται: <strong>2W</strong>. Γενική
-          αρχή: κάθε φορά που υψώνεις ένα σήμα στο τετράγωνο, το spectrum του
-          απλώνεται διπλάσια. Γι' αυτό δεν μπορούμε να αγνοήσουμε τον όρο{' '}
-          <InlineMath>{'m^2(t)'}</InlineMath> στον square-law modulator —
-          βγαίνει από τη ζώνη του <InlineMath>m(t)</InlineMath>.
-        </p>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L05-divide-and-conquer-iii',
+      'lectures/L06-graphs-i',
+    ],
+    sourceFile: '/material/exercises/inclass/F5__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-9',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 9',
-    weight: 10,
-    title: 'AM σήμα στο χρόνο και στη συχνότητα: tone modulation',
-    topic: 'am',
+    id: 'frontistirio-f7',
+    title: 'Φροντιστήριο 7 · Άπληστοι Αλγόριθμοι (1/2)',
+    topic: 'greedy',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F7',
     difficulty: 'medium',
-    prerequisites: ['am/conventional', 'foundations/fourier-transform'],
-    formulaIds: ['am-signal', 'am-spectrum', 'fourier-pair-cos', 'fourier-pair-sin'],
-    statement: (
-      <p>
-        Να σχεδιάσετε το διαμορφωμένο κατά AM σήμα στον χρόνο και στο φάσμα
-        πλάτους όταν το φέρον είναι{' '}
-        <InlineMath>{'c(t) = \\cos(1000\\pi t)'}</InlineMath> και το σήμα
-        πληροφορίας είναι <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Φέρον: <InlineMath>{'A_c = 1'}</InlineMath>,{' '}
-          <InlineMath>{'f_c = 500'}</InlineMath> Hz. Message:{' '}
-          <InlineMath>{'A_m = 2'}</InlineMath>,{' '}
-          <InlineMath>{'f_m = 1'}</InlineMath> Hz. Δείκτης{' '}
-          <InlineMath>{'m = A_m/A_c = 2 > 1'}</InlineMath>: <strong>υπερδιαμόρφωση</strong>{' '}
-          (το σχεδιάζουμε όπως ζητείται, με την σημείωση).
-        </p>
-        <BlockMath>{'x_{AM}(t) = [1 + 2\\sin(2\\pi t)]\\cos(1000\\pi t)'}</BlockMath>
-        <p>
-          <strong>Στον χρόνο:</strong> carrier στα 500 Hz με περιβάλλουσα{' '}
-          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath>. Επειδή{' '}
-          <InlineMath>{'m>1'}</InlineMath>, η περιβάλλουσα αλλάζει πρόσημο
-          (πέφτει στο −1) — βλέπουμε <em>phase reversals</em> εκεί που η{' '}
-          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath> γίνεται αρνητική.
-        </p>
-        <p>
-          <strong>Στη συχνότητα:</strong> με{' '}
-          <InlineMath>{'2\\sin(2\\pi t)\\cos(1000\\pi t) = \\sin(1002\\pi t) - \\sin(998\\pi t)'}</InlineMath>:
-        </p>
-        <BlockMath>{'x_{AM}(t) = \\cos(1000\\pi t) + \\sin(1002\\pi t) - \\sin(998\\pi t)'}</BlockMath>
-        <p>
-          Άρα το φάσμα είναι <strong>τέσσερα ζεύγη impulses</strong> στις
-          συχνότητες <InlineMath>{'\\pm 499,\\, \\pm 500,\\, \\pm 501'}</InlineMath>{' '}
-          Hz:
-        </p>
-        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
-          <li>
-            Carrier στα <InlineMath>{'\\pm 500'}</InlineMath> Hz, μέτρο{' '}
-            <InlineMath>{'1/2'}</InlineMath>.
-          </li>
-          <li>
-            USB στα <InlineMath>{'\\pm 501'}</InlineMath> Hz, μέτρο{' '}
-            <InlineMath>{'1/2'}</InlineMath> (από το{' '}
-            <InlineMath>{'\\sin(1002\\pi t)'}</InlineMath>).
-          </li>
-          <li>
-            LSB στα <InlineMath>{'\\pm 499'}</InlineMath> Hz, μέτρο{' '}
-            <InlineMath>{'1/2'}</InlineMath> (από το{' '}
-            <InlineMath>{'-\\sin(998\\pi t)'}</InlineMath>).
-          </li>
-        </ul>
-        <p>
-          Bandwidth = <InlineMath>{'2 f_m = 2'}</InlineMath> Hz (από 499 έως
-          501 Hz στο positive side).
-        </p>
-      </>
-    ),
+    prerequisites: ['lectures/L11-greedy-i'],
+    sourceFile: '/material/exercises/inclass/F7__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-10',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 10',
-    weight: 10,
-    title: 'Φάσμα πλάτους και ισχύς για sin + sinc',
-    topic: 'foundations',
+    id: 'frontistirio-f8',
+    title: 'Φροντιστήριο 8 · Άπληστοι Αλγόριθμοι (2/2)',
+    topic: 'greedy',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F8',
     difficulty: 'medium',
-    prerequisites: ['foundations/fourier-transform', 'foundations/signals'],
-    formulaIds: ['fourier-pair-rect', 'fourier-pair-sin', 'parseval-power'],
-    statement: (
-      <p>
-        Έστω σήμα βασικής ζώνης{' '}
-        <InlineMath>{'m(t) = \\sin(10\\pi t) + \\mathrm{sinc}(10t)'}</InlineMath>.
-        Να υπολογιστεί και να σχεδιαστεί το φάσμα πλάτους του και να
-        υπολογιστεί η ισχύς του.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>Όρος 1:</strong>{' '}
-          <InlineMath>{'\\sin(10\\pi t) = \\sin(2\\pi\\cdot 5\\cdot t)'}</InlineMath>{' '}
-          → δύο impulses:
-        </p>
-        <BlockMath>{'\\mathcal{F}\\{\\sin(2\\pi 5 t)\\} = \\tfrac{1}{2j}[\\delta(f-5) - \\delta(f+5)]'}</BlockMath>
-        <p>
-          <strong>Όρος 2:</strong> με normalized sinc{' '}
-          <InlineMath>{'\\mathrm{sinc}(x) = \\sin(\\pi x)/(\\pi x)'}</InlineMath>:
-        </p>
-        <BlockMath>{'\\mathrm{sinc}(10 t) \\;\\xleftrightarrow{\\mathcal{F}}\\; \\tfrac{1}{10}\\,\\mathrm{rect}(f/10)'}</BlockMath>
-        <p>
-          (rect από <InlineMath>{'-5'}</InlineMath> έως <InlineMath>5</InlineMath>{' '}
-          Hz, ύψος <InlineMath>{'1/10'}</InlineMath>.)
-        </p>
-        <p>
-          <strong>Συνολικό |M(f)|:</strong> ορθογώνιο πλάτος{' '}
-          <InlineMath>{'1/10'}</InlineMath> για{' '}
-          <InlineMath>{'|f| < 5'}</InlineMath> Hz, συν impulses ύψους{' '}
-          <InlineMath>{'1/2'}</InlineMath> ακριβώς στις άκρες{' '}
-          <InlineMath>{'f = \\pm 5'}</InlineMath> Hz.
-        </p>
-        <svg
-          viewBox="0 0 380 170"
-          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
-          role="img"
-          aria-label="|M(f)|: ορθογώνιο ύψους 1/10 από −5 έως 5 Hz, και δύο impulses ύψους 1/2 στα ±5 Hz"
-        >
-          {/* x-axis */}
-          <line x1="36" y1="130" x2="358" y2="130" stroke="currentColor" strokeOpacity="0.45" />
-          <polygon points="364,130 354,126 354,134" fill="currentColor" fillOpacity="0.5" />
-          <text x="368" y="134" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f</text>
-          {/* y-axis at f=0 */}
-          <line x1="190" y1="130" x2="190" y2="20" stroke="currentColor" strokeOpacity="0.3" />
-          <polygon points="190,14 186,22 194,22" fill="currentColor" fillOpacity="0.5" />
-          {/* rect (sinc): 1/10 from f=-5 to f=+5 */}
-          <rect x="80" y="116" width="220" height="14" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.85" />
-          {/* impulses (sin): height 1/2 at f = ±5 */}
-          <line x1="80" y1="130" x2="80" y2="60" stroke="rgb(217, 119, 6)" strokeWidth="2" />
-          <polygon points="80,54 76,62 84,62" fill="rgb(217, 119, 6)" />
-          <line x1="300" y1="130" x2="300" y2="60" stroke="rgb(217, 119, 6)" strokeWidth="2" />
-          <polygon points="300,54 296,62 304,62" fill="rgb(217, 119, 6)" />
-          {/* tick marks */}
-          <line x1="80" y1="127" x2="80" y2="133" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="190" y1="127" x2="190" y2="133" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="300" y1="127" x2="300" y2="133" stroke="currentColor" strokeOpacity="0.5" />
-          {/* tick labels */}
-          <text x="80" y="146" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">−5 Hz</text>
-          <text x="190" y="146" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">0</text>
-          <text x="300" y="146" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">+5 Hz</text>
-          {/* y-axis amplitude labels */}
-          <text x="74" y="120" textAnchor="end" fontSize="10" fill="rgb(29, 78, 216)" fillOpacity="0.95">1/10</text>
-          <text x="306" y="64" fontSize="10" fill="rgb(217, 119, 6)" fillOpacity="0.95">1/2</text>
-          {/* spectrum label */}
-          <text x="196" y="28" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">|M(f)|</text>
-        </svg>
-        <p>
-          <strong>Ισχύς:</strong> ο όρος{' '}
-          <InlineMath>{'\\sin(10\\pi t)'}</InlineMath> είναι περιοδικό
-          power-signal με <InlineMath>{'P_1 = 1/2'}</InlineMath> W. Ο όρος{' '}
-          <InlineMath>{'\\mathrm{sinc}(10t)'}</InlineMath> είναι{' '}
-          <strong>finite-energy</strong> (πεπερασμένη ενέργεια{' '}
-          <InlineMath>{'E = 1/10'}</InlineMath> J), οπότε{' '}
-          <InlineMath>{'P_2 = 0'}</InlineMath> (μέση ισχύς σε άπειρο χρόνο
-          είναι μηδέν για finite-energy signals). Άρα:
-        </p>
-        <BlockMath>{'P_m = P_1 + P_2 = \\tfrac{1}{2} + 0 = \\tfrac{1}{2}\\text{ W}'}</BlockMath>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L11-greedy-i',
+      'lectures/L12-greedy-ii',
+      'lectures/L13-greedy-iii',
+    ],
+    sourceFile: '/material/exercises/inclass/F8__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-11',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 11',
-    weight: 9,
-    title: 'USSB δύο σημάτων: φάσματα baseband και διαμορφωμένων',
-    topic: 'am',
+    id: 'frontistirio-f9',
+    title: 'Φροντιστήριο 9 · Δυναμικός προγραμματισμός (1/2)',
+    topic: 'dp',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F9',
     difficulty: 'medium',
-    prerequisites: ['am/ssb', 'am/multiplexing'],
-    formulaIds: ['ssb-signal', 'fourier-pair-rect', 'fourier-pair-tri'],
-    statement: (
-      <p>
-        Έστω τα δύο βασικά σήματα πληροφορίας{' '}
-        <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και{' '}
-        <InlineMath>{'k(t) = \\mathrm{sinc}^2(Wt)'}</InlineMath>. Το κάθε σήμα
-        διαμορφώνεται κατά AM-USSB με φέροντα <InlineMath>{'f_1'}</InlineMath>{' '}
-        και <InlineMath>{'f_2'}</InlineMath> αντίστοιχα. Αποτυπώστε σχηματικά
-        το φάσμα πλάτους των δύο σημάτων βασικής ζώνης και των δύο
-        διαμορφωμένων σημάτων.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>Baseband φάσματα:</strong>
-        </p>
-        <BlockMath>{'M(f) = \\tfrac{1}{W}\\,\\mathrm{rect}(f/W) \\quad\\Rightarrow\\quad |M(f)|\\text{ = ορθογώνιο πλάτος }1/W,\\; |f| < W/2'}</BlockMath>
-        <BlockMath>{'K(f) = \\tfrac{1}{W}\\,\\mathrm{tri}(f/W) \\quad\\Rightarrow\\quad |K(f)|\\text{ = τρίγωνο κορυφή }1/W,\\; |f| < W'}</BlockMath>
-        <p>
-          (Σημείωση: το <InlineMath>{'\\mathrm{sinc}^2(Wt)'}</InlineMath> έχει
-          <strong> διπλάσιο</strong> εύρος από το{' '}
-          <InlineMath>{'\\mathrm{sinc}(Wt)'}</InlineMath> — βλ. ΘΕΜΑ 8.)
-        </p>
-        <p>
-          <strong>USSB διαμόρφωση:</strong> κρατάμε <em>μόνο</em> την upper
-          sideband γύρω από κάθε φέρον. Για το{' '}
-          <InlineMath>{'m(t)'}</InlineMath> με carrier{' '}
-          <InlineMath>{'f_1'}</InlineMath>:
-        </p>
-        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
-          <li>
-            Στα θετικά <InlineMath>f</InlineMath>: rect από{' '}
-            <InlineMath>{'f_1'}</InlineMath> έως{' '}
-            <InlineMath>{'f_1 + W/2'}</InlineMath>, ύψος{' '}
-            <InlineMath>{'1/(2W)'}</InlineMath>.
-          </li>
-          <li>
-            Mirror στα αρνητικά: rect από{' '}
-            <InlineMath>{'-f_1 - W/2'}</InlineMath> έως{' '}
-            <InlineMath>{'-f_1'}</InlineMath>, ίδιο ύψος.
-          </li>
-        </ul>
-        <p>
-          Για το <InlineMath>{'k(t)'}</InlineMath> με carrier{' '}
-          <InlineMath>{'f_2'}</InlineMath>:
-        </p>
-        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
-          <li>
-            Στα θετικά: <em>τρίγωνο</em> από <InlineMath>{'f_2'}</InlineMath>{' '}
-            (κορυφή ύψους <InlineMath>{'1/(2W)'}</InlineMath>) πέφτοντας
-            γραμμικά στο 0 στο <InlineMath>{'f_2 + W'}</InlineMath>.
-          </li>
-          <li>
-            Mirror στα αρνητικά γύρω από <InlineMath>{'-f_2'}</InlineMath>.
-          </li>
-        </ul>
-        <svg
-          viewBox="0 0 480 140"
-          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
-          role="img"
-          aria-label="USSB φάσματα: rect στο [f_1, f_1+W/2] για το m(t) και τρίγωνο με κορυφή στο f_2 και βάση στο f_2+W για το k(t)"
-        >
-          {/* x-axis */}
-          <line x1="20" y1="100" x2="438" y2="100" stroke="currentColor" strokeOpacity="0.45" />
-          <polygon points="444,100 434,96 434,104" fill="currentColor" fillOpacity="0.5" />
-          <text x="448" y="104" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f</text>
-          {/* origin tick */}
-          <line x1="40" y1="97" x2="40" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <text x="40" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.75">0</text>
-          {/* USSB(m) — rect [f_1, f_1+W/2], height 1/(2W) */}
-          <rect x="120" y="70" width="60" height="30" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
-          <text x="150" y="62" textAnchor="middle" fontSize="10" fill="rgb(29, 78, 216)" fillOpacity="0.95">USSB(m)</text>
-          {/* USSB(k) — right triangle: peak at f_2, drops to 0 at f_2+W */}
-          <path d="M 260 70 L 260 100 L 400 100 Z" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
-          <text x="296" y="62" fontSize="10" fill="rgb(220, 38, 38)" fillOpacity="0.95">USSB(k)</text>
-          {/* tick marks */}
-          <line x1="120" y1="97" x2="120" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="180" y1="97" x2="180" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="260" y1="97" x2="260" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="400" y1="97" x2="400" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          {/* tick labels */}
-          <text x="120" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_1</text>
-          <text x="180" y="116" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_1+W/2</text>
-          <text x="260" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_2</text>
-          <text x="400" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_2+W</text>
-          {/* note */}
-          <text x="240" y="132" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.6" fontStyle="italic">(+ καθρέφτης στις αρνητικές f γύρω από −f_1 και −f_2)</text>
-        </svg>
-      </>
-    ),
+    prerequisites: ['lectures/L14-dp-i'],
+    sourceFile: '/material/exercises/inclass/F9__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-12',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 12',
-    weight: 9,
-    title: 'Συνθήκη μη-επικάλυψης για USSB FDM',
-    topic: 'am',
-    difficulty: 'medium',
-    prerequisites: ['am/ssb', 'am/multiplexing'],
-    formulaIds: ['ssb-signal'],
-    statement: (
-      <p>
-        Πόσο πρέπει να είναι τα φέροντα <InlineMath>{'f_1'}</InlineMath> και{' '}
-        <InlineMath>{'f_2'}</InlineMath> σε σχέση με το <InlineMath>W</InlineMath>{' '}
-        για να μπορούμε να αποπολυπλέξουμε τα δύο σήματα χωρίς να
-        επικαλύπτονται;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Από το ΘΕΜΑ 11, η USSB του <InlineMath>{'m(t)'}</InlineMath> πιάνει{' '}
-          <InlineMath>{'[f_1,\\, f_1 + W/2]'}</InlineMath> (με mirror στα
-          αρνητικά) και η USSB του <InlineMath>{'k(t)'}</InlineMath> πιάνει{' '}
-          <InlineMath>{'[f_2,\\, f_2 + W]'}</InlineMath>. Υποθέτουμε χωρίς
-          βλάβη της γενικότητας <InlineMath>{'f_1 < f_2'}</InlineMath>.
-        </p>
-        <p>
-          <strong>Συνθήκη 1 — να μην επικαλύπτονται μεταξύ τους:</strong> η
-          άκρη της USSB(m) πρέπει να βρίσκεται κάτω από την αρχή της USSB(k):
-        </p>
-        <BlockMath>{'f_1 + \\tfrac{W}{2} \\le f_2 \\quad\\Longleftrightarrow\\quad f_2 \\ge f_1 + \\tfrac{W}{2}'}</BlockMath>
-        <p>
-          <strong>Συνθήκη 2 — κάθε USSB να μη «φτάνει» στο 0</strong> (ώστε
-          το mirror στα αρνητικά να μη μπει στα θετικά):
-        </p>
-        <BlockMath>{'f_1 \\ge \\tfrac{W}{2}, \\qquad f_2 \\ge W'}</BlockMath>
-        <p>
-          (Αν <InlineMath>{'f_1 < W/2'}</InlineMath>, το mirror της USSB(m)
-          θα έσπαγε στο positive axis· αν <InlineMath>{'f_2 < W'}</InlineMath>,
-          το ίδιο για την USSB(k).)
-        </p>
-        <p>
-          <strong>Συνολικά:</strong> πρέπει{' '}
-          <InlineMath>{'f_1 \\ge W/2'}</InlineMath>, και{' '}
-          <InlineMath>{'f_2 \\ge \\max(W,\\; f_1 + W/2)'}</InlineMath>. Στην
-          πράξη παίρνουμε guard band μεταξύ των δύο για ασφάλεια από real
-          (όχι ιδανικά) BPF.
-        </p>
-      </>
-    ),
+    id: 'frontistirio-f10',
+    title: 'Φροντιστήριο 10 · Δυναμικός προγραμματισμός (2/2)',
+    topic: 'dp',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F10',
+    difficulty: 'hard',
+    prerequisites: [
+      'lectures/L14-dp-i',
+      'lectures/L15-dp-ii',
+      'lectures/L16-dp-iii',
+      'lectures/L17-dp-iv',
+    ],
+    sourceFile: '/material/exercises/inclass/F10__eclass.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'proodos26-13',
-    origin: 'past-exam',
-    source: 'proodos-april-2026',
-    problemNumber: 'ΘΕΜΑ 13',
-    weight: 8,
-    title: 'Φάσμα πολυπλεγμένου σήματος G(f)',
-    topic: 'am',
-    difficulty: 'medium',
-    prerequisites: ['am/ssb', 'am/multiplexing'],
-    formulaIds: ['ssb-signal'],
-    statement: (
-      <p>
-        Αποτυπώστε σχηματικά το φάσμα του πολυπλεγμένου σήματος{' '}
-        <InlineMath>G(f)</InlineMath> των δύο διαμορφωμένων σημάτων με βάση
-        την επιλογή των <InlineMath>{'f_1'}</InlineMath> και{' '}
-        <InlineMath>{'f_2'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Το πολυπλεγμένο σήμα είναι το άθροισμα των δύο USSB:
-        </p>
-        <BlockMath>{'g(t) = x_{USSB,m}(t) + x_{USSB,k}(t) \\quad\\Rightarrow\\quad G(f) = X_{USSB,m}(f) + X_{USSB,k}(f)'}</BlockMath>
-        <p>
-          Διαλέγοντας <InlineMath>{'f_1, f_2'}</InlineMath> από το ΘΕΜΑ 12
-          (π.χ. <InlineMath>{'f_1 = W/2,\\; f_2 = f_1 + W/2 = W'}</InlineMath>{' '}
-          για το οριακά compact packing), το <InlineMath>G(f)</InlineMath>{' '}
-          είναι η ένωση τεσσάρων «μπλοκ»:
-        </p>
-        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
-          <li>
-            <strong>Θετικές:</strong> rect στο{' '}
-            <InlineMath>{'[f_1,\\, f_1 + W/2]'}</InlineMath> + τρίγωνο στο{' '}
-            <InlineMath>{'[f_2,\\, f_2 + W]'}</InlineMath>.
-          </li>
-          <li>
-            <strong>Αρνητικές</strong> (mirror): rect στο{' '}
-            <InlineMath>{'[-f_1 - W/2,\\, -f_1]'}</InlineMath> + τρίγωνο στο{' '}
-            <InlineMath>{'[-f_2 - W,\\, -f_2]'}</InlineMath>.
-          </li>
-        </ul>
-        <svg
-          viewBox="0 0 480 150"
-          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
-          role="img"
-          aria-label="|G(f)|: USSB(m) ορθογώνιο γύρω από ±f_1 και USSB(k) τρίγωνο γύρω από ±f_2, με όλους τους κατόπτρους στις αρνητικές συχνότητες"
-        >
-          {/* x-axis */}
-          <line x1="20" y1="100" x2="438" y2="100" stroke="currentColor" strokeOpacity="0.45" />
-          <polygon points="444,100 434,96 434,104" fill="currentColor" fillOpacity="0.5" />
-          <text x="448" y="104" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f</text>
-          {/* y-axis at f=0 */}
-          <line x1="240" y1="100" x2="240" y2="22" stroke="currentColor" strokeOpacity="0.3" />
-          <polygon points="240,16 236,24 244,24" fill="currentColor" fillOpacity="0.5" />
-          {/* + side: USSB(m) rect [f_1, f_1+W/2] (compact: f_1+W/2 = f_2) */}
-          <rect x="280" y="70" width="40" height="30" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
-          {/* + side: USSB(k) triangle [f_2, f_2+W], peak at f_2 */}
-          <path d="M 320 70 L 320 100 L 400 100 Z" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
-          {/* − side mirror rect [-f_1-W/2, -f_1] */}
-          <rect x="160" y="70" width="40" height="30" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
-          {/* − side mirror triangle [-f_2-W, -f_2], peak at -f_2 */}
-          <path d="M 160 70 L 160 100 L 80 100 Z" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
-          {/* height label 1/(2W) on the rect */}
-          <text x="216" y="68" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.65" fontStyle="italic">1/(2W)</text>
-          {/* tick marks */}
-          <line x1="80" y1="97" x2="80" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="160" y1="97" x2="160" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="200" y1="97" x2="200" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="240" y1="97" x2="240" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="280" y1="97" x2="280" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="320" y1="97" x2="320" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="400" y1="97" x2="400" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          {/* tick labels — for compact packing f_2 = f_1+W/2 */}
-          <text x="80" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">−f_2−W</text>
-          <text x="160" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">−f_2</text>
-          <text x="200" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">−f_1</text>
-          <text x="240" y="114" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">0</text>
-          <text x="280" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_1</text>
-          <text x="320" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_2</text>
-          <text x="400" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_2+W</text>
-          {/* spectrum label */}
-          <text x="246" y="30" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">|G(f)|</text>
-          {/* legend */}
-          <rect x="20" y="20" width="10" height="8" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
-          <text x="34" y="28" fontSize="9" fill="currentColor" fillOpacity="0.85">USSB(m)</text>
-          <rect x="20" y="34" width="10" height="8" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
-          <text x="34" y="42" fontSize="9" fill="currentColor" fillOpacity="0.85">USSB(k)</text>
-          {/* compact-packing note */}
-          <text x="240" y="138" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.6" fontStyle="italic">οριακά compact: f_2 = f_1 + W/2</text>
-        </svg>
-        <p>
-          Στον δέκτη: για το <InlineMath>{'m(t)'}</InlineMath> χρησιμοποιούμε
-          BPF γύρω από <InlineMath>{'[f_1,\\, f_1 + W/2]'}</InlineMath> και
-          μετά coherent demod με <InlineMath>{'\\cos(2\\pi f_1 t)'}</InlineMath>·
-          για το <InlineMath>{'k(t)'}</InlineMath> BPF γύρω από{' '}
-          <InlineMath>{'[f_2,\\, f_2 + W]'}</InlineMath> με demod στο{' '}
-          <InlineMath>{'f_2'}</InlineMath>. Η μη-επικάλυψη που εξασφαλίσαμε
-          στο ΘΕΜΑ 12 κάνει αυτή τη διαδικασία δυνατή.
-        </p>
-      </>
-    ),
+    id: 'frontistirio-f11',
+    title: 'Φροντιστήριο 11 · Επανάληψη (τελευταίο)',
+    topic: 'dp',
+    origin: 'frontistirio',
+    source: 'frontistirio-2023-24',
+    problemNumber: 'F11',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/inclass/F11__eclass.pdf',
+    statement: null,
+    solution: null,
   },
 
   // ═══════════════════════════════════════════════════════════════════════
-  // ΕΞΕΤΑΣΗ ΣΕΠΤΕΜΒΡΙΟΥ 2025 (11 problems · 100%)
+  // Παλαιότερα φροντιστήρια (CamScanner — image-only)
   // ═══════════════════════════════════════════════════════════════════════
   {
-    id: 'sept25-th1-1',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 1.1',
-    weight: 10,
-    title: 'Αρχή λειτουργίας AM — εξίσωση, sidebands',
-    topic: 'am',
+    id: 'frontistirio-old-1',
+    title: '1ο Φροντιστήριο (παλαιότερο)',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    source: 'frontistirio-misc',
     difficulty: 'easy',
-    prerequisites: ['am/conventional', 'am/overview'],
-    formulaIds: ['am-signal', 'am-spectrum', 'am-bandwidth'],
-    statement: (
-      <p>
-        Εξηγήστε την αρχή λειτουργίας της διαμόρφωσης πλάτους (AM). Γράψτε
-        την μαθηματική εξίσωση του AM σήματος και αναλύστε το φάσμα του,
-        δείχνοντας τις πλευρικές ζώνες (sidebands).
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Η AM «ανυψώνει» ένα baseband σήμα <InlineMath>m(t)</InlineMath>{' '}
-          γύρω από συχνότητα <InlineMath>f_c</InlineMath> προσθέτοντας
-          σταθερή συνιστώσα <InlineMath>A_c</InlineMath> (carrier) και
-          πολλαπλασιάζοντας με <InlineMath>{'\\cos(2\\pi f_c t)'}</InlineMath>:
-        </p>
-        <BlockMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</BlockMath>
-        <p>Από modulation theorem:</p>
-        <BlockMath>{'X_{AM}(f) = \\tfrac{A_c}{2}[\\delta(f-f_c) + \\delta(f+f_c)] + \\tfrac{1}{2}[M(f-f_c) + M(f+f_c)]'}</BlockMath>
-        <p>
-          Στις θετικές συχνότητες: ένα impulse στον carrier{' '}
-          <InlineMath>{'f_c'}</InlineMath>, μια <strong>upper sideband</strong>{' '}
-          (USB, <InlineMath>{'f > f_c'}</InlineMath>) και μια{' '}
-          <strong>lower sideband</strong> (LSB,{' '}
-          <InlineMath>{'f < f_c'}</InlineMath>). Συμμετρικά στα αρνητικά.
-          Bandwidth = <InlineMath>{'2W'}</InlineMath>.
-        </p>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L01-eisagogika',
+      'lectures/L02-asymptotic-analysis',
+    ],
+    sourceFile: '/material/exercises/inclass/1%CE%BF%20%CE%A6%CF%81%CE%BF%CE%BD%CF%84.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'sept25-th1-2',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 1.2',
-    weight: 10,
-    title: 'Conventional AM — μ, ισχύς carrier, ισχύς συνολική',
-    topic: 'am',
+    id: 'frontistirio-old-2',
+    title: '2ο Φροντιστήριο (παλαιότερο)',
+    topic: 'divide-conquer',
+    origin: 'frontistirio',
+    source: 'frontistirio-misc',
     difficulty: 'medium',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal', 'am-mu', 'am-power'],
-    statement: (
-      <p>
-        Δίνεται φέρον κύμα με πλάτος <InlineMath>{'A_c = 10'}</InlineMath> V και
-        σήμα πληροφορίας <InlineMath>{'m(t) = \\cos(2\\pi f_m t)'}</InlineMath>{' '}
-        με πλάτος <InlineMath>{'A_m = 5'}</InlineMath> V. Υπολογίστε τον
-        συντελεστή διαμόρφωσης, την ισχύ του φέροντος, και τη συνολική ισχύ
-        του σήματος AM.
-      </p>
-    ),
-    solution: (
-      <>
-        <BlockMath>{'\\mu = \\frac{A_m}{A_c} = \\frac{5}{10} = 0.5'}</BlockMath>
-        <p>Ισχύς carrier (RMS²/2):</p>
-        <BlockMath>{'P_c = \\frac{A_c^2}{2} = \\frac{100}{2} = 50\\text{ W}'}</BlockMath>
-        <p>
-          Ισχύς message: <InlineMath>{'P_m = A_m^2/2 = 12.5'}</InlineMath> W.
-          Συνολική ισχύς:
-        </p>
-        <BlockMath>{'P_{AM} = \\frac{A_c^2}{2} + \\frac{A_m^2}{4} = 50 + 6.25 = 56.25\\text{ W}'}</BlockMath>
-        <p>
-          (Ή ισοδύναμα <InlineMath>{'P_c(1 + \\mu^2/2) = 50\\cdot 1.125 = 56.25'}</InlineMath> W
-          για normalized single-tone message.)
-        </p>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L03-divide-and-conquer-i',
+      'lectures/L04-divide-and-conquer-ii',
+    ],
+    sourceFile: '/material/exercises/inclass/2%CE%BF%20%CE%A6%CF%81%CE%BF%CE%BD%CF%84.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'sept25-th1-3',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 1.3',
-    weight: 6,
-    title: 'AM vs DSB-SC vs SSB — bandwidth & ισχύς',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/overview', 'am/conventional', 'am/dsb-sc', 'am/ssb'],
-    formulaIds: ['am-bandwidth', 'am-power', 'dsb-sc-power'],
-    statement: (
-      <p>
-        Να περιγράψετε τις διαφορές μεταξύ AM, DSB-SC (διπλής πλευρικής ζώνης
-        με καταστολή φέροντος) και SSB (απλής πλευρικής ζώνης). Συγκρίνετε ως
-        προς τις απαιτήσεις σε εύρος ζώνης και ισχύ.
-      </p>
-    ),
-    solution: (
-      <>
-        <table className="my-3 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="py-2 text-left">Σχήμα</th>
-              <th className="py-2 text-left">Bandwidth</th>
-              <th className="py-2 text-left">Carrier</th>
-              <th className="py-2 text-left">η</th>
-            </tr>
-          </thead>
-          <tbody className="text-fg-muted">
-            <tr><td>Conventional AM</td><td>2W</td><td>ναι, μεγάλο</td><td>≤ 33%</td></tr>
-            <tr><td>DSB-SC</td><td>2W</td><td>όχι</td><td>100%</td></tr>
-            <tr><td>SSB</td><td>W</td><td>όχι</td><td>100%</td></tr>
-          </tbody>
-        </table>
-        <p>
-          AM σπαταλά ισχύ στον carrier (που δεν φέρει πληροφορία) αλλά
-          επιτρέπει απλό envelope detector. DSB-SC και SSB απαιτούν coherent
-          demod. SSB έχει το <em>μισό</em> bandwidth — βέλτιστη για στενά
-          κανάλια.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th1-4',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 1.4',
-    weight: 8,
-    title: 'Envelope detector — λειτουργία & συνθήκες',
-    topic: 'am',
+    id: 'frontistirio-old-3',
+    title: '3ο Φροντιστήριο (παλαιότερο)',
+    topic: 'graphs',
+    origin: 'frontistirio',
+    source: 'frontistirio-misc',
     difficulty: 'medium',
-    prerequisites: ['am/modulator-demodulator'],
-    formulaIds: ['envelope-detector-rc', 'am-mu'],
-    statement: (
-      <p>
-        Περιγράψτε τη λειτουργία ενός envelope detector (ανιχνευτή
-        περιβάλλουσας). Ποιες είναι οι βασικές προϋποθέσεις για την ορθή
-        λειτουργία του;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Δίοδος + RC σε παράλληλη σύνδεση. Η δίοδος ανορθώνει (κρατάει μόνο
-          θετικά μισόπεριόδια), ο πυκνωτής φορτίζεται στην peak τιμή και
-          εκφορτίζεται αργά μέσω της <InlineMath>R</InlineMath>, ακολουθώντας
-          την περιβάλλουσα <InlineMath>{'V(t) = |A_c + m(t)|'}</InlineMath>.
-        </p>
-        <p>Συνθήκες ορθής λειτουργίας:</p>
-        <ol className="ml-5 list-decimal space-y-1 text-fg-muted">
-          <li>
-            <strong>μ ≤ 1</strong> — αλλιώς overmodulation, το envelope δεν
-            ταυτίζεται με το <InlineMath>{'A_c + m(t)'}</InlineMath>.
-          </li>
-          <li>
-            <strong>RC time constant</strong>:{' '}
-            <InlineMath>{'\\tfrac{1}{f_c} \\ll RC \\ll \\tfrac{1}{W}'}</InlineMath>{' '}
-            — μικρότερο από <InlineMath>{'1/W'}</InlineMath> για να
-            ακολουθεί το envelope, μεγαλύτερο από{' '}
-            <InlineMath>{'1/f_c'}</InlineMath> για να εξομαλύνει τον carrier.
-          </li>
-          <li>
-            <strong>Capacitor</strong> στην έξοδο για αφαίρεση του DC{' '}
-            <InlineMath>{'A_c'}</InlineMath> και απομόνωση του{' '}
-            <InlineMath>m(t)</InlineMath>.
-          </li>
-        </ol>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th1-5',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 1.5',
-    weight: 10,
-    title: 'AM φάσμα δύο-τόνου message',
-    topic: 'am',
-    difficulty: 'medium',
-    prerequisites: ['am/conventional', 'foundations/fourier-transform'],
-    formulaIds: ['am-signal', 'fourier-pair-cos', 'fourier-modulation-theorem'],
-    statement: (
-      <p>
-        Ένα σήμα πληροφορίας{' '}
-        <InlineMath>{'m(t) = \\cos(2\\pi\\cdot 1\\,\\text{kHz}\\cdot t) + 0.5\\cos(2\\pi\\cdot 2\\,\\text{kHz}\\cdot t)'}</InlineMath>{' '}
-        διαμορφώνεται κατά AM σε φέρον συχνότητας 100 kHz. Σχεδιάστε το φάσμα
-        του διαμορφωμένου σήματος.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <InlineMath>{'M(f)'}</InlineMath> έχει impulses πλάτους 1/2 στις{' '}
-          <InlineMath>{'\\pm 1'}</InlineMath> kHz και πλάτους 1/4 στις{' '}
-          <InlineMath>{'\\pm 2'}</InlineMath> kHz.
-        </p>
-        <p>
-          Στο AM φάσμα <InlineMath>{'X_{AM}(f)'}</InlineMath> εμφανίζονται:
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <strong>Carrier:</strong> impulses{' '}
-            <InlineMath>{'A_c/2'}</InlineMath> στις{' '}
-            <InlineMath>{'\\pm 100'}</InlineMath> kHz.
-          </li>
-          <li>
-            <strong>USB:</strong> 1/4 στις 101 kHz (από{' '}
-            <InlineMath>{'f_c + 1'}</InlineMath>) και 1/8 στις 102 kHz (από{' '}
-            <InlineMath>{'f_c + 2'}</InlineMath>). Συμμετρικά LSB στις 99
-            kHz (1/4) και 98 kHz (1/8).
-          </li>
-          <li>
-            Ομοίως στα <InlineMath>{'-100'}</InlineMath> kHz: USB στις{' '}
-            <InlineMath>{'-99, -98'}</InlineMath>· LSB στις{' '}
-            <InlineMath>{'-101, -102'}</InlineMath>.
-          </li>
-        </ul>
-        <p>Bandwidth συνολικά = 4 kHz (από 98 έως 102).</p>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th2-6',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 2.6',
-    weight: 8,
-    title: 'FM αρχή λειτουργίας + δείκτης β',
-    topic: 'fm',
-    difficulty: 'easy',
-    prerequisites: ['fm/idea'],
-    formulaIds: ['fm-signal', 'fm-instantaneous-freq', 'fm-beta'],
-    statement: (
-      <p>
-        Εξηγήστε την αρχή λειτουργίας της διαμόρφωσης συχνότητας (FM). Δώστε
-        τη μαθηματική έκφραση του σήματος FM και ορίστε τον δείκτη
-        διαμόρφωσης β.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Στην FM η <strong>στιγμιαία συχνότητα</strong> κουνιέται γύρω από
-          τον carrier ανάλογα με το <InlineMath>m(t)</InlineMath>:
-        </p>
-        <BlockMath>{'f(t) = f_c + K_f\\, m(t)'}</BlockMath>
-        <p>Φάση = ολοκλήρωμα στιγμιαίας συχνότητας:</p>
-        <BlockMath>{'x_{FM}(t) = A_c\\cos\\!\\left[2\\pi f_c t + 2\\pi K_f \\int_{-\\infty}^{t} m(\\tau)\\,d\\tau\\right]'}</BlockMath>
-        <p>
-          <strong>Δείκτης διαμόρφωσης</strong> για bandwidth W του message:
-        </p>
-        <BlockMath>{'\\beta_f = \\frac{\\Delta f}{W} = \\frac{K_f \\max|m(t)|}{W}'}</BlockMath>
-        <p>
-          Πληροφορία ζει στη φάση, envelope μένει σταθερό{' '}
-          <InlineMath>{'V = A_c'}</InlineMath>.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th2-7',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 2.7',
-    weight: 8,
-    title: 'Σύγκριση FM vs AM',
-    topic: 'fm',
-    difficulty: 'easy',
-    prerequisites: ['fm/in-noise', 'am/modulator-demodulator'],
-    formulaIds: ['fm-snr-out', 'fm-gain-am', 'carson', 'am-bandwidth'],
-    statement: (
-      <p>
-        Συγκρίνετε τα συστήματα FM και AM ως προς: ευαισθησία στον θόρυβο,
-        απαιτήσεις σε εύρος ζώνης, απόδοση ισχύος, πολυπλοκότητα δέκτη.
-      </p>
-    ),
-    solution: (
-      <>
-        <table className="my-3 w-full text-sm">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="py-2 text-left">Παράγοντας</th>
-              <th className="py-2 text-left">AM</th>
-              <th className="py-2 text-left">FM</th>
-            </tr>
-          </thead>
-          <tbody className="text-fg-muted">
-            <tr><td>Θόρυβος</td><td>Άμεσα στο envelope (κακή ανοσία)</td><td>Σταθερό envelope → limiter αφαιρεί amplitude θόρυβο</td></tr>
-            <tr><td>Output SNR gain</td><td>~ <InlineMath>{'\\mu^2'}</InlineMath></td><td>~ <InlineMath>{'3\\beta^2'}</InlineMath> (FM gain over AM = <InlineMath>{'9\\beta^2'}</InlineMath>)</td></tr>
-            <tr><td>Bandwidth</td><td>2W</td><td>2(β+1)W (μεγαλύτερο)</td></tr>
-            <tr><td>Ισχύς</td><td>Σπαταλά στον carrier (η ≤ 33%)</td><td>Πάντα <InlineMath>{'A_c^2/2'}</InlineMath>, όλη ωφέλιμη</td></tr>
-            <tr><td>Πολυπλοκότητα</td><td>Χαμηλή (envelope detector)</td><td>Μέτρια (limiter + discriminator)</td></tr>
-          </tbody>
-        </table>
-        <p>
-          Trade-off: FM «αγοράζει» SNR με bandwidth. Για εμπορικό FM
-          ραδιόφωνο (β=5), gain = 9·25 = 225 → 23.5 dB.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th2-8',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 2.8',
-    weight: 12,
-    title: 'FM — β και Carson για εμπορικό σήμα',
-    topic: 'fm',
-    difficulty: 'medium',
-    prerequisites: ['fm/idea', 'fm/carson'],
-    formulaIds: ['fm-beta', 'carson'],
-    statement: (
-      <p>
-        Σήμα <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath> με
-        μέγιστη συχνότητα <InlineMath>{'f_m = 5'}</InlineMath> kHz
-        διαμορφώνει FM φέρον στα 100 MHz με απόκλιση συχνότητας{' '}
-        <InlineMath>{'\\Delta f = 50'}</InlineMath> kHz. Υπολογίστε (1) τον
-        δείκτη διαμόρφωσης, (2) το απαιτούμενο εύρος ζώνης κατά Carson.
-      </p>
-    ),
-    solution: (
-      <>
-        <BlockMath>{'\\beta = \\frac{\\Delta f}{f_m} = \\frac{50}{5} = 10 \\quad \\text{(WBFM)}'}</BlockMath>
-        <BlockMath>{'B = 2(\\beta + 1) f_m = 2\\cdot 11\\cdot 5\\,\\text{kHz} = 110\\,\\text{kHz}'}</BlockMath>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th2-9',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 2.9',
-    weight: 12,
-    title: 'FM Bessel — sidebands για β=2.5',
-    topic: 'fm',
-    difficulty: 'hard',
-    prerequisites: ['fm/bessel'],
-    formulaIds: ['fm-bessel-sidebands', 'fm-bessel-property', 'carson'],
-    memorizationNote: (
-      <>
-        Οι τιμές των <InlineMath>{'J_n(\\beta)'}</InlineMath> δίνονται στο
-        τυπολόγιο σε πίνακα — δεν χρειάζεται να τις αποστηθίσεις, αλλά πρέπει
-        να ξέρεις πώς να τον διαβάσεις γρήγορα.
-      </>
-    ),
-    statement: (
-      <p>
-        Για μονοτονικό σήμα πληροφορίας <InlineMath>{'m(t) = \\cos(2\\pi f_m t)'}</InlineMath>{' '}
-        και δείκτη διαμόρφωσης <InlineMath>{'\\beta = 2.5'}</InlineMath>:{' '}
-        (Α) Γράψτε τη σειρά Bessel που περιγράφει το φάσμα του FM σήματος.
-        (Β) Προσδιορίστε τις σχετικές εντάσεις για τα πρώτα τρία ζεύγη
-        πλευρικών ζωνών. (Γ) Εκτιμήστε το πρακτικό εύρος ζώνης με τον κανόνα
-        του Carson.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>(Α) Bessel form:</p>
-        <BlockMath>{'x_{FM}(t) = A_c\\sum_{n=-\\infty}^{\\infty} J_n(2.5)\\cos[2\\pi(f_c + n f_m)t]'}</BlockMath>
-        <p>
-          (Β) Από τον πίνακα Bessel για <InlineMath>{'\\beta = 2.5'}</InlineMath>:
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li><InlineMath>{'J_0(2.5) \\approx -0.05'}</InlineMath> (carrier σχεδόν εξαφανίζεται — κοντά στη ρίζα 2.405)</li>
-          <li><InlineMath>{'J_1(2.5) \\approx 0.50'}</InlineMath></li>
-          <li><InlineMath>{'J_2(2.5) \\approx 0.45'}</InlineMath></li>
-          <li><InlineMath>{'J_3(2.5) \\approx 0.22'}</InlineMath></li>
-        </ul>
-        <p>
-          Σχετικές εντάσεις (πλάτη <InlineMath>{'A_c |J_n|'}</InlineMath>):
-          το <InlineMath>{'\\pm 1'}</InlineMath> sideband είναι το ισχυρότερο,
-          ακολουθεί <InlineMath>{'\\pm 2'}</InlineMath>, μετά{' '}
-          <InlineMath>{'\\pm 3'}</InlineMath>. Carrier σχεδόν μηδέν.
-        </p>
-        <p>(Γ) Carson:</p>
-        <BlockMath>{'B = 2(\\beta + 1) f_m = 2\\cdot 3.5\\cdot f_m = 7 f_m'}</BlockMath>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th3-10',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 3.10',
-    weight: 10,
-    title: 'PSD θερμικού θορύβου',
-    topic: 'noise',
-    difficulty: 'easy',
-    prerequisites: ['noise/sources', 'noise/white-noise'],
-    formulaIds: ['thermal-noise', 'white-noise-psd'],
-    statement: (
-      <p>
-        Ποια είναι η φασματική πυκνότητα ισχύος του θερμικού θορύβου και πώς
-        εξαρτάται από το εύρος ζώνης και τη θερμοκρασία;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Φασματική πυκνότητα (διπλής όψεως){' '}
-          <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath> W/Hz, σταθερή
-          (επίπεδη) μέχρι ~10¹³ Hz. <strong>Δεν εξαρτάται από το εύρος ζώνης</strong>;
-          όμως η συνολική ισχύς που μετράμε σε ζώνη <InlineMath>B</InlineMath>{' '}
-          είναι:
-        </p>
-        <BlockMath>{'P_N = N_0 B = kTB'}</BlockMath>
-        <p>
-          Άμεσα ανάλογη του <InlineMath>T</InlineMath> και του{' '}
-          <InlineMath>B</InlineMath>. Σε room temperature{' '}
-          <InlineMath>{'T_0 = 290'}</InlineMath> K,{' '}
-          <InlineMath>{'N_0 \\approx 4\\cdot 10^{-21}'}</InlineMath> W/Hz =
-          <strong> -174 dBm/Hz</strong>.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'sept25-th3-11',
-    origin: 'past-exam',
-    source: 'sept-2025',
-    problemNumber: 'ΘΕΜΑ 3.11',
-    weight: 10,
-    title: 'Λευκός θόρυβος μέσα από LPF',
-    topic: 'noise',
-    difficulty: 'easy',
-    prerequisites: ['noise/through-filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd'],
-    statement: (
-      <p>
-        Έστω λευκός θόρυβος με φασματική πυκνότητα{' '}
-        <InlineMath>{'N_0/2'}</InlineMath>. Διέρχεται μέσα από ιδανικό
-        χαμηλοπερατό φίλτρο εύρους ζώνης B. Υπολογίστε την ισχύ θορύβου στην
-        έξοδο.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f) = N_0/2'}</InlineMath> για{' '}
-          <InlineMath>{'|f| \\leq B'}</InlineMath>, αλλιώς 0.
-        </p>
-        <BlockMath>{'P_Y = \\int_{-B}^{B} \\frac{N_0}{2}\\,df = N_0 B'}</BlockMath>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L06-graphs-i',
+      'lectures/L07-graphs-ii',
+      'lectures/L08-graphs-iii',
+    ],
+    sourceFile: '/material/exercises/inclass/3%CE%BF%20%CE%A6%CF%81%CE%BF%CE%BD%CF%84.pdf',
+    statement: null,
+    solution: null,
   },
 
   // ═══════════════════════════════════════════════════════════════════════
-  // ΕΞΕΤΑΣΗ ΕΠΙ ΠΤΥΧΙΩ ΙΑΝΟΥΑΡΙΟΥ 2026 (16 problems · 100%)
+  // 2024 / 2025 ΕΞΕΤΑΣΤΙΚΕΣ — υψηλή προτεραιότητα
   // ═══════════════════════════════════════════════════════════════════════
   {
-    id: 'jan26-th1-1',
+    id: 'exam-june-2025',
+    title: 'Εξεταστική Ιουνίου 2025 — Πλήρες θέμα',
+    topic: 'dp',
     origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 1.1',
-    weight: 3,
-    title: 'Σ/Λ — μορφή AM σήματος',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional', 'am/dsb-sc'],
-    formulaIds: ['am-signal', 'dsb-sc-signal'],
-    statement: (
-      <p>
-        Σ/Λ: Το συμβατικά διαμορφωμένο κατά AM σήμα <InlineMath>x(t)</InlineMath>{' '}
-        του σήματος βασικής ζώνης{' '}
-        <InlineMath>{'m(t) = \\cos(2\\pi t)'}</InlineMath> έχει τη μορφή{' '}
-        <InlineMath>{'x(t) = [A_c\\cos(2\\pi t)]\\cos(2\\pi f_c t)'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>ΛΑΘΟΣ.</strong> Αυτή η μορφή είναι <em>DSB-SC</em>{' '}
-          (διπλής πλευρικής με καταστολή φέροντος). Η συμβατική AM είναι:
-        </p>
-        <BlockMath>{'x(t) = [A_c + m(t)]\\cos(2\\pi f_c t) = [A_c + \\cos(2\\pi t)]\\cos(2\\pi f_c t)'}</BlockMath>
-        <p>
-          Ο carrier <InlineMath>{'A_c'}</InlineMath> προστίθεται στο message
-          (όχι πολλαπλασιάζεται μαζί του).
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th1-2',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 1.2',
-    weight: 3,
-    title: 'Σ/Λ — cos είναι σήμα ισχύος',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: ['foundations/signals'],
-    statement: (
-      <p>
-        Σ/Λ: Το σήμα <InlineMath>{'m(t) = \\cos(2\\pi t)'}</InlineMath> είναι
-        σήμα ισχύος.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>ΣΩΣΤΟ.</strong> Έχει άπειρη ενέργεια{' '}
-          (<InlineMath>{'\\int |m|^2 dt = \\infty'}</InlineMath>) αλλά
-          πεπερασμένη μέση ισχύ:
-        </p>
-        <BlockMath>{'P = \\lim_{T\\to\\infty}\\frac{1}{2T}\\int_{-T}^{T} \\cos^2(2\\pi t)\\,dt = \\frac{1}{2}'}</BlockMath>
-        <p>Άρα σήμα ισχύος. Κάθε μη-μηδενικό περιοδικό είναι σήμα ισχύος.</p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th1-3',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 1.3',
-    weight: 4,
-    title: 'Σ/Λ — λευκός θόρυβος ⇔ Gaussian',
-    topic: 'noise',
-    difficulty: 'medium',
-    prerequisites: ['noise/white-noise'],
-    statement: (
-      <p>
-        Σ/Λ: Ο λευκός θόρυβος είναι ο θόρυβος του οποίου η φασματική πυκνότητα
-        ισχύος ακολουθεί την κατανομή Gauss.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>ΛΑΘΟΣ — κλασική παγίδα.</strong> «Λευκός» αναφέρεται στο
-          σχήμα της PSD (επίπεδο, σταθερό σε όλες τις συχνότητες).{' '}
-          «Gaussian» αναφέρεται στην κατανομή πλάτους. Είναι{' '}
-          <strong>ξεχωριστές ιδιότητες</strong>.
-        </p>
-        <p>
-          Ο θερμικός θόρυβος ικανοποιεί και τα δύο (γι' αυτό λέγεται AWGN —
-          Additive White Gaussian Noise). Αλλά π.χ. uniform-amplitude white
-          noise είναι λευκός χωρίς να είναι Gaussian.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th1-4',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 1.4',
-    weight: 5,
-    title: 'Σ/Λ — Envelope FS τετραγωνικού παλμού',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
-    statement: (
-      <p>
-        Σ/Λ: Η περιβάλλουσα του φάσματος πλάτους του Μ/Σ Fourier ενός
-        περιοδικού τετραγωνικού παλμού με πλάτος T=1sec έχει στενότερο εύρος
-        από έναν περιοδικό τετραγωνικό παλμό με πλάτος T=0.1sec.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>ΛΑΘΟΣ.</strong> Η περιβάλλουσα είναι <strong>sinc</strong>{' '}
-          με πρώτη ρίζα στο <InlineMath>{'1/\\tau'}</InlineMath>, όπου{' '}
-          <InlineMath>{'\\tau'}</InlineMath> είναι το πλάτος του παλμού.
-        </p>
-        <p>
-          Παλμός πλάτους <InlineMath>{'\\tau = 1'}</InlineMath>s →
-          sinc(f·1), πρώτη ρίζα στο 1 Hz. Παλμός πλάτους{' '}
-          <InlineMath>{'\\tau = 0.1'}</InlineMath>s → sinc(f·0.1), πρώτη
-          ρίζα στα 10 Hz. Άρα <strong>στενότερος παλμός = πλατύτερο
-          φάσμα</strong> (αντίστροφη σχέση χρόνος ↔ συχνότητα).
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th1-5',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 1.5',
-    weight: 5,
-    title: 'Σ/Λ — β=0.3 είναι WBFM',
-    topic: 'fm',
-    difficulty: 'easy',
-    prerequisites: ['fm/idea', 'fm/carson'],
-    formulaIds: ['fm-beta', 'carson'],
-    statement: (
-      <p>
-        Σ/Λ: Δίνεται FM σήμα με δείκτη διαμόρφωσης β=0.3. Το σήμα είναι WBFM.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>ΛΑΘΟΣ.</strong> Με <InlineMath>{'\\beta = 0.3'}</InlineMath>{' '}
-          (<InlineMath>{'\\beta < 1'}</InlineMath>, μάλιστα{' '}
-          <InlineMath>{'\\ll 1'}</InlineMath>) έχουμε <strong>NBFM</strong>{' '}
-          (Narrowband FM). WBFM απαιτεί <InlineMath>{'\\beta \\gg 1'}</InlineMath>.
-          Στο NBFM ισχύει η γραμμικοποίηση{' '}
-          <InlineMath>{'\\cos\\phi \\approx 1, \\sin\\phi \\approx \\phi'}</InlineMath>{' '}
-          και το bandwidth γίνεται 2W (όπως AM).
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th2-6',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 2.6',
-    weight: 4,
-    title: 'Λόγοι διαμόρφωσης',
-    topic: 'modulation',
-    difficulty: 'easy',
-    prerequisites: ['am/overview'],
-    statement: (
-      <p>
-        Αναφέρετε τους βασικούς λόγους για τους οποίους επιτελούμε
-        διαμόρφωση στα προς μετάδοση τηλεπικοινωνιακά συστήματα.
-      </p>
-    ),
-    solution: (
-      <ol className="ml-5 list-decimal space-y-1 text-fg-muted">
-        <li>
-          <strong>Αντενα μέγεθος</strong>: για αποδοτική εκπομπή χρειάζεται
-          <InlineMath>{'\\lambda/4 = c/(4f)'}</InlineMath> — σε baseband
-          (kHz) θα ήταν km. Στα MHz/GHz μετράται σε εκατοστά.
-        </li>
-        <li>
-          <strong>Multiplexing</strong>: πολλά κανάλια μοιράζονται το ίδιο
-          μέσο, τοποθετώντας κάθε ένα σε διαφορετική συχνότητα (FDM).
-        </li>
-        <li>
-          <strong>Αποδοτική χρήση φάσματος</strong>: επιλέγουμε ζώνες με
-          λιγότερο θόρυβο, λιγότερη απόσβεση.
-        </li>
-        <li>
-          <strong>Ανοσία θορύβου</strong>: συγκεκριμένες διαμορφώσεις (FM)
-          είναι πιο ανθεκτικές.
-        </li>
-        <li>
-          <strong>Νομοθετικά πλαίσια</strong>: συχνές περιοχές
-          εκχωρημένες σε συγκεκριμένες χρήσεις.
-        </li>
-      </ol>
-    ),
-  },
-  {
-    id: 'jan26-th2-7',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 2.7',
-    weight: 4,
-    title: 'AM σχεδίαση χρόνου + φάσματος',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal', 'am-spectrum', 'fourier-pair-sin'],
-    statement: (
-      <p>
-        Σχεδιάστε το διαμορφωμένο κατά AM σήμα στον χρόνο και στο φάσμα όταν
-        το φέρον είναι <InlineMath>{'c(t) = \\cos(20\\pi t)'}</InlineMath> και
-        το σήμα πληροφορίας <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Carrier: <InlineMath>{'A_c = 1, f_c = 10'}</InlineMath> Hz. Message:
-          <InlineMath>{'A_m = 2, f_m = 1'}</InlineMath> Hz. AM signal:
-        </p>
-        <BlockMath>{'x(t) = [1 + 2\\sin(2\\pi t)]\\cos(20\\pi t)'}</BlockMath>
-        <p>
-          <strong>Time domain:</strong> Modulation index{' '}
-          <InlineMath>{'\\mu = 2/1 = 2 > 1'}</InlineMath> →{' '}
-          <strong>overmodulation</strong>. Envelope flips στο μηδέν.
-        </p>
-        <p>
-          <strong>Φάσμα:</strong> impulses (1/2) στις{' '}
-          <InlineMath>{'\\pm 10'}</InlineMath> Hz (carrier),
-          <InlineMath>{'\\pm 1/(2j)'}</InlineMath> για sin → impulses (1)
-          στις{' '}
-          <InlineMath>{'\\pm 9, \\pm 11'}</InlineMath> Hz (sidebands), με
-          αντίθετα πρόσημα λόγω <InlineMath>j</InlineMath> του sin.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th2-8',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 2.8',
-    weight: 6,
-    title: 'DSB-SC με sinc message',
-    topic: 'am',
-    difficulty: 'medium',
-    prerequisites: ['am/dsb-sc', 'foundations/fourier-transform'],
-    formulaIds: ['dsb-sc-signal', 'fourier-pair-rect', 'fourier-modulation-theorem'],
-    statement: (
-      <p>
-        Σχεδιάστε το φάσμα του διαμορφωμένου κατά AM-DSB-SC σήματος όταν το
-        φέρον είναι <InlineMath>{'c(t) = \\cos(2\\pi f_c t)'}</InlineMath> και
-        το σήμα πληροφορίας{' '}
-        <InlineMath>{'m(t) = 2\\,\\mathrm{sinc}(2Wt)'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          DSB-SC: <InlineMath>{'x(t) = m(t)\\cos(2\\pi f_c t)'}</InlineMath>.
-          FT: <InlineMath>{'X(f) = \\tfrac{1}{2}[M(f-f_c) + M(f+f_c)]'}</InlineMath>.
-        </p>
-        <p>
-          <InlineMath>{'M(f) = \\frac{2}{2W}\\Pi(f/(2W)) = \\frac{1}{W}\\Pi(f/(2W))'}</InlineMath>{' '}
-          (rect ύψους <InlineMath>{'1/W'}</InlineMath>, πλάτους{' '}
-          <InlineMath>{'\\pm W'}</InlineMath>).
-        </p>
-        <p>
-          Άρα <InlineMath>{'X(f)'}</InlineMath>: δύο rects ύψους{' '}
-          <InlineMath>{'1/(2W)'}</InlineMath> γύρω από τα{' '}
-          <InlineMath>{'\\pm f_c'}</InlineMath>, καθένα πλάτους{' '}
-          <InlineMath>{'\\pm W'}</InlineMath>.{' '}
-          <strong>Δεν υπάρχει impulse στον carrier</strong> (suppressed).
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th2-9',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 2.9',
-    weight: 8,
-    title: 'Ισχύς αθροίσματος cosines + sines',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['parseval-power'],
-    statement: (
-      <p>
-        Έστω το σήμα{' '}
-        <InlineMath>{'x(t) = A\\cos(2\\pi f_1 t) + B\\sin(2\\pi f_2 t) + C\\sin(2\\pi f_3 t)'}</InlineMath>{' '}
-        με <InlineMath>{'f_1 \\neq f_2 \\neq f_3'}</InlineMath>. Υπολογίστε
-        την ισχύ του.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Όλες οι συχνότητες διαφορετικές → ορθογώνια στοιχεία → χωρίς
-          cross-terms. Καθεμία συνεισφέρει <InlineMath>{'\\text{amp}^2/2'}</InlineMath>:
-        </p>
-        <BlockMath>{'P_x = \\frac{A^2}{2} + \\frac{B^2}{2} + \\frac{C^2}{2}'}</BlockMath>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th2-10',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 2.10',
-    weight: 8,
-    title: 'Φάσμα πλάτους του sum-of-cosines+sines',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-transform'],
-    formulaIds: ['fourier-pair-cos', 'fourier-pair-sin'],
-    statement: (
-      <p>
-        Στο προηγούμενο σήμα{' '}
-        <InlineMath>{'x(t) = A\\cos(2\\pi f_1 t) + B\\sin(2\\pi f_2 t) + C\\sin(2\\pi f_3 t)'}</InlineMath>,
-        σχεδιάστε το φάσμα πλάτους του.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>FT impulses:</p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>cos: ύψος <InlineMath>{'A/2'}</InlineMath> στις <InlineMath>{'\\pm f_1'}</InlineMath></li>
-          <li>sin: ύψος <InlineMath>{'B/2'}</InlineMath> στις <InlineMath>{'\\pm f_2'}</InlineMath> (φανταστικό, αλλά μέτρο = B/2)</li>
-          <li>sin: ύψος <InlineMath>{'C/2'}</InlineMath> στις <InlineMath>{'\\pm f_3'}</InlineMath></li>
-        </ul>
-        <p>
-          Έξι impulses συνολικά. Για <strong>φάσμα πλάτους</strong>{' '}
-          παίρνουμε μέτρο, όλα τα ύψη θετικά.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jan26-th3-mux',
-    origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 3.11–12',
-    weight: 20,
-    title: 'AM-USSB Multiplexing — sinc + Π σε δύο φέροντα',
-    topic: 'am',
+    source: 'june-2025',
     difficulty: 'hard',
-    prerequisites: ['am/multiplexing', 'am/ssb', 'foundations/fourier-transform'],
-    formulaIds: ['ssb-signal', 'hilbert', 'fourier-pair-rect'],
-    statement: (
-      <p>
-        Έστω τα δύο βασικά σήματα πληροφορίας{' '}
-        <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath> και{' '}
-        <InlineMath>{'k(t) = \\Pi(4Wt)'}</InlineMath>. Το κάθε σήμα
-        διαμορφώνεται κατά AM-USSB με φέροντα{' '}
-        <InlineMath>{'f_1 = 100'}</InlineMath> kHz και{' '}
-        <InlineMath>{'f_2 = 1'}</InlineMath> MHz αντίστοιχα. (1) Αποτυπώστε
-        σχηματικά το φάσμα πλάτους των δύο σημάτων βασικής ζώνης και των
-        διαμορφωμένων σημάτων. (2) Αποτυπώστε το φάσμα του πολυπλεγμένου
-        <InlineMath>G(f)</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>Bandwidths.</strong>{' '}
-          <InlineMath>{'M(f) = \\frac{1}{2W}\\Pi(f/(2W))'}</InlineMath> →
-          rect στις <InlineMath>{'|f| \\leq W'}</InlineMath>.
-          <InlineMath>{'K(f) = \\frac{1}{4W}\\mathrm{sinc}(f/(4W))'}</InlineMath>{' '}
-          → πρώτη ρίζα στα <InlineMath>{'|f| = 4W'}</InlineMath> (πρακτικά
-          BW <InlineMath>{'\\sim 4W'}</InlineMath>).
-        </p>
-        <p>
-          <strong>USSB:</strong> κρατάει μόνο τη <strong>πάνω</strong>{' '}
-          πλευρική ζώνη του DSB-SC.
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <InlineMath>{'X_1(f)'}</InlineMath> από <InlineMath>m</InlineMath>:
-            rect από <InlineMath>{'f_1 = 100'}</InlineMath> kHz έως{' '}
-            <InlineMath>{'f_1 + W'}</InlineMath>· συμμετρικά αρνητικά.
-          </li>
-          <li>
-            <InlineMath>{'X_2(f)'}</InlineMath> από <InlineMath>k</InlineMath>:
-            sinc-like από <InlineMath>{'f_2 = 1'}</InlineMath> MHz έως{' '}
-            <InlineMath>{'f_2 + 4W'}</InlineMath>.
-          </li>
-        </ul>
-        <p>
-          <strong>(2) Πολυπλεγμένο G(f) = X_1(f) + X_2(f).</strong>{' '}
-          Δεν επικαλύπτονται γιατί <InlineMath>{'f_2 - f_1 = 900'}</InlineMath>{' '}
-          kHz είναι πολύ μεγαλύτερο από τα BW του καθενός. Το spectrum έχει
-          δύο ξεχωριστούς «λοβούς» (USSB του sinc στα ~100 kHz, USSB του Π
-          στα ~1 MHz).
-        </p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Algorithms-June-2025.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'jan26-th4-fm',
+    id: 'exam-sept-2025',
+    title: 'Εξεταστική Σεπτεμβρίου 2025 — Πλήρες θέμα',
+    topic: 'graphs',
     origin: 'past-exam',
-    source: 'jan-2026',
-    problemNumber: 'ΘΕΜΑ 4.13–16',
-    weight: 30,
-    title: 'FM — f_c, β, Bessel sidebands, ποσοστό ισχύος',
-    topic: 'fm',
+    source: 'sept-2025',
     difficulty: 'hard',
-    prerequisites: ['fm/idea', 'fm/bessel', 'fm/carson'],
-    formulaIds: ['fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-power'],
-    memorizationNote: (
-      <>
-        Στο τυπολόγιο υπάρχει πίνακας <InlineMath>{'J_n(\\beta)'}</InlineMath>.
-        Πρέπει να ξέρεις πώς να πάρεις τιμές γρήγορα — π.χ. για{' '}
-        <InlineMath>{'\\beta = 3'}</InlineMath>:{' '}
-        <InlineMath>{'J_0 \\approx -0.26, J_1 \\approx 0.34, J_2 \\approx 0.49, J_3 \\approx 0.31'}</InlineMath>.
-      </>
-    ),
-    statement: (
-      <p>
-        Δίνεται FM σήμα{' '}
-        <InlineMath>{'s(t) = 10\\cos(2\\pi\\cdot 100000\\,t + 3\\sin(2\\pi\\cdot 1000\\,t))'}</InlineMath>.
-        (13, 4%) Συχνότητα φέροντος <InlineMath>{'f_c'}</InlineMath> και
-        συχνότητα σήματος πληροφορίας <InlineMath>{'f_m'}</InlineMath>.
-        (14, 6%) Δείκτης διαμόρφωσης β και εύρος ζώνης Carson. (15, 10%)
-        Ανάπτυξη σε φασματικές συνιστώσες με Bessel και προσδιορισμός των 3
-        ισχυρότερων sidebands. (16, 10%) Ποσοστό ισχύος που μεταφέρεται από
-        τον carrier.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>(13)</strong> Σύγκριση με{' '}
-          <InlineMath>{'A_c\\cos[2\\pi f_c t + \\beta\\sin(2\\pi f_m t)]'}</InlineMath>:
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li><InlineMath>{'A_c = 10'}</InlineMath> V</li>
-          <li><InlineMath>{'f_c = 100\\,000'}</InlineMath> Hz = 100 kHz</li>
-          <li><InlineMath>{'f_m = 1000'}</InlineMath> Hz = 1 kHz</li>
-          <li><InlineMath>{'\\beta = 3'}</InlineMath></li>
-        </ul>
-        <p><strong>(14)</strong> Carson:</p>
-        <BlockMath>{'B = 2(\\beta + 1)f_m = 2\\cdot 4\\cdot 1000 = 8\\,\\text{kHz}'}</BlockMath>
-        <p>
-          <strong>(15)</strong> Bessel form:{' '}
-          <InlineMath>{'s(t) = 10\\sum_n J_n(3)\\cos[2\\pi(100 + n)\\,\\text{kHz}\\,t]'}</InlineMath>.
-          Για <InlineMath>{'\\beta = 3'}</InlineMath>:
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li><InlineMath>{'J_0(3) \\approx -0.26'}</InlineMath> → carrier 2.6 V</li>
-          <li><InlineMath>{'J_1(3) \\approx 0.34'}</InlineMath> → ±1 sb 3.4 V</li>
-          <li><InlineMath>{'J_2(3) \\approx 0.49'}</InlineMath> → ±2 sb 4.9 V <strong>(ισχυρότερο!)</strong></li>
-          <li><InlineMath>{'J_3(3) \\approx 0.31'}</InlineMath> → ±3 sb 3.1 V</li>
-          <li><InlineMath>{'J_4(3) \\approx 0.13'}</InlineMath> → ±4 sb 1.3 V</li>
-        </ul>
-        <p>
-          Τα <strong>3 ισχυρότερα ζεύγη</strong>:{' '}
-          <InlineMath>{'\\pm 2'}</InlineMath> (4.9 V),{' '}
-          <InlineMath>{'\\pm 1'}</InlineMath> (3.4 V),{' '}
-          <InlineMath>{'\\pm 3'}</InlineMath> (3.1 V).
-        </p>
-        <p>
-          <strong>(16)</strong> Ολική ισχύς FM:{' '}
-          <InlineMath>{'P_{FM} = A_c^2/2 = 50'}</InlineMath> W. Ισχύς στον
-          carrier: <InlineMath>{'A_c^2 J_0^2(3)/2 = 50\\cdot 0.0676 = 3.38'}</InlineMath> W.
-        </p>
-        <BlockMath>{'\\text{Ποσοστό carrier} = \\frac{3.38}{50} = 6.76\\%'}</BlockMath>
-        <p>
-          Αντίστοιχα <strong>93.24% της ισχύος έχει μεταφερθεί στις
-          sidebands</strong> (μακριά από <InlineMath>{'f_c'}</InlineMath>).
-        </p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Algorithms-Sep-2025.pdf',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-june-2024',
+    title: 'Εξεταστική Ιουνίου 2024 — Πλήρες θέμα',
+    topic: 'dp',
+    origin: 'past-exam',
+    source: 'june-2024',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Algorithms-June-2024.pdf',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-sept-2024',
+    title: 'Εξεταστική Σεπτεμβρίου 2024 — Πλήρες θέμα',
+    topic: 'graphs',
+    origin: 'past-exam',
+    source: 'sept-2024',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Algorithms-September-2024.pdf',
+    statement: null,
+    solution: null,
   },
 
   // ═══════════════════════════════════════════════════════════════════════
-  // ΕΞΕΤΑΣΗ ΙΟΥΝΙΟΥ 2025 (ΘΕΜΑ Α — 16 problems · 100%)
+  // Παλαιότερα θέματα (Ζησιμόπουλος αρχείο + λοιπά)
   // ═══════════════════════════════════════════════════════════════════════
   {
-    id: 'jun25-th1-1',
+    id: 'exam-june-2023',
+    title: 'Εξεταστική Ιουνίου 2023 (Ζησιμόπουλος)',
+    topic: 'dp',
     origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.1',
-    weight: 3,
-    title: 'Σειρά συχνοτήτων: δορυφορικά, ραδιοφωνικά, τηλεοπτικά',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: [],
-    statement: (
-      <p>
-        Τοποθετήστε με σειρά αύξουσας συχνότητας τα δορυφορικά σήματα, τα
-        ραδιοφωνικά σήματα και τα τηλεοπτικά σήματα. Εξηγήστε γιατί.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Σειρά (αύξουσα): <strong>Ραδιοφωνικά → Τηλεοπτικά → Δορυφορικά</strong>.
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>AM ραδιόφωνο: 535 kHz – 1.7 MHz · FM ραδιόφωνο: 88-108 MHz</li>
-          <li>Αναλογική TV: VHF (54-216 MHz) και UHF (470-806 MHz)</li>
-          <li>Δορυφορικά: 4-30 GHz (C, Ku, Ka bands)</li>
-        </ul>
-        <p>
-          Λόγος: σταθμοί χαμηλών συχνοτήτων ταξιδεύουν μεγαλύτερες
-          αποστάσεις (κάμψη γύρω από εμπόδια), ενώ υψηλές συχνότητες
-          απαιτούνται για μεγάλο bandwidth (TV/data). Δορυφόροι χρειάζονται
-          line-of-sight και υψηλές συχνότητες για compact κεραίες.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-2',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.2',
-    weight: 3,
-    title: 'Ρόλος καναλιού στο τηλεπικοινωνιακό σύστημα',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: [],
-    statement: (
-      <p>
-        Περιγράψτε τον ρόλο του καναλιού σ' ένα τηλεπικοινωνιακό σύστημα.
-        Ποια κύρια χαρακτηριστικά του σήματος επηρεάζει και γιατί;
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Το κανάλι είναι το φυσικό μέσο μεταξύ πομπού και δέκτη (αέρας,
-          καλώδιο, οπτική ίνα). Τα κύρια χαρακτηριστικά που επηρεάζει:
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <strong>Πλάτος (απόσβεση):</strong> εξαρτάται από απόσταση,
-            συχνότητα, υλικό. Μειώνει το SNR.
-          </li>
-          <li>
-            <strong>Φάση:</strong> φάση ταυτόχρονη, frequency-dependent
-            καθυστέρηση → group delay distortion.
-          </li>
-          <li>
-            <strong>Φασματική απόκριση</strong>: το κανάλι ως φίλτρο
-            (περιορίζει bandwidth).
-          </li>
-          <li>
-            <strong>Θόρυβος:</strong> AWGN από θερμικό θόρυβο, συν παρεμβολές.
-          </li>
-          <li>
-            <strong>Fading:</strong> wireless κανάλια έχουν χρονική μεταβολή.
-          </li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-3',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.3',
-    weight: 3,
-    title: 'Φασματικές συνιστώσες δ(t-T₁)',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: ['foundations/fourier-transform'],
-    formulaIds: ['fourier-shift'],
-    statement: (
-      <p>
-        Από πόσες φασματικές συνιστώσες αποτελείται το φάσμα της κρουστικής
-        συνάρτησης <InlineMath>{'g(t) = \\delta(t - T_1)'}</InlineMath>;
-        Εξηγήστε γιατί.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Από <strong>άπειρες</strong> — η κρουστική περιέχει ομοιόμορφα όλες
-          τις συχνότητες.
-        </p>
-        <BlockMath>{'\\mathcal{F}\\{\\delta(t - T_1)\\} = e^{-j 2\\pi f T_1}'}</BlockMath>
-        <p>
-          <InlineMath>{'|G(f)| = 1'}</InlineMath> για όλα{' '}
-          <InlineMath>f</InlineMath>. Δηλαδή ομοιόμορφο φάσμα πλάτους — όλες
-          οι συχνότητες με ίδιο πλάτος. Η μετατόπιση{' '}
-          <InlineMath>{'T_1'}</InlineMath> εμφανίζεται μόνο ως φάση{' '}
-          <InlineMath>{'-2\\pi f T_1'}</InlineMath>.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-4',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.4',
-    weight: 4,
-    title: 'Φάσμα πλάτους + φάσης 2cos(1000πt+π/4)',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: ['foundations/fourier-transform'],
-    formulaIds: ['fourier-pair-cos'],
-    statement: (
-      <p>
-        Σχεδιάστε το φάσμα πλάτους και φάσης της συνάρτησης{' '}
-        <InlineMath>{'x(t) = 2\\cos(1000\\pi t + \\pi/4)'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <InlineMath>{'f_0 = 500'}</InlineMath> Hz, <InlineMath>{'A = 2'}</InlineMath>,
-          φάση <InlineMath>{'\\pi/4'}</InlineMath>. Με{' '}
-          <InlineMath>{'2\\cos\\theta = e^{j\\theta} + e^{-j\\theta}'}</InlineMath>:
-        </p>
-        <BlockMath>{'X(f) = e^{j\\pi/4}\\delta(f-500) + e^{-j\\pi/4}\\delta(f+500)'}</BlockMath>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <strong>Φάσμα πλάτους:</strong> δύο impulses ύψους 1 στις{' '}
-            <InlineMath>{'\\pm 500'}</InlineMath> Hz.
-          </li>
-          <li>
-            <strong>Φάσμα φάσης:</strong>{' '}
-            <InlineMath>{'+\\pi/4'}</InlineMath> στα 500 Hz,{' '}
-            <InlineMath>{'-\\pi/4'}</InlineMath> στα -500 Hz (περιττή φάση
-            για πραγματικό σήμα).
-          </li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-5',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.5',
-    weight: 6,
-    title: 'Περιοδικός τετραγωνικός παλμός — χρόνος + φάσμα',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
-    statement: (
-      <p>
-        Σχεδιάστε (1) το σήμα στον χρόνο και (2) το φάσμα πλάτους ενός
-        περιοδικού σήματος τετραγωνικών παλμών μοναδιαίου πλάτους με περίοδο{' '}
-        <InlineMath>{'T = 10'}</InlineMath> sec και πλάτος παλμού{' '}
-        <InlineMath>{'\\tau = 1'}</InlineMath> sec.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>Χρόνος:</strong> Π-παλμοί ύψους 1, διάρκειας 1s, κάθε 10s.
-          Duty cycle <InlineMath>{'\\tau/T = 0.1'}</InlineMath>.
-        </p>
-        <p>
-          <strong>Φάσμα Fourier (περιοδικό):</strong> impulses στις{' '}
-          <InlineMath>{'k f_0 = k/T = k/10'}</InlineMath> Hz, με συντελεστές:
-        </p>
-        <BlockMath>{'a_k = \\frac{\\tau}{T}\\,\\mathrm{sinc}(k\\tau/T) = 0.1\\cdot \\mathrm{sinc}(k/10)'}</BlockMath>
-        <p>
-          DC: <InlineMath>{'a_0 = 0.1'}</InlineMath>. Πρώτη ρίζα του sinc στα{' '}
-          <InlineMath>{'k = 10'}</InlineMath> (δηλαδή στο{' '}
-          <InlineMath>{'1/\\tau = 1'}</InlineMath> Hz).
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-6',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.6',
-    weight: 5,
-    title: 'Αν τ μεγαλώσει σε 4sec, τι αλλάζει στο φάσμα',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
-    statement: (
-      <p>
-        Στο προηγούμενο παράδειγμα, τι θα συμβεί στο φάσμα αν το χρονικό
-        πλάτος των παλμών γίνει <InlineMath>{'\\tau = 4'}</InlineMath> sec
-        (ίδια <InlineMath>{'T = 10'}</InlineMath> sec);
-      </p>
-    ),
-    solution: (
-      <>
-        <p>Νέοι συντελεστές:</p>
-        <BlockMath>{'a_k = \\frac{4}{10}\\mathrm{sinc}(4k/10) = 0.4\\,\\mathrm{sinc}(0.4k)'}</BlockMath>
-        <p>Αλλαγές:</p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            DC αυξάνεται από 0.1 σε 0.4 (μεγαλύτερο duty cycle).
-          </li>
-          <li>
-            Πρώτη ρίζα της <InlineMath>{'\\mathrm{sinc}'}</InlineMath>{' '}
-            μετατοπίζεται από <InlineMath>{'k = 10'}</InlineMath> (1 Hz) στο{' '}
-            <InlineMath>{'k = 2.5'}</InlineMath> (0.25 Hz). Πρακτικά οι
-            ρίζες πέφτουν στα <InlineMath>{'k = 2.5, 5, 7.5,...'}</InlineMath>{' '}
-            (όχι ακέραια — ο 5ος harmonic έχει <InlineMath>{'a_5 = 0'}</InlineMath>{' '}
-            αν επεκτείνεις το sinc).
-          </li>
-          <li>
-            Το envelope <strong>στενεύει</strong> (αντίστροφη σχέση{' '}
-            <InlineMath>{'\\tau \\leftrightarrow B'}</InlineMath>).
-          </li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-7',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.7',
-    weight: 4,
-    title: 'Φάσμα πλάτους & φάσης Σ A_k cos(2πk f_c t + φ_k)',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    statement: (
-      <p>
-        Έστω σήμα βασικής ζώνης{' '}
-        <InlineMath>{'x(t) = \\sum_{k=1}^{6} A_k \\cos(2\\pi k f_c t + \\phi_k)'}</InlineMath>{' '}
-        με <InlineMath>{'A_k = k^2'}</InlineMath>,{' '}
-        <InlineMath>{'\\phi_k = k\\pi/4'}</InlineMath>. Σχεδιάστε φάσμα
-        πλάτους και φάσης.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          6 αρμονικές στις <InlineMath>{'\\pm k f_c'}</InlineMath> για{' '}
-          <InlineMath>{'k = 1\\ldots 6'}</InlineMath>.
-        </p>
-        <p><strong>Φάσμα πλάτους</strong> (impulses ύψους <InlineMath>{'A_k/2 = k^2/2'}</InlineMath>):</p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li><InlineMath>{'k = 1: 0.5'}</InlineMath></li>
-          <li><InlineMath>{'k = 2: 2'}</InlineMath></li>
-          <li><InlineMath>{'k = 3: 4.5'}</InlineMath></li>
-          <li><InlineMath>{'k = 4: 8'}</InlineMath></li>
-          <li><InlineMath>{'k = 5: 12.5'}</InlineMath></li>
-          <li><InlineMath>{'k = 6: 18'}</InlineMath></li>
-        </ul>
-        <p>
-          <strong>Φάσμα φάσης:</strong>{' '}
-          <InlineMath>{'\\phi_k = k\\pi/4'}</InlineMath> στα{' '}
-          <InlineMath>{'+k f_c'}</InlineMath>,{' '}
-          <InlineMath>{'-k\\pi/4'}</InlineMath> στα{' '}
-          <InlineMath>{'-k f_c'}</InlineMath>.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-8',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.8',
-    weight: 5,
-    title: 'A_k για περιοδικούς τετραγωνικούς παλμούς',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
-    statement: (
-      <p>
-        Στο προηγούμενο, πόσο πρέπει να ισούνται οι συντελεστές{' '}
-        <InlineMath>{'A_k'}</InlineMath> ώστε το{' '}
-        <InlineMath>x(t)</InlineMath> να περιγράφει μια συνάρτηση
-        περιοδικών τετραγωνικών παλμών (θεωρήστε{' '}
-        <InlineMath>{'\\phi_k = 0'}</InlineMath>);
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          Για περιοδικό Π-παλμό (πλάτους A, διάρκειας τ, περιόδου T) με{' '}
-          <InlineMath>{'f_0 = 1/T'}</InlineMath> και χρησιμοποιώντας single-sided FS:
-        </p>
-        <BlockMath>{'A_k = \\frac{2A\\tau}{T}\\,\\mathrm{sinc}(k f_0 \\tau)'}</BlockMath>
-        <p>
-          Για να αναπαριστά τετραγωνικό παλμό{' '}
-          <InlineMath>{'A_k \\propto \\mathrm{sinc}(k f_0 \\tau)'}</InlineMath>.
-          Τα μεγάλα <InlineMath>k</InlineMath> έχουν φθίνουσες τιμές, με
-          ρίζες στα <InlineMath>{'k = 1/(f_0 \\tau) = T/\\tau'}</InlineMath>.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th1-9',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.9',
-    weight: 4,
-    title: 'Φασματική πυκνότητα ισχύος θερμικού θορύβου',
-    topic: 'noise',
-    difficulty: 'easy',
-    prerequisites: ['noise/white-noise'],
-    formulaIds: ['white-noise-psd', 'thermal-noise'],
-    statement: (
-      <p>
-        Έστω ΤΔ <InlineMath>N(t)</InlineMath> θερμικού θορύβου. Πόση είναι η
-        φασματική πυκνότητα ισχύος του;
-      </p>
-    ),
-    solution: (
-      <BlockMath>{'S_N(f) = \\frac{N_0}{2} = \\frac{kT}{2} \\quad \\text{(W/Hz, διπλής όψεως, σταθερή)}'}</BlockMath>
-    ),
-  },
-  {
-    id: 'jun25-th1-10',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 1.10',
-    weight: 13,
-    title: 'Λευκός θόρυβος μέσα από LPF + HPF',
-    topic: 'noise',
-    difficulty: 'medium',
-    prerequisites: ['noise/through-filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandpass-noise-r'],
-    statement: (
-      <p>
-        Για τον προηγούμενο θερμικό θόρυβο, θεωρήστε ότι εισέρχεται σε ένα
-        βαθυπερατό φίλτρο με συχνότητα αποκοπής <InlineMath>{'f_c = W'}</InlineMath>{' '}
-        και ένα υψιπερατό φίλτρο με συχνότητα αποκοπής{' '}
-        <InlineMath>{'f_c = 10W'}</InlineMath>. Σχεδιάστε (1) το φάσμα εξόδου
-        στα δύο φίλτρα και (2) τη χρονική απόκριση του θορύβου στην έξοδο
-        των φίλτρων.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>(1) Φάσμα εξόδου:</p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <strong>LPF:</strong> rect στις{' '}
-            <InlineMath>{'|f| \\leq W'}</InlineMath> με ύψος{' '}
-            <InlineMath>{'N_0/2'}</InlineMath>. Τα υπόλοιπα 0.
-          </li>
-          <li>
-            <strong>HPF:</strong> δύο rects στις{' '}
-            <InlineMath>{'|f| \\geq 10W'}</InlineMath> με ύψος{' '}
-            <InlineMath>{'N_0/2'}</InlineMath> (μέχρι το άπειρο — μη
-            φυσικό· πρακτικά μέχρι το BW του δέκτη).
-          </li>
-        </ul>
-        <p>(2) Autocorrelation:</p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <strong>LPF:</strong>{' '}
-            <InlineMath>{'R_Y(\\tau) = N_0 W \\mathrm{sinc}(2W\\tau)'}</InlineMath>{' '}
-            — sinc, πρώτη ρίζα στο <InlineMath>{'1/(2W)'}</InlineMath>.
-          </li>
-          <li>
-            <strong>HPF:</strong> Δ-spike μείον bandlimited (πρακτικά
-            <InlineMath>{'\\delta(\\tau)'}</InlineMath> μείον slow sinc) —
-            <em>«γρήγορος» θόρυβος</em>, μικρή μνήμη.
-          </li>
-        </ul>
-        <p>
-          Output ισχύς: <InlineMath>{'P_Y^{LPF} = N_0 W'}</InlineMath>·{' '}
-          <InlineMath>{'P_Y^{HPF}'}</InlineMath> εξαρτάται από το άνω cutoff
-          του HPF (θεωρητικά άπειρη — προφανώς μη φυσικό για ιδανικό HPF).
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'jun25-th2',
-    origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 2',
-    weight: 25,
-    title: 'AM Multiplexing — sinc(Wt) DSB-SC + sinc(6Wt) DSB',
-    topic: 'am',
+    source: 'june-2023',
     difficulty: 'hard',
-    prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/conventional', 'am/modulator-demodulator'],
-    formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect'],
-    statement: (
-      <p>
-        Έστω τα δύο βασικά σήματα πληροφορίας{' '}
-        <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και{' '}
-        <InlineMath>{'k(t) = \\mathrm{sinc}(6Wt)'}</InlineMath>. Το{' '}
-        <InlineMath>m</InlineMath> διαμορφώνεται κατά AM-DSB-SC με φέρον{' '}
-        <InlineMath>{'f_1'}</InlineMath> και το <InlineMath>k</InlineMath>{' '}
-        κατά AM-DSB με φέρον <InlineMath>{'f_2 = n f_1'}</InlineMath>.{' '}
-        (1) Μαθηματική περιγραφή κάθε σήματος + φάσμα πλάτους. (2) n για
-        non-overlap. (3) Φασματική απόκριση πολυπλεγμένου. (4) Συνολική
-        ενέργεια. (5) Δυνατότητα detection με envelope detector + BPF
-        μόνο. (6) Σχεδιασμός κυκλώματος δέκτη.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>Bandwidths:</strong>{' '}
-          <InlineMath>{'M(f) = (1/W)\\Pi(f/W)'}</InlineMath> →{' '}
-          <InlineMath>{'|f| \\leq W/2'}</InlineMath>.{' '}
-          <InlineMath>{'K(f) = (1/(6W))\\Pi(f/(6W))'}</InlineMath> →{' '}
-          <InlineMath>{'|f| \\leq 3W'}</InlineMath>.
-        </p>
-        <p><strong>(1)</strong> Σήματα:</p>
-        <BlockMath>{'x_m(t) = m(t)\\cos(2\\pi f_1 t) \\quad \\text{(DSB-SC, χωρίς carrier)}'}</BlockMath>
-        <BlockMath>{'x_k(t) = [A_c + k(t)]\\cos(2\\pi f_2 t) \\quad \\text{(DSB συμβατικό, με carrier)}'}</BlockMath>
-        <p>
-          Φάσματα: rect γύρω από <InlineMath>{'\\pm f_1'}</InlineMath>{' '}
-          (πλάτους <InlineMath>{'W/2'}</InlineMath>· για DSB-SC χωρίς
-          impulse στον carrier), rect γύρω από{' '}
-          <InlineMath>{'\\pm f_2 = \\pm n f_1'}</InlineMath> (πλάτους{' '}
-          <InlineMath>{'3W'}</InlineMath>· για DSB με impulse στον
-          carrier).
-        </p>
-        <p>
-          <strong>(2) Non-overlap:</strong> κανάλι 1 πιάνει από{' '}
-          <InlineMath>{'f_1 - W/2'}</InlineMath> έως{' '}
-          <InlineMath>{'f_1 + W/2'}</InlineMath>· κανάλι 2 από{' '}
-          <InlineMath>{'n f_1 - 3W'}</InlineMath> έως{' '}
-          <InlineMath>{'n f_1 + 3W'}</InlineMath>. Συνθήκη:
-        </p>
-        <BlockMath>{'n f_1 - 3W \\geq f_1 + W/2 \\Rightarrow n \\geq 1 + \\frac{7W/2}{f_1}'}</BlockMath>
-        <p>
-          (Για <InlineMath>{'f_1 \\gg W'}</InlineMath>, αρκεί
-          <InlineMath>{'n \\geq 2'}</InlineMath> πρακτικά, αλλά ακριβώς
-          εξαρτάται από την σχέση <InlineMath>{'f_1 / W'}</InlineMath>.)
-        </p>
-        <p>
-          <strong>(3)</strong> <InlineMath>{'G(f) = X_m(f) + X_k(f)'}</InlineMath>{' '}
-          — δύο rect ζευγάρια στις <InlineMath>{'\\pm f_1, \\pm f_2'}</InlineMath>,
-          μαζί με carrier impulses στα <InlineMath>{'\\pm f_2'}</InlineMath>.
-        </p>
-        <p>
-          <strong>(4) Συνολική ενέργεια:</strong> Parseval. Για το{' '}
-          <InlineMath>{'x_m'}</InlineMath>:{' '}
-          <InlineMath>{'\\int |X_m|^2 df = (1/W^2)\\cdot 2\\cdot W/2 \\cdot 1/4 = ...'}</InlineMath>{' '}
-          (συγκεκριμένος υπολογισμός εξαρτάται από <InlineMath>{'A_c, A_m'}</InlineMath>).
-          Για παρόμοιο υπολογισμό για{' '}
-          <InlineMath>{'x_k'}</InlineMath> με τον carrier impulse να
-          συνεισφέρει <InlineMath>{'A_c^2/2'}</InlineMath>.
-        </p>
-        <p>
-          <strong>(5) Detection με envelope detector + BPF:</strong>{' '}
-          Μόνο το <InlineMath>{'x_k'}</InlineMath> (DSB συμβατικό AM) μπορεί,
-          γιατί έχει carrier και εφόσον <InlineMath>{'\\mu \\leq 1'}</InlineMath>{' '}
-          το envelope ταυτίζεται με το <InlineMath>{'A_c + k(t)'}</InlineMath>.
-          Το <InlineMath>{'x_m'}</InlineMath> (DSB-SC) <strong>δεν</strong>{' '}
-          μπορεί — απαιτεί coherent demod.
-        </p>
-        <p>
-          <strong>(6) Δέκτης</strong>: Antenna → BPF γύρω από{' '}
-          <InlineMath>{'f_2'}</InlineMath> (κεντρική συχνότητα{' '}
-          <InlineMath>{'f_2'}</InlineMath>, BW <InlineMath>{'6W'}</InlineMath>{' '}
-          ≥ Carson) → Envelope detector (διοδος + RC) → DC blocker → Output.
-          Το BPF πρέπει να αποκόπτει το <InlineMath>{'x_m'}</InlineMath>{' '}
-          εντελώς (καλά διαχωρισμένα φάσματα με non-overlap από βήμα 2).
-        </p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2023-June-VZ/Algo-June-2023.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'jun25-th3-fm',
+    id: 'exam-sept-2023',
+    title: 'Εξεταστική Σεπτεμβρίου 2023 (Ζησιμόπουλος)',
+    topic: 'graphs',
     origin: 'past-exam',
-    source: 'june-2025',
-    problemNumber: 'ΘΕΜΑ 3',
-    weight: 25,
-    title: 'FM στα 90 MHz με αλλαγή bandwidth + RF φιλτράρισμα',
-    topic: 'fm',
+    source: 'sept-2023',
     difficulty: 'hard',
-    prerequisites: ['fm/idea', 'fm/bessel', 'fm/carson'],
-    formulaIds: ['fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-power'],
-    statement: (
-      <p>
-        FM modulator με{' '}
-        <InlineMath>{'m(t) = 2\\cos(2\\pi\\cdot 2000\\,t)'}</InlineMath> Volt,{' '}
-        <InlineMath>{'K_f = 1'}</InlineMath> kHz/V. Φέρον στα 90 MHz, ενεργό
-        bandwidth <InlineMath>{'B_1 = 16'}</InlineMath> kHz. (1) Πόσες
-        αρμονικές στο ενεργό εύρος ζώνης. (2) Δείκτης β₁. (3) Ισχύς FM σήματος.
-        (4) Για να μπει σε <InlineMath>{'B_2 = 8'}</InlineMath> kHz χωρίς να
-        αλλάξει η <InlineMath>{'f_m'}</InlineMath> και <InlineMath>{'K_f'}</InlineMath>,
-        τι πρέπει να συμβεί στο πλάτος του message; (5) RF φίλτρο{' '}
-        <InlineMath>{'f_{RF} = 90'}</InlineMath> MHz,{' '}
-        <InlineMath>{'B_{RF} = 4'}</InlineMath> kHz: πόσες αρμονικές περνούν αν{' '}
-        <InlineMath>{'B_2 = 8'}</InlineMath> kHz; (6) Ποσοστό ισχύος εξόδου.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>(1)</strong> <InlineMath>{'\\Delta f = K_f \\max|m| = 1\\cdot 2 = 2'}</InlineMath>{' '}
-          kHz, <InlineMath>{'f_m = 2'}</InlineMath> kHz, β₁ = 1. Carson:{' '}
-          <InlineMath>{'B_{Carson} = 2(\\beta+1)f_m = 2\\cdot 2\\cdot 2 = 8'}</InlineMath>{' '}
-          kHz. Αλλά δίνεται <InlineMath>{'B_1 = 16'}</InlineMath> kHz · συνεπώς
-          αρμονικές n από{' '}
-          <InlineMath>{'-B_1/(2 f_m) = -4'}</InlineMath> έως{' '}
-          <InlineMath>{'+4'}</InlineMath>: <strong>9 αρμονικές</strong>{' '}
-          (carrier + 4 ζεύγη sidebands).
-        </p>
-        <p>
-          <strong>(2) β₁ = 1</strong> (όπως υπολογίστηκε).
-        </p>
-        <p>
-          <strong>(3)</strong>{' '}
-          <InlineMath>{'P_{FM} = A_c^2/2'}</InlineMath> — δεν δίνεται{' '}
-          <InlineMath>{'A_c'}</InlineMath>, οπότε γενική απάντηση. Αν π.χ.{' '}
-          <InlineMath>{'A_c = 1'}</InlineMath> → <InlineMath>{'P = 0.5'}</InlineMath> W.
-        </p>
-        <p>
-          <strong>(4) Για B₂ = 8 kHz</strong> (μισό από B₁), χρειάζεται
-          μικρότερο β. Από Carson: <InlineMath>{'B = 2(\\beta+1)f_m'}</InlineMath>,
-          με σταθερό <InlineMath>{'f_m = 2'}</InlineMath> kHz, νέο β:{' '}
-          <InlineMath>{'8 = 2(\\beta+1)\\cdot 2 \\Rightarrow \\beta = 1'}</InlineMath>.
-          Παρόμοιο! Αλλά το πραγματικό σήμα είχε β=1 και χρειαζόταν 16 kHz
-          να συμπεριλάβει τα ±4 sidebands. Για να χωρέσει σε 8 kHz μόνο τα
-          ±2 sidebands → χρειάζεται μικρότερο β. Από{' '}
-          <InlineMath>{'\\beta = K_f A_m / f_m'}</InlineMath> με σταθερά{' '}
-          <InlineMath>{'K_f, f_m'}</InlineMath>: <strong>μείωση
-          πλάτους message</strong> (π.χ. στο μισό → β=0.5).
-        </p>
-        <p>
-          <strong>(5)</strong> <InlineMath>{'B_{RF} = 4'}</InlineMath> kHz
-          γύρω από 90 MHz → αφήνει sidebands με{' '}
-          <InlineMath>{'|n| \\leq B_{RF}/(2 f_m) = 1'}</InlineMath>. Δηλαδή
-          <strong>3 αρμονικές</strong>: carrier + ±1 sb.
-        </p>
-        <p>
-          <strong>(6)</strong> Ποσοστό ισχύος = ποσοστό ολικής που
-          εμφανίζεται σε αυτές τις 3 αρμονικές. Για β=1:
-        </p>
-        <BlockMath>{'\\frac{J_0^2(1) + 2J_1^2(1)}{1} = 0.7656^2 + 2\\cdot 0.4401^2 = 0.586 + 0.387 = 97.4\\%'}</BlockMath>
-      </>
-    ),
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // ΠΡΟΟΔΟΣ A · ΜΑΪΟΣ 2025 (foundations + AM, ~10 problems)
-  // ═══════════════════════════════════════════════════════════════════════
-  {
-    id: 'pa25-th1-1',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 1.1',
-    weight: 3,
-    title: 'Σ/Λ — μορφή AM σήματος (DSB-SC vs conventional)',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal'],
-    statement: (
-      <p>
-        Σ/Λ: Το συμβατικά διαμορφωμένο κατά AM σήμα{' '}
-        <InlineMath>{'x(t) = [A_c\\cos(2\\pi t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
-        έχει αυτή την μορφή.
-      </p>
-    ),
-    solution: (
-      <p>
-        <strong>ΛΑΘΟΣ.</strong> Είναι DSB-SC. Συμβατικό AM:{' '}
-        <InlineMath>{'x = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>.
-      </p>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2023-Sept-VZ/',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'pa25-th1-2',
+    id: 'exam-june-2022',
+    title: 'Εξεταστική Ιουνίου 2022 (Ζησιμόπουλος)',
+    topic: 'dp',
     origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 1.2',
-    weight: 3,
-    title: 'Σ/Λ — cos είναι σήμα ισχύος',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: ['foundations/signals'],
-    statement: (
-      <p>
-        Σ/Λ: Το <InlineMath>{'m(t) = \\cos(2\\pi t)'}</InlineMath> είναι σήμα
-        ισχύος.
-      </p>
-    ),
-    solution: <p><strong>ΣΩΣΤΟ.</strong> P=1/2, ενέργεια άπειρη.</p>,
-  },
-  {
-    id: 'pa25-th1-3',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 1.3',
-    weight: 4,
-    title: 'Σ/Λ — λευκός θόρυβος Gauss',
-    topic: 'noise',
-    difficulty: 'medium',
-    prerequisites: ['noise/white-noise'],
-    statement: <p>Σ/Λ: Ο λευκός θόρυβος είναι ο θόρυβος του οποίου ακολουθεί την κατανομή Gauss.</p>,
-    solution: <p><strong>ΛΑΘΟΣ.</strong> «Λευκός» = επίπεδη PSD. «Gaussian» = κατανομή πλάτους. Διαφορετικά concepts.</p>,
-  },
-  {
-    id: 'pa25-th1-4',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 1.4',
-    weight: 5,
-    title: 'Σ/Λ — Bandwidth του M³(f)',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-transform'],
-    formulaIds: ['fourier-convolution'],
-    statement: (
-      <p>
-        Σ/Λ: Αν W είναι το φάσμα του βασικού σήματος <InlineMath>M(f)</InlineMath>,
-        το φάσμα του σήματος <InlineMath>{'G(f) = M^3(f)'}</InlineMath> είναι{' '}
-        <InlineMath>{'W^3'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>ΛΑΘΟΣ.</strong> Ο γραφή{' '}
-          <InlineMath>{'M^3(f)'}</InlineMath> έχει δύο εύλογες αναγνώσεις, και
-          <em>καμία</em> από τις δύο δεν δίνει <InlineMath>{'W^3'}</InlineMath>:
-        </p>
-        <ol className="ml-5 list-decimal text-fg-muted">
-          <li>
-            <strong>Pointwise κυβισμός του φάσματος</strong> (αυτό που γράφει
-            κυριολεκτικά ο τύπος): <InlineMath>{'G(f) = [M(f)]^3'}</InlineMath>.
-            Το <em>στήριγμα</em> δεν αλλάζει — όπου <InlineMath>M = 0</InlineMath>{' '}
-            έχουμε <InlineMath>{'M^3 = 0'}</InlineMath>. Bandwidth παραμένει{' '}
-            <strong>W</strong>.
-          </li>
-          <li>
-            <strong>Φάσμα του{' '}
-            <InlineMath>{'m^3(t)'}</InlineMath></strong> (η συνηθέστερη πρόθεση
-            σε exam questions). Πολλαπλασιασμός στον χρόνο = συνέλιξη στη
-            συχνότητα:{' '}
-            <InlineMath>{'\\mathcal{F}\\{m^3\\} = M * M * M'}</InlineMath>. Η
-            συνέλιξη <em>προσθέτει</em> τα στηρίγματα:{' '}
-            <InlineMath>{'W + W + W = 3W'}</InlineMath>.
-          </li>
-        </ol>
-        <p>
-          Σε καμία περίπτωση δεν προκύπτει <InlineMath>{'W^3'}</InlineMath>.
-          (Παγίδα: <em>convolution στον χρόνο</em> δίνει
-          <em> πολλαπλασιασμό στη συχνότητα</em> με ίδιο BW· η{' '}
-          <strong>convolution στη συχνότητα</strong> είναι αυτή που προσθέτει
-          BWs.)
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'pa25-th1-5',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 1.5',
-    weight: 5,
-    title: 'Σ/Λ — Envelope FS τριγωνικού παλμού',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-tri'],
-    statement: <p>Σ/Λ: Η περιβάλλουσα του φάσματος πλάτους του Μ/Σ Fourier ενός τριγωνικού παλμού είναι ημιτονοειδής.</p>,
-    solution: (
-      <p>
-        <strong>ΛΑΘΟΣ.</strong> Είναι <strong>sinc²</strong> (από{' '}
-        <InlineMath>{'\\Lambda(t/T) \\leftrightarrow T\\,\\mathrm{sinc}^2(fT)'}</InlineMath>).
-        Δεν είναι ημιτονοειδής.
-      </p>
-    ),
-  },
-  {
-    id: 'pa25-th2-1',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 2.1',
-    weight: 5,
-    title: 'Λόγοι διαμόρφωσης — βασικοί',
-    topic: 'modulation',
-    difficulty: 'easy',
-    prerequisites: ['am/overview'],
-    statement: <p>Αναφέρετε τους βασικούς λόγους για τους οποίους επιτελούμε διαμόρφωση στα προς μετάδοση τηλεπικοινωνιακά συστήματα.</p>,
-    solution: (
-      <ol className="ml-5 list-decimal text-fg-muted">
-        <li>Αντενα μέγεθος (λ/4)</li>
-        <li>FDM multiplexing</li>
-        <li>Αποδοτική χρήση φάσματος</li>
-        <li>Ανοσία θορύβου</li>
-        <li>Κανονιστικά πλαίσια</li>
-      </ol>
-    ),
-  },
-  {
-    id: 'pa25-th2-2',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 2.2',
-    weight: 5,
-    title: 'Σχεδίαση AM σήματος cos(8πt) με 2sin(2πt)',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal', 'am-mu'],
-    statement: <p>Σχεδιάστε το διαμορφωμένο κατά AM σήμα όταν το φέρον είναι <InlineMath>{'c(t) = \\cos(8\\pi t)'}</InlineMath> και το σήμα πληροφορίας <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.</p>,
-    solution: (
-      <>
-        <p>
-          <InlineMath>{'A_c = 1, f_c = 4'}</InlineMath> Hz,{' '}
-          <InlineMath>{'A_m = 2, f_m = 1'}</InlineMath> Hz.
-        </p>
-        <BlockMath>{'x(t) = [1 + 2\\sin(2\\pi t)]\\cos(8\\pi t)'}</BlockMath>
-        <p>
-          <InlineMath>{'\\mu = A_m/A_c = 2/1 = 2 > 1'}</InlineMath> →{' '}
-          <strong>overmodulation</strong>. Η περιβάλλουσα{' '}
-          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath> διασταυρώνει το μηδέν
-          (φτάνει από <InlineMath>-1</InlineMath> έως{' '}
-          <InlineMath>+3</InlineMath>) — phase reversals ορατά στο waveform.
-        </p>
-        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
-          <strong>⚠️ Παγίδα:</strong> ο modulation index είναι λόγος{' '}
-          <em>πλατών</em> (<InlineMath>{'A_m / A_c'}</InlineMath>), όχι{' '}
-          <InlineMath>{'A_m / f_c'}</InlineMath>. Σε κυκλοφορούσες λύσεις
-          εμφανίζεται «<InlineMath>{'\\mu = 2/4 = 1/2'}</InlineMath>» —
-          διαστατικά λάθος (διαιρεί πλάτος με συχνότητα). Το σωστό είναι{' '}
-          <InlineMath>{'\\mu = 2'}</InlineMath>, και η περιβάλλουσα στο
-          σχεδιάγραμμα όντως πέφτει αρνητική, που το επιβεβαιώνει.
-        </div>
-      </>
-    ),
-  },
-  {
-    id: 'pa25-th2-4',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 2.4',
-    weight: 6,
-    title: 'Ισχύς Asin(2πf₁t) + Bcos(2πf₂t) + Ccos(2πf₃t)',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['parseval-power'],
-    statement: <p>Έστω σήμα <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με <InlineMath>{'f_1 \\neq f_2 \\neq f_3'}</InlineMath>. Ισχύς;</p>,
-    solution: <BlockMath>{'P = \\frac{A^2}{2} + \\frac{B^2}{2} + \\frac{C^2}{2}'}</BlockMath>,
-  },
-  {
-    id: 'pa25-th2-5',
-    origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 2.5',
-    weight: 8,
-    title: 'AM ενός Σ ncos(2πnt), n=1..8 — αρμονικές',
-    topic: 'am',
+    source: 'june-2022',
     difficulty: 'hard',
-    prerequisites: ['am/conventional', 'foundations/fourier-series'],
-    formulaIds: ['am-signal', 'am-spectrum'],
-    statement: <p>Έστω σήμα βασικής ζώνης <InlineMath>{'x(t) = \\sum_{n=1}^{8} n\\cos(2\\pi n t)'}</InlineMath>. Σχεδιάστε το φάσμα πλάτους βασικής ζώνης και υπολογίστε πόσες αρμονικές έχει το φάσμα πλάτους του διαμορφωμένου κατά συμβατικό AM του <InlineMath>x(t)</InlineMath>.</p>,
-    solution: (
-      <>
-        <p>
-          <strong>Baseband:</strong> 8 αρμονικές στις 1, 2, ..., 8 Hz, με
-          πλάτη <InlineMath>{'n/2'}</InlineMath> καθεμία (impulses στις
-          <InlineMath>{'\\pm n'}</InlineMath>).
-        </p>
-        <p>
-          <strong>AM</strong>:{' '}
-          <InlineMath>{'[A_c + x(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
-          → στις θετικές συχνότητες έχει: 1 carrier στο{' '}
-          <InlineMath>{'f_c'}</InlineMath> + 8 USB στις{' '}
-          <InlineMath>{'f_c + 1, ..., f_c + 8'}</InlineMath> + 8 LSB στις{' '}
-          <InlineMath>{'f_c - 1, ..., f_c - 8'}</InlineMath>. Σύνολο{' '}
-          <strong>17 αρμονικές</strong> στις θετικές συχνότητες (συμμετρικά
-          άλλες 17 στις αρνητικές).
-        </p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2022-June-VZ/Algo_june_2022.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'pa25-th3-mux',
+    id: 'exam-sept-2022',
+    title: 'Εξεταστική Σεπτεμβρίου 2022 (Ζησιμόπουλος)',
+    topic: 'graphs',
     origin: 'past-exam',
-    source: 'proodos-a-2025',
-    problemNumber: 'ΘΕΜΑ 3',
-    weight: 25,
-    title: 'AM-USSB Multiplexing — sinc(2Wt) + Π(4Wt)',
-    topic: 'am',
+    source: 'sept-2022',
     difficulty: 'hard',
-    prerequisites: ['am/multiplexing', 'am/ssb'],
-    formulaIds: ['ssb-signal', 'fourier-pair-rect'],
-    statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(4Wt)'}</InlineMath>. Διαμορφώνονται κατά AM-USSB με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) <InlineMath>{'f_1, f_2'}</InlineMath> σχέση με W για non-overlap. (3) Σχεδιασμός G(f).</p>,
-    solution: (
-      <>
-        <p>
-          <strong>BW</strong>: <InlineMath>{'M(f) = (1/(2W))\\Pi(f/(2W))'}</InlineMath> →{' '}
-          <InlineMath>{'|f| \\leq W'}</InlineMath>. <InlineMath>{'K(f) = (1/(4W))\\mathrm{sinc}(f/(4W))'}</InlineMath>{' '}
-          → πρώτη ρίζα στα <InlineMath>{'|f| = 4W'}</InlineMath>.
-        </p>
-        <p>
-          <strong>USSB</strong>: κρατά μόνο upper sideband. Κάθε καναλιού:{' '}
-          <InlineMath>{'X_1'}</InlineMath> πιάνει <InlineMath>{'[f_1, f_1 + W]'}</InlineMath>,{' '}
-          <InlineMath>{'X_2'}</InlineMath> πιάνει <InlineMath>{'[f_2, f_2 + 4W]'}</InlineMath>.
-        </p>
-        <p>
-          <strong>Non-overlap</strong>:{' '}
-          <InlineMath>{'f_2 \\geq f_1 + W'}</InlineMath>. Πιο αυστηρά για
-          guard band: <InlineMath>{'f_2 \\geq f_1 + W + \\text{guard}'}</InlineMath>.
-          Ελάχιστο: <InlineMath>{'f_1 \\geq W'}</InlineMath> (για να μην
-          πέσει στα αρνητικά). Πρακτικά:{' '}
-          <InlineMath>{'f_1 \\gg W, f_2 \\gg f_1 + W'}</InlineMath>.
-        </p>
-      </>
-    ),
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // ΠΡΟΟΔΟΣ B · ΜΑΪΟΣ 2025 (full + nonlinear AM, ~12 problems)
-  // ═══════════════════════════════════════════════════════════════════════
-  {
-    id: 'pb25-th1-1',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 1.1',
-    weight: 3,
-    title: 'Σ/Λ — μορφή AM (σωστή)',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal'],
-    statement: <p>Σ/Λ: Το συμβατικά διαμορφωμένο κατά AM σήμα <InlineMath>{'x(t) = [A_c + \\cos(2\\pi t)]\\cos(2\\pi f_c t)'}</InlineMath> έχει αυτή τη μορφή.</p>,
-    solution: <p><strong>ΣΩΣΤΟ.</strong> Carrier <InlineMath>{'A_c'}</InlineMath> προστιθέμενος στο message <InlineMath>{'\\cos(2\\pi t)'}</InlineMath>, μετά πολλαπλασιασμός με carrier oscillation. Καθαρή conventional AM.</p>,
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2022-Sept-VZ/',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'pb25-th1-2',
+    id: 'exam-june-2021',
+    title: 'Εξεταστική Ιουνίου 2021 (Ζησιμόπουλος)',
+    topic: 'dp',
     origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 1.2',
-    weight: 3,
-    title: 'Σ/Λ — cos είναι σήμα ενέργειας',
-    topic: 'foundations',
-    difficulty: 'easy',
-    prerequisites: ['foundations/signals'],
-    statement: <p>Σ/Λ: Το <InlineMath>{'m(t) = \\cos(2\\pi t)'}</InlineMath> είναι σήμα ενέργειας.</p>,
-    solution: <p><strong>ΛΑΘΟΣ.</strong> Σήμα ισχύος. Ενέργεια άπειρη επειδή είναι περιοδικό μη-μηδενικό.</p>,
-  },
-  {
-    id: 'pb25-th1-3',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 1.3',
-    weight: 4,
-    title: 'Σ/Λ — θερμικός θόρυβος Gauss',
-    topic: 'noise',
-    difficulty: 'medium',
-    prerequisites: ['noise/sources', 'noise/white-noise'],
-    statement: <p>Σ/Λ: Ο θερμικός θόρυβος είναι ο θόρυβος του οποίου η φασματική πυκνότητα ισχύος ακολουθεί την κατανομή Gauss.</p>,
-    solution: <p><strong>ΛΑΘΟΣ.</strong> Η PSD του θερμικού θορύβου είναι <strong>επίπεδη</strong> (λευκός). Η κατανομή <em>πλάτους</em> είναι Gaussian, αλλά αυτό είναι ξεχωριστή ιδιότητα από την PSD.</p>,
-  },
-  {
-    id: 'pb25-th1-4',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 1.4',
-    weight: 5,
-    title: 'Σ/Λ — M³(f) bandwidth',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-transform'],
-    formulaIds: ['fourier-convolution'],
-    statement: <p>Σ/Λ: Αν W είναι το φάσμα του M(f), το φάσμα του G(f)=M³(f) είναι W³.</p>,
-    solution: (
-      <>
-        <p>
-          <strong>ΛΑΘΟΣ.</strong> Δύο εύλογες αναγνώσεις του{' '}
-          <InlineMath>{'M^3(f)'}</InlineMath>, καμία δεν δίνει{' '}
-          <InlineMath>{'W^3'}</InlineMath>:
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <strong>Pointwise κυβισμός:</strong>{' '}
-            <InlineMath>{'[M(f)]^3'}</InlineMath> — ίδιο στήριγμα με το{' '}
-            <InlineMath>M(f)</InlineMath>, BW = <strong>W</strong>.
-          </li>
-          <li>
-            <strong>Φάσμα του{' '}
-            <InlineMath>{'m^3(t)'}</InlineMath>:</strong>{' '}
-            <InlineMath>{'M * M * M'}</InlineMath> (συνέλιξη <em>στη συχνότητα</em>{' '}
-            από πολλαπλασιασμό στον χρόνο), BW = <strong>3W</strong>.
-          </li>
-        </ul>
-        <p>
-          Παγίδα: convolution <em>στον χρόνο</em> δίνει πολλαπλασιασμό στη
-          συχνότητα <em>με ίδιο BW</em>. Η συχνοτική συνέλιξη (από πολ/μο στον
-          χρόνο) είναι αυτή που προσθέτει BWs.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: 'pb25-th1-5',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 1.5',
-    weight: 5,
-    title: 'Σ/Λ — Envelope FS τριγωνικού = συνημιτονοειδής',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-tri'],
-    statement: <p>Σ/Λ: Η περιβάλλουσα του φάσματος πλάτους του Μ/Σ Fourier ενός τριγωνικού παλμού είναι συνημιτονοειδής.</p>,
-    solution: <p><strong>ΛΑΘΟΣ.</strong> Είναι <InlineMath>{'\\mathrm{sinc}^2'}</InlineMath>, όχι ημιτονο/συνημιτονοειδής.</p>,
-  },
-  {
-    id: 'pb25-th2-1',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 2.1',
-    weight: 5,
-    title: 'Λόγοι DSB-SC διαμόρφωσης',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/dsb-sc'],
-    statement: <p>Αναφέρετε τους βασικούς λόγους για τους οποίους επιτελούμε AM-DSB-SC διαμόρφωση στα προς μετάδοση τηλεπικοινωνιακά συστήματα.</p>,
-    solution: (
-      <ol className="ml-5 list-decimal text-fg-muted">
-        <li><strong>Power efficiency</strong>: η = 100% (όλη η ισχύς στις sidebands, καθόλου spent στον carrier).</li>
-        <li><strong>Ίδιο bandwidth</strong> με AM (2W) αλλά καλύτερη ενεργειακή απόδοση.</li>
-        <li>Στρατιωτικές/ασφαλείς εφαρμογές όπου η εξοικονόμηση ισχύος είναι κρίσιμη.</li>
-        <li>Stereo FM L−R sub-carrier είναι DSB-SC.</li>
-        <li>NTSC chrominance ήταν DSB-SC.</li>
-      </ol>
-    ),
-  },
-  {
-    id: 'pb25-th2-2',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 2.2',
-    weight: 5,
-    title: 'AM σχεδίαση cos(8πt) με 2sin(2πt)',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal'],
-    statement: <p>Σχεδιάστε το διαμορφωμένο κατά AM σήμα όταν <InlineMath>{'c(t) = \\cos(8\\pi t)'}</InlineMath> και <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.</p>,
-    solution: (
-      <>
-        <p>
-          <InlineMath>{'A_c = 1,\\; f_c = 4'}</InlineMath> Hz,{' '}
-          <InlineMath>{'A_m = 2,\\; f_m = 1'}</InlineMath> Hz.
-        </p>
-        <BlockMath>{'x(t) = [1 + 2\\sin(2\\pi t)]\\cos(8\\pi t)'}</BlockMath>
-        <p>
-          <InlineMath>{'\\mu = A_m/A_c = 2 > 1'}</InlineMath> →{' '}
-          <strong>overmodulation</strong>. Περιβάλλουσα{' '}
-          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath> διασταυρώνει το 0
-          (κυμαίνεται από <InlineMath>-1</InlineMath> έως{' '}
-          <InlineMath>+3</InlineMath>), phase reversals ορατά.
-        </p>
-        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
-          <strong>⚠️ Παγίδα:</strong> ο modulation index είναι λόγος{' '}
-          <em>πλατών</em>, όχι «<InlineMath>{'A_m / f_c'}</InlineMath>». Σε
-          κυκλοφορούσες λύσεις εμφανίζεται «<InlineMath>{'\\mu = 2/4 = 1/2'}</InlineMath>»
-          (διαστατικά λάθος). Το σωστό είναι{' '}
-          <InlineMath>{'\\mu = 2'}</InlineMath>.
-        </div>
-      </>
-    ),
-  },
-  {
-    id: 'pb25-th2-3',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 2.3',
-    weight: 6,
-    title: 'AM-LSSB φάσμα με sinc message',
-    topic: 'am',
-    difficulty: 'medium',
-    prerequisites: ['am/ssb'],
-    formulaIds: ['ssb-signal', 'fourier-pair-rect'],
-    statement: <p>Σχεδιάστε το φάσμα του διαμορφωμένου κατά AM-LSSB σήματος όταν <InlineMath>{'c(t) = \\cos(2\\pi f_c t)'}</InlineMath> και <InlineMath>{'m(t) = 2\\,\\mathrm{sinc}(2Wt)'}</InlineMath>.</p>,
-    solution: (
-      <>
-        <p>
-          <InlineMath>{'M(f) = (1/W)\\Pi(f/(2W))'}</InlineMath> — rect στις{' '}
-          <InlineMath>{'|f| \\leq W'}</InlineMath>.
-        </p>
-        <p>
-          DSB-SC θα είχε rect γύρω από <InlineMath>{'\\pm f_c'}</InlineMath>{' '}
-          (πλάτους <InlineMath>{'\\pm W'}</InlineMath>). LSSB κρατά μόνο το{' '}
-          <strong>κάτω</strong> sideband:
-        </p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>Στις θετικές συχνότητες: rect από <InlineMath>{'f_c - W'}</InlineMath> έως <InlineMath>{'f_c'}</InlineMath>.</li>
-          <li>Στις αρνητικές: rect από <InlineMath>{'-f_c'}</InlineMath> έως <InlineMath>{'-f_c + W'}</InlineMath>.</li>
-        </ul>
-        <p>Bandwidth του διαμορφωμένου = W (μισό του DSB-SC).</p>
-      </>
-    ),
-  },
-  {
-    id: 'pb25-th2-4',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 2.4',
-    weight: 6,
-    title: 'Ισχύς Asin + Bcos + Ccos διαφορετικών συχνοτήτων',
-    topic: 'foundations',
-    difficulty: 'medium',
-    prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['parseval-power'],
-    statement: <p>Έστω <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με όλες τις f διαφορετικές. Ισχύς;</p>,
-    solution: <BlockMath>{'P = \\frac{A^2 + B^2 + C^2}{2}'}</BlockMath>,
-  },
-  {
-    id: 'pb25-th2-5',
-    origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 2.5',
-    weight: 8,
-    title: 'AM φάσμα Σ(10-n)cos(2πnt), n=1..6',
-    topic: 'am',
+    source: 'june-2021',
     difficulty: 'hard',
-    prerequisites: ['am/conventional', 'foundations/fourier-series'],
-    formulaIds: ['am-signal'],
-    statement: <p>Έστω <InlineMath>{'x(t) = \\sum_{n=1}^{6} (10-n)\\cos(2\\pi n t)'}</InlineMath>. Σχεδιάστε φάσμα βασικής ζώνης και υπολογίστε αρμονικές AM.</p>,
-    solution: (
-      <>
-        <p>
-          <strong>Baseband:</strong> impulses στις 1...6 Hz με ύψη{' '}
-          <InlineMath>{'(10-n)/2 = 4.5, 4, 3.5, 3, 2.5, 2'}</InlineMath>.
-        </p>
-        <p>
-          <strong>AM:</strong> 1 carrier + 6 USB + 6 LSB γύρω από{' '}
-          <InlineMath>{'\\pm f_c'}</InlineMath> = <strong>13 αρμονικές
-          ανά πλευρά</strong> (26 συνολικά συμπεριλαμβανομένων αρνητικών).
-        </p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2021-June-VZ/',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'pb25-th3-mux',
+    id: 'exam-distance-2020',
+    title: 'Εξ αποστάσεως εξεταστική 2020',
+    topic: 'graphs',
     origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 3',
-    weight: 25,
-    title: 'AM-DSB-SC Multiplexing — sinc(Wt) + Π(Wt)',
-    topic: 'am',
+    source: 'distance-2020',
     difficulty: 'hard',
-    prerequisites: ['am/multiplexing', 'am/dsb-sc'],
-    formulaIds: ['dsb-sc-signal'],
-    statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(Wt)'}</InlineMath> διαμορφώνονται κατά DSB-SC με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) Σχέση f για non-overlap. (3) G(f).</p>,
-    solution: (
-      <>
-        <p>
-          <strong>BW</strong>:{' '}
-          <InlineMath>{'M(f) = (1/W)\\Pi(f/W) \\Rightarrow |f| \\leq W/2'}</InlineMath>.{' '}
-          <InlineMath>{'K(f) = (1/W)\\mathrm{sinc}(f/W) \\Rightarrow'}</InlineMath>{' '}
-          πρώτη ρίζα στα <InlineMath>{'|f| = W'}</InlineMath>.
-        </p>
-        <p>
-          <strong>DSB-SC</strong>: rect γύρω από{' '}
-          <InlineMath>{'\\pm f_1'}</InlineMath> (πλάτος{' '}
-          <InlineMath>{'\\pm W/2'}</InlineMath>), sinc-shape γύρω από{' '}
-          <InlineMath>{'\\pm f_2'}</InlineMath> (πλάτος ~ <InlineMath>{'\\pm W'}</InlineMath>).
-        </p>
-        <p>
-          <strong>Non-overlap</strong>:{' '}
-          <InlineMath>{'f_2 - W \\geq f_1 + W/2 \\Rightarrow f_2 \\geq f_1 + 3W/2'}</InlineMath>.
-        </p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile:
+      '/material/exercises/oldtests/%CE%B1%CE%BB%CE%B3%CE%BF%CF%81%CE%B9%CE%B8%CE%BC%CE%BF%CE%B9-%CE%BA%CE%B1%CE%B9-%CF%80%CE%BF%CE%BB%CF%85%CF%80%CE%BB%CE%BF%CE%BA%CE%BF%CF%84%CE%B9%CF%84%CE%B1-%CE%B5%CE%BE-%CE%B1%CF%80%CE%BF%CF%83%CF%84%CE%B1%CF%83%CE%B5%CF%89%CF%82-2020.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'pb25-th4-nonlinear',
+    id: 'exam-sept-2020',
+    title: 'Σεπτέμβριος 2020 (Slot 2)',
+    topic: 'graphs',
     origin: 'past-exam',
-    source: 'proodos-b-2025',
-    problemNumber: 'ΘΕΜΑ 4',
-    weight: 25,
-    title: 'Μη γραμμικός AM transmitter — α, φάσμα, BPF',
-    topic: 'am',
+    source: 'sept-2020',
     difficulty: 'hard',
-    prerequisites: ['am/modulator-demodulator', 'foundations/filters'],
-    formulaIds: ['am-signal', 'fourier-pair-rect', 'fourier-modulation-theorem'],
-    statement: (
-      <p>
-        Σήμα <InlineMath>{'m(t) = \\alpha\\,\\Pi(2Wt)'}</InlineMath>{' '}
-        διαμορφώνεται με μη γραμμικό στοιχείο{' '}
-        <InlineMath>{'y(t) = x^2(t)'}</InlineMath>, κεντρική συχνότητα{' '}
-        <InlineMath>{'f_c \\gg W'}</InlineMath>,{' '}
-        <InlineMath>{'c(t) = \\cos(2\\pi f_c t)'}</InlineMath>. (1) Βρες α
-        ώστε ενέργεια του message = 1. (2) Φάσμα y(t). (3) Απόκριση
-        ζωνοπερατού φίλτρου ώστε <InlineMath>{'z(t) = m(t)\\cos(2\\pi f_c t)'}</InlineMath>.
-      </p>
-    ),
-    solution: (
-      <>
-        <p>
-          <strong>(1)</strong>{' '}
-          <InlineMath>{'m(t) = \\alpha\\Pi(2Wt)'}</InlineMath> έχει διάρκεια{' '}
-          <InlineMath>{'1/(2W)'}</InlineMath>, ύψος <InlineMath>α</InlineMath>:
-        </p>
-        <BlockMath>{'\\mathcal{E} = \\int |\\alpha|^2 \\Pi^2(2Wt)\\,dt = \\alpha^2 \\cdot \\tfrac{1}{2W} = 1 \\;\\Rightarrow\\; \\alpha = \\sqrt{2W}'}</BlockMath>
-        <p>
-          <strong>(2)</strong> Είσοδος μη γραμμικού:{' '}
-          <InlineMath>{'x(t) = m(t) + \\cos(2\\pi f_c t)'}</InlineMath>.
-          Έξοδος:
-        </p>
-        <BlockMath>{'y = x^2 = m^2 + 2m\\cos(2\\pi f_c t) + \\cos^2(2\\pi f_c t)'}</BlockMath>
-        <p>
-          Φασματικά: <InlineMath>{'m^2(t)'}</InlineMath> στο baseband (BW{' '}
-          <InlineMath>{'2W'}</InlineMath>),{' '}
-          <InlineMath>{'2m\\cos(2\\pi f_c t)'}</InlineMath> γύρω από{' '}
-          <InlineMath>{'\\pm f_c'}</InlineMath> με BW{' '}
-          <InlineMath>{'2W'}</InlineMath> (DSB-SC),{' '}
-          <InlineMath>{'\\cos^2 = (1 + \\cos(4\\pi f_c t))/2'}</InlineMath>{' '}
-          → DC + impulses στις <InlineMath>{'\\pm 2 f_c'}</InlineMath>.
-        </p>
-        <p>
-          <strong>(3) BPF</strong>: ζωνοπερατό γύρω από{' '}
-          <InlineMath>{'f_c'}</InlineMath> με BW <InlineMath>{'2W'}</InlineMath>{' '}
-          → απομονώνει τον όρο{' '}
-          <InlineMath>{'2m(t)\\cos(2\\pi f_c t)'}</InlineMath>. Για να
-          προκύψει <InlineMath>{'z(t) = m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
-          το BPF πρέπει να έχει gain <InlineMath>1/2</InlineMath> στο
-          passband:
-        </p>
-        <BlockMath>{'H(f) = \\tfrac{1}{2}\\Pi\\!\\left(\\frac{f - f_c}{2W}\\right) + \\tfrac{1}{2}\\Pi\\!\\left(\\frac{f + f_c}{2W}\\right)'}</BlockMath>
-      </>
-    ),
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // LECTURE EXERCISES (sessions 14, 15) — secondary priority
-  // ═══════════════════════════════════════════════════════════════════════
-  {
-    id: 'lec-am-1',
-    origin: 'lecture',
-    problemNumber: 'Session 14 — Άσκηση 1',
-    title: 'μ για διάφορα A_c (lecture)',
-    topic: 'am',
-    difficulty: 'easy',
-    prerequisites: ['am/conventional'],
-    formulaIds: ['am-mu', 'am-signal'],
-    statement: <p>m(t) = a sin(πt/4) με a=0.5, f_c=2 Hz. Βρες μ για A_c ∈ {'{2, 1, 0.75, 0.5, 0.33, 0.25}'}.</p>,
-    solution: (
-      <>
-        <p>μ = 0.5/A_c. Τιμές: 0.25, 0.5, 0.66, 1.0, 1.51, 2.0. Overmodulation για A_c &lt; 0.5.</p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile:
+      '/material/exercises/oldtests/%CE%91%CE%BB%CE%B3%CE%BF-2020-%CE%A3%CE%B5%CF%80%CF%84-1(Slot2).jpg',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'lec-fm-1',
-    origin: 'lecture',
-    problemNumber: 'Session 15 — Άσκηση 1',
-    title: 'PM/FM για m=αcos(2πf_m t) (lecture)',
-    topic: 'fm',
-    difficulty: 'easy',
-    prerequisites: ['fm/idea', 'fm/pm'],
-    formulaIds: ['fm-single-tone', 'pm-signal'],
-    statement: <p>m(t) = α cos(2π f_m t). Βρες τα διαμορφωμένα PM και FM σήματα.</p>,
-    solution: (
-      <>
-        <BlockMath>{'x_{PM} = A_c\\cos[2\\pi f_c t + \\beta_p\\cos(2\\pi f_m t)]'}</BlockMath>
-        <BlockMath>{'x_{FM} = A_c\\cos[2\\pi f_c t + \\beta_f\\sin(2\\pi f_m t)]'}</BlockMath>
-        <p>Διαφορά: cos vs sin (90° μετατόπιση από ολοκλήρωμα).</p>
-      </>
-    ),
-  },
-  {
-    id: 'lec-fm-3',
-    origin: 'lecture',
-    problemNumber: 'Session 15 — Άσκηση 3',
-    title: 'FM Bessel σε στενό BPF (lecture)',
-    topic: 'fm',
+    id: 'exam-feb-2019',
+    title: 'Φεβρουάριος 2019 (Ζησιμόπουλος)',
+    topic: 'graphs',
+    origin: 'past-exam',
+    source: 'feb-2019',
     difficulty: 'hard',
-    prerequisites: ['fm/bessel', 'fm/carson'],
-    formulaIds: ['fm-bessel-sidebands', 'fm-bessel-property', 'fm-power'],
-    statement: <p>m(t)=8cos(16πt), K_f=10 Hz/V, A_c=8, f_c=2 kHz. BPF f_c=2 kHz, BW=64 Hz. Ισχύς εξόδου & ποσοστό.</p>,
-    solution: (
-      <>
-        <p>β=10. BPF αφήνει |n|≤4. P_u ≈ 11.1 W. P_x = 32 W. Ποσοστό ~34.7%.</p>
-      </>
-    ),
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2019-Feb-VZ/2019.pdf',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'lec-rp-1',
-    origin: 'lecture',
-    problemNumber: 'Session 10 — Άσκηση 1',
-    title: 'Joint statistics δύο τυχαίων διαδικασιών (lecture)',
-    topic: 'random',
-    difficulty: 'medium',
-    prerequisites: ['randomness/random-processes', 'randomness/stationarity'],
-    formulaIds: ['random-mean', 'random-autocorr', 'random-cross'],
-    statement: <p>X(t)=Acos(2πf₁t+φ), φ~U[0,π]; Y(t)=αcos(2πf₂t), α~U[0,2]. φ,α ανεξάρτητα. Βρες m_X, m_Y, R_X, R_XY, C_XY.</p>,
-    solution: (
-      <>
-        <BlockMath>{'m_X = -\\frac{2A}{\\pi}\\sin(2\\pi f_1 t),\\; m_Y = \\cos(2\\pi f_2 t)'}</BlockMath>
-        <BlockMath>{'R_X = \\frac{A^2}{2}\\cos(2\\pi f_1(t_1-t_2))'}</BlockMath>
-        <BlockMath>{'R_{XY} = m_X m_Y,\\quad C_{XY} = 0'}</BlockMath>
-        <p>Uncorrelated αλλά όχι orthogonal (R_XY ≠ 0).</p>
-      </>
-    ),
+    id: 'exam-june-2018',
+    title: 'Ιούνιος 2018 (Ζησιμόπουλος)',
+    topic: 'greedy',
+    origin: 'past-exam',
+    source: 'june-2018',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2018-June-VZ/',
+    statement: null,
+    solution: null,
   },
   {
-    id: 'lec-rp-2',
-    origin: 'lecture',
-    problemNumber: 'Session 10 — Άσκηση 5',
-    title: 'Ergodicity random-phase cosine (lecture)',
-    topic: 'random',
+    id: 'exam-sept-2018',
+    title: 'Σεπτέμβριος 2018 (Ζησιμόπουλος)',
+    topic: 'dp',
+    origin: 'past-exam',
+    source: 'sept-2018',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2018-Sept-VZ/',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-feb-2017',
+    title: 'Φεβρουάριος 2017 (Ζησιμόπουλος)',
+    topic: 'graphs',
+    origin: 'past-exam',
+    source: 'feb-2017',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile:
+      '/material/exercises/oldtests/Zisimopoulos/2017-Feb-VZ/algo-fevr-2017-zisimopoulos.pdf',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-sept-2017',
+    title: 'Σεπτέμβριος 2017 (Ζησιμόπουλος)',
+    topic: 'greedy',
+    origin: 'past-exam',
+    source: 'sept-2017',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2017-Sept-VZ/',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-feb-2016',
+    title: 'Φεβρουάριος 2016 (Ζησιμόπουλος)',
+    topic: 'graphs',
+    origin: 'past-exam',
+    source: 'feb-2016',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2016-Feb-VZ/',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-june-2016',
+    title: 'Ιούνιος 2016 (Ζησιμόπουλος)',
+    topic: 'dp',
+    origin: 'past-exam',
+    source: 'june-2016',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2016-June-VZ/',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-june-2015',
+    title: 'Ιούνιος 2015 (Ζησιμόπουλος)',
+    topic: 'graphs',
+    origin: 'past-exam',
+    source: 'june-2015',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2015-June-VZ/2015june.pdf',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-midterm-2012',
+    title: 'Πρόοδος 2012 (Ζησιμόπουλος)',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    source: 'midterm-2012',
     difficulty: 'medium',
-    prerequisites: ['randomness/stationarity'],
-    formulaIds: ['random-phase-cosine', 'wss'],
-    statement: <p>Z(t)=Acos(2πft+θ), θ~U[0,2π]. Δείξε ότι είναι WSS και ergodic στον μέσο και την αυτοσυσχέτιση.</p>,
-    solution: (
-      <>
-        <p>m_Z=0, R_Z(τ)=(A²/2)cos(2πfτ) → WSS.</p>
-        <p>Time-avg → 0 = m_Z (sin φραγμένος, T→∞). Time-avg autocorr → R_Z. Ergodic ✓</p>
-      </>
-    ),
+    prerequisites: [
+      'lectures/L01-eisagogika',
+      'lectures/L02-asymptotic-analysis',
+      'lectures/L03-divide-and-conquer-i',
+      'lectures/L04-divide-and-conquer-ii',
+      'lectures/L05-divide-and-conquer-iii',
+      'lectures/L06-graphs-i',
+      'lectures/L07-graphs-ii',
+    ],
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2012-Midterm/2012-p.pdf',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-june-2011',
+    title: 'Ιούνιος 2011 (Ζησιμόπουλος)',
+    topic: 'graphs',
+    origin: 'past-exam',
+    source: 'june-2011',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2011-June-VZ/',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-sept-2011',
+    title: 'Σεπτέμβριος 2011 (Ζησιμόπουλος)',
+    topic: 'dp',
+    origin: 'past-exam',
+    source: 'sept-2011',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile:
+      '/material/exercises/oldtests/Zisimopoulos/2011-Sept-VZ/%CE%A3%CE%B5%CF%80%CF%84%CE%AD%CE%BC%CE%B2%CF%81%CE%B9%CE%BF%CF%82%202011-VZ.pdf',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-june-2010',
+    title: 'Ιούνιος 2010 (Ζησιμόπουλος)',
+    topic: 'greedy',
+    origin: 'past-exam',
+    source: 'june-2010',
+    difficulty: 'hard',
+    prerequisites: ALL_LECTURES,
+    sourceFile:
+      '/material/exercises/oldtests/Zisimopoulos/2010-June-VZ/proodos2010(zisimopoulos).pdf',
+    statement: null,
+    solution: null,
+  },
+  {
+    id: 'exam-midterm-2008',
+    title: 'Πρόοδος 2008 (Ζησιμόπουλος)',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    source: 'midterm-2008',
+    difficulty: 'medium',
+    prerequisites: [
+      'lectures/L01-eisagogika',
+      'lectures/L02-asymptotic-analysis',
+      'lectures/L03-divide-and-conquer-i',
+      'lectures/L04-divide-and-conquer-ii',
+      'lectures/L05-divide-and-conquer-iii',
+      'lectures/L06-graphs-i',
+    ],
+    sourceFile: '/material/exercises/oldtests/Zisimopoulos/2008-Midterm/2008.pdf',
+    statement: null,
+    solution: null,
   },
 ]

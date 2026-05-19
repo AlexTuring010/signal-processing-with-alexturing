@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "L03 · D&C I — Mergesort & Master Theorem",
+  description: "Το πρώτο σχήμα σχεδίασης: διαίρει και κυρίευε. Συγχωνευτική ταξινόμηση, αναδρομικές σχέσεις, και το Master Theorem ως «καρφί στο τοίχο» για ολόκληρη την οικογένεια.",
+}
+
+export const frontmatter = {
+  title: "L03 · D&C I — Mergesort & Master Theorem",
+  slug: "lectures/L03-divide-and-conquer-i",
+  order: 3,
+  prerequisites: ["lectures/L02-asymptotic-analysis"],
+  examWeight: 6,
+  estimatedReadTime: 0,
+  lastUpdated: '2026-05-19',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Divide & Conquer</span>
+  <span>·</span>
+  <span>Διάλεξη 3</span>
+</div>
+
+# L03 · D&C I — Mergesort & Master Theorem
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="lectures/L03-divide-and-conquer-i" />
+  <Bookmark id="lectures/L03-divide-and-conquer-i" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={{ pdf: "L03 - Διαίρει και Κυρίευε Ι (Συγχωνευτική Ταξινόμηση, Αναδρομικές Σχέσεις και Master Theorem).pdf" }}
+/>
+
+<Callout type="note">
+  Αυτή η διάλεξη είναι ακόμα **σκελετός**. Η αναλυτική επεξήγηση και οι
+  visualizations έρχονται σε επόμενο πέρασμα — δες το αντίστοιχο
+  `plans/L03-divide-and-conquer-i.md` για το roadmap. Στο μεταξύ, οι παρακάτω
+  ασκήσεις από φροντιστήρια και παλιά θέματα κουμπώνουν εδώ.
+</Callout>
+
+## Τι θα δούμε
+
+Το πρώτο σχήμα σχεδίασης: διαίρει και κυρίευε. Συγχωνευτική ταξινόμηση, αναδρομικές σχέσεις, και το Master Theorem ως «καρφί στο τοίχο» για ολόκληρη την οικογένεια.
+
+> **Το PDF της διάλεξης** βρίσκεται στο SourceDoc παραπάνω — άνοιξέ το
+> δίπλα στο κείμενο όσο διαβάζεις. Όταν προσθέσουμε αναλυτικές
+> εξηγήσεις σε αυτή τη σελίδα, θα ακολουθούν τη δομή του PDF διαφάνεια
+> προς διαφάνεια.
+
+<LectureExercises lectureSlug="lectures/L03-divide-and-conquer-i" />

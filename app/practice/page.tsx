@@ -128,71 +128,73 @@ export default function PracticePage() {
               Πρώτα διάβασε όλα τα θέματα και ξεκίνα από τα εύκολα.
             </li>
             <li>
-              Στις True/False προσοχή στην παγίδα{' '}
-              <em>«λευκός θόρυβος = Gaussian»</em> (ψευδές — διαφορετικά
-              concepts). →{' '}
+              <strong>Master Theorem:</strong> γρήγορα κατατάσσεις{' '}
+              <code>T(n) = aT(n/b) + f(n)</code> σε case 1/2/3. →{' '}
               <Link
-                href="/noise/white-noise"
+                href="/lectures/L03-divide-and-conquer-i"
                 className="text-accent hover:underline"
               >
-                Λευκός θόρυβος
+                L03 · D&C I
               </Link>
             </li>
             <li>
-              <strong>Carson:</strong> <code>B = 2(β+1)W</code> — μάθε το
-              απέξω. →{' '}
+              <strong>Dijkstra:</strong> δεν δουλεύει με αρνητικά βάρη — πήγαινε
+              Bellman-Ford. →{' '}
               <Link
-                href="/fm/carson"
+                href="/lectures/L08-graphs-iii"
                 className="text-accent hover:underline"
               >
-                Carson's rule
+                L08 · Shortest paths
               </Link>
             </li>
             <li>
-              <strong>AM efficiency:</strong> πάντα{' '}
-              <code>η ≤ 1/3 ≈ 33%</code> για conventional AM. →{' '}
+              <strong>Cut / cycle property:</strong> ο πυρήνας της απόδειξης
+              ορθότητας Prim/Kruskal. →{' '}
               <Link
-                href="/am/conventional"
+                href="/lectures/L09-graphs-iv"
                 className="text-accent hover:underline"
               >
-                Conventional AM
+                L09 · MST
               </Link>
             </li>
             <li>
-              <strong>Bessel zeros</strong> για carrier vanish: β ≈ 2.405,
-              5.520, 8.654. →{' '}
-              <Link href="/fm/bessel" className="text-accent hover:underline">
-                Bessel sidebands
+              <strong>Exchange argument:</strong> τυπικό σχήμα απόδειξης
+              βελτιστότητας άπληστου αλγορίθμου. →{' '}
+              <Link
+                href="/lectures/L11-greedy-i"
+                className="text-accent hover:underline"
+              >
+                L11 · Greedy I
               </Link>
             </li>
             <li>
-              <strong>Envelope detector RC:</strong>{' '}
-              <code>1/f_c ≪ RC ≪ 1/W</code>. →{' '}
+              <strong>DP recipe:</strong> ορισμός subproblem → recurrence →
+              base case → bottom-up πίνακας → ανάκτηση λύσης. →{' '}
               <Link
-                href="/am/modulator-demodulator"
+                href="/lectures/L14-dp-i"
                 className="text-accent hover:underline"
               >
-                Modulator/Demodulator
+                L14 · DP I
               </Link>
             </li>
             <li>
-              <strong>WSS:</strong> mean σταθερός + R_X(τ) εξαρτάται μόνο από
-              τ. →{' '}
+              <strong>0/1 vs unbounded knapsack:</strong> διαφορά μόνο στη
+              σειρά των δύο βρόχων. →{' '}
               <Link
-                href="/randomness/stationarity"
+                href="/lectures/L15-dp-ii"
                 className="text-accent hover:underline"
               >
-                Stationarity
+                L15 · DP II
               </Link>
             </li>
             <li>
-              <strong>S_Y(f) = |H(f)|² S_X(f)</strong> για κάθε LTI φίλτρο.
-              →{' '}
+              <strong>Pseudo-polynomial:</strong> γιατί το knapsack ΔΕΝ είναι
+              πραγματικά πολυωνυμικό. →{' '}
               <Link
-                href="/noise/through-filters"
+                href="/lectures/L15-dp-ii"
                 className="text-accent hover:underline"
               >
-                Noise through filters
+                L15 · DP II
               </Link>
             </li>
           </ul>

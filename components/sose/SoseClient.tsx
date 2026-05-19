@@ -127,12 +127,13 @@ export function SoseClient({ problems, totalExamWeight, topicTotals }: Props) {
   // Compute coverage stats live from solved set
   const stats = useMemo(() => {
     const perTopic: Record<Topic, number> = {
-      foundations: 0,
-      modulation: 0,
-      am: 0,
-      fm: 0,
-      random: 0,
-      noise: 0,
+      intro: 0,
+      asymptotics: 0,
+      'divide-conquer': 0,
+      graphs: 0,
+      'data-structures': 0,
+      greedy: 0,
+      dp: 0,
     }
     let solvedCount = 0
     let weightCovered = 0
