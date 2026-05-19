@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { getAuthCallbackUrl } from '@/lib/site-url'
 
 /**
  * Map the error-code values that can appear in `?error=...` on /sign-in to
@@ -45,8 +46,14 @@ function SignInForm() {
   const oauthInFlight = useRef(false)
   const supabase = createClient()
 
-  const redirectTo =
-    typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined
+  // Important: use the env-driven site URL (NEXT_PUBLIC_SITE_URL on
+  // Vercel) and NOT `window.location.origin` blindly. On Vercel, browsers
+  // load this page from the production host, but if a user mistypes the
+  // host or uses a custom domain not yet whitelisted by Supabase, the
+  // OAuth provider silently falls back to the Supabase project's *Site
+  // URL* — which used to be `http://localhost:3000` and bounced everyone
+  // back to localhost after a successful Google login. Centralizing here.
+  const redirectTo = getAuthCallbackUrl()
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
