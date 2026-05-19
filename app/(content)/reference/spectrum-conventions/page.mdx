@@ -8,7 +8,7 @@ export const frontmatter = {
   title: 'Συμβάσεις Φάσματος — μιγαδικές τιμές, αρνητικές συχνότητες, two-sided vs one-sided',
   slug: 'reference/spectrum-conventions',
   order: 97,
-  prerequisites: [],
+  prerequisites: ['foundations/fourier-transform', 'reference/complex-numbers'],
   examWeight: 3,
   estimatedReadTime: 7,
   lastUpdated: '2026-05-05',
@@ -16,6 +16,7 @@ export const frontmatter = {
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
 import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Foundations · Reference</span>
@@ -29,6 +30,8 @@ import { Bookmark } from '@/components/layout/Bookmark'
   <CompleteToggle slug="reference/spectrum-conventions" />
   <Bookmark id="reference/spectrum-conventions" />
 </div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
 <Callout type="note">
   Σελίδα **αναφοράς** — όχι μέρος της κύριας ροής. Απαντά τέσσερις ερωτήσεις που ξανακάνουν φοιτητές μόλις δουν για πρώτη φορά φάσμα: **τι ακριβώς επιστρέφει το $X(f)$** (μιγαδικοί αριθμοί), **τι σημαίνει αρνητική συχνότητα**, **γιατί το πλάτος μοιράζεται στα ±f₀** ενός cosine, και **ποια σύμβαση σχεδίασης χρησιμοποιείς πότε** (two-sided vs one-sided). Όλα προκύπτουν από ένα μαθηματικό γεγονός: τα complex exponentials.
