@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tamagotchi } from '@/components/pet/Tamagotchi'
 import { FindBanner } from '@/components/collectibles/FindBanner'
+import { AuthProvider } from '@/components/auth/AuthProvider'
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext', 'greek', 'greek-ext'],
@@ -52,11 +53,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#content" className="skip-link">
           Πήδα στο περιεχόμενο
         </a>
-        <Header />
-        <main id="content">{children}</main>
-        <Footer />
-        <Tamagotchi />
-        <FindBanner />
+        <AuthProvider>
+          <Header />
+          <main id="content">{children}</main>
+          <Footer />
+          <Tamagotchi />
+          <FindBanner />
+        </AuthProvider>
       </body>
     </html>
   )

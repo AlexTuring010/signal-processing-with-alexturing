@@ -150,14 +150,14 @@ DFS(G, s):
 
 ### Παράδειγμα BFS-επιπέδων
 
-<div className="my-6 overflow-x-auto rounded-lg border border-border bg-bg-soft/40 p-4">
+<div className="graph-canvas">
 <svg viewBox="0 0 700 360" className="w-full max-w-2xl" xmlns="http://www.w3.org/2000/svg">
   <style>{`
     .lvbar { fill: rgb(244 63 94 / 0.10); stroke: rgb(244 63 94); stroke-dasharray: 4,3; }
     .lvtxt { font: 700 13px ui-sans-serif, system-ui; fill: rgb(244 63 94); }
-    .nd { fill: rgb(var(--color-bg-elevated)); stroke: rgb(var(--color-accent)); stroke-width: 2; }
-    .lbl { font: 700 13px ui-sans-serif, system-ui; fill: rgb(var(--color-fg)); text-anchor: middle; dominant-baseline: middle; }
-    .ed { stroke: rgb(var(--color-fg-muted)); stroke-width: 1.5; }
+    .nd { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--accent)); stroke-width: 2; }
+    .lbl { font: 700 13px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; dominant-baseline: middle; }
+    .ed { stroke: rgb(var(--fg-muted)); stroke-width: 1.5; }
     .tree-edge { stroke: rgb(244 63 94); stroke-width: 2.5; }
   `}</style>
   {/* level bands */}
@@ -333,10 +333,6 @@ $$
 6. **Σφιχτή ανάλυση:** μην αρκείσαι σε $O(n^2)$ — με handshaking παίρνεις $O(n+m)$, που για αραιά γραφήματα είναι πολύ καλύτερο.
 </Recap>
 
-<NextUp
-  href="/lectures/L08-graphs-iii"
-  title="L08 · Γραφήματα ΙΙΙ — Εφαρμογές, Διμερότητα, Κατευθυνόμενα"
-  blurb="Εφαρμογές της διάσχισης: εύρεση διμερών γραφημάτων (2-colourability), κατευθυνόμενα γραφήματα, ισχυρή συνεκτικότητα, και εισαγωγή στο πρόβλημα συντομότερης διαδρομής με βάρη."
-/>
+<NextUp current="lectures/L07-graphs-ii" />
 
 <LectureExercises lectureSlug="lectures/L07-graphs-ii" />

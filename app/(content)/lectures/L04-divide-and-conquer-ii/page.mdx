@@ -160,15 +160,15 @@ inversions(A):
 
 Τα δύο πρώτα είδη μετρώνται **αναδρομικά**. Το ζητούμενο είναι: πώς μετράμε τα μικτά γρήγορα;
 
-<div className="my-6 overflow-x-auto rounded-lg border border-border bg-bg-soft/40 p-4">
+<div className="graph-canvas">
 <svg viewBox="0 0 760 220" className="w-full max-w-3xl" xmlns="http://www.w3.org/2000/svg">
   <style>{`
-    .arr-box { fill: rgb(var(--color-bg-elevated)); stroke: rgb(var(--color-border)); }
+    .arr-box { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--border)); }
     .arr-left { fill: rgb(244 63 94 / 0.18); stroke: rgb(244 63 94); }
     .arr-right { fill: rgb(56 189 248 / 0.18); stroke: rgb(56 189 248); }
-    .arr-text { font: 600 14px ui-sans-serif, system-ui; fill: rgb(var(--color-fg)); text-anchor: middle; }
-    .arr-label { font: 600 11px ui-sans-serif, system-ui; fill: rgb(var(--color-fg-muted)); text-anchor: middle; }
-    .arr-total { font: 700 14px ui-sans-serif, system-ui; fill: rgb(var(--color-accent)); text-anchor: middle; }
+    .arr-text { font: 600 14px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
+    .arr-label { font: 600 11px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+    .arr-total { font: 700 14px ui-sans-serif, system-ui; fill: rgb(var(--accent)); text-anchor: middle; }
   `}</style>
   <text x="380" y="20" className="arr-label">Πίνακας 11 στοιχείων</text>
   {[10,5,8,6,3,4,7,1,9,2,11].map((v,i) => (
@@ -425,14 +425,14 @@ karatsuba(x, y):                     // x, y με n ψηφία
 
 ### Δέντρο των τριών πολλαπλασιασμών
 
-<div className="my-6 overflow-x-auto rounded-lg border border-border bg-bg-soft/40 p-4">
+<div className="graph-canvas">
 <svg viewBox="0 0 700 280" className="w-full max-w-3xl" xmlns="http://www.w3.org/2000/svg">
   <style>{`
-    .knode { fill: rgb(var(--color-bg-elevated)); stroke: rgb(var(--color-border)); stroke-width: 1.5; }
+    .knode { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--border)); stroke-width: 1.5; }
     .kroot { fill: rgb(244 63 94 / 0.18); stroke: rgb(244 63 94); }
-    .ktxt { font: 600 13px ui-sans-serif, system-ui; fill: rgb(var(--color-fg)); text-anchor: middle; }
-    .kann { font: 500 11px ui-sans-serif, system-ui; fill: rgb(var(--color-fg-muted)); text-anchor: middle; }
-    .kline { stroke: rgb(var(--color-fg-subtle)); stroke-width: 1.5; fill: none; }
+    .ktxt { font: 600 13px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
+    .kann { font: 500 11px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+    .kline { stroke: rgb(var(--fg-subtle)); stroke-width: 1.5; fill: none; }
   `}</style>
   <rect x="270" y="20" width="160" height="50" rx="6" className="knode kroot" />
   <text x="350" y="42" className="ktxt">x · y</text>
@@ -491,10 +491,6 @@ $$T(n) = O(n^{\log_2 3}) = O(n^{1.585})$$
 5. **Σε όλα: το Master Theorem κάνει την ανάλυση μηχανική.** Δες $(a, b, d)$, σύγκρινε $d$ με $\log_b a$, διάλεξε case.
 </Recap>
 
-<NextUp
-  href="/lectures/L05-divide-and-conquer-iii"
-  title="L05 · D&C III — Closest pair of points"
-  blurb="Το γεωμετρικό πρόβλημα της εύρεσης του πλησιέστερου ζεύγους σημείων σε επίπεδο. Λύση σε O(n log n) με σαρωτική γραμμή και έξυπνο 'strip check'."
-/>
+<NextUp current="lectures/L04-divide-and-conquer-ii" />
 
 <LectureExercises lectureSlug="lectures/L04-divide-and-conquer-ii" />

@@ -690,6 +690,56 @@ html {
     box-shadow 240ms ease !important;
 }
 
+/* ------------------------------------------------------------------
+   Graph / diagram canvas — used by every <div className="graph-canvas">
+   wrapper around an inline SVG diagram in lecture MDX. Needs much more
+   contrast than `bg-bg-soft/40` so step-through traces, BFS trees and
+   weighted-edge graphs read cleanly against the deep-maroon dark theme.
+
+   Light mode: warm off-white panel (close to paper).
+   Dark mode:  much lifted surface — almost charcoal — with a soft inner
+               border so the graph reads like a printed insert.
+   ------------------------------------------------------------------ */
+.graph-canvas {
+  /* Override the theme palette inside this subtree only. Every SVG that
+     references rgb(var(--fg)) / rgb(var(--bg-elevated)) / rgb(var(--accent))
+     etc. inherits the light-mode values here — so technical diagrams read
+     like a printed insert regardless of the surrounding theme. */
+  --bg: 252 250 248;
+  --bg-soft: 245 241 241;
+  --bg-elevated: 255 254 254;
+  --fg: 28 18 20;
+  --fg-muted: 87 70 73;
+  --fg-subtle: 120 105 108;
+  --border: 212 198 201;
+  --border-strong: 184 168 172;
+  --accent: 159 18 57;
+  --accent-soft: 254 226 226;
+
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid rgb(var(--border-strong));
+  padding: 1rem;
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+}
+[data-theme='dark'] .graph-canvas {
+  /* Slightly warmer cream + a faint maroon outline so the panel reads as
+     intentional (a printed inset) against the deep dark theme. */
+  background-color: rgb(244 232 220);
+  border-color: rgb(170 100 120 / 0.55);
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.25);
+}
+/* Belt-and-suspenders: any plain SVG text without a `fill` rule still
+   reads as dark on the cream background. */
+.graph-canvas svg {
+  color: rgb(var(--fg));
+}
+.graph-canvas svg text:not([fill]):not([style*="fill"]) {
+  fill: rgb(var(--fg));
+}
+
 /* Subtle scrollbar in dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {
   width: 10px;
