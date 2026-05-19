@@ -9,12 +9,10 @@ import { buildSearchIndex } from '@/lib/search/build-index'
 import { createClient } from '@/lib/supabase/server'
 
 export async function Header() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
   const searchIndex = buildSearchIndex()
 
+  // Auth lookup is wrapped — a corrupted cookie or transient Supabase
+  // error must not crash the whole page. We just render anonymously.
   let menuUser: {
     id: string
     displayName: string
@@ -22,18 +20,27 @@ export async function Header() {
     isModerator: boolean
   } | null = null
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('display_name, avatar_url, role')
-      .eq('id', user.id)
-      .maybeSingle()
-    menuUser = {
-      id: user.id,
-      displayName: profile?.display_name ?? user.email?.split('@')[0] ?? 'Φοιτητής',
-      avatarUrl: profile?.avatar_url ?? null,
-      isModerator: profile?.role === 'moderator',
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('display_name, avatar_url, role')
+        .eq('id', user.id)
+        .maybeSingle()
+      menuUser = {
+        id: user.id,
+        displayName:
+          profile?.display_name ?? user.email?.split('@')[0] ?? 'Φοιτητής',
+        avatarUrl: profile?.avatar_url ?? null,
+        isModerator: profile?.role === 'moderator',
+      }
     }
+  } catch {
+    /* anonymous render — broken auth state isn't fatal here */
   }
 
   return (

@@ -1,22 +1,48 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Mail, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+
+/**
+ * Map the error-code values that can appear in `?error=...` on /sign-in to
+ * a friendly Greek message. Codes come from three sources:
+ *   - our own `/auth/callback` handler (`auth-failed`, `auth-bad-url`)
+ *   - Supabase OAuth errors (`flow_state_already_used`, `invalid_request`, ...)
+ *   - the OAuth provider's `error` field (`access_denied`, ...)
+ */
+function friendlyError(code: string | null): string | null {
+  if (!code) return null
+  switch (code) {
+    case 'auth-failed':
+      return 'Η σύνδεση απέτυχε. Δοκίμασε ξανά.'
+    case 'auth-bad-url':
+      return 'Κάτι πήγε στραβά με τον σύνδεσμο επιστροφής. Δοκίμασε ξανά.'
+    case 'flow_state_not_found':
+    case 'flow_state_already_used':
+      return 'Η σύνδεση έληξε ή χρησιμοποιήθηκε ήδη. Πάτα ξανά το κουμπί.'
+    case 'access_denied':
+      return 'Δεν παραχωρήθηκε άδεια από τον πάροχο. Αν δεν ήταν σκόπιμο, δοκίμασε ξανά.'
+    case 'invalid_request':
+      return 'Μη έγκυρο αίτημα σύνδεσης. Δοκίμασε ξανά.'
+    default:
+      return `Η σύνδεση απέτυχε (${code}). Δοκίμασε ξανά.`
+  }
+}
 
 function SignInForm() {
   const params = useSearchParams()
   const initialError = params.get('error')
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
-  const [error, setError] = useState<string | null>(
-    initialError === 'auth-failed'
-      ? 'Η σύνδεση απέτυχε. Δοκίμασε ξανά.'
-      : null,
-  )
+  const [error, setError] = useState<string | null>(friendlyError(initialError))
   const [loading, setLoading] = useState(false)
+  // Survives React 18 Strict Mode's double-effect. Prevents the OAuth
+  // handler from firing twice when a fast user double-clicks or when the
+  // dev runtime re-mounts the component.
+  const oauthInFlight = useRef(false)
   const supabase = createClient()
 
   const redirectTo =
@@ -37,40 +63,56 @@ function SignInForm() {
   }
 
   const handleGoogle = async () => {
+    // Hard guard against double-fire. The `flow_state_already_used` error
+    // happens when Supabase creates two OAuth flow states from two calls
+    // to `signInWithOAuth` and the user consumes only one of them.
+    if (oauthInFlight.current) return
+    oauthInFlight.current = true
     setLoading(true)
     setError(null)
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo,
-        // Explicit scopes — `openid` enables the OIDC flow Supabase prefers,
-        // `email profile` populates `user_metadata.full_name` / `avatar_url`
-        // so the profile auto-create trigger has values to write.
-        scopes: 'openid email profile',
-        // Refresh-token flow: `offline` asks Google to issue a refresh token,
-        // `prompt: consent` makes Google show the consent screen every time
-        // (without this, returning users skip consent and Google does NOT
-        // re-issue a refresh token if one was revoked).
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo,
+          // Explicit scopes — `openid` enables the OIDC flow Supabase
+          // prefers, `email profile` populates user_metadata so the
+          // profile auto-create trigger has values to write.
+          scopes: 'openid email profile',
+          // Refresh-token flow: `offline` asks Google to issue a refresh
+          // token, `prompt: consent` shows the consent screen every time
+          // (returning users otherwise skip consent and Google does NOT
+          // re-issue a refresh token if one was revoked).
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
-      },
-    })
-    if (error) {
-      setLoading(false)
-      // Friendly diagnostic for the most common config mistake — Google
-      // provider not enabled on the Supabase backend. Surfacing the raw
-      // error message ("Unsupported provider: provider is not enabled")
-      // is unhelpful for end users.
-      if (/provider is not enabled/i.test(error.message)) {
-        setError(
-          'Η σύνδεση μέσω Google δεν είναι ενεργοποιημένη ακόμα στον server. ' +
-          'Δοκίμασε προς το παρόν με magic link στο email σου.',
-        )
-      } else {
-        setError(error.message)
+      })
+      if (error) {
+        // Friendly diagnostics for the common config mistakes.
+        if (/provider is not enabled/i.test(error.message)) {
+          setError(
+            'Η σύνδεση μέσω Google δεν είναι ενεργοποιημένη ακόμα στον server. ' +
+              'Δοκίμασε προς το παρόν με magic link στο email σου.',
+          )
+        } else {
+          setError(error.message)
+        }
+        // Release the lock so the user can retry. The success path
+        // intentionally keeps it locked — we're about to leave the page.
+        oauthInFlight.current = false
+        setLoading(false)
       }
+    } catch (e) {
+      // Network blip, blocked popup, etc. Surface as a generic error.
+      oauthInFlight.current = false
+      setLoading(false)
+      setError(
+        e instanceof Error
+          ? `Η σύνδεση απέτυχε: ${e.message}`
+          : 'Η σύνδεση απέτυχε. Δοκίμασε ξανά.',
+      )
     }
   }
 
