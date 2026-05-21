@@ -1,8 +1,8 @@
-# signal-processing-with-alexturing
+# algorithms-with-steliosrotas
 
-An **interactive study companion** for the **K21 — Communication Systems** course at the University of Athens (Department of Informatics & Telecommunications, 4th semester). Built to help my Greek-speaking classmates *understand* the material rather than memorize it.
+An **interactive study companion** for the **K17 — Algorithms and Complexity** course at the University of Athens (Department of Informatics & Telecommunications, 4th semester). Built to help my Greek-speaking classmates *understand* the material rather than memorize it.
 
-**Live: [signal-processing-with-alexturing.vercel.app](https://signal-processing-with-alexturing.vercel.app)**
+**Live: [algorithms-class-hub.vercel.app](https://algorithms-class-hub.vercel.app/)**
 
 The site is **in Greek** because its audience is. This README is in English for anyone landing on the repo from outside the course.
 
