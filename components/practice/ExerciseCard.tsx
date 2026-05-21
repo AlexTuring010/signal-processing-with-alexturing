@@ -8,6 +8,7 @@ import {
   BookOpen,
   CheckCircle2,
   Circle,
+  Repeat,
 } from 'lucide-react'
 import {
   TOPIC_COLORS,
@@ -18,6 +19,7 @@ import {
   ORIGIN_COLORS,
 } from '@/content/practice/types'
 import type { Exercise } from '@/content/practice/types'
+import type { RepeatOccurrence } from '@/content/practice/repeats'
 import { PrereqChips } from './PrereqChips'
 import { useFormulaSheet } from './formula-sheet-store'
 import { SectionComments } from '@/components/layout/SectionComments'
@@ -28,6 +30,18 @@ export const PRACTICE_SOLVED_PREFIX = 'practice'
 
 type Props = {
   exercise: Exercise
+  /** Other exams where this same question appeared (drives the repeat marker). */
+  repeatedIn?: RepeatOccurrence[]
+}
+
+/** "Πρόοδος A · Μάιος 2025 (ΘΕΜΑ 2.2)" — joined with commas and a final «και». */
+function formatRepeatList(occurrences: RepeatOccurrence[]): string {
+  const labels = occurrences.map(
+    (o) =>
+      SOURCE_LABELS[o.source] + (o.problemNumber ? ` (${o.problemNumber})` : ''),
+  )
+  if (labels.length <= 1) return labels[0] ?? ''
+  return labels.slice(0, -1).join(', ') + ' και ' + labels[labels.length - 1]
 }
 
 const DIFFICULTY_COLORS = {
@@ -36,7 +50,7 @@ const DIFFICULTY_COLORS = {
   hard: 'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300',
 }
 
-export function ExerciseCard({ exercise }: Props) {
+export function ExerciseCard({ exercise, repeatedIn }: Props) {
   const [open, setOpen] = useState(false)
   const { openWithAssist } = useFormulaSheet()
 
@@ -83,6 +97,12 @@ export function ExerciseCard({ exercise }: Props) {
           {exercise.problemNumber && (
             <span className="rounded-full border border-border bg-bg-soft px-2 py-0.5 text-[11px] font-mono font-semibold text-fg-muted">
               {exercise.problemNumber}
+            </span>
+          )}
+          {repeatedIn && repeatedIn.length > 0 && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/40 bg-sky-500/10 px-2 py-0.5 text-[11px] font-semibold text-sky-700 dark:text-sky-300">
+              <Repeat className="h-3 w-3" aria-hidden />
+              Επαναλαμβανόμενο
             </span>
           )}
           {exercise.weight != null && (
@@ -134,6 +154,24 @@ export function ExerciseCard({ exercise }: Props) {
       <div className="prose-content max-w-none text-[15px] leading-relaxed text-fg">
         {exercise.statement}
       </div>
+
+      {/* Repeated-question notice */}
+      {repeatedIn && repeatedIn.length > 0 && (
+        <div className="mt-3 flex items-start gap-2 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2 text-xs leading-relaxed text-fg-muted">
+          <Repeat
+            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-600 dark:text-sky-400"
+            aria-hidden
+          />
+          <span>
+            <strong className="font-semibold text-fg">
+              Επαναλαμβανόμενο θέμα.
+            </strong>{' '}
+            Το ίδιο θέμα έχει μπει και σε {formatRepeatList(repeatedIn)}. Η
+            επανάληψη είναι σκόπιμη — δείχνει ότι το θέμα πέφτει συχνά στις
+            εξετάσεις, οπότε αξίζει να το ξέρεις καλά.
+          </span>
+        </div>
+      )}
 
       {/* Prerequisite chips */}
       <div className="mt-3">

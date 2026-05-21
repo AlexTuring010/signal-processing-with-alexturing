@@ -14,6 +14,7 @@ import {
 import { Comments } from '@/components/layout/Comments'
 import { SectionCommentsProvider } from '@/components/layout/section-comments-context'
 import { EXERCISES } from '@/content/practice/exercises'
+import { computeRepeats } from '@/content/practice/repeats'
 import { QUIZ_BANK } from '@/content/practice/quiz-bank'
 
 export const metadata = {
@@ -26,6 +27,7 @@ export default function PracticePage() {
   const pastExamCount = EXERCISES.filter((e) => e.origin === 'past-exam').length
   const lectureCount = EXERCISES.filter((e) => e.origin === 'lecture').length
   const aiCount = EXERCISES.filter((e) => e.origin === 'ai-generated').length
+  const repeats = computeRepeats(EXERCISES)
 
   return (
     <>
@@ -114,7 +116,7 @@ export default function PracticePage() {
             Λυμένες ασκήσεις
           </h2>
           <SectionCommentsProvider>
-            <ExerciseLibrary exercises={EXERCISES} />
+            <ExerciseLibrary exercises={EXERCISES} repeats={repeats} />
           </SectionCommentsProvider>
         </section>
 

@@ -12,12 +12,15 @@ import {
 } from 'lucide-react'
 import type { Exercise, Topic, Origin, ExamSource } from '@/content/practice/types'
 import { SOURCE_LABELS } from '@/content/practice/types'
+import type { RepeatOccurrence } from '@/content/practice/repeats'
 import { TopicFilter } from './TopicFilter'
 import { ExerciseCard, PRACTICE_SOLVED_PREFIX } from './ExerciseCard'
 import { useAppStore } from '@/lib/store'
 
 type Props = {
   exercises: Exercise[]
+  /** id → other exams the same question appeared in (from `computeRepeats`). */
+  repeats: Record<string, RepeatOccurrence[]>
 }
 
 type OriginFilter = 'all' | Origin
@@ -31,7 +34,7 @@ const SOURCE_ORDER: ExamSource[] = [
   'proodos-a-2025',
 ]
 
-export function ExerciseLibrary({ exercises }: Props) {
+export function ExerciseLibrary({ exercises, repeats }: Props) {
   const [topics, setTopics] = useState<Set<Topic>>(new Set())
   const [originFilter, setOriginFilter] = useState<OriginFilter>('past-exam')
   const [sourceFilter, setSourceFilter] = useState<ExamSource | 'all'>('all')
@@ -248,7 +251,7 @@ export function ExerciseLibrary({ exercises }: Props) {
       ) : (
         <div className="space-y-4">
           {sorted.map((ex) => (
-            <ExerciseCard key={ex.id} exercise={ex} />
+            <ExerciseCard key={ex.id} exercise={ex} repeatedIn={repeats[ex.id]} />
           ))}
         </div>
       )}

@@ -98,6 +98,13 @@ export type Exercise = {
   source?: ExamSource
   /** Problem label, e.g. "ΘΕΜΑ 1.5", "ΘΕΜΑ 4.2". */
   problemNumber?: string
+  /**
+   * Exercises sharing a `repeatGroup` are the same question recurring across
+   * exams (sometimes lightly reworded). The card shows an "Επαναλαμβανόμενο
+   * θέμα" marker pointing to the other occurrences, so students know the
+   * duplication is intentional. Set only on genuine repeats.
+   */
+  repeatGroup?: string
   /** Weight on the exam, e.g. 10 for "10%". */
   weight?: number
   difficulty: Difficulty

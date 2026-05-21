@@ -268,6 +268,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'proodos26-6',
+    repeatGroup: 'white-noise-lpf',
     origin: 'past-exam',
     source: 'proodos-april-2026',
     problemNumber: 'ΘΕΜΑ 6',
@@ -1207,6 +1208,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'sept25-th3-10',
+    repeatGroup: 'thermal-noise-psd',
     origin: 'past-exam',
     source: 'sept-2025',
     problemNumber: 'ΘΕΜΑ 3.10',
@@ -1244,6 +1246,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'sept25-th3-11',
+    repeatGroup: 'white-noise-lpf',
     origin: 'past-exam',
     source: 'sept-2025',
     problemNumber: 'ΘΕΜΑ 3.11',
@@ -1277,6 +1280,7 @@ export const EXERCISES: Exercise[] = [
   // ═══════════════════════════════════════════════════════════════════════
   {
     id: 'jan26-th1-1',
+    repeatGroup: 'tf-am-form',
     origin: 'past-exam',
     source: 'jan-2026',
     problemNumber: 'ΘΕΜΑ 1.1',
@@ -1310,6 +1314,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'jan26-th1-2',
+    repeatGroup: 'tf-cos-power',
     origin: 'past-exam',
     source: 'jan-2026',
     problemNumber: 'ΘΕΜΑ 1.2',
@@ -1338,6 +1343,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'jan26-th1-3',
+    repeatGroup: 'tf-white-noise-gaussian',
     origin: 'past-exam',
     source: 'jan-2026',
     problemNumber: 'ΘΕΜΑ 1.3',
@@ -1435,6 +1441,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'jan26-th2-6',
+    repeatGroup: 'why-modulate',
     origin: 'past-exam',
     source: 'jan-2026',
     problemNumber: 'ΘΕΜΑ 2.6',
@@ -1558,6 +1565,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'jan26-th2-9',
+    repeatGroup: 'power-sum-sinusoids',
     origin: 'past-exam',
     source: 'jan-2026',
     problemNumber: 'ΘΕΜΑ 2.9',
@@ -2076,6 +2084,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'jun25-th1-9',
+    repeatGroup: 'thermal-noise-psd',
     origin: 'past-exam',
     source: 'june-2025',
     problemNumber: 'ΘΕΜΑ 1.9',
@@ -2323,6 +2332,7 @@ export const EXERCISES: Exercise[] = [
   // ═══════════════════════════════════════════════════════════════════════
   {
     id: 'pa25-th1-1',
+    repeatGroup: 'tf-am-form',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 1.1',
@@ -2348,6 +2358,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pa25-th1-2',
+    repeatGroup: 'tf-cos-power',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 1.2',
@@ -2366,6 +2377,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pa25-th1-3',
+    repeatGroup: 'tf-white-noise-gaussian',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 1.3',
@@ -2379,6 +2391,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pa25-th1-4',
+    repeatGroup: 'tf-m3-bandwidth',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 1.4',
@@ -2432,6 +2445,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pa25-th1-5',
+    repeatGroup: 'tf-tri-envelope',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 1.5',
@@ -2452,6 +2466,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pa25-th2-1',
+    repeatGroup: 'why-modulate',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 2.1',
@@ -2473,6 +2488,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pa25-th2-2',
+    repeatGroup: 'am-draw-cos8pi',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 2.2',
@@ -2511,6 +2527,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pa25-th2-4',
+    repeatGroup: 'power-sum-sinusoids',
     origin: 'past-exam',
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 2.4',
@@ -2636,6 +2653,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pb25-th1-4',
+    repeatGroup: 'tf-m3-bandwidth',
     origin: 'past-exam',
     source: 'proodos-b-2025',
     problemNumber: 'ΘΕΜΑ 1.4',
@@ -2676,6 +2694,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pb25-th1-5',
+    repeatGroup: 'tf-tri-envelope',
     origin: 'past-exam',
     source: 'proodos-b-2025',
     problemNumber: 'ΘΕΜΑ 1.5',
@@ -2711,6 +2730,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pb25-th2-2',
+    repeatGroup: 'am-draw-cos8pi',
     origin: 'past-exam',
     source: 'proodos-b-2025',
     problemNumber: 'ΘΕΜΑ 2.2',
@@ -2778,6 +2798,7 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pb25-th2-4',
+    repeatGroup: 'power-sum-sinusoids',
     origin: 'past-exam',
     source: 'proodos-b-2025',
     problemNumber: 'ΘΕΜΑ 2.4',
