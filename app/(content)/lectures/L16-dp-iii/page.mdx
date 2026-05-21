@@ -1,16 +1,17 @@
 export const metadata = {
-  title: "L16 · DP III — LCS, edit distance",
-  description: "DP σε δύο ακολουθίες: longest common subsequence, edit distance, και ανάκτηση λύσης.",
+  title: 'L16 · Δυναμικός Προγραμματισμός III — Ευθυγράμμιση Συμβολοσειρών',
+  description:
+    'Ομοιότητα συμβολοσειρών και απόσταση επεξεργασίας (edit distance), ο αλγόριθμος ευθυγράμμισης ως συντομότερο μονοπάτι σε πλέγμα, και η ευθυγράμμιση σε γραμμικό χώρο κατά Hirschberg.',
 }
 
 export const frontmatter = {
-  title: "L16 · DP III — LCS, edit distance",
-  slug: "lectures/L16-dp-iii",
+  title: 'L16 · Δυναμικός Προγραμματισμός III — Ευθυγράμμιση Συμβολοσειρών',
+  slug: 'lectures/L16-dp-iii',
   order: 16,
-  prerequisites: ["lectures/L15-dp-ii"],
-  examWeight: 7,
-  estimatedReadTime: 0,
-  lastUpdated: '2026-05-19',
+  prerequisites: ['lectures/L15-dp-ii'],
+  examWeight: 8,
+  estimatedReadTime: 30,
+  lastUpdated: '2026-05-21',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -21,9 +22,11 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   <span>Dynamic programming</span>
   <span>·</span>
   <span>Διάλεξη 16</span>
+  <span>·</span>
+  <span>~30 min read</span>
 </div>
 
-# L16 · DP III — LCS, edit distance
+# L16 · Δυναμικός Προγραμματισμός III — Ευθυγράμμιση Συμβολοσειρών
 
 <div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
   <CompleteToggle slug="lectures/L16-dp-iii" />
@@ -32,40 +35,254 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
-<SourceDoc
-  sources={{ pdf: "L16 - Δυναμικός Προγραμματισμός ΙII.pdf" }}
-/>
+<SourceDoc sources={{ pdf: 'L16 - Δυναμικός Προγραμματισμός ΙII.pdf' }} />
 
 ## Τι θα δούμε
 
-DP σε δύο ακολουθίες: longest common subsequence, edit distance, και ανάκτηση λύσης.
+Πόσο **όμοιες** είναι δύο συμβολοσειρές; Το ερώτημα ακούγεται απλό, αλλά είναι η βάση για το `unix diff`, για την αναγνώριση φωνής, και για τη σύγκριση ακολουθιών DNA. Η απάντηση — η **απόσταση επεξεργασίας** — είναι ένα κομψό DP. Και θα δούμε δύο βαθιές ιδέες:
 
-## Σχεδιάγραμμα της διάλεξης (από το επίσημο PDF)
+1. Το DP πλέγμα είναι στην πραγματικότητα **γράφημα** — και η βέλτιστη λύση είναι ένα **συντομότερο μονοπάτι**.
+2. Με συνδυασμό DP **και** διαίρει-και-κυρίευε, μπορούμε να λύσουμε το πρόβλημα σε **γραμμικό χώρο** (Hirschberg).
 
-Παρακάτω είναι τα **πραγματικά βήματα** της διάλεξης όπως εμφανίζονται διαδοχικά στις διαφάνειες. Κάθε εγγραφή αντιστοιχεί σε σελίδα του PDF. Άνοιξε το SourceDoc παραπάνω για να διαβάσεις τις λεπτομέρειες κάθε ενότητας.
+## Ομοιότητα συμβολοσειρών
 
-2. **Δυναμικός Προγραμματισμός**
-3. **Αλγοριθμικά Μοντέλα**
-6. **Σύνοψη**
-7. **Μέγιστη Κοινή Υπακολουθία**
-8. **Δομή του Προβλήματος**
-13. **Αλγόριθμος**
-16. **Ομοιότητα συμβολοσειρών**
-20. **Απόσταση επεξεργασίας**
-23. **Ευθυγράμμιση συμβολοσειρών**
-24. **Δομή προβλήματος**
-31. **Αναδρομικός τύπος**
-33. **Παράδει γμα**
-35. **Ευθυγράμμιση συμβολοσειρών σε γραμμικό χώρο**
-44. **Ευθυγράμμιση συμβολοσειρών: Χρονική Πολυπλοκότητα**
+Δες τις δύο λέξεις:
 
-## Πώς να μελετήσεις τώρα
+```
+o c u r r a n c e
+o c c u r e n c e
+```
 
-Μέχρι να γραφτούν αναλυτικές σημειώσεις για αυτή τη διάλεξη με την ίδια λεπτομέρεια όπως [L01](/lectures/L01-eisagogika) και [L02](/lectures/L02-asymptotic-analysis):
+Είναι ολοφάνερα «η ίδια λέξη με λάθη». Αλλά πώς το **ποσοτικοποιείς**; Η ιδέα: μέτρα πόσες **στοιχειώδεις αλλαγές** χρειάζονται για να μετατρέψεις τη μία στην άλλη.
 
-1. **Διάβασε το PDF** ακριβώς από την αρχή — η σειρά των διαφανειών είναι παιδαγωγικά δομημένη και κάθε ορισμός χτίζει πάνω στον προηγούμενο.
-2. **Σταμάτα σε κάθε διαφάνεια που έχει ψευδοκώδικα** και τρέξε τον αλγόριθμο με το χέρι σε μικρό παράδειγμα ($n = 4$ ή $5$).
-3. **Λύσε αμέσως** τις ασκήσεις που εμφανίζονται παρακάτω — οι περισσότερες προέρχονται από φροντιστήρια και παλαιότερες εξεταστικές που εξετάζουν ακριβώς αυτή τη διάλεξη.
-4. **Άσε σχόλιο** σε όποιο σημείο μπερδεύτηκες — αυτή η σελίδα θα γραφτεί με βάση τα σημεία όπου οι φοιτητές κολλάνε περισσότερο.
+<Callout type="key">
+**Απόσταση επεξεργασίας** (edit distance) — [Levenshtein 1966, Needleman-Wunsch 1970]. Δύο είδη «κόστους»:
+
+- **κόστος κενού** $\delta$ — αφήνεις έναν χαρακτήρα **αταίριαστο** (μια εισαγωγή ή διαγραφή)·
+- **κόστος σύγκρουσης** $\alpha_{xy}$ — ταιριάζεις δύο **διαφορετικούς** χαρακτήρες $x \ne y$ (μια αντικατάσταση). Αν $x = y$, το κόστος είναι $0$.
+
+Συνολικό κόστος = άθροισμα όλων των κενών και των συγκρούσεων.
+</Callout>
+
+## Ευθυγράμμιση συμβολοσειρών
+
+<Callout type="key">
+**Ευθυγράμμιση** (alignment) $M$ δύο συμβολοσειρών $X = x_1 \cdots x_m$ και $Y = y_1 \cdots y_n$: ένα σύνολο διατεταγμένων ζευγών $x_i - y_j$ τέτοιο ώστε:
+
+- κάθε χαρακτήρας ανήκει σε **το πολύ ένα** ζεύγος, και
+- τα ζεύγη **δεν διασταυρώνονται** — τα $x_i - y_j$ και $x_{i'} - y_{j'}$ διασταυρώνονται αν $i < i'$ αλλά $j > j'$.
+
+$$
+\text{κόστος}(M) = \!\!\sum_{(x_i, y_j) \in M,\ x_i \ne y_j}\!\! \alpha_{x_i y_j} \ +\!\! \sum_{x_i \text{ αταίριαστο}}\!\! \delta \ +\!\! \sum_{y_j \text{ αταίριαστο}}\!\! \delta
+$$
+</Callout>
+
+<Callout type="intuition">
+**«Δεν διασταυρώνονται»** σημαίνει ότι αν διαβάσεις και τις δύο λέξεις από αριστερά προς δεξιά, τα ζεύγη διατηρούν τη σειρά τους — δεν μπερδεύεσαι. **Στόχος:** βρες την ευθυγράμμιση **ελάχιστου κόστους**.
+</Callout>
+
+## Η αναδρομή
+
+Ορίζουμε $\text{OPT}(i, j)$ = ελάχιστο κόστος ευθυγράμμισης των προθεμάτων $x_1 \cdots x_i$ και $y_1 \cdots y_j$. Κοιτάμε τους τελευταίους χαρακτήρες $x_i, y_j$ — υπάρχουν **τρεις** δυνατότητες:
+
+- **Ταίριασμα** $x_i$ με $y_j$: πληρώνεις $\alpha_{x_i y_j}$ (ή $0$ αν ίδιοι) + το βέλτιστο για $x_1 \cdots x_{i-1}$, $y_1 \cdots y_{j-1}$.
+- **Το $x_i$ αταίριαστο:** πληρώνεις κενό $\delta$ + το βέλτιστο για $x_1 \cdots x_{i-1}$, $y_1 \cdots y_j$.
+- **Το $y_j$ αταίριαστο:** πληρώνεις κενό $\delta$ + το βέλτιστο για $x_1 \cdots x_i$, $y_1 \cdots y_{j-1}$.
+
+<Callout type="key">
+$$
+\text{OPT}(i, j) =
+\begin{cases}
+j \cdot \delta & i = 0 \\[3pt]
+i \cdot \delta & j = 0 \\[3pt]
+\min
+\begin{cases}
+\alpha_{x_i y_j} + \text{OPT}(i-1, j-1) \\
+\delta + \text{OPT}(i-1, j) \\
+\delta + \text{OPT}(i, j-1)
+\end{cases}
+& \text{αλλιώς}
+\end{cases}
+$$
+
+Οι βασικές περιπτώσεις: ευθυγράμμιση με την **κενή** συμβολοσειρά κοστίζει ένα κενό ανά χαρακτήρα.
+</Callout>
+
+```
+Ευθυγράμμιση(m, n, x, y, δ, α):
+  Για i = 0 έως m:  M[i, 0] ← i·δ
+  Για j = 0 έως n:  M[0, j] ← j·δ
+  Για i = 1 έως m:
+    Για j = 1 έως n:
+      M[i, j] ← min( α(x_i, y_j) + M[i-1, j-1],
+                     δ + M[i-1, j],
+                     δ + M[i, j-1] )
+  επίστρεψε M[m, n]
+```
+
+**Παράδειγμα.** $x = \texttt{GAC}$, $y = \texttt{AGC}$, με $\delta = 1$ και $\alpha_{xy} = 1$ για $x \ne y$:
+
+| | ∅ | A | G | C |
+|---|---|---|---|---|
+| **∅** | 0 | 1 | 2 | 3 |
+| **G** | 1 | 1 | 1 | 2 |
+| **A** | 2 | 1 | 2 | 2 |
+| **C** | 3 | 2 | 2 | **2** |
+
+Η απόσταση επεξεργασίας είναι $M[3, 3] = \mathbf{2}$.
+
+**Πολυπλοκότητα:** $\Theta(mn)$ χρόνος **και** $\Theta(mn)$ χώρος.
+
+## Το DP πλέγμα είναι γράφημα
+
+Εδώ έρχεται η βαθιά ιδέα. Φτιάχνουμε ένα **γράφημα απόστασης επεξεργασίας**: μια κορυφή για κάθε ζεύγος $(i, j)$, με ακμές:
+
+- **δεξιά** $(i, j-1) \to (i, j)$ — κόστος $\delta$ (κενό στο $X$),
+- **κάτω** $(i-1, j) \to (i, j)$ — κόστος $\delta$ (κενό στο $Y$),
+- **διαγώνια** $(i-1, j-1) \to (i, j)$ — κόστος $\alpha_{x_i y_j}$ (ταίριασμα).
+
+<Callout type="key">
+Με αυτές τις ακμές, το $\text{OPT}(i, j)$ ισούται **ακριβώς** με το μήκος του **συντομότερου μονοπατιού** από την κορυφή $(0, 0)$ στην $(i, j)$. Η απόσταση επεξεργασίας είναι το συντομότερο μονοπάτι $(0,0) \to (m, n)$.
+</Callout>
+
+<div className="graph-canvas">
+<svg viewBox="0 0 540 360" className="w-full max-w-lg" xmlns="http://www.w3.org/2000/svg">
+  <style>{`
+    .gge { stroke: rgb(var(--fg-muted)); stroke-width: 1.5; fill: none; marker-end: url(#gg-a); }
+    .ggp { stroke: rgb(244 63 94); stroke-width: 3; fill: none; marker-end: url(#gg-p); }
+    .ggn { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--accent)); stroke-width: 1.8; }
+    .ggnt { fill: rgb(244 63 94 / 0.2); stroke: rgb(244 63 94); stroke-width: 2.3; }
+    .ggl { font: 600 10px ui-sans-serif, system-ui; fill: rgb(var(--fg-subtle)); text-anchor: middle; dominant-baseline: middle; }
+    .ggc { font: 700 12px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
+    .ggann { font: 600 11px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+  `}</style>
+  <defs>
+    <marker id="gg-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(var(--fg-muted))" />
+    </marker>
+    <marker id="gg-p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(244 63 94)" />
+    </marker>
+  </defs>
+  {/* all grey edges */}
+  {[
+    [110,60,260,60],[260,60,410,60],
+    [110,170,260,170],[260,170,410,170],
+    [110,280,260,280],[260,280,410,280],
+    [110,60,110,170],[110,170,110,280],
+    [260,60,260,170],[260,170,260,280],
+    [410,60,410,170],[410,170,410,280],
+    [110,60,260,170],[260,60,410,170],
+    [110,170,260,280],[260,170,410,280],
+  ].map(([x1,y1,x2,y2],idx) => (
+    <line key={idx} x1={x1} y1={y1} x2={x2} y2={y2} className="gge" />
+  ))}
+  {/* highlighted shortest path: diagonal then diagonal */}
+  <line x1="110" y1="60" x2="260" y2="170" className="ggp" />
+  <line x1="260" y1="170" x2="410" y2="280" className="ggp" />
+  {/* nodes */}
+  {[
+    [110,60,'(0,0)',true],[260,60,'(0,1)',false],[410,60,'(0,2)',false],
+    [110,170,'(1,0)',false],[260,170,'(1,1)',false],[410,170,'(1,2)',false],
+    [110,280,'(2,0)',false],[260,280,'(2,1)',false],[410,280,'(2,2)',true],
+  ].map(([x,y,l,t],idx) => (
+    <g key={idx}>
+      <circle cx={x} cy={y} r="20" className={t ? 'ggnt' : 'ggn'} />
+      <text x={x} y={y} className="ggl">{l}</text>
+    </g>
+  ))}
+  <text x="185" y="108" className="ggc">δ→</text>
+  <text x="92" y="120" className="ggc">δ↓</text>
+  <text x="200" y="135" className="ggc" fill="rgb(244 63 94)">α ⬂</text>
+  <text x="270" y="330" className="ggann">Κόκκινο = συντομότερο μονοπάτι (0,0)→(m,n) = βέλτιστη ευθυγράμμιση.</text>
+</svg>
+</div>
+
+## Ευθυγράμμιση σε γραμμικό χώρο — Hirschberg
+
+Ο πίνακας $\Theta(mn)$ είναι το πρόβλημα: στην υπολογιστική βιολογία $m = n = 100.000$, και ένας πίνακας $10^{10}$ κελιών **δεν χωράει** στη μνήμη.
+
+### Πρώτη παρατήρηση — η τιμή σε γραμμικό χώρο
+
+Για να υπολογίσεις τη γραμμή $\text{OPT}(i, \cdot)$ χρειάζεσαι **μόνο** την προηγούμενη γραμμή $\text{OPT}(i-1, \cdot)$. Άρα η **τιμή** $\text{OPT}(m, n)$ υπολογίζεται σε $O(m + n)$ χώρο και $O(mn)$ χρόνο, κρατώντας δύο γραμμές κάθε φορά.
+
+<Callout type="warning">
+**Αλλά** — έτσι χάνεις τον υπόλοιπο πίνακα, και η **ίδια η ευθυγράμμιση** δεν ανακτάται με το συνηθισμένο πέρασμα προς τα πίσω. Χρειάζεται έξυπνη ιδέα.
+</Callout>
+
+### Η ιδέα του Hirschberg (1975) — διαίρει και κυρίευε + DP
+
+Δουλεύουμε στο γράφημα απόστασης. Ορίζουμε:
+
+- $f(i, j)$ = συντομότερο μονοπάτι από $(0, 0)$ στο $(i, j)$ — δηλαδή $\text{OPT}(i, j)$·
+- $g(i, j)$ = συντομότερο μονοπάτι από $(i, j)$ στο $(m, n)$ — υπολογίζεται **όμοια**, αντιστρέφοντας τις ακμές.
+
+<Callout type="key">
+Το κόστος του συντομότερου μονοπατιού $(0,0) \to (m,n)$ **που περνά** από την κορυφή $(i, j)$ είναι ακριβώς $f(i, j) + g(i, j)$.
+</Callout>
+
+Διαλέγουμε τη **μεσαία στήλη** $j = n/2$. Έστω $q$ ο δείκτης γραμμής που ελαχιστοποιεί την ποσότητα $f(q,\, n/2) + g(q,\, n/2)$. Τότε **υπάρχει** βέλτιστη ευθυγράμμιση που περνά από την κορυφή $(q,\, n/2)$.
+
+<div className="graph-canvas">
+<svg viewBox="0 0 560 290" className="w-full max-w-2xl" xmlns="http://www.w3.org/2000/svg">
+  <style>{`
+    .hbox { fill: rgb(var(--bg-soft)); stroke: rgb(var(--border-strong)); stroke-width: 1.6; }
+    .hmid { stroke: rgb(var(--accent)); stroke-width: 2; stroke-dasharray: 6 4; }
+    .hf { stroke: rgb(59 130 246); stroke-width: 3; fill: none; marker-end: url(#h-f); }
+    .hg { stroke: rgb(34 197 94); stroke-width: 3; fill: none; marker-end: url(#h-g); }
+    .hpt { fill: rgb(244 63 94 / 0.25); stroke: rgb(244 63 94); stroke-width: 2.4; }
+    .hc { fill: rgb(var(--accent)); }
+    .hl { font: 700 12px ui-sans-serif, system-ui; fill: rgb(var(--fg)); }
+    .hann { font: 600 12px ui-sans-serif, system-ui; text-anchor: middle; }
+  `}</style>
+  <defs>
+    <marker id="h-f" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(59 130 246)" />
+    </marker>
+    <marker id="h-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(34 197 94)" />
+    </marker>
+  </defs>
+  <rect x="70" y="44" width="420" height="180" className="hbox" />
+  <line x1="280" y1="44" x2="280" y2="224" className="hmid" />
+  {/* f path 0,0 -> q */}
+  <path d="M 70 44 Q 170 70 280 138" className="hf" />
+  {/* g path q -> m,n */}
+  <path d="M 280 138 Q 390 200 490 224" className="hg" />
+  <circle cx="280" cy="138" r="13" className="hpt" />
+  <circle cx="70" cy="44" r="5" className="hc" />
+  <circle cx="490" cy="224" r="5" className="hc" />
+  <text x="36" y="40" className="hl">(0,0)</text>
+  <text x="452" y="244" className="hl">(m,n)</text>
+  <text x="296" y="134" className="hl">(q, n/2)</text>
+  <text x="280" y="34" textAnchor="middle" className="hl" fill="rgb(var(--accent))">στήλη n/2</text>
+  <text x="160" y="110" className="hann" fill="rgb(59 130 246)">f</text>
+  <text x="400" y="186" className="hann" fill="rgb(34 197 94)">g</text>
+  <text x="280" y="270" className="hann" fill="rgb(var(--fg-muted))">Βρες το q που ελαχιστοποιεί f(q,n/2)+g(q,n/2), μετά αναδρομή στα δύο μισά.</text>
+</svg>
+</div>
+
+**Διαίρει:** βρες το $q$ (με DP σε γραμμικό χώρο, υπολογίζοντας τη στήλη $f(\cdot, n/2)$ και $g(\cdot, n/2)$). Ευθυγράμμισε το $(q, n/2)$.
+
+**Κυρίευε:** λύσε αναδρομικά τα **δύο μισά** — το πάνω-αριστερά ορθογώνιο $(0,0)$–$(q, n/2)$ και το κάτω-δεξιά $(q, n/2)$–$(m, n)$.
+
+<Callout type="key">
+**Πολυπλοκότητα:** $O(m + n)$ **χώρος** και $O(mn)$ **χρόνος**. Ο χρόνος μένει $O(mn)$ γιατί κάθε επίπεδο της αναδρομής δουλεύει σε ορθογώνια συνολικού εμβαδού που **υποδιπλασιάζεται** — $mn + mn/2 + mn/4 + \dots = O(mn)$.
+</Callout>
+
+<Callout type="intuition">
+**Γιατί είναι όμορφο:** συνδυάζει **δύο** από τα μοντέλα του μαθήματος. Το DP βρίσκει τη μεσαία κορυφή· το διαίρει-και-κυρίευε σπάει το πρόβλημα γύρω της. Κανένα από τα δύο μόνο του δεν θα έδινε γραμμικό χώρο.
+</Callout>
+
+<Recap>
+**Τι κρατάμε από αυτή τη διάλεξη**
+
+1. **Απόσταση επεξεργασίας** — ελάχιστο κόστος μετατροπής μιας συμβολοσειράς σε άλλη, με κόστος κενού $\delta$ και κόστος σύγκρουσης $\alpha$.
+2. **Ευθυγράμμιση** = μη-διασταυρούμενα ζεύγη χαρακτήρων. Αναδρομή με **τρεις** περιπτώσεις: ταίριασμα (διαγώνια), κενό στο $X$ (κάτω), κενό στο $Y$ (δεξιά). Χρόνος & χώρος $\Theta(mn)$.
+3. Το DP πλέγμα είναι **γράφημα**: $\text{OPT}(i,j)$ = συντομότερο μονοπάτι $(0,0) \to (i,j)$.
+4. **Hirschberg** — συνδυασμός DP + διαίρει-και-κυρίευε. Με $f$ (εμπρός) και $g$ (πίσω), βρες την κορυφή της μεσαίας στήλης που ελαχιστοποιεί $f + g$, και αναδρομή. $O(m+n)$ χώρος, $O(mn)$ χρόνος.
+</Recap>
+
+<NextUp current="lectures/L16-dp-iii" />
 
 <LectureExercises lectureSlug="lectures/L16-dp-iii" />

@@ -1,16 +1,17 @@
 export const metadata = {
-  title: "L15 · DP II — knapsack family",
-  description: "Το knapsack και οι παραλλαγές του: 0/1, unbounded, subset-sum, και pseudo-polynomial πολυπλοκότητα.",
+  title: 'L15 · Δυναμικός Προγραμματισμός II — Σακίδιο & Μέγιστη Κοινή Υπακολουθία',
+  description:
+    'Το πρόβλημα του σακιδίου (0/1 knapsack) με δισδιάστατο DP και ψευδοπολυωνυμική πολυπλοκότητα, και η μέγιστη κοινή υπακολουθία (LCS) δύο συμβολοσειρών.',
 }
 
 export const frontmatter = {
-  title: "L15 · DP II — knapsack family",
-  slug: "lectures/L15-dp-ii",
+  title: 'L15 · Δυναμικός Προγραμματισμός II — Σακίδιο & Μέγιστη Κοινή Υπακολουθία',
+  slug: 'lectures/L15-dp-ii',
   order: 15,
-  prerequisites: ["lectures/L14-dp-i"],
-  examWeight: 7,
-  estimatedReadTime: 0,
-  lastUpdated: '2026-05-19',
+  prerequisites: ['lectures/L14-dp-i'],
+  examWeight: 9,
+  estimatedReadTime: 30,
+  lastUpdated: '2026-05-21',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -21,9 +22,11 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   <span>Dynamic programming</span>
   <span>·</span>
   <span>Διάλεξη 15</span>
+  <span>·</span>
+  <span>~30 min read</span>
 </div>
 
-# L15 · DP II — knapsack family
+# L15 · Δυναμικός Προγραμματισμός II — Σακίδιο &amp; Μέγιστη Κοινή Υπακολουθία
 
 <div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
   <CompleteToggle slug="lectures/L15-dp-ii" />
@@ -32,37 +35,233 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
-<SourceDoc
-  sources={{ pdf: "L15 - Δυναμικός Προγραμματισμός ΙI.pdf" }}
-/>
+<SourceDoc sources={{ pdf: 'L15 - Δυναμικός Προγραμματισμός ΙI.pdf' }} />
 
 ## Τι θα δούμε
 
-Το knapsack και οι παραλλαγές του: 0/1, unbounded, subset-sum, και pseudo-polynomial πολυπλοκότητα.
+Δύο κλασικά DP προβλήματα — και ένα **νέο** δίδαγμα. Στο [L14](/lectures/L14-dp-i) τα υποπροβλήματα παραμετροποιήθηκαν με **μία** μεταβλητή ($j$ = πρώτα $j$ αιτήματα). Εδώ θα δούμε ότι αυτό **δεν αρκεί πάντα**: το πρόβλημα του **σακιδίου** χρειάζεται **δύο** μεταβλητές. Μετά, η **μέγιστη κοινή υπακολουθία** δείχνει DP πάνω σε δύο συμβολοσειρές.
 
-## Σχεδιάγραμμα της διάλεξης (από το επίσημο PDF)
+## Το Πρόβλημα του Σακιδίου (Knapsack)
 
-Παρακάτω είναι τα **πραγματικά βήματα** της διάλεξης όπως εμφανίζονται διαδοχικά στις διαφάνειες. Κάθε εγγραφή αντιστοιχεί σε σελίδα του PDF. Άνοιξε το SourceDoc παραπάνω για να διαβάσεις τις λεπτομέρειες κάθε ενότητας.
+### Διατύπωση
 
-2. **Δυναμικός Προγραμματισμός**
-3. **Αλγοριθμικά Μοντέλα**
-6. **Σύνοψη**
-7. **Σακίδιο(Knapsack)**
-10. **Δυναμικός Προγραμματισμός: Απόπειρα**
-16. **Δυναμικός προγραμματισμός: Επιπλέον μεταβλητή**
-22. **Αλγόριθμος**
-25. **Παράδει γμα**
-26. **Χρόνος εκτέλεσης**
-30. **Μέγιστη Κοινή Υπακολουθία**
-31. **Δομή του Προβλήματος**
+**Είσοδος:** $n$ αντικείμενα και ένα «σακίδιο». Το αντικείμενο $i$ έχει **βάρος** $w_i > 0$ και **αξία** $v_i > 0$. Το σακίδιο αντέχει το πολύ $W$ κιλά.
 
-## Πώς να μελετήσεις τώρα
+**Στόχος:** διάλεξε υποσύνολο αντικειμένων που **χωράει** ($\sum w_i \le W$) και **μεγιστοποιεί** τη συνολική αξία.
 
-Μέχρι να γραφτούν αναλυτικές σημειώσεις για αυτή τη διάλεξη με την ίδια λεπτομέρεια όπως [L01](/lectures/L01-eisagogika) και [L02](/lectures/L02-asymptotic-analysis):
+<Callout type="warning">
+**Ο άπληστος αλγόριθμος αποτυγχάνει.** Φυσικό κριτήριο: διάλεξε κάθε φορά το αντικείμενο με τον μεγαλύτερο λόγο **αξίας προς βάρος** $v_i / w_i$. Αλλά αυτός ο λόγος αγνοεί τη χωρητικότητα: ένα αντικείμενο με τέλειο λόγο μπορεί να «σπαταλήσει» χώρο που θα έδινε καλύτερο **συνδυασμό**. (Παράδειγμα από το PDF: τα αντικείμενα 3, 4 δίνουν αξία 40 με βάρος 11, ενώ τα 5, 2, 1 δίνουν αξία 35.)
+</Callout>
 
-1. **Διάβασε το PDF** ακριβώς από την αρχή — η σειρά των διαφανειών είναι παιδαγωγικά δομημένη και κάθε ορισμός χτίζει πάνω στον προηγούμενο.
-2. **Σταμάτα σε κάθε διαφάνεια που έχει ψευδοκώδικα** και τρέξε τον αλγόριθμο με το χέρι σε μικρό παράδειγμα ($n = 4$ ή $5$).
-3. **Λύσε αμέσως** τις ασκήσεις που εμφανίζονται παρακάτω — οι περισσότερες προέρχονται από φροντιστήρια και παλαιότερες εξεταστικές που εξετάζουν ακριβώς αυτή τη διάλεξη.
-4. **Άσε σχόλιο** σε όποιο σημείο μπερδεύτηκες — αυτή η σελίδα θα γραφτεί με βάση τα σημεία όπου οι φοιτητές κολλάνε περισσότερο.
+### Πρώτη απόπειρα — και γιατί αποτυγχάνει
+
+Δοκιμάζουμε το μοτίβο του L14: $\text{OPT}(i)$ = μέγιστη αξία υποσυνόλων από τα αντικείμενα $1, \dots, i$.
+
+- **Το $i$ ΕΞΩ:** $\text{OPT}(i) = \text{OPT}(i-1)$.
+- **Το $i$ ΜΕΣΑ:** η επιλογή του $i$ δεν αποκλείει άμεσα κανένα άλλο αντικείμενο… αλλά **καταναλώνει χώρο**. Χωρίς να ξέρουμε πόσος χώρος έχει ήδη ξοδευτεί από τα προηγούμενα αντικείμενα, **δεν μπορούμε καν να ξέρουμε αν χωράει το $i$**.
+
+<Callout type="key">
+Η παράμετρος $i$ από μόνη της **δεν περιγράφει πλήρως ένα υποπρόβλημα**. Χρειαζόμαστε να θυμόμαστε και **πόση χωρητικότητα απομένει**. Άρα: μία δεύτερη μεταβλητή.
+</Callout>
+
+### Η σωστή αναδρομή — δύο μεταβλητές
+
+<Callout type="key">
+$\text{OPT}(i, w)$ = μέγιστη αξία υποσυνόλου των αντικειμένων $1, \dots, i$ με **συνολικό βάρος το πολύ $w$**.
+</Callout>
+
+Σκεφτόμαστε ξανά το αντικείμενο $i$:
+
+- **Το $i$ ΕΞΩ:** καλύτερη λύση από τα $1, \dots, i-1$ με χωρητικότητα $w$ → $\text{OPT}(i-1, w)$.
+- **Το $i$ ΜΕΣΑ** (μόνο αν $w_i \le w$): «ξοδεύουμε» $w_i$ χώρο και $v_i$ αξία, και λύνουμε το υπόλοιπο με χωρητικότητα $w - w_i$ → $v_i + \text{OPT}(i-1, w - w_i)$.
+
+<Callout type="key">
+$$
+\text{OPT}(i, w) =
+\begin{cases}
+0 & i = 0 \\[4pt]
+\text{OPT}(i-1, w) & w_i > w \\[4pt]
+\max\bigl\{\, \text{OPT}(i-1, w),\ \ v_i + \text{OPT}(i-1, w - w_i) \,\bigr\} & \text{αλλιώς}
+\end{cases}
+$$
+</Callout>
+
+<div className="graph-canvas">
+<svg viewBox="0 0 480 240" className="w-full max-w-md" xmlns="http://www.w3.org/2000/svg">
+  <style>{`
+    .kc { fill: rgb(var(--bg-soft)); stroke: rgb(var(--border-strong)); stroke-width: 1.5; }
+    .kcur { fill: rgb(244 63 94 / 0.26); stroke: rgb(244 63 94); stroke-width: 2.2; }
+    .kdep { fill: rgb(59 130 246 / 0.20); stroke: rgb(59 130 246); stroke-width: 2; }
+    .kt { font: 600 11px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; dominant-baseline: middle; }
+    .kar { stroke: rgb(244 63 94); stroke-width: 1.9; fill: none; marker-end: url(#k-a); }
+    .kann { font: 600 11px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+  `}</style>
+  <defs>
+    <marker id="k-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(244 63 94)" />
+    </marker>
+  </defs>
+  {/* row i-1 */}
+  <rect x="120" y="56" width="86" height="44" className="kdep" />
+  <text x="163" y="78" className="kt">OPT(i−1,</text>
+  <text x="163" y="92" className="kt">w−wᵢ)</text>
+  <rect x="276" y="56" width="86" height="44" className="kdep" />
+  <text x="319" y="78" className="kt">OPT(i−1,</text>
+  <text x="319" y="92" className="kt">w)</text>
+  {/* row i */}
+  <rect x="276" y="140" width="86" height="44" className="kcur" />
+  <text x="319" y="162" className="kt">OPT(i,</text>
+  <text x="319" y="176" className="kt">w)</text>
+  <path d="M 200 100 L 300 138" className="kar" />
+  <path d="M 319 100 L 319 138" className="kar" />
+  <text x="240" y="210" className="kann">Κάθε κελί κοιτάει μόνο την προηγούμενη γραμμή:</text>
+  <text x="240" y="226" className="kann">«πάνω» (i έξω) και «πάνω-αριστερά κατά wᵢ» (i μέσα).</text>
+</svg>
+</div>
+
+### Ο αλγόριθμος
+
+Συμπληρώνουμε έναν πίνακα $n \times W$ — γραμμή προς γραμμή:
+
+```
+Σακίδιο(n, w[], v[], W):
+  Για w = 0 έως W:  M[0, w] ← 0
+  Για i = 1 έως n:
+    Για w = 0 έως W:
+      Εάν w_i > w:
+        M[i, w] ← M[i-1, w]
+      Αλλιώς:
+        M[i, w] ← max{ v_i + M[i-1, w - w_i],  M[i-1, w] }
+  επίστρεψε M[n, W]
+```
+
+**Παράδειγμα.** Αντικείμενα $(w, v)$: $1{=}(2,3),\ 2{=}(3,4),\ 3{=}(4,5),\ 4{=}(5,6)$, χωρητικότητα $W = 8$.
+
+| $i \,\backslash\, w$ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|---|
+| **0** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| **1** · (2,3) | 0 | 0 | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
+| **2** · (3,4) | 0 | 0 | 3 | 4 | 4 | 7 | 7 | 7 | 7 |
+| **3** · (4,5) | 0 | 0 | 3 | 4 | 5 | 7 | 8 | 9 | 9 |
+| **4** · (5,6) | 0 | 0 | 3 | 4 | 5 | 7 | 8 | 9 | **10** |
+
+Η βέλτιστη αξία είναι $M[4, 8] = \mathbf{10}$ — αντικείμενα $2$ και $4$ (βάρος $3 + 5 = 8$, αξία $4 + 6 = 10$).
+
+### Πολυπλοκότητα — μια λεπτή παγίδα
+
+<Callout type="warning">
+Ο αλγόριθμος τρέχει σε $\Theta(n \cdot W)$. Φαίνεται «πολυωνυμικό» — αλλά **δεν είναι**. Το $W$ είναι ένας **αριθμός** στην είσοδο· για να τον γράψεις χρειάζεσαι μόνο $\log W$ δυφία. Άρα ο χρόνος $n \cdot W$ είναι **εκθετικός** ως προς το μέγεθος της εισόδου. Λέγεται **ψευδοπολυωνυμικός** (pseudo-polynomial).
+</Callout>
+
+<Callout type="key">
+Το **πρόβλημα απόφασης** του σακιδίου είναι **NP-πλήρες** — δεν είναι γνωστός (και πιθανότατα δεν υπάρχει) πραγματικά πολυωνυμικός αλγόριθμος. Υπάρχει όμως πολυωνυμικός **προσεγγιστικός** αλγόριθμος που βρίσκει λύση με αξία το πολύ $0{.}01\%$ μακριά από το βέλτιστο (FPTAS).
+</Callout>
+
+## Μέγιστη Κοινή Υπακολουθία (LCS)
+
+### Διατύπωση
+
+**Είσοδος:** δύο συμβολοσειρές $x = x_1 x_2 \cdots x_m$ και $y = y_1 y_2 \cdots y_n$.
+
+**Στόχος:** το **μέγιστο μήκος** μιας ακολουθίας $z_1 z_2 \cdots z_k$ που είναι **ταυτόχρονα υπακολουθία** και των δύο.
+
+<Callout type="intuition">
+**Υπακολουθία** ≠ υποσυμβολοσειρά. Δεν χρειάζεται να είναι **συνεχόμενη** — απλώς να εμφανίζεται με τη σωστή σειρά. Στο `ABCBDAB`, το `BCAB` είναι υπακολουθία. Το LCS μετράει πόσο «όμοιες» είναι δύο ακολουθίες — βάση για το `unix diff` και για τη σύγκριση γονιδιωμάτων.
+</Callout>
+
+### Η αναδρομή
+
+Ορίζουμε $\text{OPT}(i, j)$ = μέγιστο μήκος κοινής υπακολουθίας των προθεμάτων $x_1 \cdots x_i$ και $y_1 \cdots y_j$. Κοιτάμε τους **τελευταίους** χαρακτήρες $x_i, y_j$:
+
+- **$x_i = y_j$.** Τότε αξίζει να τους ζευγαρώσουμε: αυτός ο κοινός χαρακτήρας είναι το τελευταίο στοιχείο της LCS, και το υπόλοιπο είναι LCS των $x_1 \cdots x_{i-1}$ και $y_1 \cdots y_{j-1}$. Άρα $1 + \text{OPT}(i-1, j-1)$.
+- **$x_i \ne y_j$.** Δεν μπορούν να είναι **και οι δύο** το τελευταίο στοιχείο. Άρα τουλάχιστον ένας περισσεύει — η LCS είναι είτε των $x_1 \cdots x_{i-1}, y_1 \cdots y_j$ είτε των $x_1 \cdots x_i, y_1 \cdots y_{j-1}$. Παίρνουμε το $\max$.
+
+<Callout type="key">
+$$
+\text{OPT}(i, j) =
+\begin{cases}
+0 & i = 0 \ \text{ή}\ j = 0 \\[4pt]
+1 + \text{OPT}(i-1, j-1) & x_i = y_j \\[4pt]
+\max\bigl\{\, \text{OPT}(i-1, j),\ \ \text{OPT}(i, j-1) \,\bigr\} & x_i \ne y_j
+\end{cases}
+$$
+</Callout>
+
+<div className="graph-canvas">
+<svg viewBox="0 0 480 230" className="w-full max-w-md" xmlns="http://www.w3.org/2000/svg">
+  <style>{`
+    .lc { fill: rgb(var(--bg-soft)); stroke: rgb(var(--border-strong)); stroke-width: 1.5; }
+    .lcur { fill: rgb(244 63 94 / 0.26); stroke: rgb(244 63 94); stroke-width: 2.2; }
+    .ldia { fill: rgb(34 197 94 / 0.22); stroke: rgb(34 197 94); stroke-width: 2; }
+    .ldep { fill: rgb(59 130 246 / 0.20); stroke: rgb(59 130 246); stroke-width: 2; }
+    .lt { font: 600 10px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; dominant-baseline: middle; }
+    .larg { stroke: rgb(34 197 94); stroke-width: 1.9; fill: none; marker-end: url(#l-g); }
+    .larb { stroke: rgb(59 130 246); stroke-width: 1.9; fill: none; marker-end: url(#l-b); }
+    .lann { font: 600 10px ui-sans-serif, system-ui; text-anchor: middle; }
+  `}</style>
+  <defs>
+    <marker id="l-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(34 197 94)" />
+    </marker>
+    <marker id="l-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(59 130 246)" />
+    </marker>
+  </defs>
+  <rect x="120" y="40" width="80" height="44" className="ldia" />
+  <text x="160" y="62" className="lt">OPT(i−1,j−1)</text>
+  <rect x="240" y="40" width="80" height="44" className="ldep" />
+  <text x="280" y="62" className="lt">OPT(i−1,j)</text>
+  <rect x="120" y="124" width="80" height="44" className="ldep" />
+  <text x="160" y="146" className="lt">OPT(i,j−1)</text>
+  <rect x="240" y="124" width="80" height="44" className="lcur" />
+  <text x="280" y="146" className="lt">OPT(i,j)</text>
+  <path d="M 200 84 L 248 122" className="larg" />
+  <path d="M 280 84 L 280 122" className="larb" />
+  <path d="M 200 146 L 238 146" className="larb" />
+  <text x="240" y="200" className="lann" fill="rgb(34 197 94)">πράσινο: διαγώνια, αν xᵢ = yⱼ</text>
+  <text x="240" y="216" className="lann" fill="rgb(59 130 246)">μπλε: πάνω / αριστερά, αν xᵢ ≠ yⱼ</text>
+</svg>
+</div>
+
+### Ο αλγόριθμος
+
+```
+ΜΚΥ(m, n, x, y):
+  Για j = 0 έως n:  M[0, j] ← 0
+  Για i = 0 έως m:  M[i, 0] ← 0
+  Για i = 1 έως m:
+    Για j = 1 έως n:
+      Εάν x_i = y_j:
+        M[i, j] ← 1 + M[i-1, j-1]
+      Αλλιώς:
+        M[i, j] ← max{ M[i, j-1],  M[i-1, j] }
+  επίστρεψε M[m, n]
+```
+
+**Παράδειγμα.** $x = \texttt{ABCB}$, $y = \texttt{BDCAB}$:
+
+| | ∅ | B | D | C | A | B |
+|---|---|---|---|---|---|---|
+| **∅** | 0 | 0 | 0 | 0 | 0 | 0 |
+| **A** | 0 | 0 | 0 | 0 | 1 | 1 |
+| **B** | 0 | 1 | 1 | 1 | 1 | 2 |
+| **C** | 0 | 1 | 1 | 2 | 2 | 2 |
+| **B** | 0 | 1 | 1 | 2 | 2 | **3** |
+
+Η LCS έχει μήκος $M[4,5] = \mathbf{3}$ — μια κοινή υπακολουθία είναι το `BCB`.
+
+**Πολυπλοκότητα:** ο πίνακας έχει $m \cdot n$ κελιά, κάθε ένα $O(1)$. Συνολικά **$\Theta(mn)$**.
+
+<Recap>
+**Τι κρατάμε από αυτή τη διάλεξη**
+
+1. **Σακίδιο (0/1 knapsack)** — μέγιστη αξία αντικειμένων που χωράνε σε χωρητικότητα $W$. Ο άπληστος (λόγος $v/w$) αποτυγχάνει.
+2. Η μονοδιάστατη παραμετροποίηση $\text{OPT}(i)$ **δεν αρκεί** — χρειάζεται δεύτερη μεταβλητή: $\text{OPT}(i, w)$ = αξία με αντικείμενα $1..i$ και χωρητικότητα $w$.
+3. Αναδρομή: $\max\{\text{OPT}(i-1,w),\ v_i + \text{OPT}(i-1,w-w_i)\}$. Χρόνος $\Theta(nW)$ — **ψευδοπολυωνυμικός**· το πρόβλημα απόφασης είναι **NP-πλήρες**.
+4. **Μέγιστη κοινή υπακολουθία (LCS)** — μέγιστο μήκος κοινής (όχι κατ' ανάγκη συνεχόμενης) υπακολουθίας δύο συμβολοσειρών.
+5. Αναδρομή: αν $x_i = y_j$ → διαγώνια $1 + \text{OPT}(i-1,j-1)$· αλλιώς → $\max$ από «πάνω» και «αριστερά». Χρόνος $\Theta(mn)$.
+</Recap>
+
+<NextUp current="lectures/L15-dp-ii" />
 
 <LectureExercises lectureSlug="lectures/L15-dp-ii" />

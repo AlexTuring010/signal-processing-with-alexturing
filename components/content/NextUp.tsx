@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, Sparkles } from 'lucide-react'
-import { LECTURES, findSection } from '@/lib/content-index'
+import { ALL_SECTIONS } from '@/lib/content-index'
 
 type Props = {
   /**
@@ -44,11 +44,11 @@ export function NextUp({ current, href, title, blurb }: Props) {
   if (!current) return null
 
   // Dynamic mode — walk the lectures index.
-  const idx = LECTURES.findIndex((s) => s.slug === current)
+  const idx = ALL_SECTIONS.findIndex((s) => s.slug === current)
 
   // Find the first AVAILABLE successor (skip any flagged unavailable).
   const next = idx >= 0
-    ? LECTURES.slice(idx + 1).find((s) => s.available)
+    ? ALL_SECTIONS.slice(idx + 1).find((s) => s.available)
     : undefined
 
   if (!next) {

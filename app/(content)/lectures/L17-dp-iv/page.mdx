@@ -1,16 +1,17 @@
 export const metadata = {
-  title: "L17 · DP IV — DP σε γραφήματα",
-  description: "Συνδυάζουμε γραφήματα με DP: Floyd-Warshall, DP σε DAGs, και βασικά παραδείγματα σε δέντρα.",
+  title: 'L17 · Δυναμικός Προγραμματισμός IV — Ανεξάρτητο Σύνολο σε Δέντρα & Bellman-Ford',
+  description:
+    'Δυναμικός προγραμματισμός σε γραφήματα: ανεξάρτητο σύνολο μέγιστου βάρους σε δέντρα, και ο αλγόριθμος Bellman-Ford για συντομότερες διαδρομές με αρνητικά βάρη.',
 }
 
 export const frontmatter = {
-  title: "L17 · DP IV — DP σε γραφήματα",
-  slug: "lectures/L17-dp-iv",
+  title: 'L17 · Δυναμικός Προγραμματισμός IV — Ανεξάρτητο Σύνολο σε Δέντρα & Bellman-Ford',
+  slug: 'lectures/L17-dp-iv',
   order: 17,
-  prerequisites: ["lectures/L16-dp-iii", "lectures/L09-graphs-iv"],
-  examWeight: 6,
-  estimatedReadTime: 0,
-  lastUpdated: '2026-05-19',
+  prerequisites: ['lectures/L16-dp-iii', 'lectures/L09-graphs-iv'],
+  examWeight: 8,
+  estimatedReadTime: 30,
+  lastUpdated: '2026-05-21',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -21,9 +22,11 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   <span>Dynamic programming</span>
   <span>·</span>
   <span>Διάλεξη 17</span>
+  <span>·</span>
+  <span>~30 min read</span>
 </div>
 
-# L17 · DP IV — DP σε γραφήματα
+# L17 · Δυναμικός Προγραμματισμός IV — Ανεξάρτητο Σύνολο σε Δέντρα &amp; Bellman-Ford
 
 <div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
   <CompleteToggle slug="lectures/L17-dp-iv" />
@@ -32,41 +35,249 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
-<SourceDoc
-  sources={{ pdf: "L17 - Δυναμικός Προγραμματισμός ΙV.pdf" }}
-/>
+<SourceDoc sources={{ pdf: 'L17 - Δυναμικός Προγραμματισμός ΙV.pdf' }} />
 
 ## Τι θα δούμε
 
-Συνδυάζουμε γραφήματα με DP: Floyd-Warshall, DP σε DAGs, και βασικά παραδείγματα σε δέντρα.
+Η τελευταία διάλεξη του μαθήματος εφαρμόζει τον δυναμικό προγραμματισμό σε **γραφήματα**:
 
-## Σχεδιάγραμμα της διάλεξης (από το επίσημο PDF)
+1. **Ανεξάρτητο σύνολο σε δέντρα** — DP όπου τα υποπροβλήματα είναι **υποδέντρα**.
+2. **Bellman-Ford** — συντομότερες διαδρομές με **αρνητικά** βάρη, εκεί που ο Dijkstra του [L09](/lectures/L09-graphs-iv) αποτυγχάνει. Κλείνει έτσι μια υπόσχεση που είχαμε αφήσει ανοιχτή.
 
-Παρακάτω είναι τα **πραγματικά βήματα** της διάλεξης όπως εμφανίζονται διαδοχικά στις διαφάνειες. Κάθε εγγραφή αντιστοιχεί σε σελίδα του PDF. Άνοιξε το SourceDoc παραπάνω για να διαβάσεις τις λεπτομέρειες κάθε ενότητας.
+## Ανεξάρτητο Σύνολο σε Δέντρα — «το πάρτι»
 
-2. **Δυναμικός Προγραμματισμός**
-3. **Ας οργανώσουμε ένα πάρτυ...**
-4. **Για παράδει γμα**
-5. **Ας προσπαθήσουμε να το λύσουμε**
-8. **Δομή του προβλήματος**
-15. **Συντομότερη Διαδρομή με Βάρη**
-16. **Μόνο θετικά βάρη - ΑλγόριθμοςDijkstra**
-32. **Αν έχουμε και αρνητικά βάρη;**
-34. **Απόπειρα 2: Προσθέτουμε σε όλα τα βάρη μία σταθερά**
-37. **Αρνητικοί κύκλοι**
-45. **Συνοψίζοντας**
-46. **Αλγόριθμος**
-48. **Βελτιώσεις**
-51. **Συντομότερη διαδρομή (ξανά)**
-52. **Παρατηρήσεις**
+### Το πρόβλημα
 
-## Πώς να μελετήσεις τώρα
+Οργανώνουμε ένα πάρτι για μια εταιρεία με **αυστηρή ιεραρχική δομή**. Κάθε υπάλληλος $v$ έχει μια θετική «προσφορά» $\chi(v)$ (πόσο κέφι φέρνει). Ένας περιορισμός: **δεν** καλούμε ταυτόχρονα έναν υπάλληλο και τον **άμεσο προϊστάμενό** του.
 
-Μέχρι να γραφτούν αναλυτικές σημειώσεις για αυτή τη διάλεξη με την ίδια λεπτομέρεια όπως [L01](/lectures/L01-eisagogika) και [L02](/lectures/L02-asymptotic-analysis):
+**Είσοδος:** ένα **δέντρο** που περιγράφει την ιεραρχία, με προσφορά σε κάθε κορυφή.
 
-1. **Διάβασε το PDF** ακριβώς από την αρχή — η σειρά των διαφανειών είναι παιδαγωγικά δομημένη και κάθε ορισμός χτίζει πάνω στον προηγούμενο.
-2. **Σταμάτα σε κάθε διαφάνεια που έχει ψευδοκώδικα** και τρέξε τον αλγόριθμο με το χέρι σε μικρό παράδειγμα ($n = 4$ ή $5$).
-3. **Λύσε αμέσως** τις ασκήσεις που εμφανίζονται παρακάτω — οι περισσότερες προέρχονται από φροντιστήρια και παλαιότερες εξεταστικές που εξετάζουν ακριβώς αυτή τη διάλεξη.
-4. **Άσε σχόλιο** σε όποιο σημείο μπερδεύτηκες — αυτή η σελίδα θα γραφτεί με βάση τα σημεία όπου οι φοιτητές κολλάνε περισσότερο.
+**Στόχος:** λίστα καλεσμένων με το **μέγιστο άθροισμα προσφορών**, που να σέβεται τον περιορισμό.
+
+<Callout type="intuition">
+Σε ορολογία γραφημάτων: ζητάμε ένα **ανεξάρτητο σύνολο** (σύνολο κορυφών χωρίς ακμή μεταξύ τους) **μέγιστου βάρους** σε ένα δέντρο. Στα γενικά γραφήματα αυτό το πρόβλημα είναι NP-δύσκολο — αλλά σε **δέντρα** ο δυναμικός προγραμματισμός το λύνει εύκολα.
+</Callout>
+
+### Δύο τιμές ανά κορυφή
+
+Το κλειδί: για κάθε κορυφή $v$, τα υποπροβλήματα αφορούν το **υποδέντρο** της $v$. Αλλά μία τιμή δεν αρκεί — η απάντηση εξαρτάται από το **αν η ίδια η $v$ είναι μέσα**. Άρα κρατάμε **δύο**:
+
+<Callout type="key">
+- $A[v]$ = μέγιστη προσφορά ενός έγκυρου υποσυνόλου του **υποδέντρου** της $v$ (η $v$ επιτρέπεται ή όχι).
+- $B[v]$ = μέγιστη προσφορά ενός έγκυρου υποσυνόλου του υποδέντρου της $v$ που **δεν περιέχει** την $v$.
+</Callout>
+
+Έστω $v$ με άμεσους υφισταμένους (παιδιά) $v_1, v_2, \dots, v_k$.
+
+**Για το $B[v]$:** η $v$ **δεν** μπαίνει — άρα δεν μπλοκάρει κανέναν. Κάθε υφιστάμενος μπορεί ελεύθερα να μπει ή όχι· για κάθε υποδέντρο παίρνουμε το βέλτιστο $A[v_i]$:
+
+$$B[v] = \sum_{i=1}^{k} A[v_i]$$
+
+**Για το $A[v]$:** δύο σενάρια, παίρνουμε το καλύτερο.
+- Η $v$ **δεν** μπαίνει: αυτό είναι ακριβώς το $B[v]$.
+- Η $v$ **μπαίνει**: τότε **κανένα** από τα παιδιά $v_1, \dots, v_k$ δεν επιτρέπεται. Συνεισφορά: $\chi(v) + \sum_i B[v_i]$.
+
+$$A[v] = \max\Bigl\{\, B[v],\ \ \chi(v) + \sum_{i=1}^{k} B[v_i] \,\Bigr\}$$
+
+<div className="graph-canvas">
+<svg viewBox="0 0 660 380" className="w-full max-w-3xl" xmlns="http://www.w3.org/2000/svg">
+  <style>{`
+    .ptn { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--accent)); stroke-width: 2; }
+    .ptsel { fill: rgb(34 197 94 / 0.22); stroke: rgb(34 197 94); stroke-width: 2.6; }
+    .ptchi { font: 800 15px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; dominant-baseline: middle; }
+    .pte { stroke: rgb(var(--fg-muted)); stroke-width: 1.9; }
+    .ptab { font: 600 11px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+    .ptann { font: 600 12px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+  `}</style>
+  <line x1="330" y1="58" x2="190" y2="158" className="pte" />
+  <line x1="330" y1="58" x2="480" y2="158" className="pte" />
+  <line x1="190" y1="158" x2="110" y2="278" className="pte" />
+  <line x1="190" y1="158" x2="270" y2="278" className="pte" />
+  <line x1="480" y1="158" x2="480" y2="278" className="pte" />
+  {/* nodes: [label, x, y, chi, A, B, selected] */}
+  {[
+    ['r',330,50,8,39,39,false],
+    ['a',190,158,10,19,19,false],
+    ['b',480,158,20,20,9,true],
+    ['c',110,278,15,15,0,true],
+    ['d',270,278,4,4,0,true],
+    ['e',480,278,9,9,0,false],
+  ].map(([l,x,y,chi,A,B,sel]) => (
+    <g key={l}>
+      <circle cx={x} cy={y} r="26" className={sel ? 'ptsel' : 'ptn'} />
+      <text x={x} y={y - 2} className="ptchi">{chi}</text>
+      <text x={x} y={y + 13} className="ptab">{l}</text>
+      <text x={x} y={y + 44} className="ptab">A={A} · B={B}</text>
+    </g>
+  ))}
+  <text x="330" y="350" className="ptann">Αριθμός μέσα = προσφορά χ(v). Πράσινες = η βέλτιστη λίστα: {'{b, c, d}'} → 20+15+4 = 39.</text>
+  <text x="330" y="370" className="ptann">A[r] = max{'{'} B[r]=39,  χ(r)+B[a]+B[b] = 8+19+9 = 36 {'}'} = 39.</text>
+</svg>
+</div>
+
+### Ο αλγόριθμος
+
+Υπολογίζουμε τα $A[v], B[v]$ **από τα φύλλα προς τη ρίζα** (κάθε κορυφή χρειάζεται πρώτα τα παιδιά της — μια αντίστροφη τοπολογική διάταξη του δέντρου). Για **φύλλο** $\ell$: $B[\ell] = 0$ και $A[\ell] = \chi(\ell)$. Η απάντηση είναι το $A[\text{ρίζα}]$.
+
+Κάθε κορυφή και κάθε ακμή επεξεργάζεται $O(1)$ φορές → **$O(n)$** συνολικά.
+
+## Συντομότερες Διαδρομές με Αρνητικά Βάρη
+
+### Γιατί ξαναπιάνουμε το πρόβλημα
+
+Στο [L09](/lectures/L09-graphs-iv) ο Dijkstra έλυσε τις συντομότερες διαδρομές — αλλά με τη ρητή **απαίτηση όλα τα βάρη να είναι θετικά**. Τώρα επιτρέπουμε **αρνητικά** βάρη $\ell_e$ (π.χ. δρομολόγηση όπου κάποιες ακμές δίνουν «κέρδος»).
+
+<Callout type="warning">
+**Ο Dijkstra μπορεί να αποτύχει.** Μόλις «οριστικοποιήσει» μια κορυφή, δεν την ξανακοιτάζει. Μια αρνητική ακμή που οδηγεί σε **ήδη οριστικοποιημένη** κορυφή θα την βελτίωνε — αλλά είναι πια αργά.
+</Callout>
+
+<div className="graph-canvas">
+<svg viewBox="0 0 660 250" className="w-full max-w-2xl" xmlns="http://www.w3.org/2000/svg">
+  <style>{`
+    .nwn { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--accent)); stroke-width: 2; }
+    .nwl { font: 700 14px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; dominant-baseline: middle; }
+    .nwe { stroke: rgb(var(--fg-muted)); stroke-width: 2; fill: none; marker-end: url(#nw-a); }
+    .nweg { stroke: rgb(244 63 94); stroke-width: 2.6; fill: none; marker-end: url(#nw-b); }
+    .nww { font: 700 13px ui-sans-serif, system-ui; text-anchor: middle; }
+    .nwann { font: 600 12px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+  `}</style>
+  <defs>
+    <marker id="nw-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(var(--fg-muted))" />
+    </marker>
+    <marker id="nw-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(244 63 94)" />
+    </marker>
+  </defs>
+  <line x1="116" y1="120" x2="304" y2="78" className="nwe" />
+  <line x1="116" y1="120" x2="304" y2="162" className="nwe" />
+  <line x1="330" y1="86" x2="330" y2="150" className="nweg" />
+  {[['s',90,120],['t',330,68],['u',330,170]].map(([id,x,y]) => (
+    <g key={id}>
+      <circle cx={x} cy={y} r="24" className="nwn" />
+      <text x={x} y={y} className="nwl">{id}</text>
+    </g>
+  ))}
+  <text x="210" y="82" className="nww" fill="rgb(var(--accent))">2</text>
+  <text x="195" y="160" className="nww" fill="rgb(var(--accent))">1</text>
+  <text x="348" y="122" className="nww" fill="rgb(244 63 94)">−5</text>
+  <text x="330" y="216" className="nwann">Ο Dijkstra οριστικοποιεί το u στο 1 (μέσω s→u).</text>
+  <text x="330" y="234" className="nwann">Χάνει το s→t→u = 2 + (−5) = −3.</text>
+</svg>
+</div>
+
+### Πρόσθεσε σταθερά; Όχι.
+
+Δελεαστική ιδέα: «πρόσθεσε μια μεγάλη σταθερά σε **όλα** τα βάρη ώστε να γίνουν θετικά, και τρέξε Dijkstra». **Δεν δουλεύει:** μια διαδρομή με πολλές ακμές κερδίζει τη σταθερά **πολλές φορές**, ενώ μια διαδρομή με λίγες ακμές λίγες — η σύγκριση αλλοιώνεται. Ο Dijkstra και πάλι αποτυγχάνει.
+
+### Αρνητικοί κύκλοι
+
+<Callout type="key">
+**Αρνητικός κύκλος:** ένας κύκλος του οποίου το άθροισμα βαρών είναι **αρνητικό**.
+
+Αν υπάρχει διαδρομή από την $s$ στην $t$ που περνά μέσα από αρνητικό κύκλο, **δεν υπάρχει** συντομότερη $s$–$t$ διαδρομή — γυρνώντας στον κύκλο μειώνεις το κόστος επ' άπειρον. Διαφορετικά, η συντομότερη διαδρομή **υπάρχει** και είναι **απλή** (χωρίς επαναλαμβανόμενες κορυφές).
+</Callout>
+
+<div className="graph-canvas">
+<svg viewBox="0 0 500 230" className="w-full max-w-md" xmlns="http://www.w3.org/2000/svg">
+  <style>{`
+    .ncn { fill: rgb(244 63 94 / 0.16); stroke: rgb(244 63 94); stroke-width: 2.2; }
+    .ncl { font: 700 14px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; dominant-baseline: middle; }
+    .nce { stroke: rgb(244 63 94); stroke-width: 2.4; fill: none; marker-end: url(#nc-a); }
+    .ncw { font: 700 14px ui-sans-serif, system-ui; fill: rgb(244 63 94); text-anchor: middle; }
+    .ncann { font: 600 12px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
+  `}</style>
+  <defs>
+    <marker id="nc-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgb(244 63 94)" />
+    </marker>
+  </defs>
+  <path d="M 268 64 L 360 138" className="nce" />
+  <path d="M 350 162 L 178 162" className="nce" />
+  <path d="M 150 138 L 232 66" className="nce" />
+  {[['a',250,52],['b',372,158],['c',158,158]].map(([id,x,y]) => (
+    <g key={id}>
+      <circle cx={x} cy={y} r="24" className="ncn" />
+      <text x={x} y={y} className="ncl">{id}</text>
+    </g>
+  ))}
+  <text x="338" y="96" className="ncw">7</text>
+  <text x="265" y="186" className="ncw">−6</text>
+  <text x="172" y="96" className="ncw">−4</text>
+  <text x="250" y="216" className="ncann">Άθροισμα κύκλου = 7 − 6 − 4 = −3 &lt; 0 → αρνητικός κύκλος.</text>
+</svg>
+</div>
+
+## Ο αλγόριθμος Bellman-Ford
+
+### Η αναδρομή — παραμετροποίηση με το πλήθος ακμών
+
+Σταθεροποιούμε έναν **προορισμό** $t$. Το έξυπνο υποπρόβλημα:
+
+<Callout type="key">
+$\text{OPT}(i, v)$ = το μήκος του συντομότερου $v \to t$ μονοπατιού που χρησιμοποιεί **το πολύ $i$ ακμές**.
+</Callout>
+
+Έστω $P$ το βέλτιστο τέτοιο μονοπάτι. Δύο περιπτώσεις:
+
+- Το $P$ χρησιμοποιεί **το πολύ $i-1$** ακμές — τότε $\text{OPT}(i, v) = \text{OPT}(i-1, v)$.
+- Το $P$ χρησιμοποιεί **ακριβώς $i$** ακμές. Έστω $(v, w)$ η πρώτη του ακμή· τότε το υπόλοιπο είναι το συντομότερο $w \to t$ μονοπάτι με $i-1$ ακμές. Κόστος: $\ell_{vw} + \text{OPT}(i-1, w)$.
+
+<Callout type="key">
+$$
+\text{OPT}(i, v) =
+\begin{cases}
+0 & i = 0,\ v = t \\
+\infty & i = 0,\ v \ne t \\[4pt]
+\min\Bigl\{\, \text{OPT}(i-1, v),\ \ \min_{(v,w) \in A}\bigl(\ell_{vw} + \text{OPT}(i-1, w)\bigr) \,\Bigr\} & i > 0
+\end{cases}
+$$
+</Callout>
+
+<Callout type="intuition">
+**Πόσο μεγάλο πρέπει να γίνει το $i$;** Αν δεν υπάρχουν αρνητικοί κύκλοι, η συντομότερη διαδρομή είναι **απλή** — δεν επαναλαμβάνει κορυφή — άρα έχει **το πολύ $n-1$ ακμές**. Συνεπώς το $M[n-1, v]$ δίνει τη συντομότερη $v \to t$ απόσταση για **κάθε** κορυφή $v$.
+</Callout>
+
+### Ο πίνακας
+
+```
+ΣυντομότεροΜονοπάτι(G, t):
+  Για κάθε v ∈ V:  M[0, v] ← ∞
+  M[0, t] ← 0
+  Για i = 1 έως n-1:
+    Για κάθε v ∈ V:
+      M[i, v] ← M[i-1, v]
+      Για κάθε ακμή (v, w) ∈ A:
+        M[i, v] ← min( M[i, v],  ℓ(v,w) + M[i-1, w] )
+  επίστρεψε M[n-1, ·]
+```
+
+**Πολυπλοκότητα:** $\Theta(mn)$ χρόνος, $\Theta(n^2)$ χώρος.
+
+### Βελτιώσεις
+
+<Callout type="key">
+- **Γραμμικός χώρος.** Κράτα έναν **μονοδιάστατο** πίνακα $M[v]$ = το μήκος του καλύτερου $v \to t$ μονοπατιού που βρέθηκε ως τώρα. Μετά από $i$ γύρους, το $M[v]$ δεν είναι μεγαλύτερο από το συντομότερο μονοπάτι με $\le i$ ακμές. Χώρος: $O(m + n)$.
+- **Παράλειψη.** Μην εξετάζεις ακμή $(v, w)$ εκτός αν το $M[w]$ **άλλαξε** στον προηγούμενο γύρο — αλλιώς δεν θα δώσει τίποτα νέο.
+- **Πρόωρος τερματισμός.** Αν σε έναν ολόκληρο γύρο **καμία** τιμή δεν άλλαξε, σταμάτα — έχεις συγκλίνει.
+</Callout>
+
+Με αυτές: $O(m + n)$ χώρος, $O(mn)$ χρόνος στη χειρότερη περίπτωση — αλλά συχνά πολύ ταχύτερα.
+
+<Callout type="note">
+**Παρατηρήσεις-ερωτήματα από το PDF.** Ο αλγόριθμος, δοσμένου ενός $t$, υπολογίζει το συντομότερο $v \to t$ μονοπάτι για **κάθε** $v$. Μπορεί να προσαρμοστεί για $s \to v$ (αντιστρέφοντας τις ακμές), για **DAG** (όπου αρκεί ένα πέρασμα κατά τοπολογική διάταξη), και — αλλάζοντας `min` σε `max` — για τα **μακρύτερα** μονοπάτια.
+</Callout>
+
+<Recap>
+**Τι κρατάμε από αυτή τη διάλεξη**
+
+1. **Ανεξάρτητο σύνολο σε δέντρα** — DP με υποπροβλήματα τα υποδέντρα. Δύο τιμές ανά κορυφή: $A[v]$ (η $v$ ελεύθερη) και $B[v]$ (η $v$ έξω). $B[v] = \sum A[v_i]$, $A[v] = \max\{B[v],\ \chi(v) + \sum B[v_i]\}$. $O(n)$.
+2. Ο **Dijkstra αποτυγχάνει** με αρνητικά βάρη· η προσθήκη σταθεράς **δεν** βοηθάει.
+3. **Αρνητικός κύκλος** → δεν υπάρχει συντομότερη διαδρομή· αλλιώς υπάρχει και είναι **απλή** ($\le n-1$ ακμές).
+4. **Bellman-Ford** — $\text{OPT}(i, v)$ = συντομότερο $v \to t$ μονοπάτι με $\le i$ ακμές. Αναδρομή: $\min\{\text{OPT}(i-1,v),\ \min_{(v,w)}(\ell_{vw} + \text{OPT}(i-1,w))\}$. Απάντηση στο $M[n-1, v]$.
+5. $\Theta(mn)$ χρόνος· με μονοδιάστατο πίνακα, παράλειψη αμετάβλητων κορυφών και πρόωρο τερματισμό → $O(m+n)$ χώρος.
+</Recap>
+
+<NextUp current="lectures/L17-dp-iv" />
 
 <LectureExercises lectureSlug="lectures/L17-dp-iv" />
