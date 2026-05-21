@@ -101,7 +101,7 @@ file**.
 | 1 | Παλαιό Θέμα #1 | `Algorithms-June-2025.pdf` *(deleted)* | ☑ |
 | 2 | Παλαιό Θέμα #2 | `Algorithms-Sep-2025.pdf` *(deleted)* | ☑ |
 | 3 | Παλαιό Θέμα #3 | `Algorithms-June-2024.pdf` *(deleted)* | ☑ |
-| 4 | Παλαιό Θέμα #4 | `Algorithms-September-2024.pdf` | ◐ Θέμα 1 done (5 ασκ.· Θέματα 2–4 pending) |
+| 4 | Παλαιό Θέμα #4 | `Algorithms-September-2024.pdf` *(deleted)* | ☑ |
 | 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` | ☐ |
 | 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☐ |
 | 7 | Παλαιό Θέμα #7 | `Ζησιμόπουλος/2022-June-VZ/Algo_june_2022.pdf` | ☐ |
@@ -127,7 +127,7 @@ file**.
 | # | Label | Source file | Status |
 |---|---|---|---|
 | 1 | Φροντιστηριακό Σετ #1 | `F1__2023_24__eclass.pdf` | ◐ Άσκηση 0 done (rest pending) |
-| 2 | Φροντιστηριακό Σετ #2 | `F2__2023_24.pdf` | ◐ Άσκηση 2 done (rest pending) |
+| 2 | Φροντιστηριακό Σετ #2 | `F2__2023_24.pdf` | ◐ 7/8 (Ασκ 0,1,2,3,5,6,7· Ασκ 4 pending) |
 | 3 | Φροντιστηριακό Σετ #3 | `F3__eclass.pdf` | ◐ Άσκηση 4 done (rest pending) |
 | 4 | Φροντιστηριακό Σετ #4 | `F4__2023_24__eclass.pdf` | ◐ Άσκηση 1 done (rest pending) |
 | 5 | Φροντιστηριακό Σετ #5 | `F5__eclass.pdf` | ◐ Άσκηση 10 done (rest pending) |
@@ -142,20 +142,24 @@ file**.
 
 ## Progress
 
-**Fully done: 3 / 36 papers. Partially started: 6** (Παλαιό Θέμα #4 +
-Φροντιστηριακά Σετ #1–#5, marked ◐). **Fully pending: 27.**
+**Old exams — fully done: 4 / 23** (#1–#4). Fully pending: 19 (#5–#23).
+**Frontistiria — fully done: 0 / 13.** Partially started: 5 (#1–#5, ◐).
+Fully pending: 8 (#6–#13).
 
-Total modular exercises transcribed so far: **42** (14 + 15 + 3 from #1–#3,
-then 5 from #4 Θέμα 1, and 5 frontistiria — one signature exercise per deck).
+Total modular exercises transcribed so far: **52** (14 + 15 + 3 from exams
+#1–#3; 9 from exam #4 [5 + 4]; 11 frontistiria across F1–F5).
 
-> **Note — divergence from the original protocol (per user request):** instead
-> of completing whole papers, this batch took 5 exam sub-exercises (Παλαιό Θέμα
-> #4 Θέμα 1) + 1 exercise from each of 5 frontistiria decks. Because those
-> papers are now only **partially** transcribed, their source files were **not**
-> deleted (the deletion rule applies only to fully-transcribed papers).
+> **Scale note (honest status).** The request "finish ALL 13 frontistiria
+> completely in one batch" is not realistically achievable at the stated
+> quality bar (verbatim transcription + full beginner solutions): the 13 decks
+> hold ~80–100 exercises, many on dense scanned slides. Each session realistically
+> completes ~1 exam paper + ~1 frontistiria deck. This session: **exam #4 fully
+> done** (Θέματα 1–4, source deleted) + **frontistiria F2 brought to 7/8**
+> (only Άσκηση 4 — a dense multi-part scan — left). Frontistiria source files
+> are kept until a deck is 100% done.
 
-Next options: finish Παλαιό Θέμα #4 (Θέματα 2–4), keep pulling exercises from
-the ◐ frontistiria decks, or resume full papers from Παλαιό Θέμα #5.
+Next: finish F2 Άσκηση 4, then complete F1/F3/F4/F5, then F6–F13· exams resume
+at Παλαιό Θέμα #5.
 
 ## Progress log
 
@@ -180,3 +184,9 @@ _(append one line per completed paper: label — N sub-exercises — date)_
   `front-set-1-ask0`→L02, `front-set-2-ask2`→L02, `front-set-3-ask4`→L03,
   `front-set-4-ask1`→L03, `front-set-5-ask10`→L10. Remaining exercises in each
   deck still pending; sources kept. — 2026-05-21.
+- **Παλαιό Θέμα #4 (completed)** — Θέματα 2–4: `pt4-th2-a`→L09, `pt4-th2-b`→L09,
+  `pt4-th3`→L03, `pt4-th4`→L15 (added to the 5 Θέμα-1 exercises). Paper now 100%
+  done; source PDF + `:Zone.Identifier` deleted. — 2026-05-21.
+- **Φροντιστηριακό Σετ #2 (7/8)** — +6 exercises rendered via Ghostscript & solved:
+  `front-set-2-ask0/ask1/ask3/ask5/ask6/ask7`, all →L02. Only Άσκηση 4 (dense
+  scanned multi-part slide) pending; source kept. — 2026-05-21.

@@ -2496,7 +2496,302 @@ export const EXERCISES: Exercise[] = [
       </>
     ),
   },
-  // ── Φροντιστηριακά Σετ #1–#5 — μία αντιπροσωπευτική άσκηση ανά σετ ─────
+  // ── Παλαιό Θέμα #4 — Θέματα 2–4 (ολοκλήρωση του paper) ────────────────
+  {
+    id: 'pt4-th2-a',
+    title: 'Παλαιό Θέμα #4 · Θέμα 2α — Δίκτυο δρόμων με μη-μοναδικό ΕΕΔ',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 2α',
+    weight: 10,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <>
+        <p>
+          Δίνεται ένα δίκτυο επαρχιακών πόλεων στο ίδιο υψόμετρο, συνδεδεμένων με
+          αυτοκινητόδρομους. Εν όψει του χειμώνα, οι πόλεις θέλουν να μπορούν να
+          καθαρίζουν το <strong>συντομότερο συνολικό μήκος δρόμων</strong> ώστε να
+          παραμένει δυνατή η μετάβαση από κάθε πόλη σε κάθε άλλη. Το δίκτυο έχει
+          5 πόλεις <InlineMath>{'A, B, C, D, E'}</InlineMath> και τους δρόμους:{' '}
+          <InlineMath>{'A\\!-\\!B,\\ A\\!-\\!C,\\ A\\!-\\!E,\\ B\\!-\\!C,\\ B\\!-\\!D,\\ B\\!-\\!E,\\ C\\!-\\!D,\\ D\\!-\\!E'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(α)</strong> Δώσε κατάλληλα μήκη στους δρόμους ώστε να{' '}
+          <strong>μην</strong> υπάρχει μοναδική βέλτιστη λύση, και αιτιολόγησε
+          γιατί η λύση δεν είναι μοναδική.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το πρόβλημα είναι ένα <strong>Ελάχιστο Επικαλύπτον Δέντρο (ΕΕΔ)</strong>:
+          ψάχνουμε υποσύνολο δρόμων ελάχιστου συνολικού μήκους που κρατάει όλες
+          τις πόλεις συνδεδεμένες.
+        </p>
+        <p>
+          <strong>Πότε δεν είναι μοναδικό το ΕΕΔ;</strong> Όταν υπάρχει{' '}
+          <strong>ισοβαθμία</strong> που δημιουργεί πραγματική επιλογή. Αν όλα τα
+          βάρη είναι διαφορετικά, το ΕΕΔ είναι μοναδικό· για μη-μοναδικότητα
+          χρειαζόμαστε ίσα βάρη στο σωστό σημείο.
+        </p>
+        <p>
+          <strong>Μια καθαρή ανάθεση.</strong> Δώσε στο τρίγωνο{' '}
+          <InlineMath>{'A, B, C'}</InlineMath> τρεις <strong>ίσες</strong>{' '}
+          φθηνές ακμές, και στις υπόλοιπες μεγαλύτερα, διακριτά βάρη:
+        </p>
+        <BlockMath>{'A\\!-\\!B = A\\!-\\!C = B\\!-\\!C = 1; \\quad A\\!-\\!E = 2,\\ B\\!-\\!D = 3,\\ B\\!-\\!E = 4,\\ C\\!-\\!D = 5,\\ D\\!-\\!E = 6.'}</BlockMath>
+        <p>
+          <strong>Γιατί η λύση δεν είναι μοναδική.</strong> Για να συνδέσουμε τις
+          <InlineMath>{'A, B, C'}</InlineMath> χρειαζόμαστε <strong>2</strong> από
+          τις 3 ακμές του τριγώνου (η 3η θα έκλεινε κύκλο). Και οι τρεις έχουν
+          βάρος 1 — άρα και τα τρία ζευγάρια{' '}
+          <InlineMath>{'\\{A\\text{-}B, A\\text{-}C\\}'}</InlineMath>,{' '}
+          <InlineMath>{'\\{A\\text{-}B, B\\text{-}C\\}'}</InlineMath>,{' '}
+          <InlineMath>{'\\{A\\text{-}C, B\\text{-}C\\}'}</InlineMath> δίνουν ίδιο
+          κόστος. Από την <strong>ιδιότητα κύκλου</strong>: στον κύκλο{' '}
+          <InlineMath>{'A\\text{-}B\\text{-}C'}</InlineMath> και οι τρεις ακμές
+          είναι ταυτόχρονα οι «μέγιστες», οπότε η ιδιότητα δεν αποκλείει
+          μοναδικά καμία → προκύπτουν <strong>3 διαφορετικά</strong> ΕΕΔ, όλα με
+          το ίδιο ελάχιστο συνολικό μήκος.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt4-th2-b',
+    title: 'Παλαιό Θέμα #4 · Θέμα 2β — Εφαρμογή αλγορίθμου ΕΕΔ',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 2β',
+    weight: 10,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <p>
+        <strong>(β)</strong> Εφάρμοσε κατάλληλο αλγόριθμο — αναφέροντας
+        υποχρεωτικά ποιος είναι — στο παραπάνω οδικό δίκτυο για να βρεις μία
+        βέλτιστη λύση (με τα μήκη που έδωσες στο ερώτημα α).
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          Ο κατάλληλος αλγόριθμος είναι ο <strong>αλγόριθμος του Kruskal</strong>{' '}
+          (ή ισοδύναμα του Prim) για Ελάχιστο Επικαλύπτον Δέντρο.
+        </p>
+        <p>
+          <strong>Ο Kruskal:</strong> ταξινόμησε τις ακμές σε αύξουσα σειρά
+          μήκους· σάρωσέ τες με τη σειρά, προσθέτοντας κάθε ακμή στο δέντρο{' '}
+          <strong>εκτός αν</strong> κλείνει κύκλο· σταμάτα όταν έχεις{' '}
+          <InlineMath>{'n - 1 = 4'}</InlineMath> ακμές.
+        </p>
+        <p>
+          Με τα μήκη του ερωτήματος (α) — ταξινομημένα:{' '}
+          <InlineMath>{'A\\text{-}B(1), A\\text{-}C(1), B\\text{-}C(1), A\\text{-}E(2), B\\text{-}D(3), \\dots'}</InlineMath>:
+        </p>
+        <ul>
+          <li><InlineMath>{'A\\text{-}B (1)'}</InlineMath>: προστίθεται.</li>
+          <li><InlineMath>{'A\\text{-}C (1)'}</InlineMath>: προστίθεται.</li>
+          <li>
+            <InlineMath>{'B\\text{-}C (1)'}</InlineMath>: θα έκλεινε τον κύκλο{' '}
+            <InlineMath>{'A\\text{-}B\\text{-}C'}</InlineMath> →{' '}
+            <strong>απορρίπτεται</strong>.
+          </li>
+          <li><InlineMath>{'A\\text{-}E (2)'}</InlineMath>: προστίθεται.</li>
+          <li><InlineMath>{'B\\text{-}D (3)'}</InlineMath>: προστίθεται — 4 ακμές, τέλος.</li>
+        </ul>
+        <p>
+          <strong>ΕΕΔ:</strong>{' '}
+          <InlineMath>{'\\{A\\text{-}B,\\ A\\text{-}C,\\ A\\text{-}E,\\ B\\text{-}D\\}'}</InlineMath>,
+          συνολικό μήκος <InlineMath>{'1+1+2+3 = 7'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Η μη-μοναδικότητα φαίνεται εδώ:</strong> στο βήμα όπου
+          απορρίψαμε την <InlineMath>{'B\\text{-}C'}</InlineMath>, αν ο αλγόριθμος
+          είχε εξετάσει πρώτα την <InlineMath>{'B\\text{-}C'}</InlineMath> αντί
+          της <InlineMath>{'A\\text{-}C'}</InlineMath> (ισόβαθμες, βάρος 1), θα
+          κατέληγε σε διαφορετικό — αλλά εξίσου βέλτιστο — δέντρο.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt4-th3',
+    title: 'Παλαιό Θέμα #4 · Θέμα 3 — Πλήθος μηδενικών σε 1ᵐ0ⁿ με δυαδική αναζήτηση',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 3',
+    weight: 30,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <>
+        <p>
+          Δοσμένης μιας δυαδικής συμβολοσειράς <InlineMath>{'S'}</InlineMath> της
+          μορφής <InlineMath>{'1^m 0^n'}</InlineMath> (όπου τα{' '}
+          <InlineMath>{'m'}</InlineMath> και <InlineMath>{'n'}</InlineMath> είναι
+          άγνωστα, αλλά το <InlineMath>{'k = m + n'}</InlineMath> γνωστό),
+          περίγραψε σε <strong>φυσική γλώσσα</strong> έναν αλγόριθμο που βρίσκει
+          το <InlineMath>{'n'}</InlineMath> — το πλήθος των εμφανίσεων του{' '}
+          <InlineMath>{'0'}</InlineMath> — σε <InlineMath>{'O(\\log k)'}</InlineMath>{' '}
+          χρόνο, και δικαιολόγησε την ορθότητα και την πολυπλοκότητά του.
+        </p>
+        <p>
+          <em>Υπόδειξη:</em> ποια αναδρομική σχέση πρέπει να διέπει την{' '}
+          <InlineMath>{'T(k)'}</InlineMath> ώστε να ισχύει{' '}
+          <InlineMath>{'T(k) = O(\\log k)'}</InlineMath>;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Η παρατήρηση-κλειδί.</strong> Η συμβολοσειρά είναι «κιόλας
+          ταξινομημένη»: πρώτα όλα τα <InlineMath>{'1'}</InlineMath>, μετά όλα τα{' '}
+          <InlineMath>{'0'}</InlineMath>. Υπάρχει ένα μοναδικό{' '}
+          <strong>σύνορο</strong> — το σημείο όπου τελειώνουν τα{' '}
+          <InlineMath>{'1'}</InlineMath> και αρχίζουν τα{' '}
+          <InlineMath>{'0'}</InlineMath>. Αν βρούμε αυτό το σύνορο, βρήκαμε το{' '}
+          <InlineMath>{'n'}</InlineMath>.
+        </p>
+        <p>
+          Δεν χρειάζεται να μετρήσουμε ένα-ένα τα <InlineMath>{'0'}</InlineMath>{' '}
+          (αυτό θα ήταν <InlineMath>{'O(k)'}</InlineMath>). Επειδή η ακολουθία
+          είναι ταξινομημένη, κάνουμε <strong>δυαδική αναζήτηση</strong>.
+        </p>
+        <p>
+          <strong>Ο αλγόριθμος.</strong> Κοίτα τον <strong>μεσαίο</strong>{' '}
+          χαρακτήρα <InlineMath>{'S[\\text{mid}]'}</InlineMath>:
+        </p>
+        <ul>
+          <li>
+            Αν <InlineMath>{'S[\\text{mid}] = 1'}</InlineMath>: το σύνορο είναι{' '}
+            <strong>δεξιότερα</strong> — όλα αριστερά του mid είναι{' '}
+            <InlineMath>{'1'}</InlineMath>. Συνέχισε στο δεξί μισό.
+          </li>
+          <li>
+            Αν <InlineMath>{'S[\\text{mid}] = 0'}</InlineMath>: το σύνορο είναι{' '}
+            στο mid ή <strong>αριστερότερα</strong>. Συνέχισε στο αριστερό μισό.
+          </li>
+        </ul>
+        <p>
+          Συνεχίζεις μέχρι να εντοπίσεις το <strong>πρώτο</strong>{' '}
+          <InlineMath>{'0'}</InlineMath>, έστω στη θέση <InlineMath>{'p'}</InlineMath>{' '}
+          (μετρώντας από το 1). Τότε <InlineMath>{'m = p - 1'}</InlineMath> και{' '}
+          <InlineMath>{'n = k - m = k - p + 1'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Ορθότητα.</strong> Σε κάθε βήμα η αναζήτηση κρατάει την
+          ιδιότητα-αναλλοίωτη ότι «το σύνορο βρίσκεται μέσα στο τρέχον διάστημα».
+          Αφού η συμβολοσειρά είναι μονότονη (<InlineMath>{'1'}</InlineMath>-μετά-<InlineMath>{'0'}</InlineMath>),
+          ένας χαρακτήρας <InlineMath>{'1'}</InlineMath> σημαίνει με βεβαιότητα ότι
+          το σύνορο είναι δεξιά, και ένα <InlineMath>{'0'}</InlineMath> ότι είναι
+          (το πολύ) εκεί. Άρα δεν «χάνουμε» ποτέ το σύνορο.
+        </p>
+        <p>
+          <strong>Πολυπλοκότητα.</strong> Κάθε βήμα <strong>υποδιπλασιάζει</strong>{' '}
+          το διάστημα αναζήτησης και κάνει <InlineMath>{'O(1)'}</InlineMath>{' '}
+          δουλειά. Άρα η αναδρομική σχέση που ζητάει η υπόδειξη είναι
+        </p>
+        <BlockMath>{'T(k) = T(k/2) + O(1) \\;\\Longrightarrow\\; T(k) = O(\\log k).'}</BlockMath>
+      </>
+    ),
+  },
+  {
+    id: 'pt4-th4',
+    title: 'Παλαιό Θέμα #4 · Θέμα 4 — Διαφημίσεις χορηγών (Σακίδιο)',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 4',
+    weight: 40,
+    difficulty: 'hard',
+    prerequisites: ['lectures/L15-dp-ii'],
+    statement: (
+      <>
+        <p>
+          Στην πρώτη μέρα ενός φεστιβάλ παρουσιάζονται δύο συγκροτήματα. Από το
+          τέλος της συναυλίας του πρώτου μέχρι την έναρξη του δεύτερου μεσολαβεί
+          χρόνος <InlineMath>{'T'}</InlineMath>. Σε αυτό το διάστημα η
+          διοργανώτρια εταιρεία θα προβάλει διαφημίσεις χορηγών (χωρίς
+          επαναλήψεις). Έχουν καταθέσει προτάσεις <InlineMath>{'n'}</InlineMath>{' '}
+          εταιρείες· η διαφήμιση <InlineMath>{'i'}</InlineMath> έχει διάρκεια{' '}
+          <InlineMath>{'t_i'}</InlineMath> και αποφέρει κέρδος{' '}
+          <InlineMath>{'p_i'}</InlineMath> (όλα θετικοί ακέραιοι). Ορίζουμε{' '}
+          <InlineMath>{'\\text{OPT}(i, t)'}</InlineMath> = το μέγιστο κέρδος από
+          τις διαφημίσεις <InlineMath>{'1, \\dots, i'}</InlineMath> με συνολική
+          διάρκεια το πολύ <InlineMath>{'t'}</InlineMath>.
+        </p>
+        <p>
+          (α) Ποια τιμή δίνει το μέγιστο κέρδος; (β) Γράψε τον αναδρομικό τύπο
+          του <InlineMath>{'\\text{OPT}(i,t)'}</InlineMath>. (γ) Χρονική
+          πολυπλοκότητα του υπολογισμού όλων των υποπροβλημάτων — αιτιολόγησε.
+          (δ) Πολυπλοκότητα για τον <em>εντοπισμό</em> των διαφημίσεων που
+          δίνουν το μέγιστο κέρδος. (ε) Σε ποιο γνωστό πρόβλημα αντιστοιχεί αν
+          επιπλέον κάθε διαφήμιση πρέπει να προβληθεί σε σταθερό διάστημα{' '}
+          <InlineMath>{'[s_i, s_i + t_i]'}</InlineMath> εντός του{' '}
+          <InlineMath>{'[0, T]'}</InlineMath>;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Αυτό είναι ακριβώς το <strong>πρόβλημα του Σακιδίου (Knapsack)</strong>:
+          «διάρκεια» <InlineMath>{'t_i'}</InlineMath> = βάρος αντικειμένου,
+          «κέρδος» <InlineMath>{'p_i'}</InlineMath> = αξία, και ο διαθέσιμος
+          χρόνος <InlineMath>{'T'}</InlineMath> = χωρητικότητα σακιδίου.
+        </p>
+        <p>
+          <strong>(α)</strong> Θέλουμε το μέγιστο κέρδος έχοντας στη διάθεσή μας{' '}
+          <em>όλες</em> τις <InlineMath>{'n'}</InlineMath> διαφημίσεις και
+          ολόκληρο τον χρόνο <InlineMath>{'T'}</InlineMath>. Άρα η ζητούμενη τιμή
+          είναι <strong><InlineMath>{'\\text{OPT}(n, T)'}</InlineMath></strong>.
+        </p>
+        <p>
+          <strong>(β)</strong> Κοιτάμε τη διαφήμιση <InlineMath>{'i'}</InlineMath>{' '}
+          — μέσα ή έξω; Αν δεν χωράει (<InlineMath>{'t_i > t'}</InlineMath>) είναι
+          αναγκαστικά έξω. Αλλιώς παίρνουμε το καλύτερο από «έξω» και «μέσα»:
+        </p>
+        <BlockMath>{'\\text{OPT}(i,t) = \\begin{cases} 0 & i = 0 \\\\ \\text{OPT}(i-1,t) & t_i > t \\\\ \\max\\{\\, \\text{OPT}(i-1,t),\\ \\ p_i + \\text{OPT}(i-1,\\,t - t_i) \\,\\} & \\text{αλλιώς} \\end{cases}'}</BlockMath>
+        <p>
+          <strong>(γ)</strong> Ο πίνακας έχει <InlineMath>{'n \\cdot T'}</InlineMath>{' '}
+          κελιά και κάθε κελί υπολογίζεται σε <InlineMath>{'O(1)'}</InlineMath>{' '}
+          (ένα <InlineMath>{'\\max'}</InlineMath>). Άρα{' '}
+          <strong><InlineMath>{'\\Theta(nT)'}</InlineMath></strong>. Προσοχή:
+          αυτό είναι <strong>ψευδοπολυωνυμικό</strong> — το{' '}
+          <InlineMath>{'T'}</InlineMath> είναι ένας αριθμός, που γράφεται με{' '}
+          <InlineMath>{'\\log T'}</InlineMath> δυφία, οπότε το{' '}
+          <InlineMath>{'nT'}</InlineMath> είναι εκθετικό ως προς το μέγεθος της
+          εισόδου.
+        </p>
+        <p>
+          <strong>(δ)</strong> Έχοντας έτοιμο τον πίνακα, εντοπίζουμε{' '}
+          <em>ποιες</em> διαφημίσεις επιλέχθηκαν με ένα πέρασμα προς τα πίσω:
+          ξεκινάμε από το <InlineMath>{'\\text{OPT}(n,T)'}</InlineMath> και σε
+          κάθε <InlineMath>{'i'}</InlineMath> ρωτάμε «κέρδισε το “μέσα” ή το
+          “έξω”;» — μία σύγκριση <InlineMath>{'O(1)'}</InlineMath>, μετά πάμε στο{' '}
+          <InlineMath>{'i-1'}</InlineMath>. Συνολικά{' '}
+          <strong><InlineMath>{'O(n)'}</InlineMath></strong>.
+        </p>
+        <p>
+          <strong>(ε)</strong> Αν επιπλέον κάθε διαφήμιση έχει{' '}
+          <strong>καθορισμένο</strong> χρονικό παράθυρο{' '}
+          <InlineMath>{'[s_i, s_i + t_i]'}</InlineMath>, δεν επιλέγουμε πια απλώς
+          «πόσος χρόνος» — επιλέγουμε <em>μη-επικαλυπτόμενα διαστήματα</em>{' '}
+          μέγιστου κέρδους. Αυτό είναι ο{' '}
+          <strong>Σταθμισμένος Χρονοπρογραμματισμός Διαστημάτων</strong>{' '}
+          (weighted interval scheduling).
+        </p>
+      </>
+    ),
+  },
+  // ── Φροντιστηριακά Σετ — μεταγραμμένες ασκήσεις ───────────────────────
   {
     id: 'front-set-1-ask0',
     title: 'Φροντιστηριακό Σετ #1 · Άσκηση 0 — Σ/Λ ασυμπτωτικού συμβολισμού',
@@ -2597,6 +2892,384 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'\\Theta'}</InlineMath> είναι ανακλαστικό. Είναι μια
           «δωρεάν» πρόταση που ελέγχει αν προσέχεις: η δεξιά και η αριστερή
           πλευρά είναι πανομοιότυπες.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-2-ask0',
+    title: 'Φροντιστηριακό Σετ #2 · Άσκηση 0 — Διάταξη συναρτήσεων κατά ρυθμό αύξησης',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #2',
+    problemNumber: 'Άσκηση 0',
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>Διάταξε κάθε ομάδα συναρτήσεων σε <strong>αύξουσα</strong> σειρά ρυθμού αύξησης.</p>
+        <p>
+          <strong>Ομάδα b:</strong>{' '}
+          <InlineMath>{'b_1 = 2^n,\\ \\ b_2 = 4002^{\\,2^n},\\ \\ b_3 = 2^{\\,4002^n},\\ \\ b_4 = 4002^{4002},\\ \\ b_5 = 4002^{\\,n^2}'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Ομάδα f:</strong>{' '}
+          <InlineMath>{'f_1 = n^{n+4} + n!,\\ \\ f_2 = n^{7\\sqrt{n}},\\ \\ f_3 = 4^{3n\\log n},\\ \\ f_4 = 7^{n^2},\\ \\ f_5 = n^{12 + 1/n}'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Όταν οι συναρτήσεις είναι «εκθετικοί πύργοι», το εργαλείο είναι ο{' '}
+          <strong>λογάριθμος</strong>: συγκρίνουμε τους λογαρίθμους τους, που
+          είναι πιο εύκολο, και η σειρά διατηρείται.
+        </p>
+        <p>
+          <strong>Ομάδα b.</strong> Το <InlineMath>{'b_4 = 4002^{4002}'}</InlineMath>{' '}
+          δεν εξαρτάται από το <InlineMath>{'n'}</InlineMath> — είναι{' '}
+          <strong>σταθερά</strong>, <InlineMath>{'O(1)'}</InlineMath>, το
+          μικρότερο. Για τα υπόλοιπα παίρνουμε λογάριθμο:
+        </p>
+        <BlockMath>{'\\log b_1 = n,\\quad \\log b_5 \\approx 12n^2,\\quad \\log b_2 \\approx 12\\cdot 2^n,\\quad \\log b_3 = 4002^{\\,n}.'}</BlockMath>
+        <p>
+          Συγκρίνοντας: <InlineMath>{'n < 12n^2 < 12\\cdot 2^n < 4002^n'}</InlineMath>.
+          Άρα <strong><InlineMath>{'b_4 < b_1 < b_5 < b_2 < b_3'}</InlineMath></strong>.
+        </p>
+        <p>
+          <strong>Ομάδα f.</strong> Ξανά με λογαρίθμους:{' '}
+          <InlineMath>{'\\log f_5 = \\Theta(\\log n)'}</InlineMath>,{' '}
+          <InlineMath>{'\\log f_2 = \\Theta(\\sqrt{n}\\log n)'}</InlineMath>,{' '}
+          <InlineMath>{'\\log f_1 = \\Theta(n\\log n)'}</InlineMath>,{' '}
+          <InlineMath>{'\\log f_3 = \\Theta(n\\log n)'}</InlineMath>,{' '}
+          <InlineMath>{'\\log f_4 = \\Theta(n^2)'}</InlineMath>.
+        </p>
+        <p>
+          Τα <InlineMath>{'f_1, f_3'}</InlineMath> πέφτουν στην ίδια κλάση{' '}
+          (<InlineMath>{'n\\log n'}</InlineMath>) — χρειάζεται πιο λεπτή
+          σύγκριση. Γράφουμε{' '}
+          <InlineMath>{'f_3 = 4^{3n\\log n} = (n^{\\log 4})^{3n} = (n^2)^{3n} = n^{6n}'}</InlineMath>,
+          ενώ <InlineMath>{'f_1 \\approx n^{n+4}'}</InlineMath>. Άρα{' '}
+          <InlineMath>{'f_1 < f_3'}</InlineMath>. Τελική σειρά:{' '}
+          <strong><InlineMath>{'f_5 < f_2 < f_1 < f_3 < f_4'}</InlineMath></strong>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-2-ask1',
+    title: 'Φροντιστηριακό Σετ #2 · Άσκηση 1 — Αναμενόμενος χρόνος Σειριακής Αναζήτησης',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #2',
+    problemNumber: 'Άσκηση 1',
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>
+          Υπολόγισε τον <strong>αναμενόμενο</strong> χρόνο εκτέλεσης μίας
+          Σειριακής (γραμμικής) Αναζήτησης σε <InlineMath>{'n'}</InlineMath>{' '}
+          διακριτά στοιχεία, όταν η πιθανότητα <InlineMath>{'p_i'}</InlineMath> να
+          βρίσκεται το ζητούμενο στη θέση <InlineMath>{'i'}</InlineMath> είναι:
+        </p>
+        <ul>
+          <li>θέσεις <InlineMath>{'1'}</InlineMath> έως <InlineMath>{'n/2'}</InlineMath>: η καθεμία με πιθανότητα <InlineMath>{'1/n'}</InlineMath>·</li>
+          <li>θέσεις <InlineMath>{'n/2+1'}</InlineMath> έως <InlineMath>{'n-2'}</InlineMath>: η καθεμία με πιθανότητα <InlineMath>{'1/(2(n-4))'}</InlineMath>·</li>
+          <li>θέσεις <InlineMath>{'n-1'}</InlineMath> και <InlineMath>{'n'}</InlineMath>: η καθεμία με πιθανότητα <InlineMath>{'1/8'}</InlineMath>·</li>
+          <li>«δεν βρέθηκε»: με την υπόλοιπη πιθανότητα <InlineMath>{'1 - \\sum p_i'}</InlineMath>.</li>
+        </ul>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Η βασική ιδέα.</strong> «Αναμενόμενος χρόνος» σημαίνει{' '}
+          <strong>σταθμισμένος μέσος όρος</strong>: για κάθε δυνατή έκβαση,
+          πολλαπλασιάζουμε την πιθανότητά της επί το κόστος της, και τα
+          προσθέτουμε όλα.
+        </p>
+        <p>
+          Στη σειριακή αναζήτηση, για να βρεις το στοιχείο της θέσης{' '}
+          <InlineMath>{'i'}</InlineMath> κάνεις <InlineMath>{'i'}</InlineMath>{' '}
+          συγκρίσεις (τις ελέγχεις μία-μία από την αρχή). Αν δεν βρεθεί,
+          ελέγχεις και τις <InlineMath>{'n'}</InlineMath> θέσεις. Άρα:
+        </p>
+        <BlockMath>{'E[T] = \\sum_{i=1}^{n} p_i \\cdot i \\;+\\; p_{\\text{δεν βρέθηκε}} \\cdot (n{+}1).'}</BlockMath>
+        <p>
+          <strong>Πάνω φράγμα.</strong> Κάθε κόστος είναι το πολύ{' '}
+          <InlineMath>{'n+1'}</InlineMath>, και οι πιθανότητες αθροίζουν σε{' '}
+          <InlineMath>{'1'}</InlineMath>. Άρα{' '}
+          <InlineMath>{'E[T] \\le (n+1)\\sum p = n+1 = O(n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Κάτω φράγμα.</strong> Κοίτα μόνο τις θέσεις{' '}
+          <InlineMath>{'n-1'}</InlineMath> και <InlineMath>{'n'}</InlineMath>:
+          έχουν συνολική πιθανότητα <InlineMath>{'1/8 + 1/8 = 1/4'}</InlineMath>{' '}
+          και κόστος <InlineMath>{'\\ge n-1'}</InlineMath>. Μόνο αυτές
+          συνεισφέρουν <InlineMath>{'\\ge \\tfrac14 (n-1) = \\Omega(n)'}</InlineMath>.
+        </p>
+        <p>
+          Αφού <InlineMath>{'E[T]'}</InlineMath> είναι ταυτόχρονα{' '}
+          <InlineMath>{'O(n)'}</InlineMath> και <InlineMath>{'\\Omega(n)'}</InlineMath>,
+          ο αναμενόμενος χρόνος είναι <strong><InlineMath>{'\\Theta(n)'}</InlineMath></strong>.
+          Παρά την «τρομακτική» κατανομή, η σειριακή αναζήτηση μένει γραμμική
+          κατά μέσο όρο.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-2-ask3',
+    title: 'Φροντιστηριακό Σετ #2 · Άσκηση 3 — Σ/Λ: συνεπαγωγές ασυμπτωτικών',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #2',
+    problemNumber: 'Άσκηση 3',
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>Χαρακτήρισε <strong>Σωστό / Λάθος</strong>:</p>
+        <p>
+          (α) <InlineMath>{'f(n) = O(g(n)) \\;\\Rightarrow\\; 2^{f(n)} = O(2^{g(n)})'}</InlineMath>{' '}
+          · (β) <InlineMath>{'g(n) = \\sum_{k=1}^{n} \\sqrt[k]{k} = \\Theta(n)'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α) ΛΑΘΟΣ.</strong> Η ερώτηση ζητάει αν η συνεπαγωγή ισχύει
+          για <em>κάθε</em> <InlineMath>{'f, g'}</InlineMath> — οπότε ένα{' '}
+          αντιπαράδειγμα την καταρρίπτει.
+        </p>
+        <p>
+          Πάρε <InlineMath>{'f(n) = 2n'}</InlineMath> και{' '}
+          <InlineMath>{'g(n) = n'}</InlineMath>. Είναι{' '}
+          <InlineMath>{'f = O(g)'}</InlineMath> ✓ (δύο πολυώνυμα ίδιου βαθμού).
+          Όμως <InlineMath>{'2^{f} = 2^{2n} = 4^n'}</InlineMath> ενώ{' '}
+          <InlineMath>{'2^{g} = 2^n'}</InlineMath> — και το{' '}
+          <InlineMath>{'4^n'}</InlineMath> <strong>δεν</strong> είναι{' '}
+          <InlineMath>{'O(2^n)'}</InlineMath> (ο λόγος{' '}
+          <InlineMath>{'4^n/2^n = 2^n \\to \\infty'}</InlineMath>). Η εκθετικοποίηση
+          «μεγεθύνει» τη σταθερά του εκθέτη — δεν διατηρεί το <InlineMath>{'O'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(β) ΣΩΣΤΟ.</strong> Κάθε όρος <InlineMath>{'\\sqrt[k]{k} = k^{1/k}'}</InlineMath>{' '}
+          είναι «σφηνωμένος» ανάμεσα στο <InlineMath>{'1'}</InlineMath> και στο{' '}
+          <InlineMath>{'2'}</InlineMath>: για <InlineMath>{'k \\ge 1'}</InlineMath>{' '}
+          ισχύει <InlineMath>{'1 \\le k^{1/k} \\le 2'}</InlineMath> (το άνω φράγμα
+          γιατί <InlineMath>{'k \\le 2^k'}</InlineMath>, άρα{' '}
+          <InlineMath>{'k^{1/k} \\le 2'}</InlineMath>).
+        </p>
+        <p>
+          Άρα το άθροισμα <InlineMath>{'n'}</InlineMath> τέτοιων όρων είναι
+          ανάμεσα σε <InlineMath>{'n\\cdot 1 = n'}</InlineMath> και{' '}
+          <InlineMath>{'n\\cdot 2 = 2n'}</InlineMath> — δηλαδή{' '}
+          <InlineMath>{'g(n) = \\Theta(n)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-2-ask5',
+    title: 'Φροντιστηριακό Σετ #2 · Άσκηση 5 — Τρεις ασυμπτωτικές κατατάξεις',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #2',
+    problemNumber: 'Άσκηση 5',
+    difficulty: 'hard',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>Για καθεμία απάντησε ποια σχέση ισχύει:</p>
+        <p>
+          (α) Η <InlineMath>{'g(n) = 2^{\\sqrt{\\log n}}'}</InlineMath> είναι{' '}
+          <InlineMath>{'\\Theta(n)'}</InlineMath>, <InlineMath>{'o(n)'}</InlineMath>{' '}
+          ή <InlineMath>{'\\omega(n)'}</InlineMath>; (β) Η{' '}
+          <InlineMath>{'f(n) = n^2 2^n / 5^n'}</InlineMath> είναι{' '}
+          <InlineMath>{'\\Theta(1)'}</InlineMath>, <InlineMath>{'o(1)'}</InlineMath>{' '}
+          ή <InlineMath>{'\\omega(1)'}</InlineMath>;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α)</strong> Συγκρίνουμε την{' '}
+          <InlineMath>{'g(n) = 2^{\\sqrt{\\log n}}'}</InlineMath> με την{' '}
+          <InlineMath>{'n'}</InlineMath>. Κόλπο: γράψε και τις δύο ως δύναμη του{' '}
+          <InlineMath>{'2'}</InlineMath>. Είναι{' '}
+          <InlineMath>{'n = 2^{\\log n}'}</InlineMath>. Άρα συγκρίνουμε τους
+          εκθέτες: <InlineMath>{'\\sqrt{\\log n}'}</InlineMath> έναντι{' '}
+          <InlineMath>{'\\log n'}</InlineMath>.
+        </p>
+        <p>
+          Η ρίζα ενός μεγάλου αριθμού είναι πολύ μικρότερη από τον ίδιο τον
+          αριθμό: <InlineMath>{'\\sqrt{\\log n} \\ll \\log n'}</InlineMath>. Άρα
+          ο εκθέτης της <InlineMath>{'g'}</InlineMath> είναι πολύ μικρότερος, και{' '}
+          <strong><InlineMath>{'g(n) = o(n)'}</InlineMath></strong>.
+        </p>
+        <p>
+          <strong>(β)</strong> Ξαναγράφουμε:{' '}
+          <InlineMath>{'f(n) = n^2 \\cdot \\dfrac{2^n}{5^n} = n^2 \\left(\\tfrac{2}{5}\\right)^n'}</InlineMath>.
+          Το <InlineMath>{'(2/5)^n'}</InlineMath> έχει βάση{' '}
+          <InlineMath>{'< 1'}</InlineMath>, άρα <strong>μηδενίζεται εκθετικά</strong> —
+          και η εκθετική κατάρρευση «νικάει» εύκολα τον πολυωνυμικό όρο{' '}
+          <InlineMath>{'n^2'}</InlineMath>. Συνεπώς{' '}
+          <InlineMath>{'f(n) \\to 0'}</InlineMath>, δηλαδή{' '}
+          <strong><InlineMath>{'f(n) = o(1)'}</InlineMath></strong>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-2-ask6',
+    title: 'Φροντιστηριακό Σετ #2 · Άσκηση 6 — Πολυπλοκότητα εμφωλευμένων βρόχων',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #2',
+    problemNumber: 'Άσκηση 6',
+    difficulty: 'hard',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>Υπολόγισε τη χρονική πολυπλοκότητα του παρακάτω αλγορίθμου:</p>
+        <pre><code>{`Algorithm 1:
+  arg ← -1
+  για i ← 1 έως 2n  (βήμα 1):
+    για j ← i έως i²  (βήμα 1):
+      arg ← CALC(j)
+
+procedure CALC(w):
+  res ← 0
+  για i ← 1 έως √w  (βήμα 0.1):
+    res ← res + log(i)
+  return res`}</code></pre>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Δουλεύουμε <strong>από μέσα προς τα έξω</strong> — πρώτα η{' '}
+          <InlineMath>{'\\text{CALC}'}</InlineMath>, μετά οι δύο βρόχοι.
+        </p>
+        <p>
+          <strong>Η <InlineMath>{'\\text{CALC}(w)'}</InlineMath>.</strong> Ο
+          βρόχος της πάει από <InlineMath>{'1'}</InlineMath> έως{' '}
+          <InlineMath>{'\\sqrt{w}'}</InlineMath> με βήμα{' '}
+          <InlineMath>{'0.1'}</InlineMath> — άρα κάνει{' '}
+          <InlineMath>{'\\sqrt{w}/0.1 = 10\\sqrt{w}'}</InlineMath> επαναλήψεις. Το
+          βήμα <InlineMath>{'0.1'}</InlineMath> είναι απλώς μια σταθερά· η{' '}
+          <InlineMath>{'\\text{CALC}(w) = \\Theta(\\sqrt{w})'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Ο εσωτερικός βρόχος</strong> (για δεδομένο{' '}
+          <InlineMath>{'i'}</InlineMath>): το <InlineMath>{'j'}</InlineMath>{' '}
+          πάει από <InlineMath>{'i'}</InlineMath> έως{' '}
+          <InlineMath>{'i^2'}</InlineMath> — περίπου <InlineMath>{'i^2'}</InlineMath>{' '}
+          επαναλήψεις. Κάθε μία καλεί <InlineMath>{'\\text{CALC}(j)'}</InlineMath>{' '}
+          με <InlineMath>{'j'}</InlineMath> το πολύ <InlineMath>{'i^2'}</InlineMath>,
+          άρα κόστος το πολύ <InlineMath>{'\\Theta(\\sqrt{i^2}) = \\Theta(i)'}</InlineMath>.
+          Συνολικά ο εσωτερικός βρόχος:{' '}
+          <InlineMath>{'\\Theta(i^2) \\cdot \\Theta(i) = \\Theta(i^3)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Ο εξωτερικός βρόχος:</strong> αθροίζουμε για{' '}
+          <InlineMath>{'i = 1'}</InlineMath> έως <InlineMath>{'2n'}</InlineMath>:
+        </p>
+        <BlockMath>{'T(n) = \\sum_{i=1}^{2n} \\Theta(i^3) = \\Theta\\!\\big((2n)^4\\big) = \\Theta(n^4).'}</BlockMath>
+        <p>
+          (Χρησιμοποιήσαμε <InlineMath>{'\\sum_{i=1}^{m} i^3 = \\Theta(m^4)'}</InlineMath>.)
+          Η συνολική πολυπλοκότητα είναι{' '}
+          <strong><InlineMath>{'\\Theta(n^4)'}</InlineMath></strong>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-2-ask7',
+    title: 'Φροντιστηριακό Σετ #2 · Άσκηση 7 — Πίνακας ασυμπτωτικών σχέσεων',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #2',
+    problemNumber: 'Άσκηση 7',
+    difficulty: 'hard',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>
+          Για κάθε ζεύγος συναρτήσεων <InlineMath>{'A, B'}</InlineMath>{' '}
+          παρακάτω, ποιες σχέσεις ισχύουν (<InlineMath>{'A'}</InlineMath> ως προς{' '}
+          <InlineMath>{'B'}</InlineMath>): <InlineMath>{'O,\\ o,\\ \\Omega,\\ \\omega,\\ \\Theta'}</InlineMath>;
+          (Σταθερές: <InlineMath>{'k,\\ e,\\ c > 1'}</InlineMath>.)
+        </p>
+        <p>
+          1) <InlineMath>{'\\log^k n'}</InlineMath> vs <InlineMath>{'n^e'}</InlineMath>{' '}
+          · 2) <InlineMath>{'n^k'}</InlineMath> vs <InlineMath>{'c^n'}</InlineMath>{' '}
+          · 3) <InlineMath>{'\\sqrt{n}'}</InlineMath> vs{' '}
+          <InlineMath>{'n^{\\sin n}'}</InlineMath> · 4){' '}
+          <InlineMath>{'2^n'}</InlineMath> vs <InlineMath>{'2^{n/2}'}</InlineMath>{' '}
+          · 5) <InlineMath>{'n^{\\log c}'}</InlineMath> vs{' '}
+          <InlineMath>{'c^{\\log n}'}</InlineMath> · 6){' '}
+          <InlineMath>{'\\log(n!)'}</InlineMath> vs <InlineMath>{'\\log(n^n)'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <table>
+          <thead>
+            <tr><th>A vs B</th><th>O</th><th>o</th><th>Ω</th><th>ω</th><th>Θ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1) logᵏn vs nᵉ</td><td>Ναι</td><td>Ναι</td><td>Όχι</td><td>Όχι</td><td>Όχι</td></tr>
+            <tr><td>2) nᵏ vs cⁿ</td><td>Ναι</td><td>Ναι</td><td>Όχι</td><td>Όχι</td><td>Όχι</td></tr>
+            <tr><td>3) √n vs n^sin n</td><td>Όχι</td><td>Όχι</td><td>Όχι</td><td>Όχι</td><td>Όχι</td></tr>
+            <tr><td>4) 2ⁿ vs 2^(n/2)</td><td>Όχι</td><td>Όχι</td><td>Ναι</td><td>Ναι</td><td>Όχι</td></tr>
+            <tr><td>5) n^log c vs c^log n</td><td>Ναι</td><td>Όχι</td><td>Ναι</td><td>Όχι</td><td>Ναι</td></tr>
+            <tr><td>6) log(n!) vs log(nⁿ)</td><td>Ναι</td><td>Όχι</td><td>Ναι</td><td>Όχι</td><td>Ναι</td></tr>
+          </tbody>
+        </table>
+        <p>
+          <strong>1) Πολυλογάριθμος vs πολυώνυμο.</strong> Κάθε δύναμη του{' '}
+          <InlineMath>{'\\log n'}</InlineMath> «χάνει» από οποιαδήποτε θετική
+          δύναμη του <InlineMath>{'n'}</InlineMath>: <InlineMath>{'\\log^k n = o(n^e)'}</InlineMath>{' '}
+          (το επιβεβαιώνεις με <InlineMath>{'k'}</InlineMath> εφαρμογές του
+          κανόνα L'Hôpital). Το <InlineMath>{'o'}</InlineMath> δίνει και{' '}
+          <InlineMath>{'O'}</InlineMath>.
+        </p>
+        <p>
+          <strong>2) Πολυώνυμο vs εκθετικό.</strong> Όμοια,{' '}
+          <InlineMath>{'n^k = o(c^n)'}</InlineMath> — το εκθετικό κερδίζει πάντα.
+        </p>
+        <p>
+          <strong>3) Η παγίδα.</strong> Ο εκθέτης{' '}
+          <InlineMath>{'\\sin n'}</InlineMath> <em>ταλαντώνεται</em> ανάμεσα σε{' '}
+          <InlineMath>{'-1'}</InlineMath> και <InlineMath>{'1'}</InlineMath>, οπότε
+          η <InlineMath>{'n^{\\sin n}'}</InlineMath> πότε είναι πάνω και πότε
+          κάτω από την <InlineMath>{'\\sqrt{n} = n^{0.5}'}</InlineMath>. Καμία
+          σχέση δεν ισχύει σταθερά → <strong>μη-συγκρίσιμες</strong>.
+        </p>
+        <p>
+          <strong>4)</strong> <InlineMath>{'2^n = (2^{n/2})^2'}</InlineMath> —
+          το <InlineMath>{'2^n'}</InlineMath> είναι το τετράγωνο του{' '}
+          <InlineMath>{'2^{n/2}'}</InlineMath>, άρα αυστηρά μεγαλύτερο:{' '}
+          <InlineMath>{'2^n = \\omega(2^{n/2})'}</InlineMath> (και{' '}
+          <InlineMath>{'\\Omega'}</InlineMath>).
+        </p>
+        <p>
+          <strong>5) Ταυτότητα!</strong> Ισχύει{' '}
+          <InlineMath>{'c^{\\log n} = n^{\\log c}'}</InlineMath> (παίρνοντας
+          λογάριθμο, και οι δύο δίνουν <InlineMath>{'\\log c \\cdot \\log n'}</InlineMath>).
+          Είναι <strong>ίσες</strong> → <InlineMath>{'\\Theta'}</InlineMath> (και{' '}
+          <InlineMath>{'O, \\Omega'}</InlineMath>).
+        </p>
+        <p>
+          <strong>6)</strong> <InlineMath>{'\\log(n^n) = n\\log n'}</InlineMath>,
+          και <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath> (Stirling).
+          Ίδια τάξη → <InlineMath>{'\\Theta'}</InlineMath>.
         </p>
       </>
     ),
@@ -2777,18 +3450,6 @@ export const EXERCISES: Exercise[] = [
         </p>
       </>
     ),
-  },
-  {
-    id: 'exam-sept-2024',
-    title: 'Εξεταστική Σεπτεμβρίου 2024 — Πλήρες θέμα',
-    topic: 'graphs',
-    origin: 'past-exam',
-    source: 'sept-2024',
-    difficulty: 'hard',
-    prerequisites: ALL_LECTURES,
-    sourceFile: '/material/exercises/oldtests/Algorithms-September-2024.pdf',
-    statement: null,
-    solution: null,
   },
 
   // ═══════════════════════════════════════════════════════════════════════
