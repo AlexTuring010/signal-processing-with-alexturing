@@ -99,8 +99,8 @@ file**.
 | # | Label | Source file(s) | Status |
 |---|---|---|---|
 | 1 | Παλαιό Θέμα #1 | `Algorithms-June-2025.pdf` *(deleted)* | ☑ |
-| 2 | Παλαιό Θέμα #2 | `Algorithms-Sep-2025.pdf` | ☐ |
-| 3 | Παλαιό Θέμα #3 | `Algorithms-June-2024.pdf` | ☐ |
+| 2 | Παλαιό Θέμα #2 | `Algorithms-Sep-2025.pdf` *(deleted)* | ☑ |
+| 3 | Παλαιό Θέμα #3 | `Algorithms-June-2024.pdf` *(deleted)* | ☑ |
 | 4 | Παλαιό Θέμα #4 | `Algorithms-September-2024.pdf` | ☐ |
 | 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` | ☐ |
 | 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☐ |
@@ -140,6 +140,11 @@ file**.
 | 12 | Φροντιστηριακό Σετ #12 | `2ο Φροντ.pdf` | ☐ |
 | 13 | Φροντιστηριακό Σετ #13 | `3ο Φροντ.pdf` | ☐ |
 
+## Progress
+
+**Completed: 3 / 36 papers. Remaining: 33** (20 old exams + 13 frontistirio).
+Next up: Παλαιό Θέμα #4 (`Algorithms-September-2024.pdf`).
+
 ## Progress log
 
 _(append one line per completed paper: label — N sub-exercises — date)_
@@ -151,3 +156,8 @@ _(append one line per completed paper: label — N sub-exercises — date)_
   weight-5 edges should be double-checked against the original if the printed
   multiple-choice options (0/1/2/4) must be matched exactly. The solution
   teaches the counting method regardless.
+- **Παλαιό Θέμα #2** — 15 sub-exercises (`pt2-th1-q1` … `pt2-th1-q10`,
+  `pt2-th2-1`, `pt2-th2-2`, `pt2-th2-3`, `pt2-th3`, `pt2-th4`), routed to
+  L01/L02/L03/L09/L11/L12/L14/L15. Source PDF + `:Zone.Identifier` deleted. — 2026-05-21.
+- **Παλαιό Θέμα #3** — 3 sub-exercises (`pt3-th1`→L09, `pt3-th2`→L04,
+  `pt3-th3`→L13). Source PDF + `:Zone.Identifier` deleted. — 2026-05-21.
