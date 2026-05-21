@@ -102,7 +102,7 @@ file**.
 | 2 | Παλαιό Θέμα #2 | `Algorithms-Sep-2025.pdf` *(deleted)* | ☑ |
 | 3 | Παλαιό Θέμα #3 | `Algorithms-June-2024.pdf` *(deleted)* | ☑ |
 | 4 | Παλαιό Θέμα #4 | `Algorithms-September-2024.pdf` *(deleted)* | ☑ |
-| 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` | ☐ |
+| 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` *(deleted)* | ☑ |
 | 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☐ |
 | 7 | Παλαιό Θέμα #7 | `Ζησιμόπουλος/2022-June-VZ/Algo_june_2022.pdf` | ☐ |
 | 8 | Παλαιό Θέμα #8 | `Ζησιμόπουλος/2022-Sept-VZ/*.jpg` (3) | ☐ |
@@ -126,11 +126,11 @@ file**.
 
 | # | Label | Source file | Status |
 |---|---|---|---|
-| 1 | Φροντιστηριακό Σετ #1 | `F1__2023_24__eclass.pdf` | ◐ Άσκηση 0 done (rest pending) |
-| 2 | Φροντιστηριακό Σετ #2 | `F2__2023_24.pdf` | ◐ 7/8 (Ασκ 0,1,2,3,5,6,7· Ασκ 4 pending) |
-| 3 | Φροντιστηριακό Σετ #3 | `F3__eclass.pdf` | ◐ Άσκηση 4 done (rest pending) |
-| 4 | Φροντιστηριακό Σετ #4 | `F4__2023_24__eclass.pdf` | ◐ Άσκηση 1 done (rest pending) |
-| 5 | Φροντιστηριακό Σετ #5 | `F5__eclass.pdf` | ◐ Άσκηση 10 done (rest pending) |
+| 1 | Φροντιστηριακό Σετ #1 | `F1__2023_24__eclass.pdf` *(deleted)* | ☑ 3/3 (Ασκ 0,1,3) |
+| 2 | Φροντιστηριακό Σετ #2 | `F2__2023_24.pdf` *(deleted)* | ☑ 8/8 (Ασκ 0–7) |
+| 3 | Φροντιστηριακό Σετ #3 | `F3__eclass.pdf` *(deleted)* | ☑ 7/7 (Ασκ 1,2,4,7,8,9,10) |
+| 4 | Φροντιστηριακό Σετ #4 | `F4__2023_24__eclass.pdf` *(deleted)* | ☑ 12/12 (Ασκ 1–10 + E0 + Θέμα 4) |
+| 5 | Φροντιστηριακό Σετ #5 | `F5__eclass.pdf` *(deleted)* | ☑ 10/10 (Ασκ 1,2,3,5,6,7,8,9,10,11) |
 | 6 | Φροντιστηριακό Σετ #6 | `F7__eclass.pdf` | ☐ |
 | 7 | Φροντιστηριακό Σετ #7 | `F8__eclass.pdf` | ☐ |
 | 8 | Φροντιστηριακό Σετ #8 | `F9__eclass.pdf` | ☐ |
@@ -142,24 +142,20 @@ file**.
 
 ## Progress
 
-**Old exams — fully done: 4 / 23** (#1–#4). Fully pending: 19 (#5–#23).
-**Frontistiria — fully done: 0 / 13.** Partially started: 5 (#1–#5, ◐).
-Fully pending: 8 (#6–#13).
+**Old exams — fully done: 5 / 23** (#1–#5). Fully pending: 18 (#6–#23).
+**Frontistiria — fully done: 5 / 13** (#1–#5). Fully pending: 8 (#6–#13).
 
-Total modular exercises transcribed so far: **52** (14 + 15 + 3 from exams
-#1–#3; 9 from exam #4 [5 + 4]; 11 frontistiria across F1–F5).
+Total modular exercises transcribed so far: **89** (14 + 15 + 3 from exams
+#1–#3; 9 from exam #4; 7 from exam #5; 41 frontistiria — F1×3, F2×8, F3×7,
+F4×12, F5×11).
 
-> **Scale note (honest status).** The request "finish ALL 13 frontistiria
-> completely in one batch" is not realistically achievable at the stated
-> quality bar (verbatim transcription + full beginner solutions): the 13 decks
-> hold ~80–100 exercises, many on dense scanned slides. Each session realistically
-> completes ~1 exam paper + ~1 frontistiria deck. This session: **exam #4 fully
-> done** (Θέματα 1–4, source deleted) + **frontistiria F2 brought to 7/8**
-> (only Άσκηση 4 — a dense multi-part scan — left). Frontistiria source files
-> are kept until a deck is 100% done.
+> **Batch note.** This session: **exam #5 (Παλαιό Θέμα #5) done** (7 modules)
+> + **F1 and F5 brought to 100%** (2 + 9 new exercises). All three source files
+> deleted. Frontistiria #1–#5 are now fully complete; #6–#13 remain untouched.
+> Each session realistically completes ~1 exam + ~2 frontistiria decks at the
+> quality bar (verbatim transcription + full beginner solutions).
 
-Next: finish F2 Άσκηση 4, then complete F1/F3/F4/F5, then F6–F13· exams resume
-at Παλαιό Θέμα #5.
+Next: frontistiria F6–F13; exams resume at Παλαιό Θέμα #6.
 
 ## Progress log
 
@@ -190,3 +186,33 @@ _(append one line per completed paper: label — N sub-exercises — date)_
 - **Φροντιστηριακό Σετ #2 (7/8)** — +6 exercises rendered via Ghostscript & solved:
   `front-set-2-ask0/ask1/ask3/ask5/ask6/ask7`, all →L02. Only Άσκηση 4 (dense
   scanned multi-part slide) pending; source kept. — 2026-05-21.
+- **Φροντιστηριακό Σετ #2 (completed)** — +`front-set-2-ask4`→L02 (ασυμπτωτική
+  τάξη & διάταξη συναρτήσεων). Deck now 8/8 (Ασκ 0–7); source PDF deleted. — 2026-05-22.
+- **Φροντιστηριακό Σετ #3 (completed)** — +6 exercises: `front-set-3-ask1`
+  (Fibonacci κλειστός τύπος), `ask2` (διπλή ρίζα), `ask7` (3 αλγόριθμοι D&C),
+  `ask8` (επαγωγή n log n), `ask9` (Master με log-όρο), `ask10` (T(√n)+1) — all
+  →L03 (added to `ask4`). Deck now 7/7; source PDF deleted. — 2026-05-22.
+- **Φροντιστηριακό Σετ #4 (completed)** — +11 exercises: `front-set-4-ask2/3/4`
+  (αναδρομές, αντικατάσταση →L03), `ask5` (πλειοψηφικό στοιχείο →L04), `ask6`
+  (σημαία Ολλανδίας →L04), `ask7` (χαμένος όρος →L03), `ask8` (διάμεσος 2
+  πινάκων →L04), `ask9` (τομές = αντιστροφές →L04), `ask10` (Master με log-όρο
+  →L03), `e0-ask6` & `thema4` (πολυπλοκότητα βρόχων →L02) — added to `ask1`.
+  Deck now 12/12; source PDF deleted. — 2026-05-22.
+- **Παλαιό Θέμα #5** — 7 modules: `pt5-th1` (συνεκτικές συνιστώσες →L06),
+  `pt5-th1b` (σύγκριση ασυμπτωτικών →L02), `pt5-th2-a` (κατάταξη 2^√logn →L02),
+  `pt5-th2-b` (Master Theorem →L03), `pt5-th3-a` (Hamiltonian Path ∈ NP →L09),
+  `pt5-th3-b` (MST_D ∈ NP, ∈ P →L09), `pt5-th4` (μέγιστο ανεξάρτητο σύνολο σε
+  μονοπάτι, DP →L14). Stale `exam-june-2023` index entry removed; source PDF
+  deleted. — 2026-05-22.
+- **Φροντιστηριακό Σετ #1 (completed)** — +2 exercises: `front-set-1-ask1`
+  (διάταξη συναρτήσεων ανά ομάδα), `front-set-1-ask3` (πολυπλοκότητα με log*) —
+  both →L02 (added to `ask0`). Deck now 3/3 (Ασκ 0,1,3· η σειρά παραλείπει την
+  Ασκ 2); source PDF deleted. — 2026-05-22.
+- **Φροντιστηριακό Σετ #5 (completed)** — +9 exercises: `front-set-5-ask1`
+  (Stooge Sort →L03), `ask2` (βίδες/παξιμάδια →L04), `ask3` (Quicksort
+  ανακάτεμα →L04), `ask5` (συνεκτικές συνιστώσες →L06), `ask6` (μονοπάτι
+  μέγιστης αξιοπιστίας →L08), `ask7` (μονοπάτι μέσα από διατεταγμένα υποσύνολα
+  →L08), `ask8` (πιο αναξιόπιστο μονοπάτι σε DAG →L08), `ask9` (Σ/Λ
+  μετασχηματισμοί βαρών →L08), `ask11` (ζεύγη με δοσμένο άθροισμα →L10) — added
+  to `ask10`. Deck now 10/10 (η σειρά παραλείπει την Ασκ 4); source PDF
+  deleted. — 2026-05-22.
