@@ -101,7 +101,7 @@ file**.
 | 1 | Παλαιό Θέμα #1 | `Algorithms-June-2025.pdf` *(deleted)* | ☑ |
 | 2 | Παλαιό Θέμα #2 | `Algorithms-Sep-2025.pdf` *(deleted)* | ☑ |
 | 3 | Παλαιό Θέμα #3 | `Algorithms-June-2024.pdf` *(deleted)* | ☑ |
-| 4 | Παλαιό Θέμα #4 | `Algorithms-September-2024.pdf` | ☐ |
+| 4 | Παλαιό Θέμα #4 | `Algorithms-September-2024.pdf` | ◐ Θέμα 1 done (5 ασκ.· Θέματα 2–4 pending) |
 | 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` | ☐ |
 | 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☐ |
 | 7 | Παλαιό Θέμα #7 | `Ζησιμόπουλος/2022-June-VZ/Algo_june_2022.pdf` | ☐ |
@@ -126,11 +126,11 @@ file**.
 
 | # | Label | Source file | Status |
 |---|---|---|---|
-| 1 | Φροντιστηριακό Σετ #1 | `F1__2023_24__eclass.pdf` | ☐ |
-| 2 | Φροντιστηριακό Σετ #2 | `F2__2023_24.pdf` | ☐ |
-| 3 | Φροντιστηριακό Σετ #3 | `F3__eclass.pdf` | ☐ |
-| 4 | Φροντιστηριακό Σετ #4 | `F4__2023_24__eclass.pdf` | ☐ |
-| 5 | Φροντιστηριακό Σετ #5 | `F5__eclass.pdf` | ☐ |
+| 1 | Φροντιστηριακό Σετ #1 | `F1__2023_24__eclass.pdf` | ◐ Άσκηση 0 done (rest pending) |
+| 2 | Φροντιστηριακό Σετ #2 | `F2__2023_24.pdf` | ◐ Άσκηση 2 done (rest pending) |
+| 3 | Φροντιστηριακό Σετ #3 | `F3__eclass.pdf` | ◐ Άσκηση 4 done (rest pending) |
+| 4 | Φροντιστηριακό Σετ #4 | `F4__2023_24__eclass.pdf` | ◐ Άσκηση 1 done (rest pending) |
+| 5 | Φροντιστηριακό Σετ #5 | `F5__eclass.pdf` | ◐ Άσκηση 10 done (rest pending) |
 | 6 | Φροντιστηριακό Σετ #6 | `F7__eclass.pdf` | ☐ |
 | 7 | Φροντιστηριακό Σετ #7 | `F8__eclass.pdf` | ☐ |
 | 8 | Φροντιστηριακό Σετ #8 | `F9__eclass.pdf` | ☐ |
@@ -142,8 +142,20 @@ file**.
 
 ## Progress
 
-**Completed: 3 / 36 papers. Remaining: 33** (20 old exams + 13 frontistirio).
-Next up: Παλαιό Θέμα #4 (`Algorithms-September-2024.pdf`).
+**Fully done: 3 / 36 papers. Partially started: 6** (Παλαιό Θέμα #4 +
+Φροντιστηριακά Σετ #1–#5, marked ◐). **Fully pending: 27.**
+
+Total modular exercises transcribed so far: **42** (14 + 15 + 3 from #1–#3,
+then 5 from #4 Θέμα 1, and 5 frontistiria — one signature exercise per deck).
+
+> **Note — divergence from the original protocol (per user request):** instead
+> of completing whole papers, this batch took 5 exam sub-exercises (Παλαιό Θέμα
+> #4 Θέμα 1) + 1 exercise from each of 5 frontistiria decks. Because those
+> papers are now only **partially** transcribed, their source files were **not**
+> deleted (the deletion rule applies only to fully-transcribed papers).
+
+Next options: finish Παλαιό Θέμα #4 (Θέματα 2–4), keep pulling exercises from
+the ◐ frontistiria decks, or resume full papers from Παλαιό Θέμα #5.
 
 ## Progress log
 
@@ -161,3 +173,10 @@ _(append one line per completed paper: label — N sub-exercises — date)_
   L01/L02/L03/L09/L11/L12/L14/L15. Source PDF + `:Zone.Identifier` deleted. — 2026-05-21.
 - **Παλαιό Θέμα #3** — 3 sub-exercises (`pt3-th1`→L09, `pt3-th2`→L04,
   `pt3-th3`→L13). Source PDF + `:Zone.Identifier` deleted. — 2026-05-21.
+- **Παλαιό Θέμα #4 (partial)** — Θέμα 1 only: 5 sub-exercises
+  (`pt4-th1-q1`→L01, `pt4-th1-q2`→L02, `pt4-th1-q3`→L17, `pt4-th1-q4`→L03,
+  `pt4-th1-q5`→L02). Θέματα 2–4 still pending; source kept. — 2026-05-21.
+- **Φροντιστηριακά Σετ #1–#5 (partial)** — one signature exercise per deck:
+  `front-set-1-ask0`→L02, `front-set-2-ask2`→L02, `front-set-3-ask4`→L03,
+  `front-set-4-ask1`→L03, `front-set-5-ask10`→L10. Remaining exercises in each
+  deck still pending; sources kept. — 2026-05-21.

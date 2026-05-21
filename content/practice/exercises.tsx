@@ -2270,6 +2270,514 @@ export const EXERCISES: Exercise[] = [
       </>
     ),
   },
+  // ── Παλαιό Θέμα #4 — Θέμα 1 (5 προτάσεις Σωστό/Λάθος) ─────────────────
+  {
+    id: 'pt4-th1-q1',
+    title: 'Παλαιό Θέμα #4 · Θέμα 1.1 — Σ/Λ: P ≠ NP και συντομότερο μονοπάτι',
+    topic: 'intro',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 1 — Πρόταση 1',
+    weight: 4,
+    difficulty: 'easy',
+    prerequisites: ['lectures/L01-eisagogika'],
+    statement: (
+      <p>
+        Χαρακτήρισε <strong>(Σ)ωστό</strong> ή <strong>(Λ)άθος</strong>: «Αν
+        γνωρίζουμε ότι <InlineMath>{'P \\neq NP'}</InlineMath>, τότε το πρόβλημα
+        της εύρεσης συντομότερου μονοπατιού ανάμεσα σε δύο κορυφές ενός
+        γραφήματος <strong>δεν</strong> είναι πολυωνυμικά επιλύσιμο.»
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>ΛΑΘΟΣ.</strong>
+        </p>
+        <p>
+          Το πρόβλημα του συντομότερου μονοπατιού <strong>λύνεται</strong> σε
+          πολυωνυμικό χρόνο — το ξέρουμε καλά: BFS για γραφήματα χωρίς βάρη,
+          Dijkstra σε <InlineMath>{'O(m\\log n)'}</InlineMath> για θετικά βάρη,
+          Bellman-Ford σε <InlineMath>{'O(mn)'}</InlineMath> ακόμη και με
+          αρνητικά βάρη. Δηλαδή ανήκει στο <InlineMath>{'P'}</InlineMath>.
+        </p>
+        <p>
+          Η εικασία <InlineMath>{'P \\neq NP'}</InlineMath> αφορά τα{' '}
+          <em>δύσκολα</em> προβλήματα (τα NP-πλήρη, όπως SAT, Hamilton, σακίδιο)
+          — δεν λέει τίποτα «κακό» για τα προβλήματα που ήδη ξέρουμε να λύνουμε
+          γρήγορα. Το συντομότερο μονοπάτι παραμένει στο{' '}
+          <InlineMath>{'P'}</InlineMath> ανεξάρτητα από το αν{' '}
+          <InlineMath>{'P = NP'}</InlineMath> ή όχι.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt4-th1-q2',
+    title: 'Παλαιό Θέμα #4 · Θέμα 1.2 — Σ/Λ: f + g = Θ(max{f, g})',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 1 — Πρόταση 2',
+    weight: 4,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <p>
+        Χαρακτήρισε <strong>(Σ)ωστό</strong> ή <strong>(Λ)άθος</strong>: «Αν{' '}
+        <InlineMath>{'f(n), g(n)'}</InlineMath> είναι θετικές συναρτήσεις με{' '}
+        <InlineMath>{'f(n) \\neq g(n)'}</InlineMath>, τότε{' '}
+        <InlineMath>{'f(n) + g(n) = \\Theta(\\max\\{f(n), g(n)\\})'}</InlineMath>.»
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>ΣΩΣΤΟ.</strong>
+        </p>
+        <p>
+          Έστω <InlineMath>{'M = \\max\\{f(n), g(n)\\}'}</InlineMath>. Θα δείξουμε
+          ότι το <InlineMath>{'f + g'}</InlineMath> είναι «σφηνωμένο» ανάμεσα σε
+          δύο σταθερά πολλαπλάσια του <InlineMath>{'M'}</InlineMath> — αυτός είναι
+          ο ορισμός του <InlineMath>{'\\Theta'}</InlineMath>.
+        </p>
+        <ul>
+          <li>
+            <strong>Κάτω φράγμα:</strong> το άθροισμα είναι τουλάχιστον όσο ο
+            μεγαλύτερος όρος: <InlineMath>{'f + g \\ge M'}</InlineMath>. (Οι
+            συναρτήσεις είναι θετικές, οπότε ο άλλος όρος μόνο προσθέτει.)
+          </li>
+          <li>
+            <strong>Άνω φράγμα:</strong> κάθε όρος είναι το πολύ{' '}
+            <InlineMath>{'M'}</InlineMath>, άρα{' '}
+            <InlineMath>{'f + g \\le M + M = 2M'}</InlineMath>.
+          </li>
+        </ul>
+        <BlockMath>{'M \\le f(n) + g(n) \\le 2M \\;\\Rightarrow\\; f + g = \\Theta(M).'}</BlockMath>
+        <p>
+          Πρόσεξε: η υπόθεση <InlineMath>{'f \\neq g'}</InlineMath> είναι{' '}
+          <strong>άσχετη</strong> — η ιδιότητα ισχύει για <em>κάθε</em> ζεύγος
+          θετικών συναρτήσεων. Είναι ένα «δόλωμα» που δεν αλλάζει τίποτα.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt4-th1-q3',
+    title: 'Παλαιό Θέμα #4 · Θέμα 1.3 — Σ/Λ: ο Bellman-Ford είναι άπληστος;',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 1 — Πρόταση 3',
+    weight: 4,
+    difficulty: 'easy',
+    prerequisites: ['lectures/L17-dp-iv'],
+    statement: (
+      <p>
+        Χαρακτήρισε <strong>(Σ)ωστό</strong> ή <strong>(Λ)άθος</strong>: «Ο
+        αλγόριθμος Bellman-Ford ανήκει στην κατηγορία των άπληστων αλγορίθμων.»
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>ΛΑΘΟΣ.</strong>
+        </p>
+        <p>
+          Ο Bellman-Ford είναι αλγόριθμος <strong>δυναμικού προγραμματισμού</strong>,
+          όχι άπληστος. Δες πώς δουλεύει: ορίζει υποπροβλήματα{' '}
+          <InlineMath>{'\\text{OPT}(i, v)'}</InlineMath> = «συντομότερο{' '}
+          <InlineMath>{'v \\to t'}</InlineMath> μονοπάτι με το πολύ{' '}
+          <InlineMath>{'i'}</InlineMath> ακμές», και χτίζει τη λύση για όλο και
+          μεγαλύτερα <InlineMath>{'i'}</InlineMath>, ξαναχρησιμοποιώντας
+          αποθηκευμένες τιμές. Αυτό είναι η υπογραφή του DP.
+        </p>
+        <p>
+          Ένας <em>άπληστος</em> αλγόριθμος παίρνει μία αμετάκλητη τοπική απόφαση
+          σε κάθε βήμα και δεν την ξανακοιτάζει (όπως ο Dijkstra ή ο Kruskal). Ο
+          Bellman-Ford, αντίθετα, «χαλαρώνει» ακμές ξανά και ξανά για{' '}
+          <InlineMath>{'n - 1'}</InlineMath> γύρους — αναθεωρεί συνεχώς. Καθαρό
+          δυναμικό προγραμματισμό.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt4-th1-q4',
+    title: 'Παλαιό Θέμα #4 · Θέμα 1.4 — Σ/Λ: T(n) = 2T(n−1) + Θ(n)',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 1 — Πρόταση 4',
+    weight: 4,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <p>
+        Χαρακτήρισε <strong>(Σ)ωστό</strong> ή <strong>(Λ)άθος</strong>: «Αν{' '}
+        <InlineMath>{'T(n) = 2T(n-1) + \\Theta(n)'}</InlineMath>, τότε{' '}
+        <InlineMath>{'T(n) = O(n^2)'}</InlineMath>.»
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>ΛΑΘΟΣ.</strong>
+        </p>
+        <p>
+          Η παγίδα: το <InlineMath>{'2T(n-1)'}</InlineMath> δεν είναι «διαίρει
+          και κυρίευε» — δεν <em>μικραίνει</em> το πρόβλημα στο μισό, το μικραίνει
+          μόνο κατά <InlineMath>{'1'}</InlineMath>, ενώ ταυτόχρονα το{' '}
+          <strong>διπλασιάζει</strong>. Αυτό εκρήγνυται.
+        </p>
+        <p>
+          Ξετυλίγουμε: σε κάθε βήμα τα υποπροβλήματα διπλασιάζονται. Μετά από{' '}
+          <InlineMath>{'n'}</InlineMath> βήματα έχουμε{' '}
+          <InlineMath>{'2^n'}</InlineMath> «φύλλα»:
+        </p>
+        <BlockMath>{'T(n) = 2T(n-1) + cn = 4T(n-2) + 2c(n-1) + cn = \\dots = 2^n\\,T(0) + (\\text{όροι}).'}</BlockMath>
+        <p>
+          Μόνο ο όρος <InlineMath>{'2^n T(0)'}</InlineMath> είναι ήδη{' '}
+          <strong>εκθετικός</strong>. Άρα <InlineMath>{'T(n) = \\Theta(2^n)'}</InlineMath>{' '}
+          — δεν φράσσεται από κανένα πολυώνυμο, πόσο μάλλον από το{' '}
+          <InlineMath>{'n^2'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Διαισθητικά:</strong> «δύο αναδρομικές κλήσεις στο{' '}
+          <InlineMath>{'n-1'}</InlineMath>» μοιάζει με τον αφελή Fibonacci —
+          εκθετικό. Για πολυωνυμικό αποτέλεσμα θα έπρεπε να είχαμε{' '}
+          <InlineMath>{'T(n/2)'}</InlineMath>, όχι <InlineMath>{'T(n-1)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt4-th1-q5',
+    title: 'Παλαιό Θέμα #4 · Θέμα 1.5 — Σ/Λ: 1 + 2 + … + n = Θ(n²)',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #4',
+    problemNumber: 'Θέμα 1 — Πρόταση 5',
+    weight: 4,
+    difficulty: 'easy',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <p>
+        Χαρακτήρισε <strong>(Σ)ωστό</strong> ή <strong>(Λ)άθος</strong>:{' '}
+        <InlineMath>{'1 + 2 + \\cdots + n = \\Theta(n^2)'}</InlineMath>.
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>ΣΩΣΤΟ.</strong>
+        </p>
+        <p>
+          Το άθροισμα των πρώτων <InlineMath>{'n'}</InlineMath> φυσικών έχει
+          κλειστό τύπο (ο θρύλος λέει ότι τον βρήκε ο Gauss μικρός):
+        </p>
+        <BlockMath>{'1 + 2 + \\cdots + n = \\frac{n(n+1)}{2} = \\frac{n^2 + n}{2}.'}</BlockMath>
+        <p>
+          Ο κυρίαρχος όρος είναι το <InlineMath>{'n^2/2'}</InlineMath> — μια
+          σταθερά επί <InlineMath>{'n^2'}</InlineMath> — άρα{' '}
+          <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Χωρίς τον τύπο:</strong> και πάλι το βλέπεις. Οι μισοί όροι
+          (από τον <InlineMath>{'n/2'}</InlineMath> ως τον{' '}
+          <InlineMath>{'n'}</InlineMath>) είναι ο καθένας{' '}
+          <InlineMath>{'\\ge n/2'}</InlineMath>, άρα το άθροισμα είναι{' '}
+          <InlineMath>{'\\ge (n/2)(n/2) = n^2/4'}</InlineMath> →{' '}
+          <InlineMath>{'\\Omega(n^2)'}</InlineMath>. Και κάθε όρος είναι{' '}
+          <InlineMath>{'\\le n'}</InlineMath>, άρα το άθροισμα{' '}
+          <InlineMath>{'\\le n \\cdot n = n^2'}</InlineMath> →{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath>. Μαζί: <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  // ── Φροντιστηριακά Σετ #1–#5 — μία αντιπροσωπευτική άσκηση ανά σετ ─────
+  {
+    id: 'front-set-1-ask0',
+    title: 'Φροντιστηριακό Σετ #1 · Άσκηση 0 — Σ/Λ ασυμπτωτικού συμβολισμού',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #1',
+    problemNumber: 'Άσκηση 0',
+    difficulty: 'easy',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <p>
+        Χαρακτήρισε <strong>Σωστό / Λάθος</strong>:{' '}
+        <InlineMath>{'n\\log n + 4n^3 + 2^{\\log n} = O(2^n)'}</InlineMath>.
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>ΣΩΣΤΟ.</strong> Δουλεύουμε σε δύο βήματα: πρώτα{' '}
+          <em>απλοποιούμε</em> την αριστερή πλευρά, μετά συγκρίνουμε.
+        </p>
+        <p>
+          <strong>Βήμα 1 — ο ύποπτος όρος.</strong> Το{' '}
+          <InlineMath>{'2^{\\log n}'}</InlineMath> φαίνεται εκθετικό, αλλά δεν
+          είναι: <InlineMath>{'2^{\\log_2 n} = n'}</InlineMath> (το{' '}
+          <InlineMath>{'2'}</InlineMath> και ο <InlineMath>{'\\log_2'}</InlineMath>{' '}
+          αλληλοαναιρούνται). Άρα η παράσταση είναι{' '}
+          <InlineMath>{'n\\log n + 4n^3 + n'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Βήμα 2 — ο κυρίαρχος όρος.</strong> Από τα τρία,{' '}
+          <InlineMath>{'n\\log n,\\ 4n^3,\\ n'}</InlineMath>, το{' '}
+          <InlineMath>{'4n^3'}</InlineMath> μεγαλώνει πιο γρήγορα. Ένα άθροισμα
+          είναι πάντα <InlineMath>{'\\Theta'}</InlineMath> του μεγαλύτερου όρου
+          του, άρα όλη η παράσταση είναι <InlineMath>{'\\Theta(n^3)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Βήμα 3 — η σύγκριση.</strong> Είναι{' '}
+          <InlineMath>{'n^3 = O(2^n)'}</InlineMath>; Ναι — κάθε πολυώνυμο
+          «χάνει» από κάθε εκθετική συνάρτηση. Άρα{' '}
+          <InlineMath>{'\\Theta(n^3) = O(2^n)'}</InlineMath>, και η πρόταση είναι{' '}
+          <strong>σωστή</strong>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-2-ask2',
+    title: 'Φροντιστηριακό Σετ #2 · Άσκηση 2 — Σ/Λ για αθροίσματα',
+    topic: 'asymptotics',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #2',
+    problemNumber: 'Άσκηση 2',
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>Χαρακτήρισε κάθε πρόταση <strong>Σωστό / Λάθος</strong>:</p>
+        <p>
+          (α) <InlineMath>{'\\sum_{k=1}^{n} \\tfrac{1}{k} = \\Theta(\\log n)'}</InlineMath>{' '}
+          · (β) <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath> · (γ){' '}
+          <InlineMath>{'2^n = \\Theta\\!\\left(\\sum_{k=0}^{n} \\binom{n}{k}\\right)'}</InlineMath>{' '}
+          · (δ) <InlineMath>{'\\log(\\log n) = \\Theta(\\log(\\log n))'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α) ΣΩΣΤΟ.</strong> Το{' '}
+          <InlineMath>{'\\sum_{k=1}^n 1/k'}</InlineMath> είναι ο{' '}
+          <em>αρμονικός αριθμός</em> <InlineMath>{'H_n'}</InlineMath>. Μια
+          γνωστή — και πολύ χρήσιμη — ταυτότητα είναι{' '}
+          <InlineMath>{'H_n \\approx \\ln n + \\gamma'}</InlineMath>, άρα{' '}
+          <InlineMath>{'H_n = \\Theta(\\log n)'}</InlineMath>. (Διαισθητικά: τον
+          φράσσεις με ολοκλήρωμα του <InlineMath>{'1/x'}</InlineMath>, που δίνει
+          λογάριθμο.)
+        </p>
+        <p>
+          <strong>(β) ΣΩΣΤΟ.</strong> Από την προσέγγιση Stirling,{' '}
+          <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath>. Γρήγορη
+          διαίσθηση: <InlineMath>{'\\log(n!) = \\sum_{k=1}^n \\log k'}</InlineMath>,
+          και οι μισοί όροι είναι <InlineMath>{'\\ge \\log(n/2)'}</InlineMath>,
+          δίνοντας κάτω φράγμα <InlineMath>{'\\Omega(n\\log n)'}</InlineMath>· το
+          άνω <InlineMath>{'O(n\\log n)'}</InlineMath> είναι προφανές αφού κάθε
+          όρος είναι <InlineMath>{'\\le \\log n'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(γ) ΣΩΣΤΟ.</strong> Εδώ δεν χρειάζεται καν ασυμπτωτική —
+          ισχύει <em>ισότητα</em>. Το διωνυμικό θεώρημα λέει{' '}
+          <InlineMath>{'\\sum_{k=0}^{n} \\binom{n}{k} = 2^n'}</InlineMath>{' '}
+          ακριβώς. Άρα <InlineMath>{'2^n = \\Theta(2^n)'}</InlineMath> —
+          τετριμμένα σωστό.
+        </p>
+        <p>
+          <strong>(δ) ΣΩΣΤΟ.</strong> Κάθε συνάρτηση είναι{' '}
+          <InlineMath>{'\\Theta'}</InlineMath> του εαυτού της — το{' '}
+          <InlineMath>{'\\Theta'}</InlineMath> είναι ανακλαστικό. Είναι μια
+          «δωρεάν» πρόταση που ελέγχει αν προσέχεις: η δεξιά και η αριστερή
+          πλευρά είναι πανομοιότυπες.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-3-ask4',
+    title: 'Φροντιστηριακό Σετ #3 · Άσκηση 4 — Αναδρομή T(n) = T(n−1) + 2ⁿ',
+    topic: 'divide-conquer',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #3',
+    problemNumber: 'Άσκηση 4',
+    difficulty: 'medium',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <p>
+        Λύσε την αναδρομική σχέση <InlineMath>{'T(n) = T(n-1) + 2^n'}</InlineMath>{' '}
+        με αρχική συνθήκη <InlineMath>{'T(0) = 5'}</InlineMath>, και δώσε την
+        ασυμπτωτική της τάξη.
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          Εδώ δεν εφαρμόζεται το Master Theorem (το πρόβλημα μικραίνει κατά{' '}
+          <InlineMath>{'1'}</InlineMath>, όχι με διαίρεση). Χρησιμοποιούμε τη{' '}
+          μέθοδο της <strong>τηλεσκόπησης</strong>: γράφουμε τη σχέση για
+          διαδοχικά <InlineMath>{'n'}</InlineMath> και προσθέτουμε.
+        </p>
+        <BlockMath>{'\\begin{aligned} T(1) - T(0) &= 2^1 \\\\ T(2) - T(1) &= 2^2 \\\\ &\\;\\;\\vdots \\\\ T(n) - T(n-1) &= 2^n \\end{aligned}'}</BlockMath>
+        <p>
+          Προσθέτοντας <strong>κατά μέλη</strong>, όλοι οι ενδιάμεσοι όροι στην
+          αριστερή στήλη αλληλοαναιρούνται (τηλεσκόπηση) και μένει:
+        </p>
+        <BlockMath>{'T(n) - T(0) = \\sum_{i=1}^{n} 2^i = 2^{n+1} - 2.'}</BlockMath>
+        <p>
+          (Το <InlineMath>{'\\sum_{i=1}^n 2^i = 2^{n+1}-2'}</InlineMath> είναι
+          γεωμετρική σειρά.) Με <InlineMath>{'T(0) = 5'}</InlineMath>:
+        </p>
+        <BlockMath>{'T(n) = 2^{n+1} - 2 + 5 = 2^{n+1} + 3.'}</BlockMath>
+        <p>
+          Τέλος, <InlineMath>{'2^{n+1} = 2 \\cdot 2^n'}</InlineMath> — σταθερά
+          επί <InlineMath>{'2^n'}</InlineMath> — άρα{' '}
+          <strong><InlineMath>{'T(n) = \\Theta(2^n)'}</InlineMath></strong>,
+          εκθετική.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-4-ask1',
+    title: 'Φροντιστηριακό Σετ #4 · Άσκηση 1 — Αναδρομή T(n) = √n·T(√n) + n',
+    topic: 'divide-conquer',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #4',
+    problemNumber: 'Άσκηση 1',
+    difficulty: 'hard',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <p>
+        Βρες την ασυμπτωτική τάξη της <InlineMath>{'T(n)'}</InlineMath> όταν{' '}
+        <InlineMath>{'T(n) = \\sqrt{n}\\;T(\\sqrt{n}) + n'}</InlineMath>.
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          Δύσκολη αναδρομή — και ρίζα, και συντελεστής{' '}
+          <InlineMath>{'\\sqrt{n}'}</InlineMath> μπροστά. Το κλειδί είναι ένα
+          έξυπνο κόλπο: <strong>διαιρούμε και τις δύο πλευρές με{' '}
+          <InlineMath>{'n'}</InlineMath></strong>.
+        </p>
+        <BlockMath>{'\\frac{T(n)}{n} = \\frac{\\sqrt{n}\\;T(\\sqrt{n})}{n} + \\frac{n}{n} = \\frac{T(\\sqrt{n})}{\\sqrt{n}} + 1.'}</BlockMath>
+        <p>
+          Τώρα ορίζουμε μια νέα συνάρτηση{' '}
+          <InlineMath>{'S(n) = T(n)/n'}</InlineMath>. Πρόσεξε ότι ο όρος{' '}
+          <InlineMath>{'T(\\sqrt{n})/\\sqrt{n}'}</InlineMath> είναι ακριβώς{' '}
+          <InlineMath>{'S(\\sqrt{n})'}</InlineMath>. Άρα η σχέση γίνεται απλή:
+        </p>
+        <BlockMath>{'S(n) = S(\\sqrt{n}) + 1.'}</BlockMath>
+        <p>
+          Αυτή τη λύνουμε με αλλαγή μεταβλητής <InlineMath>{'n = 2^m'}</InlineMath>:
+          τότε <InlineMath>{'\\sqrt{n} = 2^{m/2}'}</InlineMath>, και με{' '}
+          <InlineMath>{'R(m) = S(2^m)'}</InlineMath> παίρνουμε{' '}
+          <InlineMath>{'R(m) = R(m/2) + 1'}</InlineMath> — κάθε βήμα
+          υποδιπλασιάζει το <InlineMath>{'m'}</InlineMath>, άρα{' '}
+          <InlineMath>{'R(m) = \\Theta(\\log m)'}</InlineMath>. Επιστρέφοντας:{' '}
+          <InlineMath>{'S(n) = \\Theta(\\log m) = \\Theta(\\log\\log n)'}</InlineMath>.
+        </p>
+        <p>
+          Τέλος, αφού <InlineMath>{'S(n) = T(n)/n'}</InlineMath>:
+        </p>
+        <BlockMath>{'T(n) = n \\cdot S(n) = \\Theta(n \\log\\log n).'}</BlockMath>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-5-ask10',
+    title: 'Φροντιστηριακό Σετ #5 · Άσκηση 10 — Πυθαγόρεια τετράδα σε O(n²)',
+    topic: 'data-structures',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #5',
+    problemNumber: 'Άσκηση 10',
+    difficulty: 'hard',
+    prerequisites: ['lectures/L10-data-structures'],
+    statement: (
+      <p>
+        Μια <strong>Πυθαγόρεια τετράδα</strong> είναι ακέραιοι{' '}
+        <InlineMath>{'(a, b, c, d)'}</InlineMath> με{' '}
+        <InlineMath>{'d = \\sqrt{a^2 + b^2 + c^2}'}</InlineMath>, δηλαδή{' '}
+        <InlineMath>{'a^2 + b^2 + c^2 = d^2'}</InlineMath>. Σχεδίασε αλγόριθμο{' '}
+        <InlineMath>{'O(n^2)'}</InlineMath> που αποφασίζει αν υπάρχει Πυθαγόρεια
+        τετράδα σε έναν πίνακα <InlineMath>{'n'}</InlineMath> διακριτών θετικών
+        ακεραίων (επιτρέπεται η πολλαπλή χρήση ενός στοιχείου).
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Η αφελής λύση.</strong> Δοκίμασε όλες τις τετράδες{' '}
+          <InlineMath>{'(a,b,c,d)'}</InlineMath>: τέσσερις εμφωλευμένοι βρόχοι →{' '}
+          <InlineMath>{'O(n^4)'}</InlineMath>. Πολύ αργό. Στόχος{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Η ιδέα-κλειδί.</strong> Αναδιατάσσουμε την εξίσωση:
+        </p>
+        <BlockMath>{'a^2 + b^2 + c^2 = d^2 \\;\\Longleftrightarrow\\; a^2 + b^2 = d^2 - c^2.'}</BlockMath>
+        <p>
+          Δηλαδή ψάχνουμε ένα ζεύγος <InlineMath>{'(a,b)'}</InlineMath> και ένα
+          ζεύγος <InlineMath>{'(c,d)'}</InlineMath> που να συμφωνούν σε αυτή την
+          τιμή. Τα <strong>ζεύγη</strong> είναι μόνο{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath> — όχι οι τετράδες. Αν κάναμε
+          γραμμικό ψάξιμο για κάθε ζεύγος, θα πέφταμε πάλι σε{' '}
+          <InlineMath>{'O(n^4)'}</InlineMath>· γι' αυτό χρειαζόμαστε αναζήτηση{' '}
+          <InlineMath>{'O(1)'}</InlineMath> — έναν <strong>πίνακα
+          κατακερματισμού</strong> (hash table, από το L10).
+        </p>
+        <p>
+          <strong>Ο αλγόριθμος.</strong>
+        </p>
+        <ul>
+          <li>
+            <strong>Φάση 1 — χτίσιμο.</strong> Για κάθε ζεύγος στοιχείων{' '}
+            <InlineMath>{'(a, b)'}</InlineMath> του πίνακα ({' '}
+            <InlineMath>{'O(n^2)'}</InlineMath> ζεύγη), υπολόγισε το άθροισμα{' '}
+            <InlineMath>{'a^2 + b^2'}</InlineMath> και βάλ' το σε ένα{' '}
+            <strong>hash set</strong> <InlineMath>{'H'}</InlineMath>. Κόστος:{' '}
+            <InlineMath>{'O(n^2)'}</InlineMath> (κάθε εισαγωγή{' '}
+            <InlineMath>{'O(1)'}</InlineMath> κατά μέσο όρο).
+          </li>
+          <li>
+            <strong>Φάση 2 — ψάξιμο.</strong> Για κάθε ζεύγος{' '}
+            <InlineMath>{'(c, d)'}</InlineMath> ({' '}
+            <InlineMath>{'O(n^2)'}</InlineMath> ζεύγη), υπολόγισε{' '}
+            <InlineMath>{'d^2 - c^2'}</InlineMath>. Αν είναι θετικό{' '}
+            <strong>και</strong> υπάρχει στο <InlineMath>{'H'}</InlineMath> →{' '}
+            βρήκαμε Πυθαγόρεια τετράδα, επίστρεψε «ΝΑΙ». Κάθε αναζήτηση{' '}
+            <InlineMath>{'O(1)'}</InlineMath>.
+          </li>
+          <li>Αν κανένα ζεύγος δεν πετύχει, επίστρεψε «ΟΧΙ».</li>
+        </ul>
+        <p>
+          <strong>Ορθότητα.</strong> Αν υπάρχει τετράδα με{' '}
+          <InlineMath>{'a^2+b^2+c^2=d^2'}</InlineMath>, τότε το άθροισμα{' '}
+          <InlineMath>{'a^2+b^2'}</InlineMath> μπήκε στο{' '}
+          <InlineMath>{'H'}</InlineMath> στη Φάση 1, και το ζεύγος{' '}
+          <InlineMath>{'(c,d)'}</InlineMath> θα το βρει στη Φάση 2 αφού{' '}
+          <InlineMath>{'d^2-c^2 = a^2+b^2'}</InlineMath>. Η πολλαπλή χρήση
+          στοιχείου επιτρέπεται, οπότε δεν χρειάζεται ειδικός χειρισμός για{' '}
+          ίσα <InlineMath>{'a,b,c,d'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Πολυπλοκότητα.</strong> <InlineMath>{'O(n^2) + O(n^2) = O(n^2)'}</InlineMath>{' '}
+          (αναμενόμενος χρόνος). Ο πίνακας κατακερματισμού είναι αυτός που
+          μετατρέπει το «ψάξε αν υπάρχει» από <InlineMath>{'O(n^2)'}</InlineMath>{' '}
+          σε <InlineMath>{'O(1)'}</InlineMath> — χωρίς αυτόν δεν πιάναμε το{' '}
+          φράγμα.
+        </p>
+      </>
+    ),
+  },
   {
     id: 'exam-sept-2024',
     title: 'Εξεταστική Σεπτεμβρίου 2024 — Πλήρες θέμα',
