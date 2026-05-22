@@ -31,6 +31,11 @@ import { LimitRatioPlot } from '@/components/viz/LimitRatioPlot'
 import { StrictVsLooseExplorer } from '@/components/viz/StrictVsLooseExplorer'
 import { OscillatorComparison } from '@/components/viz/OscillatorComparison'
 import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
+import { SortRace } from '@/components/viz/SortRace'
+import { TwoPointerMerge } from '@/components/viz/TwoPointerMerge'
+import { SplitRatioExplorer } from '@/components/viz/SplitRatioExplorer'
+import { HanoiAnimator } from '@/components/viz/HanoiAnimator'
+import { DecisionTreeLowerBound } from '@/components/viz/DecisionTreeLowerBound'
 import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
 import { InversionCounter } from '@/components/viz/InversionCounter'
 import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
@@ -137,6 +142,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     StrictVsLooseExplorer,
     OscillatorComparison,
     MergeSortAnimator,
+    SortRace,
+    TwoPointerMerge,
+    SplitRatioExplorer,
+    HanoiAnimator,
+    DecisionTreeLowerBound,
     RecurrenceClassifier,
     InversionCounter,
     ClosestPairScan,
