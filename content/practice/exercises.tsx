@@ -1766,20 +1766,188 @@ for i ← 0 to n-2 with step 1 do
       </>
     ),
   },
+  // ── Φροντιστηριακό Σετ #13 — μεταγραμμένο & χωρισμένο ανά διάλεξη ──────
   {
-    id: 'frontistirio-old-3',
-    title: 'Φροντιστηριακό Σετ #13 — υπό μεταγραφή',
-    topic: 'graphs',
+    id: 'front-set-13-ask1',
+    title: 'Φροντιστηριακό Σετ #13 · Άσκηση 1 — Πολυπλοκότητα αναδρομικού προγράμματος',
+    topic: 'divide-conquer',
     origin: 'frontistirio',
     paperLabel: 'Φροντιστηριακό Σετ #13',
+    problemNumber: 'Άσκηση 1',
     difficulty: 'medium',
-    prerequisites: [
-      'lectures/L06-graphs-i',
-      'lectures/L07-graphs-ii',
-      'lectures/L08-graphs-iii',
-    ],
-    statement: null,
-    solution: null,
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <>
+        <p>
+          Δίνεται το παρακάτω πρόγραμμα. Να βρεθεί η πολυπλοκότητά του ως
+          συνάρτηση του <InlineMath>{'n'}</InlineMath>.
+        </p>
+        <pre className="overflow-x-auto rounded bg-bg-soft p-3 text-sm">{`int two(int n) {
+  int sum = 0;
+  int i, j;
+  if (n == 0)
+    return 1;
+  else
+    for (i = 0; i <= n-1; i++)
+      sum = sum + two(i);
+}`}</pre>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το πρόγραμμα, για είσοδο <InlineMath>{'n'}</InlineMath>, εκτελεί έναν
+          βρόχο που καλεί τον εαυτό του <strong>μία φορά για κάθε</strong>{' '}
+          <InlineMath>{'i = 0, 1, \\dots, n-1'}</InlineMath>. Άρα, αν{' '}
+          <InlineMath>{'T(n)'}</InlineMath> είναι το πλήθος στοιχειωδών πράξεων:
+        </p>
+        <BlockMath>{'T(n) = T(0) + T(1) + \\dots + T(n-1)'}</BlockMath>
+        <p>
+          Γράφουμε την ίδια σχέση για <InlineMath>{'n-1'}</InlineMath>:
+        </p>
+        <BlockMath>{'T(n-1) = T(0) + T(1) + \\dots + T(n-2)'}</BlockMath>
+        <p>
+          <strong>Το κόλπο:</strong> αφαιρούμε τη δεύτερη από την πρώτη. Όλοι οι
+          κοινοί όροι σβήνονται και μένει{' '}
+          <InlineMath>{'T(n) - T(n-1) = T(n-1)'}</InlineMath>, δηλαδή:
+        </p>
+        <BlockMath>{'T(n) = 2\\,T(n-1)'}</BlockMath>
+        <p>
+          Αυτή είναι μια αναδρομή που <strong>διπλασιάζεται</strong> σε κάθε βήμα.
+          Ξετυλίγοντάς την: <InlineMath>{'T(n) = 2\\,T(n-1) = 2^2\\,T(n-2) = \\dots = 2^n\\,T(0)'}</InlineMath>.
+          Αφού για <InlineMath>{'n = 0'}</InlineMath> το πρόγραμμα κάνει σταθερή
+          δουλειά, <InlineMath>{'T(0) = \\Theta(1)'}</InlineMath>, και άρα:
+        </p>
+        <BlockMath>{'T(n) = \\Theta(2^n)'}</BlockMath>
+        <p>
+          <strong>Συμπέρασμα:</strong> η πολυπλοκότητα είναι{' '}
+          <strong>εκθετική</strong>. Ένα φαινομενικά αθώο πρόγραμμα με έναν απλό
+          βρόχο γίνεται απαγορευτικά αργό, ακριβώς επειδή κάθε κλήση ξαναϋπολογίζει
+          όλες τις προηγούμενες — το ίδιο φαινόμενο επικάλυψης υποπροβλημάτων που
+          ο δυναμικός προγραμματισμός θεραπεύει με απομνημόνευση.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-13-ask2',
+    title: 'Φροντιστηριακό Σετ #13 · Άσκηση 2 — Γραμμική ομογενής αναδρομή (χαρακτηριστικό πολυώνυμο)',
+    topic: 'divide-conquer',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #13',
+    problemNumber: 'Άσκηση 2',
+    difficulty: 'hard',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <>
+        <p>
+          Να λυθεί η γραμμική ομογενής αναδρομική σχέση με σταθερούς συντελεστές
+        </p>
+        <BlockMath>{'t_n = -3\\,t_{n-1} - 3\\,t_{n-2} - t_{n-3}'}</BlockMath>
+        <p>
+          με αρχικές συνθήκες <InlineMath>{'t_0 = 1'}</InlineMath>,{' '}
+          <InlineMath>{'t_1 = -2'}</InlineMath>, <InlineMath>{'t_2 = -1'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Μια αναδρομή της μορφής{' '}
+          <InlineMath>{'t_n = c_1 t_{n-1} + \\dots + c_k t_{n-k}'}</InlineMath>{' '}
+          έχει αποδειχθεί ότι έχει λύσεις της μορφής{' '}
+          <InlineMath>{'t_n = r^n'}</InlineMath>. Αντικαθιστούμε{' '}
+          <InlineMath>{'t_n = r^n'}</InlineMath> και διαιρούμε με{' '}
+          <InlineMath>{'r^{n-3}'}</InlineMath> για να βρούμε το{' '}
+          <strong>χαρακτηριστικό πολυώνυμο</strong>:
+        </p>
+        <BlockMath>{'r^3 = -3r^2 - 3r - 1 \\;\\Longrightarrow\\; r^3 + 3r^2 + 3r + 1 = 0'}</BlockMath>
+        <p>
+          Αναγνωρίζουμε το ανάπτυγμα <InlineMath>{'(r+1)^3'}</InlineMath>:
+        </p>
+        <BlockMath>{'(r+1)^3 = 0 \\;\\Longrightarrow\\; r = -1 \\ \\text{(τριπλή ρίζα)}'}</BlockMath>
+        <p>
+          <strong>Όταν μια ρίζα έχει πολλαπλότητα</strong>{' '}
+          <InlineMath>{'m'}</InlineMath>, δεν αρκεί ο όρος{' '}
+          <InlineMath>{'r^n'}</InlineMath> — πρέπει να τον πολλαπλασιάσουμε με{' '}
+          <InlineMath>{'n^0, n^1, \\dots, n^{m-1}'}</InlineMath>. Εδώ η ρίζα{' '}
+          <InlineMath>{'-1'}</InlineMath> έχει πολλαπλότητα 3, οπότε η γενική
+          λύση είναι:
+        </p>
+        <BlockMath>{'t_n = C_1(-1)^n + C_2\\,n\\,(-1)^n + C_3\\,n^2(-1)^n'}</BlockMath>
+        <p>
+          <strong>Βρίσκουμε τις σταθερές</strong> από τις αρχικές συνθήκες:
+        </p>
+        <BlockMath>{'t_0 = 1:\\quad C_1 = 1'}</BlockMath>
+        <BlockMath>{'t_1 = -2:\\quad -C_1 - C_2 - C_3 = -2 \\;\\Rightarrow\\; C_2 + C_3 = 1'}</BlockMath>
+        <BlockMath>{'t_2 = -1:\\quad C_1 + 2C_2 + 4C_3 = -1 \\;\\Rightarrow\\; 2C_2 + 4C_3 = -2'}</BlockMath>
+        <p>
+          Λύνοντας το σύστημα <InlineMath>{'C_2 + C_3 = 1'}</InlineMath> και{' '}
+          <InlineMath>{'C_2 + 2C_3 = -1'}</InlineMath> παίρνουμε{' '}
+          <InlineMath>{'C_3 = -2'}</InlineMath> και{' '}
+          <InlineMath>{'C_2 = 3'}</InlineMath>. Άρα η κλειστή μορφή είναι:
+        </p>
+        <BlockMath>{'t_n = (-1)^n\\,(1 + 3n - 2n^2)'}</BlockMath>
+      </>
+    ),
+  },
+  {
+    id: 'front-set-13-ask3',
+    title: 'Φροντιστηριακό Σετ #13 · Άσκηση 3 — Εφαρμογές του Master Theorem',
+    topic: 'divide-conquer',
+    origin: 'frontistirio',
+    paperLabel: 'Φροντιστηριακό Σετ #13',
+    problemNumber: 'Άσκηση 3',
+    difficulty: 'easy',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    formulaIds: ['master-theorem'],
+    statement: (
+      <>
+        <p>
+          Με χρήση του Master Theorem, να λυθούν οι αναδρομικές σχέσεις:
+        </p>
+        <BlockMath>{'(\\alpha)\\ \\ T(n) = 9\\,T(n/3) + n \\qquad (\\beta)\\ \\ T(n) = T(2n/3) + 1 \\qquad (\\gamma)\\ \\ T(n) = 3\\,T(n/4) + n\\log n'}</BlockMath>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το Master Theorem για <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath>{' '}
+          συγκρίνει το <InlineMath>{'f(n)'}</InlineMath> με το{' '}
+          <InlineMath>{'n^{\\log_b a}'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(α) <InlineMath>{'T(n) = 9\\,T(n/3) + n'}</InlineMath>.</strong>{' '}
+          Εδώ <InlineMath>{'a = 9'}</InlineMath>, <InlineMath>{'b = 3'}</InlineMath>,
+          άρα <InlineMath>{'n^{\\log_3 9} = n^2'}</InlineMath>. Το{' '}
+          <InlineMath>{'f(n) = n'}</InlineMath> είναι πολυωνυμικά{' '}
+          <em>μικρότερο</em> από το <InlineMath>{'n^2'}</InlineMath> (1η περίπτωση
+          — κυριαρχούν τα φύλλα του δέντρου αναδρομής). Άρα{' '}
+          <InlineMath>{'T(n) = \\Theta(n^2)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(β) <InlineMath>{'T(n) = T(2n/3) + 1'}</InlineMath>.</strong>{' '}
+          Εδώ <InlineMath>{'a = 1'}</InlineMath>,{' '}
+          <InlineMath>{'b = 3/2'}</InlineMath>, άρα{' '}
+          <InlineMath>{'n^{\\log_{3/2} 1} = n^0 = 1'}</InlineMath>. Το{' '}
+          <InlineMath>{'f(n) = 1 = \\Theta(n^{\\log_b a})'}</InlineMath> (2η
+          περίπτωση — ισορροπία). Άρα{' '}
+          <InlineMath>{'T(n) = \\Theta(\\log n)'}</InlineMath> — ακριβώς η
+          συμπεριφορά της δυαδικής αναζήτησης.
+        </p>
+        <p>
+          <strong>(γ) <InlineMath>{'T(n) = 3\\,T(n/4) + n\\log n'}</InlineMath>.</strong>{' '}
+          Εδώ <InlineMath>{'a = 3'}</InlineMath>, <InlineMath>{'b = 4'}</InlineMath>,
+          άρα <InlineMath>{'n^{\\log_4 3} \\approx n^{0.79}'}</InlineMath>. Το{' '}
+          <InlineMath>{'f(n) = n\\log n'}</InlineMath> είναι πολυωνυμικά{' '}
+          <em>μεγαλύτερο</em> (3η περίπτωση — κυριαρχεί η ρίζα). Ελέγχουμε και τη
+          συνθήκη κανονικότητας:{' '}
+          <InlineMath>{'3 \\cdot \\tfrac{n}{4}\\log\\tfrac{n}{4} \\le c \\cdot n\\log n'}</InlineMath>{' '}
+          ισχύει π.χ. για <InlineMath>{'c = 3/4'}</InlineMath>. Άρα{' '}
+          <InlineMath>{'T(n) = \\Theta(n\\log n)'}</InlineMath>.
+        </p>
+      </>
+    ),
   },
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -10110,16 +10278,319 @@ K = 101     Σ = 100`}</pre>
       </>
     ),
   },
+  // ── Παλαιό Θέμα #11 — μεταγραμμένο & χωρισμένο ανά διάλεξη ─────────────
   {
-    id: 'exam-distance-2020',
-    title: 'Παλαιό Θέμα #11 — υπό μεταγραφή',
+    id: 'pt11-th1',
+    title: 'Παλαιό Θέμα #11 · Θέμα 1 — Κορυφή «βουνού» σε O(log n) (διαίρει και βασίλευε)',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #11',
+    problemNumber: 'Θέμα 1',
+    weight: 3,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L05-divide-and-conquer-iii'],
+    statement: (
+      <>
+        <p>
+          Δίνεται πίνακας <InlineMath>{'A'}</InlineMath> μεγέθους{' '}
+          <InlineMath>{'n'}</InlineMath> με το χαρακτηριστικό ότι υπάρχει θέση{' '}
+          <InlineMath>{'i'}</InlineMath> τέτοια ώστε η ακολουθία{' '}
+          <InlineMath>{'A[1], A[2], \\dots, A[i]'}</InlineMath> είναι αυστηρώς
+          αύξουσα, ενώ η ακολουθία{' '}
+          <InlineMath>{'A[i+1], A[i+2], \\dots, A[n]'}</InlineMath> είναι αυστηρώς
+          φθίνουσα. Δώστε αλγόριθμο που σε χρόνο{' '}
+          <InlineMath>{'O(\\log n)'}</InlineMath> εντοπίζει τη θέση{' '}
+          <InlineMath>{'i'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ένας τέτοιος πίνακας λέγεται «κορυφογραμμή βουνού»: ανεβαίνει μέχρι μια
+          κορυφή και μετά κατεβαίνει. Η ωμή βία (σάρωση όλων) είναι{' '}
+          <InlineMath>{'O(n)'}</InlineMath>. Για <InlineMath>{'O(\\log n)'}</InlineMath>{' '}
+          χρειαζόμαστε <strong>δυαδική αναζήτηση</strong> — αλλά πρέπει να βρούμε
+          ένα κριτήριο που να μας λέει «πήγαινε αριστερά ή δεξιά».
+        </p>
+        <p>
+          <strong>Η ιδέα.</strong> Κοιτάμε το μεσαίο στοιχείο{' '}
+          <InlineMath>{'A[m]'}</InlineMath> και τον δεξί του γείτονα{' '}
+          <InlineMath>{'A[m+1]'}</InlineMath>. Δύο περιπτώσεις:
+        </p>
+        <ul>
+          <li>
+            Αν <InlineMath>{'A[m] < A[m+1]'}</InlineMath>: βρισκόμαστε ακόμα στο{' '}
+            <strong>ανηφορικό</strong> κομμάτι, άρα η κορυφή είναι{' '}
+            <strong>δεξιά</strong> — συνέχισε στο διάστημα{' '}
+            <InlineMath>{'[m+1,\\ n]'}</InlineMath>.
+          </li>
+          <li>
+            Αν <InlineMath>{'A[m] > A[m+1]'}</InlineMath>: βρισκόμαστε στο{' '}
+            <strong>κατηφορικό</strong> κομμάτι (ή ακριβώς στην κορυφή), άρα η
+            κορυφή είναι στη θέση <InlineMath>{'m'}</InlineMath> ή{' '}
+            <strong>αριστερά</strong> — συνέχισε στο διάστημα{' '}
+            <InlineMath>{'[1,\\ m]'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          Σε κάθε βήμα κόβουμε το διάστημα στη μέση και κάνουμε{' '}
+          <InlineMath>{'O(1)'}</InlineMath> δουλειά. Όταν το διάστημα γίνει ένα
+          στοιχείο, αυτό είναι η κορυφή. Η αναδρομή είναι{' '}
+          <InlineMath>{'T(n) = T(n/2) + O(1)'}</InlineMath>, που από το Master
+          Theorem (ή τη δυαδική αναζήτηση) δίνει{' '}
+          <InlineMath>{'T(n) = O(\\log n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Γιατί δουλεύει:</strong> σε ένα τέτοιο «βουνό» η σύγκριση δύο
+          διαδοχικών στοιχείων μάς λέει με βεβαιότητα σε ποια πλαγιά είμαστε — και
+          η κορυφή είναι πάντα στην πλευρά «προς τα πάνω». Έτσι ποτέ δεν πετάμε το
+          μισό που περιέχει την κορυφή.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt11-th2',
+    title: 'Παλαιό Θέμα #11 · Θέμα 2 — Κόστος ΕΣΔ μετά από μετασχηματισμό βαρών',
+    topic: 'greedy',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #11',
+    problemNumber: 'Θέμα 2',
+    weight: 3,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    formulaIds: ['prim-kruskal'],
+    statement: (
+      <>
+        <p>
+          Δίνεται μη κατευθυνόμενο γράφημα{' '}
+          <InlineMath>{'G(V, E)'}</InlineMath> με{' '}
+          <InlineMath>{'|V| = n'}</InlineMath> και{' '}
+          <InlineMath>{'|E| = q = \\Omega(n^{3/2})'}</InlineMath>, όπου κάθε ακμή
+          φέρει διαφορετικό, θετικό βάρος. Έστω ότι τα βάρη είναι{' '}
+          <InlineMath>{'w_1 < w_2 < \\dots < w_q'}</InlineMath>. Έστω{' '}
+          <InlineMath>{'G\\,\''}</InlineMath> το γράφημα που προκύπτει αν αλλάξουμε
+          στο <InlineMath>{'G'}</InlineMath> τα βάρη σε{' '}
+          <InlineMath>{'x_1, x_2, \\dots, x_q'}</InlineMath> ως εξής:{' '}
+          <InlineMath>{'x_i = w_i + i'}</InlineMath>.
+        </p>
+        <p>
+          Σας δίνεται αλγόριθμος που σε χρόνο <InlineMath>{'O(1)'}</InlineMath>{' '}
+          υπολογίζει το Ελάχιστο Συνδετικό/Επικαλύπτον Δέντρο{' '}
+          <InlineMath>{'T'}</InlineMath> του <InlineMath>{'G'}</InlineMath>.
+          Επίσης, για κάθε ακμή <InlineMath>{'e \\in E'}</InlineMath>, σας δίνονται
+          τα <InlineMath>{'x_e, w_e'}</InlineMath>. Δώστε αλγόριθμο που σε χρόνο{' '}
+          <InlineMath>{'O(n)'}</InlineMath> υπολογίζει το{' '}
+          <strong>κόστος</strong> ενός ΕΣ/ΕΔ του{' '}
+          <InlineMath>{'G\\,\''}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Η κρίσιμη παρατήρηση.</strong> Οι αλγόριθμοι ΕΣΔ (Kruskal,
+          Prim) δεν κοιτάνε ποτέ τις <em>απόλυτες</em> τιμές των βαρών — κοιτάνε
+          μόνο τη <strong>σχετική τους διάταξη</strong> («ποια ακμή είναι
+          φθηνότερη»). Άρα δύο γραφήματα με ίδιες ακμές και{' '}
+          <strong>ίδια διάταξη βαρών</strong> έχουν ακριβώς το ίδιο ΕΣΔ.
+        </p>
+        <p>
+          Ελέγχουμε αν ο μετασχηματισμός{' '}
+          <InlineMath>{'x_i = w_i + i'}</InlineMath> διατηρεί τη διάταξη. Αν{' '}
+          <InlineMath>{'i < j'}</InlineMath>, τότε{' '}
+          <InlineMath>{'w_i < w_j'}</InlineMath> (δοσμένο) <strong>και</strong>{' '}
+          <InlineMath>{'i < j'}</InlineMath>, οπότε{' '}
+          <InlineMath>{'x_i = w_i + i < w_j + j = x_j'}</InlineMath>. Δηλαδή{' '}
+          <strong>η σειρά των ακμών μένει ακριβώς η ίδια</strong>.
+        </p>
+        <p>
+          <strong>Συνέπεια:</strong> το ΕΣΔ του{' '}
+          <InlineMath>{'G\\,\''}</InlineMath> αποτελείται από τις{' '}
+          <strong>ίδιες ακριβώς ακμές</strong> με το ΕΣΔ{' '}
+          <InlineMath>{'T'}</InlineMath> του <InlineMath>{'G'}</InlineMath> (που
+          μας δίνεται σε <InlineMath>{'O(1)'}</InlineMath>).
+        </p>
+        <p>
+          <strong>Ο αλγόριθμος.</strong> Πάρε το <InlineMath>{'T'}</InlineMath>.
+          Ένα συνδετικό δέντρο έχει ακριβώς{' '}
+          <InlineMath>{'n-1'}</InlineMath> ακμές. Για καθεμία από αυτές τις{' '}
+          <InlineMath>{'n-1'}</InlineMath> ακμές, διάβασε το δοσμένο{' '}
+          <InlineMath>{'x_e'}</InlineMath> και πρόσθεσέ το:
+        </p>
+        <BlockMath>{'\\text{κόστος ΕΣΔ του } G\\,\' = \\sum_{e \\in T} x_e'}</BlockMath>
+        <p>
+          Το άθροισμα είναι πάνω σε <InlineMath>{'n-1'}</InlineMath> ακμές, με{' '}
+          <InlineMath>{'O(1)'}</InlineMath> δουλειά ανά ακμή, άρα συνολικά{' '}
+          <InlineMath>{'O(n)'}</InlineMath>. (Παρατήρησε ότι το πλήθος ακμών{' '}
+          <InlineMath>{'q = \\Omega(n^{3/2})'}</InlineMath> είναι «κόκκινη ρέγγα»:
+          δεν χρειάζεται να αγγίξουμε καθόλου τις υπόλοιπες ακμές.)
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt11-th3',
+    title: 'Παλαιό Θέμα #11 · Θέμα 3 — Υπακολουθία μέγιστου αθροίσματος χωρίς διαδοχικά (DP)',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #11',
+    problemNumber: 'Θέμα 3',
+    weight: 3,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L14-dp-i'],
+    formulaIds: ['dp-recipe'],
+    statement: (
+      <>
+        <p>
+          Έστω ακολουθία θετικών ακεραίων{' '}
+          <InlineMath>{'A = a_1, a_2, \\dots, a_n'}</InlineMath>. Λέμε ότι μια
+          υπακολουθία <InlineMath>{'B'}</InlineMath> της{' '}
+          <InlineMath>{'A'}</InlineMath> είναι <strong>έγκυρη</strong> αν δεν
+          περιέχει διαδοχικά στοιχεία της <InlineMath>{'A'}</InlineMath>. Έστω{' '}
+          <InlineMath>{'E(A)'}</InlineMath> το σύνολο των έγκυρων υπακολουθιών της{' '}
+          <InlineMath>{'A'}</InlineMath>. Για μια ακολουθία{' '}
+          <InlineMath>{'C'}</InlineMath>, έστω <InlineMath>{'w(C)'}</InlineMath>{' '}
+          το άθροισμα των στοιχείων της. Δώστε αλγόριθμο που σε χρόνο{' '}
+          <InlineMath>{'O(n)'}</InlineMath> επιστρέφει τον αριθμό{' '}
+          <InlineMath>{'\\max_{B \\in E(A)} w(B)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Βοήθεια:</strong> έστω <InlineMath>{'A_j'}</InlineMath> το
+          πρόθεμα <InlineMath>{'a_1, a_2, \\dots, a_j'}</InlineMath>. Ορίστε{' '}
+          <InlineMath>{'OPT(j) = \\max_{B \\in E(A_j)} w(B)'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Αυτό είναι το κλασικό πρόβλημα «μέγιστο ανεξάρτητο σύνολο σε μονοπάτι»
+          (γνωστό και ως «ο ληστής σπιτιών»): δεν μπορείς να πάρεις δύο γειτονικά
+          στοιχεία. Ακολουθούμε τη συνταγή του δυναμικού προγραμματισμού και
+          σκεφτόμαστε το <strong>τελευταίο</strong> στοιχείο{' '}
+          <InlineMath>{'a_j'}</InlineMath>: μέσα ή έξω;
+        </p>
+        <ul>
+          <li>
+            <strong>Το <InlineMath>{'a_j'}</InlineMath> ΕΞΩ:</strong> τότε η
+            βέλτιστη έγκυρη υπακολουθία είναι αυτή του προθέματος{' '}
+            <InlineMath>{'A_{j-1}'}</InlineMath>. Συνεισφορά:{' '}
+            <InlineMath>{'OPT(j-1)'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Το <InlineMath>{'a_j'}</InlineMath> ΜΕΣΑ:</strong> τότε το{' '}
+            <InlineMath>{'a_{j-1}'}</InlineMath> <em>απαγορεύεται</em> (θα ήταν
+            διαδοχικό). Ό,τι μένει είναι η βέλτιστη λύση για το{' '}
+            <InlineMath>{'A_{j-2}'}</InlineMath>. Συνεισφορά:{' '}
+            <InlineMath>{'a_j + OPT(j-2)'}</InlineMath>.
+          </li>
+        </ul>
+        <p>Δεν ξέρουμε ποια περίπτωση κερδίζει, οπότε παίρνουμε το μέγιστο:</p>
+        <BlockMath>{'OPT(j) = \\max\\{\\, OPT(j-1),\\ \\ a_j + OPT(j-2) \\,\\}'}</BlockMath>
+        <p>
+          <strong>Βασικές περιπτώσεις:</strong>{' '}
+          <InlineMath>{'OPT(0) = 0'}</InlineMath> (κενό πρόθεμα) και{' '}
+          <InlineMath>{'OPT(1) = a_1'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Υλοποίηση & χρόνος.</strong> Γεμίζουμε έναν πίνακα{' '}
+          <InlineMath>{'OPT[0\\ldots n]'}</InlineMath> με αύξουσα σειρά (bottom-up).
+          Κάθε θέση υπολογίζεται με μία σύγκριση και μία πρόσθεση —{' '}
+          <InlineMath>{'O(1)'}</InlineMath> δουλειά. Σύνολο{' '}
+          <InlineMath>{'O(n)'}</InlineMath>. Η απάντηση είναι το{' '}
+          <InlineMath>{'OPT(n)'}</InlineMath>. (Χρειάζονται μόνο οι δύο τελευταίες
+          τιμές κάθε φορά, οπότε ο χώρος μπορεί να πέσει σε{' '}
+          <InlineMath>{'O(1)'}</InlineMath>.)
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt11-th4',
+    title: 'Παλαιό Θέμα #11 · Θέμα 4 — Ελάχιστη αποκοπή από μέγιστη ροή',
     topic: 'graphs',
     origin: 'past-exam',
     paperLabel: 'Παλαιό Θέμα #11',
+    problemNumber: 'Θέμα 4',
+    weight: 3,
     difficulty: 'hard',
-    prerequisites: ALL_LECTURES,
-    statement: null,
-    solution: null,
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <>
+        <p>Δώστε αλγόριθμο που παίρνει σαν είσοδο</p>
+        <ul>
+          <li>
+            ένα κατευθυνόμενο γράφημα <InlineMath>{'G(V, E)'}</InlineMath> όπου
+            κάθε ακμή <InlineMath>{'e \\in E'}</InlineMath> έχει χωρητικότητα{' '}
+            <InlineMath>{'c_e > 0'}</InlineMath>, και
+          </li>
+          <li>
+            μια μέγιστη ροή <InlineMath>{'f'}</InlineMath> επί του{' '}
+            <InlineMath>{'G'}</InlineMath>,
+          </li>
+        </ul>
+        <p>
+          και σε χρόνο{' '}
+          <InlineMath>{'O(|V| + |E|)'}</InlineMath> επιστρέφει μια ελάχιστη
+          αποκοπή του <InlineMath>{'G'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το θεώρημα <strong>Μέγιστης Ροής – Ελάχιστης Αποκοπής</strong> λέει ότι
+          η τιμή της μέγιστης ροής ισούται με τη χωρητικότητα της ελάχιστης
+          αποκοπής. Εδώ <em>μας δίνεται ήδη</em> η μέγιστη ροή — άρα δεν χρειάζεται
+          να την υπολογίσουμε· πρέπει μόνο να «διαβάσουμε» από αυτήν την αποκοπή.
+        </p>
+        <p>
+          <strong>Βήμα 1 — Κατασκευή του γραφήματος υπολοίπων{' '}
+          <InlineMath>{'G_f'}</InlineMath>.</strong> Για κάθε ακμή{' '}
+          <InlineMath>{'(u,v)'}</InlineMath> με χωρητικότητα{' '}
+          <InlineMath>{'c'}</InlineMath> και ροή{' '}
+          <InlineMath>{'f(u,v)'}</InlineMath>: αν μένει αχρησιμοποίητη
+          χωρητικότητα (<InlineMath>{'f(u,v) < c'}</InlineMath>) βάζουμε
+          εμπρόσθια ακμή <InlineMath>{'u \\to v'}</InlineMath>· αν υπάρχει ροή
+          (<InlineMath>{'f(u,v) > 0'}</InlineMath>) βάζουμε οπίσθια ακμή{' '}
+          <InlineMath>{'v \\to u'}</InlineMath>. Αυτό είναι μία σάρωση όλων των
+          ακμών: <InlineMath>{'O(|V| + |E|)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Βήμα 2 — BFS/DFS από την πηγή{' '}
+          <InlineMath>{'s'}</InlineMath>.</strong> Στο{' '}
+          <InlineMath>{'G_f'}</InlineMath>, βρες το σύνολο{' '}
+          <InlineMath>{'A'}</InlineMath> όλων των κορυφών που είναι{' '}
+          <strong>προσπελάσιμες</strong> από την <InlineMath>{'s'}</InlineMath>.
+          Μία διάσχιση: <InlineMath>{'O(|V| + |E|)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Βήμα 3 — Επίστρεψε την αποκοπή{' '}
+          <InlineMath>{'(A,\\ V \\setminus A)'}</InlineMath>.</strong>
+        </p>
+        <p>
+          <strong>Γιατί είναι ελάχιστη.</strong> Αφού η <InlineMath>{'f'}</InlineMath>{' '}
+          είναι <em>μέγιστη</em>, δεν υπάρχει μονοπάτι αύξησης{' '}
+          <InlineMath>{'s \\to t'}</InlineMath> στο{' '}
+          <InlineMath>{'G_f'}</InlineMath> — άρα ο προορισμός{' '}
+          <InlineMath>{'t'}</InlineMath> δεν είναι προσπελάσιμος, δηλαδή{' '}
+          <InlineMath>{'t \\notin A'}</InlineMath> και η{' '}
+          <InlineMath>{'(A, V\\setminus A)'}</InlineMath> είναι όντως αποκοπή που
+          χωρίζει <InlineMath>{'s'}</InlineMath> από{' '}
+          <InlineMath>{'t'}</InlineMath>. Κάθε ακμή που βγαίνει από το{' '}
+          <InlineMath>{'A'}</InlineMath> είναι <strong>κορεσμένη</strong> (αλλιώς
+          θα υπήρχε εμπρόσθια ακμή στο <InlineMath>{'G_f'}</InlineMath> και ο
+          γείτονας θα ήταν στο <InlineMath>{'A'}</InlineMath>) και κάθε ακμή που
+          μπαίνει στο <InlineMath>{'A'}</InlineMath> έχει μηδενική ροή. Άρα η
+          χωρητικότητα της αποκοπής ισούται ακριβώς με την τιμή της ροής — που
+          είναι η μέγιστη. Από το θεώρημα, αυτή η αποκοπή είναι{' '}
+          <strong>ελάχιστη</strong>. Συνολικός χρόνος:{' '}
+          <InlineMath>{'O(|V| + |E|)'}</InlineMath>.
+        </p>
+      </>
+    ),
   },
   {
     id: 'exam-feb-2019',
@@ -10132,27 +10603,1607 @@ K = 101     Σ = 100`}</pre>
     statement: null,
     solution: null,
   },
+  // ── Παλαιό Θέμα #13 — μεταγραμμένο & χωρισμένο ανά διάλεξη ─────────────
   {
-    id: 'exam-june-2018',
-    title: 'Παλαιό Θέμα #13 — υπό μεταγραφή',
+    id: 'pt13-th1',
+    title: 'Παλαιό Θέμα #13 · Θέμα 1 — Κατάταξη ασυμπτωτικής τάξης συναρτήσεων',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 1',
+    weight: 5,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    formulaIds: ['growth-hierarchy'],
+    statement: (
+      <>
+        <p>
+          Βρείτε την ασυμπτωτική συμπεριφορά μιας σειράς συναρτήσεων,
+          προσδιορίζοντας για κάθε μία αν είναι της μορφής{' '}
+          <InlineMath>{'\\Theta(n^a \\log^b n)'}</InlineMath> ή της μορφής{' '}
+          <InlineMath>{'\\Theta(n^m)'}</InlineMath>, και βρείτε τις κατάλληλες
+          τιμές των εκθετών.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: ο πρωτότυπος πίνακας συναρτήσεων προέρχεται
+          από αχνό σαρωμένο αντίγραφο. Παρακάτω διδάσκεται πλήρως η μέθοδος
+          κατάταξης, που είναι το ζητούμενο του θέματος, με αντιπροσωπευτικά
+          παραδείγματα.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ο κανόνας: σε κάθε συνάρτηση κράτα <strong>μόνο τον κυρίαρχο όρο</strong>{' '}
+          και αγνόησε σταθερές. Χρήσιμη ιεραρχία:
+        </p>
+        <BlockMath>{'1 \\prec \\log n \\prec n^\\epsilon \\prec n \\prec n\\log n \\prec n^2 \\prec \\dots \\prec 2^n \\prec n!'}</BlockMath>
+        <p>Μερικά αντιπροσωπευτικά παραδείγματα του τύπου του θέματος:</p>
+        <ul>
+          <li>
+            <InlineMath>{'6 \\cdot 2^{\\log_2 n} = 6n'}</InlineMath> — η ταυτότητα{' '}
+            <InlineMath>{'2^{\\log_2 n} = n'}</InlineMath> δίνει{' '}
+            <InlineMath>{'\\Theta(n)'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'\\sum_{k=1}^{n} k = \\tfrac{n(n+1)}{2}'}</InlineMath> —
+            άρα <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'n^2 + 2^n'}</InlineMath> — η εκθετική κυριαρχεί κάθε
+            πολυωνύμου, άρα <InlineMath>{'\\Theta(2^n)'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'\\log\\log n + 3\\log n'}</InlineMath> — ο όρος{' '}
+            <InlineMath>{'\\log n'}</InlineMath> κυριαρχεί του{' '}
+            <InlineMath>{'\\log\\log n'}</InlineMath>, άρα{' '}
+            <InlineMath>{'\\Theta(\\log n)'}</InlineMath> (δηλαδή{' '}
+            <InlineMath>{'a = 0, b = 1'}</InlineMath>).
+          </li>
+        </ul>
+        <p>
+          <strong>Στρατηγική για τον πίνακα:</strong> για κάθε συνάρτηση (i)
+          απλοποίησε δυνάμεις/λογαρίθμους με ταυτότητες όπως{' '}
+          <InlineMath>{'a^{\\log_a n} = n'}</InlineMath>, (ii) αν είναι άθροισμα,
+          κράτα τον ταχύτερα αυξανόμενο όρο, (iii) γράψε το αποτέλεσμα ως{' '}
+          <InlineMath>{'n^a \\log^b n'}</InlineMath> και διάβασε τους εκθέτες{' '}
+          <InlineMath>{'a, b'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th2',
+    title: 'Παλαιό Θέμα #13 · Θέμα 2 — Πολυπλοκότητα ταξινόμησης σε ήδη ταξινομημένη είσοδο',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 2',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τους αλγορίθμους <strong>Heap Sort</strong>,{' '}
+          <strong>Quick Sort</strong> και <strong>Merge Sort</strong> για την
+          ταξινόμηση της ακολουθίας <InlineMath>{'a_1, a_2, \\dots, a_n'}</InlineMath>{' '}
+          με <InlineMath>{'a_i \\ne a_j'}</InlineMath> για κάθε{' '}
+          <InlineMath>{'i, j'}</InlineMath>. Αν τα στοιχεία είναι ήδη σε{' '}
+          <strong>αύξουσα σειρά</strong>, ποια είναι η πολυπλοκότητα των
+          αλγορίθμων; (Συμπληρώστε ΝΑΙ στις σωστές θέσεις ενός πίνακα με στήλες{' '}
+          <InlineMath>{'\\Theta(n\\log n),\\ \\Theta(n^2\\log n),\\ \\Theta(\\log^3 n),\\ O(n^2),\\ o(\\log\\log n),\\ \\Theta(\\log^{10}\\log n)'}</InlineMath>.)
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το «κρυμμένο» στοιχείο εδώ είναι ότι η είσοδος είναι{' '}
+          <strong>ήδη ταξινομημένη</strong> — και αυτό αλλάζει τα πράγματα μόνο
+          για έναν από τους τρεις.
+        </p>
+        <ul>
+          <li>
+            <strong>Merge Sort:</strong> σπάει πάντα στη μέση και συγχωνεύει,
+            ανεξάρτητα από την είσοδο. <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Heap Sort:</strong> χτίζει σωρό και κάνει{' '}
+            <InlineMath>{'n'}</InlineMath> εξαγωγές, καθεμία{' '}
+            <InlineMath>{'O(\\log n)'}</InlineMath> — πάλι ανεξάρτητα από την
+            είσοδο. <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Quick Sort</strong> με απλό pivot (π.χ. το πρώτο στοιχείο):
+            σε <em>ήδη ταξινομημένη</em> είσοδο το pivot είναι κάθε φορά το
+            ελάχιστο, οπότε ο διαχωρισμός δίνει ένα κενό και ένα μέγεθος{' '}
+            <InlineMath>{'n-1'}</InlineMath>. Η αναδρομή γίνεται{' '}
+            <InlineMath>{'T(n) = T(n-1) + \\Theta(n) = \\Theta(n^2)'}</InlineMath> —
+            η <strong>χείριστη</strong> περίπτωση.
+          </li>
+        </ul>
+        <p>
+          Άρα: Merge Sort και Heap Sort{' '}
+          <InlineMath>{'\\Theta(n\\log n)'}</InlineMath> (και φυσικά ικανοποιούν
+          και το χαλαρότερο <InlineMath>{'O(n^2)'}</InlineMath>)· Quick Sort{' '}
+          <InlineMath>{'\\Theta(n^2)'}</InlineMath>, δηλαδή ΝΑΙ στη στήλη{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath>. Οι στήλες{' '}
+          <InlineMath>{'\\Theta(n^2\\log n),\\ \\Theta(\\log^3 n),\\ o(\\log\\log n),\\ \\Theta(\\log^{10}\\log n)'}</InlineMath>{' '}
+          είναι παγίδες — καμία ταξινόμηση με συγκρίσεις δεν είναι υπογραμμική,
+          ούτε χειρότερη από <InlineMath>{'n^2'}</InlineMath> εδώ.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th3',
+    title: 'Παλαιό Θέμα #13 · Θέμα 3 — Αντιστοίχιση αναδρομικών σχέσεων σε αλγορίθμους',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 3',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    formulaIds: ['master-theorem'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τους αλγορίθμους <strong>Heapify</strong>,{' '}
+          <strong>Quick Sort</strong> και <strong>Merge Sort</strong>. Ποια
+          αναδρομική σχέση αντιστοιχεί στον καθένα για την πολυπλοκότητα{' '}
+          <strong>χείριστης περίπτωσης</strong>, και ποια η λύση της (με{' '}
+          <InlineMath>{'T(1) = \\Theta(1)'}</InlineMath>); Οι υποψήφιες σχέσεις:{' '}
+          <InlineMath>{'2T(n/2)+\\Theta(n)'}</InlineMath>,{' '}
+          <InlineMath>{'2T(n/2)+\\Theta(1)'}</InlineMath>,{' '}
+          <InlineMath>{'T(n-1)+\\Theta(n)'}</InlineMath>,{' '}
+          <InlineMath>{'T(2n/3)+\\Theta(1)'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <ul>
+          <li>
+            <strong>Heapify</strong> (επιδιόρθωση σωρού προς τα κάτω): από κάθε
+            κορυφή κατεβαίνει σε ένα παιδί, του οποίου το υποδέντρο έχει το πολύ{' '}
+            <InlineMath>{'2n/3'}</InlineMath> κόμβους, με{' '}
+            <InlineMath>{'\\Theta(1)'}</InlineMath> δουλειά ανά βήμα. Σχέση:{' '}
+            <InlineMath>{'T(n) = T(2n/3) + \\Theta(1)'}</InlineMath>. Από το Master
+            Theorem (<InlineMath>{'a=1, b=3/2, f=\\Theta(1)'}</InlineMath>, 2η
+            περίπτωση): <InlineMath>{'T(n) = \\Theta(\\log n)'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Quick Sort</strong>, χείριστη περίπτωση: ο διαχωρισμός δίνει
+            ένα κενό κομμάτι και ένα μεγέθους <InlineMath>{'n-1'}</InlineMath>, με{' '}
+            <InlineMath>{'\\Theta(n)'}</InlineMath> για το partition. Σχέση:{' '}
+            <InlineMath>{'T(n) = T(n-1) + \\Theta(n) = \\Theta(n^2)'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Merge Sort:</strong> δύο μισά μεγέθους{' '}
+            <InlineMath>{'n/2'}</InlineMath> και γραμμική συγχώνευση. Σχέση:{' '}
+            <InlineMath>{'T(n) = 2T(n/2) + \\Theta(n) = \\Theta(n\\log n)'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          Η σχέση <InlineMath>{'2T(n/2) + \\Theta(1)'}</InlineMath> είναι παγίδα:
+          θα έδινε <InlineMath>{'\\Theta(n)'}</InlineMath> και δεν ταιριάζει σε
+          κανέναν από τους τρεις.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th4',
+    title: 'Παλαιό Θέμα #13 · Θέμα 4 — Έλεγχος MAX/MIN heap',
+    topic: 'data-structures',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 4',
+    weight: 6,
+    difficulty: 'easy',
+    prerequisites: ['lectures/L10-data-structures'],
+    formulaIds: ['heap-indices'],
+    statement: (
+      <>
+        <p>
+          Να εξεταστεί αν οι παρακάτω πίνακες (θεωρημένοι ως πλήρη δυαδικά δέντρα,
+          δείκτες 1-based) είναι <strong>MAX heaps</strong> και/ή{' '}
+          <strong>MIN heaps</strong>. Όπου δεν ισχύει η ιδιότητα, δώστε τον{' '}
+          <strong>μικρότερο δείκτη</strong> όπου εμφανίζεται πρόβλημα.
+        </p>
+        <ul>
+          <li><InlineMath>{'A = [3,\\ 5,\\ 7,\\ 9,\\ 11,\\ 13,\\ 15,\\ 100]'}</InlineMath></li>
+          <li><InlineMath>{'B = [100,\\ 15,\\ 13,\\ 11,\\ 9,\\ 7,\\ 5,\\ 3]'}</InlineMath></li>
+          <li><InlineMath>{'C = [200,\\ 150,\\ 7,\\ 9,\\ 11,\\ 13,\\ 15,\\ 200]'}</InlineMath></li>
+        </ul>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Υπενθύμιση: στη θέση <InlineMath>{'i'}</InlineMath> τα παιδιά είναι στις{' '}
+          <InlineMath>{'2i'}</InlineMath> και <InlineMath>{'2i+1'}</InlineMath>. Σε{' '}
+          MAX heap κάθε γονιός <InlineMath>{'\\ge'}</InlineMath> παιδιά· σε MIN
+          heap κάθε γονιός <InlineMath>{'\\le'}</InlineMath> παιδιά.
+        </p>
+        <p>
+          <strong><InlineMath>{'A = [3,5,7,9,11,13,15,100]'}</InlineMath>:</strong>{' '}
+          γονιός <InlineMath>{'3'}</InlineMath> με παιδιά{' '}
+          <InlineMath>{'5, 7'}</InlineMath> — μικρότερος, οπότε{' '}
+          <strong>όχι MAX</strong> (πρόβλημα στον δείκτη{' '}
+          <InlineMath>{'1'}</InlineMath>). Ελέγχοντας όλους τους γονείς,{' '}
+          <InlineMath>{'3 \\le 5,7'}</InlineMath>·{' '}
+          <InlineMath>{'5 \\le 9,11'}</InlineMath>·{' '}
+          <InlineMath>{'7 \\le 13,15'}</InlineMath>·{' '}
+          <InlineMath>{'9 \\le 100'}</InlineMath> — <strong>ναι MIN heap</strong>.
+        </p>
+        <p>
+          <strong><InlineMath>{'B = [100,15,13,11,9,7,5,3]'}</InlineMath>:</strong>{' '}
+          <InlineMath>{'100 \\ge 15,13'}</InlineMath>·{' '}
+          <InlineMath>{'15 \\ge 11,9'}</InlineMath>·{' '}
+          <InlineMath>{'13 \\ge 7,5'}</InlineMath>·{' '}
+          <InlineMath>{'11 \\ge 3'}</InlineMath> — <strong>ναι MAX heap</strong>.
+          Για MIN: <InlineMath>{'100 \\le 15'}</InlineMath>; όχι —{' '}
+          <strong>όχι MIN</strong> (πρόβλημα στον δείκτη{' '}
+          <InlineMath>{'1'}</InlineMath>).
+        </p>
+        <p>
+          <strong><InlineMath>{'C = [200,150,7,9,11,13,15,200]'}</InlineMath>:</strong>{' '}
+          για MAX, ο γονιός στον δείκτη <InlineMath>{'3'}</InlineMath> είναι{' '}
+          <InlineMath>{'7'}</InlineMath> με παιδιά{' '}
+          <InlineMath>{'13, 15'}</InlineMath> —{' '}
+          <InlineMath>{'7 < 13'}</InlineMath>, <strong>όχι MAX</strong> (πρόβλημα
+          στον δείκτη <InlineMath>{'3'}</InlineMath>). Για MIN, ο{' '}
+          <InlineMath>{'200'}</InlineMath> στη ρίζα με παιδί{' '}
+          <InlineMath>{'150'}</InlineMath> — <strong>όχι MIN</strong> (πρόβλημα
+          στον δείκτη <InlineMath>{'1'}</InlineMath>). Ο πίνακας{' '}
+          <InlineMath>{'C'}</InlineMath> δεν είναι ούτε το ένα ούτε το άλλο.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th5',
+    title: 'Παλαιό Θέμα #13 · Θέμα 5 — Δέντρο επικάλυψης μέγιστου βάρους',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 5',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    formulaIds: ['prim-kruskal', 'mst-cut-property'],
+    statement: (
+      <>
+        <p>
+          Δίδεται ένας γράφος <InlineMath>{'G = (V, E, W)'}</InlineMath> με θετικά
+          βάρη στις πλευρές του. Δώστε ένα <strong>άπληστο κριτήριο επιλογής</strong>{' '}
+          που θα διασφαλίζει τη βέλτιστη λύση για την εύρεση ενός δέντρου
+          επικάλυψης <strong>μέγιστου</strong> βάρους.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το πρόβλημα είναι το «καθρέφτισμα» του Ελάχιστου Συνδετικού Δέντρου:
+          αντί για το φθηνότερο, θέλουμε το <strong>ακριβότερο</strong> συνδετικό
+          δέντρο.
+        </p>
+        <p>
+          <strong>Άπληστο κριτήριο (Kruskal αντεστραμμένος):</strong> ταξινόμησε
+          τις ακμές σε <strong>φθίνουσα</strong> σειρά βάρους. Σάρωσέ τες με τη
+          σειρά αυτή και πρόσθεσε κάθε ακμή στο δέντρο{' '}
+          <strong>εφόσον δεν δημιουργεί κύκλο</strong>. Σταμάτα όταν έχεις{' '}
+          <InlineMath>{'n-1'}</InlineMath> ακμές.
+        </p>
+        <p>
+          <strong>Γιατί δουλεύει.</strong> Υπάρχουν δύο ισοδύναμοι τρόποι να το
+          δει κανείς:
+        </p>
+        <ul>
+          <li>
+            <strong>Αναγωγή:</strong> αντικατέστησε κάθε βάρος{' '}
+            <InlineMath>{'w_e'}</InlineMath> με{' '}
+            <InlineMath>{'-w_e'}</InlineMath> (ή με{' '}
+            <InlineMath>{'M - w_e'}</InlineMath> για μεγάλο{' '}
+            <InlineMath>{'M'}</InlineMath>). Το δέντρο μέγιστου βάρους στο αρχικό
+            γράφημα είναι το ΕΣΔ στο μετασχηματισμένο — και το λύνει ο κανονικός
+            Kruskal/Prim.
+          </li>
+          <li>
+            <strong>Άμεσα:</strong> ισχύει η «ιδιότητα αποκοπής» καθρεφτισμένη —
+            για κάθε αποκοπή, η ακμή <strong>μέγιστου</strong> βάρους που την
+            διασχίζει ανήκει σε κάποιο δέντρο επικάλυψης μέγιστου βάρους. Ο
+            άπληστος που διαλέγει πάντα τη βαρύτερη ασφαλή ακμή σέβεται αυτή την
+            ιδιότητα.
+          </li>
+        </ul>
+        <p>
+          Πολυπλοκότητα: <InlineMath>{'O(m \\log n)'}</InlineMath>, κυριαρχούμενη
+          από την ταξινόμηση των ακμών.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th6',
+    title: 'Παλαιό Θέμα #13 · Θέμα 6 — Ρέστα με ελάχιστα κέρματα (ο άπληστος αποτυγχάνει)',
     topic: 'greedy',
     origin: 'past-exam',
     paperLabel: 'Παλαιό Θέμα #13',
-    difficulty: 'hard',
-    prerequisites: ALL_LECTURES,
-    statement: null,
-    solution: null,
+    problemNumber: 'Θέμα 6',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L11-greedy-i'],
+    statement: (
+      <>
+        <p>
+          Ο ταμίας σε ένα σουπερμάρκετ θέλει να δώσει ρέστα σε έναν πελάτη,
+          χρησιμοποιώντας το <strong>ελάχιστο πλήθος κερμάτων</strong> αξίας{' '}
+          <InlineMath>{'1'}</InlineMath>, <InlineMath>{'10'}</InlineMath> ή{' '}
+          <InlineMath>{'25'}</InlineMath> λεπτών. Θεωρήστε το άπληστο κριτήριο:{' '}
+          «επίστρεψε κάθε φορά το κέρμα μέγιστης αξίας που χωράει». Αποδείξτε ότι
+          ο άπληστος αλγόριθμος πάντοτε παράγει βέλτιστη λύση — ή αλλιώς δώστε ένα
+          αντιπαράδειγμα.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ο άπληστος «μέγιστο κέρμα πρώτα» δουλεύει για «καλά» νομισματικά
+          συστήματα (π.χ. το ευρώ), αλλά <strong>όχι για κάθε</strong> σύνολο
+          αξιών. Εδώ <strong>αποτυγχάνει</strong> — και αρκεί ένα αντιπαράδειγμα.
+        </p>
+        <p>
+          <strong>Αντιπαράδειγμα: ποσό <InlineMath>{'30'}</InlineMath> λεπτά.</strong>
+        </p>
+        <ul>
+          <li>
+            <strong>Άπληστος:</strong> παίρνει το <InlineMath>{'25'}</InlineMath>{' '}
+            (μένουν <InlineMath>{'5'}</InlineMath>), και μετά πέντε κέρματα του{' '}
+            <InlineMath>{'1'}</InlineMath>. Σύνολο:{' '}
+            <strong><InlineMath>{'6'}</InlineMath> κέρματα</strong>.
+          </li>
+          <li>
+            <strong>Βέλτιστο:</strong> τρία κέρματα του{' '}
+            <InlineMath>{'10'}</InlineMath> —{' '}
+            <strong><InlineMath>{'3'}</InlineMath> κέρματα</strong>.
+          </li>
+        </ul>
+        <p>
+          Ο άπληστος δίνει <InlineMath>{'6'}</InlineMath>, η βέλτιστη λύση{' '}
+          <InlineMath>{'3'}</InlineMath> — άρα ο άπληστος <strong>δεν</strong>{' '}
+          είναι βέλτιστος. Το «λάθος» του είναι ότι παίρνοντας το{' '}
+          <InlineMath>{'25'}</InlineMath> αναγκάζεται να καλύψει το υπόλοιπο{' '}
+          <InlineMath>{'5'}</InlineMath> μόνο με μονάδες, ενώ το{' '}
+          <InlineMath>{'10'}</InlineMath> «ταιριάζει» τέλεια. Το σωστό εργαλείο
+          για γενικά νομισματικά συστήματα είναι ο{' '}
+          <strong>δυναμικός προγραμματισμός</strong>.
+        </p>
+      </>
+    ),
   },
   {
-    id: 'exam-sept-2017',
-    title: 'Παλαιό Θέμα #14 — υπό μεταγραφή',
-    topic: 'greedy',
+    id: 'pt13-th7',
+    title: 'Παλαιό Θέμα #13 · Θέμα 7 — Μεγαλύτερο μονοπάτι σε DAG με DP',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 7',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L17-dp-iv'],
+    statement: (
+      <>
+        <p>
+          Σε ένα ακυκλικό κατευθυνόμενο γράφημα (DAG) με βάρη στις πλευρές,
+          θεωρήστε την εύρεση του <strong>μεγαλύτερου σε μήκος μονοπατιού</strong>{' '}
+          μεταξύ δύο κόμβων με δυναμικό προγραμματισμό. (α) Πόσα υποπροβλήματα
+          απαιτεί να οριστούν; (β) Ποια είναι η αναδρομική σχέση; (γ) Ποια η
+          πολυπλοκότητα του αλγορίθμου;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το μεγαλύτερο μονοπάτι σε γενικό γράφημα είναι NP-δύσκολο — αλλά σε{' '}
+          <strong>DAG</strong> λύνεται εύκολα, ακριβώς επειδή δεν υπάρχουν κύκλοι
+          για να «παγιδεύσουν» την αναδρομή.
+        </p>
+        <p>
+          <strong>(α) Υποπροβλήματα.</strong> Ορίζουμε ένα υποπρόβλημα{' '}
+          <strong>ανά κορυφή</strong>:{' '}
+          <InlineMath>{'L(v)'}</InlineMath> = το μήκος του μεγαλύτερου μονοπατιού
+          που <strong>ξεκινά</strong> από την <InlineMath>{'v'}</InlineMath> (και
+          φτάνει στον προορισμό). Άρα <InlineMath>{'n = |V|'}</InlineMath>{' '}
+          υποπροβλήματα.
+        </p>
+        <p>
+          <strong>(β) Αναδρομική σχέση.</strong> Από την{' '}
+          <InlineMath>{'v'}</InlineMath> διαλέγουμε την πρώτη ακμή{' '}
+          <InlineMath>{'(v, w)'}</InlineMath> που μεγιστοποιεί:
+        </p>
+        <BlockMath>{'L(v) = \\max_{(v,w) \\in E} \\bigl(\\, w(v,w) + L(w) \\,\\bigr)'}</BlockMath>
+        <p>
+          με <InlineMath>{'L(t) = 0'}</InlineMath> για τον προορισμό{' '}
+          <InlineMath>{'t'}</InlineMath> (και{' '}
+          <InlineMath>{'L(v) = -\\infty'}</InlineMath> αν η{' '}
+          <InlineMath>{'v'}</InlineMath> δεν φτάνει στον{' '}
+          <InlineMath>{'t'}</InlineMath>). Οι τιμές υπολογίζονται με{' '}
+          <strong>αντίστροφη τοπολογική διάταξη</strong>, ώστε κάθε{' '}
+          <InlineMath>{'L(w)'}</InlineMath> να είναι έτοιμο πριν χρειαστεί.
+        </p>
+        <p>
+          <strong>(γ) Πολυπλοκότητα.</strong> Η τοπολογική διάταξη κοστίζει{' '}
+          <InlineMath>{'O(n + m)'}</InlineMath>· κάθε ακμή εξετάζεται ακριβώς μία
+          φορά στον υπολογισμό των <InlineMath>{'L(v)'}</InlineMath>. Σύνολο{' '}
+          <InlineMath>{'O(n + m)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th8',
+    title: 'Παλαιό Θέμα #13 · Θέμα 8 — Το άπληστο κριτήριο του Dijkstra',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 8',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    formulaIds: ['dijkstra'],
+    statement: (
+      <>
+        <p>
+          Δώστε το <strong>άπληστο κριτήριο επιλογής</strong> στον αλγόριθμο
+          Dijkstra για την εύρεση του συντομότερου μονοπατιού μεταξύ δύο δοθέντων
+          κόμβων.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ο Dijkstra διατηρεί ένα σύνολο <InlineMath>{'S'}</InlineMath>{' '}
+          «οριστικοποιημένων» κορυφών, για τις οποίες γνωρίζει ήδη τη συντομότερη
+          απόσταση <InlineMath>{'d(\\cdot)'}</InlineMath> από την πηγή{' '}
+          <InlineMath>{'s'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Άπληστο κριτήριο.</strong> Σε κάθε βήμα, για κάθε κορυφή{' '}
+          <InlineMath>{'v \\notin S'}</InlineMath> θεώρησε την «προσωρινή
+          απόσταση»
+        </p>
+        <BlockMath>{'\\pi(v) = \\min_{u \\in S} \\bigl(\\, d(u) + \\ell(u, v) \\,\\bigr)'}</BlockMath>
+        <p>
+          και διάλεξε <strong>την κορυφή <InlineMath>{'v'}</InlineMath> με το
+          ελάχιστο <InlineMath>{'\\pi(v)'}</InlineMath></strong>. Θέσε{' '}
+          <InlineMath>{'d(v) = \\pi(v)'}</InlineMath>, βάλε την{' '}
+          <InlineMath>{'v'}</InlineMath> στο <InlineMath>{'S'}</InlineMath>, και
+          επανάλαβε.
+        </p>
+        <p>
+          <strong>Γιατί είναι σωστό:</strong> επειδή όλα τα βάρη είναι θετικά, η
+          πιο κοντινή ανεξερεύνητη κορυφή δεν μπορεί να βελτιωθεί από μελλοντικό
+          μονοπάτι — οποιαδήποτε άλλη διαδρομή προς αυτήν θα περνούσε από κορυφή
+          ακόμα μακρύτερη. Όταν η <InlineMath>{'v'}</InlineMath> γίνει ο
+          ζητούμενος προορισμός, η <InlineMath>{'d(v)'}</InlineMath> είναι η
+          απάντηση. Με ουρά προτεραιότητας ο χρόνος είναι{' '}
+          <InlineMath>{'O(m \\log n)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th10',
+    title: 'Παλαιό Θέμα #13 · Θέμα 10 — Το ΕΣΔ ως κάτω φράγμα του πλανόδιου πωλητή',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 10',
+    weight: 8,
+    difficulty: 'hard',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <>
+        <p>
+          Σε ένα πλήρες γράφημα με θετικά βάρη στις πλευρές, αποδείξτε γιατί το
+          κόστος ενός <strong>δέντρου επικάλυψης ελάχιστου κόστους (ΕΣΔ)</strong>{' '}
+          αποτελεί ένα <strong>κάτω φράγμα</strong> της βέλτιστης λύσης του
+          προβλήματος του <strong>πλανόδιου πωλητή (TSP)</strong>.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: η ακριβής διατύπωση ανακατασκευάστηκε από αχνό
+          σαρωμένο αντίγραφο· το ζητούμενο — η απόδειξη ΕΣΔ <InlineMath>{'\\le'}</InlineMath>{' '}
+          TSP — είναι σαφές.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το TSP ζητάει τον φθηνότερο <strong>κύκλο</strong> που επισκέπτεται όλες
+          τις κορυφές ακριβώς μία φορά και επιστρέφει στην αρχή. Θέλουμε να
+          δείξουμε: <InlineMath>{'\\text{κόστος ΕΣΔ} \\le \\text{κόστος βέλτιστου TSP}'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Η ιδέα σε μία πρόταση:</strong> ένας κύκλος TSP «κρύβει» μέσα
+          του ένα συνδετικό δέντρο — απλά αφαίρεσε μία ακμή.
+        </p>
+        <p>
+          <strong>Απόδειξη.</strong> Έστω <InlineMath>{'C^*'}</InlineMath> ο
+          βέλτιστος κύκλος TSP, με κόστος{' '}
+          <InlineMath>{'\\text{cost}(C^*)'}</InlineMath>. Αφαίρεσε{' '}
+          <strong>μία οποιαδήποτε ακμή</strong> από τον{' '}
+          <InlineMath>{'C^*'}</InlineMath>. Αυτό που μένει είναι ένα{' '}
+          <strong>μονοπάτι</strong> που περνά από όλες τις{' '}
+          <InlineMath>{'n'}</InlineMath> κορυφές — και ένα μονοπάτι που συνδέει
+          όλες τις κορυφές είναι, εξ ορισμού, ένα{' '}
+          <strong>συνδετικό δέντρο</strong> <InlineMath>{'T\\,\''}</InlineMath>{' '}
+          του γραφήματος.
+        </p>
+        <p>
+          Αφού αφαιρέσαμε μια ακμή θετικού βάρους:{' '}
+          <InlineMath>{'\\text{cost}(T\\,\') \\le \\text{cost}(C^*)'}</InlineMath>.
+          Αλλά το ΕΣΔ είναι, εξ ορισμού, το{' '}
+          <strong>φθηνότερο δυνατό</strong> συνδετικό δέντρο, οπότε{' '}
+          <InlineMath>{'\\text{cost(ΕΣΔ)} \\le \\text{cost}(T\\,\')'}</InlineMath>.
+          Συνδυάζοντας:
+        </p>
+        <BlockMath>{'\\text{cost(ΕΣΔ)} \\le \\text{cost}(T\\,\') \\le \\text{cost}(C^*) = \\text{βέλτιστο TSP}'}</BlockMath>
+        <p>
+          Άρα το κόστος του ΕΣΔ είναι κάτω φράγμα του βέλτιστου TSP. Αυτό είναι
+          χρήσιμο στην πράξη: αφού το TSP είναι NP-δύσκολο, το ΕΣΔ (που
+          υπολογίζεται γρήγορα) μας δίνει μια εγγυημένη «βάση» — και μάλιστα
+          οδηγεί σε προσεγγιστικό αλγόριθμο 2-προσέγγισης για το μετρικό TSP.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th11',
+    title: 'Παλαιό Θέμα #13 · Θέμα 11 — Σύγκριση αλγορίθμων D&C με Master Theorem',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 11',
+    weight: 7,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    formulaIds: ['master-theorem'],
+    statement: (
+      <>
+        <p>
+          Έχετε να επιλέξετε ανάμεσα σε τρεις αλγορίθμους{' '}
+          <InlineMath>{'A, B, C'}</InlineMath> τύπου «διαίρει και βασίλευε» για το
+          ίδιο πρόβλημα. Καθένας σπάει το πρόβλημα σε{' '}
+          <InlineMath>{'a'}</InlineMath> υποπροβλήματα διάστασης{' '}
+          <InlineMath>{'n/b'}</InlineMath> και συνδυάζει τις λύσεις σε χρόνο{' '}
+          <InlineMath>{'f(n)'}</InlineMath>:
+        </p>
+        <ul>
+          <li><InlineMath>{'A:\\ a = 4,\\ b = 4,\\ f(n) = 12n'}</InlineMath></li>
+          <li><InlineMath>{'B:\\ a = 3,\\ b = 9,\\ f(n) = n^{1/2}'}</InlineMath></li>
+          <li><InlineMath>{'C:\\ a = 27,\\ b = 3,\\ f(n) = n^{13/3}'}</InlineMath></li>
+        </ul>
+        <p>
+          Γράψτε τις αναδρομικές εξισώσεις, λύστε τις με το Master Theorem, και
+          βρείτε τον <strong>ασυμπτωτικά αποδοτικότερο</strong> αλγόριθμο.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Για κάθε αλγόριθμο γράφουμε{' '}
+          <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath> και συγκρίνουμε το{' '}
+          <InlineMath>{'f(n)'}</InlineMath> με το{' '}
+          <InlineMath>{'n^{\\log_b a}'}</InlineMath>.
+        </p>
+        <p>
+          <strong>A:</strong>{' '}
+          <InlineMath>{'T_A(n) = 4\\,T_A(n/4) + 12n'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_4 4 = 1'}</InlineMath>, και{' '}
+          <InlineMath>{'f(n) = 12n = \\Theta(n^1)'}</InlineMath> — 2η περίπτωση.{' '}
+          <InlineMath>{'T_A(n) = \\Theta(n\\log n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>B:</strong>{' '}
+          <InlineMath>{'T_B(n) = 3\\,T_B(n/9) + n^{1/2}'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_9 3 = 1/2'}</InlineMath>, και{' '}
+          <InlineMath>{'f(n) = n^{1/2} = \\Theta(n^{1/2})'}</InlineMath> — 2η
+          περίπτωση. <InlineMath>{'T_B(n) = \\Theta(\\sqrt{n}\\,\\log n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>C:</strong>{' '}
+          <InlineMath>{'T_C(n) = 27\\,T_C(n/3) + n^{13/3}'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_3 27 = 3'}</InlineMath>, και{' '}
+          <InlineMath>{'f(n) = n^{13/3}'}</InlineMath> με{' '}
+          <InlineMath>{'13/3 \\approx 4.33 > 3'}</InlineMath> — 3η περίπτωση
+          (κυριαρχεί η ρίζα).{' '}
+          <InlineMath>{'T_C(n) = \\Theta(n^{13/3})'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Σύγκριση:</strong>{' '}
+          <InlineMath>{'\\sqrt{n}\\log n \\prec n\\log n \\prec n^{13/3}'}</InlineMath>.
+          Ο <strong>αλγόριθμος <InlineMath>{'B'}</InlineMath></strong> είναι ο
+          ασυμπτωτικά αποδοτικότερος.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th12',
+    title: 'Παλαιό Θέμα #13 · Θέμα 12 — Μέγιστη κοινή υπακολουθία (LCS) με DP',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 12',
+    weight: 12,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L16-dp-iii'],
+    formulaIds: ['lcs'],
+    statement: (
+      <>
+        <p>
+          Δίνονται δύο ακολουθίες <InlineMath>{'X'}</InlineMath> (με{' '}
+          <InlineMath>{'m'}</InlineMath> όρους) και <InlineMath>{'Z'}</InlineMath>{' '}
+          (με <InlineMath>{'n'}</InlineMath> όρους). Θέλουμε να βρούμε τη{' '}
+          <strong>μέγιστη κοινή υπακολουθία (LCS)</strong> τους με δυναμικό
+          προγραμματισμό. (α) Δώστε την αναδρομική σχέση. (β) Ποια είναι η
+          πολυπλοκότητα στη χείριστη περίπτωση για την εύρεση της βέλτιστης{' '}
+          <strong>τιμής</strong>; (γ) Ποια για την εύρεση της{' '}
+          <strong>δομής</strong> (της ίδιας της υπακολουθίας);
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ορίζουμε <InlineMath>{'OPT(i, j)'}</InlineMath> = το μήκος της LCS των
+          προθεμάτων <InlineMath>{'X_1 \\cdots X_i'}</InlineMath> και{' '}
+          <InlineMath>{'Z_1 \\cdots Z_j'}</InlineMath>. Κοιτάμε τους τελευταίους
+          χαρακτήρες.
+        </p>
+        <p><strong>(α) Αναδρομική σχέση.</strong></p>
+        <BlockMath>{'OPT(i,j) = \\begin{cases} 0 & i = 0 \\ \\text{ή}\\ j = 0 \\\\ 1 + OPT(i-1,j-1) & X_i = Z_j \\\\ \\max\\{OPT(i-1,j),\\ OPT(i,j-1)\\} & X_i \\ne Z_j \\end{cases}'}</BlockMath>
+        <p>
+          Διαίσθηση: αν οι τελευταίοι χαρακτήρες <strong>ταιριάζουν</strong>,
+          αξίζει να τους ζευγαρώσουμε και μένει το πρόβλημα στα κοντύτερα
+          προθέματα. Αν <strong>δεν</strong> ταιριάζουν, τουλάχιστον ένας
+          περισσεύει — δοκιμάζουμε και τις δύο επιλογές και κρατάμε την καλύτερη.
+        </p>
+        <p>
+          <strong>(β) Εύρεση τιμής.</strong> Ο πίνακας έχει{' '}
+          <InlineMath>{'(m+1)(n+1)'}</InlineMath> κελιά, καθένα{' '}
+          <InlineMath>{'O(1)'}</InlineMath>. Πολυπλοκότητα{' '}
+          <InlineMath>{'\\Theta(mn)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(γ) Εύρεση δομής.</strong> Αφού γεμίσει ο πίνακας, κάνουμε ένα{' '}
+          <strong>πέρασμα προς τα πίσω</strong> από το{' '}
+          <InlineMath>{'OPT(m,n)'}</InlineMath>: σε κάθε κελί ελέγχουμε ποια
+          περίπτωση κέρδισε και κινούμαστε διαγώνια (κοινός χαρακτήρας) ή
+          πάνω/αριστερά. Κάθε βήμα μειώνει το{' '}
+          <InlineMath>{'i + j'}</InlineMath> κατά τουλάχιστον 1, άρα το πέρασμα
+          είναι <InlineMath>{'O(m + n)'}</InlineMath>. Συνολικά, η εύρεση δομής
+          κυριαρχείται από το γέμισμα του πίνακα:{' '}
+          <InlineMath>{'\\Theta(mn)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th13',
+    title: 'Παλαιό Θέμα #13 · Θέμα 13 — Συντομότερα μονοπάτια με αρνητικά βάρη',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 13',
+    weight: 8,
+    difficulty: 'hard',
+    prerequisites: ['lectures/L17-dp-iv'],
+    formulaIds: ['bellman-ford'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τον κατευθυνόμενο γράφο{' '}
+          <InlineMath>{'G = (V, E, W)'}</InlineMath> με{' '}
+          <InlineMath>{'|V| = n'}</InlineMath>, <InlineMath>{'|E| = m'}</InlineMath>{' '}
+          και συνάρτηση <InlineMath>{'W'}</InlineMath> που ορίζει βάρη στις
+          πλευρές. Στο στιγμιότυπο <InlineMath>{'V = \\{v_1, v_2, v_3, v_4\\}'}</InlineMath>,{' '}
+          <InlineMath>{'E = \\{(v_1,v_2), (v_1,v_3), (v_2,v_4), (v_3,v_4)\\}'}</InlineMath>{' '}
+          με <InlineMath>{'w(v_1,v_2) = -1'}</InlineMath>,{' '}
+          <InlineMath>{'w(v_1,v_3) = 5'}</InlineMath>,{' '}
+          <InlineMath>{'w(v_2,v_4) = 4'}</InlineMath>,{' '}
+          <InlineMath>{'w(v_3,v_4) = -4'}</InlineMath>: επιλέξτε και εφαρμόστε
+          έναν αλγόριθμο για την εύρεση των συντομότερων μονοπατιών από τον{' '}
+          <InlineMath>{'v_1'}</InlineMath> προς όλους τους άλλους. Αναφέρετε 2
+          άλλους αλγορίθμους για το ίδιο πρόβλημα και εξηγήστε γιατί δεν τους
+          επιλέξατε.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Το κλειδί:</strong> ο γράφος έχει{' '}
+          <strong>αρνητικά βάρη</strong> (<InlineMath>{'-1'}</InlineMath> και{' '}
+          <InlineMath>{'-4'}</InlineMath>) — αυτό αποκλείει αμέσως τον Dijkstra.
+          Δεν υπάρχει όμως αρνητικός κύκλος (μάλιστα ο γράφος είναι DAG), οπότε τα
+          συντομότερα μονοπάτια ορίζονται καλά.
+        </p>
+        <p>
+          <strong>Επιλογή: Bellman-Ford</strong> (χειρίζεται αρνητικά βάρη).
+          Ξεκινάμε με <InlineMath>{'d(v_1) = 0'}</InlineMath> και τα υπόλοιπα{' '}
+          <InlineMath>{'+\\infty'}</InlineMath>, και χαλαρώνουμε τις ακμές:
+        </p>
+        <ul>
+          <li><InlineMath>{'d(v_2) = d(v_1) + (-1) = -1'}</InlineMath></li>
+          <li><InlineMath>{'d(v_3) = d(v_1) + 5 = 5'}</InlineMath></li>
+          <li>
+            <InlineMath>{'d(v_4) = \\min\\{d(v_2)+4,\\ d(v_3)+(-4)\\} = \\min\\{3,\\ 1\\} = 1'}</InlineMath>
+          </li>
+        </ul>
+        <p>
+          Άρα οι αποστάσεις από τον <InlineMath>{'v_1'}</InlineMath> είναι{' '}
+          <InlineMath>{'0,\\ -1,\\ 5,\\ 1'}</InlineMath>. Παρατήρησε ότι το
+          φθηνότερο μονοπάτι προς το <InlineMath>{'v_4'}</InlineMath> είναι το{' '}
+          <InlineMath>{'v_1 \\to v_3 \\to v_4'}</InlineMath> (κόστος{' '}
+          <InlineMath>{'1'}</InlineMath>), παρότι περνά από την «ακριβή» ακμή{' '}
+          <InlineMath>{'5'}</InlineMath> — η αρνητική ακμή{' '}
+          <InlineMath>{'-4'}</InlineMath> το κάνει συμφέρον.
+        </p>
+        <p>
+          <strong>Δύο άλλοι αλγόριθμοι — και γιατί όχι:</strong>
+        </p>
+        <ul>
+          <li>
+            <strong>Dijkstra:</strong> προϋποθέτει{' '}
+            <strong>μη αρνητικά</strong> βάρη. Εδώ θα οριστικοποιούσε λάθος το{' '}
+            <InlineMath>{'v_4'}</InlineMath> στο <InlineMath>{'3'}</InlineMath>{' '}
+            (μέσω <InlineMath>{'v_2'}</InlineMath>) πριν δει την αρνητική ακμή —{' '}
+            δεν τον επιλέγουμε.
+          </li>
+          <li>
+            <strong>BFS:</strong> βρίσκει συντομότερα μονοπάτια μόνο όταν όλες οι
+            ακμές μετράνε <InlineMath>{'1'}</InlineMath> — αγνοεί τελείως τα βάρη,
+            άρα δεν εφαρμόζεται εδώ.
+          </li>
+        </ul>
+        <p>
+          <em>(Σημείωση: αφού ο γράφος είναι DAG, ο αλγόριθμος «συντομότερα
+          μονοπάτια σε DAG με τοπολογική διάταξη» θα έδινε το ίδιο αποτέλεσμα σε{' '}
+          <InlineMath>{'O(n+m)'}</InlineMath> — ακόμα ταχύτερα από τον
+          Bellman-Ford.)</em>
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th14',
+    title: 'Παλαιό Θέμα #13 · Θέμα 14 — Προβλήματα απόφασης ST και IS',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 14',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τα προβλήματα <strong>βελτιστοποίησης</strong>:
+          (i) ελαχιστοποίηση του βάρους ενός δέντρου επικάλυψης ενός γράφου
+          (MST), και (ii) μεγιστοποίηση του πλήθους των κορυφών ενός ανεξάρτητου
+          συνόλου ενός γράφου (MIS). Να δοθούν τα αντίστοιχα{' '}
+          <strong>προβλήματα απόφασης</strong> <InlineMath>{'ST'}</InlineMath> και{' '}
+          <InlineMath>{'IS'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ένα <strong>πρόβλημα απόφασης</strong> έχει απάντηση «ΝΑΙ» ή «ΟΧΙ». Ο
+          τυπικός τρόπος να μετατρέψεις ένα πρόβλημα{' '}
+          <em>βελτιστοποίησης</em> σε απόφασης είναι να προσθέσεις ένα{' '}
+          <strong>κατώφλι</strong> <InlineMath>{'k'}</InlineMath> και να ρωτήσεις
+          «υπάρχει λύση τουλάχιστον/το πολύ τόσο καλή όσο{' '}
+          <InlineMath>{'k'}</InlineMath>;».
+        </p>
+        <p>
+          <strong><InlineMath>{'ST'}</InlineMath> (δέντρο επικάλυψης):</strong>{' '}
+          «Δοθέντος γραφήματος <InlineMath>{'G'}</InlineMath> με βάρη στις ακμές
+          και αριθμού <InlineMath>{'k'}</InlineMath>, υπάρχει συνδετικό δέντρο του{' '}
+          <InlineMath>{'G'}</InlineMath> με συνολικό βάρος{' '}
+          <InlineMath>{'\\le k'}</InlineMath>;»
+        </p>
+        <p>
+          <strong><InlineMath>{'IS'}</InlineMath> (ανεξάρτητο σύνολο):</strong>{' '}
+          «Δοθέντος γραφήματος <InlineMath>{'G'}</InlineMath> και αριθμού{' '}
+          <InlineMath>{'k'}</InlineMath>, υπάρχει ανεξάρτητο σύνολο (σύνολο
+          κορυφών χωρίς ακμή μεταξύ τους) με <InlineMath>{'\\ge k'}</InlineMath>{' '}
+          κορυφές;»
+        </p>
+        <p>
+          Η σύνδεση: αν ξέρεις να λύνεις το πρόβλημα απόφασης, μπορείς με δυαδική
+          αναζήτηση πάνω στο <InlineMath>{'k'}</InlineMath> να βρεις και τη
+          βέλτιστη τιμή — γι' αυτό η δυσκολία των δύο εκδοχών είναι ουσιαστικά η
+          ίδια.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt13-th15',
+    title: 'Παλαιό Θέμα #13 · Θέμα 15 — Κατάταξη των ST, IS σε P και NP-complete',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #13',
+    problemNumber: 'Θέμα 15',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <>
+        <p>
+          Με την υπόθεση ότι <InlineMath>{'P \\ne NP'}</InlineMath>: ποιο/ποια
+          από τα προβλήματα απόφασης <InlineMath>{'ST'}</InlineMath> (δέντρο
+          επικάλυψης) και <InlineMath>{'IS'}</InlineMath> (ανεξάρτητο σύνολο)
+          ανήκουν στην κλάση <InlineMath>{'P'}</InlineMath>; Ποιο/ποια στην{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong><InlineMath>{'ST \\in P'}</InlineMath>.</strong> Το Ελάχιστο
+          Συνδετικό Δέντρο λύνεται σε πολυωνυμικό χρόνο{' '}
+          <InlineMath>{'O(m \\log n)'}</InlineMath> από τους Kruskal/Prim. Για να
+          απαντήσεις το πρόβλημα απόφασης, υπολόγισε το ΕΣΔ και σύγκρινε το βάρος
+          του με το <InlineMath>{'k'}</InlineMath>. Άρα το{' '}
+          <InlineMath>{'ST'}</InlineMath> ανήκει στην{' '}
+          <InlineMath>{'P'}</InlineMath>.
+        </p>
+        <p>
+          <strong><InlineMath>{'IS'}</InlineMath> είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete.</strong> Το Ανεξάρτητο Σύνολο
+          είναι ένα από τα κλασικά <InlineMath>{'NP'}</InlineMath>-πλήρη
+          προβλήματα. Ανήκει στην <InlineMath>{'NP'}</InlineMath> (αν σου δώσουν
+          ένα σύνολο <InlineMath>{'k'}</InlineMath> κορυφών, επαληθεύεις σε
+          πολυωνυμικό χρόνο ότι είναι ανεξάρτητο), και είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-δύσκολο (π.χ. με αναγωγή από το CLIQUE
+          στο συμπληρωματικό γράφημα). Υπό την υπόθεση{' '}
+          <InlineMath>{'P \\ne NP'}</InlineMath>, <strong>δεν</strong> υπάρχει
+          πολυωνυμικός αλγόριθμος γι' αυτό.
+        </p>
+        <p>
+          <strong>Συμπέρασμα:</strong> ίδια «μορφή» προβλημάτων (βελτιστοποίηση σε
+          γράφημα), εντελώς διαφορετική δυσκολία —{' '}
+          <InlineMath>{'ST \\in P'}</InlineMath>, ενώ το{' '}
+          <InlineMath>{'IS'}</InlineMath> είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete.
+        </p>
+      </>
+    ),
+  },
+  // ── Παλαιό Θέμα #14 — μεταγραμμένο & χωρισμένο ανά διάλεξη ─────────────
+  {
+    id: 'pt14-th1',
+    title: 'Παλαιό Θέμα #14 · Θέμα 1 — Σύγκριση πολυπλοκότητας σε πυκνά και αραιά γραφήματα',
+    topic: 'asymptotics',
     origin: 'past-exam',
     paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 1',
+    weight: 7,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>
+          Δίνεται γράφημα <InlineMath>{'G = (V, E)'}</InlineMath> με{' '}
+          <InlineMath>{'|V| = n'}</InlineMath> και{' '}
+          <InlineMath>{'|E| = m'}</InlineMath>. Για ένα πρόβλημα{' '}
+          <InlineMath>{'\\Pi'}</InlineMath> γνωρίζουμε έναν αλγόριθμο
+          πολυπλοκότητας <InlineMath>{'O(mn)'}</InlineMath>· πρόσφατα προέκυψε και
+          ένας αλγόριθμος πολυπλοκότητας <InlineMath>{'O(n^2)'}</InlineMath>.
+          Δικαιολογήστε ποιος αλγόριθμος είναι προτιμότερος, για{' '}
+          <strong>πυκνά</strong> και για <strong>αραιά</strong> γραφήματα.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: οι ακριβείς πολυπλοκότητες ανακατασκευάστηκαν
+          από αχνό σαρωμένο αντίγραφο· το ζητούμενο — σύγκριση πολυπλοκοτήτων με
+          βάση την πυκνότητα — είναι σαφές.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το κλειδί: το <InlineMath>{'m'}</InlineMath> δεν είναι ανεξάρτητο του{' '}
+          <InlineMath>{'n'}</InlineMath> — η σχέση τους εξαρτάται από την{' '}
+          <strong>πυκνότητα</strong> του γραφήματος.
+        </p>
+        <ul>
+          <li>
+            <strong>Αραιό γράφημα:</strong>{' '}
+            <InlineMath>{'m = O(n)'}</InlineMath>. Τότε{' '}
+            <InlineMath>{'O(mn) = O(n^2)'}</InlineMath> — οι δύο αλγόριθμοι είναι
+            ασυμπτωτικά ισοδύναμοι.
+          </li>
+          <li>
+            <strong>Πυκνό γράφημα:</strong>{' '}
+            <InlineMath>{'m = \\Theta(n^2)'}</InlineMath>. Τότε{' '}
+            <InlineMath>{'O(mn) = O(n^3)'}</InlineMath>, που είναι{' '}
+            <strong>χειρότερο</strong> από <InlineMath>{'O(n^2)'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          <strong>Συμπέρασμα:</strong> ο αλγόριθμος{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath> δεν είναι ποτέ χειρότερος και είναι{' '}
+          <strong>αυστηρά καλύτερος σε πυκνά γραφήματα</strong>. Πάντα, όταν μια
+          πολυπλοκότητα περιέχει <InlineMath>{'m'}</InlineMath>, η σύγκριση
+          εξαρτάται από το αν <InlineMath>{'m'}</InlineMath> είναι γραμμικό ή
+          τετραγωνικό ως προς <InlineMath>{'n'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th4',
+    title: 'Παλαιό Θέμα #14 · Θέμα 4 — Κατάταξη ασυμπτωτικής τάξης συναρτήσεων',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 4',
+    weight: 8,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    formulaIds: ['growth-hierarchy'],
+    statement: (
+      <>
+        <p>
+          Βρείτε την ασυμπτωτική συμπεριφορά μιας σειράς συναρτήσεων{' '}
+          <InlineMath>{'f_1, \\dots, f_5'}</InlineMath>, κατατάσσοντας καθεμία ως{' '}
+          <InlineMath>{'\\Theta(n^a \\log^b n)'}</InlineMath> ή{' '}
+          <InlineMath>{'\\Theta(n^m)'}</InlineMath>, και διατάξτε τες σε αύξουσα
+          τάξη μεγέθους.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: ο πρωτότυπος πίνακας συναρτήσεων είναι από
+          αχνό σαρωμένο αντίγραφο· παρακάτω διδάσκεται πλήρως η μέθοδος, με
+          αντιπροσωπευτικά παραδείγματα.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Η συνταγή: απλοποίησε κάθε συνάρτηση στον κυρίαρχο όρο της, και μετά
+          χρησιμοποίησε την ιεραρχία
+        </p>
+        <BlockMath>{'1 \\prec \\log n \\prec \\sqrt{n} \\prec n \\prec n\\log n \\prec n^2 \\prec 2^n'}</BlockMath>
+        <p>Χρήσιμα τεχνάσματα που εμφανίζονται σε τέτοιες ασκήσεις:</p>
+        <ul>
+          <li>
+            <InlineMath>{'a^{\\log_a n} = n'}</InlineMath> — δυνάμεις με
+            λογαριθμικό εκθέτη «καταρρέουν» σε πολυώνυμα.
+          </li>
+          <li>
+            <InlineMath>{'\\log(n^k) = k\\log n'}</InlineMath> — οι εκθέτες
+            βγαίνουν έξω από τον λογάριθμο.
+          </li>
+          <li>
+            <InlineMath>{'\\sum_{k=1}^{n} k^d = \\Theta(n^{d+1})'}</InlineMath> —
+            ένα άθροισμα δυνάμεων ανεβάζει τον εκθέτη κατά 1.
+          </li>
+          <li>
+            Σε άθροισμα όρων, κρατάς μόνο τον ταχύτερα αυξανόμενο· εκθετικός
+            κυριαρχεί κάθε πολυωνύμου, πολυώνυμο κάθε πολυλογαρίθμου.
+          </li>
+        </ul>
+        <p>
+          Αφού κάθε <InlineMath>{'f_i'}</InlineMath> γραφτεί στη μορφή{' '}
+          <InlineMath>{'n^a \\log^b n'}</InlineMath>, η διάταξη γίνεται:
+          σύγκρινε πρώτα τα <InlineMath>{'a'}</InlineMath>, και σε ισοπαλία τα{' '}
+          <InlineMath>{'b'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th5',
+    title: 'Παλαιό Θέμα #14 · Θέμα 5 — Αναμενόμενος χρόνος σειριακής αναζήτησης',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 5',
+    weight: 5,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L01-eisagogika', 'lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>
+          Υπολογίστε τον <strong>αναμενόμενο</strong> χρόνο εκτέλεσης του
+          αλγορίθμου σειριακής (γραμμικής) αναζήτησης, όταν γνωρίζουμε ότι το
+          αναζητούμενο στοιχείο βρίσκεται στην <strong>τελευταία</strong> θέση με
+          πιθανότητα <InlineMath>{'2/8'}</InlineMath>, στην{' '}
+          <strong>προτελευταία</strong> με πιθανότητα{' '}
+          <InlineMath>{'2/8'}</InlineMath>, και σε{' '}
+          <strong>οποιαδήποτε άλλη</strong> από τις υπόλοιπες θέσεις με πιθανότητα{' '}
+          <InlineMath>{'\\tfrac{1}{8(n-2)}'}</InlineMath> η καθεμία.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Η σειριακή αναζήτηση που βρίσκει το στοιχείο στη θέση{' '}
+          <InlineMath>{'i'}</InlineMath> κάνει <InlineMath>{'i'}</InlineMath>{' '}
+          συγκρίσεις. Ο <strong>αναμενόμενος</strong> αριθμός συγκρίσεων είναι το
+          σταθμισμένο άθροισμα{' '}
+          <InlineMath>{'\\sum_i (\\text{πιθανότητα θέσης } i) \\cdot i'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Έλεγχος ότι οι πιθανότητες αθροίζουν στο 1:</strong> οι δύο
+          τελευταίες θέσεις δίνουν{' '}
+          <InlineMath>{'2/8 + 2/8 = 4/8'}</InlineMath>· οι υπόλοιπες{' '}
+          <InlineMath>{'n-2'}</InlineMath> θέσεις δίνουν{' '}
+          <InlineMath>{'(n-2) \\cdot \\tfrac{1}{8(n-2)} = 1/8'}</InlineMath>.
+          Σύνολο <InlineMath>{'4/8 + 1/8 = 5/8'}</InlineMath> — δεν φτάνει το 1,
+          οπότε υπονοείται μια εναπομένουσα πιθανότητα{' '}
+          <InlineMath>{'3/8'}</InlineMath> «αποτυχίας» (το στοιχείο δεν υπάρχει),
+          που στοιχίζει <InlineMath>{'n'}</InlineMath> συγκρίσεις.
+        </p>
+        <p><strong>Αναμενόμενος χρόνος:</strong></p>
+        <BlockMath>{'E[T] = \\tfrac{2}{8}\\cdot n + \\tfrac{2}{8}\\cdot(n-1) + \\sum_{i=1}^{n-2}\\tfrac{1}{8(n-2)}\\cdot i + \\tfrac{3}{8}\\cdot n'}</BlockMath>
+        <p>
+          Το άθροισμα στη μέση είναι{' '}
+          <InlineMath>{'\\tfrac{1}{8(n-2)} \\cdot \\tfrac{(n-2)(n-1)}{2} = \\tfrac{n-1}{16}'}</InlineMath>.
+          Άρα
+        </p>
+        <BlockMath>{'E[T] = \\tfrac{2n}{8} + \\tfrac{2(n-1)}{8} + \\tfrac{n-1}{16} + \\tfrac{3n}{8} = \\Theta(n)'}</BlockMath>
+        <p>
+          <strong>Συμπέρασμα:</strong> όποια κι αν είναι η ακριβής σταθερά, ο
+          αναμενόμενος χρόνος παραμένει <strong>γραμμικός</strong>{' '}
+          <InlineMath>{'\\Theta(n)'}</InlineMath> — γιατί το μεγαλύτερο μέρος της
+          πιθανότητας μάζας κάθεται στις τελευταίες θέσεις, που κοστίζουν{' '}
+          <InlineMath>{'\\sim n'}</InlineMath> συγκρίσεις.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th6',
+    title: 'Παλαιό Θέμα #14 · Θέμα 6 — Quick Sort σε ήδη ταξινομημένη είσοδο',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 6',
+    weight: 6,
+    difficulty: 'easy',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τον αλγόριθμο <strong>Quick Sort</strong> για την ταξινόμηση
+          της ακολουθίας <InlineMath>{'a_1, \\dots, a_n'}</InlineMath> με{' '}
+          <InlineMath>{'a_i \\ne a_j'}</InlineMath>. Αν τα στοιχεία είναι ήδη σε{' '}
+          <strong>αύξουσα σειρά</strong>, ποια είναι η πολυπλοκότητα του
+          αλγορίθμου; Πώς προκύπτει; Είναι αυτή η βέλτιστη πολυπλοκότητά του;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Με απλό pivot (π.χ. το πρώτο στοιχείο), σε{' '}
+          <strong>ήδη ταξινομημένη</strong> είσοδο το pivot είναι κάθε φορά το{' '}
+          ελάχιστο. Ο διαχωρισμός δίνει ένα <strong>κενό</strong> αριστερό
+          κομμάτι και ένα δεξί μεγέθους <InlineMath>{'n-1'}</InlineMath>, με{' '}
+          <InlineMath>{'\\Theta(n)'}</InlineMath> κόστος για το partition. Η
+          αναδρομή εκφυλίζεται:
+        </p>
+        <BlockMath>{'T(n) = T(n-1) + \\Theta(n) = \\Theta(n^2)'}</BlockMath>
+        <p>
+          Άρα η πολυπλοκότητα είναι <InlineMath>{'\\Theta(n^2)'}</InlineMath> —
+          και είναι η <strong>χείριστη</strong> περίπτωση του Quick Sort,{' '}
+          <strong>όχι</strong> η βέλτιστη. Η βέλτιστη/μέση του είναι{' '}
+          <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>, που επιτυγχάνεται όταν ο
+          διαχωρισμός είναι ισορροπημένος. Παράδοξο: μια «τέλεια» (ήδη
+          ταξινομημένη) είσοδος είναι η <em>χειρότερη</em> για τον αφελή Quick
+          Sort — γι' αυτό στην πράξη επιλέγεται τυχαίο pivot.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th7',
+    title: 'Παλαιό Θέμα #14 · Θέμα 7 — Πλήθος στοιχείων σωρού ύψους h',
+    topic: 'data-structures',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 7',
+    weight: 4,
+    difficulty: 'easy',
+    prerequisites: ['lectures/L10-data-structures'],
+    formulaIds: ['heap-indices'],
+    statement: (
+      <>
+        <p>
+          (α) Ποιο είναι το <strong>μέγιστο</strong> και ποιο το{' '}
+          <strong>ελάχιστο</strong> πλήθος στοιχείων σε έναν σωρό ύψους{' '}
+          <InlineMath>{'h'}</InlineMath>; (β) Ένας πίνακας ταξινομημένος σε{' '}
+          <strong>φθίνουσα</strong> σειρά είναι σωρός; Αν ναι, MIN heap ή MAX
+          heap;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α)</strong> Ένας σωρός είναι ισοσταθμισμένο δυαδικό δέντρο:
+          κάθε επίπεδο γεμίζει πριν ξεκινήσει το επόμενο.
+        </p>
+        <ul>
+          <li>
+            <strong>Μέγιστο:</strong> όλα τα επίπεδα{' '}
+            <InlineMath>{'0, 1, \\dots, h'}</InlineMath> πλήρη. Το επίπεδο{' '}
+            <InlineMath>{'i'}</InlineMath> έχει <InlineMath>{'2^i'}</InlineMath>{' '}
+            κόμβους, άρα σύνολο{' '}
+            <InlineMath>{'\\sum_{i=0}^{h} 2^i = 2^{h+1} - 1'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Ελάχιστο:</strong> τα πρώτα <InlineMath>{'h'}</InlineMath>{' '}
+            επίπεδα πλήρη και το τελευταίο με ένα μόνο κόμβο:{' '}
+            <InlineMath>{'(2^h - 1) + 1 = 2^h'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          Δηλαδή ένας σωρός με <InlineMath>{'n'}</InlineMath> κόμβους έχει ύψος{' '}
+          <InlineMath>{'h = \\lfloor \\log_2 n \\rfloor'}</InlineMath> — εκεί
+          κρύβεται το <InlineMath>{'O(\\log n)'}</InlineMath> των πράξεων.
+        </p>
+        <p>
+          <strong>(β)</strong> Ναι. Σε πίνακα φθίνουσα σειρά, για κάθε θέση{' '}
+          <InlineMath>{'i'}</InlineMath> ισχύει{' '}
+          <InlineMath>{'A[i] \\ge A[2i]'}</InlineMath> και{' '}
+          <InlineMath>{'A[i] \\ge A[2i+1]'}</InlineMath> (αφού οι μεγαλύτερες
+          τιμές είναι στις μικρότερες θέσεις). Άρα κάθε γονιός{' '}
+          <InlineMath>{'\\ge'}</InlineMath> τα παιδιά του — είναι{' '}
+          <strong>MAX heap</strong>. (Συμμετρικά, αύξουσα σειρά δίνει MIN heap.)
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th8',
+    title: 'Παλαιό Θέμα #14 · Θέμα 8 — Δέντρο επικάλυψης μέγιστου βάρους',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 8',
+    weight: 5,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    formulaIds: ['prim-kruskal'],
+    statement: (
+      <>
+        <p>
+          Δίνεται γράφημα <InlineMath>{'G = (V, E)'}</InlineMath> με θετικά βάρη
+          στις πλευρές του. Δώστε ένα <strong>άπληστο κριτήριο επιλογής</strong>{' '}
+          που διασφαλίζει τη βέλτιστη λύση για την εύρεση ενός δέντρου επικάλυψης{' '}
+          <strong>μέγιστου</strong> βάρους.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Άπληστο κριτήριο:</strong> ταξινόμησε τις ακμές σε{' '}
+          <strong>φθίνουσα</strong> σειρά βάρους και πρόσθεσε κάθε ακμή στο δέντρο{' '}
+          εφόσον δεν δημιουργεί κύκλο (Kruskal «αντεστραμμένος»), μέχρι να μαζευτούν{' '}
+          <InlineMath>{'n-1'}</InlineMath> ακμές.
+        </p>
+        <p>
+          <strong>Γιατί δουλεύει:</strong> αν αντικαταστήσουμε κάθε βάρος{' '}
+          <InlineMath>{'w_e'}</InlineMath> με{' '}
+          <InlineMath>{'-w_e'}</InlineMath>, το δέντρο{' '}
+          <em>μέγιστου</em> βάρους γίνεται το Ελάχιστο Συνδετικό Δέντρο του
+          μετασχηματισμένου γραφήματος — και ο κανονικός Kruskal/Prim το λύνει.
+          Ισοδύναμα: ισχύει η καθρεφτισμένη «ιδιότητα αποκοπής», ότι η ακμή{' '}
+          μέγιστου βάρους κάθε αποκοπής ανήκει σε δέντρο μέγιστου βάρους.
+          Πολυπλοκότητα <InlineMath>{'O(m \\log n)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th9',
+    title: 'Παλαιό Θέμα #14 · Θέμα 9 — Το άπληστο κριτήριο του Dijkstra',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 9',
+    weight: 5,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    formulaIds: ['dijkstra'],
+    statement: (
+      <>
+        <p>
+          Δώστε το <strong>άπληστο κριτήριο επιλογής</strong> στον αλγόριθμο
+          Dijkstra για την εύρεση του συντομότερου μονοπατιού μεταξύ δύο δοθέντων
+          κόμβων.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ο Dijkstra κρατά ένα σύνολο <InlineMath>{'S'}</InlineMath>{' '}
+          οριστικοποιημένων κορυφών με γνωστή απόσταση{' '}
+          <InlineMath>{'d(\\cdot)'}</InlineMath> από την πηγή{' '}
+          <InlineMath>{'s'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Κριτήριο:</strong> σε κάθε βήμα διάλεξε την κορυφή{' '}
+          <InlineMath>{'v \\notin S'}</InlineMath> που ελαχιστοποιεί την
+          προσωρινή απόσταση{' '}
+          <InlineMath>{'\\pi(v) = \\min_{u \\in S}\\,(d(u) + \\ell(u,v))'}</InlineMath>·
+          οριστικοποίησέ την (<InlineMath>{'d(v) = \\pi(v)'}</InlineMath>) και
+          βάλ’ την στο <InlineMath>{'S'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Γιατί είναι σωστό:</strong> με θετικά βάρη, η πιο κοντινή
+          ανεξερεύνητη κορυφή δεν μπορεί να βελτιωθεί από κάποιο μελλοντικό
+          μονοπάτι (αυτό θα περνούσε από κορυφή ακόμα μακρύτερη). Σταματάμε όταν
+          οριστικοποιηθεί ο προορισμός. Χρόνος{' '}
+          <InlineMath>{'O(m \\log n)'}</InlineMath> με ουρά προτεραιότητας.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th11',
+    title: 'Παλαιό Θέμα #14 · Θέμα 11 — Το ΕΣΔ ως κάτω φράγμα του πλανόδιου πωλητή',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 11',
+    weight: 8,
     difficulty: 'hard',
-    prerequisites: ALL_LECTURES,
-    statement: null,
-    solution: null,
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <>
+        <p>
+          Σε ένα πλήρες γράφημα με θετικά βάρη στις πλευρές, αποδείξτε ότι το
+          κόστος ενός δέντρου επικάλυψης ελάχιστου κόστους (ΕΣΔ) αποτελεί{' '}
+          <strong>κάτω φράγμα</strong> της βέλτιστης λύσης του προβλήματος του
+          πλανόδιου πωλητή (TSP).
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Έστω <InlineMath>{'C^*'}</InlineMath> ο βέλτιστος κύκλος TSP. Αν{' '}
+          αφαιρέσουμε <strong>μία ακμή</strong> του, μένει ένα μονοπάτι που
+          περνά απ’ όλες τις κορυφές — δηλαδή ένα συνδετικό δέντρο{' '}
+          <InlineMath>{'T\\,\''}</InlineMath>. Αφού αφαιρέσαμε ακμή θετικού
+          βάρους, <InlineMath>{'\\text{cost}(T\\,\') \\le \\text{cost}(C^*)'}</InlineMath>.
+          Και αφού το ΕΣΔ είναι το φθηνότερο δυνατό συνδετικό δέντρο,{' '}
+          <InlineMath>{'\\text{cost(ΕΣΔ)} \\le \\text{cost}(T\\,\')'}</InlineMath>.
+          Συνδυάζοντας:
+        </p>
+        <BlockMath>{'\\text{cost(ΕΣΔ)} \\le \\text{cost}(T\\,\') \\le \\text{cost}(C^*) = \\text{βέλτιστο TSP}'}</BlockMath>
+        <p>
+          Άρα το ΕΣΔ είναι κάτω φράγμα του TSP. Επειδή το TSP είναι NP-δύσκολο
+          ενώ το ΕΣΔ υπολογίζεται γρήγορα, αυτό το φράγμα είναι η βάση για
+          προσεγγιστικούς αλγορίθμους (π.χ. 2-προσέγγιση για το μετρικό TSP).
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th12',
+    title: 'Παλαιό Θέμα #14 · Θέμα 12 — Επιλογή ανάμεσα σε 4 αλγορίθμους D&C',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 12',
+    weight: 12,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    formulaIds: ['master-theorem'],
+    statement: (
+      <>
+        <p>
+          Έχετε να επιλέξετε ανάμεσα σε τέσσερις αλγορίθμους{' '}
+          <InlineMath>{'A, B, C, D'}</InlineMath> τύπου «διαίρει και βασίλευε»
+          για το ίδιο πρόβλημα. Καθένας λύνει <InlineMath>{'a'}</InlineMath>{' '}
+          υποπροβλήματα διάστασης <InlineMath>{'n/b'}</InlineMath> και συνδυάζει
+          σε χρόνο <InlineMath>{'f(n)'}</InlineMath>. Γράψτε τις αναδρομικές
+          εξισώσεις, λύστε τις με το Master Theorem, και βρείτε τον ασυμπτωτικά
+          αποδοτικότερο αλγόριθμο.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: οι τιμές των <InlineMath>{'a, b, f(n)'}</InlineMath>{' '}
+          προέρχονται από αχνό σαρωμένο αντίγραφο· παρακάτω εφαρμόζεται πλήρως η
+          μέθοδος σε αντιπροσωπευτικές τιμές.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Για κάθε αλγόριθμο γράφουμε{' '}
+          <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath>, υπολογίζουμε το{' '}
+          <InlineMath>{'\\log_b a'}</InlineMath> και το συγκρίνουμε με τον εκθέτη
+          του <InlineMath>{'f(n)'}</InlineMath>. Ενδεικτικά:
+        </p>
+        <ul>
+          <li>
+            <InlineMath>{'T(n) = 2T(n/2) + n'}</InlineMath>:{' '}
+            <InlineMath>{'\\log_2 2 = 1 = \\deg(f)'}</InlineMath> →{' '}
+            2η περίπτωση, <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'T(n) = 4T(n/2) + n'}</InlineMath>:{' '}
+            <InlineMath>{'\\log_2 4 = 2 > 1'}</InlineMath> → 3η
+            περίπτωση (φύλλα), <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'T(n) = T(n/2) + n'}</InlineMath>:{' '}
+            <InlineMath>{'\\log_2 1 = 0 < 1'}</InlineMath> → 1η
+            περίπτωση (ρίζα), <InlineMath>{'\\Theta(n)'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'T(n) = 3T(n/2) + n'}</InlineMath>:{' '}
+            <InlineMath>{'\\log_2 3 \\approx 1.58 > 1'}</InlineMath> →{' '}
+            <InlineMath>{'\\Theta(n^{\\log_2 3})'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          <strong>Επιλογή:</strong> ο αποδοτικότερος είναι αυτός με τη{' '}
+          <strong>μικρότερη</strong> τελική ασυμπτωτική τάξη. Γενικός κανόνας: ο
+          αλγόριθμος με τα <em>λιγότερα/μικρότερα</em> υποπροβλήματα σε σχέση με
+          το κόστος συνδυασμού — δηλαδή αυτός που πέφτει σε «1η περίπτωση» ή έχει
+          το μικρότερο <InlineMath>{'\\log_b a'}</InlineMath> — νικάει. Γράψε τα 4
+          αποτελέσματα, βάλ’ τα σε σειρά μεγέθους, και κύκλωσε το μικρότερο.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th13',
+    title: 'Παλαιό Θέμα #14 · Θέμα 13 — Αναδρομική σχέση 0-1 σακιδίου',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 13',
+    weight: 12,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L15-dp-ii'],
+    formulaIds: ['knapsack'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε το <strong>0-1 πρόβλημα του σακιδίου</strong>:
+          μεγιστοποίηση του <InlineMath>{'\\sum_i c_i x_i'}</InlineMath> υπό τον
+          περιορισμό <InlineMath>{'\\sum_i a_i x_i \\le b'}</InlineMath>, με{' '}
+          <InlineMath>{'x_i \\in \\{0,1\\}'}</InlineMath>. Θέλουμε να το λύσουμε
+          με δυναμικό προγραμματισμό. (α) Πόσα υποπροβλήματα πρέπει να οριστούν;
+          (β) Ποια η αναδρομική σχέση; (γ) Ποια η πολυπλοκότητα στη χείριστη
+          περίπτωση;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α) Υποπροβλήματα.</strong> Η παράμετρος «πρώτα{' '}
+          <InlineMath>{'i'}</InlineMath> αντικείμενα» <em>δεν αρκεί</em> — πρέπει
+          να ξέρουμε και <strong>πόση χωρητικότητα απομένει</strong>. Ορίζουμε{' '}
+          <InlineMath>{'OPT(i, w)'}</InlineMath> = μέγιστη αξία με αντικείμενα{' '}
+          <InlineMath>{'1, \\dots, i'}</InlineMath> και διαθέσιμη χωρητικότητα{' '}
+          <InlineMath>{'w'}</InlineMath>. Άρα <InlineMath>{'n \\cdot b'}</InlineMath>{' '}
+          υποπροβλήματα.
+        </p>
+        <p><strong>(β) Αναδρομική σχέση.</strong></p>
+        <BlockMath>{'OPT(i,w) = \\begin{cases} 0 & i = 0 \\\\ OPT(i-1,w) & a_i > w \\\\ \\max\\{OPT(i-1,w),\\ c_i + OPT(i-1,w-a_i)\\} & a_i \\le w \\end{cases}'}</BlockMath>
+        <p>
+          Διαίσθηση: για το αντικείμενο <InlineMath>{'i'}</InlineMath> έχουμε δύο
+          επιλογές — το αφήνουμε έξω (μένει η ίδια χωρητικότητα), ή το βάζουμε
+          μέσα (κερδίζουμε <InlineMath>{'c_i'}</InlineMath>, ξοδεύουμε{' '}
+          <InlineMath>{'a_i'}</InlineMath> χώρο) — και κρατάμε το καλύτερο.
+        </p>
+        <p>
+          <strong>(γ) Πολυπλοκότητα.</strong> Ο πίνακας έχει{' '}
+          <InlineMath>{'n \\cdot b'}</InlineMath> κελιά, κάθε ένα{' '}
+          <InlineMath>{'O(1)'}</InlineMath>, άρα{' '}
+          <InlineMath>{'\\Theta(nb)'}</InlineMath>. Προσοχή: είναι{' '}
+          <strong>ψευδοπολυωνυμικός</strong> — το <InlineMath>{'b'}</InlineMath>{' '}
+          είναι αριθμός, που γράφεται με <InlineMath>{'\\log b'}</InlineMath>{' '}
+          δυφία, οπότε ο χρόνος είναι εκθετικός ως προς το μέγεθος της εισόδου.
+          Το πρόβλημα είναι NP-πλήρες.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th14',
+    title: 'Παλαιό Θέμα #14 · Θέμα 14 — Στιγμιότυπο 0-1 σακιδίου με DP',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 14',
+    weight: 12,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L15-dp-ii'],
+    formulaIds: ['knapsack'],
+    statement: (
+      <>
+        <p>
+          Λύστε με δυναμικό προγραμματισμό ένα στιγμιότυπο του 0-1 σακιδίου:
+          βρείτε τη βέλτιστη αξία, συμπληρώνοντας τον πίνακα{' '}
+          <InlineMath>{'OPT(i, w)'}</InlineMath>.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: οι ακριβείς αξίες/βάρη του πρωτότυπου είναι
+          από αχνό σαρωμένο αντίγραφο· παρακάτω λύνεται πλήρως ένα καθαρό
+          αντιπροσωπευτικό στιγμιότυπο, ώστε η μέθοδος να είναι ξεκάθαρη.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Δουλεύουμε ένα αντιπροσωπευτικό στιγμιότυπο: 4 αντικείμενα με{' '}
+          (βάρος, αξία) <InlineMath>{'(2,3), (3,4), (4,5), (5,6)'}</InlineMath>{' '}
+          και χωρητικότητα <InlineMath>{'b = 8'}</InlineMath>.
+        </p>
+        <p>
+          Γεμίζουμε τον πίνακα <InlineMath>{'OPT(i,w)'}</InlineMath> γραμμή προς
+          γραμμή με την αναδρομή{' '}
+          <InlineMath>{'OPT(i,w) = \\max\\{OPT(i-1,w),\\ c_i + OPT(i-1,w-a_i)\\}'}</InlineMath>:
+        </p>
+        <BlockMath>{'\\begin{array}{c|ccccccccc} i\\backslash w & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\\\ \\hline 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\ 1 & 0 & 0 & 3 & 3 & 3 & 3 & 3 & 3 & 3 \\\\ 2 & 0 & 0 & 3 & 4 & 4 & 7 & 7 & 7 & 7 \\\\ 3 & 0 & 0 & 3 & 4 & 5 & 7 & 8 & 9 & 9 \\\\ 4 & 0 & 0 & 3 & 4 & 5 & 7 & 8 & 9 & 10 \\end{array}'}</BlockMath>
+        <p>
+          Η βέλτιστη αξία είναι <InlineMath>{'OPT(4,8) = 10'}</InlineMath>, που
+          επιτυγχάνεται με τα αντικείμενα 2 και 4 (βάρος{' '}
+          <InlineMath>{'3+5 = 8'}</InlineMath>, αξία{' '}
+          <InlineMath>{'4+6 = 10'}</InlineMath>).
+        </p>
+        <p>
+          <strong>Εύρεση των αντικειμένων:</strong> ξεκινώντας από{' '}
+          <InlineMath>{'OPT(4,8)'}</InlineMath>, σε κάθε κελί ελέγχουμε αν η τιμή
+          ήρθε από «το αντικείμενο μέσα» (<InlineMath>{'OPT(i,w) \\ne OPT(i-1,w)'}</InlineMath>):
+          αν ναι, το αντικείμενο <InlineMath>{'i'}</InlineMath> είναι στη λύση και
+          πηγαίνουμε στο <InlineMath>{'OPT(i-1, w-a_i)'}</InlineMath>· αλλιώς στο{' '}
+          <InlineMath>{'OPT(i-1, w)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th15',
+    title: 'Παλαιό Θέμα #14 · Θέμα 15 — Προβλήματα απόφασης D(Path) και D(Knapsack)',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 15',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv', 'lectures/L15-dp-ii'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τα προβλήματα <strong>βελτιστοποίησης</strong>: (i) εύρεση
+          ελάχιστου μονοπατιού ανάμεσα σε δύο κόμβους{' '}
+          <InlineMath>{'s, t'}</InlineMath> ενός γράφου, και (ii) 0-1 σακίδιο
+          (Knapsack). Να διατυπωθούν τα αντίστοιχα{' '}
+          <strong>προβλήματα απόφασης</strong>{' '}
+          <InlineMath>{'D(\\text{Path})'}</InlineMath> και{' '}
+          <InlineMath>{'D(\\text{Knapsack})'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Μετατρέπουμε κάθε πρόβλημα βελτιστοποίησης σε «ΝΑΙ/ΟΧΙ» προσθέτοντας ένα
+          αριθμητικό <strong>κατώφλι</strong>.
+        </p>
+        <p>
+          <strong><InlineMath>{'D(\\text{Path})'}</InlineMath>:</strong>{' '}
+          «Δοθέντος γραφήματος <InlineMath>{'G'}</InlineMath> με βάρη στις ακμές,
+          κόμβων <InlineMath>{'s, t'}</InlineMath> και αριθμού{' '}
+          <InlineMath>{'k'}</InlineMath>, υπάρχει μονοπάτι από{' '}
+          <InlineMath>{'s'}</InlineMath> σε <InlineMath>{'t'}</InlineMath> με
+          συνολικό βάρος <InlineMath>{'\\le k'}</InlineMath>;»
+        </p>
+        <p>
+          <strong><InlineMath>{'D(\\text{Knapsack})'}</InlineMath>:</strong>{' '}
+          «Δοθέντων <InlineMath>{'n'}</InlineMath> αντικειμένων με βάρη{' '}
+          <InlineMath>{'a_i'}</InlineMath> και αξίες{' '}
+          <InlineMath>{'c_i'}</InlineMath>, χωρητικότητας{' '}
+          <InlineMath>{'b'}</InlineMath> και αριθμού{' '}
+          <InlineMath>{'k'}</InlineMath>, υπάρχει υποσύνολο αντικειμένων με
+          συνολικό βάρος <InlineMath>{'\\le b'}</InlineMath> και συνολική αξία{' '}
+          <InlineMath>{'\\ge k'}</InlineMath>;»
+        </p>
+        <p>
+          Με δυαδική αναζήτηση πάνω στο <InlineMath>{'k'}</InlineMath>, η λύση του
+          προβλήματος απόφασης δίνει και τη βέλτιστη τιμή — οπότε οι δύο εκδοχές
+          έχουν ουσιαστικά την ίδια δυσκολία.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt14-th16',
+    title: 'Παλαιό Θέμα #14 · Θέμα 16 — Κατάταξη των D(Path), D(Knapsack) σε P και NP-complete',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #14',
+    problemNumber: 'Θέμα 16',
+    weight: 6,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv', 'lectures/L15-dp-ii'],
+    statement: (
+      <>
+        <p>
+          Με την υπόθεση ότι <InlineMath>{'P \\ne NP'}</InlineMath>: ποιο/ποια
+          από τα προβλήματα απόφασης{' '}
+          <InlineMath>{'D(\\text{Path})'}</InlineMath> και{' '}
+          <InlineMath>{'D(\\text{Knapsack})'}</InlineMath> ανήκουν στην κλάση{' '}
+          <InlineMath>{'P'}</InlineMath>; Ποιο/ποια στην{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong><InlineMath>{'D(\\text{Path}) \\in P'}</InlineMath>.</strong>{' '}
+          Το συντομότερο μονοπάτι (με μη αρνητικά βάρη) λύνεται σε πολυωνυμικό
+          χρόνο από τον Dijkstra, <InlineMath>{'O(m \\log n)'}</InlineMath>.
+          Υπολόγισε τη συντομότερη <InlineMath>{'s\\text{--}t'}</InlineMath>{' '}
+          απόσταση και σύγκρινέ τη με το <InlineMath>{'k'}</InlineMath>. Άρα{' '}
+          ανήκει στην <InlineMath>{'P'}</InlineMath>.
+        </p>
+        <p>
+          <strong><InlineMath>{'D(\\text{Knapsack})'}</InlineMath> είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete.</strong> Ανήκει στην{' '}
+          <InlineMath>{'NP'}</InlineMath> (αν σου δώσουν ένα υποσύνολο
+          αντικειμένων, επαληθεύεις σε πολυωνυμικό χρόνο βάρος{' '}
+          <InlineMath>{'\\le b'}</InlineMath> και αξία{' '}
+          <InlineMath>{'\\ge k'}</InlineMath>), και είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-δύσκολο (κλασικό{' '}
+          <InlineMath>{'NP'}</InlineMath>-πλήρες, με αναγωγή από το Subset-Sum). Ο
+          DP αλγόριθμος <InlineMath>{'\\Theta(nb)'}</InlineMath> είναι μόνο{' '}
+          <em>ψευδοπολυωνυμικός</em>, όχι πραγματικά πολυωνυμικός. Υπό{' '}
+          <InlineMath>{'P \\ne NP'}</InlineMath>, δεν υπάρχει πολυωνυμικός
+          αλγόριθμος.
+        </p>
+        <p>
+          <strong>Συμπέρασμα:</strong> δύο προβλήματα που και τα δύο «μοιάζουν με
+          βελτιστοποίηση», αλλά το ένα (<InlineMath>{'D(\\text{Path})'}</InlineMath>)
+          είναι εύκολο και το άλλο (<InlineMath>{'D(\\text{Knapsack})'}</InlineMath>){' '}
+          είναι από τα δυσκολότερα στην <InlineMath>{'NP'}</InlineMath>.
+        </p>
+      </>
+    ),
   },
   {
     id: 'exam-feb-2017',

@@ -1,0 +1,120 @@
+% ======================================================================
+%  algo-preamble.sty
+%  Shared preamble for the printable lecture notes of the
+%  «Αλγόριθμοι και Πολυπλοκότητα (K17)» study site (Algorithms Class Hub).
+%
+%  ENGINE: compile every LNN-*.tex with XeLaTeX or LuaLaTeX (twice, for the
+%          TOC/links). fontspec + babel-greek require a Unicode engine —
+%          NOT pdflatex. See build_pdfs.sh in this folder.
+% ======================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{algo-preamble}[2026/05/22 Algorithms Class Hub lecture notes]
+
+% ── Language & fonts (Greek main, English technical terms inline) ─────
+% fontspec + babel give Unicode Greek with proper hyphenation. We avoid
+% polyglossia because it rejects mono fonts that lack the OpenType "grek"
+% script tag even when they do carry Greek glyphs.
+\RequirePackage{fontspec}
+% IMPORTANT: the body font must carry the FULL Greek block (U+0370–03FF),
+% including accented letters (ά έ ή ί ό ύ ώ, ϊ ϋ, ΐ ΰ). Latin Modern / TeX
+% Gyre only ship uppercase Greek, so Greek words render as missing glyphs.
+% Liberation Serif (a Times-compatible font bundled with TeX Live) and
+% DejaVu Sans Mono both have complete Greek coverage.
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.84]
+\RequirePackage{babel}
+\babelprovide[main,import,hyphenrules=greek]{greek}
+\babelprovide[import]{english}
+
+% ── Math ─────────────────────────────────────────────────────────────
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{mathtools}
+
+% ── Page geometry & typography ───────────────────────────────────────
+\RequirePackage[a4paper,margin=2.4cm]{geometry}
+\RequirePackage{xcolor}
+\RequirePackage{enumitem}
+\RequirePackage{graphicx}
+\RequirePackage{booktabs}
+\RequirePackage{array}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{verbatim}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setlist{topsep=0.2em,itemsep=0.15em,leftmargin=1.6em}
+% Soak up the occasional too-long Greek line instead of overflowing the margin.
+\setlength{\emergencystretch}{3em}
+\hbadness=3000
+
+% hyperref last
+\RequirePackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black,
+  citecolor=blue!55!black,
+  pdfborder={0 0 0},
+}
+
+% ── Theorem-like environments ────────────────────────────────────────
+\theoremstyle{plain}
+\newtheorem{theorem}{Θεώρημα}
+\newtheorem{lemma}[theorem]{Λήμμα}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Ορισμός}
+
+% ── Callout boxes (one per <Callout type="…"> in the MDX source) ──────
+\newtcolorbox{intuition}{%
+  enhanced,breakable,colback=cyan!6,colframe=cyan!55!black,
+  fonttitle=\bfseries,coltitle=cyan!25!black,title=Διαίσθηση,
+  boxrule=0.6pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt}
+
+\newtcolorbox{keypoint}{%
+  enhanced,breakable,colback=green!7,colframe=green!50!black,
+  fonttitle=\bfseries,coltitle=green!28!black,title=Κλειδί,
+  boxrule=0.6pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt}
+
+\newtcolorbox{warningbox}{%
+  enhanced,breakable,colback=orange!8,colframe=orange!70!black,
+  fonttitle=\bfseries,coltitle=orange!45!black,title=Προσοχή,
+  boxrule=0.6pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt}
+
+\newtcolorbox{notebox}{%
+  enhanced,breakable,colback=black!4,colframe=black!45,
+  fonttitle=\bfseries,coltitle=black!65,title=Σημείωση,
+  boxrule=0.6pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt}
+
+% ── Example (a worked example — solution shown inline in print) ───────
+\newtcolorbox{examplebox}{%
+  enhanced,breakable,colback=violet!5,colframe=violet!55!black,
+  fonttitle=\bfseries,coltitle=violet!35!black,title=Παράδειγμα,
+  boxrule=0.7pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt}
+
+% ── Recap («Τι κρατάμε από αυτή τη διάλεξη») ──────────────────────────
+\newtcolorbox{recapbox}{%
+  enhanced,breakable,colback=blue!6,colframe=blue!55!black,
+  fonttitle=\bfseries,coltitle=blue!30!black,title=Ανακεφαλαίωση,
+  boxrule=0.8pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt}
+
+% ── Highlighted block quote (theorems / key questions from the notes) ─
+\newtcolorbox{quoteblock}{%
+  enhanced,breakable,colback=black!3,colframe=black!30,
+  boxrule=0pt,leftrule=2.5pt,arc=0pt,
+  left=10pt,right=8pt,top=5pt,bottom=5pt}
+
+% ── Code / pseudocode block (use plain verbatim inside) ──────────────
+\newtcolorbox{codebox}{%
+  enhanced,breakable,colback=black!4,colframe=black!28,
+  boxrule=0.5pt,arc=1pt,left=6pt,right=6pt,top=3pt,bottom=3pt}
+
+% ── Title block helper ───────────────────────────────────────────────
+\newcommand{\lecturefooter}{%
+  \bigskip\hrule\smallskip
+  {\footnotesize\itshape Σημειώσεις από το Algorithms Class Hub —
+  μελετητικός οδηγός για το μάθημα «Αλγόριθμοι και Πολυπλοκότητα (K17)», ΕΚΠΑ.\par}}
+
+\endinput
