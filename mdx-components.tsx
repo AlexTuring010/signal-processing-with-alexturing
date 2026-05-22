@@ -39,6 +39,11 @@ import { ExchangeArgumentViz } from '@/components/viz/ExchangeArgumentViz'
 import { PrimAnimator } from '@/components/viz/PrimAnimator'
 import { KruskalAnimator } from '@/components/viz/KruskalAnimator'
 import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
+import { HeapArrayMap } from '@/components/viz/HeapArrayMap'
+import { HeapsortAnimator } from '@/components/viz/HeapsortAnimator'
+import { UnionFindForest } from '@/components/viz/UnionFindForest'
+import { UnionBySizeRace } from '@/components/viz/UnionBySizeRace'
+import { PathCompressionViz } from '@/components/viz/PathCompressionViz'
 import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
 import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
 import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
@@ -102,6 +107,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PrimAnimator,
     KruskalAnimator,
     BinaryHeapAnimator,
+    HeapArrayMap,
+    HeapsortAnimator,
+    UnionFindForest,
+    UnionBySizeRace,
+    PathCompressionViz,
     IntervalScheduling,
     TopologicalSortViz,
     HuffmanTreeBuilder,
