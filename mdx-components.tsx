@@ -12,6 +12,14 @@ import { ExerciseProgress } from '@/components/content/ExerciseProgress'
 import { Timeline } from '@/components/content/Timeline'
 import { SourceDoc } from '@/components/content/SourceDoc'
 import { LectureExercises } from '@/components/content/LectureExercises'
+import { Algorithm } from '@/components/content/Algorithm'
+import { Pseudocode } from '@/components/content/Pseudocode'
+import { RecallCard } from '@/components/content/RecallCard'
+import { ThinkingPattern } from '@/components/content/ThinkingPattern'
+import { ExamRadar } from '@/components/content/ExamRadar'
+import { GraphCanvas } from '@/components/viz/GraphCanvas'
+import { TraversalGame } from '@/components/viz/TraversalGame'
+import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -38,6 +46,18 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Timeline,
     SourceDoc,
     LectureExercises,
+
+    // Algorithm learning kit — dual view, recall practice, interactive traces
+    Algorithm,
+    Pseudocode,
+    RecallCard,
+    ThinkingPattern,
+    ExamRadar,
+    GraphCanvas,
+    TraversalGame,
+    RecallDrill,
+    ClozeDrill,
+    ReorderDrill,
 
     // Math
     Eq,
