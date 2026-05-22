@@ -23,6 +23,7 @@ import { BinarySearchViz } from '@/components/viz/BinarySearchViz'
 import { BigOPlayground } from '@/components/viz/BigOPlayground'
 import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
 import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
+import { InversionCounter } from '@/components/viz/InversionCounter'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -63,6 +64,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     BigOPlayground,
     MergeSortAnimator,
     RecurrenceClassifier,
+    InversionCounter,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
