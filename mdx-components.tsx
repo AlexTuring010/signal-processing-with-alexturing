@@ -33,6 +33,7 @@ import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
 import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
 import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
+import { KnapsackTable } from '@/components/viz/KnapsackTable'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -83,6 +84,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TopologicalSortViz,
     HuffmanTreeBuilder,
     WeightedIntervalDP,
+    KnapsackTable,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
