@@ -18,6 +18,11 @@ Format:
 
 ## Open commitments
 
+- [ ] **Link the L07 «Ραντάρ εξετάσεων» items to real past-exam problems**
+       Where it appears: `/lectures/L07-graphs-ii` — the `ExamRadar` block near the end of the page
+       Where it should be fulfilled: the same `ExamRadar` block + the `<LectureExercises>` block at the page end
+       Notes: The L07 ExamRadar currently lists exam patterns in the abstract («τρέξε BFS/DFS και δώσε τη σειρά», «απόσταση με BFS», «μοντελοποίηση ως διάσχιση»…). When graph-traversal past-exam problems are transcribed into the exercise bank (`content/practice/exercises.tsx` — see `plans/EXAM_TRANSCRIPTION.md`), come back here and, per radar pattern, link the specific problems that match it, so students can jump straight from a pattern to real exercises. Also make sure those problems surface at the end of the page: `<LectureExercises lectureSlug="lectures/L07-graphs-ii" />` already auto-pulls exercises whose prerequisites point at L07, so the work is (a) tag the new problems correctly and (b) add per-item problem links to the radar — likely a small extension of the `ExamRadar` component (an optional problem id/href per item).
+
 - [ ] **Full Lab 1 page (MATLAB installation + first steps)**
        Where it appears: `/intro` page, in the LabBox before the Recap
        Where it should be fulfilled: `/labs/01-matlab-intro` (path TBD)
