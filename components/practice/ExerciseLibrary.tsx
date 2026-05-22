@@ -10,8 +10,7 @@ import {
   CheckCircle2,
   Circle,
 } from 'lucide-react'
-import type { Exercise, Topic, Origin, ExamSource } from '@/content/practice/types'
-import { SOURCE_LABELS } from '@/content/practice/types'
+import type { Exercise, Topic, Origin } from '@/content/practice/types'
 import { TopicFilter } from './TopicFilter'
 import { ExerciseCard, PRACTICE_SOLVED_PREFIX } from './ExerciseCard'
 import { useAppStore } from '@/lib/store'
@@ -22,19 +21,9 @@ type Props = {
 
 type OriginFilter = 'all' | Origin
 
-const SOURCE_ORDER: ExamSource[] = [
-  'sept-2025',
-  'june-2025',
-  'sept-2024',
-  'june-2024',
-  'sept-2023',
-  'june-2023',
-]
-
 export function ExerciseLibrary({ exercises }: Props) {
   const [topics, setTopics] = useState<Set<Topic>>(new Set())
   const [originFilter, setOriginFilter] = useState<OriginFilter>('past-exam')
-  const [sourceFilter, setSourceFilter] = useState<ExamSource | 'all'>('all')
   const [unsolvedOnly, setUnsolvedOnly] = useState(false)
 
   // Solved state — drives both the "Άλυτα μόνο" filter and the summary chip
@@ -72,10 +61,9 @@ export function ExerciseLibrary({ exercises }: Props) {
     return exercises.filter((ex) => {
       if (topics.size > 0 && !topics.has(ex.topic)) return false
       if (originFilter !== 'all' && ex.origin !== originFilter) return false
-      if (sourceFilter !== 'all' && ex.source !== sourceFilter) return false
       return true
     })
-  }, [exercises, topics, originFilter, sourceFilter])
+  }, [exercises, topics, originFilter])
 
   const solvedInScope = useMemo(
     () => inScope.filter((ex) => isSolved(ex.id)).length,
@@ -98,15 +86,12 @@ export function ExerciseLibrary({ exercises }: Props) {
       const ra = orderRank(a.origin)
       const rb = orderRank(b.origin)
       if (ra !== rb) return ra - rb
-      // Within same origin, past-exams sort by source recency
-      if (a.origin === 'past-exam' && b.origin === 'past-exam') {
-        const sa = a.source ? SOURCE_ORDER.indexOf(a.source) : 99
-        const sb = b.source ? SOURCE_ORDER.indexOf(b.source) : 99
-        if (sa !== sb) return sa - sb
-        // Same source: sort by problem number
-        return (a.problemNumber ?? '').localeCompare(b.problemNumber ?? '')
-      }
-      return 0
+      // Within the same origin, group by anonymised paper label, then by
+      // the printed problem number.
+      const la = a.paperLabel ?? ''
+      const lb = b.paperLabel ?? ''
+      if (la !== lb) return la.localeCompare(lb, 'el')
+      return (a.problemNumber ?? '').localeCompare(b.problemNumber ?? '', 'el')
     })
   }, [filtered])
 
@@ -154,34 +139,6 @@ export function ExerciseLibrary({ exercises }: Props) {
               />
             </div>
           </div>
-          {originFilter === 'past-exam' && (
-            <div>
-              <div className="mb-2 text-xs uppercase tracking-wider text-fg-subtle">
-                Εξέταση
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <SmallChip
-                  active={sourceFilter === 'all'}
-                  onClick={() => setSourceFilter('all')}
-                  label="Όλες"
-                />
-                {SOURCE_ORDER.map((src) => {
-                  const count = exercises.filter(
-                    (e) => e.origin === 'past-exam' && e.source === src,
-                  ).length
-                  if (count === 0) return null
-                  return (
-                    <SmallChip
-                      key={src}
-                      active={sourceFilter === src}
-                      onClick={() => setSourceFilter(src)}
-                      label={`${SOURCE_LABELS[src]} (${count})`}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          )}
           <div>
             <div className="mb-2 text-xs uppercase tracking-wider text-fg-subtle">
               Topic
@@ -286,30 +243,6 @@ function OriginChip({
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition ${colorClass}`}
     >
       {icon}
-      {label}
-    </button>
-  )
-}
-
-function SmallChip({
-  active,
-  onClick,
-  label,
-}: {
-  active: boolean
-  onClick: () => void
-  label: string
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full border px-2.5 py-0.5 text-[11px] transition ${
-        active
-          ? 'border-accent bg-accent/10 text-accent font-semibold'
-          : 'border-border bg-bg-soft text-fg-muted hover:border-accent/40 hover:text-fg'
-      }`}
-    >
       {label}
     </button>
   )

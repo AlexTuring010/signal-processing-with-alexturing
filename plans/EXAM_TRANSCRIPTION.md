@@ -6,11 +6,17 @@
 
 ## Goal
 
-Transcribe **every** past-exam paper (`material/exercises/oldtests/`) and every
-frontistirio set (`material/exercises/inclass/`) from PDF/image into the app's
+Transcribe **every** past-exam paper (`private_material/oldtests/`) and every
+frontistirio set (`private_material/inclass/`) from PDF/image into the app's
 exercise bank — split into per-lecture sub-exercises, each with a
-beginner-friendly Greek solution — then **anonymise** and **delete the source
-file**.
+beginner-friendly Greek solution — then **anonymise** in the UI.
+
+> **Privacy architecture (since 2026-05-22).** All raw university materials live
+> in `/private_material`, which is **git-ignored** — never committed, never
+> published. The old public copy under `public/material/exercises/` has been
+> removed. Source files therefore no longer need to be *deleted* after
+> transcription: they simply stay local-only in `private_material`. Earlier
+> papers that were already deleted remain recoverable via `git show`.
 
 ## Conventions
 
@@ -50,10 +56,10 @@ file**.
   `content/practice/exercises.tsx` (the `statement: null` placeholder) and add
   the new sub-exercise objects.
 
-### Source deletion
-- Only **after** the paper is fully transcribed and `npx tsc --noEmit` is clean:
-  `git rm` (or `rm`) the source PDF/image(s) **and** any sibling
-  `:Zone.Identifier` files. Recoverable from git history if ever needed.
+### Source files
+- Raw source files live in `/private_material` (git-ignored). They do **not**
+  need to be deleted after transcription — the git-ignore already keeps them off
+  GitHub. Just leave them in place.
 
 ## Exercise object template
 
@@ -88,13 +94,13 @@ file**.
 3. In `content/practice/exercises.tsx`: remove the paper's old index entry, add
    the sub-exercise objects.
 4. `npx tsc --noEmit` — must be clean.
-5. Delete the source file(s) + any `:Zone.Identifier` siblings.
+5. Leave the source file in `private_material` (git-ignored — no deletion needed).
 6. Mark the paper `☑` here (and note how many sub-exercises it produced).
 7. Repeat for ~2–4 papers per session.
 
 ---
 
-## Checklist — Old exams (`material/exercises/oldtests/`)
+## Checklist — Old exams (`private_material/oldtests/`)
 
 | # | Label | Source file(s) | Status |
 |---|---|---|---|
@@ -103,8 +109,8 @@ file**.
 | 3 | Παλαιό Θέμα #3 | `Algorithms-June-2024.pdf` *(deleted)* | ☑ |
 | 4 | Παλαιό Θέμα #4 | `Algorithms-September-2024.pdf` *(deleted)* | ☑ |
 | 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` *(deleted)* | ☑ |
-| 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☐ |
-| 7 | Παλαιό Θέμα #7 | `Ζησιμόπουλος/2022-June-VZ/Algo_june_2022.pdf` | ☐ |
+| 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☑ 4/4 |
+| 7 | Παλαιό Θέμα #7 | `Ζησιμόπουλος/2022-June-VZ/Algo_june_2022.pdf` | ☑ 4/4 |
 | 8 | Παλαιό Θέμα #8 | `Ζησιμόπουλος/2022-Sept-VZ/*.jpg` (3) | ☐ |
 | 9 | Παλαιό Θέμα #9 | `Ζησιμόπουλος/2021-June-VZ/` (Θ1.pdf, Θ2.pdf, 1–15.png) | ☐ |
 | 10 | Παλαιό Θέμα #10 | `Αλγο-2020-Σεπτ-1(Slot2).jpg`, `Αλγο-2020-Σεπτ-2(Slot2).jpg` | ☐ |
@@ -122,7 +128,7 @@ file**.
 | 22 | Παλαιό Θέμα #22 | `Ζησιμόπουλος/2010-June-VZ/` (pdf + JPG) | ☐ |
 | 23 | Παλαιό Θέμα #23 | `Ζησιμόπουλος/2008-Midterm/2008.pdf` | ☐ |
 
-## Checklist — Frontistirio (`material/exercises/inclass/`)
+## Checklist — Frontistirio (`private_material/inclass/`)
 
 | # | Label | Source file | Status |
 |---|---|---|---|
@@ -131,9 +137,9 @@ file**.
 | 3 | Φροντιστηριακό Σετ #3 | `F3__eclass.pdf` *(deleted)* | ☑ 7/7 (Ασκ 1,2,4,7,8,9,10) |
 | 4 | Φροντιστηριακό Σετ #4 | `F4__2023_24__eclass.pdf` *(deleted)* | ☑ 12/12 (Ασκ 1–10 + E0 + Θέμα 4) |
 | 5 | Φροντιστηριακό Σετ #5 | `F5__eclass.pdf` *(deleted)* | ☑ 10/10 (Ασκ 1,2,3,5,6,7,8,9,10,11) |
-| 6 | Φροντιστηριακό Σετ #6 | `F7__eclass.pdf` | ☐ |
-| 7 | Φροντιστηριακό Σετ #7 | `F8__eclass.pdf` | ☐ |
-| 8 | Φροντιστηριακό Σετ #8 | `F9__eclass.pdf` | ☐ |
+| 6 | Φροντιστηριακό Σετ #6 | `F7__eclass.pdf` | ☑ 8/8 (Ασκ 1–8) |
+| 7 | Φροντιστηριακό Σετ #7 | `F8__eclass.pdf` | ☑ 12/12 (Ασκ 1–12) |
+| 8 | Φροντιστηριακό Σετ #8 | `F9__eclass.pdf` | ☑ 4/4 (Ασκ 1–4) |
 | 9 | Φροντιστηριακό Σετ #9 | `F10__eclass.pdf` | ☐ |
 | 10 | Φροντιστηριακό Σετ #10 | `F11__eclass.pdf` | ☐ |
 | 11 | Φροντιστηριακό Σετ #11 | `1ο Φροντ.pdf` | ☐ |
@@ -142,20 +148,27 @@ file**.
 
 ## Progress
 
-**Old exams — fully done: 5 / 23** (#1–#5). Fully pending: 18 (#6–#23).
-**Frontistiria — fully done: 5 / 13** (#1–#5). Fully pending: 8 (#6–#13).
+**Old exams — fully done: 7 / 23** (#1–#7). Fully pending: 16 (#8–#23).
+**Frontistiria — fully done: 8 / 13** (#1–#8). Fully pending: 5 (#9–#13).
 
-Total modular exercises transcribed so far: **89** (14 + 15 + 3 from exams
-#1–#3; 9 from exam #4; 7 from exam #5; 41 frontistiria — F1×3, F2×8, F3×7,
-F4×12, F5×11).
+Total modular exercises transcribed so far: **120** (88 from earlier sessions —
+the previous «89» double-counted Φρ. Σετ #5 by one — plus 32 this session:
+exam #6 ×4, exam #7 ×4, F#6 ×8, F#7 ×12, F#8 ×4). Verified by
+`grep -cE "id: '(pt|front-set-)" content/practice/exercises.tsx` → 120.
 
-> **Batch note.** This session: **exam #5 (Παλαιό Θέμα #5) done** (7 modules)
-> + **F1 and F5 brought to 100%** (2 + 9 new exercises). All three source files
-> deleted. Frontistiria #1–#5 are now fully complete; #6–#13 remain untouched.
-> Each session realistically completes ~1 exam + ~2 frontistiria decks at the
-> quality bar (verbatim transcription + full beginner solutions).
+> **Batch note (2026-05-22, privacy + batch session).** Two parts:
+> **(1) Privacy architecture.** All raw exercise material moved to the new
+> git-ignored `/private_material`; the public copy `public/material/exercises/`
+> deleted; `.gitignore` updated. The 16 still-untranscribed papers had their
+> index entries anonymised (dropped dated `source`/`sourceFile`, added a
+> `paperLabel`, titles → «Παλαιό Θέμα #N / Φροντιστηριακό Σετ #N — υπό
+> μεταγραφή»). The dated «Εξέταση» filter was removed from `ExerciseLibrary`.
+> **(2) Transcription batch.** Παλαιά Θέματα #6, #7 and Φροντιστηριακά Σετ #6,
+> #7, #8 transcribed — 32 modular exercises, routed across L03/L06/L08/L09/
+> L10/L11/L12/L13/L14/L15/L16/L17.
 
-Next: frontistiria F6–F13; exams resume at Παλαιό Θέμα #6.
+Next: exams resume at Παλαιό Θέμα #8; frontistiria resume at Φροντιστηριακό
+Σετ #9.
 
 ## Progress log
 
@@ -216,3 +229,34 @@ _(append one line per completed paper: label — N sub-exercises — date)_
   μετασχηματισμοί βαρών →L08), `ask11` (ζεύγη με δοσμένο άθροισμα →L10) — added
   to `ask10`. Deck now 10/10 (η σειρά παραλείπει την Ασκ 4); source PDF
   deleted. — 2026-05-22.
+- **Privacy architecture** — `/private_material` created & git-ignored; all raw
+  exercise material moved there; `public/material/exercises/` removed; the 16
+  untranscribed papers anonymised with `paperLabel` (no `source`/`sourceFile`);
+  dated «Εξέταση» filter removed from `ExerciseLibrary`. — 2026-05-22.
+- **Παλαιό Θέμα #6** — 4 modules: `pt6-th1` (BFS/DFS & εύρεση γειτόνων →L06),
+  `pt6-th2` (χρονοπρογραμματισμός με βάρη / weighted interval scheduling →L14),
+  `pt6-th3` (Master Theorem + sift-down σε σωρό →L03/L10), `pt6-th4` (υπόδεντρο
+  ελάχιστου βάρους = MST, P/NP →L09). Θέμα 2: το πρωτότυπο είναι αχνό σκαναρισμένο
+  jpg — η μέθοδος διδάσκεται πλήρως, το στιγμιότυπο δουλεύεται σε καθαρό
+  αντιπροσωπευτικό παράδειγμα. — 2026-05-22.
+- **Παλαιό Θέμα #7** — 4 modules: `pt7-th1` (ανεξάρτητο σύνολο, NP & P για
+  σταθερό k →L09), `pt7-th2` (αναδρομή vs DP, Ω(1.44ⁿ) →L14), `pt7-th3` (0-1
+  σακίδιο: άπληστος vs DP →L15), `pt7-th4` (D(ST) vs D(TSP), P/NP-complete
+  →L09). — 2026-05-22.
+- **Φροντιστηριακό Σετ #6** — 8 modules: `front-set-6-ask1` (στρωματωμένος
+  γράφος, ποδηλατική εκδρομή →L08), `ask2` (2η/3η ακμή στο MST →L09), `ask3`
+  (εναλλασσόμενη υπακολουθία O(n) →L11), `ask4` (χρονοπρογραμματισμός
+  πλυντηρίου →L12), `ask5` (ρέστα — άπληστος →L11), `ask6` (ελάχιστες στάσεις
+  ανεφοδιασμού →L11), `ask7` (Huffman →L13), `ask8` (χρωματισμός & ελάχιστα
+  ταξί →L11). — 2026-05-22.
+- **Φροντιστηριακό Σετ #7** — 12 modules: `front-set-7-ask1` (ένωση ράβδων /
+  Huffman →L13), `ask2` (λύκος-κατσίκα-λάχανο, γράφος καταστάσεων →L06), `ask3`
+  (TSP μέσω MST+preorder →L09), `ask4` (μηνιαίο vs ετήσιο πακέτο →L11), `ask5`
+  (διαδρομή σε πίνακα — άπληστος αποτυγχάνει →L11), `ask6` (αναβάθμιση δικτύου =
+  MST →L09), `ask7` (μοναδιαία διαστήματα →L11), `ask8` (κατανομή αιθουσών →L11),
+  `ask9` (πάρτι Alice, φιλτράρισμα γράφου →L06), `ask10` (αρνητικά βάρη &
+  Dijkstra →L08), `ask11` (Σ/Λ MST & Dijkstra →L09), `ask12` (κλασματικό vs 0-1
+  σακίδιο →L13). — 2026-05-22.
+- **Φροντιστηριακό Σετ #8** — 4 modules: `front-set-8-ask1` (μέσο κόστος
+  μονοπατιών σε DAG →L17), `ask2` (ευθυγράμμιση DNA →L16), `ask3` (τεμαχισμός
+  ράβδου →L14), `ask4` (άνοιγμα εστιατορίων →L14). — 2026-05-22.

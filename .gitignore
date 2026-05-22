@@ -42,3 +42,9 @@ next-env.d.ts.local
 
 # sprite preview renders (the script is checked in; outputs are throwaway)
 scripts/sprite-preview/tmp/
+
+# raw university exam / frontistirio materials — never commit or publish.
+# Scanned past-exam papers and frontistirio decks. They are transcribed
+# (anonymised) into content/practice/exercises.tsx; the raw files stay
+# local-only. See plans/EXAM_TRANSCRIPTION.md.
+/private_material

@@ -9,7 +9,7 @@ Educational website for the **Αλγόριθμοι και Πολυπλοκότη
 - **Name:** Algorithms Class Hub
 - **Audience:** Undergraduate students taking K17 — Αλγόριθμοι και Πολυπλοκότητα.
 - **Goal:** A study companion that builds understanding from zero. Reader is treated as smart but with significant gaps in prior knowledge (intro CS, discrete math, basic data structures).
-- **Material:** Lecture PDFs in `material/Notes2026/` (L01–L17), exercises in `material/exercises/{inclass,oldtests}`.
+- **Material:** Lecture PDFs in `material/Notes2026/` (L01–L17). Raw exam/frontistirio source files live in `private_material/{inclass,oldtests}` — git-ignored, never published; transcribed (anonymised) into the exercise bank. See `plans/EXAM_TRANSCRIPTION.md`.
 
 ## Tech stack
 
@@ -54,8 +54,9 @@ Educational website for the **Αλγόριθμοι και Πολυπλοκότη
 
 /lib                              Utilities (storage, supabase clients, sose path logic)
 /content                          Static content data (sections.ts, practice/*)
-/material                         Course material (lecture PDFs, exercises) — copied into /public/material/ on build
-/public/material                  Served URL for the above
+/material                         Lecture PDFs (Notes2026) — mirrored under /public/material/
+/public/material                  Served URL for the lecture PDFs
+/private_material                 Raw exam/frontistirio source files — GIT-IGNORED, never published
 
 /plans                            Per-lecture build plans (handed to Claude Code one at a time)
 /archive/sp                       Frozen Signal Processing site (prior tenant of this repo) — DO NOT IMPORT
