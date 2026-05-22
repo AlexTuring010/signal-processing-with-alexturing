@@ -31,6 +31,7 @@ import { DijkstraAnimator } from '@/components/viz/DijkstraAnimator'
 import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
 import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
 import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
+import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -79,6 +80,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     BinaryHeapAnimator,
     IntervalScheduling,
     TopologicalSortViz,
+    HuffmanTreeBuilder,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
