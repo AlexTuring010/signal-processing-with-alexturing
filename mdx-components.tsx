@@ -24,6 +24,12 @@ import { InstanceDimensionLab } from '@/components/viz/InstanceDimensionLab'
 import { ComplexityCasesExplorer } from '@/components/viz/ComplexityCasesExplorer'
 import { LogVsLinearRace } from '@/components/viz/LogVsLinearRace'
 import { BigOPlayground } from '@/components/viz/BigOPlayground'
+import { DefinitionPlayground } from '@/components/viz/DefinitionPlayground'
+import { HierarchyRace } from '@/components/viz/HierarchyRace'
+import { FasterComputerLab } from '@/components/viz/FasterComputerLab'
+import { LimitRatioPlot } from '@/components/viz/LimitRatioPlot'
+import { StrictVsLooseExplorer } from '@/components/viz/StrictVsLooseExplorer'
+import { OscillatorComparison } from '@/components/viz/OscillatorComparison'
 import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
 import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
 import { InversionCounter } from '@/components/viz/InversionCounter'
@@ -124,6 +130,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ComplexityCasesExplorer,
     LogVsLinearRace,
     BigOPlayground,
+    DefinitionPlayground,
+    HierarchyRace,
+    FasterComputerLab,
+    LimitRatioPlot,
+    StrictVsLooseExplorer,
+    OscillatorComparison,
     MergeSortAnimator,
     RecurrenceClassifier,
     InversionCounter,
