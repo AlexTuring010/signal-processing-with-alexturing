@@ -1,13 +1,14 @@
 'use client'
 
 /**
- * IntervalScheduling — why only "earliest finish time" is optimal.
+ * IntervalScheduling — four plausible greedy rules, and which one survives.
  *
- * L11's core lesson is that plausible greedy rules are usually wrong. This
- * viz runs the same interval-scheduling greedy under three sorting rules
- * on one fixed instance, stepping through pick/skip decisions. The verdict
- * line drives it home: earliest-start gets 3, shortest-interval gets 4,
- * earliest-finish gets 5 — the optimum. Built for L11.
+ * L11's core lesson: most "reasonable" greedy criteria are wrong, and a
+ * single counterexample is enough to kill a rule. Each tab is one criterion
+ * paired with its OWN purpose-built instance. The three wrong rules each run
+ * on a minimal counterexample where they visibly underperform; "earliest
+ * finish time" runs on a rich instance and lands exactly on the optimum.
+ * Step through the pick/skip decisions and watch the verdict. Built for L11.
  */
 
 import { useMemo, useState } from 'react'
@@ -15,32 +16,119 @@ import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type Iv = { id: number; s: number; f: number }
-
-/** Fixed instance — designed so the three rules give 3, 4 and 5. */
-const IVS: Iv[] = [
-  { id: 1, s: 0, f: 9 },
-  { id: 2, s: 1, f: 3 },
-  { id: 3, s: 3, f: 6 },
-  { id: 4, s: 6, f: 9 },
-  { id: 5, s: 8, f: 10 },
-  { id: 6, s: 9, f: 12 },
-  { id: 7, s: 12, f: 14 },
-]
-const OPTIMAL = 5
-const T_MAX = 14
-
-type Criterion = 'start' | 'short' | 'finish'
-const CRITERIA: { key: Criterion; label: string }[] = [
-  { key: 'start', label: 'Πρώτη έναρξη' },
-  { key: 'short', label: 'Μικρότερο διάστημα' },
-  { key: 'finish', label: 'Πρώτη λήξη' },
-]
+type Criterion = 'start' | 'short' | 'fewest' | 'finish'
 
 const overlap = (a: Iv, b: Iv) => a.s < b.f && b.s < a.f
 
+type Scenario = {
+  label: string
+  /** what this rule examines first */
+  rule: string
+  ivs: Iv[]
+  tMax: number
+  optimum: number
+  /** true only for the rule that actually works */
+  correct: boolean
+  intro: string
+}
+
+const SCENARIOS: Record<Criterion, Scenario> = {
+  start: {
+    label: 'Πρώτη έναρξη',
+    rule: 'αύξουσα σειρά χρόνου έναρξης',
+    ivs: [
+      { id: 1, s: 0, f: 20 },
+      { id: 2, s: 1, f: 6 },
+      { id: 3, s: 6, f: 11 },
+      { id: 4, s: 11, f: 16 },
+      { id: 5, s: 16, f: 21 },
+    ],
+    tMax: 21,
+    optimum: 4,
+    correct: false,
+    intro:
+      'Κανόνας «πρώτη έναρξη»: εξέτασε τις εργασίες κατά αύξοντα χρόνο έναρξης. Η εργασία 1 ξεκινά πρώτη — δες τι κάνει αυτό.',
+  },
+  short: {
+    label: 'Μικρότερο διάστημα',
+    rule: 'αύξουσα σειρά διάρκειας',
+    ivs: [
+      { id: 1, s: 0, f: 11 },
+      { id: 2, s: 10, f: 13 },
+      { id: 3, s: 12, f: 24 },
+    ],
+    tMax: 24,
+    optimum: 2,
+    correct: false,
+    intro:
+      'Κανόνας «μικρότερο διάστημα»: εξέτασε πρώτα τη συντομότερη εργασία. Εδώ η συντομότερη είναι η 2 — και κάθεται ακριβώς ανάμεσα στις άλλες δύο.',
+  },
+  fewest: {
+    label: 'Λιγότερες διενέξεις',
+    rule: 'αύξουσα σειρά πλήθους συγκρούσεων',
+    ivs: [
+      { id: 1, s: 0, f: 12 },
+      { id: 2, s: 12, f: 24 },
+      { id: 3, s: 24, f: 36 },
+      { id: 4, s: 36, f: 48 },
+      { id: 5, s: 8, f: 15 },
+      { id: 6, s: 9, f: 16 },
+      { id: 7, s: 20, f: 28 },
+      { id: 8, s: 21, f: 29 },
+      { id: 9, s: 32, f: 40 },
+      { id: 10, s: 33, f: 41 },
+    ],
+    tMax: 48,
+    optimum: 4,
+    correct: false,
+    intro:
+      'Κανόνας «λιγότερες διενέξεις»: για κάθε εργασία μέτρα με πόσες άλλες συγκρούεται, και εξέτασε πρώτα όποια έχει τις λιγότερες. Οι εργασίες 1–4 (η πάνω σειρά) είναι η βέλτιστη λύση.',
+  },
+  finish: {
+    label: 'Πρώτη λήξη',
+    rule: 'αύξουσα σειρά χρόνου λήξης',
+    ivs: [
+      { id: 1, s: 0, f: 9 },
+      { id: 2, s: 1, f: 3 },
+      { id: 3, s: 3, f: 6 },
+      { id: 4, s: 6, f: 9 },
+      { id: 5, s: 8, f: 10 },
+      { id: 6, s: 9, f: 12 },
+      { id: 7, s: 12, f: 14 },
+    ],
+    tMax: 14,
+    optimum: 5,
+    correct: true,
+    intro:
+      'Κανόνας «πρώτη λήξη»: εξέτασε τις εργασίες κατά αύξοντα χρόνο λήξης. Η εργασία 1 είναι μεγάλη και δελεαστική — δες αν ο κανόνας την αποφεύγει.',
+  },
+}
+
+const CRITERIA: Criterion[] = ['start', 'short', 'fewest', 'finish']
+
+/** number of other intervals each interval conflicts with */
+function conflictCounts(ivs: Iv[]): Map<number, number> {
+  const m = new Map<number, number>()
+  for (const a of ivs) {
+    let k = 0
+    for (const b of ivs) if (a.id !== b.id && overlap(a, b)) k++
+    m.set(a.id, k)
+  }
+  return m
+}
+
 type Decision = { iv: Iv; pick: boolean }
 
-function runGreedy(order: Iv[]): Decision[] {
+/** run the greedy under one criterion; one Decision per interval, in sweep order */
+function runGreedy(crit: Criterion, sc: Scenario): Decision[] {
+  const cc = crit === 'fewest' ? conflictCounts(sc.ivs) : null
+  const cmp: Record<Criterion, (a: Iv, b: Iv) => number> = {
+    start: (a, b) => a.s - b.s || a.id - b.id,
+    short: (a, b) => a.f - a.s - (b.f - b.s) || a.id - b.id,
+    fewest: (a, b) => cc!.get(a.id)! - cc!.get(b.id)! || a.id - b.id,
+    finish: (a, b) => a.f - b.f || a.id - b.id,
+  }
+  const order = [...sc.ivs].sort(cmp[crit])
   const picked: Iv[] = []
   return order.map((iv) => {
     const ok = picked.every((p) => !overlap(p, iv))
@@ -49,140 +137,158 @@ function runGreedy(order: Iv[]): Decision[] {
   })
 }
 
+const PAD_L = 40
+const VIEW_W = 640
+const PLOT_W = VIEW_W - PAD_L - 22
+const ROW_H = 30
+const TOP = 14
+const AXIS_H = 34
+
 export function IntervalScheduling() {
   const [criterion, setCriterion] = useState<Criterion>('start')
   const [step, setStep] = useState(0)
 
-  const decisions = useMemo<Decision[]>(() => {
-    const by: Record<Criterion, (a: Iv, b: Iv) => number> = {
-      start: (a, b) => a.s - b.s || a.id - b.id,
-      short: (a, b) => a.f - a.s - (b.f - b.s) || a.id - b.id,
-      finish: (a, b) => a.f - b.f || a.id - b.id,
-    }
-    return runGreedy([...IVS].sort(by[criterion]))
-  }, [criterion])
-
-  const last = decisions.length // 7
+  const sc = SCENARIOS[criterion]
+  const decisions = useMemo(() => runGreedy(criterion, sc), [criterion, sc])
+  const last = decisions.length
   const done = step === last
   const count = decisions.slice(0, step).filter((d) => d.pick).length
 
-  /** order-index of each interval id under the current criterion */
-  const orderIndex = new Map(decisions.map((d, i) => [d.iv.id, i]))
+  function pick(c: Criterion) {
+    setCriterion(c)
+    setStep(0)
+  }
 
-  const X = (t: number) => 48 + (t / T_MAX) * 540
-  const rowY = (id: number) => 34 + (id - 1) * 30
-
+  const X = (t: number) => PAD_L + (t / sc.tMax) * PLOT_W
+  const rows = decisions.length
+  const VIEW_H = TOP + rows * ROW_H + AXIS_H
   const cur = step > 0 ? decisions[step - 1] : null
+
   let note: string
   if (step === 0) {
-    note = `Κριτήριο «${CRITERIA.find((c) => c.key === criterion)!.label}». Θα εξετάσουμε τα διαστήματα μ' αυτή τη σειρά και θα κρατάμε όποιο είναι συμβατό. Πάτα «Επόμενο».`
+    note = sc.intro + ' Πάτα «Επόμενο».'
   } else {
     const d = cur as Decision
-    note = `Διάστημα ${d.iv.id} [${d.iv.s}–${d.iv.f}]: ${
+    note = `Εργασία ${d.iv.id} [${d.iv.s}–${d.iv.f}]: ${
       d.pick
-        ? 'συμβατό με όλα τα ήδη επιλεγμένα → ΕΠΙΛΕΓΕΤΑΙ.'
-        : 'συγκρούεται με κάποιο ήδη επιλεγμένο → απορρίπτεται.'
+        ? 'συμβατή με όλες τις ήδη επιλεγμένες → ΕΠΙΛΕΓΕΤΑΙ.'
+        : 'συγκρούεται με κάποια ήδη επιλεγμένη → απορρίπτεται.'
     }`
   }
+  const success = count === sc.optimum
 
   return (
     <section className="my-6 rounded-xl border border-border bg-bg-elevated p-4 shadow-sm">
-      {/* header + criterion toggle */}
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+      {/* header + criterion tabs */}
+      <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-semibold tracking-tight text-fg">
-          Χρονοπρογραμματισμός — δοκίμασε τρία άπληστα κριτήρια
+          Χρονοπρογραμματισμός — τέσσερα άπληστα κριτήρια
         </div>
         <div className="flex flex-wrap gap-1 rounded-md border border-border p-0.5">
           {CRITERIA.map((c) => (
             <button
-              key={c.key}
+              key={c}
               type="button"
-              onClick={() => {
-                setCriterion(c.key)
-                setStep(0)
-              }}
+              onClick={() => pick(c)}
               className={cn(
                 'rounded px-2 py-0.5 text-xs font-medium transition-colors',
-                criterion === c.key
+                criterion === c
                   ? 'bg-accent text-accent-fg'
                   : 'text-fg-muted hover:bg-bg-soft',
               )}
             >
-              {c.label}
+              {SCENARIOS[c].label}
             </button>
           ))}
         </div>
       </div>
+      <p className="mb-2 text-xs text-fg-subtle">
+        Εξέταση με σειρά: {sc.rule}. Ο αριθμός αριστερά από κάθε γραμμή είναι η
+        σειρά εξέτασης.
+      </p>
 
       {/* timeline canvas */}
       <div className="graph-canvas overflow-x-auto">
         <svg
-          viewBox="0 0 620 268"
+          viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
           className="mx-auto block w-full max-w-2xl"
           xmlns="http://www.w3.org/2000/svg"
         >
           <style>{`
-            .iv-bar { stroke-width: 2; }
-            .iv-lbl { font: 700 12px ui-sans-serif, system-ui; text-anchor: middle; dominant-baseline: central; }
-            .iv-tick { font: 600 10px ui-sans-serif, system-ui; fill: #9b8a8d; text-anchor: middle; }
-            .iv-ord { font: 600 10px ui-monospace, monospace; fill: #9b8a8d; text-anchor: end; }
+            .is-bar { stroke-width: 2; }
+            .is-lbl { font: 700 12px ui-sans-serif, system-ui; text-anchor: middle; dominant-baseline: central; }
+            .is-ord { font: 600 11px ui-monospace, monospace; fill: #9b8a8d; text-anchor: end; }
+            .is-tick { font: 600 10px ui-sans-serif, system-ui; fill: #9b8a8d; text-anchor: middle; }
           `}</style>
 
-          {/* intervals */}
-          {IVS.map((iv) => {
-            const idx = orderIndex.get(iv.id) ?? 0
-            const decided = idx < step
-            const isCurrent = idx === step - 1
-            const dec = decisions[idx]
-            const picked = dec.pick
+          {decisions.map((d, i) => {
+            const y = TOP + i * ROW_H
+            const decided = i < step
+            const isCurrent = i === step - 1
             let fill = '#ffffff'
             let stroke = '#9b8a8d'
             let textFill = '#1c1214'
-            if (decided && picked) {
+            if (decided && d.pick) {
               fill = '#22c55e'
               stroke = '#15803d'
               textFill = '#ffffff'
-            } else if (decided && !picked) {
+            } else if (decided) {
               fill = '#f3eee9'
               stroke = '#cdbfc0'
               textFill = '#9b8a8d'
             }
             return (
-              <g key={iv.id}>
+              <g key={d.iv.id}>
+                <text x={PAD_L - 8} y={y + 12} className="is-ord">
+                  {i + 1}.
+                </text>
                 <rect
-                  x={X(iv.s)}
-                  y={rowY(iv.id)}
-                  width={X(iv.f) - X(iv.s)}
+                  x={X(d.iv.s)}
+                  y={y}
+                  width={Math.max(X(d.iv.f) - X(d.iv.s), 3)}
                   height={22}
                   rx={4}
                   fill={fill}
                   stroke={isCurrent ? '#d97706' : stroke}
                   strokeWidth={isCurrent ? 3.5 : 2}
-                  className="iv-bar"
+                  className="is-bar"
                 />
                 <text
-                  x={(X(iv.s) + X(iv.f)) / 2}
-                  y={rowY(iv.id) + 11}
-                  className="iv-lbl"
+                  x={(X(d.iv.s) + X(d.iv.f)) / 2}
+                  y={y + 12}
+                  className="is-lbl"
                   fill={textFill}
                 >
-                  {iv.id}
-                </text>
-                <text x={40} y={rowY(iv.id) + 11} className="iv-ord">
-                  {idx + 1}.
+                  {d.iv.id}
                 </text>
               </g>
             )
           })}
 
           {/* time axis */}
-          <line x1={X(0)} y1={252} x2={X(T_MAX)} y2={252} stroke="#cdbfc0" strokeWidth={1.5} />
-          {Array.from({ length: T_MAX + 1 }, (_, t) => (
+          <line
+            x1={X(0)}
+            y1={VIEW_H - AXIS_H + 8}
+            x2={X(sc.tMax)}
+            y2={VIEW_H - AXIS_H + 8}
+            stroke="#cdbfc0"
+            strokeWidth={1.5}
+          />
+          {Array.from({ length: sc.tMax + 1 }, (_, t) => t).map((t) => (
             <g key={t}>
-              <line x1={X(t)} y1={249} x2={X(t)} y2={255} stroke="#cdbfc0" strokeWidth={1} />
-              <text x={X(t)} y={266} className="iv-tick">
-                {t}
-              </text>
+              <line
+                x1={X(t)}
+                y1={VIEW_H - AXIS_H + 5}
+                x2={X(t)}
+                y2={VIEW_H - AXIS_H + 11}
+                stroke="#cdbfc0"
+                strokeWidth={1}
+              />
+              {(sc.tMax <= 24 || t % 4 === 0) && (
+                <text x={X(t)} y={VIEW_H - AXIS_H + 23} className="is-tick">
+                  {t}
+                </text>
+              )}
             </g>
           ))}
         </svg>
@@ -191,20 +297,22 @@ export function IntervalScheduling() {
       {/* count + verdict */}
       <div className="mt-3 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-bg-soft/50 px-3 py-2.5">
         <span className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
-          Επιλεγμένα
+          Επιλεγμένες
         </span>
-        <span className="font-mono text-2xl font-bold tabular-nums text-fg">{count}</span>
-        <span className="text-sm text-fg-muted">/ βέλτιστο: {OPTIMAL}</span>
+        <span className="font-mono text-2xl font-bold tabular-nums text-fg">
+          {count}
+        </span>
+        <span className="text-sm text-fg-muted">/ βέλτιστο: {sc.optimum}</span>
         {done && (
           <span
             className={cn(
               'ml-auto rounded-md px-2 py-0.5 text-sm font-bold',
-              count === OPTIMAL
-                ? 'bg-success/15 text-success'
-                : 'bg-danger/15 text-danger',
+              success ? 'bg-success/15 text-success' : 'bg-danger/15 text-danger',
             )}
           >
-            {count === OPTIMAL ? '✓ Βέλτιστο' : `✗ Χάνει ${OPTIMAL - count}`}
+            {success
+              ? '✓ Πιάνει το βέλτιστο'
+              : `✗ Χάνει ${sc.optimum - count}`}
           </span>
         )}
       </div>
@@ -212,14 +320,24 @@ export function IntervalScheduling() {
       {/* annotation */}
       <div
         aria-live="polite"
-        className="mt-2 min-h-[3.5rem] rounded-lg border border-border bg-bg-soft/50 px-3 py-2 text-sm leading-relaxed text-fg-muted"
+        className="mt-2 min-h-[4rem] rounded-lg border border-border bg-bg-soft/50 px-3 py-2 text-sm leading-relaxed text-fg-muted"
       >
         {note}
-        {done && criterion !== 'finish' && (
+        {done && !sc.correct && (
           <>
             {' '}
             <span className="font-semibold text-fg">
-              Αυτό το κριτήριο απέτυχε — δοκίμασε «Πρώτη λήξη».
+              Αυτό το στιγμιότυπο είναι αντιπαράδειγμα — ένα και μόνο αρκεί για να
+              απορρίψουμε τον κανόνα. Δοκίμασε το «Πρώτη λήξη».
+            </span>
+          </>
+        )}
+        {done && sc.correct && (
+          <>
+            {' '}
+            <span className="font-semibold text-fg">
+              Το μόνο κριτήριο χωρίς αντιπαράδειγμα. Το γιατί το αποδεικνύουμε
+              παρακάτω.
             </span>
           </>
         )}

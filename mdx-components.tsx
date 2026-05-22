@@ -44,7 +44,10 @@ import { HeapsortAnimator } from '@/components/viz/HeapsortAnimator'
 import { UnionFindForest } from '@/components/viz/UnionFindForest'
 import { UnionBySizeRace } from '@/components/viz/UnionBySizeRace'
 import { PathCompressionViz } from '@/components/viz/PathCompressionViz'
+import { GreedyHorizon } from '@/components/viz/GreedyHorizon'
 import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
+import { GreedyStaysAhead } from '@/components/viz/GreedyStaysAhead'
+import { IntervalPartitionAnimator } from '@/components/viz/IntervalPartitionAnimator'
 import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
 import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
@@ -112,7 +115,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     UnionFindForest,
     UnionBySizeRace,
     PathCompressionViz,
+    GreedyHorizon,
     IntervalScheduling,
+    GreedyStaysAhead,
+    IntervalPartitionAnimator,
     TopologicalSortViz,
     HuffmanTreeBuilder,
     WeightedIntervalDP,
