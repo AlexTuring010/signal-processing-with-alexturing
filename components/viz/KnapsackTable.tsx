@@ -14,16 +14,11 @@
 import { useMemo, useState } from 'react'
 import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-type Item = { w: number; v: number }
-const ITEMS: Item[] = [
-  { w: 2, v: 3 },
-  { w: 3, v: 4 },
-  { w: 4, v: 5 },
-  { w: 5, v: 6 },
-]
-const CAP = 8
-const N = ITEMS.length
+import {
+  KNAPSACK_ITEMS as ITEMS,
+  KNAPSACK_CAP as CAP,
+  KNAPSACK_N as N,
+} from './knapsack-instance'
 
 export function KnapsackTable() {
   const [step, setStep] = useState(0) // 0 = row 0 only, i = rows 0..i revealed

@@ -64,6 +64,11 @@ import { GreedyFailsWeighted } from '@/components/viz/GreedyFailsWeighted'
 import { PjExplorer } from '@/components/viz/PjExplorer'
 import { PjScan } from '@/components/viz/PjScan'
 import { KnapsackTable } from '@/components/viz/KnapsackTable'
+import { KnapsackGreedyFail } from '@/components/viz/KnapsackGreedyFail'
+import { KnapsackWhyTwoVars } from '@/components/viz/KnapsackWhyTwoVars'
+import { PseudoPolyExplorer } from '@/components/viz/PseudoPolyExplorer'
+import { SubsequenceExplorer } from '@/components/viz/SubsequenceExplorer'
+import { LcsTable } from '@/components/viz/LcsTable'
 import { EditDistanceTable } from '@/components/viz/EditDistanceTable'
 import { TreeIndependentSet } from '@/components/viz/TreeIndependentSet'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
@@ -147,6 +152,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PjExplorer,
     PjScan,
     KnapsackTable,
+    KnapsackGreedyFail,
+    KnapsackWhyTwoVars,
+    PseudoPolyExplorer,
+    SubsequenceExplorer,
+    LcsTable,
     EditDistanceTable,
     TreeIndependentSet,
     RecallDrill,
