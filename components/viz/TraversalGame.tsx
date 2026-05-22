@@ -3,17 +3,19 @@
 /**
  * TraversalGame — «Γίνε ο αλγόριθμος».
  *
- * Two modes over the same trace:
- *  - play  — the learner clicks vertices in a valid BFS/DFS order; the
- *            queue / recursion-stack updates live and wrong clicks are
- *            explained. Retrieval practice: you don't watch the algorithm,
- *            you ARE it.
+ * Two modes over the same graph:
+ *  - play  — the learner clicks vertices; the game enforces only the
+ *            algorithm's *discipline*, not a memorised sequence.
  *  - watch — a passive auto-player (play / pause / step / reset).
  *
- * All BFS/DFS semantics live here; GraphCanvas is just the dumb renderer.
- * Neighbours are always taken in ascending-id order — the same canonical
- * order the course's adjacency lists use — so "the correct next vertex" is
- * a single, explainable answer.
+ * IMPORTANT design point — DFS is not a single sequence. From any node you
+ * may descend into ANY unvisited neighbour; all such choices are valid DFS.
+ * So in DFS mode the game *follows the learner's choices* and only checks
+ * the rule: «extend the deepest still-live node; backtrack at dead ends».
+ *
+ * BFS, by contrast, is driven by a FIFO queue: once we fix the convention
+ * that new neighbours are enqueued in ascending-id order, the dequeue order
+ * is determined — and the queue panel makes every step self-evident.
  */
 
 import { useEffect, useMemo, useState } from 'react'
@@ -26,54 +28,63 @@ import type { GraphData, GraphNodeId, NodeStatus } from './graph-types'
 type Algorithm = 'bfs' | 'dfs'
 type Mode = 'play' | 'watch'
 
-type Frame = {
-  /** vertices visited so far, in order */
-  visited: GraphNodeId[]
-  /** vertex processed at this frame (null for the initial frame) */
-  active: GraphNodeId | null
-  /** queue (BFS) or recursion stack (DFS) at this frame */
-  structure: GraphNodeId[]
+/** BFS is FIFO-deterministic: precompute the dequeue order + queue snapshots. */
+function simulateBfs(graph: GraphData, start: GraphNodeId) {
+  const order: GraphNodeId[] = []
+  const queueAfter: GraphNodeId[][] = [[start]]
+  const discovered = new Set<GraphNodeId>([start])
+  let q: GraphNodeId[] = [start]
+  while (q.length > 0) {
+    const u = q[0]
+    q = q.slice(1)
+    order.push(u)
+    for (const v of neighbors(graph, u)) {
+      if (!discovered.has(v)) {
+        discovered.add(v)
+        q.push(v)
+      }
+    }
+    queueAfter.push([...q])
+  }
+  return { order, queueAfter }
 }
 
-/** Simulate the traversal once, recording a frame after each visit. */
-function buildTrace(graph: GraphData, start: GraphNodeId, algorithm: Algorithm): Frame[] {
-  if (algorithm === 'bfs') {
-    const frames: Frame[] = [{ visited: [], active: null, structure: [start] }]
-    const discovered = new Set<GraphNodeId>([start])
-    let queue: GraphNodeId[] = [start]
-    const order: GraphNodeId[] = []
-    while (queue.length > 0) {
-      const u = queue[0]
-      queue = queue.slice(1)
-      order.push(u)
-      for (const v of neighbors(graph, u)) {
-        if (!discovered.has(v)) {
-          discovered.add(v)
-          queue.push(v)
-        }
-      }
-      frames.push({ visited: [...order], active: u, structure: [...queue] })
-    }
-    return frames
+/**
+ * DFS view derived from the learner's actual choices. `current` is the most
+ * recently visited node that still has an unvisited neighbour; `legal` is
+ * every unvisited neighbour of it (any one is a valid move); `stack` is the
+ * recursion path from the root down to `current`.
+ */
+function dfsView(
+  graph: GraphData,
+  start: GraphNodeId,
+  visited: GraphNodeId[],
+  parent: Record<number, number>,
+): { current: GraphNodeId | null; legal: GraphNodeId[]; stack: GraphNodeId[]; done: boolean } {
+  if (visited.length === 0) {
+    return { current: null, legal: [start], stack: [], done: false }
   }
+  const seen = new Set(visited)
+  const hasUnvisitedNeighbour = (u: GraphNodeId) =>
+    neighbors(graph, u).some((v) => !seen.has(v))
 
-  // DFS — recursive, recording the call stack (root → current) at each visit.
-  const frames: Frame[] = [{ visited: [], active: null, structure: [] }]
-  const explored = new Set<GraphNodeId>()
-  const order: GraphNodeId[] = []
-  const path: GraphNodeId[] = []
-  const visit = (u: GraphNodeId) => {
-    explored.add(u)
-    order.push(u)
-    path.push(u)
-    frames.push({ visited: [...order], active: u, structure: [...path] })
-    for (const v of neighbors(graph, u)) {
-      if (!explored.has(v)) visit(v)
+  let current: GraphNodeId | null = null
+  for (let i = visited.length - 1; i >= 0; i--) {
+    if (hasUnvisitedNeighbour(visited[i])) {
+      current = visited[i]
+      break
     }
-    path.pop()
   }
-  visit(start)
-  return frames
+  if (current === null) return { current: null, legal: [], stack: [], done: true }
+
+  const legal = neighbors(graph, current).filter((v) => !seen.has(v))
+  const stack: GraphNodeId[] = []
+  let c: GraphNodeId | undefined = current
+  while (c !== undefined) {
+    stack.unshift(c)
+    c = parent[c]
+  }
+  return { current, legal, stack, done: false }
 }
 
 type Props = {
@@ -94,74 +105,113 @@ export function TraversalGame({
   title,
   onSolved,
 }: Props) {
-  const frames = useMemo(() => buildTrace(graph, start, algorithm), [graph, start, algorithm])
-  /** canonical visit order, length = reachable vertex count */
-  const order = useMemo(() => frames.slice(1).map((f) => f.active as GraphNodeId), [frames])
-  const total = order.length
+  const bfs = useMemo(() => simulateBfs(graph, start), [graph, start])
+  const total = bfs.order.length
 
   const [mode, setMode] = useState<Mode>(initialMode)
-  const [progress, setProgress] = useState(0) // vertices visited so far
+  const [visited, setVisited] = useState<GraphNodeId[]>([])
+  const [parent, setParent] = useState<Record<number, number>>({})
   const [wrong, setWrong] = useState<{ id: GraphNodeId; msg: string } | null>(null)
+  const [note, setNote] = useState<string | null>(null)
   const [playing, setPlaying] = useState(false)
 
   const reset = (nextMode?: Mode) => {
-    setProgress(0)
+    setVisited([])
+    setParent({})
     setWrong(null)
+    setNote(null)
     setPlaying(false)
     if (nextMode) setMode(nextMode)
   }
 
+  // --- derive the per-algorithm view ------------------------------------
+  let current: GraphNodeId | null
+  let legal: GraphNodeId[]
+  let structure: GraphNodeId[]
+  let done: boolean
+  if (algorithm === 'dfs') {
+    const v = dfsView(graph, start, visited, parent)
+    current = v.current
+    legal = v.legal
+    structure = v.stack
+    done = v.done
+  } else {
+    const k = visited.length
+    done = k >= total
+    legal = done ? [] : [bfs.order[k]]
+    structure = bfs.queueAfter[Math.min(k, bfs.queueAfter.length - 1)]
+    current = visited.length > 0 ? visited[visited.length - 1] : null
+  }
+
+  // --- advance ----------------------------------------------------------
+  const visit = (x: GraphNodeId) => {
+    const nextVisited = [...visited, x]
+    if (algorithm === 'dfs') {
+      const nextParent = current !== null ? { ...parent, [x]: current } : parent
+      setParent(nextParent)
+      setVisited(nextVisited)
+      const after = dfsView(graph, start, nextVisited, nextParent)
+      if (after.done || after.current === x) setNote(null)
+      else setNote(`Η ${x} ήταν αδιέξοδο — ο DFS κάνει backtrack στην ${after.current}.`)
+    } else {
+      setVisited(nextVisited)
+      setNote(null)
+    }
+  }
+
   // watch-mode auto-player
   useEffect(() => {
-    if (mode !== 'watch' || !playing) return
-    if (progress >= total) {
-      setPlaying(false)
+    if (mode !== 'watch' || !playing || done) {
+      if (done) setPlaying(false)
       return
     }
-    const t = setTimeout(() => setProgress((p) => p + 1), 1150)
+    const t = setTimeout(() => {
+      if (legal.length > 0) visit(legal[0])
+    }, 1150)
     return () => clearTimeout(t)
-  }, [mode, playing, progress, total])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, playing, visited, done])
 
   useEffect(() => {
-    if (progress === total && total > 0) onSolved?.()
-  }, [progress, total, onSolved])
+    if (done && total > 0) onSolved?.()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [done])
 
-  const frame = frames[progress]
-  const done = progress >= total
+  // --- click handling ---------------------------------------------------
+  const explain = (x: GraphNodeId): string => {
+    if (algorithm === 'dfs') {
+      if (current === null) return `Ξεκίνα από την αφετηρία s = ${start}.`
+      return `Η ${x} δεν είναι μη-επισκεμμένος γείτονας της κορυφής όπου βρίσκεσαι (${current}). Ο DFS προχωράει πάντα σε γείτονα της τρέχουσας κορυφής — εδώ μπορείς να διαλέξεις: ${legal.join(', ')}.`
+    }
+    return `Το BFS βγάζει την κορυφή από την αρχή της ουράς (FIFO). Δες την ουρά πιο κάτω — σωστή επόμενη είναι η ${legal[0]}.`
+  }
 
-  // ---- node statuses for the canvas -------------------------------------
+  const handleNodeClick = (x: GraphNodeId) => {
+    if (mode !== 'play' || done) return
+    if (legal.includes(x)) {
+      setWrong(null)
+      visit(x)
+    } else {
+      setWrong({ id: x, msg: explain(x) })
+    }
+  }
+
+  // --- node statuses ----------------------------------------------------
   const status: Record<number, NodeStatus> = {}
-  for (const v of frame.visited) status[v] = 'visited'
-  if (frame.active != null) status[frame.active] = 'active'
-  if (algorithm === 'bfs') {
-    for (const v of frame.structure) if (!(v in status)) status[v] = 'frontier'
+  for (const v of visited) status[v] = 'visited'
+  if (current !== null && !done) status[current] = 'active'
+  if (algorithm === 'bfs' && !done) {
+    for (const v of structure) if (!(v in status)) status[v] = 'frontier'
   }
   if (wrong) status[wrong.id] = 'error'
 
-  const visitedSet = new Set(frame.visited)
+  const visitedSet = new Set(visited)
   const clickableNodes =
-    mode === 'play' && !done ? graph.nodes.map((n) => n.id).filter((id) => !visitedSet.has(id)) : []
+    mode === 'play' && !done
+      ? graph.nodes.map((n) => n.id).filter((id) => !visitedSet.has(id))
+      : []
 
-  // ---- click handling ---------------------------------------------------
-  const explain = (clicked: GraphNodeId): string => {
-    const correct = order[progress]
-    if (algorithm === 'bfs') {
-      return `Όχι ακόμη — η ${clicked} δεν είναι η σειρά. Το BFS εξερευνά επίπεδο-επίπεδο: βγάζει κορυφές από την αρχή της ουράς (FIFO). Σωστή επόμενη: η ${correct}.`
-    }
-    return `Όχι ακόμη — η ${clicked} δεν είναι η σειρά. Το DFS βυθίζεται στον μικρότερο μη-επισκεμμένο γείτονα της τρέχουσας κορυφής· αν δεν υπάρχει, κάνει backtrack. Σωστή επόμενη: η ${correct}.`
-  }
-
-  const handleNodeClick = (id: GraphNodeId) => {
-    if (mode !== 'play' || done) return
-    if (id === order[progress]) {
-      setWrong(null)
-      setProgress((p) => p + 1)
-    } else {
-      setWrong({ id, msg: explain(id) })
-    }
-  }
-
-  // ---- the status message ----------------------------------------------
+  // --- status message ---------------------------------------------------
   let tone: 'info' | 'danger' | 'success' = 'info'
   let message: string
   if (wrong) {
@@ -169,27 +219,28 @@ export function TraversalGame({
     message = wrong.msg
   } else if (done) {
     tone = 'success'
-    message = `Ολοκληρώθηκε. Σειρά διάσχισης: ${order.join(' → ')}.`
-  } else if (progress === 0) {
+    message =
+      algorithm === 'dfs'
+        ? `Ολοκληρώθηκε! Μία έγκυρη σειρά DFS: ${visited.join(' → ')}. Υπάρχουν κι άλλες — αυτή είναι η δική σου.`
+        : `Ολοκληρώθηκε. Σειρά BFS: ${visited.join(' → ')}.`
+  } else if (visited.length === 0) {
     message =
       mode === 'play'
-        ? `Κάνε κλικ στην κορυφή απ' όπου ξεκινά ο αλγόριθμος — την αφετηρία s = ${start}.`
+        ? `Κάνε κλικ στην αφετηρία s = ${start} για να ξεκινήσεις.`
         : 'Πάτησε «Αναπαραγωγή» για να δεις τη διάσχιση βήμα-βήμα.'
+  } else if (note) {
+    message = note
+  } else if (algorithm === 'dfs') {
+    message = `Βρίσκεσαι στην ${current}. Διάλεξε όποιον μη-επισκεμμένο γείτονά της θέλεις — κάθε επιλογή είναι έγκυρο DFS.`
   } else {
-    const a = frame.active
-    if (algorithm === 'bfs') {
-      message = `Βγάλαμε την ${a} από την ουρά και προσθέσαμε στο τέλος τους μη-ανακαλυμμένους γείτονές της.`
-    } else {
-      message = `Κατεβήκαμε στην ${a} — βάθος ${frame.structure.length} στη στοίβα αναδρομής.`
-    }
-    if (mode === 'play') message = `Σωστά! ${message}`
+    message = `Έβγαλες την ${visited[visited.length - 1]} από την ουρά. Συνέχισε με την κορυφή στην αρχή της ουράς.`
   }
 
   const structureLabel = algorithm === 'bfs' ? 'Ουρά (FIFO)' : 'Στοίβα αναδρομής'
   const structureHint =
     algorithm === 'bfs'
       ? 'Η επόμενη κορυφή βγαίνει από τα αριστερά· οι νέες μπαίνουν δεξιά.'
-      : 'Η τρέχουσα κορυφή είναι δεξιά· το backtrack αφαιρεί από τα δεξιά.'
+      : 'Δεξιά η κορυφή όπου βρίσκεσαι· σε αδιέξοδο η στοίβα μικραίνει (backtrack).'
 
   return (
     <section className="my-6 rounded-xl border border-border bg-bg-elevated p-4 shadow-sm">
@@ -212,9 +263,7 @@ export function TraversalGame({
               onClick={() => reset(m)}
               className={cn(
                 'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
-                mode === m
-                  ? 'bg-bg-elevated text-fg shadow-sm'
-                  : 'text-fg-muted hover:text-fg',
+                mode === m ? 'bg-bg-elevated text-fg shadow-sm' : 'text-fg-muted hover:text-fg',
               )}
             >
               {m === 'play' ? 'Παίξε το' : 'Παρακολούθησε'}
@@ -240,11 +289,11 @@ export function TraversalGame({
           <span className="text-xs text-fg-subtle">{structureHint}</span>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          {frame.structure.length === 0 ? (
+          {structure.length === 0 ? (
             <span className="text-sm italic text-fg-subtle">(άδεια)</span>
           ) : (
-            frame.structure.map((id, i) => {
-              const isEnd = algorithm === 'bfs' ? i === 0 : i === frame.structure.length - 1
+            structure.map((id, i) => {
+              const isEnd = algorithm === 'bfs' ? i === 0 : i === structure.length - 1
               return (
                 <span
                   key={`${id}-${i}`}
@@ -281,7 +330,7 @@ export function TraversalGame({
       {/* controls */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="mr-1 text-xs font-medium text-fg-subtle">
-          Βήμα {progress} / {total}
+          Βήμα {visited.length} / {total}
         </span>
         {mode === 'watch' && (
           <>
@@ -298,7 +347,7 @@ export function TraversalGame({
               type="button"
               onClick={() => {
                 setPlaying(false)
-                setProgress((p) => Math.min(p + 1, total))
+                if (legal.length > 0) visit(legal[0])
               }}
               disabled={done}
               className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm font-medium text-fg transition-colors hover:bg-bg-soft disabled:opacity-40"
