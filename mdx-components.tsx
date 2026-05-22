@@ -75,6 +75,11 @@ import { EditGraphViz } from '@/components/viz/EditGraphViz'
 import { TwoRowSweep } from '@/components/viz/TwoRowSweep'
 import { HirschbergViz } from '@/components/viz/HirschbergViz'
 import { TreeIndependentSet } from '@/components/viz/TreeIndependentSet'
+import { WhyTwoTreeValues } from '@/components/viz/WhyTwoTreeValues'
+import { DijkstraNegFail } from '@/components/viz/DijkstraNegFail'
+import { ConstantShiftFail } from '@/components/viz/ConstantShiftFail'
+import { NegativeCycleWalk } from '@/components/viz/NegativeCycleWalk'
+import { BellmanFordAnimator } from '@/components/viz/BellmanFordAnimator'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -167,6 +172,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TwoRowSweep,
     HirschbergViz,
     TreeIndependentSet,
+    WhyTwoTreeValues,
+    DijkstraNegFail,
+    ConstantShiftFail,
+    NegativeCycleWalk,
+    BellmanFordAnimator,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
