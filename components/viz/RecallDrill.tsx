@@ -21,6 +21,7 @@ import {
   Eye,
   ChevronUp,
   ChevronDown,
+  GripVertical,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -255,6 +256,7 @@ export function ReorderDrill({
   const stepById = new Map(steps.map((s) => [s.id, s]))
   const [order, setOrder] = useState<string[]>(() => shuffleIds(correctIds))
   const [checked, setChecked] = useState(false)
+  const [dragIndex, setDragIndex] = useState<number | null>(null)
 
   const correctCount = order.filter((id, i) => id === correctIds[i]).length
   const allCorrect = correctCount === steps.length
@@ -268,6 +270,27 @@ export function ReorderDrill({
       return next
     })
     setChecked(false)
+  }
+
+  /** Move an item to an arbitrary index — used by drag-and-drop. */
+  const moveTo = (from: number, to: number) => {
+    if (from === to || from < 0 || to < 0 || from >= order.length || to >= order.length) {
+      return
+    }
+    setOrder((prev) => {
+      const next = [...prev]
+      const [moved] = next.splice(from, 1)
+      next.splice(to, 0, moved)
+      return next
+    })
+    setChecked(false)
+  }
+
+  /** Live reorder while dragging: the dragged row follows the cursor. */
+  const onDragEnterRow = (j: number) => {
+    if (dragIndex === null || dragIndex === j) return
+    moveTo(dragIndex, j)
+    setDragIndex(j)
   }
 
   const check = () => {
@@ -317,6 +340,9 @@ export function ReorderDrill({
         </>
       }
     >
+      <div className="mb-2 text-xs text-fg-subtle">
+        Σύρε τις γραμμές για αναδιάταξη — ή χρησιμοποίησε τα βελάκια.
+      </div>
       <div className="space-y-1.5">
         {order.map((id, i) => {
           const step = stepById.get(id)
@@ -326,13 +352,25 @@ export function ReorderDrill({
           return (
             <div
               key={id}
+              draggable
+              onDragStart={() => setDragIndex(i)}
+              onDragEnter={() => onDragEnterRow(i)}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => e.preventDefault()}
+              onDragEnd={() => setDragIndex(null)}
               className={cn(
                 'flex items-center gap-2 rounded-lg border px-2.5 py-2 text-sm',
+                'cursor-grab active:cursor-grabbing',
                 ok && 'border-success/50 bg-success/5',
                 bad && 'border-danger/50 bg-danger/5',
                 !checked && 'border-border bg-bg-soft/50',
+                dragIndex === i && 'opacity-60 ring-2 ring-accent/40',
               )}
             >
+              <GripVertical
+                className="h-4 w-4 shrink-0 text-fg-subtle"
+                aria-hidden="true"
+              />
               <span className="font-mono text-xs font-semibold text-fg-subtle">{i + 1}.</span>
               <span className="flex-1 leading-relaxed text-fg">{step.text}</span>
               <div className="flex shrink-0 flex-col">
