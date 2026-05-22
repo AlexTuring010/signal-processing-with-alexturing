@@ -27,6 +27,11 @@ import { InversionCounter } from '@/components/viz/InversionCounter'
 import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
 import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
 import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
+import { StrongConnectivityViz } from '@/components/viz/StrongConnectivityViz'
+import { FloodFillGrid } from '@/components/viz/FloodFillGrid'
+import { ComponentSweep } from '@/components/viz/ComponentSweep'
+import { OddCycleProof } from '@/components/viz/OddCycleProof'
+import { WhyBFSFailsWeighted } from '@/components/viz/WhyBFSFailsWeighted'
 import { DijkstraAnimator } from '@/components/viz/DijkstraAnimator'
 import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
 import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
@@ -80,6 +85,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ClosestPairScan,
     GraphRepresentations,
     BipartiteChecker,
+    StrongConnectivityViz,
+    FloodFillGrid,
+    ComponentSweep,
+    OddCycleProof,
+    WhyBFSFailsWeighted,
     DijkstraAnimator,
     BinaryHeapAnimator,
     IntervalScheduling,
