@@ -10,8 +10,8 @@ export const frontmatter = {
   order: 1,
   prerequisites: [],
   examWeight: 2,
-  estimatedReadTime: 18,
-  lastUpdated: '2026-05-19',
+  estimatedReadTime: 22,
+  lastUpdated: '2026-05-22',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -23,7 +23,7 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   <span>·</span>
   <span>Διάλεξη 1</span>
   <span>·</span>
-  <span>~18 min read</span>
+  <span>~22 min</span>
 </div>
 
 # L01 · Εισαγωγικά
@@ -37,6 +37,7 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <SourceDoc
   sources={{ pdf: 'L01 - Εισαγωγικά.pdf' }}
+  note="Η σελίδα καλύπτει όλη τη διάλεξη (27 διαφάνειες)."
 />
 
 ## Καλώς ήρθες
@@ -117,91 +118,53 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 **Πρόγραμμα και Αλγόριθμος.** Κάθε πρόγραμμα υλοποιεί κάποιον αλγόριθμο. Το αντίστροφο όχι πάντα ευθέως: ένας αλγόριθμος μπορεί να περιγραφεί σε ψευδογλώσσα, αλλά για να τρέξει χρειάζεται προγραμματισμό σε συγκεκριμένη γλώσσα. **Για το μάθημα τους θεωρούμε ισοδύναμους:** Αλγόριθμος ↔ Πρόγραμμα.
 </Callout>
 
-## Παράδειγμα: η ψευδογλώσσα μας
+## Δυαδική αναζήτηση — ο πρώτος μας αλγόριθμος
 
-Πριν μιλήσουμε για πολυπλοκότητα, ας δούμε πώς γράφουμε έναν αλγόριθμο **σε ψευδογλώσσα**. Εδώ είναι η δυαδική αναζήτηση σε ταξινομημένο πίνακα (π.χ. τηλεφωνικός κατάλογος):
+Πριν μιλήσουμε για πολυπλοκότητα, ας δούμε έναν πραγματικό αλγόριθμο. Κλασικό παράδειγμα: η **δυαδική αναζήτηση** σε **ταξινομημένο** πίνακα — όπως όταν ψάχνεις ένα όνομα σε τηλεφωνικό κατάλογο και δεν ξεκινάς ποτέ από την πρώτη σελίδα.
 
-```
-Αλγόριθμος ΔυαδικήΑναζήτηση(Π, x):
-  Επανέλαβε:
-    Σύγκρινε το x με το μεσαίο στοιχείο του Π
-    Αν είναι μικρότερο: συνέχισε στο πρώτο ήμισυ
-    Αλλιώς: συνέχισε στο δεύτερο ήμισυ
-  Έως (x == μεσαίο στοιχείο) ή (ο πίνακας είναι κενός)
-```
+<Algorithm
+  name="Δυαδική αναζήτηση"
+  idea="Σε ταξινομημένο πίνακα, κάθε σύγκριση πετάει τη μισή δουλειά."
+  complexity="O(log n)"
+  io={{
+    input: 'ταξινομημένος πίνακας Π, στόχος x',
+    output: 'η θέση του x μέσα στον Π — ή «δεν βρέθηκε»',
+  }}
+>
 
-Δες πώς δουλεύει οπτικά σε ένα μικρό παράδειγμα — αναζήτηση του 23 σε ταξινομημένο πίνακα 8 στοιχείων:
+**Με λόγια.** Κοιτάμε το **μεσαίο** στοιχείο του πίνακα. Αν είναι ο στόχος, τελειώσαμε. Αν ο στόχος είναι **μικρότερος**, τότε — επειδή ο πίνακας είναι ταξινομημένος — ξέρουμε ότι, αν υπάρχει, βρίσκεται στο **αριστερό μισό**· αν είναι **μεγαλύτερος**, στο **δεξί μισό**. Πετάμε το άλλο μισό και επαναλαμβάνουμε. Κάθε σύγκριση **μισεύει** τον χώρο αναζήτησης — κι εκεί κρύβεται όλη η ταχύτητα.
 
-<svg viewBox="0 0 600 230" className="my-4 w-full max-w-3xl" role="img" aria-label="Binary search trace: searching for 23 in a sorted array of 8 elements">
-  <style>{`
-    .bs-cell { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--border)); }
-    .bs-cell-out { fill: rgb(var(--bg-soft)); stroke: rgb(var(--border)); opacity: 0.4; }
-    .bs-cell-mid { fill: rgb(var(--accent) / 0.25); stroke: rgb(var(--accent)); stroke-width: 2; }
-    .bs-cell-hit { fill: rgb(34 197 94 / 0.35); stroke: rgb(34 197 94); stroke-width: 2; }
-    .bs-text { font-family: ui-monospace, monospace; font-size: 13px; fill: rgb(var(--fg)); }
-    .bs-text-out { fill: rgb(var(--fg-subtle)); }
-    .bs-label { font-family: ui-sans-serif, sans-serif; font-size: 12px; fill: rgb(var(--fg-muted)); }
-  `}</style>
-  <text x="20" y="35" className="bs-label">Βήμα 1: mid=17, x=23 → 23&gt;17, ψάξε δεξιά</text>
-  <g>
-    <rect x="120" y="45" width="44" height="32" className="bs-cell" />
-    <text x="142" y="66" textAnchor="middle" className="bs-text">5</text>
-    <rect x="168" y="45" width="44" height="32" className="bs-cell" />
-    <text x="190" y="66" textAnchor="middle" className="bs-text">11</text>
-    <rect x="216" y="45" width="44" height="32" className="bs-cell" />
-    <text x="238" y="66" textAnchor="middle" className="bs-text">14</text>
-    <rect x="264" y="45" width="44" height="32" className="bs-cell-mid" />
-    <text x="286" y="66" textAnchor="middle" className="bs-text">17</text>
-    <rect x="312" y="45" width="44" height="32" className="bs-cell" />
-    <text x="334" y="66" textAnchor="middle" className="bs-text">23</text>
-    <rect x="360" y="45" width="44" height="32" className="bs-cell" />
-    <text x="382" y="66" textAnchor="middle" className="bs-text">28</text>
-    <rect x="408" y="45" width="44" height="32" className="bs-cell" />
-    <text x="430" y="66" textAnchor="middle" className="bs-text">33</text>
-    <rect x="456" y="45" width="44" height="32" className="bs-cell" />
-    <text x="478" y="66" textAnchor="middle" className="bs-text">41</text>
-  </g>
-  <text x="20" y="115" className="bs-label">Βήμα 2: mid=33, x=23 → 23&lt;33, ψάξε αριστερά</text>
-  <g>
-    <rect x="120" y="125" width="44" height="32" className="bs-cell-out" />
-    <text x="142" y="146" textAnchor="middle" className="bs-text bs-text-out">5</text>
-    <rect x="168" y="125" width="44" height="32" className="bs-cell-out" />
-    <text x="190" y="146" textAnchor="middle" className="bs-text bs-text-out">11</text>
-    <rect x="216" y="125" width="44" height="32" className="bs-cell-out" />
-    <text x="238" y="146" textAnchor="middle" className="bs-text bs-text-out">14</text>
-    <rect x="264" y="125" width="44" height="32" className="bs-cell-out" />
-    <text x="286" y="146" textAnchor="middle" className="bs-text bs-text-out">17</text>
-    <rect x="312" y="125" width="44" height="32" className="bs-cell" />
-    <text x="334" y="146" textAnchor="middle" className="bs-text">23</text>
-    <rect x="360" y="125" width="44" height="32" className="bs-cell" />
-    <text x="382" y="146" textAnchor="middle" className="bs-text">28</text>
-    <rect x="408" y="125" width="44" height="32" className="bs-cell-mid" />
-    <text x="430" y="146" textAnchor="middle" className="bs-text">33</text>
-    <rect x="456" y="125" width="44" height="32" className="bs-cell" />
-    <text x="478" y="146" textAnchor="middle" className="bs-text">41</text>
-  </g>
-  <text x="20" y="195" className="bs-label">Βήμα 3: mid=23, x=23 → βρέθηκε</text>
-  <g>
-    <rect x="120" y="205" width="44" height="32" className="bs-cell-out" />
-    <text x="142" y="226" textAnchor="middle" className="bs-text bs-text-out">5</text>
-    <rect x="168" y="205" width="44" height="32" className="bs-cell-out" />
-    <text x="190" y="226" textAnchor="middle" className="bs-text bs-text-out">11</text>
-    <rect x="216" y="205" width="44" height="32" className="bs-cell-out" />
-    <text x="238" y="226" textAnchor="middle" className="bs-text bs-text-out">14</text>
-    <rect x="264" y="205" width="44" height="32" className="bs-cell-out" />
-    <text x="286" y="226" textAnchor="middle" className="bs-text bs-text-out">17</text>
-    <rect x="312" y="205" width="44" height="32" className="bs-cell-hit" />
-    <text x="334" y="226" textAnchor="middle" className="bs-text">23</text>
-    <rect x="360" y="205" width="44" height="32" className="bs-cell-out" />
-    <text x="382" y="226" textAnchor="middle" className="bs-text bs-text-out">28</text>
-    <rect x="408" y="205" width="44" height="32" className="bs-cell-out" />
-    <text x="430" y="226" textAnchor="middle" className="bs-text bs-text-out">33</text>
-    <rect x="456" y="205" width="44" height="32" className="bs-cell-out" />
-    <text x="478" y="226" textAnchor="middle" className="bs-text bs-text-out">41</text>
-  </g>
-</svg>
+<Pseudocode
+  code={`ΔυαδικήΑναζήτηση(Π, x):
+  lo ← 1·  hi ← μήκος(Π)
+  όσο lo ≤ hi:
+    mid ← ακέραιο μέρος του (lo + hi) / 2
+    αν Π[mid] = x:  επίστρεψε mid
+    αν Π[mid] < x:  lo ← mid + 1      // ο στόχος είναι δεξιά
+    αλλιώς:         hi ← mid − 1      // ο στόχος είναι αριστερά
+  επίστρεψε «δεν βρέθηκε»`}
+/>
 
-Σε πίνακα 8 στοιχείων χρειάστηκαν **3 συγκρίσεις**. Σε πίνακα 1.000.000 στοιχείων θα χρειαστούν περίπου **20**. Αυτή η συμπεριφορά «κάθε βήμα κόβει στη μέση» είναι ο πυρήνας του τι μελετάμε στο [L02 · Ασυμπτωτική ανάλυση](/lectures/L02-asymptotic-analysis) και επιστρέφει στο [L03 · D&C](/lectures/L03-divide-and-conquer-i).
+</Algorithm>
+
+Δοκίμασέ την μόνος σου — διάλεξε στόχο, και σε κάθε βήμα αποφάσισε ποιο μισό κρατάς:
+
+<BinarySearchViz />
+
+Πρόσεξε τι συνέβη: σε πίνακα 8 στοιχείων χρειάστηκαν **το πολύ 3 συγκρίσεις**. Σε πίνακα 1.000.000 στοιχείων θα χρειαστούν περίπου **20**. Αυτή η συμπεριφορά «κάθε βήμα κόβει στη μέση» είναι ο πυρήνας του [L02 · Ασυμπτωτική ανάλυση](/lectures/L02-asymptotic-analysis) και επιστρέφει στο [L03 · D&C](/lectures/L03-divide-and-conquer-i).
+
+<RecallCard
+  algorithm="Δυαδική αναζήτηση"
+  keywords={['ταξινομημένος πίνακας', 'μεσαίο στοιχείο', 'μισεύει τον χώρο', 'lo / hi / mid', 'O(log n)']}
+  skeleton={[
+    'Κοίτα το μεσαίο στοιχείο του τρέχοντος διαστήματος.',
+    'Ίσο με τον στόχο; Τον βρήκες.',
+    'Στόχος μικρότερος → κράτα το αριστερό μισό· μεγαλύτερος → το δεξί.',
+    'Επανέλαβε ώσπου να βρεθεί ή να αδειάσει το διάστημα.',
+  ]}
+  complexity="O(log n)"
+  trap="Δουλεύει ΜΟΝΟ σε ταξινομημένο πίνακα. Σε αταξινόμητο, το «μεσαίο στοιχείο» δεν λέει τίποτα για το πού βρίσκεται ο στόχος."
+/>
 
 ## Πότε ένα πρόγραμμα είναι «χρήσιμο»;
 
@@ -363,6 +326,45 @@ $$
 **Παρατήρηση.** Όταν δεν υπάρχει «εύκολη» ή «δύσκολη» είσοδος — όταν ο αλγόριθμος κάνει την ίδια ακριβώς δουλειά για όλα τα στιγμιότυπα της ίδιας διάστασης — οι τρεις τύποι πολυπλοκότητας **συμπίπτουν**.
 </Example>
 
+## Κλείδωσε τις έννοιες
+
+Τρεις λέξεις μπερδεύονται συνεχώς — **πρόβλημα**, **στιγμιότυπο**, **διάσταση**. Συμπλήρωσε τα κενά χωρίς να κοιτάς πίσω:
+
+<ClozeDrill
+  prompt="Οι τρεις έννοιες-κλειδιά της L01."
+  segments={[
+    { text: 'Ένα ' },
+    { blank: 'πρόβλημα' },
+    { text: ' ορίζει γενικά την είσοδο και τη ζητούμενη έξοδο. Ένα ' },
+    { blank: 'στιγμιότυπο', hint: 'συγκεκριμένη είσοδος' },
+    { text: ' είναι μια συγκεκριμένη είσοδος. Η ' },
+    { blank: 'διάσταση' },
+    { text: ' μετράει το μέγεθος του στιγμιοτύπου — συνήθως το n — και η πολυπλοκότητα εκφράζεται πάντα ως συνάρτησή της.' },
+  ]}
+/>
+
+<ExamRadar
+  items={[
+    {
+      topic: 'Ξεχώρισε «πρόβλημα», «στιγμιότυπο» και «διάσταση» σε μια εκφώνηση',
+      likelihood: 'high',
+    },
+    {
+      topic: 'Ανάλυση βέλτιστης / χείριστης / μέσης περίπτωσης ενός απλού αλγορίθμου',
+      likelihood: 'high',
+      note: 'Σχεδόν πάντα ζητείται η χείριστη περίπτωση.',
+    },
+    {
+      topic: 'Μέτρημα στοιχειωδών πράξεων ως συνάρτηση του n',
+      likelihood: 'high',
+    },
+    {
+      topic: 'Γιατί η δυαδική αναζήτηση είναι O(log n) ενώ η γραμμική O(n)',
+      likelihood: 'medium',
+    },
+  ]}
+/>
+
 ## Το πλάνο του εξαμήνου
 
 Τέσσερις τεχνικές σχεδιασμού αλγορίθμων, μία θεματική ενότητα γραφημάτων, και μία ενότητα δομών δεδομένων — όλα κάθονται πάνω στα θεμέλια που χτίζουμε στις L01–L02.
@@ -445,7 +447,8 @@ $$
 2. Ένα **πρόβλημα** ορίζει είσοδο/έξοδο. Ένα **στιγμιότυπο** είναι μια συγκεκριμένη είσοδος. Η **διάσταση** είναι η αριθμητική παράμετρος που μετράει το μέγεθος του στιγμιοτύπου — συνήθως το $n$.
 3. Η **πολυπλοκότητα** είναι ο αριθμός στοιχειωδών πράξεων ως συνάρτηση της διάστασης.
 4. **Τρεις τύποι**: βέλτιστη, χείριστη, μέση περίπτωση. Σχεδόν πάντα χρησιμοποιούμε **χείριστη**.
-5. Στο μάθημα: 4 τεχνικές σχεδιασμού (D&amp;C, Greedy, DP) + Γραφήματα + Δομές Δεδομένων, με την ασυμπτωτική ανάλυση να ενώνει τα πάντα.
+5. **Δυαδική αναζήτηση:** σε ταξινομημένο πίνακα, κάθε σύγκριση μισεύει τον χώρο → $O(\log n)$.
+6. Στο μάθημα: 3 τεχνικές σχεδιασμού (D&amp;C, Greedy, DP) + Γραφήματα + Δομές Δεδομένων, με την ασυμπτωτική ανάλυση να ενώνει τα πάντα.
 </Recap>
 
 <NextUp current="lectures/L01-eisagogika" />

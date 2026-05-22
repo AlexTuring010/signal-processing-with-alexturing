@@ -19,6 +19,49 @@ import { ThinkingPattern } from '@/components/content/ThinkingPattern'
 import { ExamRadar } from '@/components/content/ExamRadar'
 import { GraphCanvas } from '@/components/viz/GraphCanvas'
 import { TraversalGame } from '@/components/viz/TraversalGame'
+import { BinarySearchViz } from '@/components/viz/BinarySearchViz'
+import { BigOPlayground } from '@/components/viz/BigOPlayground'
+import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
+import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
+import { InversionCounter } from '@/components/viz/InversionCounter'
+import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
+import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
+import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
+import { StrongConnectivityViz } from '@/components/viz/StrongConnectivityViz'
+import { FloodFillGrid } from '@/components/viz/FloodFillGrid'
+import { ComponentSweep } from '@/components/viz/ComponentSweep'
+import { OddCycleProof } from '@/components/viz/OddCycleProof'
+import { WhyBFSFailsWeighted } from '@/components/viz/WhyBFSFailsWeighted'
+import { DijkstraAnimator } from '@/components/viz/DijkstraAnimator'
+import { DijkstraProofViz } from '@/components/viz/DijkstraProofViz'
+import { CutExplorer } from '@/components/viz/CutExplorer'
+import { ExchangeArgumentViz } from '@/components/viz/ExchangeArgumentViz'
+import { PrimAnimator } from '@/components/viz/PrimAnimator'
+import { KruskalAnimator } from '@/components/viz/KruskalAnimator'
+import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
+import { HeapArrayMap } from '@/components/viz/HeapArrayMap'
+import { HeapsortAnimator } from '@/components/viz/HeapsortAnimator'
+import { UnionFindForest } from '@/components/viz/UnionFindForest'
+import { UnionBySizeRace } from '@/components/viz/UnionBySizeRace'
+import { PathCompressionViz } from '@/components/viz/PathCompressionViz'
+import { GreedyHorizon } from '@/components/viz/GreedyHorizon'
+import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
+import { GreedyStaysAhead } from '@/components/viz/GreedyStaysAhead'
+import { IntervalPartitionAnimator } from '@/components/viz/IntervalPartitionAnimator'
+import { LatenessScheduler } from '@/components/viz/LatenessScheduler'
+import { LatenessExchangeViz } from '@/components/viz/LatenessExchangeViz'
+import { TopoOrderBuilder } from '@/components/viz/TopoOrderBuilder'
+import { DagSourceWalk } from '@/components/viz/DagSourceWalk'
+import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
+import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
+import { CompressionCostLab } from '@/components/viz/CompressionCostLab'
+import { PrefixDecoder } from '@/components/viz/PrefixDecoder'
+import { HuffmanSwapViz } from '@/components/viz/HuffmanSwapViz'
+import { HuffmanOptimalityViz } from '@/components/viz/HuffmanOptimalityViz'
+import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
+import { KnapsackTable } from '@/components/viz/KnapsackTable'
+import { EditDistanceTable } from '@/components/viz/EditDistanceTable'
+import { TreeIndependentSet } from '@/components/viz/TreeIndependentSet'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -55,6 +98,49 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ExamRadar,
     GraphCanvas,
     TraversalGame,
+    BinarySearchViz,
+    BigOPlayground,
+    MergeSortAnimator,
+    RecurrenceClassifier,
+    InversionCounter,
+    ClosestPairScan,
+    GraphRepresentations,
+    BipartiteChecker,
+    StrongConnectivityViz,
+    FloodFillGrid,
+    ComponentSweep,
+    OddCycleProof,
+    WhyBFSFailsWeighted,
+    DijkstraAnimator,
+    DijkstraProofViz,
+    CutExplorer,
+    ExchangeArgumentViz,
+    PrimAnimator,
+    KruskalAnimator,
+    BinaryHeapAnimator,
+    HeapArrayMap,
+    HeapsortAnimator,
+    UnionFindForest,
+    UnionBySizeRace,
+    PathCompressionViz,
+    GreedyHorizon,
+    IntervalScheduling,
+    GreedyStaysAhead,
+    IntervalPartitionAnimator,
+    LatenessScheduler,
+    LatenessExchangeViz,
+    TopoOrderBuilder,
+    DagSourceWalk,
+    TopologicalSortViz,
+    HuffmanTreeBuilder,
+    CompressionCostLab,
+    PrefixDecoder,
+    HuffmanSwapViz,
+    HuffmanOptimalityViz,
+    WeightedIntervalDP,
+    KnapsackTable,
+    EditDistanceTable,
+    TreeIndependentSet,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
