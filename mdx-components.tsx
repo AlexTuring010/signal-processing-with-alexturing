@@ -33,6 +33,11 @@ import { ComponentSweep } from '@/components/viz/ComponentSweep'
 import { OddCycleProof } from '@/components/viz/OddCycleProof'
 import { WhyBFSFailsWeighted } from '@/components/viz/WhyBFSFailsWeighted'
 import { DijkstraAnimator } from '@/components/viz/DijkstraAnimator'
+import { DijkstraProofViz } from '@/components/viz/DijkstraProofViz'
+import { CutExplorer } from '@/components/viz/CutExplorer'
+import { ExchangeArgumentViz } from '@/components/viz/ExchangeArgumentViz'
+import { PrimAnimator } from '@/components/viz/PrimAnimator'
+import { KruskalAnimator } from '@/components/viz/KruskalAnimator'
 import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
 import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
 import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
@@ -91,6 +96,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     OddCycleProof,
     WhyBFSFailsWeighted,
     DijkstraAnimator,
+    DijkstraProofViz,
+    CutExplorer,
+    ExchangeArgumentViz,
+    PrimAnimator,
+    KruskalAnimator,
     BinaryHeapAnimator,
     IntervalScheduling,
     TopologicalSortViz,
