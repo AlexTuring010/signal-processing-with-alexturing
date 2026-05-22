@@ -25,6 +25,7 @@ import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
 import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
 import { InversionCounter } from '@/components/viz/InversionCounter'
 import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
+import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -67,6 +68,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RecurrenceClassifier,
     InversionCounter,
     ClosestPairScan,
+    GraphRepresentations,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
