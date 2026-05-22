@@ -111,9 +111,9 @@ beginner-friendly Greek solution — then **anonymise** in the UI.
 | 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` *(deleted)* | ☑ |
 | 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☑ 4/4 |
 | 7 | Παλαιό Θέμα #7 | `Ζησιμόπουλος/2022-June-VZ/Algo_june_2022.pdf` | ☑ 4/4 |
-| 8 | Παλαιό Θέμα #8 | `Ζησιμόπουλος/2022-Sept-VZ/*.jpg` (3) | ☐ |
-| 9 | Παλαιό Θέμα #9 | `Ζησιμόπουλος/2021-June-VZ/` (Θ1.pdf, Θ2.pdf, 1–15.png) | ☐ |
-| 10 | Παλαιό Θέμα #10 | `Αλγο-2020-Σεπτ-1(Slot2).jpg`, `Αλγο-2020-Σεπτ-2(Slot2).jpg` | ☐ |
+| 8 | Παλαιό Θέμα #8 | `Ζησιμόπουλος/2022-Sept-VZ/*.jpg` (3) | ☑ 3/3 |
+| 9 | Παλαιό Θέμα #9 | `Ζησιμόπουλος/2021-June-VZ/` (Θ1.pdf, Θ2.pdf, 1–15.png) | ☑ 17/17 |
+| 10 | Παλαιό Θέμα #10 | `Αλγο-2020-Σεπτ-1(Slot2).jpg`, `Αλγο-2020-Σεπτ-2(Slot2).jpg` | ☑ 4/4 |
 | 11 | Παλαιό Θέμα #11 | `αλγοριθμοι-και-πολυπλοκοτιτα-εξ-αποστασεως-2020.pdf` | ☐ |
 | 12 | Παλαιό Θέμα #12 | `Ζησιμόπουλος/2019-Feb-VZ/2019.pdf` | ☐ |
 | 13 | Παλαιό Θέμα #13 | `Ζησιμόπουλος/2018-June-VZ/*.jpg` (2) | ☐ |
@@ -140,21 +140,21 @@ beginner-friendly Greek solution — then **anonymise** in the UI.
 | 6 | Φροντιστηριακό Σετ #6 | `F7__eclass.pdf` | ☑ 8/8 (Ασκ 1–8) |
 | 7 | Φροντιστηριακό Σετ #7 | `F8__eclass.pdf` | ☑ 12/12 (Ασκ 1–12) |
 | 8 | Φροντιστηριακό Σετ #8 | `F9__eclass.pdf` | ☑ 4/4 (Ασκ 1–4) |
-| 9 | Φροντιστηριακό Σετ #9 | `F10__eclass.pdf` | ☐ |
-| 10 | Φροντιστηριακό Σετ #10 | `F11__eclass.pdf` | ☐ |
-| 11 | Φροντιστηριακό Σετ #11 | `1ο Φροντ.pdf` | ☐ |
-| 12 | Φροντιστηριακό Σετ #12 | `2ο Φροντ.pdf` | ☐ |
+| 9 | Φροντιστηριακό Σετ #9 | `F10__eclass.pdf` | ☑ 5/5 (Ασκ 1,2,3,5,8) |
+| 10 | Φροντιστηριακό Σετ #10 | `F11__eclass.pdf` | ☑ 14/14 (Ασκ 1–14) |
+| 11 | Φροντιστηριακό Σετ #11 | `1ο Φροντ.pdf` | ☑ 3/3 |
+| 12 | Φροντιστηριακό Σετ #12 | `2ο Φροντ.pdf` | ☑ 2/2 |
 | 13 | Φροντιστηριακό Σετ #13 | `3ο Φροντ.pdf` | ☐ |
 
 ## Progress
 
-**Old exams — fully done: 7 / 23** (#1–#7). Fully pending: 16 (#8–#23).
-**Frontistiria — fully done: 8 / 13** (#1–#8). Fully pending: 5 (#9–#13).
+**Old exams — fully done: 10 / 23** (#1–#10). Fully pending: 13 (#11–#23).
+**Frontistiria — fully done: 12 / 13** (#1–#12). Fully pending: 1 (#13).
 
-Total modular exercises transcribed so far: **120** (88 from earlier sessions —
-the previous «89» double-counted Φρ. Σετ #5 by one — plus 32 this session:
-exam #6 ×4, exam #7 ×4, F#6 ×8, F#7 ×12, F#8 ×4). Verified by
-`grep -cE "id: '(pt|front-set-)" content/practice/exercises.tsx` → 120.
+Total modular exercises transcribed so far: **168** (120 from earlier sessions
+plus 48 this session: exam #8 ×3, exam #9 ×17, exam #10 ×4, F#9 ×5, F#10 ×14,
+F#11 ×3, F#12 ×2). Verified by
+`grep -cE "id: '(pt|front-set-)" content/practice/exercises.tsx` → 168.
 
 > **Batch note (2026-05-22, privacy + batch session).** Two parts:
 > **(1) Privacy architecture.** All raw exercise material moved to the new
@@ -167,8 +167,15 @@ exam #6 ×4, exam #7 ×4, F#6 ×8, F#7 ×12, F#8 ×4). Verified by
 > #7, #8 transcribed — 32 modular exercises, routed across L03/L06/L08/L09/
 > L10/L11/L12/L13/L14/L15/L16/L17.
 
-Next: exams resume at Παλαιό Θέμα #8; frontistiria resume at Φροντιστηριακό
-Σετ #9.
+Next: exams resume at Παλαιό Θέμα #11; frontistiria resume at Φροντιστηριακό
+Σετ #13.
+
+> **Batch note (2026-05-22, batch session 2).** Μεταγράφηκαν 7 χαρτιά (4
+> φροντιστήρια + 3 εξετάσεις) → 48 modular exercises, routed across
+> L02/L03/L04/L06/L08/L09/L10/L11/L12/L13/L14/L15/L16/L17. `npx tsc --noEmit`
+> καθαρό· καμία προειδοποίηση ESLint στο `exercises.tsx`. (Το `npx next build`
+> αποτυγχάνει μόνο στο prerender του `/bookmarks` λόγω απουσίας Supabase env —
+> προϋπάρχον, άσχετο με τη μεταγραφή.)
 
 ## Progress log
 
@@ -260,3 +267,30 @@ _(append one line per completed paper: label — N sub-exercises — date)_
 - **Φροντιστηριακό Σετ #8** — 4 modules: `front-set-8-ask1` (μέσο κόστος
   μονοπατιών σε DAG →L17), `ask2` (ευθυγράμμιση DNA →L16), `ask3` (τεμαχισμός
   ράβδου →L14), `ask4` (άνοιγμα εστιατορίων →L14). — 2026-05-22.
+- **Παλαιό Θέμα #8** — 3 modules: `pt8-th1` (TSP: ωμή βία, πλησιέστερος
+  γείτονας, κάτω φράγμα MST →L09), `pt8-th2` (μέγιστη κοινή υπακολουθία LCS
+  →L16), `pt8-th3` (μακρύτερο μονοπάτι σε DAG →L17). — 2026-05-22.
+- **Παλαιό Θέμα #9** — 17 modules: `pt9-th1` (εξισορρόπηση φορτίου / List
+  Scheduling →L12), `pt9-th2` (επιλογή διαφημίσεων, άπληστος →L11), `pt9-q1`…
+  `pt9-q15` (quiz 15 ερωτήσεων πολλαπλής επιλογής, routed σε
+  L02/L03/L06/L09/L11/L14/L15/L16/L17). — 2026-05-22.
+- **Παλαιό Θέμα #10** — 4 modules: `pt10-th1` (διάμεσος δύο βάσεων, O(log n)
+  ερωτήσεις →L04), `pt10-th2` (ταίριασμα πελατών/πέδιλων, επιχείρημα ανταλλαγής
+  →L11), `pt10-th3` (βέλτιστη αγορά/πώληση μετοχής, DP →L14), `pt10-th4`
+  (εγγραφές μαθητών ως πρόβλημα ροής →L09). — 2026-05-22.
+- **Φροντιστηριακό Σετ #9** — 5 modules: `front-set-9-ask1` (arbitrage =
+  αρνητικός κύκλος, Bellman-Ford →L08), `ask2` (αίθουσες χωρίς 3 συνεχόμενες,
+  DP →L14), `ask3` (αλυσίδα εστιατορίων, DP 3 καταστάσεων →L14), `ask5`
+  (μαγνητικός τομογράφος = weighted interval scheduling →L14), `ask8` (αύξουσες
+  υπακολουθίες & LIS →L16). — 2026-05-22.
+- **Φροντιστηριακό Σετ #10** — 14 modules: `front-set-10-ask1`…`ask14`
+  (Επανάληψη: πολυωνυμικά φραγμένες →L02, τριπλός βρόχος →L02, BFS με ίσα βάρη
+  →L06, Master Theorem →L03, επιδιόρθωση σωρού →L10, κολώνες φωτισμού/μέγιστο
+  ανεξάρτητο σύνολο →L14, CLIQUE/INDEP/D(Path)/D(MST) NP & P →L09, αναδρομή vs
+  DP →L14, συνεχές σακίδιο →L13, 0-1 σακίδιο →L15). — 2026-05-22.
+- **Φροντιστηριακό Σετ #11** — 3 modules: `front-set-11-ask1` (επαγωγή στην
+  αρμονική σειρά →L02), `ask2` (επαγωγική λύση T(n)=2T(n/2)+Cn →L03), `ask3`
+  (Σ/Λ ασυμπτωτικού συμβολισμού →L02). — 2026-05-22.
+- **Φροντιστηριακό Σετ #12** — 2 modules: `front-set-12-ask1` (Σ/Λ
+  ασυμπτωτικού συμβολισμού →L02), `ask2` (κατάταξη συναρτήσεων σε τάξεις &
+  log n! = Θ(n log n) →L02). — 2026-05-22.
