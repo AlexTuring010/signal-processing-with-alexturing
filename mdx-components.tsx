@@ -20,6 +20,7 @@ import { ExamRadar } from '@/components/content/ExamRadar'
 import { GraphCanvas } from '@/components/viz/GraphCanvas'
 import { TraversalGame } from '@/components/viz/TraversalGame'
 import { BinarySearchViz } from '@/components/viz/BinarySearchViz'
+import { BigOPlayground } from '@/components/viz/BigOPlayground'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -57,6 +58,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     GraphCanvas,
     TraversalGame,
     BinarySearchViz,
+    BigOPlayground,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
