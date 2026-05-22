@@ -70,6 +70,10 @@ import { PseudoPolyExplorer } from '@/components/viz/PseudoPolyExplorer'
 import { SubsequenceExplorer } from '@/components/viz/SubsequenceExplorer'
 import { LcsTable } from '@/components/viz/LcsTable'
 import { EditDistanceTable } from '@/components/viz/EditDistanceTable'
+import { AlignmentBuilder } from '@/components/viz/AlignmentBuilder'
+import { EditGraphViz } from '@/components/viz/EditGraphViz'
+import { TwoRowSweep } from '@/components/viz/TwoRowSweep'
+import { HirschbergViz } from '@/components/viz/HirschbergViz'
 import { TreeIndependentSet } from '@/components/viz/TreeIndependentSet'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
@@ -158,6 +162,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SubsequenceExplorer,
     LcsTable,
     EditDistanceTable,
+    AlignmentBuilder,
+    EditGraphViz,
+    TwoRowSweep,
+    HirschbergViz,
     TreeIndependentSet,
     RecallDrill,
     ClozeDrill,
