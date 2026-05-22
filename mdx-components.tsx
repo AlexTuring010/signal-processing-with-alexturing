@@ -54,6 +54,10 @@ import { TopoOrderBuilder } from '@/components/viz/TopoOrderBuilder'
 import { DagSourceWalk } from '@/components/viz/DagSourceWalk'
 import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
 import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
+import { CompressionCostLab } from '@/components/viz/CompressionCostLab'
+import { PrefixDecoder } from '@/components/viz/PrefixDecoder'
+import { HuffmanSwapViz } from '@/components/viz/HuffmanSwapViz'
+import { HuffmanOptimalityViz } from '@/components/viz/HuffmanOptimalityViz'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
 import { KnapsackTable } from '@/components/viz/KnapsackTable'
 import { EditDistanceTable } from '@/components/viz/EditDistanceTable'
@@ -129,6 +133,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     DagSourceWalk,
     TopologicalSortViz,
     HuffmanTreeBuilder,
+    CompressionCostLab,
+    PrefixDecoder,
+    HuffmanSwapViz,
+    HuffmanOptimalityViz,
     WeightedIntervalDP,
     KnapsackTable,
     EditDistanceTable,
