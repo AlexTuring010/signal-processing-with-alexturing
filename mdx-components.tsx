@@ -21,6 +21,8 @@ import { GraphCanvas } from '@/components/viz/GraphCanvas'
 import { TraversalGame } from '@/components/viz/TraversalGame'
 import { BinarySearchViz } from '@/components/viz/BinarySearchViz'
 import { BigOPlayground } from '@/components/viz/BigOPlayground'
+import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
+import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -59,6 +61,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TraversalGame,
     BinarySearchViz,
     BigOPlayground,
+    MergeSortAnimator,
+    RecurrenceClassifier,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
