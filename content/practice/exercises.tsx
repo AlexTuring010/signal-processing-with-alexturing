@@ -12205,27 +12205,1236 @@ K = 101     Σ = 100`}</pre>
       </>
     ),
   },
+  // ── Παλαιό Θέμα #15 — μεταγραμμένο & χωρισμένο ανά διάλεξη ─────────────
   {
-    id: 'exam-feb-2017',
-    title: 'Παλαιό Θέμα #15 — υπό μεταγραφή',
-    topic: 'graphs',
+    id: 'pt15-th1',
+    title: 'Παλαιό Θέμα #15 · Θέμα 1 — Κατάταξη ασυμπτωτικής τάξης συναρτήσεων',
+    topic: 'asymptotics',
     origin: 'past-exam',
     paperLabel: 'Παλαιό Θέμα #15',
-    difficulty: 'hard',
-    prerequisites: ALL_LECTURES,
-    statement: null,
-    solution: null,
+    problemNumber: 'Θέμα 1',
+    weight: 5,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    formulaIds: ['growth-hierarchy'],
+    statement: (
+      <>
+        <p>
+          Βρείτε την ασυμπτωτική συμπεριφορά μιας σειράς συναρτήσεων{' '}
+          <InlineMath>{'f_1, \\dots, f_5'}</InlineMath>, προσδιορίζοντας για
+          καθεμία αν είναι της μορφής{' '}
+          <InlineMath>{'\\Theta(n^k \\log^m n)'}</InlineMath> ή{' '}
+          <InlineMath>{'\\Theta(n^m)'}</InlineMath>, και βρείτε τους εκθέτες.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: ο πίνακας συναρτήσεων προέρχεται από
+          σαρωμένο αντίγραφο με μια ελεύθερη παράμετρο· παρακάτω διδάσκεται
+          πλήρως η μέθοδος κατάταξης, με αντιπροσωπευτικά παραδείγματα του ίδιου
+          τύπου.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Η μέθοδος: απλοποίησε κάθε συνάρτηση στον <strong>κυρίαρχο όρο</strong>{' '}
+          της και γράψ’ τη στη μορφή <InlineMath>{'n^k \\log^m n'}</InlineMath>.
+          Τρία τεχνάσματα που εμφανίζονται διαρκώς:
+        </p>
+        <ul>
+          <li>
+            <strong>Δυνάμεις του 2 με λογαριθμικό εκθέτη.</strong>{' '}
+            <InlineMath>{'2^{c\\log_2 n} = n^c'}</InlineMath>· π.χ.{' '}
+            <InlineMath>{'2^{2\\log_2 n + \\log_2\\log_2 n} = n^2 \\log n'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Αθροίσματα δυνάμεων.</strong>{' '}
+            <InlineMath>{'\\sum_{k=1}^{n} k^{1/4} = \\Theta(n^{5/4})'}</InlineMath>{' '}
+            — ένα άθροισμα <InlineMath>{'k^d'}</InlineMath> ανεβάζει τον εκθέτη
+            κατά 1.
+          </li>
+          <li>
+            <strong>Αρμονικός αριθμός.</strong>{' '}
+            <InlineMath>{'H_n = 1 + \\tfrac12 + \\dots + \\tfrac1n = \\Theta(\\log n)'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          Σε άθροισμα όρων κρατάς πάντα τον ταχύτερα αυξανόμενο: εκθετικός{' '}
+          (<InlineMath>{'2^{n^2}'}</InlineMath>) κυριαρχεί κάθε πολυωνύμου,
+          πολυώνυμο κάθε πολυλογαρίθμου. Αφού κάθε{' '}
+          <InlineMath>{'f_i'}</InlineMath> γραφτεί ως{' '}
+          <InlineMath>{'n^k\\log^m n'}</InlineMath>, διαβάζεις απευθείας τους
+          εκθέτες <InlineMath>{'k, m'}</InlineMath>.
+        </p>
+      </>
+    ),
   },
   {
-    id: 'exam-june-2016',
-    title: 'Παλαιό Θέμα #16 — υπό μεταγραφή',
+    id: 'pt15-th2',
+    title: 'Παλαιό Θέμα #15 · Θέμα 2 — Διάταξη συναρτήσεων σε αύξουσα τάξη',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέμα 2',
+    weight: 5,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    formulaIds: ['growth-hierarchy'],
+    statement: (
+      <>
+        <p>
+          Ταξινομήστε τις συναρτήσεις{' '}
+          <InlineMath>{'f_1, f_2, f_3, f_4, f_5'}</InlineMath> του Θέματος 1 σε{' '}
+          <strong>αύξουσα σειρά τάξης μεγέθους</strong>, καθώς το{' '}
+          <InlineMath>{'n'}</InlineMath> τείνει στο άπειρο.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Αφού κάθε συνάρτηση έχει γραφτεί στη μορφή{' '}
+          <InlineMath>{'n^k \\log^m n'}</InlineMath> (ή{' '}
+          <InlineMath>{'2^{(\\cdot)}'}</InlineMath> για εκθετικές), η διάταξη
+          γίνεται μηχανικά με τον κανόνα:
+        </p>
+        <ul>
+          <li>Πρώτα σύγκρινε τους εκθέτες του <InlineMath>{'n'}</InlineMath> (το <InlineMath>{'k'}</InlineMath>).</li>
+          <li>Σε ισοπαλία στο <InlineMath>{'k'}</InlineMath>, σύγκρινε τους εκθέτες του <InlineMath>{'\\log n'}</InlineMath> (το <InlineMath>{'m'}</InlineMath>).</li>
+          <li>Κάθε εκθετική συνάρτηση πάει στο τέλος (κυριαρχεί κάθε πολυωνύμου).</li>
+        </ul>
+        <p>Χρήσιμη σταθερή ιεραρχία ως «πυξίδα»:</p>
+        <BlockMath>{'1 \\prec \\log n \\prec \\log^2 n \\prec \\sqrt{n} \\prec n \\prec n\\log n \\prec n^2 \\prec n^3 \\prec 2^n'}</BlockMath>
+        <p>
+          Παράδειγμα διάταξης για συναρτήσεις του τύπου του θέματος:{' '}
+          <InlineMath>{'\\log n \\;\\prec\\; n^{5/4} \\;\\prec\\; n^2\\log n \\;\\prec\\; 2^{n^2}'}</InlineMath>.
+          Γράφεις τις <InlineMath>{'f_i'}</InlineMath> με αυτή τη σειρά.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt15-th3',
+    title: 'Παλαιό Θέμα #15 · Θέματα 3–5 — Σύγκριση 4 αλγορίθμων D&C με Master Theorem',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέματα 3–5',
+    weight: 15,
+    difficulty: 'hard',
+    prerequisites: ['lectures/L03-divide-and-conquer-i'],
+    formulaIds: ['master-theorem'],
+    statement: (
+      <>
+        <p>
+          Έχετε να επιλέξετε ανάμεσα σε τέσσερις αλγορίθμους «διαίρει και
+          βασίλευε» για το ίδιο πρόβλημα <InlineMath>{'\\Pi'}</InlineMath>{' '}
+          διάστασης <InlineMath>{'n'}</InlineMath>:
+        </p>
+        <ul>
+          <li>
+            <strong>A:</strong> διαιρεί σε 4 υποπροβλήματα διάστασης{' '}
+            <InlineMath>{'n/4'}</InlineMath>, συνδυάζει σε χρόνο{' '}
+            <InlineMath>{'12n'}</InlineMath>.
+          </li>
+          <li>
+            <strong>B:</strong> διαιρεί σε 3 υποπροβλήματα διάστασης{' '}
+            <InlineMath>{'n/9'}</InlineMath>, συνδυάζει σε χρόνο{' '}
+            <InlineMath>{'n^{1/8}'}</InlineMath>.
+          </li>
+          <li>
+            <strong>C:</strong> διαιρεί σε 1 υποπρόβλημα διάστασης{' '}
+            <InlineMath>{'n/2'}</InlineMath>, 1 διάστασης{' '}
+            <InlineMath>{'n/4'}</InlineMath> και 1 διάστασης{' '}
+            <InlineMath>{'n/8'}</InlineMath>, συνδυάζει σε χρόνο{' '}
+            <InlineMath>{'n'}</InlineMath>.
+          </li>
+          <li>
+            <strong>D:</strong> διαιρεί σε 27 υποπροβλήματα διάστασης{' '}
+            <InlineMath>{'n/9'}</InlineMath>, συνδυάζει σε χρόνο{' '}
+            <InlineMath>{'n^{11/12}'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          (Θέμα 3) Γράψτε τις αναδρομικές εξισώσεις{' '}
+          <InlineMath>{'T_A, T_B, T_C, T_D'}</InlineMath>. (Θέμα 4) Λύστε τες με
+          το Master Theorem — για το <InlineMath>{'T_C'}</InlineMath> θεωρήστε
+          δεδομένο ότι{' '}
+          <InlineMath>{'T_C(n) \\le \\sum_{i=0}^{\\log n}(7/8)^i\\,n'}</InlineMath>.
+          (Θέμα 5) Ποιος είναι ο ασυμπτωτικά αποδοτικότερος;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Για κάθε αλγόριθμο γράφουμε{' '}
+          <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath> και συγκρίνουμε το{' '}
+          <InlineMath>{'f(n)'}</InlineMath> με το{' '}
+          <InlineMath>{'n^{\\log_b a}'}</InlineMath>.
+        </p>
+        <p>
+          <strong>A:</strong>{' '}
+          <InlineMath>{'T_A(n) = 4\\,T_A(n/4) + 12n'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_4 4 = 1'}</InlineMath>,{' '}
+          <InlineMath>{'f = \\Theta(n^1)'}</InlineMath> — 2η περίπτωση.{' '}
+          <InlineMath>{'T_A(n) = \\Theta(n\\log n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>B:</strong>{' '}
+          <InlineMath>{'T_B(n) = 3\\,T_B(n/9) + n^{1/8}'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_9 3 = 1/2'}</InlineMath>, και{' '}
+          <InlineMath>{'1/8 < 1/2'}</InlineMath> — 1η περίπτωση (κυριαρχούν τα
+          φύλλα). <InlineMath>{'T_B(n) = \\Theta(n^{1/2}) = \\Theta(\\sqrt{n})'}</InlineMath>.
+        </p>
+        <p>
+          <strong>C:</strong>{' '}
+          <InlineMath>{'T_C(n) = T_C(n/2) + T_C(n/4) + T_C(n/8) + n'}</InlineMath>.
+          Άνισος διαχωρισμός — δεν εφαρμόζεται το Master. Από τη βοήθεια, η
+          δουλειά ανά επίπεδο είναι{' '}
+          <InlineMath>{'(7/8)^i n'}</InlineMath> (στο επόμενο επίπεδο το συνολικό
+          μέγεθος είναι{' '}
+          <InlineMath>{'\\tfrac12 + \\tfrac14 + \\tfrac18 = \\tfrac78'}</InlineMath>{' '}
+          του τρέχοντος). Η γεωμετρική σειρά συγκλίνει:{' '}
+          <InlineMath>{'\\sum_{i \\ge 0}(7/8)^i = 8'}</InlineMath>, οπότε{' '}
+          <InlineMath>{'T_C(n) \\le 8n = O(n)'}</InlineMath>· και ο όρος{' '}
+          <InlineMath>{'+n'}</InlineMath> δίνει{' '}
+          <InlineMath>{'\\Omega(n)'}</InlineMath>. Άρα{' '}
+          <InlineMath>{'T_C(n) = \\Theta(n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>D:</strong>{' '}
+          <InlineMath>{'T_D(n) = 27\\,T_D(n/9) + n^{11/12}'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_9 27 = 3/2'}</InlineMath>, και{' '}
+          <InlineMath>{'11/12 < 3/2'}</InlineMath> — 1η περίπτωση.{' '}
+          <InlineMath>{'T_D(n) = \\Theta(n^{3/2})'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Θέμα 5 — σύγκριση:</strong>{' '}
+          <InlineMath>{'\\sqrt{n} \\prec n \\prec n\\log n \\prec n^{3/2}'}</InlineMath>.
+          Ο <strong>αλγόριθμος <InlineMath>{'B'}</InlineMath></strong>, με{' '}
+          <InlineMath>{'\\Theta(\\sqrt{n})'}</InlineMath>, είναι ο ασυμπτωτικά
+          αποδοτικότερος.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt15-th7',
+    title: 'Παλαιό Θέμα #15 · Θέμα 7 — Τοπολογική ταξινόμηση κατευθυνόμενου ακυκλικού γράφου',
+    topic: 'greedy',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέμα 7',
+    weight: 8,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L12-greedy-ii'],
+    formulaIds: ['topological-order'],
+    statement: (
+      <>
+        <p>
+          Να γίνει μια <strong>τοπολογική ταξινόμηση</strong> ενός κατευθυνόμενου
+          ακυκλικού γράφου <InlineMath>{'G'}</InlineMath>.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: το συγκεκριμένο γράφημα του Θέματος 6 είναι
+          δυσανάγνωστο στο σαρωμένο αντίγραφο· παρακάτω διδάσκεται πλήρως ο
+          αλγόριθμος, που είναι το ζητούμενο.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Τοπολογική ταξινόμηση</strong> ενός DAG είναι μια διάταξη των
+          κορυφών <InlineMath>{'v_1, v_2, \\dots, v_n'}</InlineMath> τέτοια ώστε
+          κάθε ακμή <InlineMath>{'(v_i, v_j)'}</InlineMath> να «δείχνει εμπρός»
+          (<InlineMath>{'i < j'}</InlineMath>). Υπάρχει αν και μόνο αν το γράφημα
+          είναι άκυκλο.
+        </p>
+        <p><strong>Αλγόριθμος (αφαίρεση πηγών):</strong></p>
+        <ol>
+          <li>
+            Υπολόγισε για κάθε κορυφή τον <strong>εσώβαθμό</strong> της (πλήθος
+            εισερχόμενων ακμών). Βάλε σε ένα σύνολο{' '}
+            <InlineMath>{'S'}</InlineMath> όλες τις κορυφές με εσώβαθμο{' '}
+            <InlineMath>{'0'}</InlineMath> (τις «πηγές»).
+          </li>
+          <li>
+            Όσο το <InlineMath>{'S'}</InlineMath> δεν είναι κενό: βγάλε μια
+            κορυφή <InlineMath>{'v'}</InlineMath>, τοποθέτησέ την επόμενη στη
+            διάταξη, και για κάθε ακμή <InlineMath>{'(v, w)'}</InlineMath> μείωσε
+            τον εσώβαθμο του <InlineMath>{'w'}</InlineMath> κατά 1· αν φτάσει{' '}
+            <InlineMath>{'0'}</InlineMath>, βάλε το{' '}
+            <InlineMath>{'w'}</InlineMath> στο <InlineMath>{'S'}</InlineMath>.
+          </li>
+        </ol>
+        <p>
+          <strong>Γιατί δουλεύει:</strong> μια κορυφή χωρίς εισερχόμενες ακμές
+          δεν έχει προαπαιτούμενα — μπαίνει με ασφάλεια επόμενη. Αφαιρώντας την,
+          το υπόλοιπο παραμένει DAG, οπότε επαναλαμβάνουμε. Με πίνακα εσωβαθμών
+          και λίστα πηγών, κάθε κορυφή και ακμή αγγίζεται{' '}
+          <InlineMath>{'O(1)'}</InlineMath> φορές — χρόνος{' '}
+          <InlineMath>{'O(n + m)'}</InlineMath>.
+        </p>
+        <p>
+          Σε ένα τυπικό μικρό DAG με ακμές{' '}
+          <InlineMath>{'v_1 \\to v_2,\\ v_1 \\to v_3,\\ v_2 \\to v_4,\\ v_3 \\to v_4'}</InlineMath>,
+          μια έγκυρη τοπολογική διάταξη είναι{' '}
+          <InlineMath>{'v_1, v_2, v_3, v_4'}</InlineMath> (ή{' '}
+          <InlineMath>{'v_1, v_3, v_2, v_4'}</InlineMath> — συχνά υπάρχουν
+          πολλές).
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt15-th8',
+    title: 'Παλαιό Θέμα #15 · Θέματα 8–9 — Μέγιστη κοινή υπακολουθία: αναδρομή & υποπροβλήματα',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέματα 8–9',
+    weight: 18,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L16-dp-iii'],
+    formulaIds: ['lcs'],
+    statement: (
+      <>
+        <p>
+          Δίνονται δύο ακολουθίες <InlineMath>{'X'}</InlineMath> (με{' '}
+          <InlineMath>{'m'}</InlineMath> όρους) και <InlineMath>{'Y'}</InlineMath>{' '}
+          (με <InlineMath>{'n'}</InlineMath> όρους). Θέλουμε να βρούμε τη{' '}
+          <strong>μέγιστη κοινή υπακολουθία (LCS)</strong> με δυναμικό
+          προγραμματισμό. (Θέμα 8) Δώστε την αναδρομική σχέση που ανάγει τη
+          βέλτιστη λύση στις βέλτιστες λύσεις των υποπροβλημάτων. (Θέμα 9) Πόσα
+          υποπροβλήματα θα οριστούν; Δικαιολογήστε την απάντησή σας.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Θέμα 8 — αναδρομική σχέση.</strong> Ορίζουμε{' '}
+          <InlineMath>{'OPT(i, j)'}</InlineMath> = το μήκος της LCS των
+          προθεμάτων <InlineMath>{'X_1 \\cdots X_i'}</InlineMath> και{' '}
+          <InlineMath>{'Y_1 \\cdots Y_j'}</InlineMath>. Κοιτάμε τους τελευταίους
+          χαρακτήρες:
+        </p>
+        <BlockMath>{'OPT(i,j) = \\begin{cases} 0 & i = 0 \\ \\text{ή}\\ j = 0 \\\\ 1 + OPT(i-1,j-1) & X_i = Y_j \\\\ \\max\\{OPT(i-1,j),\\ OPT(i,j-1)\\} & X_i \\ne Y_j \\end{cases}'}</BlockMath>
+        <p>
+          Διαίσθηση: αν οι τελευταίοι χαρακτήρες ταιριάζουν, αξίζει να τους
+          ζευγαρώσουμε (κερδίζουμε <InlineMath>{'1'}</InlineMath>) και μένει το
+          πρόβλημα στα κοντύτερα προθέματα. Αν δεν ταιριάζουν, τουλάχιστον ένας
+          περισσεύει — δοκιμάζουμε να «πετάξουμε» τον έναν ή τον άλλον και
+          κρατάμε το καλύτερο.
+        </p>
+        <p>
+          <strong>Θέμα 9 — πλήθος υποπροβλημάτων.</strong> Ένα υποπρόβλημα
+          ορίζεται από το ζεύγος <InlineMath>{'(i, j)'}</InlineMath> με{' '}
+          <InlineMath>{'0 \\le i \\le m'}</InlineMath> και{' '}
+          <InlineMath>{'0 \\le j \\le n'}</InlineMath>. Άρα{' '}
+          <InlineMath>{'(m+1)(n+1) = \\Theta(mn)'}</InlineMath> υποπροβλήματα.
+          Κάθε ένα λύνεται σε <InlineMath>{'O(1)'}</InlineMath> δεδομένων των
+          μικρότερων, άρα ο συνολικός χρόνος είναι{' '}
+          <InlineMath>{'\\Theta(mn)'}</InlineMath>. Χρειαζόμαστε{' '}
+          <strong>δισδιάστατο</strong> πίνακα γιατί η LCS εξαρτάται ταυτόχρονα
+          από «πόσο προχωρήσαμε στο <InlineMath>{'X'}</InlineMath>» και «πόσο στο{' '}
+          <InlineMath>{'Y'}</InlineMath>».
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt15-th10',
+    title: 'Παλαιό Θέμα #15 · Θέματα 10–11 — 0-1 σακίδιο: αναδρομή & υποπροβλήματα',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέματα 10–11',
+    weight: 18,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L15-dp-ii'],
+    formulaIds: ['knapsack'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε το <strong>0-1 πρόβλημα του σακιδίου</strong>: μεγιστοποίηση
+          του <InlineMath>{'\\sum_i c_i x_i'}</InlineMath> υπό τον περιορισμό{' '}
+          <InlineMath>{'\\sum_i a_i x_i \\le b'}</InlineMath>, με{' '}
+          <InlineMath>{'x_i \\in \\{0,1\\}'}</InlineMath>. (Θέμα 10) Δώστε την
+          αναδρομική σχέση που ανάγει τη βέλτιστη λύση στις βέλτιστες λύσεις των
+          υποπροβλημάτων. (Θέμα 11) Πόσα υποπροβλήματα θα οριστούν;
+          Δικαιολογήστε.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Θέμα 10 — αναδρομική σχέση.</strong> Ορίζουμε{' '}
+          <InlineMath>{'OPT(i, w)'}</InlineMath> = μέγιστη αξία με αντικείμενα{' '}
+          <InlineMath>{'1, \\dots, i'}</InlineMath> και διαθέσιμη χωρητικότητα{' '}
+          <InlineMath>{'w'}</InlineMath>:
+        </p>
+        <BlockMath>{'OPT(i,w) = \\begin{cases} 0 & i = 0 \\\\ OPT(i-1,w) & a_i > w \\\\ \\max\\{OPT(i-1,w),\\ c_i + OPT(i-1,w-a_i)\\} & a_i \\le w \\end{cases}'}</BlockMath>
+        <p>
+          Για το αντικείμενο <InlineMath>{'i'}</InlineMath> έχουμε δύο επιλογές:
+          το αφήνουμε έξω (μένει η ίδια χωρητικότητα), ή — αν χωράει — το βάζουμε
+          μέσα (κερδίζουμε <InlineMath>{'c_i'}</InlineMath>, ξοδεύουμε{' '}
+          <InlineMath>{'a_i'}</InlineMath> χώρο).
+        </p>
+        <p>
+          <strong>Θέμα 11 — πλήθος υποπροβλημάτων.</strong> Ένα υποπρόβλημα
+          ορίζεται από το ζεύγος <InlineMath>{'(i, w)'}</InlineMath> με{' '}
+          <InlineMath>{'0 \\le i \\le n'}</InlineMath> και{' '}
+          <InlineMath>{'0 \\le w \\le b'}</InlineMath> — άρα{' '}
+          <InlineMath>{'\\Theta(nb)'}</InlineMath> υποπροβλήματα. <strong>Η
+          παράμετρος <InlineMath>{'i'}</InlineMath> δεν αρκεί μόνη της:</strong>{' '}
+          για να ξέρουμε αν χωράει ένα αντικείμενο, πρέπει να θυμόμαστε και πόση
+          χωρητικότητα απομένει — γι’ αυτό η δεύτερη μεταβλητή{' '}
+          <InlineMath>{'w'}</InlineMath>. Χρόνος{' '}
+          <InlineMath>{'\\Theta(nb)'}</InlineMath> — ψευδοπολυωνυμικός (το{' '}
+          <InlineMath>{'b'}</InlineMath> γράφεται με{' '}
+          <InlineMath>{'\\log b'}</InlineMath> δυφία).
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt15-th12',
+    title: 'Παλαιό Θέμα #15 · Θέματα 12–13 — Στιγμιότυπο 0-1 σακιδίου & ανάκτηση λύσης',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέματα 12–13',
+    weight: 12,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L15-dp-ii'],
+    formulaIds: ['knapsack'],
+    statement: (
+      <>
+        <p>
+          (Θέμα 12) Θεωρήστε ένα στιγμιότυπο του 0-1 σακιδίου με αξίες{' '}
+          <InlineMath>{'c = (16, 9, 7, 20, 11, 1)'}</InlineMath> και
+          χωρητικότητα <InlineMath>{'b = 12'}</InlineMath>. Βρείτε τη βέλτιστη
+          λύση με δυναμικό προγραμματισμό (τιμή της συνάρτησης και τιμές των
+          μεταβλητών). (Θέμα 13) Δικαιολογήστε πώς ανακτώνται οι τιμές των
+          μεταβλητών.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: τα βάρη <InlineMath>{'a_i'}</InlineMath> του
+          στιγμιοτύπου είναι δυσανάγνωστα στο σαρωμένο αντίγραφο· παρακάτω
+          λύνεται πλήρως ένα καθαρό αντιπροσωπευτικό στιγμιότυπο, ώστε η μέθοδος
+          να είναι ξεκάθαρη.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Δουλεύουμε ένα αντιπροσωπευτικό στιγμιότυπο: 4 αντικείμενα με{' '}
+          (βάρος, αξία) <InlineMath>{'(2,3), (3,4), (4,5), (5,6)'}</InlineMath>{' '}
+          και <InlineMath>{'b = 8'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Θέμα 12 — γέμισμα του πίνακα.</strong> Εφαρμόζουμε την αναδρομή{' '}
+          <InlineMath>{'OPT(i,w) = \\max\\{OPT(i-1,w),\\ c_i + OPT(i-1,w-a_i)\\}'}</InlineMath>{' '}
+          γραμμή προς γραμμή:
+        </p>
+        <BlockMath>{'\\begin{array}{c|ccccccccc} i\\backslash w & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\\\ \\hline 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\ 1 & 0 & 0 & 3 & 3 & 3 & 3 & 3 & 3 & 3 \\\\ 2 & 0 & 0 & 3 & 4 & 4 & 7 & 7 & 7 & 7 \\\\ 3 & 0 & 0 & 3 & 4 & 5 & 7 & 8 & 9 & 9 \\\\ 4 & 0 & 0 & 3 & 4 & 5 & 7 & 8 & 9 & 10 \\end{array}'}</BlockMath>
+        <p>
+          Η βέλτιστη <strong>τιμή</strong> είναι{' '}
+          <InlineMath>{'OPT(4,8) = 10'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Θέμα 13 — ανάκτηση των μεταβλητών.</strong> Ξεκινάμε από το
+          κελί <InlineMath>{'OPT(4,8)'}</InlineMath> και κινούμαστε προς τα πίσω.
+          Σε κάθε κελί <InlineMath>{'OPT(i,w)'}</InlineMath> ρωτάμε: ήρθε η τιμή
+          από «το αντικείμενο <InlineMath>{'i'}</InlineMath> έξω» ή «μέσα»;
+        </p>
+        <ul>
+          <li>
+            Αν <InlineMath>{'OPT(i,w) = OPT(i-1,w)'}</InlineMath>: το{' '}
+            <InlineMath>{'i'}</InlineMath> είναι ΕΞΩ{' '}
+            (<InlineMath>{'x_i = 0'}</InlineMath>), πήγαινε στο{' '}
+            <InlineMath>{'OPT(i-1,w)'}</InlineMath>.
+          </li>
+          <li>
+            Αλλιώς: το <InlineMath>{'i'}</InlineMath> είναι ΜΕΣΑ{' '}
+            (<InlineMath>{'x_i = 1'}</InlineMath>), πήγαινε στο{' '}
+            <InlineMath>{'OPT(i-1,\\ w-a_i)'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          Στο παράδειγμα:{' '}
+          <InlineMath>{'OPT(4,8)=10 \\ne OPT(3,8)=9'}</InlineMath> → το 4 ΜΕΣΑ,
+          πάμε στο <InlineMath>{'OPT(3,3)'}</InlineMath>;{' '}
+          <InlineMath>{'OPT(3,3)=4 = OPT(2,3)'}</InlineMath> → το 3 ΕΞΩ;{' '}
+          <InlineMath>{'OPT(2,3)=4 \\ne OPT(1,3)=3'}</InlineMath> → το 2 ΜΕΣΑ,
+          πάμε στο <InlineMath>{'OPT(1,0)=0'}</InlineMath> → το 1 ΕΞΩ. Άρα η λύση
+          είναι <InlineMath>{'x = (0,1,0,1)'}</InlineMath>: αντικείμενα 2 και 4,
+          βάρος <InlineMath>{'3+5=8'}</InlineMath>, αξία{' '}
+          <InlineMath>{'4+6=10'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt15-th14',
+    title: 'Παλαιό Θέμα #15 · Θέμα 14 — Προβλήματα απόφασης Path και K',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέμα 14',
+    weight: 4,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv', 'lectures/L15-dp-ii'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τα προβλήματα βελτιστοποίησης: (i) εύρεση ελάχιστου μονοπατιού
+          ανάμεσα σε δύο κόμβους <InlineMath>{'s, t'}</InlineMath> ενός γράφου,
+          και (ii) μεγιστοποίηση οφέλους ενός 0-1 σακιδίου (Knapsack). Να δοθούν
+          τα αντίστοιχα <strong>προβλήματα απόφασης</strong>{' '}
+          <InlineMath>{'\\text{Path}'}</InlineMath> και{' '}
+          <InlineMath>{'\\text{K}'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Μετατρέπουμε ένα πρόβλημα βελτιστοποίησης σε «ΝΑΙ/ΟΧΙ» προσθέτοντας ένα
+          αριθμητικό <strong>κατώφλι</strong>.
+        </p>
+        <p>
+          <strong><InlineMath>{'\\text{Path}'}</InlineMath>:</strong> «Δοθέντος
+          γραφήματος <InlineMath>{'G'}</InlineMath> με βάρη στις ακμές, κόμβων{' '}
+          <InlineMath>{'s, t'}</InlineMath> και αριθμού{' '}
+          <InlineMath>{'k'}</InlineMath>, υπάρχει μονοπάτι από{' '}
+          <InlineMath>{'s'}</InlineMath> σε <InlineMath>{'t'}</InlineMath> με
+          συνολικό βάρος <InlineMath>{'\\le k'}</InlineMath>;»
+        </p>
+        <p>
+          <strong><InlineMath>{'\\text{K}'}</InlineMath>:</strong> «Δοθέντων{' '}
+          <InlineMath>{'n'}</InlineMath> αντικειμένων με βάρη{' '}
+          <InlineMath>{'a_i'}</InlineMath>, αξίες{' '}
+          <InlineMath>{'c_i'}</InlineMath>, χωρητικότητας{' '}
+          <InlineMath>{'b'}</InlineMath> και αριθμού{' '}
+          <InlineMath>{'k'}</InlineMath>, υπάρχει υποσύνολο αντικειμένων με
+          συνολικό βάρος <InlineMath>{'\\le b'}</InlineMath> και αξία{' '}
+          <InlineMath>{'\\ge k'}</InlineMath>;»
+        </p>
+        <p>
+          Με δυαδική αναζήτηση στο <InlineMath>{'k'}</InlineMath>, η λύση του
+          προβλήματος απόφασης δίνει και τη βέλτιστη τιμή — οπότε οι δύο εκδοχές
+          έχουν ουσιαστικά την ίδια δυσκολία.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt15-th15',
+    title: 'Παλαιό Θέμα #15 · Θέμα 15 — Κατάταξη των Path, K σε P και NP-complete',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #15',
+    problemNumber: 'Θέμα 15',
+    weight: 2,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv', 'lectures/L15-dp-ii'],
+    statement: (
+      <>
+        <p>
+          Με την υπόθεση ότι <InlineMath>{'P \\ne NP'}</InlineMath>: το πρόβλημα
+          απόφασης <InlineMath>{'\\text{Path}'}</InlineMath> ανήκει στην κλάση{' '}
+          <InlineMath>{'P'}</InlineMath>; Ανήκει στην{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete; Και το πρόβλημα{' '}
+          <InlineMath>{'\\text{K}'}</InlineMath>;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong><InlineMath>{'\\text{Path} \\in P'}</InlineMath>.</strong> Το
+          συντομότερο μονοπάτι (με μη αρνητικά βάρη) λύνεται σε πολυωνυμικό χρόνο
+          από τον Dijkstra, <InlineMath>{'O(m \\log n)'}</InlineMath>· υπολόγισε
+          τη συντομότερη <InlineMath>{'s\\text{--}t'}</InlineMath> απόσταση και
+          σύγκρινέ τη με το <InlineMath>{'k'}</InlineMath>. Άρα ανήκει στην{' '}
+          <InlineMath>{'P'}</InlineMath> — και δεν είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete (εκτός αν{' '}
+          <InlineMath>{'P = NP'}</InlineMath>).
+        </p>
+        <p>
+          <strong><InlineMath>{'\\text{K}'}</InlineMath> είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete.</strong> Ανήκει στην{' '}
+          <InlineMath>{'NP'}</InlineMath> (δοθέντος υποσυνόλου επαληθεύεις σε
+          πολυωνυμικό χρόνο βάρος <InlineMath>{'\\le b'}</InlineMath> και αξία{' '}
+          <InlineMath>{'\\ge k'}</InlineMath>) και είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-δύσκολο (αναγωγή από Subset-Sum). Ο DP
+          αλγόριθμος <InlineMath>{'\\Theta(nb)'}</InlineMath> είναι μόνο
+          ψευδοπολυωνυμικός. Υπό <InlineMath>{'P \\ne NP'}</InlineMath>, δεν
+          ανήκει στην <InlineMath>{'P'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  // ── Παλαιό Θέμα #16 — μεταγραμμένο & χωρισμένο ανά διάλεξη ─────────────
+  {
+    id: 'pt16-th1a',
+    title: 'Παλαιό Θέμα #16 · Θέμα 1.1 — Πολυπλοκότητα φωλιασμένων βρόχων',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 1.1',
+    weight: 10,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε ότι ο πίνακας <InlineMath>{'a'}</InlineMath> έχει{' '}
+          <InlineMath>{'n'}</InlineMath> θέσεις, η συνάρτηση{' '}
+          <code>randomValue()</code> κάνει σταθερό αριθμό βημάτων, και η μέθοδος{' '}
+          <code>Sort</code> κάνει <InlineMath>{'n'}</InlineMath> βήματα.
+          Προσδιορίστε σε <InlineMath>{'O'}</InlineMath>-συμβολισμό την
+          πολυπλοκότητα του παρακάτω τμήματος προγράμματος:
+        </p>
+        <pre className="overflow-x-auto rounded bg-bg-soft p-3 text-sm">{`for (bound = 1; bound <= n; bound = bound * 2)
+    for (i = 0; i < bound; i = i + 1)
+        a[i] = randomValue();
+    Sort(a);`}</pre>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Αναλύουμε «από μέσα προς τα έξω».
+        </p>
+        <p>
+          <strong>Εσωτερικός βρόχος.</strong> Τρέχει <InlineMath>{'bound'}</InlineMath>{' '}
+          φορές, με <InlineMath>{'O(1)'}</InlineMath> ανά επανάληψη — κόστος{' '}
+          <InlineMath>{'O(bound)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Κόστος μιας επανάληψης του εξωτερικού βρόχου.</strong>{' '}
+          <InlineMath>{'O(bound)'}</InlineMath> για τον εσωτερικό βρόχο{' '}
+          <strong>συν</strong> <InlineMath>{'O(n)'}</InlineMath> για το{' '}
+          <code>Sort(a)</code>. Αφού πάντα <InlineMath>{'bound \\le n'}</InlineMath>,
+          το άθροισμα είναι <InlineMath>{'O(n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Εξωτερικός βρόχος.</strong> Το <InlineMath>{'bound'}</InlineMath>{' '}
+          ξεκινά από <InlineMath>{'1'}</InlineMath> και{' '}
+          <strong>διπλασιάζεται</strong> κάθε φορά:{' '}
+          <InlineMath>{'1, 2, 4, \\dots, n'}</InlineMath> — άρα{' '}
+          <InlineMath>{'\\Theta(\\log n)'}</InlineMath> επαναλήψεις.
+        </p>
+        <p>
+          <strong>Σύνολο:</strong> <InlineMath>{'\\Theta(\\log n)'}</InlineMath>{' '}
+          επαναλήψεις, κάθε μία <InlineMath>{'O(n)'}</InlineMath>:
+        </p>
+        <BlockMath>{'T(n) = O(n \\log n)'}</BlockMath>
+        <p>
+          Η συνηθισμένη παγίδα είναι να πει κανείς «δύο φωλιασμένοι βρόχοι άρα{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath>». Όχι: ο εσωτερικός βρόχος δεν
+          φτάνει το <InlineMath>{'n'}</InlineMath> παρά μόνο στην τελευταία
+          επανάληψη — το άθροισμα{' '}
+          <InlineMath>{'1 + 2 + 4 + \\dots + n = 2n - 1'}</InlineMath> των
+          εσωτερικών βρόχων είναι μόνο <InlineMath>{'O(n)'}</InlineMath>· εκείνο
+          που κυριαρχεί είναι το <code>Sort</code> στις{' '}
+          <InlineMath>{'\\log n'}</InlineMath> επαναλήψεις.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th1b',
+    title: 'Παλαιό Θέμα #16 · Θέμα 1.2 — Σωστό / Λάθος σε ασυμπτωτικό συμβολισμό',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 1.2',
+    weight: 8,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    formulaIds: ['big-o-defn'],
+    statement: (
+      <>
+        <p>
+          Εξετάστε αν οι παρακάτω διατυπώσεις είναι αληθείς ή ψευδείς και
+          δικαιολογήστε:
+        </p>
+        <ol>
+          <li><InlineMath>{'n = o(\\log n)'}</InlineMath></li>
+          <li><InlineMath>{'2^{2n} = O(2^{2^n})'}</InlineMath></li>
+          <li><InlineMath>{'1 = o(1/n)'}</InlineMath></li>
+        </ol>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Υπενθύμιση: <InlineMath>{'f = o(g)'}</InlineMath> σημαίνει{' '}
+          <InlineMath>{'\\lim f/g = 0'}</InlineMath> (η{' '}
+          <InlineMath>{'f'}</InlineMath> είναι <em>αυστηρά</em> μικρότερης τάξης).
+        </p>
+        <p>
+          <strong>1. <InlineMath>{'n = o(\\log n)'}</InlineMath> — ΨΕΥΔΕΣ.</strong>{' '}
+          Είναι ακριβώς το ανάποδο: <InlineMath>{'\\lim n / \\log n = \\infty'}</InlineMath>,
+          το <InlineMath>{'n'}</InlineMath> μεγαλώνει πολύ <em>γρηγορότερα</em>{' '}
+          από το <InlineMath>{'\\log n'}</InlineMath>. Το σωστό θα ήταν{' '}
+          <InlineMath>{'\\log n = o(n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>2. <InlineMath>{'2^{2n} = O(2^{2^n})'}</InlineMath> — ΑΛΗΘΕΣ.</strong>{' '}
+          Συγκρίνουμε τους εκθέτες: <InlineMath>{'2n'}</InlineMath> έναντι{' '}
+          <InlineMath>{'2^n'}</InlineMath>. Το <InlineMath>{'2^n'}</InlineMath>{' '}
+          μεγαλώνει εκθετικά, το <InlineMath>{'2n'}</InlineMath> γραμμικά — άρα{' '}
+          <InlineMath>{'2n \\le 2^n'}</InlineMath> για κάθε{' '}
+          <InlineMath>{'n \\ge 2'}</InlineMath>, οπότε{' '}
+          <InlineMath>{'2^{2n} \\le 2^{2^n}'}</InlineMath>. Η σχέση{' '}
+          <InlineMath>{'O'}</InlineMath> ισχύει (μάλιστα ισχύει και η αυστηρή{' '}
+          <InlineMath>{'2^{2n} = o(2^{2^n})'}</InlineMath>).
+        </p>
+        <p>
+          <strong>3. <InlineMath>{'1 = o(1/n)'}</InlineMath> — ΨΕΥΔΕΣ.</strong>{' '}
+          Το <InlineMath>{'1/n'}</InlineMath> τείνει στο{' '}
+          <InlineMath>{'0'}</InlineMath>, ενώ το <InlineMath>{'1'}</InlineMath>{' '}
+          μένει σταθερό· <InlineMath>{'\\lim 1/(1/n) = \\lim n = \\infty'}</InlineMath>,
+          όχι <InlineMath>{'0'}</InlineMath>. Το σωστό είναι το ανάποδο:{' '}
+          <InlineMath>{'1/n = o(1)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th1c',
+    title: 'Παλαιό Θέμα #16 · Θέμα 1.3 — Διάταξη συναρτήσεων σε αύξουσα τάξη',
+    topic: 'asymptotics',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 1.3',
+    weight: 7,
+    difficulty: 'hard',
+    prerequisites: ['lectures/L02-asymptotic-analysis'],
+    formulaIds: ['growth-hierarchy'],
+    statement: (
+      <>
+        <p>
+          Διατάξτε τις παρακάτω συναρτήσεις σε <strong>αύξουσα σειρά τάξης
+          μεγέθους</strong>, καθώς το <InlineMath>{'n'}</InlineMath> τείνει στο
+          άπειρο:
+        </p>
+        <BlockMath>{'f_1(n) = (5/4)^n,\\quad f_2(n) = \\sum_{k=1}^{4\\log n}\\sqrt[4]{k},\\quad f_3(n) = H_n,'}</BlockMath>
+        <BlockMath>{'f_4(n) = \\log(n!),\\quad f_5(n) = \\binom{n}{n/2},\\quad f_6(n) = n^{\\log_2 n}'}</BlockMath>
+      </>
+    ),
+    solution: (
+      <>
+        <p>Φέρνουμε κάθε συνάρτηση στην απλούστερη ασυμπτωτική μορφή της:</p>
+        <ul>
+          <li>
+            <InlineMath>{'f_3 = H_n = 1 + \\tfrac12 + \\dots + \\tfrac1n = \\Theta(\\log n)'}</InlineMath>{' '}
+            (αρμονικός αριθμός).
+          </li>
+          <li>
+            <InlineMath>{'f_2 = \\sum_{k=1}^{4\\log n} k^{1/4} = \\Theta\\bigl((\\log n)^{5/4}\\bigr)'}</InlineMath>{' '}
+            (άθροισμα <InlineMath>{'k^{1/4}'}</InlineMath> έως{' '}
+            <InlineMath>{'4\\log n'}</InlineMath> ανεβάζει τον εκθέτη κατά 1).
+          </li>
+          <li>
+            <InlineMath>{'f_4 = \\log(n!) = \\Theta(n\\log n)'}</InlineMath>{' '}
+            (από την προσέγγιση Stirling, ή{' '}
+            <InlineMath>{'\\log(n!) \\le \\log(n^n) = n\\log n'}</InlineMath>).
+          </li>
+          <li>
+            <InlineMath>{'f_6 = n^{\\log_2 n} = 2^{(\\log_2 n)^2}'}</InlineMath>{' '}
+            — υπερπολυωνυμικό αλλά υποεκθετικό («quasi-polynomial»).
+          </li>
+          <li>
+            <InlineMath>{'f_1 = (5/4)^n = 2^{n\\log_2(5/4)} \\approx 2^{0.32n}'}</InlineMath>{' '}
+            — εκθετικό.
+          </li>
+          <li>
+            <InlineMath>{'f_5 = \\binom{n}{n/2} = \\Theta(2^n / \\sqrt{n})'}</InlineMath>{' '}
+            — ο μεγαλύτερος διωνυμικός συντελεστής, σχεδόν{' '}
+            <InlineMath>{'2^n'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          <strong>Σύγκριση των οριακών περιπτώσεων:</strong>{' '}
+          <InlineMath>{'f_6 = 2^{(\\log n)^2}'}</InlineMath> έναντι{' '}
+          <InlineMath>{'f_1 = 2^{0.32n}'}</InlineMath> — ο γραμμικός εκθέτης{' '}
+          <InlineMath>{'0.32n'}</InlineMath> ξεπερνά τελικά τον{' '}
+          <InlineMath>{'(\\log n)^2'}</InlineMath>, άρα{' '}
+          <InlineMath>{'f_6 \\prec f_1'}</InlineMath>. Και{' '}
+          <InlineMath>{'f_1 = 2^{0.32n} \\prec 2^{n}/\\sqrt{n} = f_5'}</InlineMath>.
+        </p>
+        <p><strong>Τελική διάταξη (αύξουσα):</strong></p>
+        <BlockMath>{'f_3 \\;\\prec\\; f_2 \\;\\prec\\; f_4 \\;\\prec\\; f_6 \\;\\prec\\; f_1 \\;\\prec\\; f_5'}</BlockMath>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th2a',
+    title: 'Παλαιό Θέμα #16 · Θέμα 2.1 — Κατασκευή βέλτιστου κώδικα Huffman',
+    topic: 'greedy',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 2.1',
+    weight: 8,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L13-greedy-iii'],
+    formulaIds: ['huffman'],
+    statement: (
+      <>
+        <p>
+          Να δοθεί ένας βέλτιστος κώδικας Huffman για το ακόλουθο σύνολο
+          χαρακτήρων και των συχνοτήτων τους:
+        </p>
+        <BlockMath>{'Y\\!:8,\\quad H\\!:12,\\quad P\\!:13,\\quad D\\!:18,\\quad A\\!:49'}</BlockMath>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ο αλγόριθμος Huffman χτίζει το δέντρο <strong>από κάτω προς τα
+          πάνω</strong>: σε κάθε βήμα συγχωνεύει τους <strong>δύο
+          σπανιότερους</strong> κόμβους σε έναν νέο, με συχνότητα το άθροισμά
+          τους.
+        </p>
+        <ol>
+          <li>
+            Σπανιότεροι: <InlineMath>{'Y\\,(8)'}</InlineMath> και{' '}
+            <InlineMath>{'H\\,(12)'}</InlineMath> → νέος κόμβος{' '}
+            <InlineMath>{'YH\\,(20)'}</InlineMath>. Μένουν:{' '}
+            <InlineMath>{'P13,\\ D18,\\ YH20,\\ A49'}</InlineMath>.
+          </li>
+          <li>
+            Σπανιότεροι: <InlineMath>{'P\\,(13)'}</InlineMath> και{' '}
+            <InlineMath>{'D\\,(18)'}</InlineMath> → κόμβος{' '}
+            <InlineMath>{'PD\\,(31)'}</InlineMath>. Μένουν:{' '}
+            <InlineMath>{'YH20,\\ PD31,\\ A49'}</InlineMath>.
+          </li>
+          <li>
+            Σπανιότεροι: <InlineMath>{'YH\\,(20)'}</InlineMath> και{' '}
+            <InlineMath>{'PD\\,(31)'}</InlineMath> → κόμβος{' '}
+            <InlineMath>{'YHPD\\,(51)'}</InlineMath>. Μένουν:{' '}
+            <InlineMath>{'A49,\\ YHPD51'}</InlineMath>.
+          </li>
+          <li>
+            Τελευταία συγχώνευση: <InlineMath>{'A\\,(49)'}</InlineMath> και{' '}
+            <InlineMath>{'YHPD\\,(51)'}</InlineMath> → ρίζα{' '}
+            <InlineMath>{'(100)'}</InlineMath>.
+          </li>
+        </ol>
+        <p>
+          Διαβάζουμε τους κώδικες από τη ρίζα ( <InlineMath>{'0'}</InlineMath> =
+          αριστερό παιδί, <InlineMath>{'1'}</InlineMath> = δεξιό):
+        </p>
+        <BlockMath>{'A = 0,\\quad Y = 100,\\quad H = 101,\\quad P = 110,\\quad D = 111'}</BlockMath>
+        <p>
+          Ο πιο συχνός χαρακτήρας (<InlineMath>{'A'}</InlineMath>) πήρε κώδικα{' '}
+          ενός μόνο δυφίου· οι σπάνιοι πήραν 3 δυφία. Συνολικό μήκος
+          κωδικοποίησης:
+        </p>
+        <BlockMath>{'49\\cdot1 + 8\\cdot3 + 12\\cdot3 + 13\\cdot3 + 18\\cdot3 = 49 + 153 = 202 \\text{ δυφία}'}</BlockMath>
+        <p>
+          (Σύγκριση: με σταθερό μήκος 3 δυφίων ανά χαρακτήρα θα χρειαζόμασταν{' '}
+          <InlineMath>{'100 \\cdot 3 = 300'}</InlineMath> δυφία.)
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th2b',
+    title: 'Παλαιό Θέμα #16 · Θέμα 2.2 — Αποκωδικοποίηση συμβολοσειράς Huffman',
+    topic: 'greedy',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 2.2',
+    weight: 7,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L13-greedy-iii'],
+    formulaIds: ['huffman'],
+    statement: (
+      <>
+        <p>
+          Σε ποιο μήνυμα αντιστοιχεί η συμβολοσειρά{' '}
+          <code>1010110110100111101100</code>, που προέκυψε από την κωδικοποίηση
+          Huffman του προηγούμενου θέματος;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Επειδή ο κώδικας Huffman είναι <strong>απροθεματικός</strong> (κανένας
+          κώδικας δεν είναι πρόθεμα άλλου), η αποκωδικοποίηση είναι{' '}
+          <strong>μονοσήμαντη</strong>: διαβάζουμε δυφία ένα-ένα ακολουθώντας το
+          δέντρο από τη ρίζα, και μόλις φτάσουμε σε φύλλο εκπέμπουμε τον
+          χαρακτήρα και ξαναρχίζουμε από τη ρίζα.
+        </p>
+        <p>
+          Κώδικες: <InlineMath>{'A=0,\\ Y=100,\\ H=101,\\ P=110,\\ D=111'}</InlineMath>.
+          Κόβουμε τη συμβολοσειρά:
+        </p>
+        <BlockMath>{'\\underbrace{101}_{H}\\ \\underbrace{0}_{A}\\ \\underbrace{110}_{P}\\ \\underbrace{110}_{P}\\ \\underbrace{100}_{Y}\\ \\underbrace{111}_{D}\\ \\underbrace{101}_{H}\\ \\underbrace{100}_{Y}'}</BlockMath>
+        <p>
+          Το μήνυμα ξεκινά καθαρά με <strong>HAPPY</strong> (τα πρώτα 13 δυφία,{' '}
+          <code>1010110110100</code>) και συνεχίζει με{' '}
+          <InlineMath>{'D, H, Y'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Το κλειδί της μεθόδου:</strong> δεν χρειάζεται να «μαντέψουμε»
+          πού τελειώνει κάθε χαρακτήρας — η ιδιότητα του απροθεματικού κώδικα
+          εγγυάται ότι μόλις τα δυφία που διαβάσαμε ταιριάξουν με έναν κώδικα,
+          αυτός είναι ο μοναδικός δυνατός χαρακτήρας.
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: η δυαδική συμβολοσειρά διαβάστηκε από σαρωμένο
+          αντίγραφο με χειρόγραφες σημειώσεις· η μέθοδος αποκωδικοποίησης είναι
+          το ζητούμενο και ισχύει για οποιαδήποτε συμβολοσειρά.)</em>
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th2c',
+    title: 'Παλαιό Θέμα #16 · Θέμα 2.3 — Μέγιστο μονοπάτι σε DAG',
     topic: 'dp',
     origin: 'past-exam',
     paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 2.3',
+    weight: 10,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L17-dp-iv'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε ένα κατευθυνόμενο ακυκλικό γράφημα{' '}
+          <InlineMath>{'G = (V, E, W)'}</InlineMath> με θετικά ακέραια βάρη.
+          (α) Ποια είναι η πολυπλοκότητα <InlineMath>{'T(n)'}</InlineMath> ενός
+          αλγορίθμου που βρίσκει το μέγιστο μονοπάτι; (β) Για το στιγμιότυπο{' '}
+          <InlineMath>{'V = \\{v_1, \\dots, v_6\\}'}</InlineMath>,{' '}
+          <InlineMath>{'E = \\{(v_1,v_2),(v_2,v_3),(v_1,v_3),(v_3,v_4),(v_4,v_5),(v_5,v_6),(v_4,v_6),(v_3,v_6)\\}'}</InlineMath>{' '}
+          με <InlineMath>{'w(v_i, v_j) = i + j'}</InlineMath>, βρείτε το μέγιστο
+          μονοπάτι από <InlineMath>{'v_1'}</InlineMath> προς{' '}
+          <InlineMath>{'v_6'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α) Πολυπλοκότητα.</strong> Ορίζουμε{' '}
+          <InlineMath>{'L(v)'}</InlineMath> = μήκος του μέγιστου μονοπατιού από
+          την <InlineMath>{'v'}</InlineMath> προς τον προορισμό. Αναδρομή:
+        </p>
+        <BlockMath>{'L(v) = \\max_{(v,w) \\in E} \\bigl(\\, w(v,w) + L(w) \\,\\bigr),\\qquad L(\\text{προορισμός}) = 0'}</BlockMath>
+        <p>
+          Υπολογίζουμε τα <InlineMath>{'L(v)'}</InlineMath> κατά{' '}
+          <strong>αντίστροφη τοπολογική διάταξη</strong>. Κάθε ακμή εξετάζεται
+          μία φορά, οπότε <InlineMath>{'T(n) = O(n + m)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(β) Στιγμιότυπο.</strong> Βάρη ακμών (<InlineMath>{'i+j'}</InlineMath>):{' '}
+          <InlineMath>{'(v_1,v_2)\\!=\\!3,\\ (v_2,v_3)\\!=\\!5,\\ (v_1,v_3)\\!=\\!4,\\ (v_3,v_4)\\!=\\!7,\\ (v_4,v_5)\\!=\\!9,\\ (v_5,v_6)\\!=\\!11,\\ (v_4,v_6)\\!=\\!10,\\ (v_3,v_6)\\!=\\!9'}</InlineMath>.
+        </p>
+        <p>Υπολογίζουμε τα <InlineMath>{'L'}</InlineMath> από το τέλος:</p>
+        <ul>
+          <li><InlineMath>{'L(v_6) = 0'}</InlineMath></li>
+          <li><InlineMath>{'L(v_5) = 11 + L(v_6) = 11'}</InlineMath></li>
+          <li><InlineMath>{'L(v_4) = \\max\\{9 + L(v_5),\\ 10 + L(v_6)\\} = \\max\\{20, 10\\} = 20'}</InlineMath></li>
+          <li><InlineMath>{'L(v_3) = \\max\\{7 + L(v_4),\\ 9 + L(v_6)\\} = \\max\\{27, 9\\} = 27'}</InlineMath></li>
+          <li><InlineMath>{'L(v_2) = 5 + L(v_3) = 32'}</InlineMath></li>
+          <li><InlineMath>{'L(v_1) = \\max\\{3 + L(v_2),\\ 4 + L(v_3)\\} = \\max\\{35, 31\\} = 35'}</InlineMath></li>
+        </ul>
+        <p>
+          Το μέγιστο μονοπάτι έχει μήκος <strong>35</strong> και είναι το{' '}
+          <InlineMath>{'v_1 \\to v_2 \\to v_3 \\to v_4 \\to v_5 \\to v_6'}</InlineMath>{' '}
+          (<InlineMath>{'3 + 5 + 7 + 9 + 11 = 35'}</InlineMath>).
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th3a',
+    title: 'Παλαιό Θέμα #16 · Θέμα 3.1 — Αναδρομές της μορφής T(n) = 2T(√n) + …',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 3.1',
+    weight: 10,
     difficulty: 'hard',
-    prerequisites: ALL_LECTURES,
-    statement: null,
-    solution: null,
+    prerequisites: ['lectures/L04-divide-and-conquer-ii'],
+    statement: (
+      <>
+        <p>
+          Έχετε να επιλέξετε ανάμεσα σε δύο αλγορίθμους που λύνουν το ίδιο
+          πρόβλημα διάστασης <InlineMath>{'n'}</InlineMath>. Ο{' '}
+          <strong>A</strong> διαιρεί σε 2 υποπροβλήματα διάστασης{' '}
+          <InlineMath>{'\\sqrt{n}'}</InlineMath> και συνδυάζει σε χρόνο{' '}
+          <InlineMath>{'\\Theta(1)'}</InlineMath>. Ο <strong>B</strong> διαιρεί
+          επίσης σε 2 υποπροβλήματα διάστασης <InlineMath>{'\\sqrt{n}'}</InlineMath>{' '}
+          αλλά συνδυάζει σε χρόνο <InlineMath>{'\\Theta(\\log n)'}</InlineMath>.
+          Ποια η πολυπλοκότητα <InlineMath>{'T(n)'}</InlineMath> καθενός; Ποιον θα
+          επιλέγατε;
+        </p>
+        <p>
+          <em>(Σημείωση μεταγραφής: το ακριβές κόστος συνδυασμού του B είναι
+          αχνό στο σαρωμένο αντίγραφο· παρακάτω διδάσκεται πλήρως η τεχνική
+          αλλαγής μεταβλητής, που λύνει κάθε τέτοια αναδρομή.)</em>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Αναδρομές με <InlineMath>{'T(\\sqrt{n})'}</InlineMath> δεν λύνονται
+          απευθείας με το Master Theorem. Το τέχνασμα είναι η{' '}
+          <strong>αλλαγή μεταβλητής</strong>: θέτουμε{' '}
+          <InlineMath>{'n = 2^m'}</InlineMath>, δηλαδή{' '}
+          <InlineMath>{'m = \\log_2 n'}</InlineMath>. Τότε{' '}
+          <InlineMath>{'\\sqrt{n} = 2^{m/2}'}</InlineMath>, και αν ορίσουμε{' '}
+          <InlineMath>{'S(m) = T(2^m)'}</InlineMath> η αναδρομή σε{' '}
+          <InlineMath>{'\\sqrt{n}'}</InlineMath> γίνεται αναδρομή σε{' '}
+          <InlineMath>{'m/2'}</InlineMath> — οικείο έδαφος.
+        </p>
+        <p>
+          <strong>Αλγόριθμος A:</strong>{' '}
+          <InlineMath>{'T_A(n) = 2\\,T_A(\\sqrt{n}) + \\Theta(1)'}</InlineMath>.
+          Με <InlineMath>{'n = 2^m'}</InlineMath>:{' '}
+          <InlineMath>{'S(m) = 2\\,S(m/2) + \\Theta(1)'}</InlineMath>. Από το
+          Master Theorem (<InlineMath>{'a=2, b=2, d=0,\\ \\log_2 2 = 1 > 0'}</InlineMath>{' '}
+          — 3η περίπτωση): <InlineMath>{'S(m) = \\Theta(m)'}</InlineMath>.
+          Επιστρέφοντας στο <InlineMath>{'n'}</InlineMath>:{' '}
+          <InlineMath>{'T_A(n) = \\Theta(m) = \\Theta(\\log n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Αλγόριθμος B:</strong>{' '}
+          <InlineMath>{'T_B(n) = 2\\,T_B(\\sqrt{n}) + \\Theta(\\log n)'}</InlineMath>.
+          Με <InlineMath>{'n = 2^m'}</InlineMath> το{' '}
+          <InlineMath>{'\\log n'}</InlineMath> γίνεται{' '}
+          <InlineMath>{'m'}</InlineMath>:{' '}
+          <InlineMath>{'S(m) = 2\\,S(m/2) + \\Theta(m)'}</InlineMath>. Από το
+          Master Theorem (2η περίπτωση,{' '}
+          <InlineMath>{'\\log_2 2 = 1 = d'}</InlineMath>):{' '}
+          <InlineMath>{'S(m) = \\Theta(m \\log m)'}</InlineMath>. Άρα{' '}
+          <InlineMath>{'T_B(n) = \\Theta(\\log n \\cdot \\log\\log n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Επιλογή:</strong> αφού{' '}
+          <InlineMath>{'\\log n \\prec \\log n \\cdot \\log\\log n'}</InlineMath>,
+          ο <strong>αλγόριθμος A</strong> είναι ασυμπτωτικά ταχύτερος. Το «ακριβό»
+          συνδυαστικό βήμα του B (<InlineMath>{'\\Theta(\\log n)'}</InlineMath>{' '}
+          αντί <InlineMath>{'\\Theta(1)'}</InlineMath>) προσθέτει έναν παράγοντα{' '}
+          <InlineMath>{'\\log\\log n'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th3b',
+    title: 'Παλαιό Θέμα #16 · Θέμα 3.2–3.3 — Quicksort: εκτέλεση & δέντρο αναδρομής',
+    topic: 'divide-conquer',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 3.2–3.3',
+    weight: 10,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L04-divide-and-conquer-ii'],
+    statement: (
+      <>
+        <p>
+          (3.2) Χρησιμοποιώντας τον αλγόριθμο Quicksort, ταξινομήστε τους
+          χαρακτήρες <InlineMath>{'D, A, C, B, F, E, G'}</InlineMath> σε αύξουσα
+          σειρά. (3.3) Δώστε το δέντρο των αναδρομικών κλήσεων.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Ο Quicksort διαλέγει ένα <strong>pivot</strong>, χωρίζει τα στοιχεία σε
+          «μικρότερα» και «μεγαλύτερα» από αυτό, και ταξινομεί αναδρομικά τα δύο
+          μέρη. Παίρνουμε ως pivot το <strong>πρώτο στοιχείο</strong> κάθε
+          υποπίνακα.
+        </p>
+        <p>
+          <strong>(3.2) Εκτέλεση</strong> στο{' '}
+          <InlineMath>{'[D, A, C, B, F, E, G]'}</InlineMath>:
+        </p>
+        <ul>
+          <li>
+            Pivot <InlineMath>{'D'}</InlineMath>: μικρότερα{' '}
+            <InlineMath>{'[A, C, B]'}</InlineMath>, μεγαλύτερα{' '}
+            <InlineMath>{'[F, E, G]'}</InlineMath> →{' '}
+            <InlineMath>{'[A,C,B]\\ D\\ [F,E,G]'}</InlineMath>.
+          </li>
+          <li>
+            Αριστερά <InlineMath>{'[A, C, B]'}</InlineMath>: pivot{' '}
+            <InlineMath>{'A'}</InlineMath> → <InlineMath>{'[\\,]\\ A\\ [C,B]'}</InlineMath>·
+            μετά <InlineMath>{'[C, B]'}</InlineMath>: pivot{' '}
+            <InlineMath>{'C'}</InlineMath> → <InlineMath>{'[B]\\ C\\ [\\,]'}</InlineMath>.
+            Αποτέλεσμα: <InlineMath>{'A, B, C'}</InlineMath>.
+          </li>
+          <li>
+            Δεξιά <InlineMath>{'[F, E, G]'}</InlineMath>: pivot{' '}
+            <InlineMath>{'F'}</InlineMath> → <InlineMath>{'[E]\\ F\\ [G]'}</InlineMath>.
+            Αποτέλεσμα: <InlineMath>{'E, F, G'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          Τελικό ταξινομημένο:{' '}
+          <InlineMath>{'A, B, C, D, E, F, G'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(3.3) Δέντρο αναδρομικών κλήσεων</strong> (κάθε κόμβος = ένα
+          κάλεσμα, με το pivot σε έντονη γραφή):
+        </p>
+        <pre className="overflow-x-auto rounded bg-bg-soft p-3 text-sm">{`            [D,A,C,B,F,E,G]  (pivot D)
+             /              \\
+      [A,C,B] (pivot A)   [F,E,G] (pivot F)
+         \\                  /      \\
+      [C,B] (pivot C)     [E]      [G]
+        /
+      [B]`}</pre>
+        <p>
+          Παρατήρησε ότι το δέντρο εδώ είναι αρκετά ισορροπημένο, οπότε το βάθος
+          είναι <InlineMath>{'\\approx \\log n'}</InlineMath> και η εκτέλεση
+          κοντά στη βέλτιστη περίπτωση <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>.
+          Αν η είσοδος ήταν ήδη ταξινομημένη, το δέντρο θα εκφυλιζόταν σε αλυσίδα
+          και ο χρόνος θα γινόταν <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th4',
+    title: 'Παλαιό Θέμα #16 · Θέμα 4 — LCS των BANANA και BINARY',
+    topic: 'dp',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 4',
+    weight: 17,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L16-dp-iii'],
+    formulaIds: ['lcs'],
+    statement: (
+      <>
+        <p>
+          Έστω οι δύο ακολουθίες χαρακτήρων <code>BANANA</code> και{' '}
+          <code>BINARY</code>. Θεωρήστε το πρόβλημα της μέγιστης κοινής
+          υπακολουθίας (LCS). (α) Γράψτε την αναδρομική σχέση για το{' '}
+          <InlineMath>{'C[i,j]'}</InlineMath>. (β) Συμπληρώστε τον πίνακα
+          δυναμικού προγραμματισμού. (γ) Ποια είναι η μέγιστη κοινή υπακολουθία;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α) Αναδρομική σχέση.</strong>{' '}
+          <InlineMath>{'C[i,j]'}</InlineMath> = μήκος της LCS των προθεμάτων{' '}
+          <InlineMath>{'X_1\\cdots X_i'}</InlineMath> (από το{' '}
+          <code>BANANA</code>) και <InlineMath>{'Y_1\\cdots Y_j'}</InlineMath>{' '}
+          (από το <code>BINARY</code>):
+        </p>
+        <BlockMath>{'C[i,j] = \\begin{cases} 0 & i = 0 \\ \\text{ή}\\ j = 0 \\\\ 1 + C[i-1,j-1] & X_i = Y_j \\\\ \\max\\{C[i-1,j],\\ C[i,j-1]\\} & X_i \\ne Y_j \\end{cases}'}</BlockMath>
+        <p>
+          <strong>(β) Ο πίνακας</strong> (γραμμές = <code>BANANA</code>, στήλες =
+          <code>BINARY</code>):
+        </p>
+        <BlockMath>{'\\begin{array}{c|ccccccc} & \\varnothing & B & I & N & A & R & Y \\\\ \\hline \\varnothing & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\\\ B & 0 & 1 & 1 & 1 & 1 & 1 & 1 \\\\ A & 0 & 1 & 1 & 1 & 2 & 2 & 2 \\\\ N & 0 & 1 & 1 & 2 & 2 & 2 & 2 \\\\ A & 0 & 1 & 1 & 2 & 3 & 3 & 3 \\\\ N & 0 & 1 & 1 & 2 & 3 & 3 & 3 \\\\ A & 0 & 1 & 1 & 2 & 3 & 3 & 3 \\end{array}'}</BlockMath>
+        <p>
+          <strong>(γ) Η LCS.</strong> Το κάτω-δεξιά κελί δίνει μήκος{' '}
+          <InlineMath>{'C[6,6] = 3'}</InlineMath>. Κάνοντας πέρασμα προς τα πίσω
+          (διαγώνια κίνηση όπου οι χαρακτήρες ταίριαξαν) παίρνουμε την υπακολουθία{' '}
+          <code>BNA</code>: το <InlineMath>{'B'}</InlineMath> είναι κοινό,{' '}
+          μετά το <InlineMath>{'N'}</InlineMath> (θέση 3 στο <code>BANANA</code>,
+          θέση 3 στο <code>BINARY</code>), μετά το{' '}
+          <InlineMath>{'A'}</InlineMath> (θέση 4 και 4). Το{' '}
+          <code>BINARY</code> περιέχει μόνο από ένα{' '}
+          <InlineMath>{'B, N, A'}</InlineMath>, οπότε μεγαλύτερη κοινή
+          υπακολουθία δεν γίνεται — <strong>μήκος 3</strong>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'pt16-th5',
+    title: 'Παλαιό Θέμα #16 · Θέμα 5 — Προβλήματα απόφασης ST, P και οι κλάσεις P / NP-complete',
+    topic: 'graphs',
+    origin: 'past-exam',
+    paperLabel: 'Παλαιό Θέμα #16',
+    problemNumber: 'Θέμα 5',
+    weight: 8,
+    difficulty: 'medium',
+    prerequisites: ['lectures/L09-graphs-iv'],
+    statement: (
+      <>
+        <p>
+          Θεωρήστε τα προβλήματα βελτιστοποίησης: ελαχιστοποίηση κόστους δέντρου
+          επικάλυψης (MST) και μεγιστοποίηση μονοπατιού (LP, longest path)
+          ανάμεσα σε δύο κόμβους <InlineMath>{'s, t'}</InlineMath> ενός γράφου.
+          (α) Να δοθούν τα αντίστοιχα προβλήματα απόφασης{' '}
+          <InlineMath>{'ST'}</InlineMath> και <InlineMath>{'P'}</InlineMath>.
+          (β) Με την υπόθεση ότι <InlineMath>{'P \\ne NP'}</InlineMath>: ποιο
+          ανήκει στην κλάση <InlineMath>{'P'}</InlineMath> και ποιο στην{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete;
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>(α) Προβλήματα απόφασης.</strong>
+        </p>
+        <p>
+          <strong><InlineMath>{'ST'}</InlineMath>:</strong> «Δοθέντος γραφήματος{' '}
+          <InlineMath>{'G'}</InlineMath> με βάρη στις ακμές και αριθμού{' '}
+          <InlineMath>{'k'}</InlineMath>, υπάρχει συνδετικό δέντρο με συνολικό
+          βάρος <InlineMath>{'\\le k'}</InlineMath>;»
+        </p>
+        <p>
+          <strong><InlineMath>{'P'}</InlineMath>:</strong> «Δοθέντος γραφήματος{' '}
+          <InlineMath>{'G'}</InlineMath> με βάρη, κόμβων{' '}
+          <InlineMath>{'s, t'}</InlineMath> και αριθμού{' '}
+          <InlineMath>{'k'}</InlineMath>, υπάρχει <em>απλό</em> μονοπάτι από{' '}
+          <InlineMath>{'s'}</InlineMath> σε <InlineMath>{'t'}</InlineMath> με
+          συνολικό βάρος <InlineMath>{'\\ge k'}</InlineMath>;»
+        </p>
+        <p>
+          <strong>(β) Κατάταξη.</strong>
+        </p>
+        <p>
+          <strong><InlineMath>{'ST \\in P'}</InlineMath>.</strong> Το Ελάχιστο
+          Συνδετικό Δέντρο λύνεται σε πολυωνυμικό χρόνο{' '}
+          <InlineMath>{'O(m\\log n)'}</InlineMath> (Kruskal/Prim)· υπολόγισε το
+          ΕΣΔ και σύγκρινε το βάρος του με το <InlineMath>{'k'}</InlineMath>.
+        </p>
+        <p>
+          <strong><InlineMath>{'P'}</InlineMath> είναι{' '}
+          <InlineMath>{'NP'}</InlineMath>-complete.</strong> Η εύρεση{' '}
+          <em>μεγαλύτερου</em> μονοπατιού (Longest Path) είναι κλασικό{' '}
+          <InlineMath>{'NP'}</InlineMath>-πλήρες πρόβλημα: ανήκει στην{' '}
+          <InlineMath>{'NP'}</InlineMath> (επαληθεύεις ένα δοσμένο μονοπάτι σε
+          πολυωνυμικό χρόνο) και είναι <InlineMath>{'NP'}</InlineMath>-δύσκολο
+          (περιέχει ως ειδική περίπτωση το Hamiltonian Path). Υπό{' '}
+          <InlineMath>{'P \\ne NP'}</InlineMath> δεν έχει πολυωνυμικό αλγόριθμο.
+        </p>
+        <p>
+          <strong>Το δίδαγμα:</strong> δύο προβλήματα που μοιάζουν συμμετρικά
+          («ελάχιστο δέντρο» έναντι «μέγιστο μονοπάτι») έχουν εντελώς
+          διαφορετική δυσκολία — το ένα εύκολο, το άλλο από τα δυσκολότερα στην{' '}
+          <InlineMath>{'NP'}</InlineMath>.
+        </p>
+      </>
+    ),
   },
   {
     id: 'exam-feb-2016',

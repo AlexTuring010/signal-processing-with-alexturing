@@ -118,8 +118,8 @@ beginner-friendly Greek solution — then **anonymise** in the UI.
 | 12 | Παλαιό Θέμα #12 | `Ζησιμόπουλος/2019-Feb-VZ/2019.pdf` | ⊘ κενό |
 | 13 | Παλαιό Θέμα #13 | `Ζησιμόπουλος/2018-June-VZ/*.jpg` (2) | ☑ 14/15 |
 | 14 | Παλαιό Θέμα #14 | `Ζησιμόπουλος/2017-Sept-VZ/*.jpg` (2) | ☑ 13/16 |
-| 15 | Παλαιό Θέμα #15 | `Ζησιμόπουλος/2017-Feb-VZ/algo-fevr-2017-zisimopoulos.pdf` | ☐ |
-| 16 | Παλαιό Θέμα #16 | `Ζησιμόπουλος/2016-June-VZ/*.jpg` (2) | ☐ |
+| 15 | Παλαιό Θέμα #15 | `Ζησιμόπουλος/2017-Feb-VZ/algo-fevr-2017-zisimopoulos.pdf` | ☑ 9/15 |
+| 16 | Παλαιό Θέμα #16 | `Ζησιμόπουλος/2016-June-VZ/*.jpg` (2) | ☑ 10/11 |
 | 17 | Παλαιό Θέμα #17 | `Ζησιμόπουλος/2016-Feb-VZ/*.jpg` (5) | ☐ |
 | 18 | Παλαιό Θέμα #18 | `Ζησιμόπουλος/2015-June-VZ/` (2 pdf, 2 jpg) | ☐ |
 | 19 | Παλαιό Θέμα #19 | `Ζησιμόπουλος/2012-Midterm/2012-p.pdf` | ☐ |
@@ -148,14 +148,13 @@ beginner-friendly Greek solution — then **anonymise** in the UI.
 
 ## Progress
 
-**Old exams — done: 13 / 23** (#1–#11, #13, #14· το #12 είναι κενό αρχείο —
-βλ. παρακάτω). Fully pending: 9 (#15–#23).
+**Old exams — done: 15 / 23** (#1–#11, #13–#16· το #12 είναι κενό αρχείο).
+Fully pending: 7 (#17–#23).
 **Frontistiria — done: 13 / 13 — 100% ΟΛΟΚΛΗΡΩΘΗΚΕ.**
 
-Total modular exercises transcribed so far: **202** (168 από προηγούμενες
-συνεδρίες συν 34 αυτή τη συνεδρία: Φροντ.Σετ #13 ×3, Παλαιό Θέμα #11 ×4, #13
-×14, #14 ×13). Verified by
-`grep -cE "id: '(pt|front-set-)" content/practice/exercises.tsx` → 202.
+Total modular exercises transcribed so far: **221** (202 από προηγούμενες
+συνεδρίες συν 19 αυτή τη συνεδρία: Παλαιό Θέμα #15 ×9, #16 ×10). Verified by
+`grep -cE "id: '(pt|front-set-)" content/practice/exercises.tsx` → 221.
 
 > **Batch note (2026-05-22, privacy + batch session).** Two parts:
 > **(1) Privacy architecture.** All raw exercise material moved to the new
