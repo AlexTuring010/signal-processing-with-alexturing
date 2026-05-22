@@ -26,6 +26,7 @@ import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
 import { InversionCounter } from '@/components/viz/InversionCounter'
 import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
 import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
+import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -69,6 +70,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     InversionCounter,
     ClosestPairScan,
     GraphRepresentations,
+    BipartiteChecker,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
