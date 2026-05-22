@@ -35,6 +35,7 @@ import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
 import { KnapsackTable } from '@/components/viz/KnapsackTable'
 import { EditDistanceTable } from '@/components/viz/EditDistanceTable'
+import { TreeIndependentSet } from '@/components/viz/TreeIndependentSet'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -87,6 +88,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     WeightedIntervalDP,
     KnapsackTable,
     EditDistanceTable,
+    TreeIndependentSet,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
