@@ -13,33 +13,7 @@
 import { useState } from 'react'
 import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-type Req = { id: number; s: number; f: number; v: number }
-
-/** Sorted by finish time, as the algorithm requires. */
-const REQS: Req[] = [
-  { id: 1, s: 1, f: 5, v: 2 },
-  { id: 2, s: 2, f: 7, v: 4 },
-  { id: 3, s: 4, f: 8, v: 4 },
-  { id: 4, s: 3, f: 10, v: 7 },
-  { id: 5, s: 6, f: 12, v: 2 },
-  { id: 6, s: 9, f: 13, v: 1 },
-  { id: 7, s: 8, f: 14, v: 5 },
-  { id: 8, s: 12, f: 16, v: 3 },
-]
-const N = REQS.length
-const T_MAX = 16
-
-/** p(j): largest i < j with f(i) ≤ s(j); 0 if none. */
-const P: number[] = (() => {
-  const p = [0]
-  for (let j = 1; j <= N; j++) {
-    let best = 0
-    for (let i = 1; i < j; i++) if (REQS[i - 1].f <= REQS[j - 1].s) best = i
-    p[j] = best
-  }
-  return p
-})()
+import { REQS, N, T_MAX, P } from './interval-instance'
 
 /** M[j] = OPT for the first j requests, plus the in/out decision. */
 const M: number[] = [0]

@@ -59,6 +59,10 @@ import { PrefixDecoder } from '@/components/viz/PrefixDecoder'
 import { HuffmanSwapViz } from '@/components/viz/HuffmanSwapViz'
 import { HuffmanOptimalityViz } from '@/components/viz/HuffmanOptimalityViz'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
+import { RecursionExplosion } from '@/components/viz/RecursionExplosion'
+import { GreedyFailsWeighted } from '@/components/viz/GreedyFailsWeighted'
+import { PjExplorer } from '@/components/viz/PjExplorer'
+import { PjScan } from '@/components/viz/PjScan'
 import { KnapsackTable } from '@/components/viz/KnapsackTable'
 import { EditDistanceTable } from '@/components/viz/EditDistanceTable'
 import { TreeIndependentSet } from '@/components/viz/TreeIndependentSet'
@@ -138,6 +142,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     HuffmanSwapViz,
     HuffmanOptimalityViz,
     WeightedIntervalDP,
+    RecursionExplosion,
+    GreedyFailsWeighted,
+    PjExplorer,
+    PjScan,
     KnapsackTable,
     EditDistanceTable,
     TreeIndependentSet,
