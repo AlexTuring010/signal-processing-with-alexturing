@@ -29,6 +29,7 @@ import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
 import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
 import { DijkstraAnimator } from '@/components/viz/DijkstraAnimator'
 import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
+import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -75,6 +76,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     BipartiteChecker,
     DijkstraAnimator,
     BinaryHeapAnimator,
+    IntervalScheduling,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
