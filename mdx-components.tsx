@@ -20,6 +20,9 @@ import { ExamRadar } from '@/components/content/ExamRadar'
 import { GraphCanvas } from '@/components/viz/GraphCanvas'
 import { TraversalGame } from '@/components/viz/TraversalGame'
 import { BinarySearchViz } from '@/components/viz/BinarySearchViz'
+import { InstanceDimensionLab } from '@/components/viz/InstanceDimensionLab'
+import { ComplexityCasesExplorer } from '@/components/viz/ComplexityCasesExplorer'
+import { LogVsLinearRace } from '@/components/viz/LogVsLinearRace'
 import { BigOPlayground } from '@/components/viz/BigOPlayground'
 import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
 import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
@@ -117,6 +120,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     GraphCanvas,
     TraversalGame,
     BinarySearchViz,
+    InstanceDimensionLab,
+    ComplexityCasesExplorer,
+    LogVsLinearRace,
     BigOPlayground,
     MergeSortAnimator,
     RecurrenceClassifier,
