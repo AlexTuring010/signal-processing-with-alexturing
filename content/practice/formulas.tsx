@@ -386,7 +386,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         inTypology: false,
         derivedIn: 'am/conventional',
         content: (
-          <BlockMath>{'\\eta = \\frac{P_m}{A_c^2 + P_m} = \\frac{\\mu^2 P_m}{2 + \\mu^2 P_m} \\;\\leq\\; \\tfrac{1}{3}'}</BlockMath>
+          <BlockMath>{'\\eta = \\frac{P_m}{A_c^2 + P_m} \\;\\stackrel{\\text{single-tone}}{=}\\; \\frac{\\mu^2}{2 + \\mu^2} \\;\\leq\\; \\tfrac{1}{3}'}</BlockMath>
         ),
       },
       {
