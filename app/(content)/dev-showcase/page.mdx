@@ -1,0 +1,145 @@
+export const metadata = {
+  title: 'Component kit showcase (dev)',
+  description: 'Eyeball preview of the Phase 0 MDX components: RecallCard, RecallDrill, ClozeDrill, ReorderDrill, ThinkingPattern, ExamRadar.',
+  robots: { index: false, follow: false },
+}
+
+# Component kit — eyeball showcase
+
+<Callout type="note">
+  Dev-only page (not linked from nav). Mounts each of the six new Phase 0
+  MDX components once so the visual + interactive contract can be sanity-checked
+  before the AM-track rework starts using them inline.
+</Callout>
+
+## RecallCard — `concept` variant
+
+<RecallCard
+  keywords={[
+    <>modulation index <InlineMath>{'\\mu'}</InlineMath></>,
+    <><InlineMath>{'A_m/A_c'}</InlineMath></>,
+    'envelope detector',
+    'overmodulation',
+  ]}
+  skeleton={[
+    <>Διάβασε <InlineMath>{'A_c'}</InlineMath> (πλάτος carrier) και <InlineMath>{'A_m'}</InlineMath> (πλάτος message) από την εκφώνηση.</>,
+    <>Υπολόγισε <InlineMath>{'\\mu = A_m / A_c'}</InlineMath>.</>,
+    <>Έλεγξε αν <InlineMath>{'\\mu \\le 1'}</InlineMath>. Αν όχι, έχεις υπερδιαμόρφωση και ο envelope detector σπάει.</>,
+  ]}
+  trap={
+    <>
+      Δεν διαιρείς ποτέ με <strong>τη συνολική ισχύ</strong>· πάντα με το
+      <em> πλάτος </em>του carrier <InlineMath>{'A_c'}</InlineMath>.
+    </>
+  }
+/>
+
+## RecallCard — `summary` variant
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε όλο το κεφάλαιο AM"
+  keywords={[
+    <><InlineMath>{'x(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath></>,
+    <><InlineMath>{'\\mu'}</InlineMath></>,
+    <><InlineMath>{'P_{AM}'}</InlineMath></>,
+    <>efficiency <InlineMath>{'\\eta \\le 33\\%'}</InlineMath></>,
+  ]}
+  skeleton={[
+    'Γράφεις την εξίσωση της Conventional AM.',
+    <>Βρίσκεις τον δείκτη <InlineMath>{'\\mu'}</InlineMath>.</>,
+    <>Υπολογίζεις ισχύ <InlineMath>{'P_{AM} = P_c(1+\\mu^2/2)'}</InlineMath> και efficiency.</>,
+    <>Σχεδιάζεις το φάσμα: carrier + δύο πλευρικές, <InlineMath>{'BW = 2W'}</InlineMath>.</>,
+  ]}
+/>
+
+## RecallDrill
+
+<RecallDrill
+  id="showcase-am-equation"
+  prompt={
+    <p>
+      Χωρίς να γυρίσεις στο κεφάλαιο: γράψε την εξίσωση της Conventional AM στον
+      χρόνο, και πες τι κουβαλάει κάθε όρος.
+    </p>
+  }
+  answer={
+    <>
+      <BlockMath>{'x(t) = [A_c + m(t)]\\,\\cos(2\\pi f_c t)'}</BlockMath>
+      <p>
+        Δύο όροι όταν το αναπτύξεις: το <strong>carrier component</strong>{' '}
+        <InlineMath>{'A_c\\cos(2\\pi f_c t)'}</InlineMath> (δεν κουβαλάει
+        πληροφορία) και το <strong>DSB-SC κομμάτι</strong>{' '}
+        <InlineMath>{'m(t)\\cos(2\\pi f_c t)'}</InlineMath> (η πληροφορία,
+        μετατοπισμένη στις <InlineMath>{'\\pm f_c'}</InlineMath>).
+      </p>
+    </>
+  }
+/>
+
+## ClozeDrill
+
+<ClozeDrill
+  id="showcase-am-power"
+  prompt={<p>Συμπλήρωσε τον τύπο για τη συνολική ισχύ της single-tone Conventional AM.</p>}
+  parts={[
+    <InlineMath>{'P_{AM} = P_c\\,\\bigl(1 + '}</InlineMath>,
+    { blank: 'numer', accept: ['m^2', 'm2', 'μ^2', 'mu^2', 'μ2'], hint: 'αριθμητής' },
+    ' / ',
+    { blank: 'denom', accept: ['2'], hint: 'παρονομαστής' },
+    <InlineMath>{'\\bigr)'}</InlineMath>,
+  ]}
+  solution={<BlockMath>{'P_{AM} = P_c\\left(1 + \\frac{m^2}{2}\\right)'}</BlockMath>}
+/>
+
+## ReorderDrill
+
+<ReorderDrill
+  id="showcase-am-solve-order"
+  prompt={
+    <p>
+      Βάλε στη σωστή σειρά τα βήματα για ένα τυπικό exam-problem «δίνεται
+      <InlineMath>{'A_c, A_m'}</InlineMath>, βρες τη συνολική ισχύ»:
+    </p>
+  }
+  steps={[
+    <>Γράφεις τον ορισμό <InlineMath>{'\\mu = A_m / A_c'}</InlineMath> και υπολογίζεις την τιμή του.</>,
+    <>Ελέγχεις αν <InlineMath>{'\\mu \\le 1'}</InlineMath>. Αν όχι, σημειώνεις overmodulation.</>,
+    <>Υπολογίζεις την ισχύ του carrier: <InlineMath>{'P_c = A_c^2 / 2'}</InlineMath>.</>,
+    <>Εφαρμόζεις <InlineMath>{'P_{AM} = P_c\\,(1 + \\mu^2/2)'}</InlineMath> και δίνεις την τελική τιμή.</>,
+  ]}
+/>
+
+## ThinkingPattern
+
+<ThinkingPattern
+  signals={[
+    'πλάτος φέροντος',
+    'πλάτος σήματος πληροφορίας',
+    'δείκτης διαμόρφωσης',
+    'συνολική ισχύς',
+  ]}
+>
+  <p>
+    Όταν δεις αυτές τις φράσεις σε εκφώνηση, το πρώτο πράγμα που γράφεις είναι{' '}
+    <InlineMath>{'\\mu = A_m/A_c'}</InlineMath>. Αν στη συνέχεια σου ζητάει
+    «συνολική ισχύ», συνεχίζεις με{' '}
+    <InlineMath>{'P_{AM} = P_c(1+\\mu^2/2)'}</InlineMath>. Αν σε ρωτάει για
+    envelope detector, η απάντηση εξαρτάται από το αν{' '}
+    <InlineMath>{'\\mu \\le 1'}</InlineMath>.
+  </p>
+</ThinkingPattern>
+
+## ExamRadar — auto-derived (slug = `am/conventional`)
+
+<ExamRadar slug="am/conventional" topic="am" />
+
+## ExamRadar — manual `ids` override
+
+<ExamRadar
+  ids={[
+    { id: 'proodos26-1', likelihood: 'high', note: 'τυπικό «βρες μ»' },
+    { id: 'proodos26-2', likelihood: 'high' },
+    { id: 'proodos26-3', likelihood: 'medium' },
+  ]}
+/>

@@ -11,6 +11,12 @@ import { ExamProblem } from '@/components/content/ExamProblem'
 import { ExerciseProgress } from '@/components/content/ExerciseProgress'
 import { Timeline } from '@/components/content/Timeline'
 import { SourceDoc } from '@/components/content/SourceDoc'
+import { RecallCard } from '@/components/content/RecallCard'
+import { RecallDrill } from '@/components/content/RecallDrill'
+import { ClozeDrill } from '@/components/content/ClozeDrill'
+import { ReorderDrill } from '@/components/content/ReorderDrill'
+import { ThinkingPattern } from '@/components/content/ThinkingPattern'
+import { ExamRadar } from '@/components/content/ExamRadar'
 import { Viz } from '@/components/viz/Viz'
 import { CommSystemDiagram } from '@/components/viz/CommSystemDiagram'
 import { TimeFrequencyTeaser } from '@/components/viz/TimeFrequencyTeaser'
@@ -108,6 +114,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ExerciseProgress,
     Timeline,
     SourceDoc,
+
+    // 5-stage learning loop kit (Συμπύκνωσε / Ανακάλεσε / Αναγνώρισε)
+    RecallCard,
+    RecallDrill,
+    ClozeDrill,
+    ReorderDrill,
+    ThinkingPattern,
+    ExamRadar,
 
     // Math
     Eq,
