@@ -1,11 +1,11 @@
 export const metadata = {
-  title: 'VSB — Vestigial Sideband, ο χρυσός συμβιβασμός AM/SSB',
+  title: 'VSB-AM — Μονής πλευρικής ζώνης με κατάλοιπο, ο χρυσός συμβιβασμός AM/SSB',
   description:
-    'VSB (Vestigial Sideband): πλήρης μία sideband + κατάλοιπο της άλλης. Παραμένει envelope-detectable με μειωμένο bandwidth (W < B_VSB < 2W). Η μαθηματική συνθήκη Nyquist symmetry για το shaping φίλτρο, η οπτικοποίηση του summed-pairs constraint, η coherent reconstruction που εξηγεί γιατί η σταθερότητα του H(f_c+Δ)+H(f_c−Δ) είναι ακριβώς το condition που χρειάζεται, και η πραγματική χρήση στο 6 MHz NTSC αναλογικό TV.',
+    'VSB-AM (Vestigial Sideband / Μονής πλευρικής ζώνης με κατάλοιπο): πλήρης μία sideband + κατάλοιπο της άλλης. Παραμένει envelope-detectable με μειωμένο bandwidth (W < B_VSB < 2W). Η μαθηματική συνθήκη Nyquist symmetry για το shaping φίλτρο, η οπτικοποίηση του summed-pairs constraint, η coherent reconstruction που εξηγεί γιατί η σταθερότητα του H(f_c+Δ)+H(f_c−Δ) είναι ακριβώς το condition που χρειάζεται, και η πραγματική χρήση στο 6 MHz NTSC αναλογικό TV.',
 }
 
 export const frontmatter = {
-  title: 'VSB',
+  title: 'VSB-AM',
   slug: 'am/vsb',
   order: 5,
   prerequisites: [
@@ -16,7 +16,7 @@ export const frontmatter = {
   ],
   examWeight: 2,
   estimatedReadTime: 22,
-  lastUpdated: '2026-05-23',
+  lastUpdated: '2026-05-24',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -42,10 +42,12 @@ import Link from 'next/link'
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
 <SourceDoc
-  sources={[
-    { pdf: 'SE_session11&12&13.pdf', label: 'ενότητα «Η Παραλλαγή VSB-AM» (μετά SSB)' },
-    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM' },
-  ]}
+  sources={{
+    pdf: 'SE_session11&12&13.pdf',
+    slides: '8–9',
+    label: 'TOC + ταξινόμημα AM σχημάτων: «Η Παραλλαγή VSB-AM» / «Μονής πλευρικής ζώνης με κατάλοιπο (VSB-AM)»',
+  }}
+  note="Δεν υπάρχουν dedicated content slides για VSB-AM στο φετινό deck του καθηγητή — η εμβάθυνση εδώ συμπληρώνει την αναφορά από τη γενική βιβλιογραφία (Haykin, Lathi, Proakis). Καμία άσκηση στο SE_session14_AM.pdf δεν καλύπτει VSB."
 />
 
 Από το [AM](/am/conventional) και τη [DSB-SC](/am/dsb-sc) μάθαμε ότι το βασικό πρόβλημα είναι **το bandwidth**: $2W$ — διπλάσιο του message. Από το [SSB](/am/ssb) μάθαμε ότι μπορείς να **μισέψεις** το BW πετώντας τη μία sideband, αλλά πληρώνεις πολύπλοκη παραγωγή (απότομος φίλτρος ή ακριβής Hilbert) και ξεμένεις χωρίς envelope detection — coherent demodulation πάντα.
@@ -73,7 +75,16 @@ import Link from 'next/link'
 
 ## 1. Η ιδέα — vestige αντί για πλήρη sideband
 
-Στο [SSB](/am/ssb), πετάμε **όλη** τη μία sideband — δύσκολο μηχανικά γιατί απαιτεί φίλτρο με μηδενικό transition band στο $f_c$. Στη VSB, πετάμε **σχεδόν όλη** τη μία sideband αλλά **κρατάμε μια λεπτή ζώνη γύρω από τον carrier** (το vestige). Έτσι το shaping filter μπορεί να μεταβεί ομαλά από passband σε stopband — πρακτικά υλοποιήσιμο.
+<Callout type="key" title="Πώς ονομάζει το VSB ο καθηγητής (slide 9)">
+  Στο ταξινόμημα των τεσσάρων τεχνικών AM (slide 9 του `SE_session11&12&13.pdf`), ο καθηγητής γράφει:
+  <p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+    Το AM αποτελείται από τις τεχνικές διαμόρφωσης: <strong>Διπλής πλευρικής ζώνης με συνολικό φέρον (DSB-AM-TC)</strong> ή συμβατικό AM, <strong>Διπλής πλευρικής ζώνης με κατηργημένο φέρον (DSB-AM-SC)</strong>, <strong>Μονής πλευρικής ζώνης (SSB-AM)</strong>, <strong>Μονής πλευρικής ζώνης με κατάλοιπο (VSB-AM)</strong>.
+  </p>
+  Δηλαδή η πλήρης ελληνική ονομασία του καθηγητή είναι <strong>«Μονής πλευρικής ζώνης με κατάλοιπο»</strong> και η συντομογραφία <strong>«VSB-AM»</strong>. Η λέξη <em>«κατάλοιπο»</em> είναι η ακριβής μετάφραση του αγγλικού <em>«vestige»</em> — το λεπτό κομμάτι της απορριπτόμενης sideband που κρατάμε γύρω από τον carrier.{' '}
+  <strong>Πλαίσιο σπουδών:</strong> ο καθηγητής αναφέρει τη VSB-AM μόνο σε αυτό το ταξινόμημα (συν την προηγούμενη slide 8 σαν TOC bullet «Η Παραλλαγή VSB-AM») — <strong>δεν υπάρχουν dedicated content slides φέτος</strong>. Η μαθηματική και ιστορική εμβάθυνση παρακάτω συμπληρώνει αυτή τη μία αναφορά από τη γενική βιβλιογραφία.
+</Callout>
+
+Στο [SSB](/am/ssb), πετάμε **όλη** τη μία sideband — δύσκολο μηχανικά γιατί απαιτεί φίλτρο με μηδενικό transition band στο $f_c$. Στη VSB-AM, πετάμε **σχεδόν όλη** τη μία sideband αλλά **κρατάμε μια λεπτή ζώνη γύρω από τον carrier** (το vestige, ή στην ελληνική του καθηγητή το **κατάλοιπο**). Έτσι το shaping filter μπορεί να μεταβεί ομαλά από passband σε stopband — πρακτικά υλοποιήσιμο.
 
 Το αποτέλεσμα στο φάσμα:
 
@@ -224,7 +235,7 @@ $$
 | **VSB** | **$W + W_{\text{vestige}}$** | **μεσαία** (reduced carrier) | **envelope OR coherent** | shaping filter με Nyquist symmetry | **ναι** |
 | SSB | $W$ | 100% | coherent | απότομος BPF ή Hilbert | **όχι** (DC χάνεται) |
 
-Η VSB κερδίζει τη χρυσή τομή για **applications με video** (πολλά χαμηλά συχνοτικά στοιχεία) και **φθηνούς receivers** (envelope detection). Σπάνια εμφανίζεται αλλού — και αυτό φαίνεται και στις εξετάσεις: η VSB είναι ~2% του exam weight, **δεν** έχει past-exam coverage στα προηγούμενα έτη NKUA που έχουμε καταγράψει.
+Η VSB-AM κερδίζει τη χρυσή τομή για **applications με video** (πολλά χαμηλά συχνοτικά στοιχεία) και **φθηνούς receivers** (envelope detection). Σπάνια εμφανίζεται αλλού — και αυτό φαίνεται **στις slides ΚΑΙ στις εξετάσεις**: ο καθηγητής αναφέρει τη VSB-AM μόνο μία φορά στο ταξινόμημα των AM σχημάτων (slide 9), χωρίς dedicated content slides φέτος. Στις εξετάσεις βαρύνει ~2%, **δεν** έχει past-exam coverage στα 6 πρόσφατα NKUA sessions που έχουμε καταγράψει. Αν εμφανιστεί, σχεδόν σίγουρα θα είναι ως sub-question (1–3 πόντοι) μέσα σε ένα «σύγκρινε AM σχήματα» θέμα — όχι standalone derivation.
 
 ## 6. Worked example — υπολόγισε το VSB bandwidth
 
@@ -519,7 +530,7 @@ $$
 />
 
 <Recap>
-- **VSB** = πλήρης μία sideband + **vestige** (μικρό κατάλοιπο) της άλλης + (συνήθως) reduced carrier.
+- **VSB-AM** (πλήρης ονομασία του καθηγητή «Μονής πλευρικής ζώνης με κατάλοιπο»· συντομογραφία **VSB**) = πλήρης μία sideband + **vestige (κατάλοιπο)** της άλλης + (συνήθως) reduced carrier.
 - **Bandwidth = $W + W_{\text{vestige}}$**, ανάμεσα σε SSB ($W$) και AM/DSB ($2W$).
 - **Συνθήκη Nyquist symmetry** για το shaping filter: $H_{VSB}(f_c + \Delta) + H_{VSB}(f_c - \Delta) = \text{const}$ για κάθε $|\Delta| < W$. **Αυτή είναι η μαθηματική προϋπόθεση** για καθαρή demodulation.
 - **Γιατί άθροισμα:** προέρχεται από τη coherent demodulation — πολλαπλασιασμός με $2\cos(\omega_c t)$ → δύο μετατοπισμένα αντίγραφα του spectrum που επικαλύπτονται και αθροίζονται στο baseband. Το αποτέλεσμα: $\tilde M(f) = \tfrac{1}{2} M(f) \cdot [H(f_c+f) + H(f_c-f)]$.
@@ -531,9 +542,13 @@ $$
 <ThinkingPattern
   signals={[
     'VSB',
+    'VSB-AM',
     'Vestigial Sideband',
+    'Μονής πλευρικής ζώνης με κατάλοιπο',
+    'Μονής πλευρικής ζώνης',
     'παραλλαγή της AM',
     'κατάλοιπο sideband',
+    'απορριπτόμενη sideband',
     'vestige',
     'Nyquist symmetry',
     'shaping filter',
