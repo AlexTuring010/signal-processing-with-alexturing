@@ -90,6 +90,9 @@ import { DsbScSpectrumViz } from '@/components/viz/DsbScSpectrumViz'
 import { CoherentDemodChainViz } from '@/components/viz/CoherentDemodChainViz'
 import { SSBSpectrumViz } from '@/components/viz/SSBSpectrumViz'
 import { SSBGenerationViz } from '@/components/viz/SSBGenerationViz'
+import { SsbHilbertCancellationViz } from '@/components/viz/SsbHilbertCancellationViz'
+import { UssbVsLssbComparison } from '@/components/viz/UssbVsLssbComparison'
+import { SsbPhaseErrorViz } from '@/components/viz/SsbPhaseErrorViz'
 import { VSBShapingViz } from '@/components/viz/VSBShapingViz'
 import { EnvelopeDetectorViz } from '@/components/viz/EnvelopeDetectorViz'
 import { AMInNoiseViz } from '@/components/viz/AMInNoiseViz'
@@ -248,6 +251,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — am / ssb
     SSBSpectrumViz,
     SSBGenerationViz,
+    SsbHilbertCancellationViz,
+    UssbVsLssbComparison,
+    SsbPhaseErrorViz,
 
     // Visualizations — am / vsb
     VSBShapingViz,

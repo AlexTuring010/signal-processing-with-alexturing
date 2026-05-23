@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'SSB — Single Sideband, μισό φάσμα μέσω Hilbert',
   description:
-    'SSB (Single Sideband): πετάμε τη μία από τις δύο sidebands της DSB-SC. Bandwidth = W (μισό από AM/DSB), 100% efficient. Δύο μέθοδοι παραγωγής (filter + Hilbert phase-shift), coherent demodulation, USB vs LSB, χρήση σε shortwave και ραδιοερασιτεχνικά.',
+    'SSB (Single Sideband): πετάμε τη μία από τις δύο sidebands της DSB-SC. Bandwidth = W (μισό από AM/DSB), 100% efficient. Δύο μέθοδοι παραγωγής (filter + Hilbert phase-shift), φασματική εικόνα της Hilbert ακύρωσης, σύγκριση USB vs LSB, coherent demodulation και phase-error παραμόρφωση που είναι Hilbert (όχι quadrature null όπως στο DSB-SC), χρήση σε shortwave και ραδιοερασιτεχνικά.',
 }
 
 export const frontmatter = {
@@ -14,8 +14,8 @@ export const frontmatter = {
     'am/dsb-sc',
   ],
   examWeight: 5,
-  estimatedReadTime: 22,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 32,
+  lastUpdated: '2026-05-23',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -26,9 +26,9 @@ import Link from 'next/link'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · AM</span>
   <span>·</span>
-  <span>~22 min read</span>
+  <span>~32 min read</span>
   <span>·</span>
-  <span className="font-semibold text-amber-700 dark:text-amber-400">🟠 Medium exam</span>
+  <span className="font-semibold text-amber-700 dark:text-amber-400">🟠 Medium exam · 5%</span>
 </div>
 
 # SSB (Single Sideband)
@@ -42,16 +42,22 @@ import Link from 'next/link'
 
 <SourceDoc
   sources={[
-    { pdf: 'SE_session11&12&13.pdf', label: 'ενότητα «Η Παραλλαγή SSB-AM»' },
+    { pdf: 'SE_session11&12&13.pdf', slides: '67–81', label: 'SSB-AM: USSB / LSSB, Hilbert phase-shift, παραγωγή & demod' },
     { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM (πολυπλεξία SSB)' },
   ]}
 />
 
-Στο [DSB-SC](/am/dsb-sc) πετάξαμε τον carrier component και κερδίσαμε **όλη την ισχύ** στις sidebands. Αλλά και τα δύο σχήματα (Conventional + DSB-SC) έχουν το ίδιο **bandwidth = 2W** — διπλάσιο του message.
+Στο [DSB-SC](/am/dsb-sc) πετάξαμε τον carrier component και κερδίσαμε **όλη την ισχύ** στις sidebands. Αλλά και τα δύο σχήματα (Conventional + DSB-SC) έχουν το ίδιο **bandwidth = 2W** — διπλάσιο του message. Σ' αυτό το κεφάλαιο κάνουμε ένα **ακόμα** βήμα: πετάμε **τη μία από τις δύο sidebands**. Το αποτέλεσμα — SSB, *Single Sideband* — έχει **bandwidth = W** (μισό), διατηρεί την 100% efficiency της DSB-SC, και επιτρέπει **διπλάσιο πλήθος καναλιών** στην ίδια φασματική ζώνη. Το κόστος: ακόμα πιο πολύπλοκη παραγωγή και demodulation.
 
-Σε αυτό το κεφάλαιο πετάμε επιπλέον **τη μία από τις δύο sidebands**. Το αποτέλεσμα — SSB, *Single Sideband* — έχει **bandwidth = W** (μισό), διατηρεί **100% efficiency** της DSB-SC, και επιτρέπει **πολλαπλούς χρήστες σε στενότερο κανάλι**. Το κόστος: ακόμα πιο πολύπλοκη παραγωγή και demodulation.
+Στο τέλος αυτού του κεφαλαίου θα ξέρεις:
 
-## 1. Από DSB-SC στο SSB
+1. **Γιατί** οι δύο sidebands της DSB-SC είναι «redundant» — ποια ιδιότητα του message το επιτρέπει.
+2. Τις **δύο μεθόδους παραγωγής** (filter + Hilbert phase-shift), και πότε προτιμάμε καθεμία.
+3. Την **αλγεβρική ταυτότητα** $x_{SSB} = m\cos \mp \hat m\sin$ — όχι σαν τύπο, αλλά σαν **αριθμητική στο φάσμα** που ακυρώνει τη μία πλευρά.
+4. Πώς δουλεύει η **coherent demodulation** της SSB και γιατί το **phase error εδώ είναι Hilbert παραμόρφωση** — όχι quadrature null όπως στο DSB-SC. Αυτή η διαφορά είναι ο λόγος που η SSB ανέχεται μικρά drifts φάσης χωρίς να καταρρέει.
+5. Πώς να γράφεις γρήγορα το φάσμα ενός USSB/LSSB σήματος για bandlimited message — που είναι το πιο συνηθισμένο εξεταστικό pattern.
+
+## 1. Από DSB-SC στο SSB — γιατί η μία sideband είναι περιττή
 
 Το DSB-SC σήμα έχει **και τις δύο sidebands** στο φάσμα — πάνω και κάτω από κάθε $\pm f_c$:
 
@@ -59,48 +65,42 @@ $$
 X_{DSB}(f) = \frac{1}{2}[M(f-f_c) + M(f+f_c)]
 $$
 
-Αλλά οι δύο sidebands είναι **κατοπτρικά συμμετρικές γύρω από το $f_c$** (αφού το $m(t)$ είναι real, το $M(f)$ έχει conjugate symmetry). Δηλαδή κουβαλάνε **την ίδια πληροφορία** σε διαφορετική γεωμετρία. **Αν κρατήσουμε μόνο τη μία**, δεν χάνουμε πληροφορία — απλά πετάμε ένα redundant αντίγραφο.
+Αλλά οι δύο sidebands γύρω από κάθε carrier είναι **κατοπτρικά συμμετρικές γύρω από το $\pm f_c$**. Αυτό **δεν** είναι σύμπτωση — προκύπτει από την conjugate symmetry $M(-f) = M^*(f)$ που έχει **κάθε real-valued $m(t)$** (δες [/foundations/fourier-transform §8](/foundations/fourier-transform#8-συμμετρίες-real-time-conjugate-symmetric-frequency)). Δηλαδή η πλήρης πληροφορία του message είναι ήδη μέσα **σε οποιαδήποτε από τις δύο sidebands** — η άλλη είναι απλώς το mirror της.
 
-Δύο εκδοχές του SSB:
+**Αν κρατήσουμε μόνο τη μία**, δεν χάνουμε τίποτα — απλά πετάμε ένα redundant αντίγραφο. Δύο εκδοχές:
 
 - **USB (Upper Sideband):** κρατάμε την πλευρά $|f| > f_c$ (έξω από τον carrier).
-- **LSB (Lower Sideband):** κρατάμε την πλευρά $|f| < f_c$ (μέσα στον carrier).
+- **LSB (Lower Sideband):** κρατάμε την πλευρά $|f| < f_c$ (μέσα στον carrier, κοντά στο 0).
 
-Είναι **ισοδύναμες** ως προς ποιότητα — απλά διαλέγουμε ποια χωρά καλύτερα στο διαθέσιμο κανάλι.
+Είναι **ισοδύναμες** ως προς ποιότητα — διαλέγουμε ποια χωρά καλύτερα στο διαθέσιμο κανάλι.
 
 <SSBSpectrumViz />
 
 <Callout type="connection" title="Σύνδεση με την I/Q canonical form">
-Από [bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η SSB (USB) είναι η **τρίτη γραμμή** του πίνακα:
+Από [/modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η SSB (USB) είναι η **τρίτη γραμμή** του πίνακα:
 
 $$
 x_I(t) = \frac{A_c}{2}\, m(t), \qquad x_Q(t) = -\frac{A_c}{2}\, \hat{m}(t)
 $$
 
-Διαφορά με AM/DSB-SC: **το $x_Q$ δεν είναι μηδέν**. Χρειάζεται τον Hilbert transform του message. Γι' αυτό η SSB είναι «πιο πολύπλοκη» — και γι' αυτό χτίσαμε ολόκληρη Section 2 του bridge chapter για τον Hilbert.
+Διαφορά με AM/DSB-SC: **το $x_Q$ δεν είναι μηδέν**. Χρειάζεται τον Hilbert transform του message. Γι' αυτό η SSB είναι «πιο πολύπλοκη» — και γι' αυτό χτίσαμε ολόκληρη Section 2 του bridge chapter για τον Hilbert. **Είναι η μόνη AM παραλλαγή με $x_Q \neq 0$**.
 </Callout>
 
 <Collectible id="ssb-monocle" />
 
 ## 2. Δύο μέθοδοι παραγωγής
 
-### 2a. Filter method
+### 2a. Filter method — απλή ιδέα, δύσκολη υλοποίηση
 
 Η εννοιολογικά απλή προσέγγιση:
 1. Φτιάξε DSB-SC: $x_{DSB}(t) = m(t)\cos(2\pi f_c t)$.
 2. Πέρασέ το από **bandpass filter** που αφήνει μόνο τη μία sideband.
 
-**Πρόβλημα:** ο BPF πρέπει να είναι **πολύ απότομος** στο $f_c$. Αν το message έχει συνιστώσες κοντά στο DC (όπως τα χαμηλά bass συχνότητες της φωνής), οι δύο sidebands είναι **πολύ κοντά** στο $f_c$ — και ο φίλτρος πρέπει να τις ξεχωρίσει χωρίς να κόβει χρήσιμο σήμα. Πρακτικά αυτό απαιτεί **πολύ υψηλό filter order** ή «κενή ζώνη» γύρω από το DC του message.
+**Πρόβλημα:** ο BPF πρέπει να είναι **πολύ απότομος** στο $f_c$. Αν το message έχει συνιστώσες κοντά στο DC (όπως τα χαμηλά bass συχνότητες της φωνής), οι δύο sidebands είναι **σχεδόν να αγγίζονται** στο $f_c$ — και ο φίλτρος πρέπει να τις ξεχωρίσει χωρίς να κόβει χρήσιμο σήμα. Πρακτικά αυτό απαιτεί **πολύ υψηλό filter order** ή «κενή ζώνη» γύρω από το DC του message (audio από 300 Hz και πάνω, όχι DC-έως-3 kHz). Γι' αυτό η filter method χρησιμοποιείται κυρίως σε εφαρμογές όπου το message **έχει φυσικά μηδενική ισχύ κοντά στο DC** — π.χ. ομιλία πάνω από 300 Hz.
 
-### 2b. Phase-shift (Hilbert) method
+### 2b. Phase-shift (Hilbert) method — κομψή αλγεβρικά
 
-Πιο μαθηματικά κομψή. Από την I/Q canonical form με $x_I = A_c m / 2$, $x_Q = -A_c \hat{m}/2$:
-
-$$
-x_{USB}(t) = x_I\cos(2\pi f_c t) - x_Q\sin(2\pi f_c t) = \frac{A_c}{2}\big[m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)(-1)\big]
-$$
-
-Καθαρίζοντας τα πρόσημα (με $A_c = 2$ για απλότητα):
+Πιο μαθηματικά κομψή. Από την I/Q canonical form με $x_I = A_c m / 2$, $x_Q = -A_c \hat{m}/2$, παίρνοντας $A_c = 2$ για απλότητα:
 
 $$
 \boxed{\,x_{USB}(t) = m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)\,}
@@ -112,48 +112,104 @@ $$
 \boxed{\,x_{LSB}(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)\,}
 $$
 
-Δύο γινόμενα και ένα άθροισμα. Το «−» δίνει USB, το «+» δίνει LSB. **Καμία ανάγκη για απότομο φίλτρο** — ο Hilbert transform κάνει τη δουλειά της επιλογής sideband.
+Δύο γινόμενα και ένα άθροισμα. Το «**−**» δίνει USB, το «**+**» δίνει LSB. **Καμία ανάγκη για απότομο φίλτρο** — ο Hilbert transform κάνει τη δουλειά της επιλογής sideband αλγεβρικά. Το κόστος μεταφέρεται στην ακριβή υλοποίηση του Hilbert για όλο το message bandwidth, που είναι πρακτικά δύσκολο σε αναλογικό κύκλωμα (ψηφιακά είναι μια γραμμή κώδικα).
 
 <SSBGenerationViz />
 
 <Callout type="closes-commitment" title="🎯 Κλείνει υπόσχεση — γιατί χτίσαμε τον Hilbert στο bridge chapter">
 Στο [/modulation/bridge §2](/modulation/bridge#2-hilbert-transform-phase-shifter-όλων-των-συχνοτήτων) είδαμε τον Hilbert transform — phase-shifter όλων των συχνοτήτων κατά $\pi/2$ — και υποσχεθήκαμε ότι «θα τον χρειαστούμε στη SSB». **Να γιατί.** Ο Hilbert του message $\hat{m}(t)$ μάς επιτρέπει να κατασκευάσουμε ένα bandpass σήμα με μόνο μία sideband, χωρίς να χρειαζόμαστε αδύνατα απότομα φίλτρα. Είναι το «καθαρό» μαθηματικό εργαλείο για SSB.
 
-Παρόλο που η SSB έχει εξεταστική σημασία (5%), ο Hilbert ως ξεχωριστή ερώτηση **δεν** εμφανίζεται — απλά τον χρησιμοποιείς. Στις εξετάσεις θα πρέπει να ξέρεις τη διπλή φόρμουλα `x_SSB = m cos ∓ m̂ sin`, να ξεχωρίζεις το πρόσημο για USB vs LSB, και να μπορείς να σχεδιάζεις σπεκτρα.
+Στις εξετάσεις θα πρέπει να ξέρεις τη διπλή φόρμουλα `x_SSB = m cos ∓ m̂ sin`, να ξεχωρίζεις το πρόσημο για USB vs LSB, και να μπορείς να σχεδιάζεις φάσματα.
 </Callout>
 
-### 2c. Απόδειξη ότι το `m cos − m̂ sin` δίνει μόνο USB
+### 2c. Απόδειξη — γιατί το `m·cos − m̂·sin` δίνει μόνο USB
 
-Παίρνοντας FT (γραμμικότητα + frequency shift):
-
-$$
-\mathcal{F}\{m(t)\cos(2\pi f_c t)\} = \frac{1}{2}[M(f-f_c) + M(f+f_c)]
-$$
+Παίρνοντας FT (γραμμικότητα + frequency-shift):
 
 $$
-\mathcal{F}\{\hat{m}(t)\sin(2\pi f_c t)\} = \frac{1}{2j}[\hat{M}(f-f_c) - \hat{M}(f+f_c)] = \frac{-j\,\mathrm{sgn}(f-f_c)}{2j} M(f-f_c) - \frac{-j\,\mathrm{sgn}(f+f_c)}{2j} M(f+f_c)
+\mathcal{F}\{m(t)\cos(2\pi f_c t)\} = \tfrac{1}{2}\big[M(f-f_c) + M(f+f_c)\big]
 $$
 
-Χρησιμοποιώντας $\hat{M}(f) = -j\,\mathrm{sgn}(f) M(f)$ από τον Hilbert ορισμό. Καθαρίζοντας:
+Για το δεύτερο γινόμενο, χρησιμοποιούμε $\hat M(f) = -j\,\mathrm{sgn}(f)\, M(f)$:
 
 $$
-\mathcal{F}\{\hat{m}(t)\sin(2\pi f_c t)\} = -\frac{1}{2}\mathrm{sgn}(f-f_c) M(f-f_c) + \frac{1}{2}\mathrm{sgn}(f+f_c) M(f+f_c)
+\mathcal{F}\{\hat{m}(t)\sin(2\pi f_c t)\} = \tfrac{1}{2j}\big[\hat M(f-f_c) - \hat M(f+f_c)\big]
 $$
 
-Αφαιρώντας:
-
 $$
-X_{USB}(f) = \frac{1}{2}[1 + \mathrm{sgn}(f-f_c)]M(f-f_c) + \frac{1}{2}[1 - \mathrm{sgn}(f+f_c)]M(f+f_c)
+= -\tfrac{1}{2}\,\mathrm{sgn}(f-f_c)\,M(f-f_c) + \tfrac{1}{2}\,\mathrm{sgn}(f+f_c)\,M(f+f_c)
 $$
 
-- Στο $+f_c$ side: ο όρος $1 + \mathrm{sgn}(f-f_c)$ είναι 2 για $f > f_c$, 0 για $f < f_c$ → κρατάει **μόνο USB** (πάνω από $f_c$).
-- Στο $-f_c$ side: ο όρος $1 - \mathrm{sgn}(f+f_c)$ είναι 2 για $f < -f_c$, 0 για $f > -f_c$ → κρατάει **μόνο τη μη-mirror πλευρά** (κάτω από $-f_c$).
+Αφαιρώντας (για USB):
 
-Δηλαδή το USB κρατάει μόνο τα έξω-από-τον-carrier κομμάτια του φάσματος. ∎
+$$
+X_{USB}(f) = \tfrac{1}{2}\big[1 + \mathrm{sgn}(f-f_c)\big]\,M(f-f_c) + \tfrac{1}{2}\big[1 - \mathrm{sgn}(f+f_c)\big]\,M(f+f_c)
+$$
 
-## 3. Coherent demodulation της SSB
+- Στο $+f_c$ side: ο όρος $1 + \mathrm{sgn}(f-f_c)$ είναι **2 για $f > f_c$** (upper sideband), **0 για $f < f_c$** (lower sideband ακυρώθηκε) → κρατάει μόνο USB.
+- Στο $-f_c$ side: ο όρος $1 - \mathrm{sgn}(f+f_c)$ είναι **2 για $f < -f_c$** (mirror upper), **0 για $f > -f_c$** (κάτω από carrier ακυρώθηκε).
 
-Πολλαπλασιάζουμε με τοπικό cosine και LPF — ίδια διαδικασία με DSB-SC:
+Δηλαδή το USB κρατάει μόνο τα **έξω-από-τον-carrier** κομμάτια του φάσματος. ∎
+
+Η αλγεβρική απόδειξη είναι καθαρή αλλά αφηρημένη. Για να δεις **τι ακριβώς γίνεται στο φάσμα όταν αφαιρείς τα δύο γινόμενα**, η ακόλουθη viz σπάει την ταυτότητα σε τρία στάδια: το φάσμα του $m\cos$ από μόνο του, το φάσμα του $\hat m\sin$ από μόνο του (που είναι αντι-συμμετρικό λόγω του $\mathrm{sgn}$), και την υπέρθεση που ακυρώνει τη μία πλευρά και διπλασιάζει την άλλη.
+
+<SsbHilbertCancellationViz />
+
+Τι να παρατηρήσεις:
+
+1. **Panel A** (από $m\cos$): οι γνωστές δύο πλευρές του DSB-SC, και στις δύο πλευρές κάθε $\pm f_c$, όλες θετικές ύψους $\tfrac{1}{2}$.
+2. **Panel B** (από $\hat m\sin$): **αντι-συμμετρικό γύρω από κάθε $\pm f_c$**. Γύρω από το $+f_c$, η εσωτερική πλευρά (κοντά στο 0) είναι θετική, η εξωτερική αρνητική. Γύρω από το $-f_c$, η εικόνα είναι κατοπτρική. Αυτό το αντι-συμμετρικό σχήμα είναι ακριβώς ο τύπος του $\mathrm{sgn}(f)$ που εμφανίζεται στον Hilbert.
+3. **Panel C** (USB ή LSB): στην USB περίπτωση (αφαίρεση), η εσωτερική πλευρά σε κάθε $\pm f_c$ είναι $\tfrac{1}{2} - \tfrac{1}{2} = 0$ — **ακριβής ακύρωση** — και η εξωτερική $\tfrac{1}{2} + \tfrac{1}{2} = 1$ — **διπλασιασμός**. Στην LSB περίπτωση (πρόσθεση), το αντίθετο.
+
+Δηλαδή το «$\mp$» στη φόρμουλα **κυριολεκτικά επιλέγει ποια πλευρά ακυρώνεται**. Δεν είναι μαγική επιλογή — είναι αρτιθμητική στο φάσμα.
+
+<RecallCard
+  title="Συμπύκνωσε — η Hilbert ταυτότητα στο φάσμα"
+  keywords={[
+    <><InlineMath>{'x_{USB} = m\\cos - \\hat m\\sin'}</InlineMath></>,
+    <><InlineMath>{'x_{LSB} = m\\cos + \\hat m\\sin'}</InlineMath></>,
+    <>«−» → εξωτερική πλευρά</>,
+    <>«+» → εσωτερική πλευρά</>,
+    <>Hilbert: <InlineMath>{'\\hat M = -j\\,\\mathrm{sgn}(f)\\,M'}</InlineMath></>,
+  ]}
+  skeleton={[
+    <>Γράφεις τα δύο γινόμενα <InlineMath>{'m\\cos'}</InlineMath> και <InlineMath>{'\\hat m\\sin'}</InlineMath>.</>,
+    <>Στο φάσμα: το πρώτο δίνει DSB (συμμετρικό), το δεύτερο δίνει αντι-συμμετρικό γύρω από κάθε <InlineMath>{'\\pm f_c'}</InlineMath>.</>,
+    <>Επιλέγεις πρόσημο: «−» για USB (κρατάει εξωτερική), «+» για LSB (κρατάει εσωτερική).</>,
+    <>Σχεδιάζεις το αποτέλεσμα — bumps μόνο στις «κρατημένες» πλευρές, διπλάσιο ύψος από το αρχικό DSB.</>,
+  ]}
+  trap={
+    <>
+      Η συχνότερη παγίδα: συγχέεις το «<strong>−</strong> δίνει USB» με «−
+      πάει στις αρνητικές συχνότητες». <strong>Όχι</strong> — και USB και LSB
+      έχουν φάσματα και στις θετικές και στις αρνητικές συχνότητες (αφού το
+      χρόνο-domain σήμα είναι real). Το «USB vs LSB» αναφέρεται στο{' '}
+      <em>ποια πλευρά του carrier</em> κρατάμε (πάνω ή κάτω), όχι στο
+      πρόσημο του f. Άλλη παγίδα: γράφεις «<InlineMath>{'x = m\\cos - m\\sin'}</InlineMath>»
+      νομίζοντας ότι «αφαιρούμε δύο όρους του message». <strong>Λάθος</strong> —
+      χρειάζεται ο <strong>Hilbert</strong> <InlineMath>{'\\hat m'}</InlineMath>{' '}
+      στον δεύτερο όρο, όχι το ίδιο το <InlineMath>m</InlineMath>. Χωρίς αυτόν,
+      η ακύρωση δεν συμβαίνει (δες <Link href="#why-hilbert-needed">ερώτηση
+      παρακάτω</Link>).
+    </>
+  }
+/>
+
+## 3. USSB vs LSSB — δύο επιλογές, ίδια πληροφορία
+
+Για ίδιο message $m(t)$ και ίδιο $f_c$, η μόνη διαφορά USB/LSB είναι το πρόσημο. Αλλά οπτικά (στο φάσμα) και χωροθετικά (στο διαθέσιμο κανάλι) η διαφορά είναι σημαντική: η μία γεμίζει τις «εξωτερικές» πλευρές γύρω από $\pm f_c$, η άλλη τις «εσωτερικές». **Δεν επικαλύπτονται** — άρα ο ίδιος carrier μπορεί να μεταφέρει **δύο ανεξάρτητα κανάλια ταυτόχρονα** (Independent Sideband, ISB), από τα κλασικά κόλπα στο shortwave point-to-point.
+
+<UssbVsLssbComparison />
+
+Από αυτή τη viz φεύγεις με τρία πράγματα:
+
+1. **Bandwidth ίδιο για USB και LSB** = $W$. Και τα δύο μισό του DSB-SC.
+2. **Single-tone**: η USB γίνεται καθαρά $A_m\cos(2\pi(f_c + f_m)t)$, η LSB γίνεται καθαρά $A_m\cos(2\pi(f_c - f_m)t)$. **Ένα μόνο cosine το καθένα** — πανεύκολο για ισχύ.
+3. **Bandlimited message**: τα τρίγωνα γεμίζουν τις «εξωτερικές» (USB) ή «εσωτερικές» (LSB) πλευρές. Σχήματα ξένα — μπορούν να μοιραστούν τον carrier.
+
+## 4. Coherent demodulation της SSB
+
+Πολλαπλασιάζουμε το λαμβανόμενο SSB σήμα με τοπικό cosine και περνάμε από LPF — **ίδια διαδικασία με DSB-SC**:
 
 $$
 y(t) = x_{SSB}(t) \cdot 2\cos(2\pi f_c t)
@@ -170,114 +226,238 @@ $$
 = m(t)[1 + \cos(4\pi f_c t)] - \hat{m}(t)\sin(4\pi f_c t)
 $$
 
-Μετά από LPF (cutoff $W$):
+Μετά από LPF (cutoff $W < f_{\text{cut}} \ll 2f_c$):
 
 $$
-m_{\text{recovered}}(t) = m(t)
+\boxed{\,m_{\text{recovered}}(t) = m(t)\,}
 $$
 
-Τα $\cos(4\pi f_c t)$ και $\sin(4\pi f_c t)$ κομμάτια κόβονται — μένει το $m(t)$ καθαρό.
+Τα $\cos(4\pi f_c t)$ και $\sin(4\pi f_c t)$ κομμάτια κόβονται — μένει το $m(t)$ καθαρό. Σε ιδανικές συνθήκες (μηδέν phase error), η ανάκτηση είναι **τέλεια**, ακριβώς όπως και στη DSB-SC.
 
-**Phase sensitivity:** όπως στο DSB-SC, αν η τοπική φάση είναι $\varphi$, παίρνουμε $m(t)\cos\varphi - \hat{m}(t)\sin\varphi$ μετά LPF. Σε $\varphi = 0$: τέλεια ανάκτηση. Σε $\varphi = 90°$: το $\hat{m}(t)$ που δεν είναι το $m(t)$ — **παραμόρφωση** (όχι quadrature null όπως DSB-SC, αλλά το «λάθος» message). Για ομιλία αυτό ακούγεται σαν διπλό μετασχηματισμό φωνής.
+### 4a. Phase error — Hilbert παραμόρφωση, όχι quadrature null
 
-## 4. Bandwidth και ισχύς
+Η μεγάλη διαφορά της SSB από τη DSB-SC είναι **τι γίνεται όταν ο τοπικός ταλαντωτής έχει σφάλμα φάσης $\varphi$**. Πολλαπλασιάζουμε τώρα με $2\cos(2\pi f_c t + \varphi)$ αντί για $2\cos(2\pi f_c t)$. Αναπτύσσοντας και περνώντας από LPF (η πλήρης άλγεβρα είναι ίδια στο πνεύμα με το §4):
+
+$$
+\boxed{\,y(t) = m(t)\cos\varphi \;\mp\; \hat m(t)\sin\varphi\,}
+$$
+
+(το «$\mp$» δίνει $-$ για USB, $+$ για LSB.) Δηλαδή η έξοδος είναι ένα **γραμμικό μείγμα** του πραγματικού message και του Hilbert του. Δύο ακραίες περιπτώσεις:
+
+- **$\varphi = 0°$**: $\cos\varphi = 1$, $\sin\varphi = 0$ → $y = m(t)$. Τέλεια ανάκτηση.
+- **$\varphi = 90°$**: $\cos\varphi = 0$, $\sin\varphi = 1$ → $y = \mp\hat m(t)$. Δηλαδή η έξοδος είναι **ο Hilbert του message**.
+
+Παρατήρησε την κρίσιμη διαφορά με DSB-SC: εκεί, στις $\varphi = 90°$ η έξοδος γίνεται **μηδέν** (quadrature null, δες [/am/dsb-sc §4a](/am/dsb-sc#4a-ευαισθησία-στη-φάση)). Εδώ, στις $\varphi = 90°$ η έξοδος είναι **ένα διαφορετικό σήμα της ίδιας ενέργειας** — όχι μηδέν.
+
+Σύρε τη φάση και δες τη συνεχή μετάβαση:
+
+<SsbPhaseErrorViz />
+
+<Callout type="key" title="Γιατί η SSB ανέχεται phase drifts καλύτερα από DSB-SC">
+Στο DSB-SC, ένα phase drift μειώνει το πλάτος εξόδου σε $\cos\varphi$ — και στις 90° **όλη η ενέργεια χάνεται**. Στη SSB, το ίδιο drift μετατοπίζει την ενέργεια από το $m$ στο $\hat m$ — αλλά **η συνολική ενέργεια παραμένει** ($\cos^2\varphi + \sin^2\varphi = 1$, Pythagorean). Για ομιλία, ο Hilbert ακούγεται σαν «**παραμορφωμένη**» εκδοχή του original — διπλό σύμφωνα, σφαλμένο tonal balance — αλλά **καταλαβαίνεις τι λέει ο ομιλητής**. Σε music η ποιότητα πέφτει· σε voice παραμένει αναγνώσιμη.
+
+Αυτό κάνει τη SSB πιο **«ανεκτική»** στις πρακτικές εφαρμογές HF/amateur radio, όπου το carrier recovery είναι ποτέ τέλειο. Στη DSB-SC ένας bad PLL δίνει σιωπή· στη SSB ένας bad PLL δίνει «παράξενη φωνή» που ακόμα ακούγεται.
+</Callout>
+
+## 5. Bandwidth και ισχύς
 
 | | DSB-SC | SSB |
 | --- | --- | --- |
 | Bandwidth | $2W$ | **$W$** (μισό!) |
 | Power efficiency | 100% | 100% |
-| Φάσμα φάσμα συμμετρικό; | ναι (USB ίδιο με LSB) | **όχι** (μόνο USB ή LSB) |
-| Σύνθεση δέκτη | coherent | coherent + ευαίσθητη στη φάση |
+| Φάσμα συμμετρικό γύρω από $f_c$; | ναι (USB ίδιο με LSB) | **όχι** (μόνο USB ή LSB) |
+| Σύνθεση δέκτη | coherent (sensitive to phase) | coherent (φ-error → Hilbert παραμόρφωση) |
+| Στο φ = 90°: η έξοδος είναι | $0$ (quadrature null) | $\mp\hat m(t)$ (διαφορετικό σήμα, ίδια ενέργεια) |
 
-Η ισχύς εξαρτάται από το συγκεκριμένο message. Για single-tone $m(t) = A_m\cos(2\pi f_m t)$ → $\hat{m}(t) = A_m\sin(2\pi f_m t)$, και:
+Η ισχύς εξαρτάται από το συγκεκριμένο message. Για **single-tone** $m(t) = A_m\cos(2\pi f_m t)$ → $\hat{m}(t) = A_m\sin(2\pi f_m t)$, και:
 
 $$
 x_{USB}(t) = A_m\cos(2\pi f_m t)\cos(2\pi f_c t) - A_m\sin(2\pi f_m t)\sin(2\pi f_c t) = A_m\cos(2\pi(f_c + f_m)t)
 $$
 
-Ένα και μοναδικό cosine στη συχνότητα $f_c + f_m$. Ισχύς: $A_m^2/2$. Σύγκριση με DSB-SC ($A_m^2/4$): **διπλάσια ισχύς ανά συχνότητα**, αλλά την ίδια συνολική (αφού η DSB-SC είχε δύο sidebands $A_m^2/8$ κάθε μία).
+(ταυτότητα $\cos A\cos B - \sin A\sin B = \cos(A+B)$.) **Ένα και μοναδικό cosine** στη συχνότητα $f_c + f_m$. Ισχύς: $A_m^2/2$. Σύγκριση με DSB-SC ίδιου $A_m$ ($A_m^2/4$): **διπλάσια ισχύς ανά συχνότητα** στη SSB, αλλά **ίδια συνολική useful** ισχύς (αφού η DSB είχε δύο sidebands $A_m^2/8$ καθεμία και τις πρόσθετε).
 
-## 5. Πραγματικές εφαρμογές
+## 6. Πραγματικές εφαρμογές
 
-- **Shortwave radio (HF, 3–30 MHz):** SSB είναι το επικρατές σχήμα. Σε αυτές τις συχνότητες το φάσμα είναι **πολύτιμο** (όλος ο πλανήτης μοιράζεται τα ίδια bands μέσω ionospheric propagation), και η μισή BW του SSB επιτρέπει **διπλάσιο πλήθος καναλιών** στο ίδιο φάσμα.
-- **Ραδιοερασιτεχνικά (amateur radio) HF:** SSB δομεί τις περισσότερες long-distance επικοινωνίες. Συνήθως USB πάνω από 10 MHz, LSB κάτω.
-- **Στρατιωτικές HF επικοινωνίες:** SSB για ίδιους λόγους — φάσμα efficiency.
+- **Shortwave radio (HF, 3–30 MHz):** SSB είναι το **επικρατές** σχήμα. Σε αυτές τις συχνότητες το φάσμα είναι **πολύτιμο** (όλος ο πλανήτης μοιράζεται τα ίδια bands μέσω ionospheric propagation), και η μισή BW του SSB επιτρέπει **διπλάσιο πλήθος καναλιών** στο ίδιο φάσμα. Σύμβαση: USB πάνω από 10 MHz, LSB κάτω.
+- **Ραδιοερασιτεχνικά (amateur radio) HF:** SSB δομεί τις περισσότερες long-distance επικοινωνίες· για DX contacts ο de facto standard.
+- **Στρατιωτικές HF επικοινωνίες:** SSB για ίδιους λόγους — φάσμα efficiency + ανοχή σε phase drift.
 - **Marine/aeronautical HF:** SSB για επικοινωνίες πέρα από τον ορίζοντα.
+- **Independent Sideband (ISB):** USB και LSB ταυτόχρονα γύρω από τον ίδιο carrier — δύο κανάλια στο ίδιο φασματικό slot. Σε χρήση σε military και news-gathering circuits.
 
 Η SSB **σπάνια εμφανίζεται σε εμπορικό broadcast** (FM/AM ραδιόφωνο) γιατί η demodulation είναι πολύπλοκη — δεν μπορείς να φτιάξεις φθηνό SSB δέκτη με απλά κυκλώματα. Για broadcast επικρατούν Conventional AM (απλός envelope detector) και FM.
 
-## 6. Worked example
+## 7. Worked example — single-tone SSB
 
-<Example title="Ex. — single-tone SSB">
+<Example title="Ex. — single-tone USSB + LSSB">
 
-**Δίνονται:** $m(t) = 4\cos(2\pi \cdot 1000 t)$ V, $f_c = 100$ kHz, USB.
+**Δίνονται:** $m(t) = 4\cos(2\pi \cdot 1000\, t)$ V, $f_c = 100$ kHz.
 
-**Ζητούνται:** η εξίσωση του $x_{USB}(t)$, η συχνότητα στην οποία ζει, και το bandwidth.
+**Ζητούνται:** η εξίσωση του $x_{USB}(t)$ και του $x_{LSB}(t)$, οι συχνότητες στις οποίες ζουν, και το bandwidth.
 
 ---
 
-**Λύση.**
+**Σκέψη πριν τη λύση.** Είναι **single-tone** message → η SSB θα είναι ένα **μοναδικό cosine** (αυτό είναι το «εύκολο» single-tone pattern). Το βήμα-κλειδί είναι: ποιος Hilbert γίνεται sin και ποιος γίνεται $-$cos; Από $\mathcal{H}\{\cos\} = \sin$, $\mathcal{H}\{\sin\} = -\cos$. Μετά: αντικατάσταση στη φόρμουλα + ταυτότητα $\cos(A \pm B)$.
 
 **Βήμα 1 — Hilbert του message.**
 $$
-\hat{m}(t) = \mathcal{H}\{4\cos(2\pi\cdot 1000 t)\} = 4\sin(2\pi\cdot 1000 t)
+\hat{m}(t) = \mathcal{H}\{4\cos(2\pi\cdot 1000\, t)\} = 4\sin(2\pi\cdot 1000\, t)
 $$
 
-**Βήμα 2 — SSB equation (USB):**
+**Βήμα 2 — USB equation:**
 $$
 x_{USB}(t) = m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)
 $$
 $$
-= 4\cos(2\pi\cdot 1000 t)\cos(2\pi\cdot 100000 t) - 4\sin(2\pi\cdot 1000 t)\sin(2\pi\cdot 100000 t)
+= 4\cos(2\pi\cdot 1000\, t)\cos(2\pi\cdot 100000\, t) - 4\sin(2\pi\cdot 1000\, t)\sin(2\pi\cdot 100000\, t)
 $$
 
-**Βήμα 3 — απλοποίηση μέσω cosine sum identity** $\cos A \cos B - \sin A \sin B = \cos(A+B)$:
+**Βήμα 3 — απλοποίηση μέσω ταυτότητας** $\cos A \cos B - \sin A \sin B = \cos(A+B)$:
 $$
-x_{USB}(t) = 4\cos(2\pi(100000 + 1000)t) = 4\cos(2\pi\cdot 101000\, t) \text{ V}
+x_{USB}(t) = 4\cos(2\pi(100000 + 1000)\, t) = 4\cos(2\pi\cdot 101000\, t) \text{ V}
 $$
 
 **Βήμα 4 — συχνότητα και bandwidth.**
-- Συχνότητα: $f_c + f_m = 101$ kHz (single tone).
+- Συχνότητα USB: $f_c + f_m = 101$ kHz (single tone).
 - Bandwidth: $W = 1$ kHz (η συχνότητα του message). Σύγκριση με Conventional AM/DSB-SC: 2 kHz. Η SSB κερδίζει το μισό.
 
-**Επαλήθευση από LSB:**
+**Επαλήθευση από LSB** (ταυτότητα $\cos A\cos B + \sin A\sin B = \cos(A-B)$):
 $$
-x_{LSB}(t) = m\cos + \hat{m}\sin = 4\cos(2\pi(100000 - 1000)t) = 4\cos(2\pi\cdot 99000\, t) \text{ V}
+x_{LSB}(t) = 4\cos(2\pi(100000 - 1000)\, t) = 4\cos(2\pi\cdot 99000\, t) \text{ V}
 $$
 
-LSB ζει στα 99 kHz — κάτω από τον carrier. USB στα 101 kHz — πάνω. Δύο διαφορετικά κανάλια, ίδιο message.
+LSB ζει στα 99 kHz — **κάτω** από τον carrier. USB στα 101 kHz — **πάνω**. Δύο διαφορετικά κανάλια, ίδιο message, ίδια ενέργεια ($A_m^2/2 = 8$ W ανά κανάλι αν $R = 1\,\Omega$).
 
 </Example>
 
 ## Εξάσκηση
 
-<ExerciseProgress slug="am/ssb" total={5} />
+<ExerciseProgress slug="am/ssb" total={7} />
 
-Πέντε ερωτήσεις πάνω στις δύο μεθόδους παραγωγής, στο Hilbert, και στις παγίδες της SSB.
+Επτά ερωτήσεις. Πριν δεις τη λύση, **κάνε μια προσπάθεια από μνήμη** στο `RecallDrill` παρακάτω — αν δεν μπορείς να αναπαράξεις την Hilbert ταυτότητα χωρίς να γυρίσεις πάνω, οι ασκήσεις θα σου γράψουν τα ίδια λάθη.
+
+<RecallDrill
+  id="explain-hilbert-cancellation-ssb"
+  prompt={
+    <p>
+      Χωρίς να γυρίσεις πάνω: εξήγησε σε <strong>2-3 προτάσεις</strong> γιατί
+      ο όρος <InlineMath>{'-\\hat m\\sin'}</InlineMath> ακυρώνει τη μία{' '}
+      sideband της <InlineMath>{'m\\cos'}</InlineMath>, και τι ρόλο παίζει
+      ο Hilbert. Μετά: εξήγησε <strong>γιατί</strong> το «+» δίνει LSB και
+      το «−» δίνει USB — όχι ως μνημονικό, αλλά γεωμετρικά (ποιο μισό
+      διπλασιάζεται, ποιο μηδενίζεται).
+    </p>
+  }
+  answer={
+    <ul className="ml-5 list-disc space-y-1">
+      <li>
+        Στο φάσμα, το <InlineMath>{'m\\cos'}</InlineMath> έχει συμμετρικό
+        DSB-σχήμα γύρω από κάθε <InlineMath>{'\\pm f_c'}</InlineMath>{' '}
+        (ύψη <InlineMath>{'+\\tfrac{1}{2}'}</InlineMath> και στις δύο
+        πλευρές). Ο Hilbert δίνει <InlineMath>{'\\hat M = -j\\,\\mathrm{sgn}(f)\\,M'}</InlineMath>,
+        άρα το <InlineMath>{'\\hat m\\sin'}</InlineMath> έχει{' '}
+        <strong>αντι-συμμετρικό</strong> σχήμα: <InlineMath>{'+\\tfrac{1}{2}'}</InlineMath>{' '}
+        στην εσωτερική πλευρά, <InlineMath>{'-\\tfrac{1}{2}'}</InlineMath>{' '}
+        στην εξωτερική (γύρω από <InlineMath>{'+f_c'}</InlineMath>).
+      </li>
+      <li>
+        Αφαιρώντας («−», USB): εσωτερική = <InlineMath>{'\\tfrac{1}{2} - \\tfrac{1}{2} = 0'}</InlineMath>{' '}
+        (ακύρωση), εξωτερική = <InlineMath>{'\\tfrac{1}{2} - (-\\tfrac{1}{2}) = 1'}</InlineMath>{' '}
+        (διπλασιασμός). Άρα μένει η <strong>εξωτερική</strong> = Upper.
+      </li>
+      <li>
+        Προσθέτοντας («+», LSB): εσωτερική = <InlineMath>{'\\tfrac{1}{2} + \\tfrac{1}{2} = 1'}</InlineMath>{' '}
+        (διπλασιασμός), εξωτερική = <InlineMath>{'\\tfrac{1}{2} + (-\\tfrac{1}{2}) = 0'}</InlineMath>{' '}
+        (ακύρωση). Άρα μένει η <strong>εσωτερική</strong> = Lower.
+      </li>
+    </ul>
+  }
+/>
+
+<ClozeDrill
+  id="ssb-single-tone-cloze"
+  prompt={
+    <p>
+      Έχεις message <InlineMath>{'m(t) = 3\\cos(2\\pi \\cdot 2000\\,t)'}</InlineMath>{' '}
+      V και carrier <InlineMath>{'f_c = 50'}</InlineMath> kHz. Συμπλήρωσε τα
+      αποτελέσματα για USB και LSB.
+    </p>
+  }
+  parts={[
+    'USB: ένα μοναδικό cosine στη συχνότητα ',
+    { blank: 'usb-f', accept: ['52', '52kHz', '52 kHz'], hint: 'kHz', size: 5 },
+    ' kHz, πλάτους ',
+    { blank: 'usb-a', accept: ['3', '3.0'], hint: 'V', size: 4 },
+    ' V.   LSB: ένα μοναδικό cosine στη συχνότητα ',
+    { blank: 'lsb-f', accept: ['48', '48kHz', '48 kHz'], hint: 'kHz', size: 5 },
+    ' kHz, πλάτους ',
+    { blank: 'lsb-a', accept: ['3', '3.0'], hint: 'V', size: 4 },
+    ' V.   Bandwidth κάθε σήματος = ',
+    { blank: 'bw', accept: ['2', '2kHz', '2 kHz', '2000'], hint: 'kHz', size: 4 },
+    ' kHz (σύγκριση με DSB-SC: ',
+    { blank: 'bw-dsb', accept: ['4', '4kHz', '4 kHz'], hint: 'kHz', size: 4 },
+    ' kHz).',
+  ]}
+  solution={
+    <p>
+      Για single-tone, η SSB ταυτότητα δίνει ένα μοναδικό cosine ίδιου πλάτους
+      με το message: USB στη συχνότητα <InlineMath>{'f_c + f_m = 52'}</InlineMath>{' '}
+      kHz, LSB στη συχνότητα <InlineMath>{'f_c - f_m = 48'}</InlineMath> kHz.
+      Πλάτος <InlineMath>{'A_m = 3'}</InlineMath> V και στις δύο. Bandwidth{' '}
+      <InlineMath>{'W = f_m = 2'}</InlineMath> kHz — μισό από{' '}
+      <InlineMath>{'2W = 4'}</InlineMath> kHz της DSB-SC.
+    </p>
+  }
+/>
+
+<ReorderDrill
+  id="ssb-phase-shift-method-order"
+  prompt={
+    <p>
+      Βάλε σε σωστή σειρά τα βήματα της <strong>phase-shift (Hilbert) μεθόδου</strong>{' '}
+      για παραγωγή USSB από message <InlineMath>{'m(t)'}</InlineMath>. (Δες το{' '}
+      <code>SSBGenerationViz</code> και τη <code>SsbHilbertCancellationViz</code>{' '}
+      παραπάνω.)
+    </p>
+  }
+  steps={[
+    <>① Υπολόγισε τον Hilbert <InlineMath>{'\\hat m(t)'}</InlineMath> του message (phase-shift κατά <InlineMath>{'-\\pi/2'}</InlineMath> σε όλες τις θετικές συχνότητες).</>,
+    <>② Πολλαπλασίασε το <InlineMath>{'m(t)'}</InlineMath> με <InlineMath>{'\\cos(2\\pi f_c t)'}</InlineMath> και το <InlineMath>{'\\hat m(t)'}</InlineMath> με <InlineMath>{'\\sin(2\\pi f_c t)'}</InlineMath>.</>,
+    <>③ Αφαίρεσε τα δύο γινόμενα για να πάρεις USSB: <InlineMath>{'m\\cos - \\hat m\\sin'}</InlineMath>. (Πρόσθεσέ τα για LSSB.)</>,
+    <>④ Επαλήθευσε στο φάσμα: <strong>μόνο</strong> η εξωτερική πλευρά κάθε <InlineMath>{'\\pm f_c'}</InlineMath> έχει ενέργεια (USB) / μόνο η εσωτερική (LSB).</>,
+    <>⑤ Bandwidth του εκπεμπόμενου σήματος = <InlineMath>{'W'}</InlineMath> (μισό από <InlineMath>{'2W'}</InlineMath> της DSB-SC).</>,
+  ]}
+/>
 
 <ExamProblem id="ssb-tone-frequency" year="Single tone" weight="βασικό">
 **Ερώτηση:** Message $m(t) = \cos(2\pi\cdot 2000\,t)$, carrier στα 50 kHz, **LSB**. Σε ποια συχνότητα ζει το αποτέλεσμα και ποιο το πλάτος του;
 
 <Example title="Λύση" defaultOpen={true}>
+
+**Σκέψη:** single-tone message → single cosine output. LSB → χρησιμοποίησε «+» και ταυτότητα $\cos A\cos B + \sin A\sin B = \cos(A - B)$.
+
 $\hat{m}(t) = \sin(2\pi\cdot 2000\,t)$ (Hilbert του cosine είναι sine).
 
-LSB: $x_{LSB} = m\cos\omega_c t + \hat{m}\sin\omega_c t = \cos((\omega_c - \omega_m)t)$ από την ταυτότητα $\cos A\cos B + \sin A\sin B = \cos(A-B)$.
+LSB: $x_{LSB} = m\cos\omega_c t + \hat{m}\sin\omega_c t = \cos((\omega_c - \omega_m)t)$.
 
 $$x_{LSB}(t) = \cos(2\pi\cdot (50000 - 2000)\,t) = \cos(2\pi\cdot 48000\,t)$$
 
-Ζει στα **48 kHz** (κάτω από τον carrier — αυτό κάνει «Lower» η LSB), πλάτος 1.
+Ζει στα **48 kHz** (κάτω από τον carrier — αυτό κάνει «Lower» η LSB), πλάτος **1**.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="ssb-bandwidth-saving" year="Bandwidth" weight="γιατί μισό">
-**Ερώτηση:** Σήμα voice με $W = 3$ kHz εκπέμπεται με: (a) Conventional AM, (b) DSB-SC, (c) SSB. Πόσο bandwidth χρειάζεται καθένα;
+**Ερώτηση:** Σήμα voice με $W = 3$ kHz εκπέμπεται με: (α) Conventional AM, (β) DSB-SC, (γ) SSB. Πόσο bandwidth χρειάζεται καθένα; Πόσα ταυτόχρονα κανάλια χωράνε σε κανάλι 30 kHz;
 
 <Example title="Λύση" defaultOpen={true}>
-- (a) **AM:** $2W = 6$ kHz.
-- (b) **DSB-SC:** $2W = 6$ kHz (πετάει carrier, όχι sideband).
-- (c) **SSB:** $W = 3$ kHz (μόνο μία sideband).
 
-**Σε ένα HF κανάλι 30 kHz** χωράνε **10 ταυτόχρονα SSB voice channels** αλλά μόνο 5 DSB ή AM. Γι' αυτό το SSB είναι κανόνας στο HF (3–30 MHz).
+**Σκέψη:** η ερώτηση δοκιμάζει τη βασική BW formula κάθε σχήματος. Conventional AM και DSB-SC έχουν *ίδιο* BW = $2W$ (η DSB-SC κερδίζει ισχύ, όχι φάσμα). Η SSB κερδίζει μισό φάσμα.
+
+- (α) **AM:** $2W = 6$ kHz. Χωράνε **5** κανάλια στα 30 kHz.
+- (β) **DSB-SC:** $2W = 6$ kHz. Χωράνε **5** κανάλια.
+- (γ) **SSB:** $W = 3$ kHz. Χωράνε **10** κανάλια.
+
+Γι' αυτό το SSB είναι κανόνας στο HF (3–30 MHz) — διπλασιάζει τη χωρητικότητα.
 </Example>
 </ExamProblem>
 
@@ -285,9 +465,14 @@ $$x_{LSB}(t) = \cos(2\pi\cdot (50000 - 2000)\,t) = \cos(2\pi\cdot 48000\,t)$$
 **Ερώτηση:** Στη phase-shift μέθοδο SSB γράφουμε $x_{USB} = m\cos\omega_c t - \hat{m}\sin\omega_c t$. Γιατί χρειάζεται ο Hilbert $\hat{m}$ — δεν αρκεί το ίδιο το $m$;
 
 <Example title="Λύση">
-Αν είχαμε απλά $m\cos\omega_c t - m\sin\omega_c t$, αυτό **δεν** θα ήταν SSB. Στη συχνότητα: $\frac{1}{2}[M(f-f_c)+M(f+f_c)] - \frac{1}{2j}[M(f-f_c)-M(f+f_c)]$ — δίνει ένα άθροισμα που **δεν** ακυρώνει τη μία sideband.
 
-Ο Hilbert κάνει ακριβώς το σωστό phase shift ($-\pi/2$ για $f>0$, $+\pi/2$ για $f<0$) ώστε όταν το $\hat{m}$ ζευγαρώσει με το $\sin\omega_c t$, ο όρος που προκύπτει να **ακυρώνει** την LSB και να αφήνει μόνο την USB. Δηλαδή ο Hilbert είναι ακριβώς το «μαθηματικό κλειδί» που δίνει τη single-sided δομή.
+**Σκέψη:** η ερώτηση δοκιμάζει αν έχεις καταλάβει **ποια ιδιότητα** του Hilbert κάνει την ακύρωση. Δοκίμασε με $m$ αντί για $\hat m$ και δες αν η ακύρωση συμβαίνει.
+
+Αν είχαμε απλά $m\cos\omega_c t - m\sin\omega_c t$, αυτό **δεν** θα ήταν SSB. Στη συχνότητα ο όρος $m\sin$ δίνει $\tfrac{1}{2j}[M(f-f_c) - M(f+f_c)]$ — *όχι* αντι-συμμετρικό γύρω από κάθε $\pm f_c$, οπότε η αφαίρεση από το $m\cos$ δίνει ένα **μιγαδικό** σήμα που **δεν** ακυρώνει sideband — αντίθετα δίνει σήμα με μη-Hermitian φάσμα (δηλαδή το time-domain σήμα δεν είναι καν real-valued, που είναι ήδη παράλογο για ένα εκπεμπόμενο σήμα).
+
+Ο Hilbert κάνει ακριβώς το σωστό phase shift ($-\pi/2$ για $f>0$, $+\pi/2$ για $f<0$) ώστε όταν το $\hat{m}$ ζευγαρώσει με το $\sin\omega_c t$, να δίνει το **αντι-συμμετρικό** σχήμα στο φάσμα (panel B της `SsbHilbertCancellationViz` παραπάνω). Είναι ακριβώς αυτή η αντισυμμετρία που κάνει την μία πλευρά να ακυρώνεται όταν αφαιρούμε.
+
+**Σύντομα:** ο Hilbert δεν είναι «πιο πολύπλοκος multiplier» από το $m$ — είναι το **σωστό multiplier** που γεωμετρικά κουρδίζει τα δύο γινόμενα ώστε να ακυρώνει. Χωρίς αυτόν, η ακύρωση απλά δεν συμβαίνει.
 </Example>
 </ExamProblem>
 
@@ -295,13 +480,16 @@ $$x_{LSB}(t) = \cos(2\pi\cdot (50000 - 2000)\,t) = \cos(2\pi\cdot 48000\,t)$$
 **Ερώτηση:** USSB σήμα $x = m\cos\omega_c t - \hat{m}\sin\omega_c t$ πολλαπλασιάζεται με $2\cos\omega_c t$ και περνάει από LPF. Τι παίρνουμε;
 
 <Example title="Λύση">
+
+**Σκέψη:** ίδια αλυσίδα με DSB-SC coherent demod — multiply με τοπικό cosine + LPF. Εδώ έχουμε επιπλέον τον όρο $\hat m\sin$ που πρέπει να ξετυλίξουμε.
+
 $$2x\cos\omega_c t = 2m\cos^2\omega_c t - 2\hat{m}\sin\omega_c t\cos\omega_c t$$
 $$= m[1 + \cos 2\omega_c t] - \hat{m}\sin 2\omega_c t$$
 
 Μετά από LPF (κρατάει μόνο τους baseband όρους):
 $$y(t) = m(t)$$
 
-**Τέλεια ανάκτηση** του message — αρκεί το τοπικό cosine να είναι σε φάση με τον carrier (όπως και στο DSB-SC). Phase error δίνει το ίδιο πρόβλημα: η ανάκτηση γίνεται ασθενέστερη και αναμιγνύεται με το $\hat{m}$.
+**Τέλεια ανάκτηση** του message — αρκεί η τοπική φάση να είναι 0. Phase error $\varphi$ δίνει $y = m\cos\varphi - \hat m\sin\varphi$ (Hilbert παραμόρφωση, δες `SsbPhaseErrorViz` στο §4a). **Όχι μηδέν** όπως στο DSB-SC — αυτή είναι η ποιοτική διαφορά.
 </Example>
 </ExamProblem>
 
@@ -309,27 +497,152 @@ $$y(t) = m(t)$$
 **Δήλωση:** Η SSB είναι η μόνη AM παραλλαγή που έχει $x_Q \neq 0$ (μη-μηδενικό quadrature component).
 
 <Example title="Λύση" defaultOpen={true}>
+
+**Σκέψη:** η ερώτηση δοκιμάζει αν θυμάσαι τη γραμμή της SSB στον [πίνακα I/Q του /modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή).
+
 **Σωστό.** Από τον πίνακα I/Q:
 - AM: $x_Q = 0$
 - DSB-SC: $x_Q = 0$
 - VSB: $x_Q = 0$ (στην standard περιγραφή)
 - **SSB**: $x_Q = \mp A_c \hat{m}/2$ (με Hilbert)
 
-Στο complex plane, το complex envelope $g(t) = x_I + j x_Q$ της SSB κινείται σε **μη-τετριμμένη τροχιά** (όχι μόνο στον πραγματικό άξονα όπως στα άλλα AM σχήματα). Αυτή η ιδιότητα είναι ακριβώς αυτό που δίνει τη single-sideband structure στο φάσμα.
+Στο complex plane, το complex envelope $g(t) = x_I + j x_Q$ της SSB κινείται σε **μη-τετριμμένη τροχιά** (όχι μόνο στον πραγματικό άξονα όπως στα άλλα AM σχήματα). Αυτή η ιδιότητα είναι ακριβώς αυτό που δίνει τη single-sideband structure στο φάσμα — και ταυτόχρονα γιατί το complex envelope της SSB ζει σε σπείρα/άρπα, όχι σε γραμμή.
 </Example>
 </ExamProblem>
 
+<ExamProblem id="pb25-lssb-sinc-spectrum" year="Πρόοδος β' 2025 Θ2.3" weight="6 πόντοι">
+**Ερώτηση:** Σχεδιάστε το φάσμα του διαμορφωμένου κατά **AM-LSSB** σήματος όταν το φέρον είναι $c(t) = \cos(2\pi f_c t)$ και το σήμα πληροφορίας $m(t) = 2\,\mathrm{sinc}(2Wt)$.
+
+<Example title="Λύση">
+
+**Σκέψη:** το $m(t)$ είναι sinc → το $M(f)$ είναι rect (γνωστή Fourier pair από [/foundations/fourier-transform](/foundations/fourier-transform#3-η-βασική-fourier-pair-rect-sinc)). Άρα το DSB-SC φάσμα είναι **δύο rect αντίγραφα γύρω από τα ±f_c**. Η LSSB πετάει τα «εξωτερικά» μισά κάθε rect — κρατάει μόνο τα «εσωτερικά», δηλαδή τα κομμάτια **πιο κοντά στο 0**.
+
+**Παραγωγή.** Από το ζεύγος $\mathrm{sinc}(2Wt) \leftrightarrow \tfrac{1}{2W}\Pi(f/(2W))$:
+$$M(f) = 2 \cdot \tfrac{1}{2W}\Pi(f/(2W)) = \tfrac{1}{W}\Pi(f/(2W))$$
+(rect ύψους $1/W$, στήριγμα $[-W, W]$.)
+
+DSB-SC θα έδινε rect γύρω από $\pm f_c$ (πλάτους $2W$ καθένα). **LSSB** κρατάει μόνο **κάτω** sideband:
+
+- Στις θετικές: rect από $f_c - W$ έως $f_c$, ύψος $1/(2W)$.
+- Στις αρνητικές: rect από $-f_c$ έως $-f_c + W$, ίδιο ύψος.
+
+**Bandwidth** του διαμορφωμένου = $W$ (μισό του DSB-SC του ίδιου message). Είναι το κλασικό «AM-LSSB φάσμα» που δοκιμάστηκε στην [Πρόοδος β' 2025 ΘΕΜΑ 2.3](/practice#exercise:pb25-th2-3) — 6 πόντοι.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="ssb-phase-error-90" year="Phase error" weight="vs DSB-SC">
+**Ερώτηση:** USSB σήμα αποδιαμορφώνεται με τοπικό cosine ακριβώς **90° εκτός φάσης** ($\varphi = \pi/2$). Σύγκρινε την έξοδο με την αντίστοιχη περίπτωση DSB-SC.
+
+<Example title="Λύση" defaultOpen={true}>
+
+**Σκέψη:** δύο σχήματα, ίδιο phase error, διαφορετική απόκριση. Είναι ο τυπικός «ποιο πέφτει χειρότερα στο phase drift» έλεγχος.
+
+**SSB στα $\varphi = 90°$:** η φόρμουλα $y = m\cos\varphi \mp \hat m\sin\varphi$ δίνει $y = \mp\hat m(t)$ — ο **Hilbert** του message. Είναι ένα *διαφορετικό* σήμα, αλλά **όχι μηδέν**. Έχει την **ίδια ενέργεια** με το $m$ (Pythagorean: $\cos^2 + \sin^2 = 1$, παρόλο που μετατοπίστηκε όλη η ενέργεια στο $\sin$-όρο).
+
+**DSB-SC στα $\varphi = 90°$:** η φόρμουλα $y = m\cos\varphi$ δίνει $y = 0$. **Όλη η ενέργεια χάθηκε** — quadrature null.
+
+**Πρακτική συνέπεια:** ένας SSB δέκτης με κακό PLL βγάζει «παράξενη φωνή» που ακόμα διαβάζεται (ομιλία) ή ξεθωριάζει η ποιότητα (μουσική). Ένας DSB-SC δέκτης με ίδιο κακό PLL βγάζει **σιωπή**. Γι' αυτό το SSB θεωρείται «ανεκτικό» στα HF.
+</Example>
+</ExamProblem>
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε όλο το SSB"
+  keywords={[
+    <><InlineMath>{'x_{USB} = m\\cos - \\hat m\\sin'}</InlineMath>, <InlineMath>{'x_{LSB} = m\\cos + \\hat m\\sin'}</InlineMath></>,
+    <>BW = <InlineMath>{'W'}</InlineMath> (μισό DSB-SC)</>,
+    <>Single-tone: USB → <InlineMath>{'A_m\\cos(2\\pi(f_c+f_m)t)'}</InlineMath>, LSB → <InlineMath>{'A_m\\cos(2\\pi(f_c-f_m)t)'}</InlineMath></>,
+    <>I/Q: <InlineMath>{'x_Q = \\mp\\tfrac{A_c}{2}\\hat m'}</InlineMath> (μόνο SSB), <InlineMath>{'x_Q \\neq 0'}</InlineMath></>,
+    <>Coherent demod με phase error: <InlineMath>{'y = m\\cos\\varphi \\mp \\hat m\\sin\\varphi'}</InlineMath></>,
+    <>Στα 90°: Hilbert παραμόρφωση, <strong>όχι</strong> null</>,
+  ]}
+  skeleton={[
+    'Γράφεις την ταυτότητα m cos ∓ m̂ sin. Διαλέγεις πρόσημο (− = USB, + = LSB).',
+    'Για single-tone, εφαρμόζεις cos(A±B) ταυτότητα και παίρνεις ένα μοναδικό cosine στη συχνότητα f_c ± f_m.',
+    'Για bandlimited M(f), σχεδιάζεις δύο τρίγωνα γύρω από ±f_c και κρατάς μόνο τα «εξωτερικά» μισά (USB) ή «εσωτερικά» (LSB). BW = W.',
+    'Coherent demod: × 2cos(ω_c t) + LPF. Phase error φ → output m cos φ ∓ m̂ sin φ — γραμμικό μείγμα.',
+    'Στα 90°: η έξοδος είναι ∓m̂ (Hilbert του message), όχι μηδέν.',
+  ]}
+  trap={
+    <>
+      Τρεις κλασικές παγίδες. <strong>(1)</strong> Συγχέεις το πρόσημο: «−»{' '}
+      δίνει USB (έξω), «+» δίνει LSB (μέσα) — και όχι το αντίστροφο.
+      Μνημονικό: «<em>μείον</em>» = «<em>μέσα μηδέν</em>» = USB. <strong>(2)</strong>{' '}
+      Ξεχνάς ότι ο δεύτερος όρος έχει <InlineMath>{'\\hat m'}</InlineMath> και
+      γράφεις <InlineMath>{'m\\sin'}</InlineMath>. Χωρίς τον Hilbert καμία
+      ακύρωση δεν συμβαίνει — απλά παίρνεις ένα παράξενο complex σήμα.
+      <strong>(3)</strong> Νομίζεις ότι το phase error στο SSB είναι ίδιο με
+      το DSB-SC (quadrature null στα 90°). <strong>Όχι</strong> — στο SSB στα
+      90° παίρνεις τον Hilbert του message, διαφορετικό σήμα ίδιας ενέργειας.
+      Αυτή η διαφορά είναι ο λόγος που το SSB είναι το επικρατές σχήμα στα HF.
+    </>
+  }
+/>
+
 <Recap>
-- **SSB** = DSB-SC με μία από τις δύο sidebands αφαιρεμένη. Δύο εκδοχές: **USB** (πάνω από $f_c$), **LSB** (κάτω από $f_c$).
-- **Bandwidth = W** — μισό του AM/DSB. Power efficiency = 100% (διατηρεί τα πλεονεκτήματα του DSB-SC).
+- **SSB** = DSB-SC με μία από τις δύο sidebands αφαιρεμένη. Δύο εκδοχές: **USB** (πάνω από $f_c$, εξωτερικές πλευρές), **LSB** (κάτω από $f_c$, εσωτερικές πλευρές).
+- **Bandwidth = W** — μισό του AM/DSB. Power efficiency = 100%.
 - **I/Q form:** $x_I = A_c m/2$, $x_Q = -A_c \hat{m}/2$ — **η μόνη AM παραλλαγή με $x_Q \neq 0$**. Γι' αυτό χρειάζεται Hilbert.
-- **Δύο μέθοδοι παραγωγής:** filter (DSB-SC + απότομος BPF) ή phase-shift (Hilbert: $m\cos \mp \hat{m}\sin$).
+- **Δύο μέθοδοι παραγωγής:** filter (DSB-SC + απότομος BPF) ή phase-shift (Hilbert: $m\cos \mp \hat{m}\sin$). Η phase-shift είναι μαθηματικά κομψή· η filter ευκολότερη όταν το message έχει «κενή» ζώνη γύρω από DC.
+- **Hilbert cancellation στο φάσμα:** ο όρος $\hat m\sin$ έχει αντι-συμμετρικό σχήμα γύρω από κάθε $\pm f_c$. Αφαίρεση («−») ακυρώνει τις εσωτερικές πλευρές και διπλασιάζει τις εξωτερικές (USB)· πρόσθεση («+») κάνει το αντίθετο (LSB).
 - **Φόρμουλες προς απομνημόνευση:**
   - $x_{USB}(t) = m(t)\cos(2\pi f_c t) - \hat{m}(t)\sin(2\pi f_c t)$
   - $x_{LSB}(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)$
   - Single-tone: USB → $A_m\cos(2\pi(f_c + f_m)t)$, LSB → $A_m\cos(2\pi(f_c - f_m)t)$.
-- **Coherent demodulation** όπως στο DSB-SC. Phase error παράγει mix του $m$ και $\hat{m}$ — όχι quadrature null αλλά παραμόρφωση.
+- **Coherent demodulation** ίδια αλυσίδα με DSB-SC. **Phase error φ:** $y = m\cos\varphi \mp \hat m\sin\varphi$. Στα 90°: $\mp\hat m$ (Hilbert παραμόρφωση), **όχι μηδέν** — γι' αυτό η SSB ανέχεται καλύτερα phase drifts από DSB-SC.
+- **Πραγματικές εφαρμογές:** HF shortwave, amateur radio (DX), military/marine/aeronautical HF, Independent Sideband (ISB) για διπλασιασμό χωρητικότητας.
 - Επόμενο: **VSB**, ένας συμβιβασμός μεταξύ AM (απλό demod) και SSB (μισό BW).
 </Recap>
+
+<ThinkingPattern
+  signals={[
+    'SSB',
+    'Single Sideband',
+    'USSB',
+    'LSSB',
+    'απλής πλευρικής ζώνης',
+    'phase-shift method',
+    'Hilbert transform',
+    'm̂(t)',
+    'm cos ∓ m̂ sin',
+    'half bandwidth',
+    'μισό φάσμα',
+  ]}
+>
+  <p>
+    Σχεδόν κάθε εξεταστική SSB ζητάει μία από τρεις πράγματα: <strong>(α)</strong>{' '}
+    να γράψεις την εξίσωση ή το φάσμα δοθέντος <InlineMath>{'m(t)'}</InlineMath>{' '}
+    και <InlineMath>{'f_c'}</InlineMath>, <strong>(β)</strong> να αναγνωρίσεις
+    το bandwidth και να υπολογίσεις πλήθος καναλιών σε δοθέν spectrum window,
+    <strong> (γ)</strong> να δείξεις το φάσμα ενός bandlimited message σε
+    SSB (συνήθως sinc → rect ή τρίγωνο). Όλες είναι μηχανικές αν έχεις την{' '}
+    Hilbert ταυτότητα στο μυαλό και ξέρεις την Fourier pair για το message.
+  </p>
+  <p className="mt-2">
+    Αν η εκφώνηση γράφει «<strong>USSB</strong>» (Upper) → πρόσημο «−» στη
+    φόρμουλα, ζώνη πάνω από <InlineMath>{'f_c'}</InlineMath>. Αν γράφει
+    «<strong>LSSB</strong>» (Lower) → πρόσημο «+», ζώνη κάτω από{' '}
+    <InlineMath>{'f_c'}</InlineMath>. Αν δίνει message bandlimited <InlineMath>W</InlineMath>{' '}
+    → BW του διαμορφωμένου = <InlineMath>{'W'}</InlineMath> (όχι <InlineMath>{'2W'}</InlineMath>).
+  </p>
+  <p className="mt-2">
+    Για single-tone <InlineMath>{'m = A_m\\cos(2\\pi f_m t)'}</InlineMath>, η{' '}
+    SSB είναι **πάντα** ένα μοναδικό cosine πλάτους <InlineMath>{'A_m'}</InlineMath>{' '}
+    στη συχνότητα <InlineMath>{'f_c \\pm f_m'}</InlineMath>. Καμία υπολογιστική
+    πολυπλοκότητα — απλά αναγνώρισε το pattern και γράψε. Σε FDM ασκήσεις (όπως{' '}
+    <Link href="/practice#exercise:proodos26-11">proodos26-11/12/13</Link>{' '}
+    και <Link href="/practice#exercise:jan26-th3-mux">jan26-th3-mux</Link>), η{' '}
+    USSB κάθε καναλιού πιάνει <InlineMath>{'[f_i, f_i + W_i]'}</InlineMath> και
+    το non-overlap condition γίνεται απλή αριθμητική στα carrier spacings.
+  </p>
+  <p className="mt-2">
+    Στα phase-error problems: αν είναι DSB-SC και ρωτάει «τι γίνεται στα 90°»,
+    η απάντηση είναι <strong>μηδέν</strong> (quadrature null). Αν είναι SSB και
+    ρωτάει το ίδιο, η απάντηση είναι <strong>ο Hilbert του message</strong> —{' '}
+    διαφορετικό σήμα, ίδια ενέργεια.
+  </p>
+</ThinkingPattern>
+
+<ExamRadar slug="am/ssb" />
 
 <NextUp slug="am/vsb" />
