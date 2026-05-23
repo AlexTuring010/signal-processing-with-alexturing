@@ -85,6 +85,9 @@ import { EfficiencyVsMuCurveViz } from '@/components/viz/EfficiencyVsMuCurveViz'
 import { CarrierVsSidebandPowerSplitViz } from '@/components/viz/CarrierVsSidebandPowerSplitViz'
 import { DSBSCSignalViz } from '@/components/viz/DSBSCSignalViz'
 import { CoherentDemodulationViz } from '@/components/viz/CoherentDemodulationViz'
+import { DsbVsAmEnvelopeDetectorComparison } from '@/components/viz/DsbVsAmEnvelopeDetectorComparison'
+import { DsbScSpectrumViz } from '@/components/viz/DsbScSpectrumViz'
+import { CoherentDemodChainViz } from '@/components/viz/CoherentDemodChainViz'
 import { SSBSpectrumViz } from '@/components/viz/SSBSpectrumViz'
 import { SSBGenerationViz } from '@/components/viz/SSBGenerationViz'
 import { VSBShapingViz } from '@/components/viz/VSBShapingViz'
@@ -238,6 +241,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — am / dsb-sc
     DSBSCSignalViz,
     CoherentDemodulationViz,
+    DsbVsAmEnvelopeDetectorComparison,
+    DsbScSpectrumViz,
+    CoherentDemodChainViz,
 
     // Visualizations — am / ssb
     SSBSpectrumViz,
