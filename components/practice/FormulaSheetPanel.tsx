@@ -11,6 +11,7 @@ import {
   Check,
   AlertTriangle,
   Lightbulb,
+  Printer,
 } from 'lucide-react'
 import { FORMULA_SHEET, type FormulaEntry } from '@/content/practice/formulas'
 import { FORMULA_META } from '@/content/practice/formula-meta'
@@ -66,25 +67,36 @@ export function FormulaSheetPanel() {
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <header className="flex shrink-0 items-center justify-between border-b border-border bg-bg-elevated px-4 py-3">
-          <div className="flex items-center gap-2">
-            <Sigma className="h-5 w-5 text-accent" aria-hidden />
-            <h2 className="text-base font-semibold tracking-tight">Τυπολόγιο</h2>
-            {inAssist && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/15 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-300">
-                <Sparkles className="h-3 w-3" aria-hidden />
-                Assist on
-              </span>
-            )}
+        <header className="flex shrink-0 flex-col gap-2 border-b border-border bg-bg-elevated px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sigma className="h-5 w-5 text-accent" aria-hidden />
+              <h2 className="text-base font-semibold tracking-tight">Τυπολόγιο</h2>
+              {inAssist && (
+                <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/15 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-300">
+                  <Sparkles className="h-3 w-3" aria-hidden />
+                  Assist on
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={closeSheet}
+              aria-label="Κλείσιμο"
+              className="rounded-md p-1.5 text-fg-muted transition hover:bg-bg-soft hover:text-fg"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
-          <button
-            type="button"
+          <Link
+            href="/cheatsheet"
             onClick={closeSheet}
-            aria-label="Κλείσιμο"
-            className="rounded-md p-1.5 text-fg-muted transition hover:bg-bg-soft hover:text-fg"
+            className="inline-flex items-center gap-1.5 self-start rounded-md border border-accent/40 bg-accent-soft/40 px-2.5 py-1 text-[11px] font-semibold text-accent transition hover:bg-accent-soft/70"
+            title="Print-ready πινακίδα που συνδυάζει τυπολόγιο + must-memorize"
           >
-            <X className="h-5 w-5" />
-          </button>
+            <Printer className="h-3 w-3" aria-hidden />
+            Συνιστώμενη πινακίδα εξέτασης (print-ready)
+          </Link>
         </header>
 
         {inAssist && (

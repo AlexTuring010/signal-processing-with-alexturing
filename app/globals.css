@@ -684,6 +684,196 @@ html {
     box-shadow 240ms ease !important;
 }
 
+/* ────────────────────────────────────────────────────────────────────
+   Recommended Exam Cheatsheet — print stylesheet
+   ----------------------------------------------------------------
+   Scoped via `body:has(.cheatsheet-paper)` so other pages' print
+   behaviour is unaffected — the rules only activate when the cheatsheet
+   markup is present in the DOM. Using `:has()` instead of a JS-set body
+   class is critical because headless / server-side print contexts don't
+   run useEffect; the print stylesheet must work without any client hydration.
+   The goal: when the user prints, only the two A4 paper cards reach the
+   printer. All site chrome, comments, and the cheatsheet's own header/
+   footer/banner are hidden.
+   ──────────────────────────────────────────────────────────────── */
+@media print {
+  html:has(.cheatsheet-paper),
+  body:has(.cheatsheet-paper) {
+    /* Disable the 80% zoom while printing so the layout matches A4. */
+    zoom: 1;
+    background: white !important;
+    color: black !important;
+    color-scheme: light !important;
+  }
+
+  /* Hide everything outside <main> (header, footer, tamagotchi, find banner,
+     skip link, etc.). */
+  body:has(.cheatsheet-paper) > *:not(main) {
+    display: none !important;
+  }
+
+  /* Flatten the three-column content grid to a single column. */
+  body:has(.cheatsheet-paper) main,
+  body:has(.cheatsheet-paper) main > div {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+
+  /* Hide the sidebar + right TOC asides. */
+  body:has(.cheatsheet-paper) main > div > aside {
+    display: none !important;
+  }
+
+  /* Article fills the page. */
+  body:has(.cheatsheet-paper) article {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide any element marked as "no-print" (the cheatsheet's own header,
+     toggles, banner, print button, comments threads, etc.). */
+  body:has(.cheatsheet-paper) .cheatsheet-no-print {
+    display: none !important;
+  }
+
+  /* The cheatsheet paper cards lose their on-screen shadow/border in print —
+     they ARE the page now, not an element ON a page. The min-height is
+     also lifted so each paper sizes to its content and the @page rule
+     determines actual page boundaries. */
+  body:has(.cheatsheet-paper) .cheatsheet-paper {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* The second paper starts on a fresh sheet. */
+  body:has(.cheatsheet-paper) .cheatsheet-page-break {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Inside the paper: minimal padding for print. */
+  body:has(.cheatsheet-paper) .cheatsheet-paper > div {
+    padding: 2mm 3mm !important;
+  }
+
+  /* Color bands must keep their backgrounds in print. */
+  body:has(.cheatsheet-paper) .cheatsheet-group,
+  body:has(.cheatsheet-paper) #decision-tree,
+  body:has(.cheatsheet-paper) .cheatsheet-paper section {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Avoid awkward column breaks INSIDE a single group. */
+  body:has(.cheatsheet-paper) .cheatsheet-group {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Aggressive density for print — every mm counts to hit the 2-page target. */
+  body:has(.cheatsheet-paper) .cheatsheet-paper .katex {
+    font-size: 0.7em;
+  }
+  body:has(.cheatsheet-paper) .cheatsheet-paper .katex-display {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body:has(.cheatsheet-paper) .cheatsheet-paper .katex-display > .katex {
+    text-align: left !important;
+    padding-left: 0 !important;
+  }
+  body:has(.cheatsheet-paper) .cheatsheet-grid {
+    column-gap: 2.5mm !important;
+  }
+  body:has(.cheatsheet-paper) .cheatsheet-formula {
+    margin-bottom: 0.4mm !important;
+  }
+
+  /* Comments threads — always hide on print. */
+  body:has(.cheatsheet-paper) [data-comments] {
+    display: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 4mm;
+  }
+}
+
+/* On-screen typography tweaks for the cheatsheet paper.
+   The paper is rendered at A4-ish proportions on screen so the user
+   can see what they'll actually print. KaTeX defaults (1.25rem display
+   margins, 1.05em base) are way too loose for a stress-lookup grid; we
+   strip them inside the paper container only — the rest of the site
+   keeps the normal generous math typography.
+
+   The paper is also a *light-theme island*: it must always render as
+   black-on-white, regardless of the surrounding site theme. We achieve
+   this by redefining the CSS theme variables inside the paper; any rule
+   inside (KaTeX color, prose colors, borders) now resolves against
+   slate-900 fg / white bg, so the printed sheet is identical in light
+   and dark mode and Chrome's headless print (which has no theme set)
+   doesn't drift. */
+.cheatsheet-paper {
+  --fg: 15 23 42;           /* slate-900 */
+  --fg-muted: 71 85 105;    /* slate-600 */
+  --fg-subtle: 100 116 139; /* slate-500 */
+  --bg: 255 255 255;
+  --bg-soft: 248 250 252;
+  --bg-elevated: 255 255 255;
+  --border: 226 232 240;
+  --border-strong: 203 213 225;
+  color-scheme: light;
+}
+.cheatsheet-paper .katex {
+  font-size: 0.78em;
+}
+.cheatsheet-paper .katex-display {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+.cheatsheet-paper .katex-display > .katex {
+  text-align: left;
+  padding-left: 0;
+  white-space: nowrap;
+}
+.cheatsheet-paper .cheatsheet-math {
+  font-size: 0.95em;
+  line-height: 1.05;
+  margin: 0;
+}
+.cheatsheet-paper .cheatsheet-formula {
+  margin-bottom: 0.5mm;
+}
+/* Beat the global `.prose-content ul` list-style rule (the cheatsheet sits
+   inside a .prose-content article but should NEVER have list bullets — it's
+   visual chrome, not prose). */
+.cheatsheet-paper ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+.cheatsheet-paper li {
+  margin: 0 !important;
+}
+
 /* Subtle scrollbar in dark mode */
 [data-theme='dark'] ::-webkit-scrollbar {
   width: 10px;

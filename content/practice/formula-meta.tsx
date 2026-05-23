@@ -126,6 +126,27 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'fourier-duality': {
+    intuition: (
+      <>
+        Η δομή του Fourier είναι σχεδόν συμμετρική: αν αλλάξεις ρόλους χρόνου/συχνότητας
+        παίρνεις ξανά FT pair, με ένα <InlineMath>{'f \\to -f'}</InlineMath>. Από εδώ
+        παίρνεις δωρεάν ένα νέο pair για κάθε γνωστό — π.χ. ξέρεις{' '}
+        <InlineMath>{'\\mathrm{rect} \\leftrightarrow \\mathrm{sinc}'}</InlineMath>, άρα{' '}
+        <InlineMath>{'\\mathrm{sinc} \\leftrightarrow \\mathrm{rect}'}</InlineMath>. Είναι
+        ο λόγος που <InlineMath>{'\\delta(t) \\leftrightarrow 1'}</InlineMath> και{' '}
+        <InlineMath>{'1 \\leftrightarrow \\delta(f)'}</InlineMath> συνυπάρχουν.
+      </>
+    ),
+    derivation: (
+      <>
+        Αλλάζεις τα <InlineMath>{'t \\leftrightarrow f'}</InlineMath> στον ορισμό{' '}
+        <InlineMath>{'X(f) = \\int x(t) e^{-j2\\pi ft}\\,dt'}</InlineMath> ⇒ ο IFT γίνεται FT
+        με reversed sign στον εκθέτη, οπότε εμφανίζεται το{' '}
+        <InlineMath>{'x(-f)'}</InlineMath>.
+      </>
+    ),
+  },
   'fourier-scaling': {
     intuition: (
       <>

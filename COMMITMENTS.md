@@ -55,6 +55,11 @@ Format:
 
 (Move entries here when satisfied. Keep them for traceability.)
 
+- [x] **Recommended exam cheatsheet (Συνιστώμενη πινακίδα εξέτασης)** (closed 2026-05-23)
+       Originally added: Phase 0 sub-task 7 of the SP rework (`plans/you-re-picking-up-sleepy-sketch.md`), after a Discord exchange (Δήλος, June 2025) surfaced that the prof allows students to bring their **own** custom cheatsheet to the exam in addition to the official τυπολόγιο.
+       Fulfilled in: `/cheatsheet` (`app/(content)/cheatsheet/page.tsx` + `components/practice/Cheatsheet.tsx` + `content/practice/cheatsheet-spec.tsx`)
+       Notes: Print-ready two-page A4 view over the SAME `FORMULA_SHEET` data — no data fork. Page 1 = must-memorize formulas grouped by problem-pattern (AM Conventional · DSB/SSB · Coherent demod recipe · FM+Bessel · Carson+FM noise · Random · Noise), with a 7-row "Πρώτο πράγμα που σκέφτομαι" decision tree at the top and a red "ΔΕΝ ξεχνάω" pitfalls callout at the bottom. Page 2 = clean τυπολόγιο mirror (Fourier pairs · Fourier properties · Hilbert · trig identities · integrals · Bessel reference). One-click Print-to-PDF + scoped print stylesheet (`body.cheatsheet-print-mode`) hides nav/footer/sidebar/TOC/comments. "Πλήρες (2 σελ.)" vs "Μόνο πρέπει-να-θυμάσαι (1 σελ.)" toggle on the visible header. Honest banner about the bring-your-own permission being hearsay ("επιβεβαίωσε με τον καθηγητή"). `/formulas` framing now points at the cheatsheet; `FormulaSheetPanel` header has a "Print-ready πινακίδα" link visible on /practice and /sose. Added missing `fourier-duality` (`X(t) ↔ x(-f)`) entry to `FORMULA_SHEET` — was the very first τυπολόγιο property and was missing; needed so the cheatsheet's typology mirror is complete.
+
 - [x] **Reference page for Fourier pairs** (closed 2026-05-23)
        Originally part of: bundled "Reference pages for trig identities, Fourier pairs, and integrals" commitment.
        Fulfilled in: `/reference/fourier-pairs`

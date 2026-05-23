@@ -144,6 +144,7 @@ export const CHAPTERS: Chapter[] = [
         available: true,
       },
       { slug: 'practice', title: 'Practice hub', available: true },
+      { slug: 'cheatsheet', title: '📋 Συνιστώμενη πινακίδα εξέτασης', available: true },
       { slug: 'formulas', title: 'Formula sheet', available: true },
     ],
   },

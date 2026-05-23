@@ -104,6 +104,16 @@ export const FORMULA_SHEET: FormulaSection[] = [
         ),
       },
       {
+        id: 'fourier-duality',
+        title: 'Δυϊκότητα (symmetry)',
+        topic: 'foundations',
+        inTypology: true,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <BlockMath>{'x(t) \\,\\leftrightarrow\\, X(f) \\;\\;\\Longrightarrow\\;\\; X(t) \\,\\leftrightarrow\\, x(-f)'}</BlockMath>
+        ),
+      },
+      {
         id: 'fourier-scaling',
         title: 'Scaling',
         topic: 'foundations',

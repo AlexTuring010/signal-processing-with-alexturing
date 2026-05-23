@@ -1,4 +1,5 @@
-import { Sigma, Check, AlertTriangle } from 'lucide-react'
+import Link from 'next/link'
+import { Sigma, Check, AlertTriangle, Printer } from 'lucide-react'
 
 import { FormulasInteractive } from '@/components/practice/FormulasInteractive'
 
@@ -41,6 +42,35 @@ export default function FormulasPage() {
             Πρέπει να το θυμάσαι
           </span>
         </div>
+
+        {/* Bring-your-own cheatsheet — pointer to the recommended one. */}
+        <aside className="mt-5 flex max-w-3xl gap-3 rounded-lg border border-accent/40 bg-accent-soft/40 px-4 py-3">
+          <Printer className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden />
+          <div className="space-y-1.5 text-sm">
+            <p className="text-fg">
+              Από συζητήσεις φοιτητών (Δήλος, περασμένα έτη), ο καθηγητής
+              επιτρέπει να φέρεις και <em>δικό σου</em> τυπολόγιο επιπλέον του
+              επίσημου.{' '}
+              <strong>
+                Αν ισχύει, η{' '}
+                <Link
+                  href="/cheatsheet"
+                  className="text-accent underline hover:opacity-80"
+                >
+                  Συνιστώμενη πινακίδα
+                </Link>{' '}
+                είναι αυτό που σου προτείνουμε
+              </strong>{' '}
+              — το επίσημο τυπολόγιο + όλα τα must-memorize σε δύο A4 σελίδες,
+              δομημένα για στιγμιαία αναζήτηση κάτω από πίεση.
+            </p>
+            <p className="text-xs text-fg-muted">
+              Δεν είναι 100% επιβεβαιωμένο για φέτος — ρώτα τον καθηγητή πριν
+              την εξέταση.
+            </p>
+          </div>
+        </aside>
+
         <p className="mt-4 max-w-3xl text-sm text-fg-muted">
           Κάνε κλικ στον τύπο για να ανοίξεις διαίσθηση, mini-viz, παραγωγή σε
           δύο γραμμές και ποια παλιά θέματα τον χρησιμοποιούν. Άσε σχόλιο σε

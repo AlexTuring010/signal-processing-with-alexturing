@@ -211,4 +211,6 @@ export const SECTION_TITLES: Record<string, string> = {
   'noise/white-noise': 'White noise',
   'noise/through-filters': 'Noise through filters',
   'noise/snr': 'SNR',
+  formulas: 'Τυπολόγιο',
+  cheatsheet: 'Συνιστώμενη πινακίδα',
 }
