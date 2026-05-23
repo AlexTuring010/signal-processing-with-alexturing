@@ -785,6 +785,48 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'am-output-snr': {
+    intuition: (
+      <>
+        Στην Conventional AM ο carrier καταναλώνει ισχύ χωρίς να μεταφέρει πληροφορία. Στο
+        high-SNR regime, αυτή η σπατάλη μεταφράζεται σε γραμμική απώλεια output SNR κατά
+        τον παράγοντα <InlineMath>{'\\eta'}</InlineMath>. Για{' '}
+        <InlineMath>{'\\mu = 1'}</InlineMath> (μέγιστο επιτρεπτό), single-tone:{' '}
+        <InlineMath>{'\\eta = 1/3'}</InlineMath> ή <strong>−4.8 dB</strong> κάτω από DSB-SC.
+      </>
+    ),
+    derivation: (
+      <>
+        Output noise = baseband noise <InlineMath>{'N_0 W'}</InlineMath>. Output signal ={' '}
+        <InlineMath>{'\\langle m^2\\rangle'}</InlineMath>. Λαμβάνοντας υπόψη ότι total
+        transmitted power είναι <InlineMath>{'A_c^2/2 + \\langle m^2\\rangle/2'}</InlineMath>,
+        η σχέση δίνει το <InlineMath>{'\\eta = (\\mu^2/2)/(1 + \\mu^2/2)'}</InlineMath> για
+        single-tone.
+      </>
+    ),
+  },
+  'nonlinear-modulator-fc': {
+    intuition: (
+      <>
+        Όταν ο modulator είναι μη γραμμικός με <InlineMath>{'d_2 v^2'}</InlineMath> όρο,
+        παράγει επίσης <InlineMath>{'d_2 m^2(t)'}</InlineMath> στο baseband. Από convolution
+        theorem, <InlineMath>{'m^2'}</InlineMath> έχει <strong>διπλάσιο</strong> bandwidth
+        (<InlineMath>{'2W'}</InlineMath>) από το αρχικό <InlineMath>{'m'}</InlineMath>. Για
+        να μη μπει στο BPF γύρω από <InlineMath>{'f_c'}</InlineMath>, χρειάζεται κενό:{' '}
+        <InlineMath>{'f_c - W > 2W'}</InlineMath>.
+      </>
+    ),
+    derivation: (
+      <>
+        Convolution theorem:{' '}
+        <InlineMath>{'\\mathcal{F}\\{m^2\\} = M(f) * M(f)'}</InlineMath>· αν{' '}
+        <InlineMath>{'M(f)'}</InlineMath> έχει support <InlineMath>{'[-W, W]'}</InlineMath>,
+        η συνέλιξη έχει support <InlineMath>{'[-2W, 2W]'}</InlineMath>. BPF{' '}
+        <InlineMath>{'[f_c - W, f_c + W]'}</InlineMath> καθαρό ⇔{' '}
+        <InlineMath>{'f_c > 3W'}</InlineMath>.
+      </>
+    ),
+  },
 
   // ── FM / PM ──────────────────────────────────────────────────
   'fm-signal': {

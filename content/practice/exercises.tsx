@@ -181,7 +181,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'medium',
     prerequisites: ['am/modulator-demodulator', 'am/conventional'],
-    formulaIds: ['am-signal'],
+    formulaIds: ['am-signal', 'nonlinear-modulator-fc'],
     statement: (
       <p>
         Σχεδιάστε το κύκλωμα που χρησιμοποιείται συνήθως για τη διαμόρφωση ενός
@@ -1095,7 +1095,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'fm',
     difficulty: 'easy',
     prerequisites: ['fm/in-noise', 'am/modulator-demodulator'],
-    formulaIds: ['fm-snr-out', 'fm-gain-am', 'carson', 'am-bandwidth'],
+    formulaIds: ['fm-snr-out', 'fm-gain-am', 'carson', 'am-bandwidth', 'am-output-snr'],
     statement: (
       <p>
         Συγκρίνετε τα συστήματα FM και AM ως προς: ευαισθησία στον θόρυβο,
@@ -2880,7 +2880,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/modulator-demodulator', 'foundations/filters'],
-    formulaIds: ['am-signal', 'fourier-pair-rect', 'fourier-modulation-theorem'],
+    formulaIds: ['am-signal', 'fourier-pair-rect', 'fourier-modulation-theorem', 'nonlinear-modulator-fc'],
     statement: (
       <p>
         Σήμα <InlineMath>{'m(t) = \\alpha\\,\\Pi(2Wt)'}</InlineMath>{' '}

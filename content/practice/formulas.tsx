@@ -469,6 +469,24 @@ export const FORMULA_SHEET: FormulaSection[] = [
         derivedIn: 'am/modulator-demodulator',
         content: <BlockMath>{'\\tfrac{1}{f_c} \\ll RC \\ll \\tfrac{1}{W}'}</BlockMath>,
       },
+      {
+        id: 'am-output-snr',
+        title: 'AM output SNR (single-tone, high SNR)',
+        topic: 'am',
+        inTypology: false,
+        derivedIn: 'am/modulator-demodulator',
+        content: (
+          <BlockMath>{'(\\mathrm{SNR})_\\text{out, AM} = \\frac{\\mu^2/2}{1 + \\mu^2/2}\\cdot(\\mathrm{SNR})_\\text{in} = \\eta\\cdot(\\mathrm{SNR})_\\text{in}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'nonlinear-modulator-fc',
+        title: 'Συνθήκη μη γραμμικού modulator',
+        topic: 'am',
+        inTypology: false,
+        derivedIn: 'am/modulator-demodulator',
+        content: <BlockMath>{'f_c > 3W'}</BlockMath>,
+      },
     ],
   },
 

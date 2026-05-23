@@ -99,6 +99,10 @@ import { VsbCoherentReconstructionViz } from '@/components/viz/VsbCoherentRecons
 import { VsbForTvViz } from '@/components/viz/VsbForTvViz'
 import { EnvelopeDetectorViz } from '@/components/viz/EnvelopeDetectorViz'
 import { AMInNoiseViz } from '@/components/viz/AMInNoiseViz'
+import { NonlinearModulatorSpectrumViz } from '@/components/viz/NonlinearModulatorSpectrumViz'
+import { BalancedModulatorCancellationViz } from '@/components/viz/BalancedModulatorCancellationViz'
+import { CoherentReceiverChainViz } from '@/components/viz/CoherentReceiverChainViz'
+import { AMSNRCurveViz } from '@/components/viz/AMSNRCurveViz'
 import { FDMSpectrumViz } from '@/components/viz/FDMSpectrumViz'
 import { FMSignalViz } from '@/components/viz/FMSignalViz'
 import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
@@ -267,6 +271,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — am / modulator-demodulator
     EnvelopeDetectorViz,
     AMInNoiseViz,
+    NonlinearModulatorSpectrumViz,
+    BalancedModulatorCancellationViz,
+    CoherentReceiverChainViz,
+    AMSNRCurveViz,
 
     // Visualizations — am / multiplexing
     FDMSpectrumViz,

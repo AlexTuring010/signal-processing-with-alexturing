@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'AM Modulator/Demodulator + AM στον θόρυβο',
   description:
-    'Πρακτικά κυκλώματα AM: ο envelope detector (δίοδος + RC) και τα όρια του time constant, ο coherent receiver (mixer + LPF), και η συμπεριφορά της AM σε θόρυβο μαζί με το threshold effect του envelope detector.',
+    'Πρακτικά κυκλώματα AM: ο μη γραμμικός modulator και το f_c > 3W, ο balanced modulator για DSB-SC, ο envelope detector (δίοδος + RC) στα όρια του time constant, ο coherent receiver (mixer + LPF) και το cos(φ) penalty, και η συμπεριφορά της AM σε θόρυβο μαζί με το threshold effect.',
 }
 
 export const frontmatter = {
@@ -15,8 +15,8 @@ export const frontmatter = {
     'am/dsb-sc',
   ],
   examWeight: 8,
-  estimatedReadTime: 28,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 38,
+  lastUpdated: '2026-05-23',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -27,9 +27,9 @@ import Link from 'next/link'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · AM</span>
   <span>·</span>
-  <span>~28 min read</span>
+  <span>~38 min read</span>
   <span>·</span>
-  <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam</span>
+  <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam · 8%</span>
 </div>
 
 # Modulator & Demodulator + AM στον θόρυβο
@@ -44,15 +44,23 @@ import Link from 'next/link'
 <SourceDoc
   sources={[
     { pdf: 'SE_session11&12&13.pdf', slides: '34–~50', label: 'Διαμορφωτής/Αποδιαμορφωτής AM, διοδικός μετατροπέας, envelope detector' },
-    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM (envelope detector)' },
+    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM (envelope detector + threshold)' },
   ]}
 />
 
 <Collectible id="diode-frame" />
 
-Ξέρουμε **τι είναι** η AM, ποιο είναι το φάσμα της, πόση ισχύ καταναλώνει, ποιες παραλλαγές υπάρχουν. Σε αυτό το κεφάλαιο πάμε στα **πρακτικά κυκλώματα** και στη **συμπεριφορά σε θόρυβο** — τι κάνει πραγματικά ένας AM δέκτης, ποιοι είναι οι περιορισμοί, και γιατί η AM είναι ευαίσθητη στον θόρυβο.
+Ξέρουμε ήδη **τι είναι** η AM, ποιο είναι το φάσμα της, πόση ισχύ καταναλώνει, ποιες παραλλαγές υπάρχουν. Σε αυτό το κεφάλαιο πάμε στα **πρακτικά κυκλώματα** και στη **συμπεριφορά σε θόρυβο** — τι κάνει πραγματικά ένας AM πομπός και δέκτης, ποιοι είναι οι περιορισμοί, και γιατί η Conventional AM έχει την περίφημη αδυναμία του *threshold effect*.
 
-8% εξεταστικό βάρος, εμφανίζεται σχεδόν σε κάθε εξεταστική ως ερώτηση «εξήγησε τη λειτουργία του envelope detector», «βρες τα όρια του RC», ή «υπολόγισε output SNR».
+8% εξεταστικό βάρος — το δεύτερο πιο βαρύ μάθημα του AM track μετά το [/am/conventional](/am/conventional). Σχεδόν κάθε εξεταστική περιοχή έχει μία ερώτηση που πέφτει εδώ: «εξήγησε τη λειτουργία του envelope detector», «βρες τα όρια του RC», «γιατί χρειάζεται bandpass filter μετά τον modulator», «τι είναι το threshold effect».
+
+Στο τέλος αυτού του κεφαλαίου θα ξέρεις:
+
+1. **Πώς παράγεται** ένα AM σήμα πρακτικά (μη γραμμικός modulator + BPF) και γιατί χρειάζεται η συνθήκη <InlineMath>{'f_c > 3W'}</InlineMath>.
+2. Πώς δουλεύει ο **balanced modulator** για DSB-SC — ποιοι όροι ακυρώνονται και γιατί.
+3. Πώς το RC σε έναν **envelope detector** ζει ανάμεσα στις δύο κλίμακες <InlineMath>{'1/f_c \\ll RC \\ll 1/W'}</InlineMath>, και τι σφάλματα παίρνεις αν φύγεις εκτός.
+4. Πώς δουλεύει ο **coherent receiver** (mixer + LPF) και γιατί το phase error δίνει <InlineMath>{'\\cos\\varphi'}</InlineMath> penalty.
+5. Γιατί ο envelope detector παρουσιάζει **threshold effect** κάτω από ~10 dB SNR — και ο coherent receiver όχι.
 
 ## 1. Modulator (πομπός)
 
@@ -60,50 +68,54 @@ import Link from 'next/link'
 
 ### 1a. Direct multiplication (ιδεατή προσέγγιση)
 
-Πάρε τον carrier $A_c\cos(2\pi f_c t)$, προσθέσε το $A_c$ στο message για να το πιάσεις πάνω από μηδέν, και πολλαπλασίασε. Αυτό απαιτεί έναν **αναλογικό multiplier** στις υψηλές συχνότητες — δύσκολο αν το $f_c$ είναι ραδιοφωνικό (MHz).
+Πάρε τον carrier $A_c\cos(2\pi f_c t)$, πρόσθεσε το DC offset $A_c$ στο message για να το πιάσεις πάνω από μηδέν, και πολλαπλασίασε. Αυτό απαιτεί έναν **αναλογικό multiplier** στις υψηλές συχνότητες — δύσκολο και ακριβό αν το $f_c$ είναι ραδιοφωνικό (MHz).
+
+Στην πράξη ο modulator υλοποιείται **έμμεσα**, εκμεταλλευόμενος μη γραμμικότητα μιας διόδου.
 
 ### 1b. Nonlinear element + bandpass filter (πραγματικός πομπός)
 
-Η πραγματική AM παράγεται **εκμεταλλευόμενη μη γραμμικότητα**, π.χ. ένα διοδικό κύκλωμα τύπου $V_{out} = d_1 V_{in} + d_2 V_{in}^2 + \ldots$ Παρακάτω η πλήρης παραγωγή που εμφανίζεται στις διαλέξεις (session 11&12&13).
-
-**Setup.** Στην είσοδο της διόδου εφαρμόζουμε $V_{in}(t) = m(t) + A_c\cos(2\pi f_c t)$ — message **συν** carrier. Η έξοδος της μη γραμμικής συσκευής είναι:
+**Setup.** Στην είσοδο μιας μη γραμμικής συσκευής εφαρμόζουμε $V_{in}(t) = m(t) + A_c\cos(2\pi f_c t)$ — message **συν** carrier. Η μη γραμμικότητα δίνει:
 
 $$
 V_{out}(t) = d_1 V_{in}(t) + d_2 V_{in}^2(t) + \ldots
 $$
 
-Αναπτύσσοντας το τετράγωνο:
-
-$$
-V_{in}^2(t) = m^2(t) + 2 A_c\, m(t)\cos(2\pi f_c t) + A_c^2\cos^2(2\pi f_c t)
-$$
-
-Χρησιμοποιώντας $\cos^2 = (1 + \cos(2\cdot))/2$:
+Αναπτύσσοντας το τετράγωνο και χρησιμοποιώντας $\cos^2 = (1 + \cos(2\cdot))/2$:
 
 $$
 V_{in}^2(t) = m^2(t) + 2 A_c\, m(t)\cos(2\pi f_c t) + \frac{A_c^2}{2}\big[1 + \cos(4\pi f_c t)\big]
 $$
 
-Τελικά, μαζεύοντας τους όρους που προέρχονται από $d_1 V_{in}$ και $d_2 V_{in}^2$:
+Μαζεύοντας όλα όσα προέρχονται από $d_1 V_{in}$ και $d_2 V_{in}^2$:
 
 $$
 V_{out}(t) = \underbrace{2 d_2 A_c \cos(2\pi f_c t)\!\left[\frac{d_1}{2 d_2} + m(t)\right]}_{\text{AM-like}} + d_1 m(t) + d_2 m^2(t) + \frac{d_2 A_c^2}{2}\big[1 + \cos(4\pi f_c t)\big]
 $$
 
-**Ο πρώτος όρος είναι ακριβώς AM σήμα** της μορφής $A_c'[1 + k_a m(t)]\cos(2\pi f_c t)$ με $A_c' = d_1 A_c$ και $k_a = 2 d_2/d_1$. Οι υπόλοιποι όροι είναι «παράπλευρα προϊόντα» που πρέπει να αφαιρεθούν με **bandpass filter** γύρω από τη ζώνη $[f_c - W, f_c + W]$.
+**Ο πρώτος όρος είναι ακριβώς AM σήμα** της μορφής $A_c'[1 + k_a m(t)]\cos(2\pi f_c t)$ με $A_c' = d_1 A_c$ και $k_a = 2 d_2/d_1$. Οι υπόλοιποι όροι είναι «παράπλευρα προϊόντα» που πρέπει να φιλτραριστούν με **bandpass filter** γύρω από τη ζώνη $[f_c - W, f_c + W]$.
 
-<Callout type="key" title="Συνθήκη f_c > 3W">
-Για να μπορεί το BPF να απομονώσει τον AM όρο **χωρίς να συμπεριλάβει τον $d_2 m^2(t)$ θόρυβο**, χρειάζεται να ξέρουμε πού βρίσκεται φασματικά το $m^2$. Από το θεώρημα convolution, $\mathcal{F}\{m^2\} = M(f) * M(f)$, οπότε αν το $m(t)$ έχει bandwidth $W$ τότε **το $m^2(t)$ έχει bandwidth $2W$**.
+<Callout type="key" title="Συνθήκη f_c > 3W — γεωμετρική ανάγνωση του φάσματος">
+Από [convolution theorem](/foundations/fourier-transform), $\mathcal{F}\{m^2(t)\} = M(f) * M(f)$. **Convolution διπλασιάζει το bandwidth**: αν το $m(t)$ έχει bandwidth $W$, τότε **το $m^2(t)$ έχει bandwidth $2W$**.
 
-Άρα τα φάσματα του $d_2 m^2(t)$ (στη baseband, μέχρι $\pm 2W$) και του AM όρου (στις $\pm f_c$ με bandwidth $\pm W$) **δεν πρέπει να επικαλύπτονται**:
+Άρα το φάσμα στο $V_{out}$ έχει 5 «λοβούς»:
+- $d_1 m$ → baseband bump στο εύρος $[-W, W]$
+- $d_2 m^2$ → baseband bump στο εύρος $[-2W, 2W]$ ← ο μπελάς
+- $d_1 A_c \cos$ → δύο impulses στα $\pm f_c$ (carrier line)
+- $2 d_2 A_c m \cos$ → AM-like band στο $[f_c \pm W]$ (και αντίστοιχα στα $-f_c$)
+- $d_2 A_c^2/2 \cdot \cos(4\pi f_c t)$ → impulses στα $\pm 2 f_c$
+
+Το BPF $[f_c - W, f_c + W]$ θα αφήσει μόνο τον AM-like όρο **μόνο αν** η κόκκινη ζώνη $m^2$ (δεξί άκρο στο $2W$) δεν μπει μέσα του (αριστερό άκρο στο $f_c - W$):
+
 $$
 f_c - W > 2W \;\Rightarrow\; \boxed{\,f_c > 3W\,}
 $$
 
-Πιο αυστηρή συνθήκη από το απλό «$f_c \gg W$» — εμφανίζεται συχνά σε εξετάσεις.
+Είναι **αυστηρότερη** συνθήκη από το γενικό «$f_c \gg W$» — εμφανίζεται σε εξετάσεις ως μικρή παγίδα.
 </Callout>
 
-Αυτό είναι το «**nonlinear AM transmitter**» πρόβλημα — βλ. και την worked exercise στο [/practice](/practice) (Άσκηση AM-3).
+<NonlinearModulatorSpectrumViz />
+
+Παρατήρηση: σύρε τον slider προς τα μικρά $f_c/W$ και δες τη κόκκινη ζώνη $m^2$ να ξεχειλίζει μέσα στη ζώνη του BPF. Όταν περάσει το «3», η ένδειξη γίνεται κόκκινη και το guard band γίνεται αρνητικό. Η σωστή σχεδίαση πομπού χρειάζεται **τουλάχιστον** $f_c = 3W$, και στην πράξη πολύ μεγαλύτερο.
 
 ### 1c. Balanced modulator για DSB-SC
 
@@ -116,19 +128,48 @@ $$
 y_-(t) = d_1[-m(t) + \cos(2\pi f_c t)] + d_2[-m(t) + \cos(2\pi f_c t)]^2
 $$
 
-Αφαιρώντας:
+Αφαιρώντας: οι όροι που είναι **κοινοί** στα δύο σκέλη ($d_1\cos$, $d_2 m^2$, $d_2\cos^2$) ακυρώνονται. Επιβιώνουν μόνο οι όροι που εμπεριέχουν το $m$ με αντισυμμετρικό τρόπο:
+
 $$
 y_+(t) - y_-(t) = 2 d_1 m(t) + 4 d_2 m(t)\cos(2\pi f_c t)
 $$
 
-Οι όροι $\cos^2$ και ο σκέτος carrier **εξαφανίζονται** λόγω της αντισυμμετρίας. Μετά από bandpass filter γύρω από $f_c$:
+Μετά από bandpass filter γύρω από $f_c$ μένει **καθαρό DSB-SC**:
 $$
-y_{BPF}(t) = 4 d_2 m(t)\cos(2\pi f_c t) \quad \text{← καθαρό DSB-SC}
+y_{BPF}(t) = 4 d_2 m(t)\cos(2\pi f_c t)
 $$
 
-Το «balanced» στο όνομα αναφέρεται σε αυτή την ακριβή ακύρωση του carrier — γι' αυτό η συσκευή απαιτεί **πανομοιότυπες** διοδικές χαρακτηριστικές στους δύο κλάδους.
+<BalancedModulatorCancellationViz />
 
-## 2. Envelope detector — η ραχοκοκαλιά του AM δέκτη
+Το «balanced» στο όνομα αναφέρεται σε αυτή την ακριβή ακύρωση του carrier — γι' αυτό η συσκευή απαιτεί **πανομοιότυπες** διοδικές χαρακτηριστικές στους δύο κλάδους. Αν οι δύο δίοδοι έχουν διαφορετικά $d_1, d_2$, η ακύρωση είναι ατελής και επιζεί ένα residual carrier στην έξοδο (το λεγόμενο *carrier leakage*).
+
+<RecallCard
+  variant="concept"
+  title="Modulator paths — βήματα από το message στο RF"
+  keywords={[
+    <>Nonlinear + BPF</>,
+    <><InlineMath>{'f_c > 3W'}</InlineMath></>,
+    <><InlineMath>{'m^2 \\to 2W'}</InlineMath> bandwidth</>,
+    <>Balanced → carrier cancel</>,
+    <>Identical diodes</>,
+  ]}
+  skeleton={[
+    <>Conventional AM: <InlineMath>{'m + A_c \\cos'}</InlineMath> → μη γραμμική δίοδος → BPF γύρω από <InlineMath>{'f_c'}</InlineMath> κρατάει τον AM όρο.</>,
+    <>Για τη συνθήκη <InlineMath>{'f_c > 3W'}</InlineMath>, υπενθύμισε: <InlineMath>{'m^2'}</InlineMath> έχει bandwidth <InlineMath>{'2W'}</InlineMath> από convolution theorem.</>,
+    <>DSB-SC: δύο αντισυμμετρικές μη γραμμικότητες, αφαίρεση, BPF → μόνο <InlineMath>{'4 d_2 m\\cos'}</InlineMath> επιβιώνει.</>,
+    <>Balanced cancellation απαιτεί <strong>ίδιες</strong> διοδικές χαρακτηριστικές — διαφορετικά υπάρχει carrier leakage.</>,
+  ]}
+  trap={
+    <>
+      Το <InlineMath>{'m^2(t)'}</InlineMath> έχει bandwidth <InlineMath>{'2W'}</InlineMath>,{' '}
+      <strong>όχι</strong> <InlineMath>{'W'}</InlineMath>. Το λάθος είναι να γράψεις
+      «BPF αρκεί στο <InlineMath>{'f_c > 2W'}</InlineMath>» — αν το κάνεις, το{' '}
+      <InlineMath>{'m^2'}</InlineMath> ξεχειλίζει στη ζώνη.
+    </>
+  }
+/>
+
+## 2. Envelope detector — η ραχοκοκαλιά του εμπορικού AM
 
 Το πιο σημαντικό κύκλωμα στο εμπορικό AM. Είναι **απλό** (δίοδος + αντίσταση + πυκνωτής), **φθηνό**, και **δεν χρειάζεται συγχρονισμό φάσης**. Γι' αυτό το AM ραδιόφωνο είναι ακόμα ζωντανό μετά από 100 χρόνια.
 
@@ -140,9 +181,7 @@ $$
 x_{\text{rect}}(t) = \max(0, x(t))
 $$
 
-Στη συνέχεια ένα RC κύκλωμα (αντίσταση και πυκνωτής σε παράλληλη σύνδεση) λειτουργεί σαν **lowpass filter** που «κρατάει την κορυφή» κάθε carrier κύκλου. Το αποτέλεσμα **ακολουθεί το envelope** του AM σήματος, που είναι (όταν $\mu \leq 1$) το $A_c + m(t)$.
-
-Στη συνέχεια αφαιρούμε το DC offset $A_c$ και κρατάμε το $m(t)$.
+Στη συνέχεια ένα RC κύκλωμα (αντίσταση και πυκνωτής σε παράλληλη σύνδεση) λειτουργεί σαν **lowpass filter** που «κρατάει την κορυφή» κάθε carrier κύκλου. Το αποτέλεσμα **ακολουθεί το envelope** του AM σήματος, που είναι (όταν $\mu \leq 1$) το $A_c + m(t)$. Στο τέλος, αφαιρούμε το DC offset $A_c$ και κρατάμε το $m(t)$.
 
 <EnvelopeDetectorViz />
 
@@ -154,27 +193,110 @@ $$
 \boxed{\,\frac{1}{f_c} \ll RC \ll \frac{1}{W}\,} \quad \text{✓ Στο τυπολόγιο}
 $$
 
-όπου $W$ είναι το message bandwidth.
+όπου $W$ είναι το message bandwidth. Στον viz πάνω, σύρε τον slider και κοίτα το κάτω «scale» strip — το RC μετακινείται μέσα σε log άξονα, με τα δύο κόκκινα όρια (στο $1/f_c$ και $1/W$) ξεκάθαρα στη θέση τους.
 
-- **Πολύ μικρό RC** (κοντά στο $1/f_c$): ο πυκνωτής εκφορτίζεται γρήγορα ανάμεσα στους carrier κύκλους → output με **ripple** στη συχνότητα του carrier. Δεν είναι καθαρή ανάκτηση.
-- **Πολύ μεγάλο RC** (κοντά στο $1/W$): ο πυκνωτής δεν εκφορτίζεται αρκετά γρήγορα για να ακολουθήσει τις πτώσεις του message → **diagonal clipping** όπου το ανακτημένο σήμα μένει «ψηλά» όταν το message πέφτει απότομα.
-- **Σωστό RC**: αρκετά μεγάλο για να εξομαλύνει carrier, αρκετά μικρό για να ακολουθεί message.
+- **Πολύ μικρό RC** (κοντά στο $1/f_c$): ο πυκνωτής εκφορτίζεται γρήγορα ανάμεσα στους carrier κύκλους → output με **ripple** στη συχνότητα του carrier. Πρακτικός κανόνας: $f_c \cdot RC \geq 10$.
+- **Πολύ μεγάλο RC** (κοντά στο $1/W$): ο πυκνωτής δεν εκφορτίζεται αρκετά γρήγορα για να ακολουθήσει τις πτώσεις του message → **diagonal clipping** όπου το ανακτημένο σήμα μένει «ψηλά» όταν το envelope πέφτει απότομα. Πρακτικός κανόνας: $W \cdot RC \leq 0.1$.
+- **Σωστό RC**: γεωμετρικός μέσος των δύο κλιμάκων, $RC \approx \sqrt{1/(f_c W)}$.
 
-**Παράδειγμα τιμών για AM ραδιόφωνο:** $f_c = 1$ MHz, $W = 4$ kHz. Σωστό RC ≈ 50–100 μs (ανάμεσα στα $1/(2π \cdot 10^6)$ ≈ 0.16 μs και $1/(2π \cdot 4 \cdot 10^3)$ ≈ 40 μs).
+**Παράδειγμα τιμών για AM ραδιόφωνο:** $f_c = 1$ MHz, $W = 4$ kHz.
+- $1/f_c \approx 1\,\mu\text{s}$, $1/W \approx 250\,\mu\text{s}$
+- Σωστό RC ≈ $\sqrt{1 \cdot 250} \approx 16\,\mu\text{s}$. Στην πράξη επιλέγονται τιμές 50–100 μs.
 
-### 2c. Όρος envelope detection για να δουλέψει
+<Callout type="warning" title="Diagonal clipping — η συχνή εξεταστική παγίδα">
+Όταν το RC είναι πολύ μεγάλο, ο πυκνωτής εκφορτίζεται πολύ αργά. Στις «κατηφορικές» περιοχές του envelope, η output τάση χάνει επαφή με το πραγματικό envelope και «γλιστράει» σε διαγώνια ευθεία. Αναλυτικά, για single-tone modulation, η συνθήκη χωρίς diagonal clipping είναι:
 
-**Απαραίτητη συνθήκη**: $\mu \leq 1$ (καμία υπερδιαμόρφωση). Διαφορετικά το envelope πάει αρνητικό σε κάποιες στιγμές, ο envelope detector το αναποδογυρίζει, και παίρνεις παραμορφωμένο message.
+$$
+RC \leq \frac{\sqrt{1 - \mu^2}}{\mu\, \omega_m}
+$$
+
+Όσο μεγαλύτερο μ, **τόσο μικρότερο επιτρεπτό RC** — γι' αυτό η Conventional AM προτιμά μέτριο μ ≈ 0.5–0.8.
+</Callout>
+
+### 2c. Όρος για να δουλέψει η envelope detection
+
+**Δύο απαραίτητες συνθήκες**:
+
+1. **$\mu \leq 1$** (καμία υπερδιαμόρφωση). Διαφορετικά το envelope πάει αρνητικό σε κάποιες στιγμές, ο envelope detector το αναποδογυρίζει, και παίρνεις παραμορφωμένο message. Δες [/am/conventional](/am/conventional#3-overmodulation-η-έννοια-της-καθαρής-ανάκτησης) για τη πλήρη εικόνα.
+2. **$f_c \gg W$** (καλά διαχωρισμένες κλίμακες). Διαφορετικά δεν υπάρχει «σωστό» RC ανάμεσα στα $1/f_c$ και $1/W$.
+
+Ο envelope detector είναι **ασύμβατος** με DSB-SC και SSB γιατί εκεί δεν υπάρχει DC offset $A_c$ → το envelope του σήματος **δεν** ταυτίζεται με το $m(t)$.
+
+<RecallCard
+  variant="concept"
+  title="Envelope detector — δύο κλίμακες, ένα RC"
+  keywords={[
+    <>diode + RC LPF</>,
+    <>1/f_c ≪ RC ≪ 1/W</>,
+    <>μ ≤ 1</>,
+    <>diagonal clipping</>,
+    <>carrier ripple</>,
+  ]}
+  skeleton={[
+    <>Half-wave rectify με δίοδο → ακολουθεί μόνο τη θετική πλευρά.</>,
+    <>RC LPF: αρκετά μεγάλο για να εξομαλύνει carrier (<InlineMath>{'f_c \\cdot RC \\gg 1'}</InlineMath>), αρκετά μικρό για να ακολουθεί message (<InlineMath>{'W \\cdot RC \\ll 1'}</InlineMath>).</>,
+    <>Sweet RC: <InlineMath>{'RC \\approx \\sqrt{1/(f_c\\, W)}'}</InlineMath> ως πρώτη εκτίμηση.</>,
+    <>Αφαίρεσε το DC <InlineMath>{'A_c'}</InlineMath> με ξεχωριστό capacitor στην έξοδο και έχεις το <InlineMath>{'m(t)'}</InlineMath>.</>,
+  ]}
+  trap={
+    <>
+      Δουλεύει <strong>μόνο για Conventional AM</strong>: χρειάζεται μη
+      αρνητικό envelope. Για DSB-SC ή SSB είναι άχρηστος — πρέπει coherent.
+    </>
+  }
+/>
 
 ## 3. Coherent receiver (synchronous detection)
 
 Ο εναλλακτικός τρόπος demodulation που ισχύει για **όλα τα AM σχήματα** (Conventional, DSB-SC, SSB, VSB):
 
-1. **Mixer**: πολλαπλασιάζεις το λαμβανόμενο σήμα με ένα τοπικό cosine ίδιας συχνότητας και φάσης με τον carrier.
+1. **Mixer**: πολλαπλασιάζεις το λαμβανόμενο σήμα με ένα τοπικό cosine ίδιας συχνότητας και (ιδανικά) ίδιας φάσης με τον carrier.
 2. **LPF**: φιλτράρεις το αποτέλεσμα με ένα low-pass filter cutoff $W$.
 3. (Αν Conventional AM) **DC removal**: αφαιρείς το $A_c$ DC component για να μείνει μόνο το $m(t)$.
 
-Είναι η ίδια διαδικασία που είδαμε στο [DSB-SC](/am/dsb-sc#4-coherent-demodulation-πώς-ανακτούμε-το-message). Δουλεύει για κάθε AM σχήμα. Είναι **πιο πολύπλοκο αλλά πιο ισχυρό** σε noisy συνθήκες — γι' αυτό το εμπορικό AM ραδιόφωνο χρησιμοποιεί envelope detector (φθηνός), αλλά τα professional συστήματα χρησιμοποιούν coherent.
+### 3a. Αλγεβρική παραγωγή
+
+Λαμβανόμενο σήμα: $r(t) = [A_c + m(t)]\cos(2\pi f_c t) + n(t)$. Πολλαπλασιάζουμε με $2\cos(2\pi f_c t + \varphi)$ (LO με σφάλμα φάσης $\varphi$):
+
+$$
+y(t) = 2 r(t)\cos(2\pi f_c t + \varphi)
+$$
+
+Χρησιμοποιώντας $2\cos A \cos B = \cos(A-B) + \cos(A+B)$:
+
+$$
+y(t) = [A_c + m(t)]\big[\cos\varphi + \cos(4\pi f_c t + \varphi)\big] + 2 n(t)\cos(2\pi f_c t + \varphi)
+$$
+
+Μετά από LPF cutoff $W$ φεύγει ο $2 f_c$ όρος, μένει:
+
+$$
+y_{\text{LPF}}(t) = [A_c + m(t)]\cos\varphi + n_{\text{low}}(t)
+$$
+
+Μετά από DC removal:
+
+$$
+\boxed{\,\hat m(t) = m(t)\cos\varphi + n_{\text{low}}(t)\,}
+$$
+
+**Το $\cos\varphi$ είναι το phase-error penalty**: τέλεια ευθυγράμμιση ($\varphi = 0$) → πλήρης ανάκτηση. Στις 90° → **μηδέν** (quadrature null, ίδιο όπως στο [DSB-SC](/am/dsb-sc#4a-coherent-demodulation-η-σωστή-διαδικασία)). Σε ενδιάμεσες γωνίες → γραμμική απώλεια πλάτους.
+
+<CoherentReceiverChainViz />
+
+Στον viz πάνω σύρε το slider φάσης από 0 σε 90°: η πράσινη ανακτημένη κυματομορφή «μικραίνει» γραμμικά χωρίς να αλλάζει σχήμα μέχρι να μηδενιστεί. Πάτησε «Θόρυβος: ON» και δες ότι ακόμη και με θόρυβο η ανάκτηση **παραμένει γραμμική** — αυτή είναι η μεγάλη διαφορά από τον envelope detector που θα δούμε στην §4.
+
+### 3b. Πότε προτιμάμε coherent vs envelope
+
+| Παράγοντας | Envelope detector | Coherent receiver |
+| --- | --- | --- |
+| Πολυπλοκότητα | Απλός (δίοδος + RC) | Σύνθετος (PLL ή pilot για φάση) |
+| Λειτουργεί σε | Conventional AM, VSB | Όλα τα AM σχήματα |
+| Phase synchronization | Δεν χρειάζεται | Απαιτείται (PLL/pilot) |
+| Φθηνός | ✓ | ✗ |
+| Σε θόρυβο | Threshold effect (§4) | Γραμμικός σε όλο το SNR |
+
+Το **εμπορικό AM ραδιόφωνο** χρησιμοποιεί envelope detector — η απλότητα είναι αξία πιο σημαντική από την εμφανή απώλεια SNR. Τα **professional** συστήματα (στρατιωτικά, DX listening) χρησιμοποιούν coherent.
 
 ## 4. AM στον θόρυβο — threshold effect
 
@@ -186,40 +308,74 @@ $$
 
 όπου $n(t)$ είναι **bandpass θόρυβος** (συνήθως white noise φιλτραρισμένο από τον RF bandpass του δέκτη). Πώς συμπεριφέρεται ο envelope detector;
 
-### 4a. High-SNR regime (συνήθης λειτουργία)
+### 4a. High-SNR regime — γραμμικός envelope detector
 
-Όταν το SNR είναι υψηλό (πάνω από ~10 dB), ο θόρυβος είναι «μικρός» σε σύγκριση με τον carrier. Σε αυτή την περιοχή ο envelope detector λειτουργεί **σχεδόν γραμμικά**:
+Όταν το SNR είναι υψηλό (πάνω από ~10 dB), ο θόρυβος είναι «μικρός» σε σύγκριση με τον carrier. Σε αυτή την περιοχή ο envelope detector λειτουργεί **σχεδόν γραμμικά** και ισχύει για single-tone:
 
 $$
-\text{Output SNR}_{\text{AM}} \approx \frac{\mu^2/2}{1 + \mu^2/2} \cdot \text{Input SNR}
+\text{SNR}_{\text{out, env}} \approx \frac{\mu^2/2}{1 + \mu^2/2} \cdot \text{SNR}_{\text{in}} = \eta \cdot \text{SNR}_{\text{in}}
 $$
 
-Δηλαδή, η output SNR είναι **χειρότερη** από την input SNR κατά τον παράγοντα efficiency $\eta$ που υπολογίσαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency). Για $\mu = 1$: output SNR ≈ (1/3) × input SNR ≈ −5 dB. Για $\mu = 0.5$: ακόμα χειρότερα.
+Δηλαδή η output SNR είναι **χειρότερη** από την input SNR κατά τον παράγοντα efficiency $\eta$ που υπολογίσαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency). Για $\mu = 1$: output SNR ≈ (1/3) × input SNR ≈ −4.8 dB απώλεια. Για $\mu = 0.5$: $\eta \approx 0.111$ → −9.5 dB. **Η σπατάλη ισχύος στον carrier πληρώνεται σε SNR.**
 
 ### 4b. Threshold effect (κάτω από ~10 dB)
 
-Κάτω από SNR ≈ 10 dB, ο envelope detector **σπάει**. Ο θόρυβος envelope κυριαρχεί και το ανακτημένο message χάνεται γρήγορα:
+Κάτω από SNR ≈ 10 dB, ο envelope detector **σπάει**. Αναλυτικά: το envelope του $x + n$ δεν είναι πλέον προσεγγιστικά $A_c + m(t) + n_I(t)$ (όπου $n_I$ είναι ο in-phase component του noise). Όταν ο θόρυβος γίνει συγκρίσιμος με τον carrier, υπάρχουν φάσεις όπου το $|x + n|$ καθορίζεται από τον θόρυβο, και το envelope είναι **μη γραμμική συνάρτηση** του $(x, n)$.
+
+Αποτέλεσμα:
 
 $$
-\text{Output SNR}_{\text{AM}} \propto (\text{Input SNR})^2 \quad \text{στο threshold region}
+\text{SNR}_{\text{out, env}} \propto (\text{SNR}_{\text{in}})^2 \quad \text{στο threshold region}
 $$
 
-Δηλαδή κάθε 3 dB πτώση στο input → 6 dB πτώση στο output. **Threshold effect** — η μεγαλύτερη αδυναμία της Conventional AM.
+Δηλαδή σε dB κλίμακα κάθε **1 dB** πτώση στο input → **2 dB** πτώση στο output. Διπλάσια κλίση από το γραμμικό high-SNR regime. **Threshold effect** — η μεγαλύτερη αδυναμία της Conventional AM.
 
 <AMInNoiseViz />
 
+<AMSNRCurveViz />
+
+Πάνω αριστερά είναι η time-domain εικόνα (envelope detector output καθώς πέφτει το SNR). Πάνω δεξιά είναι η ποσοτική εικόνα: σύρε το $\mu$ για να αλλάξεις τη γραμμική ζώνη (η η-offset μετακινείται), σύρε το $\text{SNR}_\text{in}$ για να δεις την τρέχουσα τιμή output. Πάνω από 10 dB ο envelope (κόκκινο) και ο coherent AM (πορτοκαλί) ταυτίζονται. Κάτω από 10 dB ο envelope διπλασιάζει την κλίση του και χάνει γρήγορα.
+
 ### 4c. Coherent vs envelope σε θόρυβο
 
-Ο coherent receiver **δεν έχει threshold effect** — η output SNR ακολουθεί γραμμικά την input SNR ακόμα και σε χαμηλά SNR. Είναι ο λόγος που στρατιωτικά συστήματα χρησιμοποιούν coherent παρά την πολυπλοκότητα.
+Ο coherent receiver **δεν έχει threshold effect** — η output SNR ακολουθεί γραμμικά την input SNR ακόμα και σε χαμηλά SNR. Αυτό είναι η μεγάλη αρετή του coherent: στη περιοχή που χρειάζεσαι περισσότερο τη σύλληψη ασθενούς σήματος, ο coherent απλά συνεχίζει να δουλεύει.
 
-| Demodulator | High SNR | Low SNR |
+| Demodulator | High SNR (≥ 10 dB) | Low SNR (< 10 dB) |
 | --- | --- | --- |
-| **Envelope detector** | Σχεδόν γραμμικός, factor $\eta$ απώλεια | Threshold collapse |
-| **Coherent (synchronous)** | Γραμμικός | Παραμένει γραμμικός |
+| **Envelope detector** | Σχεδόν γραμμικός, factor $\eta$ απώλεια | Threshold collapse, κλίση 2× |
+| **Coherent (synchronous)** | Γραμμικός με $\eta$ απώλεια (AM) ή 1 (DSB-SC) | Παραμένει γραμμικός |
 
-## 5. AM input/output SNR στο τυπολόγιο
+Σε **DSB-SC** ή **SSB** όπου δεν υπάρχει σπατάλη ισχύος στον carrier, **η output SNR ισούται με την input SNR** — γι' αυτό λέμε ότι DSB-SC και SSB είναι «100% efficient».
 
-Για Conventional AM στο high-SNR regime, ο γενικός τύπος για την output SNR είναι:
+<RecallCard
+  variant="concept"
+  title="AM στον θόρυβο — δύο regimes, δύο κλίσεις"
+  keywords={[
+    <>η · SNR_in</>,
+    <>threshold ≈ 10 dB</>,
+    <>SNR_out ∝ SNR_in² (low SNR)</>,
+    <>coherent: γραμμικός παντού</>,
+    <>DSB-SC: SNR_out = SNR_in</>,
+  ]}
+  skeleton={[
+    <>High SNR (≫ 10 dB): <InlineMath>{'\\mathrm{SNR}_\\text{out} \\approx \\eta\\cdot\\mathrm{SNR}_\\text{in}'}</InlineMath> για Conventional AM, slope 1 σε dB.</>,
+    <>Low SNR (<InlineMath>{'< 10'}</InlineMath> dB): envelope detector «σπάει», slope γίνεται 2 σε dB — κάθε −1 dB input κοστίζει −2 dB output.</>,
+    <>Coherent demod: <InlineMath>{'\\mathrm{SNR}_\\text{out} = \\eta\\cdot\\mathrm{SNR}_\\text{in}'}</InlineMath> για κάθε SNR (no knee).</>,
+    <>DSB-SC / SSB coherent: <InlineMath>{'\\mathrm{SNR}_\\text{out} = \\mathrm{SNR}_\\text{in}'}</InlineMath> (no carrier waste).</>,
+  ]}
+  trap={
+    <>
+      Η σύγκριση «AM είναι χειρότερη από DSB-SC» πρέπει να γίνεται{' '}
+      <strong>στο ίδιο SNR_in</strong>. Σε χαμηλά SNR η σύγκριση δεν είναι
+      γραμμική — η AM ηττάται διπλά, και από <InlineMath>{'\\eta < 1'}</InlineMath>{' '}
+      και από το threshold.
+    </>
+  }
+/>
+
+## 5. AM SNR formulas — γενικό μήνυμα
+
+Για Conventional AM στο high-SNR regime:
 
 $$
 (\text{SNR})_{\text{out, AM}} = \frac{\mu^2 P_{m,N}}{1 + \mu^2 P_{m,N}} \cdot (\text{SNR})_{\text{in}}
@@ -228,10 +384,16 @@ $$
 όπου $P_{m,N} = \langle m^2 \rangle / m_{\max}^2$ είναι η **κανονικοποιημένη** ισχύς του message ($\leq 1$). Για single-tone $m(t) = A_m\cos$ → $P_{m,N} = 1/2$, και ο τύπος γίνεται:
 
 $$
-(\text{SNR})_{\text{out, AM}} = \frac{\mu^2/2}{1 + \mu^2/2} \cdot (\text{SNR})_{\text{in}} = \eta \cdot (\text{SNR})_{\text{in}}
+(\text{SNR})_{\text{out, AM, single-tone}} = \frac{\mu^2/2}{1 + \mu^2/2} \cdot (\text{SNR})_{\text{in}} = \eta \cdot (\text{SNR})_{\text{in}}
 $$
 
-Για DSB-SC και SSB, η output SNR είναι **πάντα ίση με την input SNR** (κανένας carrier να πετάξει).
+Για **DSB-SC** και **SSB** (coherent demodulation, κανένας carrier να πετάξει):
+
+$$
+(\text{SNR})_{\text{out, DSB-SC}} = (\text{SNR})_{\text{in}}, \qquad (\text{SNR})_{\text{out, SSB}} = (\text{SNR})_{\text{in}}
+$$
+
+Άρα η DSB-SC κερδίζει 4.8 dB σε output SNR έναντι του AM με $\mu = 1$, και ακόμη περισσότερα για μικρότερο $\mu$.
 
 ## 6. Worked example
 
@@ -243,14 +405,14 @@ $$
 
 ---
 
-**Λύση.**
+**Σκέψη πριν τη λύση.** (α) Η ερώτηση είναι σχεδόν πάντα ίδια — εφαρμόζουμε ευθεία τη συνθήκη $1/f_c \ll RC \ll 1/W$ και υπολογίζουμε τις δύο τιμές. Πρακτικά επιλέγουμε γεωμετρικό μέσο. (β) Single-tone → $P_{m,N} = 1/2$, άρα ο τύπος γίνεται $\eta = \frac{\mu^2/2}{1 + \mu^2/2}$. Αντικατάσταση και ×.
 
 **(α) RC range:**
 $$
 \frac{1}{f_c} = 1 \text{ μs}, \qquad \frac{1}{W} = 200 \text{ μs}
 $$
 
-Σωστό εύρος: $1 \text{ μs} \ll RC \ll 200 \text{ μs}$. Πρακτικά διαλέγουμε **RC ≈ 50 μs** (στο μέσον λογαριθμικά).
+Σωστό εύρος: $1 \text{ μs} \ll RC \ll 200 \text{ μs}$. Γεωμετρικός μέσος: $\sqrt{1 \cdot 200} \approx 14$ μs. Πρακτικά διαλέγουμε **RC ≈ 20–50 μs** ώστε $f_c \cdot RC \geq 20$ (καθαρή απόρριψη carrier) και $W \cdot RC \leq 0.25$ (καμία diagonal clipping).
 
 **(β) Output SNR:**
 $$
@@ -263,30 +425,79 @@ $$
 
 Σε dB: $10 \log_{10}(19.7) \approx 13$ dB. Δηλαδή η output SNR είναι **7 dB χαμηλότερη** από την input — η απώλεια λόγω της σπατάλης ισχύος στον carrier.
 
+**Σύγκριση με DSB-SC:** αν εκπέμπαμε το ίδιο message με DSB-SC και είχαμε ίδιο SNR_in 20 dB, η SNR_out θα ήταν επίσης 20 dB (no loss). DSB-SC κερδίζει 7 dB εδώ.
+
 </Example>
 
 ## 7. Πρακτικές παρατηρήσεις
 
 - **Εμπορικό AM ραδιόφωνο** χρησιμοποιεί envelope detector γιατί είναι φθηνό. Η ευαισθησία στον θόρυβο είναι αποδεκτή για τοπικές εκπομπές με ισχυρό σήμα.
-- **DX (long-distance) AM listening** συχνά χρησιμοποιεί receiverς με coherent detection (synchronous AM detectors) για καλύτερη ποιότητα σε ασθενή σήματα.
+- **DX (long-distance) AM listening** συχνά χρησιμοποιεί receivers με coherent detection (synchronous AM detectors) για καλύτερη ποιότητα σε ασθενή σήματα — εκεί που ο envelope έχει ήδη πέσει στο threshold.
 - **Stereo AM** (όπου υπάρχει — σπάνιο σήμερα) χρησιμοποιεί quadrature multiplexing με coherent detection — απαιτεί PLL για συγχρονισμό.
+- **Balanced modulators** σε ολοκληρωμένη μορφή (Gilbert cell) είναι το standard κύκλωμα για DSB-SC και SSB στα σύγχρονα ραδιοφωνικά chipsets.
+
+<Recap>
+- **Modulator path** Conventional AM: $m + A_c\cos$ → μη γραμμικότητα → BPF γύρω από $f_c$. Συνθήκη $f_c > 3W$ ώστε το $m^2$ band (2W bandwidth) να μην ξεχειλίζει στο BPF.
+- **Balanced modulator** για DSB-SC: δύο αντισυμμετρικές μη γραμμικότητες, αφαίρεση → κοινοί όροι (carrier + $m^2$ + $\cos^2$) ακυρώνονται, μένει μόνο $m\cdot\cos$.
+- **Envelope detector**: διοδος + RC LPF, δουλεύει για Conventional AM (και VSB). **RC range**: $1/f_c \ll RC \ll 1/W$. Sweet spot: γεωμετρικός μέσος. Δύο modes αποτυχίας: carrier ripple (μικρό RC) και diagonal clipping (μεγάλο RC).
+- **Coherent receiver** (mixer + LPF + DC removal): universal για κάθε AM σχήμα. Phase error → $\cos\varphi$ penalty (γραμμική απώλεια), όχι quadrature null εκτός αν $\varphi = 90°$.
+- **AM στον θόρυβο:** στο high-SNR regime, $\text{SNR}_\text{out} \approx \eta \cdot \text{SNR}_\text{in}$. Κάτω από ~10 dB **threshold effect** — τετραγωνική πτώση. **Coherent demod δεν έχει threshold effect.**
+- **DSB-SC, SSB** (coherent): $\text{SNR}_\text{out} = \text{SNR}_\text{in}$ (no carrier waste).
+- **Πρακτική σημείωση:** εμπορικό AM = envelope detector (φθηνό), professional = coherent (καλύτερο σε θόρυβο).
+</Recap>
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε όλο το κεφάλαιο — pomp & dekt prakika"
+  keywords={[
+    <><InlineMath>{'f_c > 3W'}</InlineMath></>,
+    <>balanced carrier cancel</>,
+    <><InlineMath>{'1/f_c \\ll RC \\ll 1/W'}</InlineMath></>,
+    <>diode + RC</>,
+    <><InlineMath>{'\\cos\\varphi'}</InlineMath> penalty</>,
+    <><InlineMath>{'\\eta\\cdot\\mathrm{SNR}_\\text{in}'}</InlineMath></>,
+    <>threshold @ 10 dB</>,
+    <>slope 2 below threshold</>,
+    <>coherent: γραμμικός</>,
+  ]}
+  skeleton={[
+    <>Modulator path: μη γραμμικός με <InlineMath>{'m + A_c\\cos'}</InlineMath> → BPF; συνθήκη <InlineMath>{'f_c > 3W'}</InlineMath> γιατί <InlineMath>{'m^2'}</InlineMath> έχει 2W bandwidth.</>,
+    <>Για DSB-SC: balanced modulator → αντισυμμετρία ακυρώνει carrier + κοινούς όρους.</>,
+    <>Envelope detector: <InlineMath>{'1/f_c \\ll RC \\ll 1/W'}</InlineMath>, sweet spot γεωμετρικός μέσος. Δύο modes αποτυχίας.</>,
+    <>Coherent: × 2cos(ω_c t + φ) → LPF → DC removal · στο <InlineMath>{'\\varphi = 0'}</InlineMath> πλήρης, στο <InlineMath>{'\\varphi = 90°'}</InlineMath> null.</>,
+    <>Conventional AM high-SNR: <InlineMath>{'\\eta = \\frac{\\mu^2/2}{1+\\mu^2/2}'}</InlineMath> single-tone, output χάνει <InlineMath>{'\\eta'}</InlineMath> factor.</>,
+    <>Low SNR (<InlineMath>{'< 10'}</InlineMath> dB): envelope σπάει, slope 2 σε dB. Coherent παραμένει γραμμικός.</>,
+    <>DSB-SC, SSB coherent: output SNR = input SNR (no waste).</>,
+  ]}
+  trap={
+    <>
+      Τρία λάθη που εμφανίζονται κάθε εξέταση: (1)
+      «<InlineMath>{'m^2'}</InlineMath> έχει bandwidth W» (όχι, είναι 2W). (2)
+      «Στον coherent <InlineMath>{'\\varphi = 90°'}</InlineMath> δίνει
+      παραμόρφωση» (στο Conventional AM και DSB-SC δίνει{' '}
+      <strong>μηδέν</strong>, όχι παραμόρφωση — η παραμόρφωση είναι ξεχωριστή
+      περίπτωση της SSB). (3) «AM threshold είναι 0 dB» (όχι, είναι ~10 dB —
+      και κάτω από εκεί η κλίση γίνεται 2 σε dB).
+    </>
+  }
+/>
 
 ## Εξάσκηση
 
 <ExerciseProgress slug="am/modulator-demodulator" total={5} />
 
-Πέντε ερωτήσεις πάνω στα κυκλώματα — circuits + threshold + practical engineering.
+Πέντε ερωτήσεις πάνω στα κυκλώματα — circuits + threshold + practical engineering. Πριν τις δεις, **κάνε μια προσπάθεια από μνήμη** στο `RecallDrill` παρακάτω.
 
 <ExamProblem id="rc-range" year="RC selection" weight="κρίσιμο">
 **Ερώτηση:** AM σήμα με $f_c = 1$ MHz και message bandwidth $W = 5$ kHz. Σε ποιο εύρος πρέπει να βρίσκεται το $RC$ του envelope detector;
 
 <Example title="Λύση" defaultOpen={true}>
-Συνθήκη: $\frac{1}{f_c} \ll RC \ll \frac{1}{W}$.
+**Σκέψη:** η ερώτηση είναι κανονικοποιημένη — απλώς εφαρμόζουμε ευθεία τη συνθήκη τυπολογίου $1/f_c \ll RC \ll 1/W$.
 
 - $1/f_c = 1\,\mu\text{s} = 10^{-6}$ s
 - $1/W = 1/5000 = 200\,\mu\text{s} = 2\cdot 10^{-4}$ s
 
-Άρα: $1\,\mu\text{s} \ll RC \ll 200\,\mu\text{s}$. Πρακτικά καλή επιλογή είναι $RC \approx 20\,\mu\text{s}$ — δέκα φορές μεγαλύτερο από $1/f_c$ (αρκετό για να εξομαλύνει τον carrier ripple) και δέκα φορές μικρότερο από $1/W$ (αρκετά γρήγορη απόκριση για το envelope).
+Άρα: $1\,\mu\text{s} \ll RC \ll 200\,\mu\text{s}$. Πρακτικά καλή επιλογή είναι $RC \approx 20\,\mu\text{s}$ — εικοσαπλάσιο από $1/f_c$ (αρκετό για να εξομαλύνει τον carrier ripple) και δεκαπλάσιο μικρότερο από $1/W$ (αρκετά γρήγορη απόκριση για το envelope). Ο γεωμετρικός μέσος $\sqrt{1\cdot 200} \approx 14\,\mu\text{s}$ είναι μαθηματικά βέλτιστος.
 </Example>
 </ExamProblem>
 
@@ -294,22 +505,34 @@ $$
 **Ερώτηση:** Τι σφάλμα παρατηρείται στην έξοδο του envelope detector αν το $RC$ είναι **πολύ μεγάλο**;
 
 <Example title="Λύση">
+**Σκέψη:** Δύο modes αποτυχίας του envelope detector — πρέπει να ξεχωρίζεις ποιο αντιστοιχεί σε ποιο όριο.
+
 **Diagonal clipping** (διαγώνια κορύφωση): ο πυκνωτής εκφορτίζεται **πολύ αργά**, και η τάση εξόδου **δεν προλαβαίνει** να ακολουθήσει τις απότομες πτώσεις του envelope. Αποτέλεσμα: η output curve «κόβει» τις γρήγορες πτώσεις — διαγώνιες ευθείες αντί για το ομαλό envelope.
 
-Αντίστροφα, **πολύ μικρό** $RC$ → **carrier ripple** στην έξοδο (ο πυκνωτής εκφορτίζεται πολύ γρήγορα και ακολουθεί τον carrier waveform). Η σωστή τιμή ζει στη χρυσή τομή.
+Αντίστροφα, **πολύ μικρό** $RC$ → **carrier ripple** στην έξοδο (ο πυκνωτής εκφορτίζεται πολύ γρήγορα και ακολουθεί τον carrier waveform). Η σωστή τιμή ζει στη χρυσή τομή. Αναλυτικά για single-tone, η συνθήκη χωρίς diagonal clipping είναι:
+
+$$
+RC \leq \frac{\sqrt{1 - \mu^2}}{\mu\,\omega_m}
+$$
+
+Όσο μεγαλύτερο μ, τόσο **μικρότερο** επιτρεπτό RC.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="square-law-modulator" year="Modulator" weight="δίοδος">
-**Ερώτηση:** Σε έναν square-law (μη-γραμμικό) AM modulator, η δίοδος έχει χαρακτηριστική $i(v) = a_1 v + a_2 v^2$ με $v = c(t) + m(t)$. Ποιος όρος δίνει το AM σήμα και πώς το απομονώνουμε;
+**Ερώτηση:** Σε έναν square-law (μη γραμμικό) AM modulator, η δίοδος έχει χαρακτηριστική $i(v) = a_1 v + a_2 v^2$ με $v = c(t) + m(t)$. Ποιος όρος δίνει το AM σήμα, ποιο το ζητούμενο BPF και ποια η συνθήκη συχνοτήτων;
 
 <Example title="Λύση">
+**Σκέψη:** Αναπτύσσουμε το τετράγωνο, εντοπίζουμε τους όρους που ζουν γύρω από $f_c$, βρίσκουμε ποιοι άλλοι όροι μπαίνουν επίσης στο BPF, και κρατάμε μόνο τον AM όρο με κατάλληλη συχνότητα.
+
 $v^2 = (A_c\cos\omega_c t + m(t))^2 = A_c^2\cos^2\omega_c t + 2 A_c m(t)\cos\omega_c t + m^2(t)$.
 
-Ο **cross term** $2 A_c m(t)\cos\omega_c t$ είναι το DSB-SC component στη γύρω του $f_c$. Σε συνδυασμό με τον γραμμικό $a_1 A_c\cos\omega_c t$:
+Ο **cross term** $2 A_c m(t)\cos\omega_c t$ ζει στη ζώνη $[f_c \pm W]$ και είναι ο AM-like όρος. Σε συνδυασμό με τον γραμμικό $a_1 A_c\cos\omega_c t$:
 $$i(t) \supset A_c[a_1 + 2 a_2 m(t)]\cos\omega_c t = \text{conventional AM}$$
 
 **Απομόνωση:** **bandpass φίλτρο** στο κέντρο $f_c$ με bandwidth $2W$. Κόβει DC, $m(t)$, $m^2(t)$, και τον $2f_c$ harmonic — αφήνει μόνο τον AM όρο.
+
+**Συνθήκη συχνοτήτων:** για να μη μπει ο $m^2(t)$ όρος (που έχει bandwidth $2W$) μέσα στη ζώνη του BPF, χρειάζεται $f_c > 3W$. Είναι η αυστηρότερη συνθήκη — πιο αυστηρή από το γενικό $f_c \gg W$.
 </Example>
 </ExamProblem>
 
@@ -317,11 +540,13 @@ $$i(t) \supset A_c[a_1 + 2 a_2 m(t)]\cos\omega_c t = \text{conventional AM}$$
 **Δήλωση:** Ο envelope detector παρουσιάζει threshold effect σε χαμηλό SNR.
 
 <Example title="Λύση" defaultOpen={true}>
-**Σωστό.** Σε υψηλό input SNR, η μη-γραμμικότητα του envelope detector «εξομαλύνεται» από το ισχυρό carrier — η έξοδος ακολουθεί γραμμικά το $A_c + m(t) + n(t)$.
+**Σκέψη:** Ερώτηση γνώσης — πρέπει να ξέρεις τι σημαίνει «threshold effect» και τι όχι, και γιατί ο coherent receiver δεν το έχει.
 
-Σε χαμηλό SNR (συνήθως **κάτω από ~10 dB**), ο θόρυβος γίνεται συγκρίσιμος με τον carrier. Η μη-γραμμικότητα κυριαρχεί: το envelope δεν είναι πλέον $\approx A_c + m(t)$, αλλά μια αλληλεπίδραση signal × noise. Το output SNR καταρρέει **τετραγωνικά** ως προς το input SNR — δηλαδή για κάθε 1 dB πτώσης στο input, χάνεις 2 dB στο output.
+**Σωστό.** Σε υψηλό input SNR, η μη γραμμικότητα του envelope detector «εξομαλύνεται» από το ισχυρό carrier — η έξοδος ακολουθεί γραμμικά το $A_c + m(t) + n(t)$.
 
-**Coherent receiver δεν έχει threshold effect** — γραμμικός, ίδιος gain σε κάθε SNR. Γι' αυτό ο coherent είναι καλύτερος σε weak signals, παρά την επιπλέον πολυπλοκότητα.
+Σε χαμηλό SNR (συνήθως **κάτω από ~10 dB**), ο θόρυβος γίνεται συγκρίσιμος με τον carrier. Η μη γραμμικότητα κυριαρχεί: το envelope δεν είναι πλέον $\approx A_c + m(t)$, αλλά μια αλληλεπίδραση signal × noise. Το output SNR καταρρέει **τετραγωνικά** ως προς το input SNR — δηλαδή για κάθε 1 dB πτώση στο input, χάνεις 2 dB στο output.
+
+**Coherent receiver δεν έχει threshold effect** — γραμμικός, ίδιος gain ($\eta$ για AM, 1 για DSB-SC/SSB) σε κάθε SNR. Γι' αυτό ο coherent είναι καλύτερος σε weak signals, παρά την επιπλέον πολυπλοκότητα (PLL για συγχρονισμό).
 </Example>
 </ExamProblem>
 
@@ -329,23 +554,144 @@ $$i(t) \supset A_c[a_1 + 2 a_2 m(t)]\cos\omega_c t = \text{conventional AM}$$
 **Ερώτηση:** Conventional AM με $\mu = 1$ και ίδιο noise environment όπως το DSB-SC. Πόσο dB είναι η απώλεια output SNR της AM σε σχέση με DSB-SC;
 
 <Example title="Λύση">
-**DSB-SC (coherent):** SNR_out = SNR_in (ή 1× factor, καμία απώλεια).
+**Σκέψη:** Δύο τύποι output SNR — DSB-SC είναι μονάδα (no loss), AM είναι $\eta$ που εξαρτάται από μ. Λογαριθμοποιείς τον λόγο.
 
-**Conventional AM (envelope detector):** SNR_out = $\eta\cdot$ SNR_in, όπου $\eta$ είναι το efficiency. Στο $\mu = 1$: $\eta_{max} = 1/3 \approx 0.333$.
+**DSB-SC (coherent):** $\text{SNR}_\text{out} = \text{SNR}_\text{in}$ — καμία απώλεια.
+
+**Conventional AM (envelope detector, μ = 1):** $\eta_{\max} = \frac{\mu^2/2}{1 + \mu^2/2} = \frac{1/2}{3/2} = 1/3 \approx 0.333$.
 
 Λόγος dB: $10\log_{10}(1/3) \approx -4.77$ dB.
 
-Δηλαδή το AM είναι **~4.8 dB χειρότερο** από το DSB-SC σε ίδιες συνθήκες — λογική πληρωμή για την απλότητα του envelope detector. Σε χαμηλότερα $\mu$ η απώλεια είναι ακόμα μεγαλύτερη.
+Δηλαδή το AM είναι **~4.8 dB χειρότερο** από το DSB-SC σε ίδιες συνθήκες — λογική «πληρωμή» για την απλότητα του envelope detector. Σε χαμηλότερα $\mu$ η απώλεια είναι ακόμα μεγαλύτερη: για $\mu = 0.5$, $\eta = 0.111$ → απώλεια ~9.5 dB.
+
+Αν επιπλέον το SNR_in είναι κάτω από 10 dB, η AM χάνει επιπλέον λόγω threshold — και η σύγκριση δεν είναι πια γραμμική.
 </Example>
 </ExamProblem>
 
-<Recap>
-- Ο **envelope detector** είναι δίοδος + RC LPF. Δουλεύει για Conventional AM και VSB, όχι για DSB-SC/SSB.
-- **RC range:** $1/f_c \ll RC \ll 1/W$. Πολύ μικρό → ripple. Πολύ μεγάλο → diagonal clipping.
-- Ο **coherent receiver** (mixer + LPF + DC removal) είναι universal — δουλεύει για κάθε AM σχήμα. Χρειάζεται PLL ή pilot για carrier recovery.
-- **AM στον θόρυβο:** στο high-SNR regime, output SNR = $\eta \cdot$ input SNR (factor απώλεια από carrier waste). Στο low-SNR regime ($<$ 10 dB), **threshold effect** — output SNR καταρρέει τετραγωνικά.
-- **Coherent demodulation δεν έχει threshold effect** — γραμμική ανάκτηση μέχρι κάτω.
-- **Πρακτική σημείωση:** εμπορικό AM = envelope detector (φθηνό), professional = coherent (καλύτερο σε θόρυβο).
-</Recap>
+<RecallDrill
+  id="explain-rc-condition"
+  prompt={
+    <p>
+      Χωρίς να γυρίσεις πάνω: εξήγησε σε <strong>3 προτάσεις</strong> γιατί ο{' '}
+      RC του envelope detector πρέπει να ζει ανάμεσα στα{' '}
+      <InlineMath>{'1/f_c'}</InlineMath> και <InlineMath>{'1/W'}</InlineMath>.
+      Τι σπάει αν είναι πολύ μικρό; Τι σπάει αν είναι πολύ μεγάλο; Και ποια η
+      αναλυτική σχέση για το σωστό RC σε πρώτη προσέγγιση;
+    </p>
+  }
+  answer={
+    <ul className="ml-5 list-disc space-y-1">
+      <li>
+        Ο πυκνωτής φορτίζει γρήγορα μέσω της διόδου κάθε φορά που το AM σήμα
+        έχει peak, μετά εκφορτίζεται μέσω της αντίστασης με χρονοσταθερά{' '}
+        <InlineMath>{'RC'}</InlineMath>. Πρέπει να εκφορτιστεί{' '}
+        <strong>αρκετά αργά</strong> για να αγνοεί τους carrier κύκλους
+        (περίοδος <InlineMath>{'1/f_c'}</InlineMath>), αλλά{' '}
+        <strong>αρκετά γρήγορα</strong> για να ακολουθεί τις μεταβολές του
+        message (κλίμακα <InlineMath>{'1/W'}</InlineMath>).
+      </li>
+      <li>
+        Πολύ μικρό RC: ο πυκνωτής εκφορτίζεται μεταξύ carrier κύκλων → η
+        έξοδος έχει <strong>carrier ripple</strong>.
+      </li>
+      <li>
+        Πολύ μεγάλο RC: ο πυκνωτής δεν μπορεί να ακολουθήσει τις γρήγορες
+        πτώσεις του envelope → <strong>diagonal clipping</strong>. Πρώτη
+        εκτίμηση για το σωστό:{' '}
+        <InlineMath>{'RC \\approx \\sqrt{1/(f_c W)}'}</InlineMath> (γεωμετρικός
+        μέσος των δύο κλιμάκων).
+      </li>
+    </ul>
+  }
+/>
+
+<ClozeDrill
+  id="rc-numbers"
+  prompt={
+    <p>
+      Έχεις AM σήμα με <InlineMath>{'f_c = 1\\,\\text{MHz}'}</InlineMath> και{' '}
+      <InlineMath>{'W = 4\\,\\text{kHz}'}</InlineMath>. Συμπλήρωσε τα όρια και
+      μια καλή τιμή RC.
+    </p>
+  }
+  parts={[
+    'Κάτω όριο 1/f_c = ',
+    { blank: 'lower', accept: ['1', '1μs', '1 μs', '1us', '1 us'], hint: 'μs', size: 5 },
+    ' μs. Πάνω όριο 1/W = ',
+    { blank: 'upper', accept: ['250', '250μs', '250 μs', '250us'], hint: 'μs', size: 6 },
+    ' μs. Γεωμετρικός μέσος ≈ ',
+    { blank: 'geo', accept: ['16', '15', '15.8', '15.81', '16μs', '15 μs'], hint: 'μs', size: 5 },
+    ' μs. Πρακτική τιμή για RC: ',
+    { blank: 'rc', accept: ['50', '50μs', '50 μs', '50us'], hint: 'μs', size: 5 },
+    ' μs (όπου f_c·RC = ',
+    { blank: 'fcrc', accept: ['50', '50.0'], hint: '', size: 5 },
+    ' και W·RC = ',
+    { blank: 'wrc', accept: ['0.2', '.2'], hint: '', size: 5 },
+    ' — και τα δύο σε σωστή ζώνη).',
+  ]}
+  solution={
+    <p>
+      <InlineMath>{'1/f_c = 1/10^6 = 1\\,\\mu\\text{s}'}</InlineMath>,{' '}
+      <InlineMath>{'1/W = 1/4000 = 250\\,\\mu\\text{s}'}</InlineMath>.
+      Γεωμετρικός μέσος{' '}
+      <InlineMath>{'\\sqrt{1\\cdot 250} \\approx 15.8\\,\\mu\\text{s}'}</InlineMath>.
+      Στρογγυλεμένη πρακτική τιμή: 50 μs.{' '}
+      <InlineMath>{'f_c \\cdot RC = 10^6 \\cdot 50\\cdot 10^{-6} = 50'}</InlineMath>{' '}
+      (≫ 1 — καθαρό carrier suppression).{' '}
+      <InlineMath>{'W \\cdot RC = 4000 \\cdot 50\\cdot 10^{-6} = 0.2'}</InlineMath>{' '}
+      (≪ 1 — καμία diagonal clipping).
+    </p>
+  }
+/>
+
+<ReorderDrill
+  id="coherent-chain-order"
+  prompt={
+    <p>
+      Βάλε σε σωστή σειρά τα βήματα ενός{' '}
+      <strong>coherent receiver</strong> για Conventional AM (όπως φαίνεται
+      και στον <code>CoherentReceiverChainViz</code> παραπάνω).
+    </p>
+  }
+  steps={[
+    <>① Λαμβανόμενο σήμα <InlineMath>{'r(t) = [A_c + m(t)]\\cos(\\omega_c t) + n(t)'}</InlineMath>.</>,
+    <>② Πολλαπλασίασε με τοπικό cosine <InlineMath>{'2\\cos(\\omega_c t + \\varphi)'}</InlineMath> (mixer).</>,
+    <>③ Στο γινόμενο επιβιώνουν baseband και <InlineMath>{'2 f_c'}</InlineMath> συνιστώσες· εφάρμοσε LPF cutoff <InlineMath>{'W'}</InlineMath>.</>,
+    <>④ Στο LPF output μένει <InlineMath>{'[A_c + m(t)]\\cos\\varphi + n_\\text{low}(t)'}</InlineMath>.</>,
+    <>⑤ DC removal: αφαίρεσε το <InlineMath>{'A_c\\cos\\varphi'}</InlineMath> offset.</>,
+    <>⑥ Έξοδος: <InlineMath>{'\\hat m(t) = m(t)\\cos\\varphi + n_\\text{low}(t)'}</InlineMath> — γραμμική ανάκτηση με <InlineMath>{'\\cos\\varphi'}</InlineMath> penalty.</>,
+  ]}
+/>
+
+<ThinkingPattern
+  signals={[
+    'envelope detector',
+    'βρες το RC',
+    'diagonal clipping',
+    'carrier ripple',
+    'square-law modulator',
+    'balanced modulator',
+    'γιατί BPF στον modulator',
+    'threshold effect',
+    'output SNR AM vs DSB-SC',
+    'coherent demodulation με phase error φ',
+    'συμπεριφορά envelope detector σε θόρυβο',
+    'γιατί το coherent είναι καλύτερο σε ασθενή σήματα',
+  ]}
+>
+
+Τέσσερις canonical ερωτήσεις-τύπος που πέφτουν εδώ — κάθε μια έχει εντελώς διαφορετική «σκέψη πριν τη λύση»:
+
+**(α) «RC range / επιλογή RC».** Αν δεις <InlineMath>{'f_c'}</InlineMath> και <InlineMath>{'W'}</InlineMath> δοσμένα → υπολόγισε <InlineMath>{'1/f_c'}</InlineMath> και <InlineMath>{'1/W'}</InlineMath>, βάλε το RC στον γεωμετρικό μέσο ή σε σταθερή τιμή που τηρεί <InlineMath>{'f_c\\cdot RC \\geq 10'}</InlineMath> και <InlineMath>{'W \\cdot RC \\leq 0.1'}</InlineMath>. Αν ζητάει «τι σφάλμα κάνει για RC = Χ» → έλεγξε αν είναι κάτω από <InlineMath>{'1/f_c \\cdot 10'}</InlineMath> (carrier ripple) ή πάνω από <InlineMath>{'1/W \\cdot 0.1'}</InlineMath> (diagonal clipping).
+
+**(β) «Square-law modulator + BPF».** Ανάπτυξε το <InlineMath>{'(A_c\\cos + m)^2'}</InlineMath>, εντόπισε τους όρους — υπάρχουν πάντα 5 (DC, m, m², AM cross-term, 2f_c harmonic). Εξήγησε ποιους κόβει ο BPF. Αν ρωτάει για συνθήκη συχνοτήτων → <InlineMath>{'f_c > 3W'}</InlineMath> γιατί <InlineMath>{'m^2'}</InlineMath> έχει 2W bandwidth.
+
+**(γ) «Output SNR AM vs DSB-SC».** Single-tone → <InlineMath>{'\\eta = \\mu^2/2 / (1 + \\mu^2/2)'}</InlineMath>. DSB-SC = 1. Λόγος σε dB. Αν SNR_in είναι κάτω από 10 dB, αναφέρε επιπλέον το threshold effect.
+
+**(δ) «Coherent demod με phase error φ».** Πολλαπλασίασε, ανάπτυξε <InlineMath>{'2\\cos A \\cos B = \\cos(A-B) + \\cos(A+B)'}</InlineMath>, LPF, DC removal — αποτέλεσμα <InlineMath>{'m(t)\\cos\\varphi'}</InlineMath>. Στις 90° → ZERO output (quadrature null), όχι παραμόρφωση. Για SSB είναι διαφορετικά (Hilbert παραμόρφωση) — δες [/am/ssb §4](/am/ssb#4-coherent-demodulation-και-phase-error).
+
+</ThinkingPattern>
+
+<ExamRadar slug="am/modulator-demodulator" />
 
 <NextUp slug="am/multiplexing" />
