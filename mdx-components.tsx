@@ -19,6 +19,11 @@ import { ThinkingPattern } from '@/components/content/ThinkingPattern'
 import { ExamRadar } from '@/components/content/ExamRadar'
 import { GraphCanvas } from '@/components/viz/GraphCanvas'
 import { TraversalGame } from '@/components/viz/TraversalGame'
+import { GenericSearchExplorer } from '@/components/viz/GenericSearchExplorer'
+import { DfsTreeBuilder } from '@/components/viz/DfsTreeBuilder'
+import { BfsLayerTheorem } from '@/components/viz/BfsLayerTheorem'
+import { BfsEdgeProperty } from '@/components/viz/BfsEdgeProperty'
+import { ComplexityTightVsLoose } from '@/components/viz/ComplexityTightVsLoose'
 import { BinarySearchViz } from '@/components/viz/BinarySearchViz'
 import { InstanceDimensionLab } from '@/components/viz/InstanceDimensionLab'
 import { ComplexityCasesExplorer } from '@/components/viz/ComplexityCasesExplorer'
@@ -149,6 +154,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ExamRadar,
     GraphCanvas,
     TraversalGame,
+    GenericSearchExplorer,
+    DfsTreeBuilder,
+    BfsLayerTheorem,
+    BfsEdgeProperty,
+    ComplexityTightVsLoose,
     BinarySearchViz,
     InstanceDimensionLab,
     ComplexityCasesExplorer,
