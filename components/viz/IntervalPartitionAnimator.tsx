@@ -18,19 +18,132 @@ import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type Job = { id: string; s: number; f: number }
-const JOBS: Job[] = [
-  { id: 'a', s: 0, f: 3 },
-  { id: 'b', s: 1, f: 4 },
-  { id: 'c', s: 2, f: 5 },
-  { id: 'd', s: 4, f: 7 },
-  { id: 'e', s: 5, f: 9 },
-  { id: 'f', s: 6, f: 8 },
-  { id: 'g', s: 8, f: 11 },
-  { id: 'h', s: 9, f: 12 },
-  { id: 'i', s: 10, f: 13 },
-  { id: 'j', s: 12, f: 15 },
-]
-const T_MAX = 15
+
+export type IntervalPartitionInstance = 'l11' | 'taxi' | 'classroom'
+
+type InstanceLabels = {
+  /** dataset job rows */
+  jobs: Job[]
+  tMax: number
+  /** chip in the lane: "Μ1", "Τ1", "Α1" */
+  laneAbbrev: string
+  title: string
+  /** "μηχανές" / "ταξί" / "αίθουσες" — plural noun (nominative) */
+  machinesPl: string
+  /** "μηχανών" / "ταξί" / "αιθουσών" — genitive plural */
+  machinesGen: string
+  /** "εργασίες" / "ραντεβού" / "μαθήματα" — plural nominative */
+  jobsPl: string
+  /** "Εργασία" / "Ραντεβού" / "Μάθημα" — capitalized singular */
+  jobCap: string
+  /** "εργασία" / "ραντεβού" / "μάθημα" — lowercase singular */
+  jobLc: string
+  /** "ελεύθερη μηχανή" / "ελεύθερο ταξί" / "ελεύθερη αίθουσα" — full agreement */
+  freeMachine: string
+  /** "νέα μηχανή" / "νέο ταξί" / "νέα αίθουσα" */
+  newMachine: string
+  /** "διαφορετικές μηχανές" / "διαφορετικά ταξί" / "διαφορετικές αίθουσες" */
+  diffMachines: string
+  /** "ελάχιστες μηχανές" / "ελάχιστα ταξί" / "ελάχιστες αίθουσες" */
+  minMachines: string
+  /** "ανοιχτές" / "ανοιχτά" / "ανοιχτές" — adjective agreement for "machines open" */
+  machinesOpenAdj: string
+  /** "καμία μηχανή δεν είναι ελεύθερη" / "κανένα ταξί δεν είναι ελεύθερο" / "καμία αίθουσα δεν είναι ελεύθερη" */
+  noFreeAvailable: string
+  /** "η Μ1 είναι ελεύθερη" / "το Τ1 είναι ελεύθερο" / "η Α1 είναι ελεύθερη" — bare clause with placeholder */
+  laneIsFree: (id: string) => string
+}
+
+const INSTANCES: Record<IntervalPartitionInstance, InstanceLabels> = {
+  l11: {
+    jobs: [
+      { id: 'a', s: 0, f: 3 },
+      { id: 'b', s: 1, f: 4 },
+      { id: 'c', s: 2, f: 5 },
+      { id: 'd', s: 4, f: 7 },
+      { id: 'e', s: 5, f: 9 },
+      { id: 'f', s: 6, f: 8 },
+      { id: 'g', s: 8, f: 11 },
+      { id: 'h', s: 9, f: 12 },
+      { id: 'i', s: 10, f: 13 },
+      { id: 'j', s: 12, f: 15 },
+    ],
+    tMax: 15,
+    laneAbbrev: 'Μ',
+    title: 'Διαμέριση διαστημάτων',
+    machinesPl: 'μηχανές',
+    machinesGen: 'μηχανών',
+    jobsPl: 'εργασίες',
+    jobCap: 'Εργασία',
+    jobLc: 'εργασία',
+    freeMachine: 'ελεύθερη μηχανή',
+    newMachine: 'νέα μηχανή',
+    diffMachines: 'διαφορετικές μηχανές',
+    minMachines: 'ελάχιστες μηχανές',
+    machinesOpenAdj: 'ανοιχτές',
+    noFreeAvailable: 'καμία ανοιχτή μηχανή δεν είναι ελεύθερη',
+    laneIsFree: (id) => `η ${id} είναι ελεύθερη`,
+  },
+  taxi: {
+    // 8 appointments; max simultaneous = 4 (around t=4–5)
+    jobs: [
+      { id: 'a', s: 0, f: 4 },
+      { id: 'b', s: 1, f: 5 },
+      { id: 'c', s: 2, f: 6 },
+      { id: 'd', s: 3, f: 5 },
+      { id: 'e', s: 5, f: 8 },
+      { id: 'f', s: 6, f: 9 },
+      { id: 'g', s: 7, f: 11 },
+      { id: 'h', s: 10, f: 12 },
+    ],
+    tMax: 12,
+    laneAbbrev: 'Τ',
+    title: 'Ελάχιστα ταξί — διαμέριση διαστημάτων',
+    machinesPl: 'ταξί',
+    machinesGen: 'ταξί',
+    jobsPl: 'ραντεβού',
+    jobCap: 'Ραντεβού',
+    jobLc: 'ραντεβού',
+    freeMachine: 'ελεύθερο ταξί',
+    newMachine: 'νέο ταξί',
+    diffMachines: 'διαφορετικά ταξί',
+    minMachines: 'ελάχιστα ταξί',
+    machinesOpenAdj: 'ανοιχτά',
+    noFreeAvailable: 'κανένα ανοιχτό ταξί δεν είναι ελεύθερο',
+    laneIsFree: (id) => `το ${id} είναι ελεύθερο`,
+  },
+  classroom: {
+    // 11 classes; max simultaneous = 3 — different shape than l11 instance.
+    jobs: [
+      { id: 'a', s: 0, f: 5 },
+      { id: 'b', s: 2, f: 6 },
+      { id: 'c', s: 4, f: 7 },
+      { id: 'd', s: 5, f: 9 },
+      { id: 'e', s: 7, f: 11 },
+      { id: 'f', s: 8, f: 10 },
+      { id: 'g', s: 9, f: 14 },
+      { id: 'h', s: 10, f: 12 },
+      { id: 'i', s: 12, f: 15 },
+      { id: 'j', s: 13, f: 16 },
+      { id: 'k', s: 14, f: 18 },
+    ],
+    tMax: 18,
+    laneAbbrev: 'Α',
+    title: 'Κατανομή μαθημάτων σε αίθουσες',
+    machinesPl: 'αίθουσες',
+    machinesGen: 'αιθουσών',
+    jobsPl: 'μαθήματα',
+    jobCap: 'Μάθημα',
+    jobLc: 'μάθημα',
+    freeMachine: 'ελεύθερη αίθουσα',
+    newMachine: 'νέα αίθουσα',
+    diffMachines: 'διαφορετικές αίθουσες',
+    minMachines: 'ελάχιστες αίθουσες',
+    machinesOpenAdj: 'ανοιχτές',
+    noFreeAvailable: 'καμία ανοιχτή αίθουσα δεν είναι ελεύθερη',
+    laneIsFree: (id) => `η ${id} είναι ελεύθερη`,
+  },
+}
 
 /* ---- greedy interval partitioning ---- */
 type PStep = {
@@ -39,8 +152,8 @@ type PStep = {
   opened: boolean
   blockers: string[] // last job of each pre-existing machine (when a machine opens)
 }
-function runPartition(): PStep[] {
-  const sorted = [...JOBS].sort((a, b) => a.s - b.s)
+function runPartition(jobs: Job[]): PStep[] {
+  const sorted = [...jobs].sort((a, b) => a.s - b.s)
   const machines: Job[] = [] // machines[k] = last job placed on machine k+1
   const steps: PStep[] = []
   for (const job of sorted) {
@@ -59,15 +172,21 @@ function runPartition(): PStep[] {
   }
   return steps
 }
-const P_STEPS = runPartition()
-const MACHINE_COUNT = Math.max(...P_STEPS.map((s) => s.machine))
-
-/* ---- depth ---- */
-const liveAt = (t: number) => JOBS.filter((j) => j.s <= t && t < j.f)
 
 const VIEW_W = 640
 
-export function IntervalPartitionAnimator() {
+type Props = {
+  instance?: IntervalPartitionInstance
+}
+
+export function IntervalPartitionAnimator({ instance = 'l11' }: Props = {}) {
+  const conf = INSTANCES[instance]
+  const JOBS = conf.jobs
+  const T_MAX = conf.tMax
+  const P_STEPS = useMemo(() => runPartition(JOBS), [JOBS])
+  const MACHINE_COUNT = Math.max(...P_STEPS.map((s) => s.machine))
+  const liveAt = (t: number) => JOBS.filter((j) => j.s <= t && t < j.f)
+
   const [mode, setMode] = useState<'depth' | 'greedy'>('depth')
   const [step, setStep] = useState(0)
 
@@ -88,7 +207,8 @@ export function IntervalPartitionAnimator() {
     let m = 0
     for (let t = 0; t <= step; t++) m = Math.max(m, liveAt(t).length)
     return m
-  }, [step])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, instance])
 
   /* ---- ΒΑΘΟΣ render ---- */
   function renderDepth() {
@@ -114,13 +234,13 @@ export function IntervalPartitionAnimator() {
           y={TOP - 8}
           width={3}
           height={JOBS.length * ROW_H + 8}
-          fill={count >= 3 ? '#dc2626' : '#9f1239'}
+          fill={count >= MACHINE_COUNT ? '#dc2626' : '#9f1239'}
         />
         <circle
           cx={X(t)}
           cy={TOP - 12}
           r={11}
-          fill={count >= 3 ? '#dc2626' : '#9f1239'}
+          fill={count >= MACHINE_COUNT ? '#dc2626' : '#9f1239'}
         />
         <text
           x={X(t)}
@@ -234,7 +354,7 @@ export function IntervalPartitionAnimator() {
                 fontWeight={700}
                 fill={open ? '#9f1239' : '#cdbfc0'}
               >
-                Μ{m}
+                {conf.laneAbbrev}{m}
               </text>
             </g>
           )
@@ -323,45 +443,43 @@ export function IntervalPartitionAnimator() {
 
   /* ---- notes ---- */
   let note: string
+  const D = MACHINE_COUNT
   if (mode === 'depth') {
     const live = liveAt(step)
     if (step === 0) {
-      note =
-        'Η γραμμή σάρωσης διασχίζει τον χρόνο. Σε κάθε στιγμή μετράμε πόσες εργασίες «τρέχουν» — το μέγιστο αυτού του πλήθους είναι το ΒΑΘΟΣ. Πάτα «Επόμενο».'
+      note = `Η γραμμή σάρωσης διασχίζει τον χρόνο. Σε κάθε στιγμή μετράμε πόσα ${conf.jobsPl} «τρέχουν» — το μέγιστο αυτού του πλήθους είναι το ΒΑΘΟΣ. Πάτα «Επόμενο».`
     } else if (done) {
-      note = `Η σάρωση τελείωσε. Το μέγιστο πλήθος ταυτόχρονων εργασιών ήταν 3 — άρα βάθος = 3. Κάθε λύση χρειάζεται ≥ βάθος μηχανές: τουλάχιστον 3. Δες τώρα τι κάνει ο άπληστος.`
+      note = `Η σάρωση τελείωσε. Το μέγιστο πλήθος ταυτόχρονων ${conf.jobsPl} ήταν ${D} — άρα βάθος = ${D}. Κάθε λύση χρειάζεται ≥ βάθος ${conf.machinesGen}: τουλάχιστον ${D}. Δες τώρα τι κάνει ο άπληστος.`
     } else {
-      note = `Στιγμή t = ${step}: τρέχουν ${live.length} εργασίες ταυτόχρονα (${live
+      note = `Στιγμή t = ${step}: τρέχουν ${live.length} ${conf.jobsPl} ταυτόχρονα (${live
         .map((j) => j.id)
         .join(', ')}). Μέγιστο ως τώρα: ${depthSoFar}.${
-        live.length >= 3 ? ' Τρεις μαζί — αυτές χρειάζονται 3 διαφορετικές μηχανές.' : ''
+        live.length >= D ? ` ${D} μαζί — χρειάζονται ${D} ${conf.diffMachines}.` : ''
       }`
     }
   } else {
     const cur = step > 0 ? P_STEPS[step - 1] : null
     if (!cur) {
-      note =
-        'Ο άπληστος εξετάζει τις εργασίες κατά αύξοντα χρόνο έναρξης. Κάθε εργασία πάει σε μια ελεύθερη μηχανή· αν δεν υπάρχει, ανοίγει νέα. Πάτα «Επόμενο».'
+      note = `Ο άπληστος εξετάζει τα ${conf.jobsPl} κατά αύξοντα χρόνο έναρξης. Κάθε ${conf.jobLc} πάει σε ${conf.freeMachine}· αν δεν υπάρχει, ανοίγει ${conf.newMachine}. Πάτα «Επόμενο».`
     } else if (cur.opened && cur.blockers.length >= 2) {
-      note = `Εργασία ${cur.job.id} [${cur.job.s}–${cur.job.f}]: καμία ανοιχτή μηχανή δεν είναι ελεύθερη — οι ${cur.blockers.join(
+      note = `${conf.jobCap} ${cur.job.id} [${cur.job.s}–${cur.job.f}]: ${conf.noFreeAvailable} — ${cur.blockers.join(
         ' και ',
-      )} τρέχουν ακόμη. Ανοίγει η Μ${cur.machine}. Πρόσεξε: τη στιγμή ${cur.job.s} τρέχουν ${
+      )} τρέχ${cur.blockers.length === 1 ? 'ει' : 'ουν'} ακόμη. Ανοίγει ${conf.newMachine} (${conf.laneAbbrev}${cur.machine}). Πρόσεξε: τη στιγμή ${cur.job.s} τρέχουν ${
         cur.blockers.length + 1
-      } εργασίες μαζί (${[...cur.blockers, cur.job.id].join(
+      } ${conf.jobsPl} μαζί (${[...cur.blockers, cur.job.id].join(
         ', ',
       )}) → βάθος ≥ ${cur.blockers.length + 1}. Αυτή είναι η απόδειξη.`
     } else if (cur.opened) {
-      note = `Εργασία ${cur.job.id} [${cur.job.s}–${cur.job.f}]: ${
+      note = `${conf.jobCap} ${cur.job.id} [${cur.job.s}–${cur.job.f}]: ${
         cur.blockers.length
-          ? `η ${cur.blockers.join(', ')} τρέχει ακόμη, `
+          ? `${cur.blockers.join(', ')} τρέχει ακόμη, `
           : ''
-      }ανοίγει η Μ${cur.machine}.`
+      }ανοίγει ${conf.newMachine} (${conf.laneAbbrev}${cur.machine}).`
     } else {
-      note = `Εργασία ${cur.job.id} [${cur.job.s}–${cur.job.f}]: η Μ${cur.machine} είναι ελεύθερη (η προηγούμενη εργασία της τελείωσε ώς τη στιγμή ${cur.job.s}) → μπαίνει εκεί, χωρίς νέα μηχανή.`
+      note = `${conf.jobCap} ${cur.job.id} [${cur.job.s}–${cur.job.f}]: ${conf.laneIsFree(conf.laneAbbrev + cur.machine)} (τελείωσε ώς τη στιγμή ${cur.job.s}) → μπαίνει εκεί, χωρίς ${conf.newMachine}.`
     }
     if (done) {
-      note +=
-        ' Τέλος: ο άπληστος χρησιμοποίησε 3 μηχανές. Όσο το βάθος — άρα βέλτιστος.'
+      note += ` Τέλος: ο άπληστος χρησιμοποίησε ${D} ${conf.machinesGen}. Όσο το βάθος — άρα βέλτιστος.`
     }
   }
 
@@ -370,7 +488,7 @@ export function IntervalPartitionAnimator() {
       {/* header + mode toggle */}
       <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-semibold tracking-tight text-fg">
-          Διαμέριση διαστημάτων — {MACHINE_COUNT} μηχανές, βάθος {MACHINE_COUNT}
+          {conf.title} — {MACHINE_COUNT} {conf.machinesPl}, βάθος {MACHINE_COUNT}
         </div>
         <div className="flex gap-1 rounded-md border border-border p-0.5">
           {(['depth', 'greedy'] as const).map((m) => (
@@ -392,8 +510,8 @@ export function IntervalPartitionAnimator() {
       </div>
       <p className="mb-2 text-xs text-fg-subtle">
         {mode === 'depth'
-          ? 'Κόκκινο = εργασία που τρέχει τη στιγμή της σάρωσης.'
-          : 'Κάθε λωρίδα είναι μία μηχανή. Κόκκινο = εργασία που μπλοκάρει· πράσινο = μπήκε σε ελεύθερη μηχανή.'}
+          ? `Κόκκινο = ${conf.jobLc} που τρέχει τη στιγμή της σάρωσης.`
+          : `Κάθε λωρίδα είναι μία γραμμή. Κόκκινο = ${conf.jobLc} που μπλοκάρει· πράσινο = μπήκε σε ${conf.freeMachine}.`}
       </p>
 
       {/* canvas */}
@@ -412,20 +530,20 @@ export function IntervalPartitionAnimator() {
               {depthSoFar}
             </span>
             <span className="text-sm text-fg-muted">
-              = ελάχιστες μηχανές που χρειάζεται ΚΑΘΕ λύση
+              = {conf.minMachines} που χρειάζεται ΚΑΘΕ λύση
             </span>
           </>
         ) : (
           <>
             <span className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
-              Μηχανές ανοιχτές
+              {conf.machinesPl} {conf.machinesOpenAdj}
             </span>
             <span className="font-mono text-2xl font-bold tabular-nums text-fg">
               {P_STEPS.slice(0, step).reduce((m, s) => Math.max(m, s.machine), 0)}
             </span>
             {done && (
               <span className="ml-auto rounded-md bg-success/15 px-2 py-0.5 text-sm font-bold text-success">
-                ✓ 3 μηχανές = βάθος
+                ✓ {D} {conf.machinesPl} = βάθος
               </span>
             )}
           </>

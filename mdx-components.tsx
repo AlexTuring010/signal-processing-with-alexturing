@@ -141,6 +141,13 @@ import { GreedyHorizon } from '@/components/viz/GreedyHorizon'
 import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
 import { GreedyStaysAhead } from '@/components/viz/GreedyStaysAhead'
 import { IntervalPartitionAnimator } from '@/components/viz/IntervalPartitionAnimator'
+import { CoinChangeLab } from '@/components/viz/CoinChangeLab'
+import { AlternatingPeaksValleys } from '@/components/viz/AlternatingPeaksValleys'
+import { GasStationsGreedy } from '@/components/viz/GasStationsGreedy'
+import { GreedyColoringOrders } from '@/components/viz/GreedyColoringOrders'
+import { InternetPlanCounter } from '@/components/viz/InternetPlanCounter'
+import { GridGreedyVsOpt } from '@/components/viz/GridGreedyVsOpt'
+import { UnitIntervalCover } from '@/components/viz/UnitIntervalCover'
 import { LatenessScheduler } from '@/components/viz/LatenessScheduler'
 import { LatenessExchangeViz } from '@/components/viz/LatenessExchangeViz'
 import { TopoOrderBuilder } from '@/components/viz/TopoOrderBuilder'
@@ -331,6 +338,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     IntervalScheduling,
     GreedyStaysAhead,
     IntervalPartitionAnimator,
+    CoinChangeLab,
+    AlternatingPeaksValleys,
+    GasStationsGreedy,
+    GreedyColoringOrders,
+    InternetPlanCounter,
+    GridGreedyVsOpt,
+    UnitIntervalCover,
     LatenessScheduler,
     LatenessExchangeViz,
     TopoOrderBuilder,
