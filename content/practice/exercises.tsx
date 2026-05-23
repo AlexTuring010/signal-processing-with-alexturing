@@ -107,6 +107,8 @@ import { ShortestSupersequenceTable } from '@/components/viz/ShortestSupersequen
 import { KnapsackTable } from '@/components/viz/KnapsackTable'
 import { KnapsackRatioVsDp } from '@/components/viz/KnapsackRatioVsDp'
 import { KnapsackToIntervalScheduling } from '@/components/viz/KnapsackToIntervalScheduling'
+import { MinMaxFlipExplainer } from '@/components/viz/MinMaxFlipExplainer'
+import { DnaScoreAlignTable } from '@/components/viz/DnaScoreAlignTable'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -9663,18 +9665,150 @@ K = 101     Σ = 100`}</pre>
     prerequisites: ['lectures/L16-dp-iii'],
     statement: (
       <>
-        <p>Έχουμε 2 αλληλουχίες DNA και θέλουμε να τις ευθυγραμμίσουμε με τον καλύτερο δυνατό τρόπο, βάσει των τιμών: ταύτιση (ίδια βάση) <InlineMath>{'+1'}</InlineMath>· μη-ταύτιση (διαφορετική βάση) <InlineMath>{'-1'}</InlineMath>· κενό <InlineMath>{'-2'}</InlineMath>. Δίνονται <InlineMath>{'x = \\text{ATGGCA}'}</InlineMath> και <InlineMath>{'y = \\text{TCTATGG}'}</InlineMath>.</p>
+        <p>
+          Έχουμε δύο αλληλουχίες DNA — δηλαδή δύο συμβολοσειρές πάνω σε ένα{' '}
+          τετραγράμματο αλφάβητο <InlineMath>{'\\{A, T, G, C\\}'}</InlineMath>{' '}
+          — και θέλουμε να τις <strong>ευθυγραμμίσουμε</strong> με τον καλύτερο
+          δυνατό τρόπο. «Ευθυγράμμιση» όπως στη <a href="/lectures/L16-dp-iii" className="underline">L16</a>:
+          βάζουμε τη μία κάτω από την άλλη σε στήλες· κάθε στήλη είτε ζευγαρώνει
+          δύο γράμματα, είτε ζευγαρώνει ένα γράμμα με ένα <em>κενό</em>{' '}
+          (παύλα). Αυτή τη φορά, ωστόσο, αντί για το ελάχιστο{' '}
+          <em>κόστος</em>, ψάχνουμε το μέγιστο <strong>σκορ</strong>:
+        </p>
+        <ul>
+          <li>ταύτιση (ίδια βάση): <InlineMath>{'+1'}</InlineMath> — επιβράβευση</li>
+          <li>μη-ταύτιση (διαφορετική βάση): <InlineMath>{'-1'}</InlineMath> — μικρή ποινή</li>
+          <li>κενό: <InlineMath>{'-2'}</InlineMath> — μεγαλύτερη ποινή</li>
+        </ul>
+        <p>
+          Δίνονται <InlineMath>{'x = \\text{ATGGCA}'}</InlineMath> (μήκος 6) και{' '}
+          <InlineMath>{'y = \\text{TCTATGG}'}</InlineMath> (μήκος 7). Βρες τη
+          βέλτιστη βαθμολογία ευθυγράμμισης και ανάκτησε τουλάχιστον μία
+          βέλτιστη ευθυγράμμιση.
+        </p>
       </>
     ),
     solution: (
       <>
-        <p><strong>Η ιδέα.</strong> Είναι παραλλαγή του προβλήματος <em>edit distance / longest common subsequence</em>: χτίζουμε έναν δισδιάστατο πίνακα <InlineMath>{'M'}</InlineMath> όπου το <InlineMath>{'M[i][j]'}</InlineMath> κρατά τη βέλτιστη βαθμολογία ευθυγράμμισης του προθέματος <InlineMath>{'y[1..i]'}</InlineMath> με το πρόθεμα <InlineMath>{'x[1..j]'}</InlineMath>.</p>
-        <p><strong>Αρχικοποίηση.</strong> <InlineMath>{'M[0][0] = 0'}</InlineMath>. Η πρώτη γραμμή/στήλη αντιστοιχεί σε «όλα κενά»: <InlineMath>{'M[0][j] = -2j'}</InlineMath> και <InlineMath>{'M[i][0] = -2i'}</InlineMath>.</p>
-        <p><strong>Αναδρομική σχέση.</strong> Για κάθε θέση <InlineMath>{'(i, j)'}</InlineMath> έχουμε τρεις κινήσεις και κρατάμε την καλύτερη:</p>
-        <BlockMath>{'M[i][j] = \\max\\begin{cases} M[i-1][j-1] + \\sigma(y_i, x_j) & \\text{(ταύτιση/μη-ταύτιση)} \\\\ M[i-1][j] - 2 & \\text{(κενό στο } x) \\\\ M[i][j-1] - 2 & \\text{(κενό στο } y) \\end{cases}'}</BlockMath>
-        <p>όπου <InlineMath>{'\\sigma = +1'}</InlineMath> αν <InlineMath>{'y_i = x_j'}</InlineMath>, αλλιώς <InlineMath>{'-1'}</InlineMath>. Διασχίζουμε τον πίνακα από πάνω-αριστερά προς κάτω-δεξιά και σε κάθε κελί κρατάμε «βελάκι» προς το κελί που έδωσε το μέγιστο, για την οπισθοδρόμηση.</p>
-        <p><strong>Αποτέλεσμα.</strong> Η βέλτιστη βαθμολογία βρίσκεται στο κάτω-δεξιά κελί <InlineMath>{'M[7][6]'}</InlineMath>· για τις δοθείσες αλληλουχίες ισούται με <InlineMath>{'-6'}</InlineMath>. Ακολουθώντας τα βελάκια ανάποδα ως το <InlineMath>{'(0,0)'}</InlineMath> ανακτούμε την (ή τις) βέλτιστη ευθυγράμμιση — μία απ’ αυτές βάζει κενά ώστε να ευθυγραμμιστεί το κοινό κομμάτι <InlineMath>{'\\text{TGG}'}</InlineMath>.</p>
-        <p><strong>Πολυπλοκότητα.</strong> Ο πίνακας έχει <InlineMath>{'(|y|+1)(|x|+1)'}</InlineMath> κελιά και κάθε κελί υπολογίζεται σε <InlineMath>{'O(1)'}</InlineMath> → <InlineMath>{'O(|x|\\cdot|y|)'}</InlineMath>.</p>
+        <p>
+          <strong>Πρώτη κίνηση — δες τη διαφορά από τη διάλεξη.</strong>{' '}
+          Η L16 έλεγε «ελάχιστο <em>κόστος</em>»· εδώ λέμε «μέγιστο{' '}
+          <em>σκορ</em>». Η ταύτιση από <em>δωρεάν κίνηση</em>{' '}
+          (κόστος 0) γίνεται <em>επιβράβευση</em> (+1)· η σύγκρουση από κόστος
+          +1 γίνεται ποινή −1· το κενό από κόστος +1 γίνεται −2. Αυτό{' '}
+          αναποδογυρίζει δύο πράγματα ταυτόχρονα:{' '}
+          <strong>τα πρόσημα</strong> και <strong>τον τελεστή</strong>{' '}
+          (από <span className="font-mono">min</span> σε{' '}
+          <span className="font-mono">max</span>). Δες ένα και το αυτό κελί
+          μέσα από τους δύο κόσμους και πρόσεξε ότι ο σκελετός — τρεις
+          υποψήφιοι, μία επιλογή — μένει αυτούσιος:
+        </p>
+        <MinMaxFlipExplainer />
+        <p>
+          <strong>Η αναδρομή — ίδιο σχήμα, νέα νούμερα.</strong> Έστω{' '}
+          <InlineMath>{'M[i][j]'}</InlineMath> το <em>μέγιστο σκορ</em>{' '}
+          ευθυγράμμισης του προθέματος <InlineMath>{'y[1..i]'}</InlineMath>{' '}
+          (γραμμές) με το πρόθεμα <InlineMath>{'x[1..j]'}</InlineMath>{' '}
+          (στήλες). Η «τελευταία στήλη» της ευθυγράμμισης μπορεί να είναι ένα
+          από τρία πράγματα — όπως στη διάλεξη, αλλά τώρα με σκορ:
+        </p>
+        <BlockMath>{'M[i][j] = \\max\\begin{cases} M[i-1][j-1] + \\sigma(y_i, x_j) & \\text{ταίριασμα } y_i \\text{ με } x_j \\\\ M[i-1][j] - 2 & \\text{κενό στο } x \\text{ (το } y_i \\text{ αταίριαστο)} \\\\ M[i][j-1] - 2 & \\text{κενό στο } y \\text{ (το } x_j \\text{ αταίριαστο)} \\end{cases}'}</BlockMath>
+        <p>
+          όπου <InlineMath>{'\\sigma(y_i, x_j) = +1'}</InlineMath> αν τα δύο
+          γράμματα ταυτίζονται, αλλιώς <InlineMath>{'-1'}</InlineMath>.{' '}
+          <strong>Βασικές περιπτώσεις:</strong> ευθυγράμμιση με την κενή
+          συμβολοσειρά κοστίζει ένα κενό ανά γράμμα, άρα{' '}
+          <InlineMath>{'M[i][0] = -2i'}</InlineMath> και{' '}
+          <InlineMath>{'M[0][j] = -2j'}</InlineMath>· και{' '}
+          <InlineMath>{'M[0][0] = 0'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Δες τον πίνακα να γεμίζει.</strong> Παρακάτω, ο{' '}
+          8×7 πίνακας <InlineMath>{'M'}</InlineMath> για{' '}
+          <InlineMath>{'x = \\text{ATGGCA}'}</InlineMath> και{' '}
+          <InlineMath>{'y = \\text{TCTATGG}'}</InlineMath>. Στην καρτέλα{' '}
+          «Γέμισμα», κάθε γραμμή αποκαλύπτει το{' '}
+          <InlineMath>{'M[i][j]'}</InlineMath> σαν το <em>μέγιστο</em>{' '}
+          τριών υποψηφίων· στο «Backtrack», περπατάμε το βέλτιστο μονοπάτι
+          από το <InlineMath>{'(7, 6)'}</InlineMath> πίσω στο{' '}
+          <InlineMath>{'(0, 0)'}</InlineMath>, και κάθε ακμή του γίνεται μία
+          στήλη της ευθυγράμμισης· στα «Πολλαπλά βέλτιστα», ο χάρτης δείχνει
+          ΟΛΑ τα κελιά από όπου περνά κάποιο βέλτιστο μονοπάτι:
+        </p>
+        <DnaScoreAlignTable />
+        <p>
+          <strong>Αποτέλεσμα.</strong> Το βέλτιστο σκορ είναι{' '}
+          <InlineMath>{'M[7][6] = -6'}</InlineMath>. Από το «Backtrack»
+          βλέπεις μία βέλτιστη ευθυγράμμιση που <em>συγκεντρώνει</em> τα
+          ταιριάσματα στο μέσον:
+        </p>
+        <pre className="overflow-x-auto rounded-lg border border-border bg-bg-soft/40 p-3 font-mono text-sm leading-relaxed text-fg">
+{`x:   −   −   −   A   T   G   G   C   A
+     ·   ·   ·   ✓   ✓   ✓   ✓   ·   ·
+y:   T   C   T   A   T   G   G   −   −`}
+        </pre>
+        <p>
+          Τέσσερα ταιριάσματα (το «<strong>κοινό κομμάτι ATGG</strong>») και
+          πέντε κενά — σκορ:{' '}
+          <InlineMath>{'4 \\cdot (+1) + 5 \\cdot (-2) = -6'}</InlineMath>. Η
+          συμβολοσειρά ATGG είναι, μάλιστα, η <em>μέγιστη κοινή υπακολουθία</em>{' '}
+          (<a href="#exercise:pt2-th3" className="underline">LCS</a>) των{' '}
+          <InlineMath>{'x, y'}</InlineMath> — δεν είναι σύμπτωση: το σκορ με{' '}
+          <InlineMath>{'+1/-1'}</InlineMath> και αυστηρά αρνητικά κενά
+          ωθεί τη βέλτιστη λύση να <em>κουμπώσει</em> όσες ταυτίσεις γίνεται,
+          οπότε στρωτά «πιάνει» την LCS.
+        </p>
+        <Callout type="note">
+          <strong>Δεν είναι μοναδική.</strong> Στην καρτέλα «Πολλαπλά βέλτιστα»
+          φαίνονται πολλά κελιά κίτρινα — δηλαδή σε ΚΑΠΟΙΟ βέλτιστο μονοπάτι,
+          αλλά όχι σε κάθε. Η εξεταστική απαντά «η (ή τις) βέλτιστη
+          ευθυγράμμιση» επειδή υπάρχουν αρκετές ισόσκορες λύσεις (όλες με
+          σκορ −6). Όσα κελιά είναι <em>πράσινα</em>{' '}
+          — και ιδιαίτερα τα τέσσερα ταιριάσματα ATGG — βρίσκονται μέσα σε{' '}
+          ΚΑΘΕ βέλτιστο: αυτά είναι ο σταθερός πυρήνας της απάντησης.
+        </Callout>
+        <p>
+          <strong>Πολυπλοκότητα.</strong> Ο πίνακας έχει{' '}
+          <InlineMath>{'(|y|+1) \\cdot (|x|+1)'}</InlineMath> κελιά και κάθε
+          κελί υπολογίζεται σε <InlineMath>{'O(1)'}</InlineMath> από τρεις
+          γείτονες, οπότε{' '}
+          <InlineMath>{'\\Theta(|x| \\cdot |y|)'}</InlineMath> χρόνος και
+          χώρος. Αν χρειαστεί μόνο η <em>τιμή</em> και όχι η ίδια η
+          ευθυγράμμιση, αρκούν δύο γραμμές μνήμης{' '}
+          <InlineMath>{'O(|x| + |y|)'}</InlineMath>· για να ανακτηθεί η{' '}
+          ευθυγράμμιση σε γραμμικό χώρο, χρειάζεται{' '}
+          <a href="/lectures/L16-dp-iii#hirschberg" className="underline">
+            Hirschberg
+          </a>{' '}
+          (η ίδια ιδέα δουλεύει αυτούσια με max αντί min — απλώς αλλάζει η
+          ορολογία).
+        </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «ευθυγράμμιση με αναπρόσημο».</strong> Όταν
+          μια εκφώνηση δίνει σκορ <em>θετικό για ταυτίσεις</em> και{' '}
+          <em>αρνητικό για κενά/συγκρούσεις</em>, είναι η ίδια αλγοριθμική
+          μηχανή με τη διάλεξη — αλλά:
+          <ul>
+            <li>
+              <InlineMath>{'\\min \\to \\max'}</InlineMath>· νικάει η{' '}
+              <em>μεγαλύτερη</em> τιμή του max αντί της μικρότερης του min.
+            </li>
+            <li>
+              Οι σταθερές <InlineMath>{'\\delta, \\alpha'}</InlineMath> γίνονται{' '}
+              <em>αρνητικές</em> (gap, mismatch penalty) και η{' '}
+              <em>ταύτιση</em> γίνεται <em>θετική</em>.
+            </li>
+            <li>
+              Τα <em>βελάκια</em> για το backtrack δείχνουν στον γείτονα
+              που <em>μεγιστοποίησε</em> το άθροισμα — και η ευθυγράμμιση
+              «κουμπώνει» τις ταυτίσεις σαν να ψάχνει LCS.
+            </li>
+          </ul>
+          Παγίδα: μη γυρίσεις άθελα στη συνήθεια του{' '}
+          <InlineMath>{'\\min'}</InlineMath> από τη διάλεξη — αν το κάνεις, ο
+          πίνακάς σου θα «τιμωρεί» τις ταυτίσεις και θα προτιμά κενά
+          παντού.
+        </Callout>
       </>
     ),
   },

@@ -181,6 +181,8 @@ import { AlignmentBuilder } from '@/components/viz/AlignmentBuilder'
 import { EditGraphViz } from '@/components/viz/EditGraphViz'
 import { TwoRowSweep } from '@/components/viz/TwoRowSweep'
 import { HirschbergViz } from '@/components/viz/HirschbergViz'
+import { MinMaxFlipExplainer } from '@/components/viz/MinMaxFlipExplainer'
+import { DnaScoreAlignTable } from '@/components/viz/DnaScoreAlignTable'
 import { TreeIndependentSet } from '@/components/viz/TreeIndependentSet'
 import { WhyTwoTreeValues } from '@/components/viz/WhyTwoTreeValues'
 import { DijkstraNegFail } from '@/components/viz/DijkstraNegFail'
@@ -385,6 +387,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     EditGraphViz,
     TwoRowSweep,
     HirschbergViz,
+    MinMaxFlipExplainer,
+    DnaScoreAlignTable,
     TreeIndependentSet,
     WhyTwoTreeValues,
     DijkstraNegFail,
