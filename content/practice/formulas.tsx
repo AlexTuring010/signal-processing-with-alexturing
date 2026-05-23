@@ -84,6 +84,16 @@ export const FORMULA_SHEET: FormulaSection[] = [
         ),
       },
       {
+        id: 'fourier-pair-sgn',
+        title: 'sgn(t) ↔ 1/(jπf)',
+        topic: 'foundations',
+        inTypology: true,
+        derivedIn: 'modulation/bridge',
+        content: (
+          <BlockMath>{'\\mathrm{sgn}(t) \\;\\leftrightarrow\\; \\frac{1}{j\\pi f} \\quad\\Longleftrightarrow\\quad \\frac{1}{\\pi t} \\;\\leftrightarrow\\; -j\\,\\mathrm{sgn}(f)'}</BlockMath>
+        ),
+      },
+      {
         id: 'fourier-scaling',
         title: 'Scaling',
         topic: 'foundations',
@@ -120,6 +130,32 @@ export const FORMULA_SHEET: FormulaSection[] = [
         ),
       },
       {
+        id: 'fourier-freq-shift',
+        title: 'Frequency shift (μιγαδικός φέρων)',
+        topic: 'foundations',
+        inTypology: true,
+        derivedIn: 'foundations/fourier-transform',
+        content: <BlockMath>{'x(t)\\, e^{j 2\\pi f_0 t} \\;\\leftrightarrow\\; X(f - f_0)'}</BlockMath>,
+      },
+      {
+        id: 'fourier-differentiation',
+        title: 'Παράγωγος στο time domain',
+        topic: 'foundations',
+        inTypology: true,
+        derivedIn: 'foundations/fourier-transform',
+        content: <BlockMath>{'\\frac{d\\,x(t)}{dt} \\;\\leftrightarrow\\; j 2\\pi f \\, X(f)'}</BlockMath>,
+      },
+      {
+        id: 'fourier-integration',
+        title: 'Ολοκλήρωση στο time domain',
+        topic: 'foundations',
+        inTypology: true,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <BlockMath>{'\\int_{-\\infty}^{t} x(\\tau)\\, d\\tau \\;\\leftrightarrow\\; \\frac{X(f)}{j 2\\pi f} + \\frac{X(0)}{2}\\,\\delta(f)'}</BlockMath>
+        ),
+      },
+      {
         id: 'parseval',
         title: 'Parseval',
         topic: 'foundations',
@@ -138,6 +174,131 @@ export const FORMULA_SHEET: FormulaSection[] = [
             <BlockMath>{'P_x = \\sum_i \\frac{A_i^2}{2} \\quad \\text{(για cosines σε διαφορετικές } f\\text{)}'}</BlockMath>
           </>
         ),
+      },
+
+      // ── Τριγωνομετρικές ταυτότητες (τυπολόγιο) ──
+      {
+        id: 'trig-cos-sum-diff',
+        title: 'cos(x ± y)',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\cos(x \\pm y) = \\cos(x)\\cos(y) \\mp \\sin(x)\\sin(y)'}</BlockMath>,
+      },
+      {
+        id: 'trig-sin-sum-diff',
+        title: 'sin(x ± y)',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\sin(x \\pm y) = \\sin(x)\\cos(y) \\pm \\cos(x)\\sin(y)'}</BlockMath>,
+      },
+      {
+        id: 'trig-cos-complex-exp',
+        title: 'cos(x) μέσω εκθετικών',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\cos(x) = \\tfrac{1}{2}\\!\\left(e^{jx} + e^{-jx}\\right)'}</BlockMath>,
+      },
+      {
+        id: 'trig-sin-complex-exp',
+        title: 'sin(x) μέσω εκθετικών',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\sin(x) = \\tfrac{1}{2j}\\!\\left(e^{jx} - e^{-jx}\\right)'}</BlockMath>,
+      },
+      {
+        id: 'trig-prod-cos-cos',
+        title: 'cos(x)·cos(y) → product-to-sum',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\cos(x)\\cos(y) = \\tfrac{1}{2}\\,[\\cos(x - y) + \\cos(x + y)]'}</BlockMath>,
+      },
+      {
+        id: 'trig-prod-sin-sin',
+        title: 'sin(x)·sin(y) → product-to-sum',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\sin(x)\\sin(y) = \\tfrac{1}{2}\\,[\\cos(x - y) - \\cos(x + y)]'}</BlockMath>,
+      },
+      {
+        id: 'trig-prod-sin-cos',
+        title: 'sin(x)·cos(y) → product-to-sum',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\sin(x)\\cos(y) = \\tfrac{1}{2}\\,[\\sin(x - y) + \\sin(x + y)]'}</BlockMath>,
+      },
+      {
+        id: 'trig-double-cos',
+        title: 'cos²(x) (διπλάσιο τόξο)',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\cos^2(x) = \\tfrac{1}{2}\\,[1 + \\cos(2x)]'}</BlockMath>,
+      },
+      {
+        id: 'trig-double-sin',
+        title: 'sin²(x) (διπλάσιο τόξο)',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\sin^2(x) = \\tfrac{1}{2}\\,[1 - \\cos(2x)]'}</BlockMath>,
+      },
+
+      // ── Βασικά ολοκληρώματα (τυπολόγιο) ──
+      {
+        id: 'int-cos',
+        title: '∫ cos(x) dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\int \\cos(x)\\, dx = \\sin(x) + C'}</BlockMath>,
+      },
+      {
+        id: 'int-sin',
+        title: '∫ sin(x) dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\int \\sin(x)\\, dx = -\\cos(x) + C'}</BlockMath>,
+      },
+      {
+        id: 'int-power',
+        title: '∫ (a + bx)ⁿ dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: (
+          <BlockMath>{'\\int (a + bx)^{n}\\, dx = \\frac{(a + bx)^{n+1}}{b\\,(n + 1)} + C \\quad (n \\neq -1)'}</BlockMath>
+        ),
+      },
+      {
+        id: 'int-exp',
+        title: '∫ eˣ dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\int e^{x}\\, dx = e^{x} + C'}</BlockMath>,
+      },
+      {
+        id: 'int-ln',
+        title: '∫ ln(x) dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\int \\ln(x)\\, dx = x\\,\\ln(x) - x + C'}</BlockMath>,
+      },
+      {
+        id: 'int-one-over-x',
+        title: '∫ (1/x) dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\int \\frac{1}{x}\\, dx = \\ln|x| + C'}</BlockMath>,
+      },
+      {
+        id: 'int-sec-squared',
+        title: '∫ (1/cos²(x)) dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\int \\frac{1}{\\cos^2(x)}\\, dx = \\tan(x) + C'}</BlockMath>,
+      },
+      {
+        id: 'int-csc-squared',
+        title: '∫ (1/sin²(x)) dx',
+        topic: 'foundations',
+        inTypology: true,
+        content: <BlockMath>{'\\int \\frac{1}{\\sin^2(x)}\\, dx = -\\cot(x) + C'}</BlockMath>,
       },
     ],
   },
@@ -354,6 +515,23 @@ export const FORMULA_SHEET: FormulaSection[] = [
         inTypology: false,
         derivedIn: 'fm/in-noise',
         content: <BlockMath>{'G_{FM/AM} = 9\\beta^2'}</BlockMath>,
+      },
+      {
+        id: 'bessel-table',
+        title: 'Bessel table Jₙ(β)',
+        topic: 'fm',
+        inTypology: true,
+        derivedIn: 'fm/bessel',
+        content: (
+          <>
+            <BlockMath>{'J_n(\\beta), \\quad n = 0\\,(\\text{carrier}),\\, 1,\\, 2,\\, \\dots,\\, 16'}</BlockMath>
+            <p className="mt-2 text-xs leading-relaxed text-fg-muted">
+              Πίνακας τιμών για συνηθισμένα <InlineMath>{'\\beta'}</InlineMath> — δίνει
+              το πλάτος <InlineMath>{'A_c\\, J_n(\\beta)'}</InlineMath> της{' '}
+              <InlineMath>{'n'}</InlineMath>-οστής πλευρικής στο FM single-tone.
+            </p>
+          </>
+        ),
       },
     ],
   },
