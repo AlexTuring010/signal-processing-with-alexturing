@@ -78,8 +78,13 @@ import { DijkstraAnimator } from '@/components/viz/DijkstraAnimator'
 import { DijkstraProofViz } from '@/components/viz/DijkstraProofViz'
 import { CutExplorer } from '@/components/viz/CutExplorer'
 import { ExchangeArgumentViz } from '@/components/viz/ExchangeArgumentViz'
+import { CycleCutLemmaViz } from '@/components/viz/CycleCutLemmaViz'
 import { PrimAnimator } from '@/components/viz/PrimAnimator'
 import { KruskalAnimator } from '@/components/viz/KruskalAnimator'
+import { ReverseDeleteAnimator } from '@/components/viz/ReverseDeleteAnimator'
+import { PrimVsDijkstraViz } from '@/components/viz/PrimVsDijkstraViz'
+import { CayleyCount } from '@/components/viz/CayleyCount'
+import { DijkstraInvariantBreak } from '@/components/viz/DijkstraInvariantBreak'
 import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
 import { HeapArrayMap } from '@/components/viz/HeapArrayMap'
 import { HeapsortAnimator } from '@/components/viz/HeapsortAnimator'
@@ -217,8 +222,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     DijkstraProofViz,
     CutExplorer,
     ExchangeArgumentViz,
+    CycleCutLemmaViz,
     PrimAnimator,
     KruskalAnimator,
+    ReverseDeleteAnimator,
+    PrimVsDijkstraViz,
+    CayleyCount,
+    DijkstraInvariantBreak,
     BinaryHeapAnimator,
     HeapArrayMap,
     HeapsortAnimator,
