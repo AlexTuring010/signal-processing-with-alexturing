@@ -120,6 +120,13 @@ import { ReverseDeleteAnimator } from '@/components/viz/ReverseDeleteAnimator'
 import { PrimVsDijkstraViz } from '@/components/viz/PrimVsDijkstraViz'
 import { CayleyCount } from '@/components/viz/CayleyCount'
 import { DijkstraInvariantBreak } from '@/components/viz/DijkstraInvariantBreak'
+import { MstCountingExplorer } from '@/components/viz/MstCountingExplorer'
+import { DijkstraHandTrace } from '@/components/viz/DijkstraHandTrace'
+import { MstRunnerWithTies } from '@/components/viz/MstRunnerWithTies'
+import { SecondVsThirdEdgeMst } from '@/components/viz/SecondVsThirdEdgeMst'
+import { MstPreorderTSP } from '@/components/viz/MstPreorderTSP'
+import { DijkstraTreeVsMstTriangle } from '@/components/viz/DijkstraTreeVsMstTriangle'
+import { MaxEdgeAsBridge } from '@/components/viz/MaxEdgeAsBridge'
 import { BinaryHeapAnimator } from '@/components/viz/BinaryHeapAnimator'
 import { HeapArrayMap } from '@/components/viz/HeapArrayMap'
 import { HeapsortAnimator } from '@/components/viz/HeapsortAnimator'
@@ -299,6 +306,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PrimVsDijkstraViz,
     CayleyCount,
     DijkstraInvariantBreak,
+    MstCountingExplorer,
+    DijkstraHandTrace,
+    MstRunnerWithTies,
+    SecondVsThirdEdgeMst,
+    MstPreorderTSP,
+    DijkstraTreeVsMstTriangle,
+    MaxEdgeAsBridge,
     BinaryHeapAnimator,
     HeapArrayMap,
     HeapsortAnimator,

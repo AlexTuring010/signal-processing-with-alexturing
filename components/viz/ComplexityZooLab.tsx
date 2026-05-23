@@ -126,6 +126,22 @@ const PROBLEMS: ZooProblem[] = [
     why: 'Βρες σύνολο ≤ k κορυφών που καλύπτει όλες τις ακμές. Κλασικό NP-πλήρες (αναγωγή από 3-SAT).',
   },
   {
+    id: 'independent-set',
+    name: 'Independent Set',
+    greekName: 'Ανεξάρτητο σύνολο',
+    klass: 'NPC',
+    why: 'Βρες σύνολο k κορυφών χωρίς καμία ακμή μεταξύ τους. Συμπληρωματικό του Vertex Cover (S ανεξάρτητο ⇔ V\\S κάλυμμα), άρα κι αυτό NP-πλήρες. Με σταθερό k γίνεται πολυωνυμικό σε O(n^k).',
+  },
+  {
+    id: 'mst-decision',
+    name: 'MST (απόφαση)',
+    greekName: 'Ελάχιστο συνδετικό δέντρο — απόφαση',
+    klass: 'P',
+    why: '«Υπάρχει συνδετικό δέντρο με συνολικό βάρος ≤ k;» Τρέξε Kruskal/Prim O(m log n), σύγκρινε με k. Πάει χέρι-χέρι με το πρόβλημα βελτιστοποίησης.',
+    lecture: 'lectures/L09-graphs-iv',
+    lectureLabel: 'L09',
+  },
+  {
     id: 'knapsack',
     name: 'Knapsack (απόφαση)',
     greekName: 'Σακίδιο',

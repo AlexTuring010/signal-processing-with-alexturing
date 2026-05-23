@@ -67,6 +67,15 @@ import { DAGUnreliableTwoWays } from '@/components/viz/DAGUnreliableTwoWays'
 import { MultVsAddPaths } from '@/components/viz/MultVsAddPaths'
 import { LayeredTripPlanner } from '@/components/viz/LayeredTripPlanner'
 import { ConstantShiftFail } from '@/components/viz/ConstantShiftFail'
+import { MstCountingExplorer } from '@/components/viz/MstCountingExplorer'
+import { DijkstraHandTrace } from '@/components/viz/DijkstraHandTrace'
+import { DijkstraInvariantBreak } from '@/components/viz/DijkstraInvariantBreak'
+import { MstRunnerWithTies } from '@/components/viz/MstRunnerWithTies'
+import { SecondVsThirdEdgeMst } from '@/components/viz/SecondVsThirdEdgeMst'
+import { MstPreorderTSP } from '@/components/viz/MstPreorderTSP'
+import { DijkstraTreeVsMstTriangle } from '@/components/viz/DijkstraTreeVsMstTriangle'
+import { MaxEdgeAsBridge } from '@/components/viz/MaxEdgeAsBridge'
+import { KruskalAnimator } from '@/components/viz/KruskalAnimator'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -582,24 +591,49 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Ας θυμηθούμε τι κάνει ο Dijkstra σε κάθε βήμα. Κρατάει ένα σύνολο{' '}
-          <InlineMath>{'S'}</InlineMath> «εξερευνημένων» κορυφών και, από όλες
-          τις υπόλοιπες, διαλέγει εκείνη με τη <strong>μικρότερη τρέχουσα
-          απόσταση από την αφετηρία</strong> <InlineMath>{'s'}</InlineMath>.
+          <strong>Φαντάσου το κύμα.</strong> Ο Dijkstra είναι «κύμα από την{' '}
+          <InlineMath>{'s'}</InlineMath>»: σε κάθε βήμα ακουμπάει την επόμενη
+          πιο κοντινή κορυφή <em>συνολικά</em> από την αφετηρία, και την
+          κλειδώνει για πάντα. Άρα κάθε φορά διαλέγει την κορυφή με τη{' '}
+          <strong>μικρότερη τρέχουσα συνολική απόσταση</strong>{' '}
+          <InlineMath>{'d(v)'}</InlineMath>.
         </p>
         <p>
-          Γιατί όχι οι άλλες; Το (i) «τελευταία ακμή» δεν λέει τίποτα — ο
-          Dijkstra κοιτάζει <strong>όλη</strong> την απόσταση από την{' '}
-          <InlineMath>{'s'}</InlineMath>, όχι ένα μόνο βήμα. Το (iii) «ακμή
-          ελάχιστου βάρους σε τομή» είναι το κριτήριο του{' '}
-          <strong>Prim</strong> (ελάχιστο συνδετικό δέντρο), όχι του Dijkstra —
-          μοιάζουν πολύ αλλά ο Prim κοιτάει «κόστος μίας ακμής» ενώ ο Dijkstra
-          «κόστος όλης της διαδρομής». Το (iv) «λιγότερες ακμές» είναι το BFS —
-          αγνοεί τα βάρη.
+          Πώς ξεχωρίζει από τα γειτονικά της αλγορίθμους; Καθένα από τα άλλα
+          τρία κριτήρια ανήκει σε <em>άλλο</em> αλγόριθμο:
         </p>
+        <ul>
+          <li>
+            (i) «συντομότερος γείτονας από την τελευταία ακμή» — μυωπική κίνηση
+            που δεν αντιστοιχεί σε γνωστό αλγόριθμο· ο Dijkstra δεν κρατάει
+            «τελευταία ακμή», κοιτάει όλη την απόσταση από την{' '}
+            <InlineMath>{'s'}</InlineMath>.
+          </li>
+          <li>
+            (iii) «ελάχιστη ακμή σε μία τομή» — κριτήριο του <strong>Prim</strong>{' '}
+            (ΕΕΔ). Prim και Dijkstra μοιάζουν επικίνδυνα, αλλά το κλειδί στην
+            ουρά αλλάζει: ο Prim κρατά «<em>μίας</em> ακμής κόστος προς το
+            δέντρο», ο Dijkstra «<em>όλης</em> της διαδρομής από την s».
+          </li>
+          <li>
+            (iv) «λιγότερες ακμές» — το <strong>BFS</strong>, που αγνοεί τα βάρη.
+            Σωστό μόνο όταν όλα τα βάρη είναι ίσα.
+          </li>
+        </ul>
         <p>
           <strong>Σωστή: (ii).</strong>
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «ποιο κλειδί έχει η ουρά;».</strong> Όταν Σ/Λ
+            ή πολλαπλή επιλογή ρωτά για κριτήριο σε ζυγισμένο γράφημα, γράψε
+            δίπλα σε κάθε όνομα το κλειδί του: Dijkstra ↔{' '}
+            <InlineMath>{'d[s] + \\ell'}</InlineMath> (συσσωρευτικό), Prim ↔{' '}
+            <InlineMath>{'c(e)'}</InlineMath> (μόνο η μία ακμή), BFS ↔ ακμές
+            (αγνοεί βάρη), Kruskal ↔ ταξινομημένη λίστα ακμών. Η σωστή απάντηση
+            πέφτει μόνη της.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -930,75 +964,62 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>Η μέθοδος.</strong> Ένα γράφημα έχει{' '}
-          <strong>μοναδικό</strong> ΕΕΔ αν όλα τα βάρη των ακμών είναι
-          διαφορετικά. Όταν υπάρχουν <strong>ισοβαθμίες</strong> (ίσα βάρη), ο
-          άπληστος αλγόριθμος (Kruskal) μπορεί να έχει{' '}
-          <strong>επιλογές</strong> — και κάθε ανεξάρτητη επιλογή πολλαπλασιάζει
-          το πλήθος των ΕΕΔ.
+          <strong>Η ιδέα σε μία γραμμή.</strong> Με διακριτά βάρη το ΕΕΔ είναι
+          μοναδικό· μόλις εμφανιστούν <strong>ισοβαθμίες</strong>, ο Kruskal
+          βρίσκεται σε <em>πραγματική επιλογή</em> και κάθε ανεξάρτητη επιλογή
+          πολλαπλασιάζει το πλήθος των διαφορετικών ΕΕΔ. Άρα η συνταγή είναι:
+          (α) βρες τι μπαίνει υποχρεωτικά, (β) μέτρα τις πραγματικές επιλογές
+          στις ισόβαθμες ακμές.
         </p>
         <p>
-          <strong>Βήμα 1 — υποχρεωτικές ακμές.</strong> Τρέχουμε Kruskal:
-          παίρνουμε ακμές σε αύξουσα σειρά κόστους.
+          <strong>Βήμα 1 — οι 3 υποχρεωτικές ακμές.</strong> Σαρώνοντας με Kruskal:
         </p>
         <ul>
           <li>
-            <InlineMath>{'C-D = 1'}</InlineMath>: η φθηνότερη, μπαίνει — σε κάθε
-            ΕΕΔ.
+            <InlineMath>{'C\\text{-}D = 1'}</InlineMath> — η φθηνότερη συνολικά,
+            μπαίνει πάντα.
           </li>
           <li>
-            <InlineMath>{'B-E = 3'}</InlineMath>: επόμενη φθηνότερη, δεν κλείνει
-            κύκλο, μπαίνει — σε κάθε ΕΕΔ.
+            <InlineMath>{'B\\text{-}E = 3'}</InlineMath> — η αμέσως επόμενη, δεν
+            κλείνει κύκλο, μπαίνει πάντα.
           </li>
           <li>
-            <InlineMath>{'D-F = 10'}</InlineMath>: είναι η <strong>μόνη</strong>{' '}
-            ακμή που αγγίζει την <InlineMath>{'F'}</InlineMath> — γέφυρα, μπαίνει
-            υποχρεωτικά σε κάθε ΕΕΔ.
+            <InlineMath>{'D\\text{-}F = 10'}</InlineMath> — γέφυρα: η μόνη ακμή
+            που αγγίζει την <InlineMath>{'F'}</InlineMath>. Χωρίς αυτήν η F
+            αποκόπτεται, οπότε ανήκει σε κάθε ΕΕΔ.
           </li>
         </ul>
         <p>
-          Ένα ΕΕΔ σε 6 κορυφές έχει 5 ακμές· έχουμε ήδη 3. Μένει να συνδέσουμε
-          τις τρεις «νησίδες» <InlineMath>{'\\{A\\}'}</InlineMath>,{' '}
+          Με 3 σίγουρες ακμές, το γράφημα χωρίζεται σε τρεις «νησίδες»:{' '}
+          <InlineMath>{'\\{A\\}'}</InlineMath>,{' '}
           <InlineMath>{'\\{C,D,F\\}'}</InlineMath>,{' '}
-          <InlineMath>{'\\{B,E\\}'}</InlineMath> με 2 ακμές.
+          <InlineMath>{'\\{B,E\\}'}</InlineMath>. Χρειαζόμαστε 2 ακόμα ακμές για
+          να γίνουν δέντρο.
         </p>
         <p>
-          <strong>Βήμα 2 — οι επιλογές.</strong> Όλες οι υπόλοιπες ακμές έχουν
-          βάρος 5: <InlineMath>{'A-C, A-B, C-B, D-E'}</InlineMath>. Δες ποιες
-          νησίδες ενώνει η καθεμία: <InlineMath>{'A-C'}</InlineMath> ενώνει{' '}
-          <InlineMath>{'\\{A\\}'}</InlineMath>–<InlineMath>{'\\{C,D,F\\}'}</InlineMath>·{' '}
-          <InlineMath>{'A-B'}</InlineMath> ενώνει{' '}
-          <InlineMath>{'\\{A\\}'}</InlineMath>–<InlineMath>{'\\{B,E\\}'}</InlineMath>·{' '}
-          ενώ <InlineMath>{'C-B'}</InlineMath> και{' '}
-          <InlineMath>{'D-E'}</InlineMath> ενώνουν και οι δύο{' '}
-          <InlineMath>{'\\{C,D,F\\}'}</InlineMath>–<InlineMath>{'\\{B,E\\}'}</InlineMath>.
+          <strong>Βήμα 2 — οι ισοβαθμίες.</strong> Οι 4 υπόλοιπες ακμές{' '}
+          <InlineMath>{'A\\text{-}C, A\\text{-}B, C\\text{-}B, D\\text{-}E'}</InlineMath>{' '}
+          έχουν όλες βάρος 5. Από τα 6 πιθανά ζευγάρια ακμών, ποια ενώνουν και
+          τις 3 νησίδες χωρίς κύκλο; Κλικ σε κάθε ζεύγος:
         </p>
+        <MstCountingExplorer />
         <p>
-          Πρέπει να διαλέξουμε 2 ακμές που ενώνουν και τις 3 νησίδες χωρίς
-          κύκλο. Έγκυρα ζευγάρια: <InlineMath>{'\\{A\\text{-}C, A\\text{-}B\\}'}</InlineMath>,{' '}
-          <InlineMath>{'\\{A\\text{-}C, C\\text{-}B\\}'}</InlineMath>,{' '}
-          <InlineMath>{'\\{A\\text{-}C, D\\text{-}E\\}'}</InlineMath>,{' '}
-          <InlineMath>{'\\{A\\text{-}B, C\\text{-}B\\}'}</InlineMath>,{' '}
-          <InlineMath>{'\\{A\\text{-}B, D\\text{-}E\\}'}</InlineMath>. Το μόνο
-          άκυρο ζευγάρι είναι <InlineMath>{'\\{C\\text{-}B, D\\text{-}E\\}'}</InlineMath>{' '}
-          — αφήνει την <InlineMath>{'A'}</InlineMath> αποκομμένη.
+          <strong>Συμπέρασμα.</strong> 5 διαφορετικά ΕΕΔ, όλα με συνολικό κόστος{' '}
+          <InlineMath>{'1 + 3 + 10 + 5 + 5 = 24'}</InlineMath>. Το άκυρο ζεύγος{' '}
+          <InlineMath>{'\\{C\\text{-}B, D\\text{-}E\\}'}</InlineMath> ενώνει τις
+          ίδιες δύο νησίδες δύο φορές και αφήνει την{' '}
+          <InlineMath>{'A'}</InlineMath> αποκομμένη.
         </p>
-        <p>
-          Κάθε έγκυρο ζευγάρι δίνει ένα διαφορετικό ΕΕΔ, όλα με ίδιο συνολικό
-          κόστος <InlineMath>{'1 + 3 + 10 + 5 + 5 = 24'}</InlineMath>. Δηλαδή
-          κάθε ΕΕΔ αποτελείται από τις υποχρεωτικές{' '}
-          <InlineMath>{'\\{C\\text{-}D, B\\text{-}E, D\\text{-}F\\}'}</InlineMath>{' '}
-          συν ένα από τα παραπάνω ζευγάρια βάρους 5.
-        </p>
-        <p>
-          <strong>Συμπέρασμα.</strong> Το γράφημα έχει <strong>περισσότερα από
-          ένα</strong> ΕΕΔ — υπάρχουν ισοβαθμίες ακμών βάρους 5 που δημιουργούν
-          πραγματικές επιλογές. Για να δώσεις τον <em>ακριβή</em> αριθμό στην
-          εξέταση, μέτρα — όπως παραπάνω — πόσα έγκυρα ζευγάρια ακμών ελάχιστου
-          βάρους ενώνουν τις νησίδες χωρίς κύκλο. Αυτή ακριβώς η καταμέτρηση
-          (υποχρεωτικές ακμές → ανεξάρτητες επιλογές στις ισοβαθμίες) είναι η
-          ζητούμενη μέθοδος.
-        </p>
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «υποχρεωτικά πρώτα, μετά οι ισοβαθμίες».</strong>{' '}
+            Σε προβλήματα πλήθους ΕΕΔ: τρέξε Kruskal, βρες τις ακμές που μπαίνουν
+            μονοσήμαντα (μοναδικά ελαφρύτερες σε μια τομή, γέφυρες), αναγνώρισε
+            τις «νησίδες» που μένουν, και μέτρα μόνο τα έγκυρα ζευγάρια ακμών
+            ίδιου βάρους που τις ενώνουν. Αυτό το «μέτρα τις επιλογές» κάνει
+            το πρόβλημα συνδυαστικό — όχι «τρέξε άπληστο».
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -1459,32 +1480,52 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
-        <p>Πάμε έναν-έναν, σκεπτόμενοι «τι κάνει με αρνητικά βάρη;»</p>
+        <p>
+          <strong>Πέρνα έναν-έναν.</strong> Ποιος αλγόριθμος <em>βασίζεται</em>{' '}
+          στο ότι τα βάρη είναι μη αρνητικά;
+        </p>
         <ul>
           <li>
-            <strong>Prim</strong> (ελάχιστο συνδετικό δέντρο): δουλεύει μια χαρά
-            — η λογική «πιο φθηνή ακμή αποκοπής» ισχύει είτε τα βάρη είναι θετικά
-            είτε αρνητικά. ✓
+            <strong>Prim</strong> (ΕΕΔ): η λογική «η φθηνότερη ακμή της αποκοπής
+            ανήκει στο ΕΕΔ» δουλεύει ανεξάρτητα από πρόσημο — αρκεί τα βάρη να
+            είναι σταθερά. ✓ δουλεύει με αρνητικά.
           </li>
           <li>
-            <strong>Bellman-Ford</strong>: σχεδιάστηκε ακριβώς για{' '}
-            <strong>αρνητικά</strong> βάρη — δουλεύει. ✓
+            <strong>Bellman-Ford</strong> ([L17](/lectures/L17-dp-iv)):
+            σχεδιάστηκε ακριβώς γι' αρνητικά. Επαναπροσπαθεί κάθε ακμή σε κάθε
+            γύρο, οπότε δεν «κλειδώνει» τίποτα πρόωρα. ✓
           </li>
           <li>
-            <strong>Dijkstra</strong>: <strong>σπάει</strong>. Μόλις
-            «οριστικοποιήσει» μια κορυφή, δεν την ξανακοιτάζει — μια αρνητική ακμή
-            θα μπορούσε να τη βελτιώσει αργότερα, αλλά είναι πια αργά.
+            <strong>BFS</strong>: αγνοεί τα βάρη συνολικά. Επιστρέφει «λιγότερες
+            ακμές», όχι «μικρότερο άθροισμα» — οπότε δεν είναι αλγόριθμος ζυγισμένου
+            shortest path καν, και τα αρνητικά δεν αλλάζουν αυτή του την ιδιότητα.
+          </li>
+          <li>
+            <strong>Dijkstra</strong>: <strong>σπάει</strong>. Μόλις οριστικοποιεί
+            μια κορυφή, δεν την ξανακοιτάζει· μια αρνητική ακμή που εμφανίζεται
+            αργότερα θα μπορούσε να τη βελτιώσει, αλλά «είναι αργά».
           </li>
         </ul>
         <p>
-          Το <strong>BFS</strong> απλώς αγνοεί τα βάρη — δεν είναι αλγόριθμος
-          συντομότερων διαδρομών με βάρη ούτως ή άλλως, οπότε το «αρνητικά βάρη»
-          δεν αλλάζει κάτι ειδικό γι' αυτό.
+          Δες ακριβώς τη στιγμή που σπάει — η <InlineMath>{'u'}</InlineMath>{' '}
+          κλειδώνει στο <InlineMath>{'d = 1'}</InlineMath> ενώ η πραγματική της
+          απόσταση είναι <InlineMath>{'-1'}</InlineMath>, και το ψέμα μεταφέρεται
+          στο <InlineMath>{'t'}</InlineMath>:
         </p>
+        <DijkstraInvariantBreak />
         <p>
-          Ο αλγόριθμος που <strong>χαλάει ειδικά εξαιτίας</strong> των αρνητικών
-          βαρών είναι ο Dijkstra. <strong>Σωστή: (iii).</strong>
+          <strong>Σωστή: (iii).</strong>
         </p>
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «ποιος αλγόριθμος εμπιστεύεται οριστικοποίηση;».</strong>{' '}
+            Αν ένας αλγόριθμος κλειδώνει αμετάκλητα μια απόφαση (Dijkstra: κάθε
+            κορυφή οριστική μόλις βγει από την ουρά), τότε μια αρνητική ακμή
+            μπορεί να ακυρώσει την αναλλοίωτη και να σπάσει την ορθότητα. Prim
+            δεν εμπιστεύεται «αποστάσεις από την s» — εμπιστεύεται «ένα-ένα κόστος
+            ακμής σε τομή», που μένει σωστό. BFS αγνοεί βάρη ούτως ή άλλως.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -1826,47 +1867,44 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Ο Dijkstra κρατάει για κάθε κορυφή μια <strong>τρέχουσα απόσταση</strong>{' '}
-          από την <InlineMath>{'a'}</InlineMath>, και σε κάθε βήμα{' '}
-          «οριστικοποιεί» την κορυφή με τη μικρότερη τρέχουσα απόσταση, μετά{' '}
-          «χαλαρώνει» τις γειτονικές της.
+          <strong>Η μηχανή του Dijkstra σε δύο γραμμές.</strong> Κάθε βήμα:
+          (1) εξήγαγε την κορυφή με τη μικρότερη τρέχουσα{' '}
+          <InlineMath>{'d'}</InlineMath> — αυτή κλειδώνει· (2) χαλάρωσε όλες τις
+          ακμές που φεύγουν από αυτήν, ενημερώνοντας τα <InlineMath>{'d'}</InlineMath>{' '}
+          των μη οριστικών γειτόνων.
         </p>
         <p>
-          Ξεκινάμε: <InlineMath>{'d(a) = 0'}</InlineMath>, όλες οι άλλες{' '}
-          <InlineMath>{'\\infty'}</InlineMath>. Ο πίνακας ανά βήμα (οριστικές
-          τιμές με <strong>έντονα</strong>):
+          Δες την να τρέχει ολοκληρωμένα — η ουρά εμφανής στο διάγραμμα, οι
+          σταδιακές τιμές <InlineMath>{'d[\\cdot]'}</InlineMath> κάτω από κάθε
+          κορυφή, και ο πλήρης «πίνακας ανά βήμα» που ζητά η εκφώνηση:
         </p>
-        <BlockMath>{'\\begin{array}{c|cccccc} \\text{Βήμα} & a & b & c & d & e & f \\\\ \\hline \\text{αρχή} & \\mathbf{0} & \\infty & \\infty & \\infty & \\infty & \\infty \\\\ \\text{εξ. } a & \\mathbf{0} & 4 & 5 & 1 & \\infty & \\infty \\\\ \\text{εξ. } d & \\mathbf{0} & 4 & 5 & \\mathbf{1} & 6 & \\infty \\\\ \\text{εξ. } b & \\mathbf{0} & \\mathbf{4} & 5 & \\mathbf{1} & 5 & \\infty \\\\ \\text{εξ. } c & \\mathbf{0} & \\mathbf{4} & \\mathbf{5} & \\mathbf{1} & 5 & \\infty \\\\ \\text{εξ. } e & \\mathbf{0} & \\mathbf{4} & \\mathbf{5} & \\mathbf{1} & \\mathbf{5} & 7 \\\\ \\text{εξ. } f & \\mathbf{0} & \\mathbf{4} & \\mathbf{5} & \\mathbf{1} & \\mathbf{5} & \\mathbf{7} \\end{array}'}</BlockMath>
-        <p>Πώς προκύπτει κάθε γραμμή:</p>
-        <ul>
-          <li>
-            <strong>Εξερευνώ <InlineMath>{'a'}</InlineMath> (0):</strong> ακμές{' '}
-            <InlineMath>{'a\\!-\\!d=1, a\\!-\\!b=4, a\\!-\\!c=5'}</InlineMath> →{' '}
-            <InlineMath>{'d=1, b=4, c=5'}</InlineMath>.
-          </li>
-          <li>
-            <strong>Εξερευνώ <InlineMath>{'d'}</InlineMath> (1, η μικρότερη):</strong>{' '}
-            <InlineMath>{'d\\!-\\!b: 1+3=4'}</InlineMath> (ίδιο, καμία αλλαγή)·{' '}
-            <InlineMath>{'d\\!-\\!e: 1+5=6'}</InlineMath> → <InlineMath>{'e=6'}</InlineMath>.
-          </li>
-          <li>
-            <strong>Εξερευνώ <InlineMath>{'b'}</InlineMath> (4):</strong>{' '}
-            <InlineMath>{'b\\!-\\!e: 4+1=5 < 6'}</InlineMath> →{' '}
-            <InlineMath>{'e=5'}</InlineMath>. (<InlineMath>{'b\\!-\\!c: 4+2=6>5'}</InlineMath>,
-            όχι.)
-          </li>
-          <li>
-            <strong>Εξερευνώ <InlineMath>{'c'}</InlineMath> (5)</strong> και{' '}
-            <strong><InlineMath>{'e'}</InlineMath> (5):</strong> από την{' '}
-            <InlineMath>{'e'}</InlineMath>, <InlineMath>{'e\\!-\\!f: 5+2=7'}</InlineMath>{' '}
-            → <InlineMath>{'f=7'}</InlineMath>.
-          </li>
-        </ul>
+        <DijkstraHandTrace instance="pt2-th2-1" />
+        <p>
+          <strong>Τα τρία κρίσιμα σημεία.</strong> (i) Όταν εξάγουμε την{' '}
+          <InlineMath>{'d'}</InlineMath> (μικρότερη τρέχουσα = 1), η ακμή{' '}
+          <InlineMath>{'d\\!-\\!b'}</InlineMath> δίνει <InlineMath>{'1+3=4'}</InlineMath>,
+          ίδιο με το τρέχον <InlineMath>{'d[b]'}</InlineMath> — καμία βελτίωση,
+          καμία αλλαγή. (ii) Όταν εξάγουμε την <InlineMath>{'b'}</InlineMath> (4),
+          η ακμή <InlineMath>{'b\\!-\\!e'}</InlineMath> δίνει <InlineMath>{'4+1=5 < 6'}</InlineMath>{' '}
+          — βελτιώνει το <InlineMath>{'d[e]'}</InlineMath>. (iii) Η σειρά
+          οριστικοποίησης που προκύπτει είναι{' '}
+          <InlineMath>{'a, d, b, c, e, f'}</InlineMath> — όχι αλφαβητική.
+        </p>
         <p>
           <strong>Τελικές συντομότερες αποστάσεις από την{' '}
           <InlineMath>{'a'}</InlineMath>:</strong>{' '}
           <InlineMath>{'a{=}0,\\ d{=}1,\\ b{=}4,\\ c{=}5,\\ e{=}5,\\ f{=}7'}</InlineMath>.
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — η «μεγάλη ζητούμενη έξοδος» είναι ο πίνακας ανά βήμα.</strong>{' '}
+            Όταν η εκφώνηση λέει «αρκεί ο πίνακας που διατηρεί ο Dijkstra σε κάθε
+            βήμα», σχεδίασέ τον ως πίνακα <em>κορυφές × βήματα</em>. Μία γραμμή
+            ανά εξαγωγή· μόνο τα κελιά που χαλαρώθηκαν αλλάζουν. Αυτό είναι ταυτόχρονα
+            (α) η απόδειξη ότι τρέξες σωστά τον αλγόριθμο και (β) η πηγή κάθε
+            συντομότερης διαδρομής μέσω της <InlineMath>{'\\pi[\\cdot]'}</InlineMath>.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -2220,45 +2258,56 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>(α) Τι ζητάει.</strong> Θέλουμε γράφημα όπου ο Dijkstra
-          δουλεύει σωστά — δηλαδή <strong>όλα τα βάρη μη-αρνητικά</strong> (αυτή
-          είναι η μόνη προϋπόθεση του Dijkstra). Ο «μη-αρνητικός κύκλος» δεν
-          ενοχλεί: κύκλος με συνολικό βάρος <InlineMath>{'\\ge 0'}</InlineMath>{' '}
-          δεν δίνει κανένα κίνητρο να τον διασχίσουμε, οπότε οι συντομότερες
-          διαδρομές παραμένουν καλά ορισμένες.
-        </p>
-        <p>Ένα έγκυρο παράδειγμα — 5 κορυφές <InlineMath>{'s,a,b,c,d'}</InlineMath>, 5 ακμές:</p>
-        <ul>
-          <li><InlineMath>{'s \\to a'}</InlineMath>, βάρος 2</li>
-          <li><InlineMath>{'a \\to b'}</InlineMath>, βάρος 3</li>
-          <li><InlineMath>{'b \\to c'}</InlineMath>, βάρος 1</li>
-          <li><InlineMath>{'c \\to a'}</InlineMath>, βάρος 4 &nbsp;— κλείνει τον κύκλο <InlineMath>{'a\\to b\\to c\\to a'}</InlineMath></li>
-          <li><InlineMath>{'b \\to d'}</InlineMath>, βάρος 6</li>
-        </ul>
-        <p>
-          Η <InlineMath>{'s'}</InlineMath> έχει εισερχόμενο βαθμό 0 ✓. Ο κύκλος{' '}
-          <InlineMath>{'a\\to b\\to c\\to a'}</InlineMath> έχει βάρος{' '}
-          <InlineMath>{'3+1+4 = 8 \\ge 0'}</InlineMath> — μη-αρνητικός ✓. Όλα τα
-          βάρη <InlineMath>{'\\ge 0'}</InlineMath> → ο Dijkstra λειτουργεί σωστά ✓.
+          <strong>(α) Τι ζητάμε από τον γράφο.</strong> Ο Dijkstra έχει ΜΙΑ
+          προϋπόθεση: όλα τα βάρη <InlineMath>{'\\ell_e \\ge 0'}</InlineMath>. Ο
+          «μη-αρνητικός κύκλος» δεν ενοχλεί καθόλου — αν διασχίσεις έναν κύκλο
+          βάρους <InlineMath>{'\\ge 0'}</InlineMath>, στο τέλος έχεις πληρώσει το
+          ίδιο ή περισσότερα, οπότε καμία βέλτιστη διαδρομή δεν θα ήθελε να τον
+          κάνει. Άρα οι συντομότερες διαδρομές παραμένουν καλά ορισμένες.
         </p>
         <p>
-          <strong>(β) Εκτέλεση Dijkstra από την <InlineMath>{'s'}</InlineMath>.</strong>{' '}
-          Αρχικά <InlineMath>{'d(s)=0'}</InlineMath>, υπόλοιπα{' '}
-          <InlineMath>{'\\infty'}</InlineMath>. Σε κάθε βήμα οριστικοποιούμε την
-          κορυφή με τη μικρότερη τρέχουσα τιμή και χαλαρώνουμε τις γείτονές της:
+          <strong>Ένα έγκυρο παράδειγμα.</strong> 5 κορυφές{' '}
+          <InlineMath>{'s, a, b, c, d'}</InlineMath>· 5 ακμές, ένας κύκλος{' '}
+          <InlineMath>{'a \\to b \\to c \\to a'}</InlineMath> με συνολικό βάρος{' '}
+          <InlineMath>{'3 + 1 + 4 = 8 \\ge 0'}</InlineMath>:
         </p>
-        <BlockMath>{'\\begin{array}{c|ccccc} \\text{Βήμα} & s & a & b & c & d \\\\ \\hline \\text{αρχή} & \\mathbf{0} & \\infty & \\infty & \\infty & \\infty \\\\ \\text{εξ. } s & \\mathbf{0} & 2 & \\infty & \\infty & \\infty \\\\ \\text{εξ. } a & \\mathbf{0} & \\mathbf{2} & 5 & \\infty & \\infty \\\\ \\text{εξ. } b & \\mathbf{0} & \\mathbf{2} & \\mathbf{5} & 6 & 11 \\\\ \\text{εξ. } c & \\mathbf{0} & \\mathbf{2} & \\mathbf{5} & \\mathbf{6} & 11 \\\\ \\text{εξ. } d & \\mathbf{0} & \\mathbf{2} & \\mathbf{5} & \\mathbf{6} & \\mathbf{11} \\end{array}'}</BlockMath>
         <ul>
-          <li><strong>εξ. <InlineMath>{'s'}</InlineMath>:</strong> <InlineMath>{'s\\to a: 0+2=2'}</InlineMath>.</li>
-          <li><strong>εξ. <InlineMath>{'a'}</InlineMath> (2):</strong> <InlineMath>{'a\\to b: 2+3=5'}</InlineMath>.</li>
-          <li><strong>εξ. <InlineMath>{'b'}</InlineMath> (5):</strong> <InlineMath>{'b\\to c: 5+1=6'}</InlineMath>· <InlineMath>{'b\\to d: 5+6=11'}</InlineMath>.</li>
-          <li><strong>εξ. <InlineMath>{'c'}</InlineMath> (6):</strong> <InlineMath>{'c\\to a: 6+4=10 > 2'}</InlineMath> — η <InlineMath>{'a'}</InlineMath> είναι ήδη οριστική, καμία αλλαγή. (Εδώ φαίνεται γιατί ο μη-αρνητικός κύκλος δεν βλάπτει.)</li>
-          <li><strong>εξ. <InlineMath>{'d'}</InlineMath> (11):</strong> καμία εξερχόμενη ακμή.</li>
+          <li><InlineMath>{'s \\to a'}</InlineMath>, βάρος <InlineMath>{'2'}</InlineMath></li>
+          <li><InlineMath>{'a \\to b'}</InlineMath>, βάρος <InlineMath>{'3'}</InlineMath></li>
+          <li><InlineMath>{'b \\to c'}</InlineMath>, βάρος <InlineMath>{'1'}</InlineMath></li>
+          <li><InlineMath>{'c \\to a'}</InlineMath>, βάρος <InlineMath>{'4'}</InlineMath> — κλείνει τον κύκλο</li>
+          <li><InlineMath>{'b \\to d'}</InlineMath>, βάρος <InlineMath>{'6'}</InlineMath></li>
         </ul>
+        <p>
+          Η <InlineMath>{'s'}</InlineMath> έχει εισερχόμενο βαθμό 0 ✓. Όλα τα
+          βάρη <InlineMath>{'\\ge 0'}</InlineMath> ✓. Ο κύκλος είναι μη-αρνητικός ✓.
+        </p>
+        <p>
+          <strong>(β) Dijkstra από την <InlineMath>{'s'}</InlineMath>, βήμα-βήμα.</strong>{' '}
+          Δες τον αλγόριθμο να τρέχει στον γράφο πάνω-πάνω και τον πίνακα να
+          γεμίζει· πρόσεξε τη στιγμή που φτάνουμε στην <InlineMath>{'c'}</InlineMath>{' '}
+          και η ακμή <InlineMath>{'c \\to a'}</InlineMath> «προσπαθεί» να βελτιώσει
+          την ήδη οριστική <InlineMath>{'a'}</InlineMath> — αλλά αποτυγχάνει, ακριβώς
+          επειδή ο κύκλος είναι μη-αρνητικός:
+        </p>
+        <DijkstraHandTrace instance="pt3-th1" />
         <p>
           <strong>Συντομότερες αποστάσεις από την <InlineMath>{'s'}</InlineMath>:</strong>{' '}
           <InlineMath>{'s{=}0,\\ a{=}2,\\ b{=}5,\\ c{=}6,\\ d{=}11'}</InlineMath>.
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «μη-αρνητικός κύκλος ≠ αρνητική ακμή».</strong>{' '}
+            Σε κατευθυνόμενα ζυγισμένα γραφήματα, ο Dijkstra απαιτεί κάθε{' '}
+            <em>ακμή</em> να είναι <InlineMath>{'\\ge 0'}</InlineMath> — όχι κάθε{' '}
+            <em>κύκλος</em>. Ένας κύκλος βάρους ≥ 0 με όλα τα βάρη ακμών{' '}
+            <InlineMath>{'\\ge 0'}</InlineMath> δεν επηρεάζει καθόλου την ορθότητα.
+            Όταν η εκφώνηση σου ζητά να φτιάξεις γράφο «όπου δουλεύει ο Dijkstra»,
+            είναι ευκολότερο να ξεκινήσεις με ΜΙΑ ακμή <InlineMath>{'< 0'}</InlineMath>{' '}
+            ως «παγίδα να αποφύγεις» και να βάλεις όλα τα υπόλοιπα{' '}
+            <InlineMath>{'\\ge 0'}</InlineMath>.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -2717,35 +2766,44 @@ export const EXERCISES: Exercise[] = [
       <>
         <p>
           Το πρόβλημα είναι ένα <strong>Ελάχιστο Επικαλύπτον Δέντρο (ΕΕΔ)</strong>:
-          ψάχνουμε υποσύνολο δρόμων ελάχιστου συνολικού μήκους που κρατάει όλες
-          τις πόλεις συνδεδεμένες.
+          ζητάμε ένα δέντρο που κρατά όλες τις πόλεις συνδεδεμένες με{' '}
+          <em>ελάχιστο συνολικό μήκος</em>.
         </p>
         <p>
-          <strong>Πότε δεν είναι μοναδικό το ΕΕΔ;</strong> Όταν υπάρχει{' '}
-          <strong>ισοβαθμία</strong> που δημιουργεί πραγματική επιλογή. Αν όλα τα
-          βάρη είναι διαφορετικά, το ΕΕΔ είναι μοναδικό· για μη-μοναδικότητα
-          χρειαζόμαστε ίσα βάρη στο σωστό σημείο.
+          <strong>Η ιδέα της μη-μοναδικότητας.</strong> Με διακριτά βάρη το ΕΕΔ
+          είναι μοναδικό. Για να έχουμε πολλά ΕΕΔ χρειαζόμαστε{' '}
+          <em>ισοβαθμία</em> σε σημείο που δημιουργεί πραγματική επιλογή — και
+          το πιο καθαρό τέτοιο σημείο είναι ένας <strong>κύκλος με ίδια ελάχιστα
+          βάρη</strong>: στον κύκλο θα κρατήσουμε όλες τις ακμές πλην μίας, και
+          αν είναι όλες ίδιες, δεν προτιμάται καμία.
         </p>
         <p>
-          <strong>Μια καθαρή ανάθεση.</strong> Δώσε στο τρίγωνο{' '}
-          <InlineMath>{'A, B, C'}</InlineMath> τρεις <strong>ίσες</strong>{' '}
-          φθηνές ακμές, και στις υπόλοιπες μεγαλύτερα, διακριτά βάρη:
+          <strong>Μια καθαρή ανάθεση.</strong> Φτιάχνουμε ισόπλευρο τρίγωνο{' '}
+          <InlineMath>{'A, B, C'}</InlineMath> με βάρος 1, και στις υπόλοιπες
+          ακμές διακριτά, μεγαλύτερα βάρη:
         </p>
         <BlockMath>{'A\\!-\\!B = A\\!-\\!C = B\\!-\\!C = 1; \\quad A\\!-\\!E = 2,\\ B\\!-\\!D = 3,\\ B\\!-\\!E = 4,\\ C\\!-\\!D = 5,\\ D\\!-\\!E = 6.'}</BlockMath>
         <p>
-          <strong>Γιατί η λύση δεν είναι μοναδική.</strong> Για να συνδέσουμε τις
-          <InlineMath>{'A, B, C'}</InlineMath> χρειαζόμαστε <strong>2</strong> από
-          τις 3 ακμές του τριγώνου (η 3η θα έκλεινε κύκλο). Και οι τρεις έχουν
-          βάρος 1 — άρα και τα τρία ζευγάρια{' '}
+          <strong>Γιατί 3 διαφορετικά ΕΕΔ;</strong> Για να συνδέσουμε τις
+          A, B, C χρειαζόμαστε ακριβώς <strong>2</strong> από τις 3 ίδιες ακμές
+          (η 3η θα έκλεινε τον κύκλο A-B-C). Οπότε υπάρχουν 3 ισόκυρες επιλογές{' '}
           <InlineMath>{'\\{A\\text{-}B, A\\text{-}C\\}'}</InlineMath>,{' '}
           <InlineMath>{'\\{A\\text{-}B, B\\text{-}C\\}'}</InlineMath>,{' '}
-          <InlineMath>{'\\{A\\text{-}C, B\\text{-}C\\}'}</InlineMath> δίνουν ίδιο
-          κόστος. Από την <strong>ιδιότητα κύκλου</strong>: στον κύκλο{' '}
-          <InlineMath>{'A\\text{-}B\\text{-}C'}</InlineMath> και οι τρεις ακμές
-          είναι ταυτόχρονα οι «μέγιστες», οπότε η ιδιότητα δεν αποκλείει
-          μοναδικά καμία → προκύπτουν <strong>3 διαφορετικά</strong> ΕΕΔ, όλα με
-          το ίδιο ελάχιστο συνολικό μήκος.
+          <InlineMath>{'\\{A\\text{-}C, B\\text{-}C\\}'}</InlineMath>. Από την{' '}
+          <strong>ιδιότητα κύκλου</strong>: στον κύκλο και οι τρεις ακμές είναι{' '}
+          <em>ταυτόχρονα</em> οι «μέγιστες», οπότε η ιδιότητα δεν αποκλείει
+          μοναδικά καμία.
         </p>
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «κύκλος ίδιων βαρών = πραγματική επιλογή».</strong>{' '}
+            Όταν η εκφώνηση σου ζητά να φτιάξεις γράφο με μη-μοναδικό ΕΕΔ, ψάξε
+            το <em>μικρότερο</em> κύκλο: τρίγωνο. Δώσε του 3 ίδια βάρη — αυτό
+            ξεκλειδώνει 3 διαφορετικά ΕΕΔ. Στις υπόλοιπες ακμές μάζεψε διακριτά
+            βάρη για να αποφύγεις «παράπλευρες» ισοβαθμίες που θα μπερδέψουν τη
+            μέτρηση.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -2769,42 +2827,35 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Ο κατάλληλος αλγόριθμος είναι ο <strong>αλγόριθμος του Kruskal</strong>{' '}
-          (ή ισοδύναμα του Prim) για Ελάχιστο Επικαλύπτον Δέντρο.
+          <strong>Ο κατάλληλος αλγόριθμος είναι ο Kruskal</strong> (ή Prim — δίνουν
+          την ίδια τάξη). Ο Kruskal δουλεύει με τη λίστα ακμών, οπότε φαίνεται
+          ξεκάθαρα ποια ακμή απορρίπτεται από την ιδιότητα κύκλου — που είναι
+          ακριβώς το σημείο της μη-μοναδικότητας του (α).
         </p>
         <p>
-          <strong>Ο Kruskal:</strong> ταξινόμησε τις ακμές σε αύξουσα σειρά
-          μήκους· σάρωσέ τες με τη σειρά, προσθέτοντας κάθε ακμή στο δέντρο{' '}
-          <strong>εκτός αν</strong> κλείνει κύκλο· σταμάτα όταν έχεις{' '}
-          <InlineMath>{'n - 1 = 4'}</InlineMath> ακμές.
+          <strong>Τρεις σειρές, τρία διαφορετικά ΕΕΔ.</strong> Όταν ταξινομούμε
+          τις ακμές, οι τρεις βάρους 1 είναι ισόβαθμες — όποια σειρά τους
+          αλληλοδιαδέχονται, μία θα απορριφθεί (κλείνει το τρίγωνο). Πάτα τις
+          τρεις καρτέλες — βλέπεις ποιο τρίγωνο-edge εκάστοτε «θυσιάζεται», και
+          γιατί το συνολικό κόστος μένει σταθερό:
         </p>
+        <MstRunnerWithTies />
         <p>
-          Με τα μήκη του ερωτήματος (α) — ταξινομημένα:{' '}
-          <InlineMath>{'A\\text{-}B(1), A\\text{-}C(1), B\\text{-}C(1), A\\text{-}E(2), B\\text{-}D(3), \\dots'}</InlineMath>:
+          <strong>Σε όλες τις σειρές το ΕΕΔ έχει συνολικό μήκος{' '}
+          <InlineMath>{'1+1+2+3 = 7'}</InlineMath>.</strong> Αυτό απαντά και τι
+          ζητούσε το (α): η λύση δεν είναι μοναδική — τρία διαφορετικά δέντρα,
+          ίδιο κόστος.
         </p>
-        <ul>
-          <li><InlineMath>{'A\\text{-}B (1)'}</InlineMath>: προστίθεται.</li>
-          <li><InlineMath>{'A\\text{-}C (1)'}</InlineMath>: προστίθεται.</li>
-          <li>
-            <InlineMath>{'B\\text{-}C (1)'}</InlineMath>: θα έκλεινε τον κύκλο{' '}
-            <InlineMath>{'A\\text{-}B\\text{-}C'}</InlineMath> →{' '}
-            <strong>απορρίπτεται</strong>.
-          </li>
-          <li><InlineMath>{'A\\text{-}E (2)'}</InlineMath>: προστίθεται.</li>
-          <li><InlineMath>{'B\\text{-}D (3)'}</InlineMath>: προστίθεται — 4 ακμές, τέλος.</li>
-        </ul>
-        <p>
-          <strong>ΕΕΔ:</strong>{' '}
-          <InlineMath>{'\\{A\\text{-}B,\\ A\\text{-}C,\\ A\\text{-}E,\\ B\\text{-}D\\}'}</InlineMath>,
-          συνολικό μήκος <InlineMath>{'1+1+2+3 = 7'}</InlineMath>.
-        </p>
-        <p>
-          <strong>Η μη-μοναδικότητα φαίνεται εδώ:</strong> στο βήμα όπου
-          απορρίψαμε την <InlineMath>{'B\\text{-}C'}</InlineMath>, αν ο αλγόριθμος
-          είχε εξετάσει πρώτα την <InlineMath>{'B\\text{-}C'}</InlineMath> αντί
-          της <InlineMath>{'A\\text{-}C'}</InlineMath> (ισόβαθμες, βάρος 1), θα
-          κατέληγε σε διαφορετικό — αλλά εξίσου βέλτιστο — δέντρο.
-        </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «η σειρά του Kruskal είναι μηχανισμός επιλογής».</strong>{' '}
+            Όταν δίνεις πολλαπλές «εξίσου βέλτιστες» λύσεις σε MST, η ευκολότερη
+            παρουσίαση είναι: δείξε διαφορετικές σειρές εξέτασης των ισόβαθμων
+            ακμών — κάθε σειρά παράγει διαφορετικό δέντρο. Το κόστος όμως
+            παραμένει το ίδιο, γιατί κάθε ισόβαθμη μπαίνει ή φεύγει σε ισοδύναμη
+            θέση.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -3349,19 +3400,16 @@ return c, mark`}</pre>
     solution: (
       <>
         <p>
-          <strong>Τι σημαίνει «ανήκει στο NP».</strong> Η κλάση{' '}
-          <strong>NP</strong> είναι τα προβλήματα απόφασης για τα οποία, αν η
-          απάντηση είναι «ναι», υπάρχει ένα <em>πιστοποιητικό</em> (ένα στοιχείο
-          απόδειξης) που μπορεί να <strong>επαληθευτεί σε πολυωνυμικό
-          χρόνο</strong>. Δεν χρειάζεται να <em>βρούμε</em> γρήγορα την
-          απάντηση — αρκεί να μπορούμε γρήγορα να <em>ελέγξουμε</em> μια
-          προτεινόμενη λύση.
+          <strong>Τι σημαίνει «ανήκει στο NP».</strong> Όχι «λύνεται γρήγορα».
+          Σημαίνει: <em>αν κάποιος μου ψιθυρίσει μια υποψήφια λύση</em>, μπορώ
+          να την <em>επαληθεύσω</em> σε πολυωνυμικό χρόνο. Δεν χρειάζεται να
+          βρίσκω εγώ τη λύση — αρκεί να την αναγνωρίζω.
         </p>
         <p>
-          <strong>Το πιστοποιητικό.</strong> Για το Hamiltonian Path, το
+          <strong>Το πιστοποιητικό.</strong> Για το Hamiltonian Path, ένα φυσικό
           πιστοποιητικό είναι μια προτεινόμενη ακολουθία κορυφών{' '}
-          <InlineMath>{'v_1, v_2, \\ldots, v_n'}</InlineMath> — δηλαδή ένα
-          υποψήφιο μονοπάτι.
+          <InlineMath>{'v_1, v_2, \\ldots, v_n'}</InlineMath> — η σειρά με την
+          οποία θα τις επισκεφθούμε.
         </p>
         <p>
           <strong>Ο επαληθευτής</strong> ελέγχει τρία πράγματα:
@@ -3374,23 +3422,37 @@ return c, mark`}</pre>
           </li>
           <li>
             η ακολουθία περιέχει <em>κάθε</em> κορυφή{' '}
-            <strong>ακριβώς μία φορά</strong> (χωρίς επαναλήψεις, χωρίς
-            παραλείψεις) — <InlineMath>{'O(n)'}</InlineMath> με ένα βοηθητικό
-            σύνολο.
+            <strong>ακριβώς μία φορά</strong> — <InlineMath>{'O(n)'}</InlineMath>{' '}
+            με ένα boolean σύνολο.
           </li>
           <li>
-            κάθε διαδοχικό ζεύγος{' '}
-            <InlineMath>{'(v_i, v_{i+1})'}</InlineMath> είναι πραγματική ακμή
-            του <InlineMath>{'G'}</InlineMath> — <InlineMath>{'O(n)'}</InlineMath>{' '}
-            έλεγχοι.
+            κάθε διαδοχικό ζεύγος <InlineMath>{'(v_i, v_{i+1})'}</InlineMath>{' '}
+            είναι πραγματική ακμή του <InlineMath>{'G'}</InlineMath> —{' '}
+            <InlineMath>{'O(n)'}</InlineMath> έλεγχοι (με πίνακα γειτνίασης).
           </li>
         </ul>
         <p>
-          Και οι τρεις έλεγχοι γίνονται σε <strong>πολυωνυμικό χρόνο</strong>.
-          Αν υπάρχει Hamiltonian μονοπάτι, υπάρχει πιστοποιητικό που τους
-          περνά· αν δεν υπάρχει, κανένα πιστοποιητικό δεν τους περνά. Άρα{' '}
-          <InlineMath>{'H \\in \\text{NP}'}</InlineMath>.
+          Συνολικά <InlineMath>{'O(n)'}</InlineMath> έλεγχος — πολυωνυμικός.
+          Άρα <InlineMath>{'H \\in \\text{NP}'}</InlineMath>.
         </p>
+        <p>
+          <strong>Πού ζει το Hamilton Path στον «ζωολογικό κήπο».</strong>{' '}
+          Hamilton Path = NP-πλήρες. Παγίδα: συντομότερο μονοπάτι (στο{' '}
+          <span className="text-success">P</span>) και μακρύτερο/Hamilton (στο{' '}
+          <span className="text-danger">NPC</span>) έχουν διαφορά μιας λέξης
+          αλλά δραματική διαφορά πολυπλοκότητας:
+        </p>
+        <ComplexityZooLab focus="hamilton-path" />
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «πιστοποιητικό + verifier».</strong> Για
+            κάθε πρόβλημα του τύπου «υπάρχει X που ικανοποιεί …;», η ένταξη στο
+            NP είναι ίδια συνταγή: όρισε ως πιστοποιητικό το ίδιο το X
+            (μονοπάτι, υποσύνολο κορυφών, ανάθεση μεταβλητών), περίγραψε τους
+            ελέγχους που πρέπει να περάσει, και δείξε ότι κάθε έλεγχος είναι
+            πολυωνυμικός. Δεν μιλάς για αλγόριθμο εύρεσης — μόνο για επαλήθευση.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -3426,14 +3488,13 @@ return c, mark`}</pre>
     solution: (
       <>
         <p>
-          <strong>i. Από πρόβλημα βελτιστοποίησης σε πρόβλημα απόφασης.</strong>{' '}
-          Ένα πρόβλημα τύπου «βρες το ελάχιστο» μετατρέπεται σε «ναι/όχι»
-          ερώτημα προσθέτοντας ένα <em>κατώφλι</em>{' '}
-          <InlineMath>{'k'}</InlineMath>:
+          <strong>i. Βελτιστοποίηση → απόφαση μέσω κατωφλίου.</strong> Όταν
+          έχουμε «βρες ελάχιστο X», το μετατρέπουμε σε «ναι/όχι» προσθέτοντας
+          παράμετρο <InlineMath>{'k'}</InlineMath>:
         </p>
         <p>
           <InlineMath>{'\\text{MST}_D'}</InlineMath>: «Δίνεται γράφος{' '}
-          <InlineMath>{'G = (V,E,W)'}</InlineMath> και αριθμός{' '}
+          <InlineMath>{'G = (V, E, W)'}</InlineMath> και ακέραιος{' '}
           <InlineMath>{'k'}</InlineMath>. Υπάρχει συνδετικό δέντρο του{' '}
           <InlineMath>{'G'}</InlineMath> με συνολικό βάρος{' '}
           <InlineMath>{'\\le k'}</InlineMath>;»
@@ -3441,22 +3502,21 @@ return c, mark`}</pre>
         <p>
           <strong>ii. <InlineMath>{'\\text{MST}_D \\in \\text{NP}'}</InlineMath>.</strong>{' '}
           Πιστοποιητικό: ένα προτεινόμενο σύνολο ακμών{' '}
-          <InlineMath>{'T'}</InlineMath>. Ο επαληθευτής ελέγχει σε πολυωνυμικό
-          χρόνο:
+          <InlineMath>{'T \\subseteq E'}</InlineMath>. Ο επαληθευτής ελέγχει σε
+          πολυωνυμικό χρόνο:
         </p>
         <ul>
           <li>
-            ότι το <InlineMath>{'T'}</InlineMath> έχει ακριβώς{' '}
-            <InlineMath>{'n - 1'}</InlineMath> ακμές·
+            <InlineMath>{'|T| = n - 1'}</InlineMath> ακμές — <InlineMath>{'O(1)'}</InlineMath>.
           </li>
           <li>
-            ότι σχηματίζει <em>δέντρο που καλύπτει όλες τις κορυφές</em>{' '}
-            (συνεκτικό και χωρίς κύκλους — ελέγχεται με BFS/DFS ή Union-Find σε{' '}
-            <InlineMath>{'O(|V|+|E|)'}</InlineMath>)·
+            το <InlineMath>{'T'}</InlineMath> είναι δέντρο που καλύπτει όλες
+            τις κορυφές (συνεκτικό, χωρίς κύκλους) — ελέγχεται με BFS/DFS ή
+            Union-Find σε <InlineMath>{'O(|V| + |E|)'}</InlineMath>.
           </li>
           <li>
-            ότι το συνολικό βάρος είναι{' '}
-            <InlineMath>{'\\le k'}</InlineMath> (μια άθροιση).
+            <InlineMath>{'\\sum_{e \\in T} W(e) \\le k'}</InlineMath> — απλή άθροιση{' '}
+            <InlineMath>{'O(n)'}</InlineMath>.
           </li>
         </ul>
         <p>
@@ -3464,21 +3524,37 @@ return c, mark`}</pre>
         </p>
         <p>
           <strong>iii. <InlineMath>{'\\text{MST}_D \\in \\text{P}'}</InlineMath>.</strong>{' '}
-          Η κλάση <strong>P</strong> είναι τα προβλήματα που{' '}
-          <em>λύνονται</em> (όχι απλώς επαληθεύονται) σε πολυωνυμικό χρόνο. Και
-          για το MST <em>έχουμε</em> τέτοιον αλγόριθμο: ο{' '}
-          <strong>Kruskal</strong> ή ο <strong>Prim</strong> υπολογίζει το
-          ελάχιστο συνδετικό δέντρο σε <InlineMath>{'O(|E|\\log |V|)'}</InlineMath>.
-          Άρα: τρέξε τον Kruskal, βρες το βάρος{' '}
-          <InlineMath>{'W^*'}</InlineMath> του MST, και απάντησε «ναι» αν και
-          μόνο αν <InlineMath>{'W^* \\le k'}</InlineMath>. Πολυωνυμικό →{' '}
+          Η κλάση P είναι «λύνεται σε πολυωνυμικό χρόνο» — και για το MST έχουμε
+          ολόκληρη μηχανή. Τρέξε <strong>Kruskal</strong> ή{' '}
+          <strong>Prim</strong> σε <InlineMath>{'O(|E| \\log |V|)'}</InlineMath>,
+          βρες το βάρος <InlineMath>{'W^*'}</InlineMath> του ΕΣΔ, και απάντησε
+          «ναι» ⇔ <InlineMath>{'W^* \\le k'}</InlineMath>. Πολυωνυμικό →{' '}
           <InlineMath>{'\\text{MST}_D \\in \\text{P}'}</InlineMath>.
         </p>
         <p>
-          (Παρατήρηση: ισχύει πάντα <InlineMath>{'\\text{P} \\subseteq \\text{NP}'}</InlineMath>,
-          οπότε το (iii) ουσιαστικά συνεπάγεται το (ii) — όμως η άσκηση ζητά να
-          δειχθούν ρητά και τα δύο.)
+          <strong>Πού ζει το MST απόφασης στον «ζωολογικό κήπο».</strong>{' '}
+          Στο P — μαζί με τα γνωστά «εύκολα»: BFS/DFS, shortest path, sorting.
+          Όχι κοντά στο TSP. Η διαφορά είναι κρίσιμη: «βρες δέντρο» εύκολο,
+          «βρες κύκλο» NP-πλήρες.
         </p>
+        <ComplexityZooLab focus="mst-decision" />
+        <p>
+          <em>(Παρατήρηση: αφού <InlineMath>{'\\text{P} \\subseteq \\text{NP}'}</InlineMath>,
+          το (iii) συνεπάγεται το (ii)· η άσκηση όμως απαιτεί ρητή απόδειξη και
+          των δύο. Το πιστοποιητικό + verifier είναι ιστορικά η «πραγματική»
+          απόδειξη ένταξης σε NP.)</em>
+        </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «βελτιστοποίηση + κατώφλι = απόφαση».</strong>{' '}
+            Κάθε πρόβλημα τύπου «βρες min/max X» μετατρέπεται σε{' '}
+            <InlineMath>{'X_D'}</InlineMath>: «υπάρχει υποψήφιο με{' '}
+            <InlineMath>{'X \\le k'}</InlineMath> (ή <InlineMath>{'\\ge k'}</InlineMath>);».
+            Από εκεί, η ένταξη σε P έρχεται από τον αλγόριθμο βελτιστοποίησης
+            (αν υπάρχει· τρέξ' τον, σύγκρινε με k)· η ένταξη σε NP από τον
+            verifier ενός υποψήφιου X.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -6948,11 +7024,59 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>Η κρίσιμη παρατήρηση.</strong> Όταν <InlineMath>{'|S| = n = |V|'}</InlineMath>, το <InlineMath>{'S'}</InlineMath> περιέχει <em>όλους</em> τους κόμβους. Ένα δέντρο που περιέχει όλους τους κόμβους και είναι υπογράφος του <InlineMath>{'G'}</InlineMath> είναι ακριβώς ένα <strong>δέντρο επικάλυψης</strong> (spanning tree). Άρα το <InlineMath>{'\\Pi'}</InlineMath> εκφυλίζεται στο γνωστό πρόβλημα του <strong>ελάχιστου δέντρου επικάλυψης (MST)</strong>!</p>
-        <p><strong>(i) Πρόβλημα απόφασης <InlineMath>{'\\Pi_A'}</InlineMath>.</strong> Ένα πρόβλημα βελτιστοποίησης το μετατρέπουμε σε πρόβλημα απόφασης βάζοντας ένα κατώφλι: <em>«Δοθέντος γράφου <InlineMath>{'G'}</InlineMath> και ακεραίου <InlineMath>{'k'}</InlineMath>, υπάρχει δέντρο επικάλυψης του <InlineMath>{'G'}</InlineMath> με συνολικό βάρος <InlineMath>{'\\le k'}</InlineMath>;»</em> (η απάντηση είναι ΝΑΙ/ΟΧΙ).</p>
-        <p><strong>(ii) <InlineMath>{'\\Pi_A \\in NP'}</InlineMath>.</strong> Ένα πρόβλημα είναι στο <InlineMath>{'NP'}</InlineMath> αν, όταν η απάντηση είναι ΝΑΙ, υπάρχει «πιστοποιητικό» που επαληθεύεται σε πολυωνυμικό χρόνο. Εδώ το πιστοποιητικό είναι το ίδιο το δέντρο <InlineMath>{'T'}</InlineMath>. Επαλήθευση: ελέγχουμε ότι το <InlineMath>{'T'}</InlineMath> έχει ακριβώς <InlineMath>{'n-1'}</InlineMath> ακμές, είναι συνεκτικό και περιέχει όλους τους κόμβους (με ένα BFS/DFS, <InlineMath>{'O(n + m)'}</InlineMath>), και ότι το άθροισμα των βαρών του είναι <InlineMath>{'\\le k'}</InlineMath> (<InlineMath>{'O(n)'}</InlineMath>). Όλα πολυωνυμικά → <InlineMath>{'\\Pi_A \\in NP'}</InlineMath>.</p>
-        <p><strong>(iii) <InlineMath>{'\\Pi_A \\in P'}</InlineMath>.</strong> Ένα πρόβλημα είναι στο <InlineMath>{'P'}</InlineMath> αν λύνεται σε πολυωνυμικό χρόνο. Το MST λύνεται από τους αλγορίθμους <strong>Kruskal</strong> ή <strong>Prim</strong> σε χρόνο <InlineMath>{'O(m \\log n)'}</InlineMath> — πολυωνυμικό. Αφού μπορούμε να βρούμε το <em>ελάχιστο</em> βάρος, απλώς το συγκρίνουμε με το <InlineMath>{'k'}</InlineMath> για να απαντήσουμε στο <InlineMath>{'\\Pi_A'}</InlineMath>. Άρα <InlineMath>{'\\Pi_A \\in P'}</InlineMath>.</p>
-        <p>(Σημείωση: αφού <InlineMath>{'P \\subseteq NP'}</InlineMath>, το ερώτημα (ii) προκύπτει και ως άμεση συνέπεια του (iii) — αλλά είναι διδακτικό να δοθεί και το πιστοποιητικό ξεχωριστά.)</p>
+        <p>
+          <strong>Η κρίσιμη παρατήρηση — μην πεις «δύσκολο» πριν διαβάσεις την υπόθεση.</strong>{' '}
+          Όταν <InlineMath>{'|S| = n'}</InlineMath>, το <InlineMath>{'S'}</InlineMath>{' '}
+          αναγκαστικά είναι όλο το <InlineMath>{'V'}</InlineMath>. Ένα δέντρο
+          υπογράφος του <InlineMath>{'G'}</InlineMath> που «περιέχει το{' '}
+          <InlineMath>{'S'}</InlineMath>» χρειάζεται να αγγίζει κάθε κορυφή —
+          δηλαδή είναι <strong>συνδετικό δέντρο</strong>. Το{' '}
+          <InlineMath>{'\\Pi'}</InlineMath> εκφυλίζεται στο γνωστό{' '}
+          <strong>MST</strong>.{' '}
+          <em>(Η πλήρης γενική εκδοχή με αυθαίρετο S είναι το Steiner Tree —
+          NP-πλήρες — άρα η υπόθεση «|S| = n» είναι αυτή που κάνει το πρόβλημα
+          εύκολο.)</em>
+        </p>
+        <p>
+          <strong>(i) Πρόβλημα απόφασης <InlineMath>{'\\Pi_A'}</InlineMath>.</strong>{' '}
+          Με κατώφλι: «Δοθέντος γράφου <InlineMath>{'G = (V, E, W)'}</InlineMath>{' '}
+          και ακεραίου <InlineMath>{'k'}</InlineMath>, υπάρχει συνδετικό δέντρο
+          του <InlineMath>{'G'}</InlineMath> με συνολικό βάρος{' '}
+          <InlineMath>{'\\le k'}</InlineMath>;»
+        </p>
+        <p>
+          <strong>(ii) <InlineMath>{'\\Pi_A \\in NP'}</InlineMath>.</strong>{' '}
+          Πιστοποιητικό = το ίδιο το δέντρο <InlineMath>{'T'}</InlineMath>.
+          Επαληθευτής: (α) <InlineMath>{'|T| = n - 1'}</InlineMath> ακμές· (β){' '}
+          συνεκτικό + ακυκλικό (BFS/DFS σε <InlineMath>{'O(n + m)'}</InlineMath>)·
+          (γ) <InlineMath>{'\\sum_e W(e) \\le k'}</InlineMath> (άθροιση{' '}
+          <InlineMath>{'O(n)'}</InlineMath>). Όλα πολυωνυμικά →{' '}
+          <InlineMath>{'\\Pi_A \\in NP'}</InlineMath>.
+        </p>
+        <p>
+          <strong>(iii) <InlineMath>{'\\Pi_A \\in P'}</InlineMath>.</strong>{' '}
+          Τρέξε <strong>Kruskal</strong> ή <strong>Prim</strong> σε{' '}
+          <InlineMath>{'O(m \\log n)'}</InlineMath>, βρες το βάρος{' '}
+          <InlineMath>{'W^*'}</InlineMath> του ΕΣΔ, απάντησε «ναι» αν{' '}
+          <InlineMath>{'W^* \\le k'}</InlineMath>.
+        </p>
+        <p>
+          Στον «ζωολογικό κήπο»: το MST απόφασης ζει στο{' '}
+          <span className="text-success">P</span>. Παρόμοιο πρόβλημα Steiner
+          Tree (αυθαίρετο S) θα ήταν NP-πλήρες — η υπόθεση{' '}
+          <InlineMath>{'|S| = n'}</InlineMath> είναι το κλειδί.
+        </p>
+        <ComplexityZooLab focus="mst-decision" />
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «πρώτα διάβασε ποια ακριβώς εκδοχή».</strong>{' '}
+            Πολλά «δύσκολα» προβλήματα έχουν εύκολη ειδική περίπτωση και αντίστροφα:
+            Steiner Tree (αυθαίρετο S) NP-πλήρες, ίδιο πρόβλημα με|S| = n
+            (MST) στο P· INDEP γενικό NP-πλήρες, σταθερό k στο P· longest path
+            NP-πλήρες, shortest path στο P. Πάντα κοιτάς ΠΟΙΑ είναι η εκδοχή
+            που σου ζητείται.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -6977,14 +7101,55 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>i. INDEP <InlineMath>{'\\in NP'}</InlineMath>.</strong> Πρέπει να δείξουμε ότι, όταν η απάντηση είναι ΝΑΙ, υπάρχει πιστοποιητικό που επαληθεύεται σε πολυωνυμικό χρόνο.</p>
-        <p>Πιστοποιητικό: ένα σύνολο <InlineMath>{'U'}</InlineMath> από <InlineMath>{'k'}</InlineMath> κόμβους. Επαλήθευση: για κάθε ζεύγος κόμβων του <InlineMath>{'U'}</InlineMath> ελέγχουμε ότι ΔΕΝ υπάρχει ακμή ανάμεσά τους. Τα ζεύγη είναι <InlineMath>{'\\binom{k}{2} = O(k^2)'}</InlineMath> και κάθε έλεγχος ακμής είναι <InlineMath>{'O(1)'}</InlineMath> (με πίνακα γειτνίασης). Συνολικά <InlineMath>{'O(k^2) = O(n^2)'}</InlineMath> — πολυωνυμικό. Άρα <InlineMath>{'\\text{INDEP} \\in NP'}</InlineMath>.</p>
-        <p><strong>ii. Σταθερό <InlineMath>{'k'}</InlineMath> → INDEP <InlineMath>{'\\in P'}</InlineMath>.</strong></p>
-        <p><strong>Ο αλγόριθμος (ωμή βία):</strong> εξέτασε όλα τα δυνατά υποσύνολα <InlineMath>{'k'}</InlineMath> κόμβων του γράφου. Για καθένα, έλεγξε αν είναι ανεξάρτητο (κανένα ζεύγος να μη συνδέεται). Αν βρεθεί έστω ένα, απάντησε ΝΑΙ· αλλιώς ΟΧΙ.</p>
-        <p><strong>Πολυπλοκότητα.</strong> Τα υποσύνολα μεγέθους <InlineMath>{'k'}</InlineMath> είναι <InlineMath>{'\\binom{n}{k} \\le n^k'}</InlineMath>. Ο έλεγχος καθενός κοστίζει <InlineMath>{'O(k^2)'}</InlineMath>. Συνολικά:</p>
-        <BlockMath>{'O\\!\\left(n^k \\cdot k^2\\right)'}</BlockMath>
-        <p><strong>Γιατί αυτό είναι πολυωνυμικό;</strong> Εδώ είναι το κλειδί: το <InlineMath>{'k'}</InlineMath> είναι <em>σταθερά</em> — δεν είναι μέρος της εισόδου, δεν μεγαλώνει. Για <InlineMath>{'k = 1000'}</InlineMath> ο χρόνος είναι <InlineMath>{'O(n^{1000})'}</InlineMath>. Μπορεί να φαίνεται τερατώδες, αλλά είναι πολυώνυμο σταθερού βαθμού ως προς το <InlineMath>{'n'}</InlineMath> — άρα εξ ορισμού πολυωνυμικό, άρα <InlineMath>{'\\text{INDEP} \\in P'}</InlineMath>.</p>
-        <p>Η αντίθεση με τη γενική περίπτωση: όταν το <InlineMath>{'k'}</InlineMath> είναι μέρος της εισόδου (μπορεί να φτάσει το <InlineMath>{'n/2'}</InlineMath>), το <InlineMath>{'n^k'}</InlineMath> γίνεται εκθετικό — και τότε το INDEP είναι NP-πλήρες. «Σταθερό <InlineMath>{'k'}</InlineMath>» αλλάζει εντελώς την εικόνα.</p>
+        <p>
+          <strong>i. <InlineMath>{'\\text{INDEP} \\in NP'}</InlineMath>.</strong>{' '}
+          Πιστοποιητικό = ένα σύνολο <InlineMath>{'U'}</InlineMath> από{' '}
+          <InlineMath>{'k'}</InlineMath> κόμβους. Επαληθευτής: για κάθε από τα{' '}
+          <InlineMath>{'\\binom{k}{2} = O(k^2)'}</InlineMath> ζεύγη μέσα στο{' '}
+          <InlineMath>{'U'}</InlineMath>, ελέγχουμε ΟΤΙ ΔΕΝ υπάρχει ακμή
+          (πίνακας γειτνίασης, <InlineMath>{'O(1)'}</InlineMath> ανά ζεύγος).
+          Συνολικά <InlineMath>{'O(k^2) = O(n^2)'}</InlineMath> — πολυωνυμικό.
+        </p>
+        <p>
+          <strong>ii. Σταθερό <InlineMath>{'k = 1000'}</InlineMath> →{' '}
+          <InlineMath>{'\\text{INDEP} \\in P'}</InlineMath>.</strong>
+        </p>
+        <p>
+          <strong>Ο αλγόριθμος (ωμή βία).</strong> Εξέτασε όλα τα{' '}
+          <InlineMath>{'\\binom{n}{k}'}</InlineMath> υποσύνολα μεγέθους{' '}
+          <InlineMath>{'k'}</InlineMath>. Για κάθε ένα, ένας{' '}
+          <InlineMath>{'O(k^2)'}</InlineMath> έλεγχος. Αν βρεθεί έστω ένα
+          ανεξάρτητο, απάντα «ΝΑΙ»· αλλιώς «ΟΧΙ».
+        </p>
+        <BlockMath>{'O\\!\\left(\\binom{n}{k} \\cdot k^2\\right) = O\\!\\left(n^k \\cdot k^2\\right)'}</BlockMath>
+        <p>
+          <strong>Γιατί αυτό είναι πολυωνυμικό.</strong> Το{' '}
+          <InlineMath>{'k = 1000'}</InlineMath> είναι <em>σταθερά</em> — δεν
+          μεγαλώνει με την είσοδο. Άρα <InlineMath>{'O(n^{1000})'}</InlineMath>{' '}
+          είναι πολυώνυμο σταθερού βαθμού — εξ ορισμού πολυωνυμικό, άρα{' '}
+          <InlineMath>{'\\text{INDEP} \\in P'}</InlineMath>.{' '}
+          <em>Όχι πρακτικά γρήγορο — αλγοριθμικά πολυωνυμικό.</em>
+        </p>
+        <p>
+          <strong>Η αντίθεση με τη γενική εκδοχή.</strong> Όταν το{' '}
+          <InlineMath>{'k'}</InlineMath> είναι μέρος της εισόδου και μπορεί να
+          φτάσει το <InlineMath>{'n/2'}</InlineMath>, το{' '}
+          <InlineMath>{'n^k'}</InlineMath> γίνεται εκθετικό· τότε το INDEP είναι
+          NP-πλήρες. Δες πού ζει στον «ζωολογικό κήπο» — και πρόσεξε τον
+          συμπληρωματικό συγγενή του, το Vertex Cover:
+        </p>
+        <ComplexityZooLab focus="independent-set" />
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «σταθερά στην έκθεση είναι σταθερά».</strong>{' '}
+            Όταν εμφανίζεται «σταθερό k» (ή «σταθερό d», «σταθερό αλφάβητο»…),
+            ο <em>ορισμός</em> του «πολυωνυμικό» δεν επιτρέπει στο k να
+            μεγαλώνει. Άρα <InlineMath>{'n^k = n^{1000}'}</InlineMath> είναι
+            πολυωνυμικό. Παγίδα: μη μπερδέψεις το {' '}
+            <InlineMath>{'n^k'}</InlineMath> με <InlineMath>{'2^n'}</InlineMath>{' '}
+            ή <InlineMath>{'k^n'}</InlineMath> — μόνο το πρώτο είναι πολυωνυμικό.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7074,15 +7239,60 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>i. Τα προβλήματα απόφασης.</strong> Κάθε πρόβλημα βελτιστοποίησης γίνεται πρόβλημα απόφασης με ένα κατώφλι <InlineMath>{'k'}</InlineMath>:</p>
+        <p>
+          <strong>i. Τα προβλήματα απόφασης.</strong> Κάθε{' '}
+          «βρες min X» μετατρέπεται σε «υπάρχει X ≤ k;» με κατώφλι:
+        </p>
         <ul>
-          <li><InlineMath>{'D(ST)'}</InlineMath>: «Δοθέντος γράφου <InlineMath>{'G'}</InlineMath> με βάρη και ακεραίου <InlineMath>{'k'}</InlineMath>, υπάρχει δέντρο επικάλυψης του <InlineMath>{'G'}</InlineMath> με συνολικό βάρος <InlineMath>{'\\le k'}</InlineMath>;»</li>
-          <li><InlineMath>{'D(TSP)'}</InlineMath>: «Δοθέντος πλήρους γράφου <InlineMath>{'G'}</InlineMath> με βάρη και ακεραίου <InlineMath>{'k'}</InlineMath>, υπάρχει Χαμιλτονιανός κύκλος (κύκλος που περνά από κάθε κόμβο ακριβώς μία φορά) με συνολικό βάρος <InlineMath>{'\\le k'}</InlineMath>;»</li>
+          <li>
+            <InlineMath>{'D(ST)'}</InlineMath>: «Δοθέντος γράφου{' '}
+            <InlineMath>{'G'}</InlineMath> με βάρη και ακεραίου{' '}
+            <InlineMath>{'k'}</InlineMath>, υπάρχει συνδετικό δέντρο του{' '}
+            <InlineMath>{'G'}</InlineMath> με συνολικό βάρος{' '}
+            <InlineMath>{'\\le k'}</InlineMath>;»
+          </li>
+          <li>
+            <InlineMath>{'D(TSP)'}</InlineMath>: «Δοθέντος πλήρους γράφου{' '}
+            <InlineMath>{'G'}</InlineMath> με βάρη και ακεραίου{' '}
+            <InlineMath>{'k'}</InlineMath>, υπάρχει κύκλος Hamilton με συνολικό
+            βάρος <InlineMath>{'\\le k'}</InlineMath>;»
+          </li>
         </ul>
-        <p><strong>ii. Κατάταξη (με <InlineMath>{'P \\ne NP'}</InlineMath>).</strong></p>
-        <p><strong><InlineMath>{'D(ST)'}</InlineMath>:</strong> ανήκει στην <InlineMath>{'P'}</InlineMath> — το MST βρίσκεται σε πολυωνυμικό χρόνο με Kruskal/Prim, και απλώς συγκρίνουμε το ελάχιστο βάρος με το <InlineMath>{'k'}</InlineMath>. Αφού <InlineMath>{'P \\subseteq NP'}</InlineMath>, ανήκει και στην <InlineMath>{'NP'}</InlineMath>. <em>Δεν</em> είναι <InlineMath>{'NP'}</InlineMath>-complete: αν ένα πρόβλημα της <InlineMath>{'P'}</InlineMath> ήταν <InlineMath>{'NP'}</InlineMath>-complete, τότε <em>κάθε</em> πρόβλημα του <InlineMath>{'NP'}</InlineMath> θα λυνόταν πολυωνυμικά και θα είχαμε <InlineMath>{'P = NP'}</InlineMath> — αντίφαση με την υπόθεση.</p>
-        <p><strong><InlineMath>{'D(TSP)'}</InlineMath>:</strong> ανήκει στην <InlineMath>{'NP'}</InlineMath> — πιστοποιητικό είναι ο ίδιος ο κύκλος· επαληθεύουμε σε πολυωνυμικό χρόνο ότι περνά από κάθε κόμβο ακριβώς μία φορά και ότι το βάρος του είναι <InlineMath>{'\\le k'}</InlineMath>. Είναι <strong><InlineMath>{'NP'}</InlineMath>-complete</strong> (κλασικό αποτέλεσμα — το TSP απόφασης είναι από τα «δυσκολότερα» του <InlineMath>{'NP'}</InlineMath>). Άρα, με <InlineMath>{'P \\ne NP'}</InlineMath>, <em>δεν</em> ανήκει στην <InlineMath>{'P'}</InlineMath>.</p>
-        <p><strong>Το ηθικό δίδαγμα.</strong> Δύο προβλήματα που μοιάζουν επιφανειακά («βρες φθηνό υπογράφημα που τα συνδέει όλα») έχουν δραματικά διαφορετική δυσκολία: το «δέντρο» λύνεται εύκολα, ο «κύκλος» είναι από τα δυσκολότερα που ξέρουμε.</p>
+        <p>
+          <strong>ii. Κατάταξη (με <InlineMath>{'P \\ne NP'}</InlineMath>).</strong>
+        </p>
+        <p>
+          <strong><InlineMath>{'D(ST)'}</InlineMath>:</strong> στο{' '}
+          <span className="text-success">P</span> — Kruskal/Prim σε{' '}
+          <InlineMath>{'O(m \\log n)'}</InlineMath>. Άρα και στο NP. <em>Όχι</em>{' '}
+          NP-complete: αν ήταν, τότε κάθε πρόβλημα του NP θα λυνόταν πολυωνυμικά
+          και θα είχαμε <InlineMath>{'P = NP'}</InlineMath> — αντίφαση.
+        </p>
+        <p>
+          <strong><InlineMath>{'D(TSP)'}</InlineMath>:</strong> στο{' '}
+          <span className="text-danger">NP</span> — πιστοποιητικό = ο ίδιος ο
+          κύκλος· verifier ελέγχει «κάθε κορυφή μία φορά» + «βάρος{' '}
+          <InlineMath>{'\\le k'}</InlineMath>». <strong>NP-complete</strong>{' '}
+          (κλασικό αποτέλεσμα). Με <InlineMath>{'P \\ne NP'}</InlineMath>, ΟΧΙ
+          στο P.
+        </p>
+        <p>
+          <strong>Το ηθικό δίδαγμα — δύο φράσεις, δύο ζώνες του «κήπου».</strong>{' '}
+          Δύο προβλήματα που μοιάζουν επιφανειακά («φθηνό υπογράφημα που τα
+          συνδέει όλα») έχουν δραματικά διαφορετική δυσκολία. Πάτα και τα δύο
+          ονόματα στον ζωολογικό κήπο για να δεις την απόσταση:
+        </p>
+        <ComplexityZooLab focus="tsp" />
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «δέντρο εύκολο, κύκλος δύσκολο».</strong>{' '}
+            Σε ερωτήσεις P/NP για γραφικά προβλήματα, αναγνώρισε σχεδόν αμέσως:
+            spanning <em>tree</em> = MST = P· spanning <em>cycle</em> = Hamilton/TSP =
+            NPC. Παρόμοια: shortest <em>path</em> = P· longest <em>path</em> = NPC.
+            Η αλλαγή μιας λέξης («tree» → «cycle», «short» → «long») μπορεί να
+            σε στείλει από εύκολο σε εκθετικό.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7202,9 +7412,44 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>Α. ΣΩΣΤΟ.</strong> Σκέψου τι κάνει ο αλγόριθμος Kruskal: εξετάζει τις ακμές κατά αύξον βάρος και κρατά μια ακμή εκτός αν αυτή σχηματίζει κύκλο με όσες έχει ήδη κρατήσει. Η <strong>1η</strong> (ελαφρύτερη) ακμή μπαίνει πάντα — δεν υπάρχει τίποτα να κάνει κύκλο. Φτάνοντας στη <strong>2η</strong> ακμή, έχει κρατηθεί μόνο μία ακμή. Σε έναν απλό γράφο, ένας κύκλος χρειάζεται τουλάχιστον 3 ακμές — άρα με μία μόνο τοποθετημένη ακμή είναι αδύνατο να σχηματιστεί κύκλος. Άρα η 2η ακμή μπαίνει πάντα στο MST.</p>
-        <p><strong>Β. ΛΑΘΟΣ.</strong> Όταν φτάνουμε στην 3η ακμή έχουν ήδη μπει δύο ακμές — και τώρα <em>μπορεί</em> να σχηματιστεί κύκλος.</p>
-        <p><strong>Αντιπαράδειγμα.</strong> Τρίγωνο με κορυφές <InlineMath>{'v_1, v_2, v_3'}</InlineMath> και ακμές βάρους <InlineMath>{'1, 2, 3'}</InlineMath>: <InlineMath>{'(v_1, v_2) = 1'}</InlineMath>, <InlineMath>{'(v_2, v_3) = 2'}</InlineMath>, <InlineMath>{'(v_1, v_3) = 3'}</InlineMath>. Ο Kruskal παίρνει τις ακμές βάρους <InlineMath>{'1'}</InlineMath> και <InlineMath>{'2'}</InlineMath> — έχει ήδη συνδέσει και τις 3 κορυφές. Η 3η ακμή (βάρους <InlineMath>{'3'}</InlineMath>) θα έκλεινε κύκλο, οπότε <em>απορρίπτεται</em>. Άρα η ακμή με το τρίτο μικρότερο βάρος δεν ανήκει στο MST — η πρόταση είναι λαθεμένη.</p>
+        <p>
+          <strong>Η ιδέα της απόδειξης.</strong> Ο Kruskal σαρώνει ακμές κατά
+          αύξον βάρος, κρατά κάθε ακμή εκτός αν κλείνει κύκλο. Όταν φτάνει στην{' '}
+          <InlineMath>{'i'}</InlineMath>-στη ακμή, έχει ήδη τοποθετήσει το πολύ{' '}
+          <InlineMath>{'i - 1'}</InlineMath> ακμές. Ένας κύκλος σε απλό γράφημα
+          χρειάζεται <em>τουλάχιστον 3</em> ακμές — άρα η{' '}
+          <InlineMath>{'i'}</InlineMath>-στη μπαίνει σίγουρα ⇔{' '}
+          <InlineMath>{'i - 1 < 3'}</InlineMath> ⇔{' '}
+          <InlineMath>{'i \\le 3'}</InlineMath>… όχι αρκετά: «μέχρι 3 ακμές
+          τοποθετημένες» δεν είναι όλες, χρειάζεται προσοχή στο{' '}
+          <InlineMath>{'i = 3'}</InlineMath>.
+        </p>
+        <p>
+          Πάτα τις δύο καρτέλες και δες πού σπάει η γενίκευση:
+        </p>
+        <SecondVsThirdEdgeMst />
+        <p>
+          <strong>Α. ΣΩΣΤΟ.</strong> Στη 2η ακμή έχει τοποθετηθεί μόνο 1 ακμή —
+          αδύνατο να κλείσει κύκλος (χρειάζεσαι ≥ 3). Άρα η 2η <em>πάντα</em>{' '}
+          μπαίνει.
+        </p>
+        <p>
+          <strong>Β. ΛΑΘΟΣ.</strong> Στην 3η ακμή έχουν τοποθετηθεί 2 ακμές —{' '}
+          ακριβώς ο ελάχιστος αριθμός για να φτιαχτεί τρίγωνο. Αντιπαράδειγμα: το
+          K₃ με βάρη 1, 2, 3 (πάνω). Η 3η (βάρους 3) απορρίπτεται.
+        </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «μέτρα τις ήδη τοποθετημένες ακμές».</strong>{' '}
+            Για κάθε ισχυρισμό «η <InlineMath>{'i'}</InlineMath>-στη ελαφρύτερη
+            ακμή ανήκει στο ΕΕΔ», η σωστή ερώτηση είναι: «πόσες ακμές έχει
+            τοποθετήσει ο Kruskal πριν από αυτήν;». Αν είναι ≥ 2, μπορεί να
+            σχηματιστεί κύκλος και ο ισχυρισμός σπάει με ένα τρίγωνο. Αν είναι
+            &lt; 2 (δηλαδή <InlineMath>{'i \\le 2'}</InlineMath>), ο ισχυρισμός
+            ισχύει πάντα. Η «μαγική γραμμή» είναι το{' '}
+            <InlineMath>{'i = 3'}</InlineMath>.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7465,16 +7710,54 @@ K = 101     Σ = 100`}</pre>
     ),
     solution: (
       <>
-        <p><strong>Η ιδέα.</strong> Το TSP ζητά κύκλο Hamilton (περνά μία φορά από κάθε κόμβο) ελάχιστου κόστους — δύσκολο. Όμως μια <em>εφικτή</em> (όχι κατ’ ανάγκη βέλτιστη) λύση παίρνεται εύκολα από ένα MST.</p>
+        <p>
+          <strong>Η ιδέα — δανείσου το δέντρο.</strong> Το TSP (βέλτιστος κύκλος
+          Hamilton) είναι NP-πλήρες, οπότε δεν περιμένουμε γρήγορο{' '}
+          <em>βέλτιστο</em> αλγόριθμο. Αν όμως απλώς θέλουμε{' '}
+          <em>εφικτό</em> κύκλο (όχι αναγκαστικά τον φθηνότερο), μπορούμε να
+          δανειστούμε ένα MST: «ζωγράφισε» το δέντρο σε preorder, και κλείσε
+          τον κύκλο.
+        </p>
         <pre className="overflow-x-auto rounded-lg border border-border bg-bg-soft p-3 text-[13px] leading-relaxed">{`GREEDY-TSP(G, W):
   1. διάλεξε μια κορυφή r ως "ρίζα"
   2. υπολόγισε ένα MST T του G με ρίζα r (αλγόριθμος Prim)
   3. L := λίστα κορυφών κατά preorder διάσχιση του T
-  4. επίστρεψε τον κύκλο Hamilton που επισκέπτεται τις
-     κορυφές με τη σειρά L`}</pre>
-        <p><strong>Γιατί δουλεύει.</strong> Η preorder διάσχιση του MST επισκέπτεται κάθε κόμβο ακριβώς μία φορά· διαβάζοντας τους κόμβους με αυτή τη σειρά και κλείνοντας πίσω στον <InlineMath>{'r'}</InlineMath> παίρνουμε έναν έγκυρο κύκλο Hamilton. Αφού ο γράφος είναι πλήρης, όλες οι απαιτούμενες ακμές υπάρχουν, άρα ο κύκλος είναι πάντα εφικτός.</p>
-        <p><strong>Πολυπλοκότητα.</strong> Σε πλήρη γράφο <InlineMath>{'n'}</InlineMath> κορυφών το MST με Prim (υλοποίηση με πίνακα) κοστίζει <InlineMath>{'O(n^2)'}</InlineMath>· η preorder διάσχιση κοστίζει <InlineMath>{'O(n)'}</InlineMath>. Συνολικά <InlineMath>{'O(n^2)'}</InlineMath>.</p>
-        <p>(Όταν τα βάρη ικανοποιούν την τριγωνική ανισότητα, αποδεικνύεται μάλιστα ότι αυτός ο κύκλος έχει κόστος το πολύ <InlineMath>{'2\\times'}</InlineMath> το βέλτιστο — είναι ένας αλγόριθμος <em>2-προσέγγισης</em>.)</p>
+  4. επίστρεψε τον κύκλο Hamilton που επισκέπτεται
+     τις κορυφές με τη σειρά L (και επιστρέφει στο r)`}</pre>
+        <p>
+          Δες τον σε δράση πάνω σε K₅: η preorder από v₁ μάς δίνει σειρά{' '}
+          <span className="font-mono">v₁ → v₂ → v₅ → v₃ → v₄ → v₁</span> — έγκυρος
+          κύκλος Hamilton με κόστος 23.
+        </p>
+        <MstPreorderTSP />
+        <p>
+          <strong>Γιατί δουλεύει.</strong> Η preorder διάσχιση επισκέπτεται κάθε
+          κόμβο ακριβώς μία φορά — οπότε η σειρά L είναι μια μετάθεση όλων των
+          κορυφών. Σε <em>πλήρη</em> γράφο, η ακμή ανάμεσα σε δύο διαδοχικές
+          κορυφές της L υπάρχει πάντα· άρα ο κύκλος είναι πάντα εφικτός.
+        </p>
+        <p>
+          <strong>Πολυπλοκότητα.</strong> Prim σε πλήρες γράφο με πίνακα:{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath>· preorder traversal:{' '}
+          <InlineMath>{'O(n)'}</InlineMath>· σύνολο{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath>.
+        </p>
+        <p>
+          <em>(Όταν τα βάρη ικανοποιούν την τριγωνική ανισότητα, ο κύκλος έχει
+          κόστος <InlineMath>{'\\le 2 \\cdot \\text{OPT}'}</InlineMath> — δηλαδή
+          είναι αλγόριθμος 2-προσέγγισης. Χωρίς τριγωνική ανισότητα, μπορεί να
+          είναι αυθαίρετα κακός.)</em>
+        </p>
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «αν δεν μπορείς να το λύσεις βέλτιστα,
+            δανείσου από εύκολο συγγενή».</strong> TSP NP-πλήρες, MST σε P. Η
+            προσέγγιση «κύκλος μέσω MST preorder» χρησιμοποιεί την ευκολία του
+            ΕΕΔ ως «σκελετό» και πληρώνει το μετριασμό της λύσης. Κάθε φορά που
+            δεις «δώσε γρήγορη εφικτή λύση σε NP-πλήρες πρόβλημα», ψάξε για
+            παρόμοιο εύκολο πρόβλημα ως αρχικό βήμα.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7546,13 +7829,55 @@ K = 101     Σ = 100`}</pre>
     ),
     solution: (
       <>
-        <p><strong>Αναγνώριση του προβλήματος.</strong> Δύο φράσεις-κλειδιά: «για κάθε δύο κόμβους <em>ακριβώς μία</em> διαδρομή» σημαίνει ότι το αναβαθμισμένο υποδίκτυο είναι <strong>δέντρο</strong> (ένα συνεκτικό γράφημα χωρίς κύκλους έχει μοναδικό μονοπάτι μεταξύ κάθε ζεύγους). Και «<em>ελάχιστο</em> συνολικό κόστος». Άρα ζητάμε ακριβώς ένα <strong>ελάχιστο δέντρο επικάλυψης (MST)</strong> του γραφήματος με βάρη <InlineMath>{'G = (V, E)'}</InlineMath>, όπου κόμβοι = τηλεφωνικοί κόμβοι και βάρη ακμών = κόστος αναβάθμισης.</p>
-        <p><strong>i. Ο αλγόριθμος.</strong> Χρησιμοποιούμε έναν γνωστό άπληστο αλγόριθμο MST:</p>
+        <p>
+          <strong>Αναγνώριση του προβλήματος — δύο λέξεις, δύο διαγνώσεις.</strong>{' '}
+          (α) «Για κάθε δύο κόμβους <em>ακριβώς μία</em> αναβαθμισμένη διαδρομή»
+          → συνεκτικό + ακυκλικό = <strong>δέντρο</strong> (από{' '}
+          [L06](/lectures/L06-graphs-i) ξέρουμε ότι «μοναδικό μονοπάτι ανά
+          ζεύγος» χαρακτηρίζει το δέντρο). (β) «<em>Ελάχιστο</em> συνολικό
+          κόστος». Άρα ψάχνουμε <strong>ΕΕΔ</strong> στον γράφο με κόμβους =
+          τηλεφωνικοί κόμβοι, βάρη ακμών = κόστος αναβάθμισης.
+        </p>
+        <p>
+          <strong>i. Ο αλγόριθμος.</strong> Εφαρμόζουμε έναν από τους δύο
+          άπληστους:
+        </p>
         <ul>
-          <li><strong>Kruskal:</strong> σάρωσε τις ακμές κατά αύξον βάρος· κράτα μια ακμή αν δεν σχηματίζει κύκλο με τις ήδη επιλεγμένες (έλεγχος με δομή Union-Find).</li>
-          <li><strong>Prim:</strong> ξεκίνα από έναν κόμβο και επέκτεινε το δέντρο προσθέτοντας κάθε φορά την ελαφρύτερη ακμή που το συνδέει με νέο κόμβο.</li>
+          <li>
+            <strong>Kruskal:</strong> ταξινόμησε τις ακμές κατά αύξον κόστος·
+            σάρωσέ τες με τη σειρά, κράτα μια ακμή αν τα άκρα της είναι σε
+            διαφορετικά κομμάτια (έλεγχος με Union-Find σε σχεδόν σταθερό χρόνο).
+            Δικαιολόγηση: η ιδιότητα αποκοπής εγγυάται ότι η φθηνότερη ακμή που
+            ενώνει δύο κομμάτια ανήκει στο ΕΕΔ.
+          </li>
+          <li>
+            <strong>Prim:</strong> ξεκίνα από έναν κόμβο, μεγάλωσε το δέντρο
+            προσθέτοντας κάθε φορά την ελαφρύτερη ακμή που συνδέει το τρέχον
+            δέντρο με νέο κόμβο (priority queue στις κορυφές).
+          </li>
         </ul>
-        <p><strong>ii. Πολυπλοκότητα.</strong> Και οι δύο τρέχουν σε <InlineMath>{'O(E \\log V)'}</InlineMath> — ο Kruskal λόγω της ταξινόμησης των ακμών, ο Prim με υλοποίηση μέσω ουράς προτεραιότητας.</p>
+        <p>
+          Δες τον Kruskal να τρέχει στον κανονικό γράφο της διάλεξης — σάρωση
+          ακμών κατά αύξοντα κόστο, κάθε αποδοχή δείχνει δύο «πόλεις» να
+          συγχωνεύονται, κάθε απόρριψη φωτίζει τον κύκλο που θα έκλεινε:
+        </p>
+        <KruskalAnimator />
+        <p>
+          <strong>ii. Πολυπλοκότητα.</strong> Και οι δύο τρέχουν σε{' '}
+          <InlineMath>{'O(E \\log V)'}</InlineMath>: Kruskal κυριαρχείται από την
+          ταξινόμηση των ακμών (Union-Find πρακτικά σταθερά)· Prim από τις{' '}
+          <InlineMath>{'O(E)'}</InlineMath> πράξεις σωρού.
+        </p>
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «μοναδικό μονοπάτι ⇒ δέντρο ⇒ ΕΕΔ».</strong>{' '}
+            Όταν μια εκφώνηση σου ζητά «συνδέσε όλα τα Χ ώστε μεταξύ τους να
+            υπάρχει ακριβώς ένα κρίσιμο μονοπάτι» (τηλεπικοινωνίες, νερό,
+            ρεύμα, καλωδίωση δικτύου), η μετάφραση είναι σχεδόν αυτόματη: ΕΕΔ.
+            Από εκεί, ο αλγόριθμος είναι Kruskal ή Prim — διάλεξε όποιον σου
+            είναι πιο οικείος.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7765,9 +8090,54 @@ K = 101     Σ = 100`}</pre>
     ),
     solution: (
       <>
-        <p><strong>(i) ΛΑΘΟΣ.</strong> Η ιδιότητα κύκλου λέει ότι η μέγιστη ακμή <em>ενός κύκλου</em> δεν χρειάζεται να μπει στο MST. Όμως η μοναδική μέγιστη ακμή ολόκληρου του γράφου μπορεί να είναι <strong>γέφυρα</strong> — η μόνη ακμή που συνδέει ένα κομμάτι του γράφου. Τότε <em>πρέπει</em> να μπει στο MST. Αντιπαράδειγμα: τρίγωνο <InlineMath>{'u\\!-\\!v(1),\\, v\\!-\\!w(1),\\, u\\!-\\!w(2)'}</InlineMath> και επιπλέον ακμή <InlineMath>{'u\\!-\\!x(10)'}</InlineMath>. Ο γράφος έχει <InlineMath>{'4'}</InlineMath> ακμές <InlineMath>{'> |V| - 1 = 3'}</InlineMath>, και η <InlineMath>{'u\\!-\\!x'}</InlineMath> βάρους <InlineMath>{'10'}</InlineMath> είναι η μοναδική μέγιστη — αλλά είναι η μόνη σύνδεση του <InlineMath>{'x'}</InlineMath>, άρα ανήκει υποχρεωτικά στο MST.</p>
-        <p><strong>(ii) ΛΑΘΟΣ.</strong> Το δέντρο συντομότερων διαδρομών του Dijkstra βελτιστοποιεί <em>αποστάσεις από τη ρίζα</em>, ενώ το MST βελτιστοποιεί το <em>συνολικό βάρος</em> — διαφορετικοί στόχοι. Αντιπαράδειγμα: τρίγωνο <InlineMath>{'u\\!-\\!v(1),\\, v\\!-\\!w(1),\\, u\\!-\\!w(2)'}</InlineMath> με ρίζα το <InlineMath>{'u'}</InlineMath>. Το δέντρο Dijkstra παίρνει τις ακμές <InlineMath>{'(u,v)'}</InlineMath> και <InlineMath>{'(u,w)'}</InlineMath> (απευθείας αποστάσεις <InlineMath>{'1'}</InlineMath> και <InlineMath>{'2'}</InlineMath>), συνολικό βάρος <InlineMath>{'3'}</InlineMath>. Το MST όμως είναι <InlineMath>{'\\{(u,v), (v,w)\\}'}</InlineMath>, συνολικό βάρος <InlineMath>{'2'}</InlineMath>. Διαφορετικά δέντρα.</p>
-        <p><strong>(iii) ΣΩΣΤΟ.</strong> Όταν όλα τα βάρη είναι διαφορετικά, το MST είναι μοναδικό. Διαίσθηση μέσω της ιδιότητας τομής: για κάθε διαμέριση των κορυφών σε δύο σύνολα, η <em>μοναδική</em> ελαφρύτερη ακμή που τα συνδέει ανήκει υποχρεωτικά σε κάθε MST. Αν υπήρχαν δύο διαφορετικά MST, θα παίρναμε την ελαφρύτερη ακμή στη συμμετρική τους διαφορά και θα οδηγούμασταν σε αντίφαση. Άρα το MST είναι αναγκαστικά ένα και μοναδικό.</p>
+        <p>
+          <strong>(i) ΛΑΘΟΣ.</strong> Η ιδιότητα κύκλου λέει ότι η μέγιστη ακμή{' '}
+          <em>ενός κύκλου</em> δεν χρειάζεται να μπει στο ΕΕΔ — όχι «η μέγιστη
+          ακμή ολόκληρου του γράφου». Η μοναδική μέγιστη του γράφου μπορεί να
+          είναι <strong>γέφυρα</strong> και να μην ανήκει σε κανέναν κύκλο —
+          οπότε υποχρεωτικά μπαίνει στο ΕΕΔ. Δες τον γράφο-αντιπαράδειγμα: 4
+          ακμές &gt; |V| − 1 = 3, η <InlineMath>{'u\\!-\\!x = 10'}</InlineMath>{' '}
+          είναι η μοναδική μέγιστη, αλλά γέφυρα προς την{' '}
+          <InlineMath>{'x'}</InlineMath>:
+        </p>
+        <MaxEdgeAsBridge />
+        <p>
+          <strong>(ii) ΛΑΘΟΣ.</strong> Dijkstra-tree και ΕΕΔ ελαχιστοποιούν{' '}
+          <em>διαφορετικά πράγματα</em>: ο Dijkstra τις αποστάσεις από τη ρίζα,
+          το ΕΕΔ το συνολικό βάρος του δέντρου. Όταν αυτοί οι στόχοι συγκρούονται,
+          παράγουν διαφορετικά δέντρα. Το αντιπαράδειγμα είναι ένα απλό τρίγωνο:
+        </p>
+        <DijkstraTreeVsMstTriangle />
+        <p>
+          <strong>(iii) ΣΩΣΤΟ — με διακριτά βάρη, ΕΕΔ μοναδικό.</strong>{' '}
+          <em>Διαίσθηση μέσω ιδιότητας αποκοπής.</em> Για κάθε διαμέριση των
+          κορυφών σε δύο σύνολα <InlineMath>{'A, V \\setminus A'}</InlineMath>,
+          η <strong>μοναδική</strong> ελαφρύτερη ακμή που τη διασχίζει είναι
+          αναγκαστικά μέρος <em>κάθε</em> ΕΕΔ.{' '}
+          <em>Αυστηρή απόδειξη με ανταλλαγή.</em> Έστω δύο διαφορετικά ΕΕΔ{' '}
+          <InlineMath>{'T_1, T_2'}</InlineMath>. Πάρε την ελαφρύτερη ακμή{' '}
+          <InlineMath>{'e \\in T_1 \\setminus T_2'}</InlineMath>. Προσθήκη της
+          στο <InlineMath>{'T_2'}</InlineMath> δημιουργεί έναν κύκλο, που
+          περιέχει κάποια ακμή <InlineMath>{'f \\notin T_1'}</InlineMath>. Αφού
+          τα βάρη είναι διακριτά, ή{' '}
+          <InlineMath>{'w(e) < w(f)'}</InlineMath> (οπότε{' '}
+          <InlineMath>{'T_2 - f + e'}</InlineMath> είναι ΕΕΔ φθηνότερο από{' '}
+          <InlineMath>{'T_2'}</InlineMath> — αντίφαση) ή{' '}
+          <InlineMath>{'w(f) < w(e)'}</InlineMath> (συμμετρικά, αντίφαση με τη
+          βελτιστότητα του <InlineMath>{'T_1'}</InlineMath>). Άρα δεν υπάρχουν
+          δύο διαφορετικά ΕΕΔ.
+        </p>
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «ποια ακριβώς ιδιότητα κύκλου/αποκοπής;».</strong>{' '}
+            Σ/Λ δηλώσεις για ΕΕΔ συχνά παρερμηνεύουν ποιες ακμές αποκλείει η
+            ιδιότητα κύκλου. Διπλό test: (α) μπαίνει η ακμή σε κάποιον κύκλο; Αν
+            όχι, είναι γέφυρα — μπαίνει πάντα. (β) Είναι η <em>μέγιστη</em> κάποιου
+            κύκλου; Μόνο τότε η ιδιότητα κύκλου την «βγάζει». Παρόμοια: Dijkstra
+            ≠ ΕΕΔ — διαφορετικοί στόχοι· διακριτά βάρη ⇒ μοναδικό ΕΕΔ (κλασική
+            ερώτηση εξετάσεων).
+          </p>
+        </Callout>
       </>
     ),
   },
