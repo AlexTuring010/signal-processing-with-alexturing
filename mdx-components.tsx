@@ -69,6 +69,10 @@ import { StrongConnectivityViz } from '@/components/viz/StrongConnectivityViz'
 import { FloodFillGrid } from '@/components/viz/FloodFillGrid'
 import { ComponentSweep } from '@/components/viz/ComponentSweep'
 import { OddCycleProof } from '@/components/viz/OddCycleProof'
+import { OddCycleColoring } from '@/components/viz/OddCycleColoring'
+import { DirectedDegreeViz } from '@/components/viz/DirectedDegreeViz'
+import { DirectedReachExplorer } from '@/components/viz/DirectedReachExplorer'
+import { MutualReachabilityExplorer } from '@/components/viz/MutualReachabilityExplorer'
 import { WhyBFSFailsWeighted } from '@/components/viz/WhyBFSFailsWeighted'
 import { DijkstraAnimator } from '@/components/viz/DijkstraAnimator'
 import { DijkstraProofViz } from '@/components/viz/DijkstraProofViz'
@@ -204,6 +208,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     FloodFillGrid,
     ComponentSweep,
     OddCycleProof,
+    OddCycleColoring,
+    DirectedDegreeViz,
+    DirectedReachExplorer,
+    MutualReachabilityExplorer,
     WhyBFSFailsWeighted,
     DijkstraAnimator,
     DijkstraProofViz,
