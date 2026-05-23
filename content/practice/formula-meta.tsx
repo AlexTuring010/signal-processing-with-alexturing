@@ -790,18 +790,20 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       <>
         Στην Conventional AM ο carrier καταναλώνει ισχύ χωρίς να μεταφέρει πληροφορία. Στο
         high-SNR regime, αυτή η σπατάλη μεταφράζεται σε γραμμική απώλεια output SNR κατά
-        τον παράγοντα <InlineMath>{'\\eta'}</InlineMath>. Για{' '}
-        <InlineMath>{'\\mu = 1'}</InlineMath> (μέγιστο επιτρεπτό), single-tone:{' '}
+        τον παράγοντα <InlineMath>{'\\eta'}</InlineMath>. Γενικός τύπος (όπως στις
+        ασκήσεις του μαθήματος, Άσκηση 4.1):{' '}
+        <InlineMath>{'\\eta = P_m / (A_c^2 + P_m)'}</InlineMath>. Για{' '}
+        <InlineMath>{'\\mu = 1'}</InlineMath> single-tone αυτό δίνει{' '}
         <InlineMath>{'\\eta = 1/3'}</InlineMath> ή <strong>−4.8 dB</strong> κάτω από DSB-SC.
       </>
     ),
     derivation: (
       <>
-        Output noise = baseband noise <InlineMath>{'N_0 W'}</InlineMath>. Output signal ={' '}
-        <InlineMath>{'\\langle m^2\\rangle'}</InlineMath>. Λαμβάνοντας υπόψη ότι total
-        transmitted power είναι <InlineMath>{'A_c^2/2 + \\langle m^2\\rangle/2'}</InlineMath>,
-        η σχέση δίνει το <InlineMath>{'\\eta = (\\mu^2/2)/(1 + \\mu^2/2)'}</InlineMath> για
-        single-tone.
+        Useful (sideband) power <InlineMath>{'= P_m/2'}</InlineMath>, total transmitted
+        power <InlineMath>{'= (A_c^2 + P_m)/2'}</InlineMath>· λόγος{' '}
+        <InlineMath>{'\\eta = P_m/(A_c^2 + P_m)'}</InlineMath>. Για single-tone{' '}
+        <InlineMath>{'P_m = A_m^2/2 = \\mu^2 A_c^2/2'}</InlineMath> δίνει{' '}
+        <InlineMath>{'\\eta = (\\mu^2/2)/(1 + \\mu^2/2)'}</InlineMath>.
       </>
     ),
   },
