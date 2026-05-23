@@ -68,6 +68,12 @@ import { DominantColourBoard } from '@/components/viz/DominantColourBoard'
 import { DominantColourProof } from '@/components/viz/DominantColourProof'
 import { KaratsubaStep } from '@/components/viz/KaratsubaStep'
 import { RecursionTreeBranching } from '@/components/viz/RecursionTreeBranching'
+import { MajorityCandidateDivide } from '@/components/viz/MajorityCandidateDivide'
+import { DutchFlagPartition } from '@/components/viz/DutchFlagPartition'
+import { MedianOfTwoSorted } from '@/components/viz/MedianOfTwoSorted'
+import { SegmentCrossingsToInversions } from '@/components/viz/SegmentCrossingsToInversions'
+import { NutsAndBolts } from '@/components/viz/NutsAndBolts'
+import { QuicksortShufflingDefense } from '@/components/viz/QuicksortShufflingDefense'
 import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
 import { OneDClosestPair } from '@/components/viz/OneDClosestPair'
 import { QuadrantSplitFail } from '@/components/viz/QuadrantSplitFail'
@@ -232,6 +238,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     DominantColourProof,
     KaratsubaStep,
     RecursionTreeBranching,
+    MajorityCandidateDivide,
+    DutchFlagPartition,
+    MedianOfTwoSorted,
+    SegmentCrossingsToInversions,
+    NutsAndBolts,
+    QuicksortShufflingDefense,
     ClosestPairScan,
     OneDClosestPair,
     QuadrantSplitFail,

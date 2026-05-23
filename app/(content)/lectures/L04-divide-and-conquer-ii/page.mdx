@@ -672,11 +672,13 @@ $$T(n) = O(n^{\log_2 3}) = O(n^{1.585})$$
       topic: 'Σχεδίασε αλγόριθμο D&C για ένα νέο πρόβλημα και ανάλυσέ τον με Master Theorem',
       likelihood: 'high',
       note: 'Το κυρίαρχο μοτίβο: η εκφώνηση λέει «σχεδίασε αποδοτικό αλγόριθμο που…».',
+      relatedExerciseIds: ['pt3-th2', 'front-set-4-ask5', 'front-set-4-ask8', 'front-set-5-ask2'],
     },
     {
       topic: 'Μέτρηση αντιστροφών ή παραλλαγή της (π.χ. «σημαντικές» αντιστροφές με A[i] > 2·A[j])',
       likelihood: 'high',
       note: 'Η παραλλαγή λύνεται με ένα δεύτερο γραμμικό πέρασμα μέσα στη merge.',
+      relatedExerciseIds: ['front-set-4-ask9'],
     },
     {
       topic: 'Karatsuba: εξήγησε γιατί 3 και όχι 4 πολλαπλασιασμοί, βγάλε και λύσε την αναδρομή',
@@ -685,10 +687,30 @@ $$T(n) = O(n^{\log_2 3}) = O(n^{1.585})$$
     {
       topic: 'Εφαρμογή Master Theorem σε δοσμένη αναδρομή — ποια περίπτωση, ποιο αποτέλεσμα',
       likelihood: 'high',
+      relatedExerciseIds: ['pt3-th2', 'front-set-4-ask5', 'front-set-4-ask8', 'front-set-4-ask9'],
     },
     {
       topic: 'Πρόβλημα τύπου «πλειοψηφικό / κυρίαρχο στοιχείο» με παρατήρηση που περιορίζει τους υποψήφιους',
       likelihood: 'medium',
+      relatedExerciseIds: ['pt3-th2', 'front-set-4-ask5'],
+    },
+    {
+      topic: 'Διάμεσος / k-οστό σε δύο ταξινομημένους πίνακες — δυαδική αναζήτηση «σε δύο μέτωπα»',
+      likelihood: 'medium',
+      note: 'Σύγκρινε διαμέσους, πέτα ίσα πλήθη από κάθε μισό — T(n) = T(n/2) + O(1).',
+      relatedExerciseIds: ['front-set-4-ask8'],
+    },
+    {
+      topic: 'In-place διαμέριση σε k ζώνες (Dutch flag, 3-way quicksort)',
+      likelihood: 'medium',
+      note: 'Τρεις δείκτες, σταθερό πλήθος τιμών, καμία βοηθητική μνήμη — O(n).',
+      relatedExerciseIds: ['front-set-4-ask6'],
+    },
+    {
+      topic: 'Randomized quicksort: χείριστη με πρώτο pivot, άμυνα με Fisher–Yates, cross-pivot παραλλαγές',
+      likelihood: 'medium',
+      note: 'Η ίδια ιδέα (τυχαιοποίηση εισόδου ή pivot) λύνει βίδες/παξιμάδια και σαμποτάζ.',
+      relatedExerciseIds: ['front-set-5-ask2', 'front-set-5-ask3'],
     },
   ]}
 />
