@@ -161,6 +161,10 @@ import { CompressionCostLab } from '@/components/viz/CompressionCostLab'
 import { PrefixDecoder } from '@/components/viz/PrefixDecoder'
 import { HuffmanSwapViz } from '@/components/viz/HuffmanSwapViz'
 import { HuffmanOptimalityViz } from '@/components/viz/HuffmanOptimalityViz'
+import { TreeMatchingPeel } from '@/components/viz/TreeMatchingPeel'
+import { HuffmanEncodeDecode } from '@/components/viz/HuffmanEncodeDecode'
+import { GoldbarMerges } from '@/components/viz/GoldbarMerges'
+import { FractionalVsZeroOneKnapsack } from '@/components/viz/FractionalVsZeroOneKnapsack'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
 import { RecursionExplosion } from '@/components/viz/RecursionExplosion'
 import { GreedyFailsWeighted } from '@/components/viz/GreedyFailsWeighted'
@@ -361,6 +365,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PrefixDecoder,
     HuffmanSwapViz,
     HuffmanOptimalityViz,
+    TreeMatchingPeel,
+    HuffmanEncodeDecode,
+    GoldbarMerges,
+    FractionalVsZeroOneKnapsack,
     WeightedIntervalDP,
     RecursionExplosion,
     GreedyFailsWeighted,
