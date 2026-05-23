@@ -432,6 +432,36 @@ export const FORMULA_SHEET: FormulaSection[] = [
         content: <BlockMath>{'B_{AM} = B_{DSB-SC} = 2W \\quad,\\quad B_{SSB} = W'}</BlockMath>,
       },
       {
+        id: 'vsb-signal',
+        title: 'VSB σήμα',
+        topic: 'am',
+        inTypology: false,
+        derivedIn: 'am/vsb',
+        content: (
+          <BlockMath>{'x_{VSB}(t) = [A_c + m(t)]\\cos(2\\pi f_c t) \\;\\xrightarrow{H_{VSB}(f)}\\; \\text{full USB (ή LSB) + vestige}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'vsb-nyquist-symmetry',
+        title: 'VSB Nyquist symmetry',
+        topic: 'am',
+        inTypology: false,
+        derivedIn: 'am/vsb',
+        content: (
+          <BlockMath>{'H_{VSB}(f_c + \\Delta) + H_{VSB}(f_c - \\Delta) = \\text{const} \\quad \\text{για } |\\Delta| < W'}</BlockMath>
+        ),
+      },
+      {
+        id: 'vsb-bandwidth',
+        title: 'VSB bandwidth',
+        topic: 'am',
+        inTypology: false,
+        derivedIn: 'am/vsb',
+        content: (
+          <BlockMath>{'B_{VSB} = W + W_{\\text{vestige}}, \\quad W < B_{VSB} < 2W'}</BlockMath>
+        ),
+      },
+      {
         id: 'envelope-detector-rc',
         title: 'Envelope detector RC range',
         topic: 'am',

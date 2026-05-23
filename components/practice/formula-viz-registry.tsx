@@ -29,6 +29,8 @@ import { AMPowerCalculator } from '@/components/viz/AMPowerCalculator'
 import { AMFamilySpectra } from '@/components/viz/AMFamilySpectra'
 import { DSBSCSignalViz } from '@/components/viz/DSBSCSignalViz'
 import { SSBSpectrumViz } from '@/components/viz/SSBSpectrumViz'
+import { VSBShapingViz } from '@/components/viz/VSBShapingViz'
+import { VsbNyquistSymmetryViz } from '@/components/viz/VsbNyquistSymmetryViz'
 import { EnvelopeDetectorViz } from '@/components/viz/EnvelopeDetectorViz'
 import { FMSignalViz } from '@/components/viz/FMSignalViz'
 import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
@@ -64,6 +66,9 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'ssb-signal': () => <SSBSpectrumViz />,
   hilbert: () => <HilbertTransformViz />,
   'am-bandwidth': () => <AMFamilySpectra />,
+  'vsb-signal': () => <VSBShapingViz />,
+  'vsb-nyquist-symmetry': () => <VsbNyquistSymmetryViz />,
+  'vsb-bandwidth': () => <VSBShapingViz />,
   'envelope-detector-rc': () => <EnvelopeDetectorViz />,
 
   // FM / PM

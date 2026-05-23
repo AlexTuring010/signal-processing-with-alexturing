@@ -94,6 +94,9 @@ import { SsbHilbertCancellationViz } from '@/components/viz/SsbHilbertCancellati
 import { UssbVsLssbComparison } from '@/components/viz/UssbVsLssbComparison'
 import { SsbPhaseErrorViz } from '@/components/viz/SsbPhaseErrorViz'
 import { VSBShapingViz } from '@/components/viz/VSBShapingViz'
+import { VsbNyquistSymmetryViz } from '@/components/viz/VsbNyquistSymmetryViz'
+import { VsbCoherentReconstructionViz } from '@/components/viz/VsbCoherentReconstructionViz'
+import { VsbForTvViz } from '@/components/viz/VsbForTvViz'
 import { EnvelopeDetectorViz } from '@/components/viz/EnvelopeDetectorViz'
 import { AMInNoiseViz } from '@/components/viz/AMInNoiseViz'
 import { FDMSpectrumViz } from '@/components/viz/FDMSpectrumViz'
@@ -257,6 +260,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — am / vsb
     VSBShapingViz,
+    VsbNyquistSymmetryViz,
+    VsbCoherentReconstructionViz,
+    VsbForTvViz,
 
     // Visualizations — am / modulator-demodulator
     EnvelopeDetectorViz,

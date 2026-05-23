@@ -706,6 +706,68 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'vsb-signal': {
+    intuition: (
+      <>
+        Παίρνεις το (συμβατικό AM ή DSB-SC) σήμα και το περνάς από ένα{' '}
+        <em>shaping filter</em> <InlineMath>{'H_{VSB}(f)'}</InlineMath> που
+        κρατάει ολόκληρη τη μία sideband και αφήνει μόνο ένα μικρό{' '}
+        <em>vestige</em> (κατάλοιπο) της άλλης γύρω από τον carrier. Σπάει την
+        DSB συμμετρία ελεγχόμενα — αρκετά για να μειώσει το BW κάτω από{' '}
+        <InlineMath>{'2W'}</InlineMath>, αλλά όχι τόσο ώστε να καταστραφεί η
+        envelope-detection συμβατότητα.
+      </>
+    ),
+    derivation: (
+      <>
+        <InlineMath>{'X_{VSB}(f) = X_{AM}(f)\\cdot H_{VSB}(f)'}</InlineMath> ·
+        το <InlineMath>{'|H_{VSB}|'}</InlineMath> κάνει ομαλή μετάβαση γύρω από
+        το <InlineMath>{'f_c'}</InlineMath> (0.5 ακριβώς στο{' '}
+        <InlineMath>{'f_c'}</InlineMath>) με Nyquist-συμμετρικό roll-off.
+      </>
+    ),
+  },
+  'vsb-nyquist-symmetry': {
+    intuition: (
+      <>
+        Η μαθηματική προϋπόθεση που κάνει το VSB envelope-detectable. Το{' '}
+        <em>summed-pairs</em> condition λέει: για κάθε baseband συχνότητα{' '}
+        <InlineMath>{'\\Delta'}</InlineMath>, η ποσότητα{' '}
+        <InlineMath>{'H_{VSB}(f_c+\\Delta) + H_{VSB}(f_c-\\Delta)'}</InlineMath>{' '}
+        πρέπει να είναι σταθερή. Έτσι, όταν ο coherent demod (ή το envelope με
+        reduced carrier) «διπλώνει» τις δύο πλευρές του spectrum στο baseband,
+        το άθροισμα δίνει το <InlineMath>{'M(f)'}</InlineMath> πολλαπλασιασμένο
+        με σταθερά — όχι γραμμική παραμόρφωση.
+      </>
+    ),
+    derivation: (
+      <>
+        Coherent demod: <InlineMath>{'\\tilde M(f) = \\tfrac{1}{2}M(f)[H(f_c+f)+H(f_c-f)]'}</InlineMath>{' '}
+        ⇒ bracket πρέπει να είναι σταθερά για να μην έχουμε frequency-dependent
+        gain στο baseband.
+      </>
+    ),
+  },
+  'vsb-bandwidth': {
+    intuition: (
+      <>
+        Το VSB κάθεται ανάμεσα σε <InlineMath>{'W'}</InlineMath> (SSB ιδανικό)
+        και <InlineMath>{'2W'}</InlineMath> (DSB πλήρες). Το vestige προσθέτει{' '}
+        <InlineMath>{'W_{\\text{vestige}}'}</InlineMath> στο μισό από τα{' '}
+        <InlineMath>{'2W'}</InlineMath> — άρα BW ολίγον πάνω από{' '}
+        <InlineMath>{'W'}</InlineMath>. Στο NTSC ~5.45 MHz με{' '}
+        <InlineMath>{'W = 4.2'}</InlineMath> MHz και{' '}
+        <InlineMath>{'W_{\\text{vestige}} = 1.25'}</InlineMath> MHz.
+      </>
+    ),
+    derivation: (
+      <>
+        Πλήρης USB <InlineMath>{'W'}</InlineMath> + vestige LSB{' '}
+        <InlineMath>{'W_{\\text{vestige}}'}</InlineMath> =
+        <InlineMath>{'W + W_{\\text{vestige}}'}</InlineMath>.
+      </>
+    ),
+  },
   'envelope-detector-rc': {
     intuition: (
       <>
