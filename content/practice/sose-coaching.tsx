@@ -2071,4 +2071,261 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
       </>
     ),
   },
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * L14 — Δυναμικός Προγραμματισμός I (memoization & WIS)
+   * ─────────────────────────────────────────────────────────────────── */
+  'pt1-th1-q7': {
+    takeaway: (
+      <>
+        Όταν ένας DP πίνακας έχει <InlineMath>{'n \\times m'}</InlineMath>{' '}
+        κελιά, η πολυπλοκότητα είναι <strong>τουλάχιστον</strong>{' '}
+        <InlineMath>{'\\Omega(n \\cdot m)'}</InlineMath> — γιατί ΟΛΑ τα κελιά
+        πρέπει να γεμίσουν. Οποιαδήποτε υποψήφια κλάση πέφτει ασυμπτωτικά κάτω
+        από αυτό το κατώφλι (εδώ: το <InlineMath>{'O(n)'}</InlineMath>{' '}
+        για <InlineMath>{'m > 1'}</InlineMath>) <strong>αποκλείεται με
+        βεβαιότητα</strong>, χωρίς να ξέρεις την αναδρομή.
+      </>
+    ),
+    examRadar: (
+      <>
+        Αν δεις «ποια από τις παρακάτω ΔΕΝ μπορεί να είναι η πολυπλοκότητα ενός
+        DP <InlineMath>{'n \\times m'}</InlineMath>;», η απάντηση είναι σχεδόν
+        πάντα η εκφραστική κάτω από <InlineMath>{'nm'}</InlineMath>. Έλεγξε
+        αμέσως τις «μικρές» (μικρότερες ή ίσες από{' '}
+        <InlineMath>{'n'}</InlineMath> ή <InlineMath>{'m'}</InlineMath>{' '}
+        ξεχωριστά). Όλες οι <InlineMath>{'o(\\cdot)'}</InlineMath>{' '}
+        εκφραστικές κρύβουν παγίδα: ρώτα μόνο «μπορεί η κλάση να περιέχει κάτι
+        ≥ <InlineMath>{'nm'}</InlineMath>;» — όχι «είναι η κλάση{' '}
+        <InlineMath>{'nm'}</InlineMath>;».
+      </>
+    ),
+  },
+  'pt1-th1-q8': {
+    takeaway: (
+      <>
+        Σε ένα 1D DP πίνακα <InlineMath>{'n'}</InlineMath> κελιών η
+        πολυπλοκότητα είναι σίγουρα{' '}
+        <InlineMath>{'\\Omega(n)'}</InlineMath>. Άρα{' '}
+        <InlineMath>{'O(1)'}</InlineMath> και{' '}
+        <InlineMath>{'O(\\log n)'}</InlineMath> είναι κλασικές «αδύνατες
+        απαντήσεις» — κανείς DP δεν χωράει σε λιγότερα από{' '}
+        <InlineMath>{'n'}</InlineMath> βήματα όταν πρέπει να γεμίσει
+        όλα τα κελιά.
+      </>
+    ),
+    examRadar: (
+      <>
+        Στις πολλαπλής επιλογής για 1D DP, χτύπα πρώτα το{' '}
+        <InlineMath>{'O(1)'}</InlineMath> και το{' '}
+        <InlineMath>{'O(\\log n)'}</InlineMath> ως αυτόματα αποκλεισμένα. Τα{' '}
+        <InlineMath>{'O(n)'}</InlineMath>, <InlineMath>{'O(n^2)'}</InlineMath>,{' '}
+        <InlineMath>{'O(n^3)'}</InlineMath> κ.λπ. είναι όλα συμβατά με τον{' '}
+        DP — η εκφώνηση δεν δίνει την αναδρομή, οπότε δεν έχεις τρόπο να
+        αποκλείσεις «μεγάλα» άνω φράγματα.
+      </>
+    ),
+  },
+  'pt1-th3': {
+    takeaway: (
+      <>
+        Όταν η <em>τελευταία απόφαση</em> είναι μία μικρή σταθερή λίστα (εδώ:
+        ταξί ή πατίνι), η αναδρομή γράφεται «μηχανικά»:{' '}
+        <InlineMath>{'\\text{OPT}(i) = \\min/\\max \\bigl\\{ \\text{τοπικό κόστος επιλογής}_k + \\text{OPT}(\\text{πριν την επιλογή}_k) \\bigr\\}'}</InlineMath>.
+        Στην πλατφόρμα δόνησης κάθε επιλογή «καταναλώνει» διαφορετικό αριθμό
+        θέσεων — η ίδια η <strong>δομή του προβλήματος γίνεται δείκτης πίνακα</strong>{' '}
+        (<InlineMath>{'i-1'}</InlineMath> για ταξί,{' '}
+        <InlineMath>{'i-4'}</InlineMath> για πατίνι).
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: «ελάχιστο/μέγιστο κόστος για να φτάσουμε στο{' '}
+        <InlineMath>{'n'}</InlineMath>, με 2–3 πιθανές κινήσεις στο τελευταίο
+        βήμα». Γράψε αναδρομή{' '}
+        <InlineMath>{'\\text{OPT}(i) = \\min_k(\\text{cost}_k + \\text{OPT}(i - \\Delta_k))'}</InlineMath>{' '}
+        με τα <InlineMath>{'\\Delta_k'}</InlineMath> = «πόσο πίσω σε γυρίζει
+        αυτή η επιλογή». Μην ξεχάσεις <InlineMath>{'\\max(0, i-\\Delta_k)'}</InlineMath>{' '}
+        για τα πρώτα κελιά.
+      </>
+    ),
+  },
+  'pt2-th1-q6': {
+    takeaway: (
+      <>
+        Δύο εκφραστικές κάτω από το κατώφλι{' '}
+        <InlineMath>{'\\Omega(nm)'}</InlineMath> αυτή τη φορά:{' '}
+        <InlineMath>{'O(m)'}</InlineMath> και{' '}
+        <InlineMath>{'O(n)'}</InlineMath>. Δοκίμασέ τες με τη «δοκιμή του
+        ασύμμετρου»: όταν η μία διάσταση μεγαλώνει ενώ η άλλη μένει σταθερή,
+        το <InlineMath>{'nm'}</InlineMath> ξεπερνά την υποψήφια εκφραστική —
+        άρα ασυμπτωτικά μικρότερη.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όταν δύο υποψήφιες απαντήσεις είναι «μονοδιάστατες»{' '}
+        (<InlineMath>{'O(n)'}</InlineMath>, <InlineMath>{'O(m)'}</InlineMath>{' '}
+        ή <InlineMath>{'O(n^c)'}</InlineMath> χωρίς{' '}
+        <InlineMath>{'m'}</InlineMath>), σχεδόν πάντα είναι οι σωστές
+        απαντήσεις «ΔΕΝ είναι». Κάθε εκφραστική με{' '}
+        <em>και τα δύο</em> <InlineMath>{'n'}</InlineMath> και{' '}
+        <InlineMath>{'m'}</InlineMath> (ή με μία διάσταση σε δύναμη ≥ 2) είναι
+        πιθανή.
+      </>
+    ),
+  },
+  'pt2-th1-q7': {
+    takeaway: (
+      <>
+        Πανομοιότυπη απάντηση με το <strong>pt1-th1-q8</strong>: σε ένα 1D DP
+        πίνακα <InlineMath>{'n'}</InlineMath> κελιών,{' '}
+        <InlineMath>{'O(1)'}</InlineMath> και{' '}
+        <InlineMath>{'O(\\log n)'}</InlineMath> είναι ασυμπτωτικά κάτω από{' '}
+        <InlineMath>{'n'}</InlineMath> και αποκλείονται. Το «δίδυμο»
+        ερώτημα στα διαφορετικά Παλαιά Θέματα είναι δείκτης ότι αυτή είναι μια
+        σταθερή ερώτηση εξετάσεων.
+      </>
+    ),
+    examRadar: (
+      <>
+        Είναι η αυτή ερώτηση σε δεύτερο πανομοιότυπο τύπο. Χτύπα ξανά τα{' '}
+        <InlineMath>{'O(1)'}</InlineMath>,{' '}
+        <InlineMath>{'O(\\log n)'}</InlineMath> και κάθε{' '}
+        <InlineMath>{'O(\\log^c n)'}</InlineMath> για οποιοδήποτε{' '}
+        <InlineMath>{'c'}</InlineMath>. Πιθανά μένουν{' '}
+        <InlineMath>{'O(n^c)'}</InlineMath> για κάθε{' '}
+        <InlineMath>{'c \\ge 1'}</InlineMath>.
+      </>
+    ),
+  },
+  'pt5-th4': {
+    takeaway: (
+      <>
+        Το «μέγιστο ανεξάρτητο σύνολο σε μονοπάτι» είναι ο πιο καθαρός DP της
+        εξεταστικής: <em>μέσα ή έξω</em> για κάθε{' '}
+        <InlineMath>{'x_i'}</InlineMath>, με αναδρομή{' '}
+        <InlineMath>{'\\text{OPT}(i) = \\max(\\text{OPT}(i-1),\\, \\varphi_i + \\text{OPT}(i-2))'}</InlineMath>.
+        Ο άπληστος «μόνο μονούς ή μόνο ζυγούς» <strong>χάνει</strong>: το
+        βέλτιστο είναι μικτό (στο στιγμιότυπο,{' '}
+        <InlineMath>{'\\{x_2, x_5, x_7\\} = 96 > 92'}</InlineMath>).
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: «επιλογή υποσυνόλου από γραμμή με απαγόρευση γειτονικών» (κολώνες,
+        εστιατόρια, εργαζόμενοι, σπίτια ληστείας). Στρώσε{' '}
+        <InlineMath>{'\\text{OPT}(i) = \\max(\\text{OPT}(i-1),\\, v_i + \\text{OPT}(i-2))'}</InlineMath>
+        — γραμμικός χρόνος{' '}
+        <InlineMath>{'\\Theta(n)'}</InlineMath>, ανεξάρτητος των τιμών{' '}
+        <InlineMath>{'v_i'}</InlineMath>. Αν κάποιος άπληστος «όλα μονά / όλα
+        ζυγά» μοιάζει πιθανός, βάλε το στιγμιότυπο{' '}
+        <InlineMath>{'(8, 40, 20, 16, 32, 36, 24)'}</InlineMath> ως αντιπαράδειγμα
+        (μονοί=84, ζυγοί=92, μικτό=96).
+      </>
+    ),
+  },
+  'pt6-th2': {
+    takeaway: (
+      <>
+        Η <strong>πλατφόρμα δόνησης</strong> είναι αυτούσιο weighted interval
+        scheduling — με 4 βήματα: ταξινόμηση κατά λήξη,{' '}
+        <InlineMath>{'p(j)'}</InlineMath>, αναδρομή{' '}
+        <InlineMath>{'P[j] = \\max(P[j-1],\\, p_j + P[p(j)])'}</InlineMath>,
+        ανάκτηση. Ο άπληστος «κατά συνδρομή» <strong>αποτυγχάνει</strong>: μια
+        ακριβή εργασία μπορεί να μπλοκάρει δύο φθηνές που μαζί την ξεπερνούν
+        (counterexample: A=100 μπλοκάρει B+C=120).
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε δίνεται «<em>μη επικαλυπτόμενα</em> + βάρη/συνδρομές/τιμές + max
+        άθροισμα», ΜΗΝ ψάχνεις απλό κριτήριο ταξινόμησης — είναι WIS. Γράψε τα
+        4 βήματα, σχεδίασε ένα 3-interval counterexample (A=[0,10] vs
+        B=[0,5]+C=[6,10] με βάρη 100/60/60) για να δείξεις γιατί ο άπληστος
+        χάνει, και κλείσε με{' '}
+        <InlineMath>{'O(n \\log n)'}</InlineMath>.
+      </>
+    ),
+  },
+  'pt7-th2': {
+    takeaway: (
+      <>
+        Όταν μια αναδρομή{' '}
+        <InlineMath>{'T(n) = T(n-d_1) + \\dots + T(n-d_k) + O(1)'}</InlineMath>{' '}
+        γίνεται «αφελής» (χωρίς memoization), το δέντρο έχει{' '}
+        <InlineMath>{'k'}</InlineMath> παιδιά ανά κόμβο και βάθος{' '}
+        <InlineMath>{'\\ge n / \\max d_i'}</InlineMath> — δηλαδή τουλάχιστον{' '}
+        <InlineMath>{'k^{n / \\max d_i}'}</InlineMath> κόμβους. Memoization
+        στραγγίζει το δέντρο σε <InlineMath>{'n'}</InlineMath>{' '}
+        υπολογισμούς, μεταφέροντας τη συνολική δουλειά από εκθετική σε
+        γραμμική.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα του «δείξε ότι ο αφελής είναι εκθετικός»: μέτρα <em>πόσα παιδιά</em>{' '}
+        έχει κάθε κλήση (το <InlineMath>{'k'}</InlineMath>) και <em>πόσο μειώνεται</em>{' '}
+        το όρισμα στη μικρότερη μείωση (το{' '}
+        <InlineMath>{'\\max d_i'}</InlineMath>). Δώσε το κάτω φράγμα{' '}
+        <InlineMath>{'\\Omega(k^{n / \\max d_i})'}</InlineMath>. Για 3-branch
+        με max βήμα 3 (όπως εδώ) είναι{' '}
+        <InlineMath>{'\\Omega(3^{n/3}) = \\Omega(1{,}44^n)'}</InlineMath>.
+      </>
+    ),
+  },
+  'front-set-8-ask3': {
+    takeaway: (
+      <>
+        Ο <strong>τεμαχισμός ράβδου</strong> είναι το πρωτότυπο
+        «δοκίμασε όλες τις πρώτες κοπές»:{' '}
+        <InlineMath>{'C(i) = \\max_{1 \\le k \\le i} V_k + C(i-k)'}</InlineMath>.
+        Διαφέρει από το weighted interval scheduling γιατί δεν έχει
+        «μη επικάλυψη» — απλώς κόβει σε δύο ανεξάρτητα κομμάτια. Κάθε{' '}
+        <InlineMath>{'C(i)'}</InlineMath> κάνει{' '}
+        <InlineMath>{'i'}</InlineMath> δουλειά → συνολικά{' '}
+        <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε σου ζητούν να βελτιστοποιήσεις «πώς να σπάσεις ένα ομογενές
+        αντικείμενο σε κομμάτια» με αθροιστικό κέρδος (ράβδος, σχοινί, ταινία,
+        αρχείο), η αναδρομή είναι{' '}
+        <InlineMath>{'C(i) = \\max_k (V_k + C(i-k))'}</InlineMath>. Αν το{' '}
+        <InlineMath>{'V'}</InlineMath> είναι ταξινομημένο φθίνον <em>και</em>{' '}
+        υπό-προσθετικό, ίσως δουλέψει greedy — αλλά γενικά είναι DP{' '}
+        <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
+      </>
+    ),
+  },
+  'front-set-8-ask4': {
+    takeaway: (
+      <>
+        Η DP για εστιατόρια είναι η ίδια με το «μέγιστο ανεξάρτητο σύνολο σε
+        μονοπάτι» — απλώς η απαγόρευση γίνεται γεωμετρική (≥{' '}
+        <InlineMath>{'k'}</InlineMath> km αντί για «όχι γείτονας»). Αναδρομή:{' '}
+        <InlineMath>{'D(i) = \\max(D(i-1),\\, p_i + D(j^*))'}</InlineMath>, με{' '}
+        <InlineMath>{'j^*'}</InlineMath> = μεγαλύτερος{' '}
+        <InlineMath>{'j < i'}</InlineMath> με{' '}
+        <InlineMath>{'m_i - m_j \\ge k'}</InlineMath>. Δυαδική αναζήτηση για{' '}
+        <InlineMath>{'j^*'}</InlineMath> →{' '}
+        <InlineMath>{'O(n \\log n)'}</InlineMath>, ή δύο δείκτες →{' '}
+        <InlineMath>{'O(n)'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: «επιλογή υποσυνόλου από διατεταγμένη ακολουθία με ελάχιστη
+        απόσταση/χρόνο/χωρητικότητα μεταξύ επιλεγμένων». Ο{' '}
+        <InlineMath>{'j^*'}</InlineMath> είναι η γενίκευση του{' '}
+        <InlineMath>{'p(j)'}</InlineMath> από το WIS και του{' '}
+        <InlineMath>{'i-2'}</InlineMath> από το{' '}
+        <a href="#exercise:pt5-th4" className="underline">pt5-th4</a>. Στην
+        ταξινομημένη είσοδο, δυαδική αναζήτηση. Στην πραγματικότητα του
+        εξεταστικού: σάρωση δύο δεικτών για{' '}
+        <InlineMath>{'O(n)'}</InlineMath>.
+      </>
+    ),
+  },
 }

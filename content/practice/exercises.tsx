@@ -96,6 +96,13 @@ import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
 import { HuffmanEncodeDecode } from '@/components/viz/HuffmanEncodeDecode'
 import { GoldbarMerges } from '@/components/viz/GoldbarMerges'
 import { FractionalVsZeroOneKnapsack } from '@/components/viz/FractionalVsZeroOneKnapsack'
+import { DPTableLowerBound } from '@/components/viz/DPTableLowerBound'
+import { SightseeingDP } from '@/components/viz/SightseeingDP'
+import { LamppostsMISViz } from '@/components/viz/LamppostsMISViz'
+import { RecursionExplosion } from '@/components/viz/RecursionExplosion'
+import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
+import { RodCuttingDP } from '@/components/viz/RodCuttingDP'
+import { RestaurantSpacingDP } from '@/components/viz/RestaurantSpacingDP'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -688,40 +695,77 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Κλειδί: ο πίνακας έχει <InlineMath>{'n \\times m'}</InlineMath> κελιά,
-          και πρέπει να συμπληρώσουμε <strong>όλα</strong>. Άρα ο αλγόριθμος
-          κάνει <strong>τουλάχιστον</strong> <InlineMath>{'n \\cdot m'}</InlineMath>{' '}
-          βήματα — η πολυπλοκότητα είναι σίγουρα{' '}
-          <InlineMath>{'\\Omega(nm)'}</InlineMath>.
+          <strong>Η ιδέα σε μια γραμμή:</strong> ο πίνακας έχει{' '}
+          <InlineMath>{'n \\cdot m'}</InlineMath> κελιά. Για να «λύσει» το
+          πρόβλημα ο αλγόριθμος, πρέπει να γεμίσει <em>όλα</em> — δεν υπάρχει
+          τρόπος να αποφύγει κανένα, γιατί δεν ξέρει εκ των προτέρων ποιο
+          κελί θα χρειαστεί η τελική απάντηση. Άρα κάνει{' '}
+          <strong>τουλάχιστον</strong>{' '}
+          <InlineMath>{'n \\cdot m'}</InlineMath> πράξεις, δηλαδή{' '}
+          <InlineMath>{'\\Omega(n \\cdot m)'}</InlineMath>.
         </p>
         <p>
-          Τώρα ελέγχουμε κάθε επιλογή — «μπορεί να ισχύει ή σίγουρα όχι;»
+          Από εκεί και πέρα κάθε υποψήφια εκφραστική «δηλώνει» έναν άνω
+          φραγμό. Ο άνω φραγμός είναι συμβατός μόνο αν είναι{' '}
+          <strong>μεγαλύτερος ή ίσος</strong> από αυτό το κατώφλι. Σύρε τα
+          n, m και δες ποιες από τις τέσσερις επιλογές πέφτουν κάτω από το
+          n·m:
+        </p>
+        <DPTableLowerBound preset="pt1-th1-q7" />
+        <p>
+          Από την εικόνα: μόνο το <InlineMath>{'O(n)'}</InlineMath> πέφτει
+          κάτω από το κατώφλι (όταν <InlineMath>{'m > 1'}</InlineMath>, που
+          είναι η ενδιαφέρουσα περίπτωση). Άρα{' '}
+          <InlineMath>{'O(n)'}</InlineMath> <em>αποκλείεται με βεβαιότητα</em>:
+          δεν έχεις χρόνο να αγγίξεις καν τα <InlineMath>{'n \\cdot m'}</InlineMath>{' '}
+          κελιά. Τα άλλα τρία:
         </p>
         <ul>
           <li>
-            (i) <InlineMath>{'O(n)'}</InlineMath>: αυτό είναι{' '}
-            <strong>μικρότερο</strong> από <InlineMath>{'nm'}</InlineMath> (όταν{' '}
-            <InlineMath>{'m > 1'}</InlineMath>). Αδύνατο — δεν προλαβαίνεις καν να
-            γεμίσεις τον πίνακα. <strong>Σίγουρα δεν ισχύει.</strong>
+            <InlineMath>{'O(mn)'}</InlineMath>: ακριβώς στο κατώφλι — π.χ. αν
+            κάθε κελί γεμίζει σε <InlineMath>{'O(1)'}</InlineMath>.
           </li>
           <li>
-            (ii) <InlineMath>{'O(mn)'}</InlineMath>: πιθανό — αν κάθε κελί
-            γεμίζει σε <InlineMath>{'O(1)'}</InlineMath>.
+            <InlineMath>{'o(m^2 n^2)'}</InlineMath>: η κλάση «αυστηρά μικρότερο
+            από <InlineMath>{'m^2 n^2'}</InlineMath>» περιέχει το{' '}
+            <InlineMath>{'O(mn)'}</InlineMath>, άρα ζει εύλογα πάνω από το
+            κατώφλι.
           </li>
           <li>
-            (iii) <InlineMath>{'o(m^2 n^2)'}</InlineMath>: πιθανό — π.χ.{' '}
-            <InlineMath>{'O(nm)'}</InlineMath> είναι όντως{' '}
-            <InlineMath>{'o(m^2 n^2)'}</InlineMath>.
-          </li>
-          <li>
-            (iv) <InlineMath>{'O(mn^2)'}</InlineMath>: πιθανό — αν κάθε κελί
-            θέλει <InlineMath>{'O(n)'}</InlineMath> δουλειά.
+            <InlineMath>{'O(mn^2)'}</InlineMath>: ψηλά πάνω από{' '}
+            <InlineMath>{'mn'}</InlineMath> — εύλογο αν κάθε κελί θέλει{' '}
+            <InlineMath>{'O(n)'}</InlineMath> δουλειά.
           </li>
         </ul>
         <p>
-          Μόνο το (i) αποκλείεται με βεβαιότητα.{' '}
           <strong>Σωστή: (i).</strong>
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — το κατώφλι ενός πίνακα DP.</strong> Όταν
+            το πρόβλημα ζητάει «ποια χρονική πολυπλοκότητα ΔΕΝ ταιριάζει σε
+            έναν πίνακα DP <InlineMath>{'n \\times m'}</InlineMath>;»,{' '}
+            <em>χωρίς να δίνει την αναδρομή</em>:
+          </p>
+          <ol className="ml-4 list-decimal space-y-1 text-sm">
+            <li>
+              Γράψε το πλήθος κελιών: <InlineMath>{'n \\cdot m'}</InlineMath>{' '}
+              (ή <InlineMath>{'n'}</InlineMath> σε μονοδιάστατο). Αυτό είναι το{' '}
+              <strong>κάτω φράγμα</strong>{' '}
+              <InlineMath>{'\\Omega(n \\cdot m)'}</InlineMath>.
+            </li>
+            <li>
+              Σύγκρινε κάθε υποψήφια κλάση με το κατώφλι. Ό,τι είναι{' '}
+              <em>ασυμπτωτικά μικρότερο</em> είναι αδύνατο, ό,τι ≥ είναι
+              εύλογο.
+            </li>
+            <li>
+              Μην παρασύρεσαι από το <InlineMath>{'o'}</InlineMath> μικρό vs το{' '}
+              <InlineMath>{'O'}</InlineMath> κεφαλαίο — ρώτα μόνο «μπορεί
+              αυτή η κλάση να περιέχει κάτι ≥ <InlineMath>{'nm'}</InlineMath>;».
+            </li>
+          </ol>
+        </Callout>
       </>
     ),
   },
@@ -755,22 +799,39 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Ίδια λογική με το προηγούμενο. Ο πίνακας έχει τώρα{' '}
-          <InlineMath>{'n'}</InlineMath> κελιά· πρέπει να γεμίσουν όλα, άρα η
-          πολυπλοκότητα είναι σίγουρα <InlineMath>{'\\Omega(n)'}</InlineMath>.
+          <strong>Ίδιο μοτίβο, μία διάσταση.</strong> Ο πίνακας έχει τώρα{' '}
+          <InlineMath>{'n'}</InlineMath> κελιά. Όλα πρέπει να γεμίσουν — άρα{' '}
+          <InlineMath>{'\\Omega(n)'}</InlineMath> είναι το κατώφλι. Ό,τι είναι{' '}
+          ασυμπτωτικά μικρότερο από <InlineMath>{'n'}</InlineMath> αποκλείεται
+          αυτόματα.
         </p>
+        <DPTableLowerBound preset="pt1-th1-q8" />
         <p>
-          Άρα ό,τι είναι <strong>μικρότερο</strong> από{' '}
-          <InlineMath>{'n'}</InlineMath> αποκλείεται: το{' '}
-          <InlineMath>{'O(1)'}</InlineMath> (σταθερός χρόνος — αδύνατο, δεν
-          γεμίζεις <InlineMath>{'n'}</InlineMath> κελιά σε σταθερό χρόνο) και το{' '}
-          <InlineMath>{'O(\\log_2 n)'}</InlineMath> (επίσης μικρότερο του{' '}
-          <InlineMath>{'n'}</InlineMath>). Το <InlineMath>{'O(n)'}</InlineMath>{' '}
-          και το <InlineMath>{'O(n^2)'}</InlineMath> είναι πιθανά.
+          Από την εικόνα: το <InlineMath>{'O(1)'}</InlineMath> (σταθερός χρόνος)
+          και το <InlineMath>{'O(\\log_2 n)'}</InlineMath> είναι και τα δύο
+          ασυμπτωτικά μικρότερα από <InlineMath>{'n'}</InlineMath>· δεν
+          προλαβαίνεις σε σταθερό ή λογαριθμικό χρόνο να αγγίξεις{' '}
+          <InlineMath>{'n'}</InlineMath> κελιά. Τα{' '}
+          <InlineMath>{'O(n)'}</InlineMath> και{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath> είναι πιθανά (το πρώτο αν κάθε
+          κελί κάνει <InlineMath>{'O(1)'}</InlineMath> δουλειά, το δεύτερο αν
+          κάνει <InlineMath>{'O(n)'}</InlineMath>).
         </p>
         <p>
           <strong>Σωστές: (iii) και (iv).</strong>
         </p>
+        <Callout type="intuition">
+          <strong>Το μοτίβο:</strong> «μέγεθος πίνακα = κάτω φράγμα». Στο 1D
+          είναι <InlineMath>{'\\Omega(n)'}</InlineMath>, στο 2D{' '}
+          <InlineMath>{'\\Omega(nm)'}</InlineMath>, στο 3D{' '}
+          <InlineMath>{'\\Omega(nmp)'}</InlineMath> — και κάθε υποψήφια
+          πολυπλοκότητα που πέφτει κάτω από αυτό απορρίπτεται αμέσως. Σταθερός
+          (<InlineMath>{'O(1)'}</InlineMath>) και λογαριθμικός (
+          <InlineMath>{'O(\\log n)'}</InlineMath>) είναι κλασικές παγίδες,
+          γιατί μοιάζουν «πιθανοί» — αλλά είναι αδύνατο να γεμίσεις πίνακα{' '}
+          <InlineMath>{'n'}</InlineMath> κελιών σε λιγότερο από{' '}
+          <InlineMath>{'n'}</InlineMath> βήματα.
+        </Callout>
       </>
     ),
   },
@@ -1057,7 +1118,7 @@ export const EXERCISES: Exercise[] = [
       <>
         <p>
           Θέλουμε να επισκεφτούμε μία ακολουθία από{' '}
-          <InlineMath>{'N'}</InlineMath> αξιοθέατα{' '}
+          <InlineMath>{'n'}</InlineMath> αξιοθέατα{' '}
           <InlineMath>{'\\alpha_1, \\alpha_2, \\dots, \\alpha_n'}</InlineMath> σε
           μία πόλη. Οι μόνες επιλογές μετακίνησης είναι <strong>ταξί</strong> ή{' '}
           <strong>ηλεκτρικό πατίνι</strong>, του οποίου η μίσθωση ισχύει για{' '}
@@ -1081,67 +1142,89 @@ export const EXERCISES: Exercise[] = [
       <>
         <p>
           <strong>(i)</strong> Θέλουμε να έχουμε επισκεφθεί <em>όλα</em> τα
-          αξιοθέατα, δηλαδή μέχρι το <InlineMath>{'\\alpha_n'}</InlineMath>. Άρα η
-          ζητούμενη τιμή είναι <strong><InlineMath>{'\\text{OPT}(n)'}</InlineMath></strong>.
+          αξιοθέατα, δηλαδή μέχρι το <InlineMath>{'\\alpha_n'}</InlineMath>. Άρα
+          η ζητούμενη τιμή είναι{' '}
+          <strong>
+            <InlineMath>{'\\text{OPT}(n)'}</InlineMath>
+          </strong>
+          .
         </p>
         <p>
-          <strong>(ii) Η σκέψη.</strong> Στεκόμαστε στο αξιοθέατο{' '}
-          <InlineMath>{'\\alpha_i'}</InlineMath> και ρωτάμε:{' '}
-          <em>πώς ήρθα εδώ;</em> Υπάρχουν ακριβώς δύο τρόποι για το{' '}
-          <strong>τελευταίο κομμάτι</strong> της διαδρομής:
+          <strong>(ii) Πώς θα τη βρούμε.</strong> Στεκόμαστε στο{' '}
+          <InlineMath>{'\\alpha_i'}</InlineMath> και ρωτάμε{' '}
+          <em>πώς ήρθα εδώ;</em> Η <strong>τελευταία απόφαση</strong> είναι μόνο
+          δύο επιλογές — και αυτό είναι το ζητούμενο για τη σχέση αναδρομής:
         </p>
         <ul>
           <li>
-            <strong>Με ταξί στο τελευταίο βήμα.</strong> Πλήρωσα{' '}
+            <strong>🚖 Ταξί στο τελευταίο βήμα.</strong> Πλήρωσα{' '}
             <InlineMath>{'c_i'}</InlineMath> για το βήμα{' '}
             <InlineMath>{'\\alpha_{i-1} \\to \\alpha_i'}</InlineMath>, και πριν
-            από αυτό είχα ήδη λύσει βέλτιστα το πρόβλημα μέχρι το{' '}
+            είχα λύσει βέλτιστα το πρόβλημα ως το{' '}
             <InlineMath>{'\\alpha_{i-1}'}</InlineMath>. Κόστος:{' '}
             <InlineMath>{'\\text{OPT}(i-1) + c_i'}</InlineMath>.
           </li>
           <li>
-            <strong>Με ένα ενοικιασμένο πατίνι.</strong> Μία μίσθωση καλύπτει 4
-            διαδρομές — δηλαδή φέρνει με τη σειρά μέχρι 4 αξιοθέατα. Αν το
-            τελευταίο πατίνι με έφερε ως το <InlineMath>{'\\alpha_i'}</InlineMath>,
-            ξεκίνησε από το <InlineMath>{'\\alpha_{i-4}'}</InlineMath>. Πλήρωσα{' '}
-            <InlineMath>{'S'}</InlineMath> γι' αυτό, και πριν είχα λύσει βέλτιστα
-            μέχρι το <InlineMath>{'\\alpha_{i-4}'}</InlineMath>. Κόστος:{' '}
-            <InlineMath>{'\\text{OPT}(i-4) + S'}</InlineMath>.
+            <strong>🛴 Ένα ενοικιασμένο πατίνι.</strong> Μία μίσθωση καλύπτει
+            έως 4 διαδρομές — οπότε αν το τελευταίο πατίνι με έφερε ως το{' '}
+            <InlineMath>{'\\alpha_i'}</InlineMath>, ξεκίνησε στο{' '}
+            <InlineMath>{'\\alpha_{i-4}'}</InlineMath>. Πλήρωσα σταθερά{' '}
+            <InlineMath>{'S'}</InlineMath>, και πριν είχα λύσει βέλτιστα ως
+            εκεί. Κόστος: <InlineMath>{'\\text{OPT}(i-4) + S'}</InlineMath>.
           </li>
         </ul>
         <p>
-          Δεν ξέρουμε ποιος τρόπος είναι ο φθηνότερος — οπότε παίρνουμε το{' '}
-          <strong>ελάχιστο</strong>:
+          Δεν ξέρουμε ποια απόφαση είναι η φθηνότερη — οπότε{' '}
+          <strong>παίρνουμε το ελάχιστο</strong>:
         </p>
         <BlockMath>{'\\text{OPT}(i) = \\begin{cases} 0 & i = 0 \\\\ \\min\\{\\, \\text{OPT}(i-1) + c_i,\\ \\ \\text{OPT}(\\max(0,\\,i-4)) + S \\,\\} & i \\ge 1 \\end{cases}'}</BlockMath>
         <p>
-          (Το <InlineMath>{'\\max(0, i-4)'}</InlineMath> καλύπτει τα πρώτα
-          αξιοθέατα: μια μίσθωση πατινιού καλύπτει «μέχρι 4» διαδρομές, οπότε αν
-          είμαστε π.χ. στο <InlineMath>{'\\alpha_3'}</InlineMath>, ένα πατίνι από
-          την αρχή κοστίζει απλώς <InlineMath>{'S'}</InlineMath>.)
+          Το <InlineMath>{'\\max(0, i-4)'}</InlineMath> διορθώνει την πρώτη
+          τετράδα αξιοθέατων: αν είσαι π.χ. στο{' '}
+          <InlineMath>{'\\alpha_3'}</InlineMath>, ένα πατίνι από την αρχή
+          κοστίζει απλώς <InlineMath>{'S'}</InlineMath>.
         </p>
         <p>
-          <strong>Παράδειγμα.</strong> Έστω <InlineMath>{'n = 5'}</InlineMath>,
-          κόμιστρα <InlineMath>{'c = (-, 4, 4, 4, 4, 4)'}</InlineMath> και{' '}
-          <InlineMath>{'S = 10'}</InlineMath>. Με μόνο ταξί:{' '}
-          <InlineMath>{'4 \\cdot 5 = 20'}</InlineMath>. Με ένα πατίνι για τις 4
-          πρώτες διαδρομές (<InlineMath>{'S = 10'}</InlineMath>) και ταξί για την
-          5η (<InlineMath>{'+4'}</InlineMath>): <InlineMath>{'14'}</InlineMath>.
-          Η αναδρομή ακριβώς αυτό βρίσκει — το <InlineMath>{'\\min'}</InlineMath>{' '}
-          σε κάθε βήμα.
+          <strong>Δες την αναδρομή να τρέχει.</strong> Στιγμιότυπο:{' '}
+          <InlineMath>{'n = 5'}</InlineMath>, σταθερό κόμιστρο{' '}
+          <InlineMath>{'c_i = 4'}</InlineMath>, μίσθωση πατινιού{' '}
+          <InlineMath>{'S = 10'}</InlineMath>. Σε κάθε βήμα συγκρίνονται τα δύο
+          βέλη — το κοντό ταξί (+4) και το μακρύ πατίνι (+10) — και κερδίζει το
+          μικρότερο:
+        </p>
+        <SightseeingDP />
+        <p>
+          Το αποτέλεσμα: <InlineMath>{'\\text{OPT}(5) = 14'}</InlineMath>, με
+          ένα πατίνι από <InlineMath>{'\\alpha_0'}</InlineMath> ως{' '}
+          <InlineMath>{'\\alpha_4'}</InlineMath> (κόστος 10) και ένα ταξί για το
+          τελευταίο βήμα <InlineMath>{'\\alpha_4 \\to \\alpha_5'}</InlineMath>{' '}
+          (κόστος 4). Σύγκρινε με «μόνο ταξί»{' '}
+          <InlineMath>{'5 \\cdot 4 = 20'}</InlineMath>: το πατίνι κερδίζει
+          ξεκάθαρα, και η αναδρομή το βρίσκει χωρίς να δοκιμάσει χειροκίνητα
+          συνδυασμούς.
         </p>
         <p>
           <strong>(iii) Πολυπλοκότητα.</strong> Έχουμε{' '}
-          <InlineMath>{'n + 1'}</InlineMath> υποπροβλήματα ({' '}
-          <InlineMath>{'\\text{OPT}(0), \\dots, \\text{OPT}(n)'}</InlineMath>),
+          <InlineMath>{'n + 1'}</InlineMath> υποπροβλήματα{' '}
+          <InlineMath>{'\\text{OPT}(0), \\dots, \\text{OPT}(n)'}</InlineMath>,
           και το καθένα υπολογίζεται σε <strong>σταθερό χρόνο</strong>{' '}
-          <InlineMath>{'O(1)'}</InlineMath> — απλώς ένα <InlineMath>{'\\min'}</InlineMath>{' '}
-          δύο ήδη υπολογισμένων τιμών. Άρα συνολικά{' '}
-          <strong><InlineMath>{'\\Theta(n)'}</InlineMath></strong> — γραμμικός
-          χρόνος, επειδή γεμίζουμε έναν μονοδιάστατο πίνακα{' '}
-          <InlineMath>{'n'}</InlineMath> θέσεων με <InlineMath>{'O(1)'}</InlineMath>{' '}
-          δουλειά ανά θέση.
+          <InlineMath>{'O(1)'}</InlineMath> — ένα{' '}
+          <InlineMath>{'\\min'}</InlineMath> δύο ήδη υπολογισμένων τιμών. Άρα
+          συνολικά{' '}
+          <strong>
+            <InlineMath>{'\\Theta(n)'}</InlineMath>
+          </strong>{' '}
+          — γραμμικός χρόνος.
         </p>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — «πώς ήρθα εδώ;».</strong> Όταν το πρόβλημα
+          έχει μια <em>μικρή σταθερή πινακίδα επιλογών</em> για το{' '}
+          <strong>τελευταίο βήμα</strong> (εδώ: ταξί ή πατίνι), η αναδρομή
+          γράφεται σχεδόν μόνη της: για κάθε επιλογή, «πλήρωσα τοπικό κόστος +
+          έλυσα βέλτιστα ό,τι έμεινε πριν». Παίρνεις min ή max. Το «πατίνι
+          καλύπτει 4 διαδρομές» γίνεται «πήδα 4 θέσεις πίσω» —{' '}
+          <em>η δομή του προβλήματος γίνεται δείκτης πίνακα</em>.
+        </Callout>
       </>
     ),
   },
@@ -1579,34 +1662,50 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Ο πίνακας έχει <InlineMath>{'n \\cdot m'}</InlineMath> κελιά και πρέπει
-          να γεμίσουν όλα — άρα η πολυπλοκότητα είναι σίγουρα{' '}
-          <InlineMath>{'\\Omega(nm)'}</InlineMath>. Ό,τι είναι{' '}
-          <strong>μικρότερο</strong> από αυτό το «κατώφλι» αποκλείεται με
-          βεβαιότητα.
+          <strong>Ίδιο μοτίβο, διαφορετικές υποψήφιες.</strong> Ο πίνακας έχει{' '}
+          <InlineMath>{'n \\cdot m'}</InlineMath> κελιά — όλα πρέπει να γεμίσουν,
+          άρα <InlineMath>{'\\Omega(n \\cdot m)'}</InlineMath>. Ό,τι είναι
+          ασυμπτωτικά μικρότερο αποκλείεται.
+        </p>
+        <DPTableLowerBound preset="pt2-th1-q6" />
+        <p>
+          Από την εικόνα:
         </p>
         <ul>
           <li>
-            (ii) <InlineMath>{'O(m)'}</InlineMath>: μικρότερο του{' '}
-            <InlineMath>{'nm'}</InlineMath> όταν <InlineMath>{'n > 1'}</InlineMath>.
-            <strong> Αδύνατο.</strong>
+            <InlineMath>{'O(m)'}</InlineMath>: όταν{' '}
+            <InlineMath>{'n > 1'}</InlineMath>, είναι μικρότερο του{' '}
+            <InlineMath>{'nm'}</InlineMath>. <strong>Αδύνατο.</strong>
           </li>
           <li>
-            (iii) <InlineMath>{'O(n)'}</InlineMath>: μικρότερο του{' '}
-            <InlineMath>{'nm'}</InlineMath> όταν <InlineMath>{'m > 1'}</InlineMath>.
-            <strong> Αδύνατο.</strong>
+            <InlineMath>{'O(n)'}</InlineMath>: όταν{' '}
+            <InlineMath>{'m > 1'}</InlineMath>, είναι μικρότερο του{' '}
+            <InlineMath>{'nm'}</InlineMath>. <strong>Αδύνατο.</strong>
           </li>
           <li>
-            (i) <InlineMath>{'O(n^3)'}</InlineMath> και (iv){' '}
-            <InlineMath>{'O(m^2 n^2)'}</InlineMath>: αυτά είναι{' '}
-            <strong>μεγαλύτερα ή ίσα</strong> του <InlineMath>{'nm'}</InlineMath>{' '}
-            — μπορεί κάλλιστα να είναι σωστά (ανάλογα με το πόση δουλειά κάνει
-            κάθε κελί). Δεν τα αποκλείουμε με βεβαιότητα.
+            <InlineMath>{'O(n^3)'}</InlineMath>: όταν{' '}
+            <InlineMath>{'n \\ge m'}</InlineMath>, είναι{' '}
+            <InlineMath>{'\\ge nm'}</InlineMath>. Εύλογο αν κάθε κελί θέλει{' '}
+            <InlineMath>{'O(n^2)'}</InlineMath> δουλειά.
+          </li>
+          <li>
+            <InlineMath>{'O(m^2 n^2)'}</InlineMath>: πολύ ψηλά πάνω από{' '}
+            <InlineMath>{'nm'}</InlineMath> — εύλογο αν κάθε κελί θέλει{' '}
+            <InlineMath>{'O(mn)'}</InlineMath> δουλειά.
           </li>
         </ul>
         <p>
           <strong>Σωστές: (ii), (iii).</strong>
         </p>
+        <Callout type="warning">
+          <strong>Παγίδα:</strong> οι όροι «μικρότερο» και «μεγαλύτερο»
+          ασκούνται ασυμπτωτικά, όχι σε συγκεκριμένες τιμές{' '}
+          <InlineMath>{'n, m'}</InlineMath>. Το <InlineMath>{'O(m)'}</InlineMath>{' '}
+          μπορεί τυχαία να ισούται με <InlineMath>{'nm'}</InlineMath> αν{' '}
+          <InlineMath>{'n = 1'}</InlineMath> — αλλά για κάθε ζεύγος{' '}
+          <InlineMath>{'(n, m)'}</InlineMath> με <InlineMath>{'n \\to \\infty'}</InlineMath>,
+          είναι αυστηρά μικρότερο. Αυτό αρκεί για να αποκλειστεί.
+        </Callout>
       </>
     ),
   },
@@ -1634,22 +1733,29 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Ο πίνακας έχει <InlineMath>{'n'}</InlineMath> κελιά — πρέπει να γεμίσουν
-          όλα, άρα η πολυπλοκότητα είναι σίγουρα{' '}
-          <InlineMath>{'\\Omega(n)'}</InlineMath>.
+          <strong>Ίδια ερώτηση με το{' '}
+          <a href="#exercise:pt1-th1-q8" className="underline">pt1-th1-q8</a>.</strong>{' '}
+          Ο πίνακας έχει <InlineMath>{'n'}</InlineMath> κελιά — όλα πρέπει να
+          γεμίσουν, οπότε <InlineMath>{'\\Omega(n)'}</InlineMath>. Ό,τι
+          ασυμπτωτικά μικρότερο αποκλείεται.
         </p>
+        <DPTableLowerBound preset="pt2-th1-q7" />
         <p>
-          Αποκλείονται με βεβαιότητα ό,τι είναι μικρότερο του{' '}
-          <InlineMath>{'n'}</InlineMath>: το <InlineMath>{'O(1)'}</InlineMath>{' '}
-          (σταθερός χρόνος — δεν προλαβαίνεις να γεμίσεις{' '}
-          <InlineMath>{'n'}</InlineMath> κελιά) και το{' '}
-          <InlineMath>{'O(\\log_2 n)'}</InlineMath>. Τα{' '}
-          <InlineMath>{'O(n)'}</InlineMath> και <InlineMath>{'O(n^2)'}</InlineMath>{' '}
-          είναι πιθανά.
+          Από την εικόνα: αποκλείονται <InlineMath>{'O(1)'}</InlineMath>{' '}
+          (σταθερός χρόνος δεν αγγίζει <InlineMath>{'n'}</InlineMath> κελιά) και{' '}
+          <InlineMath>{'O(\\log_2 n)'}</InlineMath> (μεγαλώνει πιο αργά από{' '}
+          <InlineMath>{'n'}</InlineMath>). Τα <InlineMath>{'O(n)'}</InlineMath>{' '}
+          και <InlineMath>{'O(n^2)'}</InlineMath> ζουν πάνω από το κατώφλι.
         </p>
         <p>
           <strong>Σωστές: (iii), (iv).</strong>
         </p>
+        <Callout type="key">
+          Όταν εμφανιστούν 1D ερωτήσεις «ποια από τα παρακάτω ΔΕΝ είναι
+          δυνατή», δες αμέσως τα δύο «μικρά» (σταθερό, λογαριθμικό). Σχεδόν
+          πάντα κάποιο από αυτά είναι η σωστή απάντηση — γιατί κανένας 1D DP
+          δεν χωράει σε λιγότερο από <InlineMath>{'\\Omega(n)'}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -3734,40 +3840,52 @@ return c, mark`}</pre>
     solution: (
       <>
         <p>
-          Το πρόβλημα είναι το κλασικό <strong>«μέγιστο ανεξάρτητο σύνολο σε
-          μονοπάτι»</strong>: διαλέγουμε κορυφές πάνω σε μια γραμμή, χωρίς δύο
-          γειτονικές, με μέγιστο άθροισμα βαρών.
+          Πρόκειται για το κλασικό <strong>«μέγιστο ανεξάρτητο σύνολο σε
+          μονοπάτι»</strong>: επιλέγουμε κορυφές πάνω σε γραμμή χωρίς δύο
+          γειτονικές, με μέγιστο άθροισμα βαρών. Παρακάτω, μία ενιαία οπτική
+          απάντηση και στα 4 ερωτήματα — άπληστος που χάνει, η σχέση
+          αναδρομής, η εκτέλεση, η ανάκτηση του ανεξάρτητου συνόλου.
         </p>
+        <LamppostsMISViz />
         <p>
-          <strong>1. Είναι ο άπληστος βέλτιστος; ΟΧΙ.</strong>{' '}
-          Αντιπαράδειγμα είναι το <em>ίδιο</em> το στιγμιότυπο της εκφώνησης.
-          Περιττοί δείκτες <InlineMath>{'\\{x_1,x_3,x_5,x_7\\}'}</InlineMath>:{' '}
-          <InlineMath>{'8+20+32+24 = 84'}</InlineMath>. Άρτιοι{' '}
-          <InlineMath>{'\\{x_2,x_4,x_6\\}'}</InlineMath>:{' '}
-          <InlineMath>{'40+16+36 = 92'}</InlineMath>. Ο άπληστος επιστρέφει{' '}
-          <InlineMath>{'\\max(84, 92) = 92'}</InlineMath>. Όμως το ανεξάρτητο{' '}
-          <InlineMath>{'\\{x_2,x_5,x_7\\}'}</InlineMath> δίνει{' '}
-          <InlineMath>{'40+32+24 = 96 > 92'}</InlineMath>. Άρα ο άπληστος{' '}
-          <strong>χάνει το βέλτιστο</strong> — η σωστή λύση δεν είναι ανάγκη να
-          είναι «όλα τα μονά» ή «όλα τα ζυγά».
-        </p>
-        <p>
-          <strong>2. Δυναμικός προγραμματισμός.</strong> Ορίζουμε{' '}
-          <InlineMath>{'\\text{OPT}(i)'}</InlineMath> = η μέγιστη φωτεινότητα
-          χρησιμοποιώντας μόνο τις θέσεις{' '}
-          <InlineMath>{'x_1, \\ldots, x_i'}</InlineMath>. Για τη θέση{' '}
-          <InlineMath>{'x_i'}</InlineMath> έχουμε δύο επιλογές:
+          <strong>1. Είναι ο άπληστος βέλτιστος; ΟΧΙ.</strong> Το ίδιο το
+          στιγμιότυπο της εκφώνησης είναι αντιπαράδειγμα. Στην καρτέλα
+          «Άπληστος odd/even» δες τα δύο ζευγάρια:
         </p>
         <ul>
           <li>
-            <strong>Δεν</strong> βάζουμε κολώνα στο{' '}
+            Μονοί <InlineMath>{'\\{x_1,x_3,x_5,x_7\\}'}</InlineMath>:{' '}
+            <InlineMath>{'8+20+32+24 = 84'}</InlineMath>.
+          </li>
+          <li>
+            Ζυγοί <InlineMath>{'\\{x_2,x_4,x_6\\}'}</InlineMath>:{' '}
+            <InlineMath>{'40+16+36 = 92'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          Ο άπληστος επιστρέφει max(84, 92) = 92. Αλλά στην καρτέλα «Το
+          πραγματικό βέλτιστο» φαίνεται το ανεξάρτητο{' '}
+          <InlineMath>{'\\{x_2, x_5, x_7\\}'}</InlineMath> ={' '}
+          <InlineMath>{'40+32+24 = 96 > 92'}</InlineMath>. Το βέλτιστο δεν
+          είναι «όλα μονά» ή «όλα ζυγά» — είναι ένα μικτό σύνολο που σπάει το
+          δίλημμα του άπληστου.
+        </p>
+        <p>
+          <strong>2. Δυναμικός προγραμματισμός.</strong> Έστω{' '}
+          <InlineMath>{'\\text{OPT}(i)'}</InlineMath> = η μέγιστη φωτεινότητα
+          χρησιμοποιώντας μόνο τις θέσεις{' '}
+          <InlineMath>{'x_1, \\ldots, x_i'}</InlineMath>. Στην θέση{' '}
+          <InlineMath>{'x_i'}</InlineMath> ρωτάμε «μέσα ή έξω;»:
+        </p>
+        <ul>
+          <li>
+            <strong>ΕΞΩ:</strong> δεν βάζουμε κολώνα στο{' '}
             <InlineMath>{'x_i'}</InlineMath> → η λύση είναι{' '}
             <InlineMath>{'\\text{OPT}(i-1)'}</InlineMath>.
           </li>
           <li>
-            <strong>Βάζουμε</strong> κολώνα στο{' '}
-            <InlineMath>{'x_i'}</InlineMath> → τότε το{' '}
-            <InlineMath>{'x_{i-1}'}</InlineMath> απαγορεύεται, οπότε κερδίζουμε{' '}
+            <strong>ΜΕΣΑ:</strong> βάζουμε κολώνα → απαγορεύεται το{' '}
+            <InlineMath>{'x_{i-1}'}</InlineMath>, οπότε κερδίζουμε{' '}
             <InlineMath>{'\\varphi_i + \\text{OPT}(i-2)'}</InlineMath>.
           </li>
         </ul>
@@ -3782,23 +3900,36 @@ return c, mark`}</pre>
           δύο ήδη γνωστών τιμών) → συνολικά{' '}
           <strong><InlineMath>{'\\Theta(n)'}</InlineMath></strong>. Είναι
           πολυωνυμικός ως προς το <InlineMath>{'n'}</InlineMath> και{' '}
-          <em>ανεξάρτητος</em> των τιμών φωτεινότητας (δεν εξαρτάται από το πόσο
-          μεγάλα είναι τα <InlineMath>{'\\varphi_i'}</InlineMath>).
+          <em>ανεξάρτητος</em> των τιμών φωτεινότητας — όσο μεγάλο κι αν είναι
+          το <InlineMath>{'\\varphi_i'}</InlineMath>, ο πίνακας γεμίζει σε
+          γραμμικό χρόνο.
         </p>
         <p>
-          <strong>4. Εκτέλεση στο παράδειγμα</strong>{' '}
-          <InlineMath>{'[\\,8,40,20,16,32,36,24\\,]'}</InlineMath>:
+          <strong>4. Εκτέλεση στο παράδειγμα.</strong> Στην καρτέλα «DP
+          βήμα-βήμα» πάτησε «Επόμενο» και δες κάθε κελί να γεμίζει — τα
+          βήματα είναι αυτά:
         </p>
         <BlockMath>{'\\begin{aligned} \\text{OPT}(0) &= 0 \\\\ \\text{OPT}(1) &= 8 \\\\ \\text{OPT}(2) &= \\max(8,\\ 40+0) = 40 \\\\ \\text{OPT}(3) &= \\max(40,\\ 20+8) = 40 \\\\ \\text{OPT}(4) &= \\max(40,\\ 16+40) = 56 \\\\ \\text{OPT}(5) &= \\max(56,\\ 32+40) = 72 \\\\ \\text{OPT}(6) &= \\max(72,\\ 36+56) = 92 \\\\ \\text{OPT}(7) &= \\max(92,\\ 24+72) = 96 \\end{aligned}'}</BlockMath>
         <p>
-          Πίνακας:{' '}
+          Τελικός πίνακας:{' '}
           <InlineMath>{'[\\,0,\\ 8,\\ 40,\\ 40,\\ 56,\\ 72,\\ 92,\\ 96\\,]'}</InlineMath>.
           Η μέγιστη φωτεινότητα είναι{' '}
-          <strong><InlineMath>{'\\text{OPT}(7) = 96'}</InlineMath></strong>,
-          που επιτυγχάνεται από το ανεξάρτητο σύνολο{' '}
-          <InlineMath>{'\\{x_2, x_5, x_7\\}'}</InlineMath> — ακριβώς όσο
-          προέβλεπε η εκφώνηση.
+          <strong><InlineMath>{'\\text{OPT}(7) = 96'}</InlineMath></strong>, με
+          ανεξάρτητο σύνολο <InlineMath>{'\\{x_2, x_5, x_7\\}'}</InlineMath> που
+          ανακαλύπτεται από το πέρασμα προς τα πίσω (βλ. ίδια καρτέλα στο τέλος).
         </p>
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης — «τοπικά διαζευτικά κριτήρια ψεύδονται».</strong>{' '}
+          Όταν ο άπληστος «δοκίμασε μονούς, μετά ζυγούς» μοιάζει να χωράει όλες
+          τις περιπτώσεις, ένα μικτό βέλτιστο σπάει την τοπική επιχειρηματολογία.
+          Το σήμα: αν στο πρόβλημα <strong>μη-διαδοχικότητα</strong> ή
+          <strong> ανάλογη απαγόρευση δύο γειτονικών</strong> + αυθαίρετα βάρη,
+          σκέψου DP «κάθε στοιχείο μέσα/έξω» με αναδρομή στο
+          <InlineMath>{'\\text{OPT}(i-1)'}</InlineMath> vs{' '}
+          <InlineMath>{'v_i + \\text{OPT}(i-2)'}</InlineMath>. Η ίδια δομή
+          γενικεύεται σε <em>«ανεξάρτητο σύνολο σε δέντρο»</em> (L17) με δύο
+          τιμές A[v]/B[v] ανά κορυφή.
+        </Callout>
       </>
     ),
   },
@@ -7124,17 +7255,100 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>(Α) Ο άπληστος «κατά συνδρομή» ΔΕΝ είναι βέλτιστος.</strong> Διαλέγοντας πάντα το ακριβότερο αίτημα μπορεί να «μπλοκάρεις» δύο φθηνότερα που μαζί αξίζουν περισσότερο.</p>
-        <p><strong>Αντιπαράδειγμα.</strong> Τρία αιτήματα: <InlineMath>{'A = [0, 10]'}</InlineMath> με <InlineMath>{'p_A = 100'}</InlineMath>· <InlineMath>{'B = [0, 5]'}</InlineMath> με <InlineMath>{'p_B = 60'}</InlineMath>· <InlineMath>{'C = [6, 10]'}</InlineMath> με <InlineMath>{'p_C = 60'}</InlineMath>. Ο άπληστος διαλέγει πρώτα το <InlineMath>{'A'}</InlineMath> (ακριβότερο, <InlineMath>{'100'}</InlineMath>)· τότε <InlineMath>{'B'}</InlineMath> και <InlineMath>{'C'}</InlineMath> επικαλύπτονται με το <InlineMath>{'A'}</InlineMath> και απορρίπτονται → σύνολο <InlineMath>{'100'}</InlineMath>. Η βέλτιστη λύση όμως είναι <InlineMath>{'\\{B, C\\}'}</InlineMath> (δεν επικαλύπτονται) → σύνολο <InlineMath>{'120'}</InlineMath>. Άρα ο άπληστος αποτυγχάνει.</p>
-        <p><strong>(Β) Η σωστή λύση: δυναμικός προγραμματισμός (χρονοπρογραμματισμός με βάρη).</strong> Αυτό είναι το κλασικό <em>weighted interval scheduling</em>.</p>
-        <p><strong>Βήμα 1 — ταξινόμηση.</strong> Ταξινόμησε τα <InlineMath>{'n'}</InlineMath> αιτήματα κατά αύξοντα χρόνο λήξης <InlineMath>{'e_1 \\le e_2 \\le \\dots \\le e_n'}</InlineMath>.</p>
-        <p><strong>Βήμα 2 — προκάτοχος.</strong> Για κάθε αίτημα <InlineMath>{'j'}</InlineMath> όρισε <InlineMath>{'p(j)'}</InlineMath> = ο μεγαλύτερος δείκτης <InlineMath>{'i < j'}</InlineMath> τέτοιος ώστε το αίτημα <InlineMath>{'i'}</InlineMath> να λήγει πριν αρχίσει το <InlineMath>{'j'}</InlineMath> (<InlineMath>{'e_i \\le s_j'}</InlineMath>) — δηλαδή το «τελευταίο συμβατό αίτημα πριν το <InlineMath>{'j'}</InlineMath>». Βρίσκεται με δυαδική αναζήτηση.</p>
-        <p><strong>Βήμα 3 — αναδρομική σχέση.</strong> Έστω <InlineMath>{'P[j]'}</InlineMath> = το μέγιστο άθροισμα συνδρομών χρησιμοποιώντας μόνο τα πρώτα <InlineMath>{'j'}</InlineMath> αιτήματα. Για το αίτημα <InlineMath>{'j'}</InlineMath> έχουμε δύο επιλογές — το παίρνουμε ή όχι:</p>
+        <p>
+          <strong>(Α) Ο άπληστος «κατά συνδρομή» ΔΕΝ είναι βέλτιστος.</strong>{' '}
+          Διαλέγοντας πάντα το ακριβότερο αίτημα ρισκάρεις να «μπλοκάρεις» δύο
+          φθηνότερα που μαζί αξίζουν περισσότερο.
+        </p>
+        <p>
+          <strong>Αντιπαράδειγμα.</strong> Τρία αιτήματα:{' '}
+          <InlineMath>{'A = [0, 10]'}</InlineMath> με{' '}
+          <InlineMath>{'p_A = 100'}</InlineMath>·{' '}
+          <InlineMath>{'B = [0, 5]'}</InlineMath> με{' '}
+          <InlineMath>{'p_B = 60'}</InlineMath>·{' '}
+          <InlineMath>{'C = [6, 10]'}</InlineMath> με{' '}
+          <InlineMath>{'p_C = 60'}</InlineMath>. Ο άπληστος ξεκινά με{' '}
+          <InlineMath>{'A'}</InlineMath> (ακριβότερο, 100). Τότε{' '}
+          <InlineMath>{'B'}</InlineMath> και <InlineMath>{'C'}</InlineMath>{' '}
+          επικαλύπτονται με το <InlineMath>{'A'}</InlineMath> και απορρίπτονται
+          → σύνολο 100. Η σωστή λύση{' '}
+          <InlineMath>{'\\{B, C\\}'}</InlineMath> δεν επικαλύπτεται → σύνολο 120,
+          νικάει.
+        </p>
+        <p>
+          <strong>(Β) Η σωστή λύση: δυναμικός προγραμματισμός (weighted interval
+          scheduling).</strong> Ίδιος αλγόριθμος με το{' '}
+          <a href="/lectures/L14-dp-i#" className="underline">L14</a>, εφαρμοσμένος στα
+          τρία αιτήματα του αντιπαραδείγματος. Παρακολούθησε τον πίνακα{' '}
+          <InlineMath>{'M'}</InlineMath> να γεμίζει:
+        </p>
+        <WeightedIntervalDP instance="platform" />
+        <p>
+          <strong>Τα 4 βήματα του αλγορίθμου:</strong>
+        </p>
+        <p>
+          <strong>Βήμα 1 — ταξινόμηση.</strong> Ταξινόμησε τα{' '}
+          <InlineMath>{'n'}</InlineMath> αιτήματα κατά αύξοντα χρόνο λήξης{' '}
+          <InlineMath>{'e_1 \\le e_2 \\le \\dots \\le e_n'}</InlineMath>. Στο
+          παράδειγμα: <InlineMath>{'B = [0,5]'}</InlineMath>,{' '}
+          <InlineMath>{'A = [0,10]'}</InlineMath>,{' '}
+          <InlineMath>{'C = [6,10]'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Βήμα 2 — προκάτοχος <InlineMath>{'p(j)'}</InlineMath>.</strong>{' '}
+          Για κάθε αίτημα <InlineMath>{'j'}</InlineMath>: ο μεγαλύτερος δείκτης{' '}
+          <InlineMath>{'i < j'}</InlineMath> με{' '}
+          <InlineMath>{'e_i \\le s_j'}</InlineMath>. Στο παράδειγμα:{' '}
+          <InlineMath>{'p(B) = 0'}</InlineMath>,{' '}
+          <InlineMath>{'p(A) = 0'}</InlineMath>,{' '}
+          <InlineMath>{'p(C) = 1'}</InlineMath> (το{' '}
+          <InlineMath>{'B'}</InlineMath> λήγει στο 5, το{' '}
+          <InlineMath>{'C'}</InlineMath> αρχίζει στο 6 → συμβατά).
+        </p>
+        <p>
+          <strong>Βήμα 3 — αναδρομή.</strong> Έστω{' '}
+          <InlineMath>{'P[j]'}</InlineMath> = μέγιστο άθροισμα χρησιμοποιώντας
+          τα πρώτα <InlineMath>{'j'}</InlineMath> αιτήματα. Δυαδική απόφαση «το{' '}
+          <InlineMath>{'j'}</InlineMath> μέσα ή έξω;»:
+        </p>
         <BlockMath>{'P[j] = \\max\\bigl(\\,P[j-1],\\;\\; p_j + P[p(j)]\\,\\bigr), \\qquad P[0] = 0'}</BlockMath>
-        <p>Αν δεν πάρουμε το <InlineMath>{'j'}</InlineMath>, η λύση είναι ό,τι καλύτερο γινόταν με τα <InlineMath>{'j-1'}</InlineMath>. Αν το πάρουμε, κερδίζουμε <InlineMath>{'p_j'}</InlineMath> και επιτρέπεται να συνδυαστεί μόνο με τη βέλτιστη λύση των αιτημάτων ως τον προκάτοχο <InlineMath>{'p(j)'}</InlineMath>.</p>
-        <p><strong>Βήμα 4.</strong> Η ζητούμενη τιμή είναι <InlineMath>{'P[n]'}</InlineMath>. Με οπισθοδρόμηση στον πίνακα <InlineMath>{'P'}</InlineMath> βρίσκουμε και το ίδιο το υποσύνολο των αιτημάτων.</p>
-        <p><strong>Παράδειγμα (το αντιπαράδειγμα από πάνω).</strong> Ταξινομημένα κατά λήξη: <InlineMath>{'B=[0,5]'}</InlineMath>, <InlineMath>{'A=[0,10]'}</InlineMath>, <InlineMath>{'C=[6,10]'}</InlineMath>. Προκάτοχοι: <InlineMath>{'p(B)=0'}</InlineMath>, <InlineMath>{'p(A)=0'}</InlineMath>, <InlineMath>{'p(C)=1'}</InlineMath> (το <InlineMath>{'B'}</InlineMath> λήγει στο 5, το <InlineMath>{'C'}</InlineMath> αρχίζει στο 6). Τότε <InlineMath>{'P[1]=60'}</InlineMath>, <InlineMath>{'P[2]=\\max(60,\\,100+0)=100'}</InlineMath>, <InlineMath>{'P[3]=\\max(100,\\,60+P[1])=\\max(100,120)=120'}</InlineMath>. Άρα <InlineMath>{'P[n]=120'}</InlineMath> με επιλογή <InlineMath>{'\\{B,C\\}'}</InlineMath> — όσο ακριβώς προβλέψαμε.</p>
-        <p><strong>Πολυπλοκότητα.</strong> Ταξινόμηση <InlineMath>{'O(n \\log n)'}</InlineMath>· κάθε <InlineMath>{'p(j)'}</InlineMath> με δυαδική αναζήτηση <InlineMath>{'O(\\log n)'}</InlineMath>· γέμισμα του πίνακα <InlineMath>{'O(n)'}</InlineMath>. Σύνολο <InlineMath>{'O(n \\log n)'}</InlineMath>.</p>
+        <p>
+          Στο παράδειγμα: <InlineMath>{'P[1] = 60'}</InlineMath> (μόνο{' '}
+          <InlineMath>{'B'}</InlineMath>);{' '}
+          <InlineMath>{'P[2] = \\max(60,\\ 100+0) = 100'}</InlineMath> (νικάει{' '}
+          <InlineMath>{'A'}</InlineMath>); <strong>όμως</strong>{' '}
+          <InlineMath>{'P[3] = \\max(100,\\ 60 + P[1]) = \\max(100,\\ 120) = 120'}</InlineMath>{' '}
+          — το <InlineMath>{'C'}</InlineMath> «μέσα» κερδίζει, και η αναδρομή
+          μέσω <InlineMath>{'P[p(C)] = P[1]'}</InlineMath> ανακτά αυτόματα το{' '}
+          <InlineMath>{'B'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Βήμα 4 — ανάκτηση.</strong>{' '}
+          <InlineMath>{'P[n] = P[3] = 120'}</InlineMath>· πέρασμα προς τα πίσω
+          βγάζει το ίδιο σύνολο{' '}
+          <InlineMath>{'\\{B, C\\}'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Πολυπλοκότητα.</strong> Ταξινόμηση{' '}
+          <InlineMath>{'O(n \\log n)'}</InlineMath>· υπολογισμός των{' '}
+          <InlineMath>{'p(j)'}</InlineMath> σε{' '}
+          <InlineMath>{'O(n)'}</InlineMath> με σάρωση δύο δεικτών (βλ. L14)·
+          γέμισμα πίνακα <InlineMath>{'O(n)'}</InlineMath>. Σύνολο{' '}
+          <InlineMath>{'O(n \\log n)'}</InlineMath>.
+        </p>
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης — «greedy by price» δεν λύνει WIS.</strong> Στο
+          μη-σταθμισμένο interval scheduling του{' '}
+          <a href="/lectures/L11-greedy-i" className="underline">L11</a>, το
+          «κατά πρώιμη λήξη» είναι αποδεδειγμένα βέλτιστο. Με βάρη όμως, ΚΑΝΕΝΑ
+          απλό κριτήριο σειράς δεν δουλεύει — «κατά τιμή» αποτυγχάνει εδώ, «κατά
+          λήξη» αποτυγχάνει σε ευρύτερες περιπτώσεις (βλ.{' '}
+          <em>GreedyFailsWeighted</em> στο L14). Σήμα: μόλις δεις{' '}
+          <em>«ζητούμε μέγιστο άθροισμα <strong>τιμών/βαρών</strong> μη
+          επικαλυπτόμενων»</em>, στρώσε τον DP <strong>weighted interval
+          scheduling</strong> με τα 4 βήματα — μην ψάχνεις απλό κριτήριο
+          ταξινόμησης.
+        </Callout>
       </>
     ),
   },
@@ -7446,15 +7660,84 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>i. Ο αναδρομικός <InlineMath>{'RB(n)'}</InlineMath>.</strong> «Αν <InlineMath>{'n \\le 3'}</InlineMath> επίστρεψε <InlineMath>{'1'}</InlineMath>. Αλλιώς, κάλεσε αναδρομικά τον εαυτό σου για να βρεις τα <InlineMath>{'RB(n-1)'}</InlineMath>, <InlineMath>{'RB(n-2)'}</InlineMath>, <InlineMath>{'RB(n-3)'}</InlineMath> και επίστρεψε <InlineMath>{'2 \\max\\{RB(n-1), RB(n-2)\\} + RB(n-3)'}</InlineMath>.»</p>
-        <p><strong>ii. Γιατί είναι εκθετικός.</strong> Ο <InlineMath>{'RB(n)'}</InlineMath> δεν θυμάται τίποτα: κάθε κλήση ξανα-υπολογίζει από την αρχή τους ίδιους όρους. Ο αριθμός των κλήσεων <InlineMath>{'T(n)'}</InlineMath> ικανοποιεί:</p>
-        <BlockMath>{'T(n) = T(n-1) + T(n-2) + T(n-3) + O(1)'}</BlockMath>
-        <p>Για ένα κάτω φράγμα, παρατηρούμε ότι κάθε κλήση παράγει 3 κλήσεις, και η «αβαθέστερη» απ’ αυτές μειώνει το <InlineMath>{'n'}</InlineMath> κατά το πολύ 3. Άρα το δέντρο αναδρομής έχει βάθος τουλάχιστον <InlineMath>{'n/3'}</InlineMath> και διακλάδωση 3:</p>
-        <BlockMath>{'T(n) \\ge 3 \\cdot T(n-3) \\;\\Rightarrow\\; T(n) \\ge 3^{\\,n/3} = \\left(3^{1/3}\\right)^{n} = 1{,}44^{\\,n}'}</BlockMath>
-        <p>Άρα <InlineMath>{'T(n) = \\Omega(1{,}44^{\\,n})'}</InlineMath> — εκθετικός.</p>
-        <p><strong>iii. Υποπροβλήματα του <InlineMath>{'DB(n)'}</InlineMath>.</strong> Τα διαφορετικά υποπροβλήματα είναι ακριβώς οι όροι που θέλουμε: <InlineMath>{'b_1, b_2, \\dots, b_n'}</InlineMath>. Είναι <InlineMath>{'n'}</InlineMath> στο πλήθος, δηλαδή <InlineMath>{'\\Theta(n)'}</InlineMath> υποπροβλήματα.</p>
-        <p><strong>iv. Γιατί ο <InlineMath>{'DB(n)'}</InlineMath> είναι γραμμικός.</strong> Ο δυναμικός προγραμματισμός υπολογίζει τους όρους «από κάτω προς τα πάνω» και τους αποθηκεύει σε έναν πίνακα. Αρχικοποιεί <InlineMath>{'b_1 = b_2 = b_3 = 1'}</InlineMath>, και για <InlineMath>{'i = 4, \\dots, n'}</InlineMath> υπολογίζει <InlineMath>{'b_i = 2\\max\\{b_{i-1}, b_{i-2}\\} + b_{i-3}'}</InlineMath> διαβάζοντας τρεις ήδη αποθηκευμένες τιμές — κόστος <InlineMath>{'O(1)'}</InlineMath> ανά όρο. Συνολικά <InlineMath>{'n'}</InlineMath> όροι <InlineMath>{'\\times\\, O(1) = \\Theta(n)'}</InlineMath> — γραμμικός.</p>
-        <p><strong>v. Ποιος είναι ταχύτερος.</strong> Ο <InlineMath>{'DB(n)'}</InlineMath> με <InlineMath>{'\\Theta(n)'}</InlineMath> είναι ασύγκριτα ταχύτερος από τον εκθετικό <InlineMath>{'RB(n)'}</InlineMath>. Η μόνη διαφορά τους είναι ότι ο <InlineMath>{'DB'}</InlineMath> <em>θυμάται</em> τα αποτελέσματα αντί να τα ξαναϋπολογίζει — και αυτό μετατρέπει το <InlineMath>{'1{,}44^{\\,n}'}</InlineMath> σε <InlineMath>{'n'}</InlineMath>.</p>
+        <p>
+          <strong>i. Ο αναδρομικός <InlineMath>{'RB(n)'}</InlineMath>{' '}
+          σε φυσική γλώσσα.</strong>
+        </p>
+        <p className="rounded-md border border-border bg-bg-soft/40 px-3 py-2 text-sm">
+          «Αν <InlineMath>{'n \\le 3'}</InlineMath>, επίστρεψε{' '}
+          <InlineMath>{'1'}</InlineMath>. Αλλιώς, κάλεσε αναδρομικά τον εαυτό
+          σου για να βρεις τα <InlineMath>{'RB(n-1)'}</InlineMath>,{' '}
+          <InlineMath>{'RB(n-2)'}</InlineMath>,{' '}
+          <InlineMath>{'RB(n-3)'}</InlineMath>, και επίστρεψε{' '}
+          <InlineMath>{'2 \\max\\{RB(n-1), RB(n-2)\\} + RB(n-3)'}</InlineMath>.»
+        </p>
+        <p>
+          <strong>ii. Γιατί είναι εκθετικός — και κάτω φράγμα{' '}
+          <InlineMath>{'\\Omega(1{,}44^n)'}</InlineMath>.</strong> Ο{' '}
+          <InlineMath>{'RB(n)'}</InlineMath> δεν θυμάται τίποτα: κάθε κλήση
+          ξεκινά τους υπολογισμούς από την αρχή. Δες το δέντρο αναδρομής με
+          <strong> τρία παιδιά ανά κόμβο</strong>, και μετά μετάβα στο
+          «Memoized» για να συγκρίνεις:
+        </p>
+        <RecursionExplosion instance="tribonacci-max" />
+        <p>
+          Το κρίσιμο γεωμετρικό σημείο: κάθε κόμβος έχει{' '}
+          <strong>3 παιδιά</strong> (<InlineMath>{'b(k-1), b(k-2), b(k-3)'}</InlineMath>),
+          και η «αβαθέστερη» κλήση μειώνει το <InlineMath>{'n'}</InlineMath>{' '}
+          κατά το πολύ 3. Άρα το δέντρο έχει βάθος{' '}
+          <strong><InlineMath>{'\\ge n/3'}</InlineMath></strong> και
+          διακλάδωση 3, οπότε:
+        </p>
+        <BlockMath>{'T(n) \\ge 3 \\cdot T(n-3) \\;\\Rightarrow\\; T(n) \\ge 3^{\\,n/3} = \\bigl(3^{1/3}\\bigr)^{n} = 1{,}44^{\\,n}'}</BlockMath>
+        <p>
+          Άρα <InlineMath>{'T(n) = \\Omega(1{,}44^{\\,n})'}</InlineMath> —
+          εκθετικός. (Ο ακριβής αριθμός κλήσεων είναι κάπως μεγαλύτερος, αλλά
+          μας αρκεί αυτό το κάτω φράγμα.)
+        </p>
+        <p>
+          <strong>iii. Υποπροβλήματα του{' '}
+          <InlineMath>{'DB(n)'}</InlineMath>.</strong> Τα διαφορετικά
+          υποπροβλήματα είναι ακριβώς οι όροι που θέλουμε:{' '}
+          <InlineMath>{'b_1, b_2, \\dots, b_n'}</InlineMath>. Πλήθος:{' '}
+          <InlineMath>{'n'}</InlineMath>, δηλαδή{' '}
+          <InlineMath>{'\\Theta(n)'}</InlineMath>.
+        </p>
+        <p>
+          <strong>iv. Γιατί ο <InlineMath>{'DB(n)'}</InlineMath> είναι
+          γραμμικός.</strong> Από κάτω προς τα πάνω: αρχικοποιεί{' '}
+          <InlineMath>{'b_1 = b_2 = b_3 = 1'}</InlineMath>, και για{' '}
+          <InlineMath>{'i = 4, \\dots, n'}</InlineMath> υπολογίζει{' '}
+          <InlineMath>{'b_i = 2\\max\\{b_{i-1}, b_{i-2}\\} + b_{i-3}'}</InlineMath>{' '}
+          διαβάζοντας τρεις ήδη αποθηκευμένες τιμές — δουλειά{' '}
+          <InlineMath>{'O(1)'}</InlineMath> ανά όρο. Συνολικά{' '}
+          <InlineMath>{'n \\cdot O(1) = \\Theta(n)'}</InlineMath>. Στην εικόνα,
+          το «Memoized» επίπεδο: από εκατομμύρια κλήσεις σε μερικές δεκάδες —
+          ίδια ακολουθία, μόνο που θυμάται.
+        </p>
+        <p>
+          <strong>v. Ποιος είναι ταχύτερος.</strong>{' '}
+          <InlineMath>{'DB(n) = \\Theta(n)'}</InlineMath> είναι ασύγκριτα
+          ταχύτερος από{' '}
+          <InlineMath>{'RB(n) = \\Omega(1{,}44^{\\,n})'}</InlineMath>. Η μόνη
+          διαφορά τους: ο DP <em>θυμάται</em> αντί να ξαναϋπολογίζει — και
+          αυτό μετατρέπει το <InlineMath>{'1{,}44^{\\,n}'}</InlineMath> σε{' '}
+          <InlineMath>{'n'}</InlineMath>.
+        </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «επικαλυπτόμενα ⇒ memoize».</strong> Όταν
+          μια αναδρομή{' '}
+          <InlineMath>{'T(n) = T(n-d_1) + T(n-d_2) + \\dots + T(n-d_k) + O(1)'}</InlineMath>{' '}
+          με <InlineMath>{'k \\ge 2'}</InlineMath> εμφανίζεται «ξαναϋπολογίζω
+          τα ίδια», η βελτίωση είναι μηχανική: αναγνώρισε ότι τα διαφορετικά
+          ορίσματα είναι μόνο <InlineMath>{'n'}</InlineMath> — άρα γέμισε
+          έναν πίνακα <InlineMath>{'b[1..n]'}</InlineMath> bottom-up.{' '}
+          <em>Κάτω φράγμα εκθετικού</em>:{' '}
+          <InlineMath>{'T(n) \\ge k \\cdot T(n - \\max d_i)'}</InlineMath>{' '}
+          δίνει
+          <InlineMath>{'\\Omega(k^{n / \\max d_i})'}</InlineMath> — δηλαδή
+          εδώ <InlineMath>{'\\Omega(3^{n/3}) = \\Omega(1{,}44^n)'}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -9251,16 +9534,81 @@ K = 101     Σ = 100`}</pre>
     prerequisites: ['lectures/L14-dp-i'],
     statement: (
       <>
-        <p>Το πρόβλημα τεμαχισμού μιας ράβδου: δίνεται μια ράβδος <InlineMath>{'n'}</InlineMath> cm και το κέρδος πώλησης για κάθε δυνατό μήκος τμήματος. Να δοθεί αλγόριθμος που βρίσκει τον πιο επικερδή τρόπο τεμαχισμού της ράβδου.</p>
+        <p>
+          Το πρόβλημα τεμαχισμού μιας ράβδου: δίνεται μια ράβδος μήκους{' '}
+          <InlineMath>{'n'}</InlineMath> cm, και το κέρδος πώλησης για κάθε
+          δυνατό μήκος τμήματος (<InlineMath>{'V_k'}</InlineMath> για τμήμα{' '}
+          μήκους <InlineMath>{'k'}</InlineMath>). Δώσε αλγόριθμο που βρίσκει
+          τον πιο επικερδή τρόπο τεμαχισμού.
+        </p>
       </>
     ),
     solution: (
       <>
-        <p><strong>Η αρχή της βέλτιστης υποδομής.</strong> Αν κόψουμε από μια ράβδο μήκους <InlineMath>{'i'}</InlineMath> ένα πρώτο κομμάτι μήκους <InlineMath>{'k'}</InlineMath>, το υπόλοιπο μήκους <InlineMath>{'i - k'}</InlineMath> πρέπει κι αυτό να τεμαχιστεί <em>βέλτιστα</em>. Άρα η βέλτιστη λύση εμπεριέχει βέλτιστες λύσεις υποπροβλημάτων.</p>
-        <p><strong>Αναδρομική σχέση.</strong> Έστω <InlineMath>{'C(i)'}</InlineMath> = το μέγιστο κέρδος από ράβδο μήκους <InlineMath>{'i'}</InlineMath>, και <InlineMath>{'V_k'}</InlineMath> = η τιμή πώλησης ενός τμήματος μήκους <InlineMath>{'k'}</InlineMath>. Δοκιμάζουμε όλα τα δυνατά «πρώτα κομμάτια»:</p>
+        <p>
+          <strong>Βέλτιστη υποδομή — γιατί DP.</strong> Αν κόψουμε από μια
+          ράβδο μήκους <InlineMath>{'i'}</InlineMath> ένα πρώτο κομμάτι μήκους{' '}
+          <InlineMath>{'k'}</InlineMath>, ό,τι μένει (μήκους{' '}
+          <InlineMath>{'i - k'}</InlineMath>) πρέπει κι αυτό να τεμαχιστεί{' '}
+          <em>βέλτιστα</em> — αλλιώς θα μπορούσαμε να το βελτιώσουμε ξεχωριστά
+          και να κερδίσουμε περισσότερα. Άρα{' '}
+          <em>βέλτιστη λύση = βέλτιστη πρώτη κοπή + βέλτιστη λύση του
+          υπολοίπου</em>. Αυτή είναι η σήμα ότι ζητάμε DP.
+        </p>
+        <p>
+          <strong>Αναδρομική σχέση.</strong> Έστω{' '}
+          <InlineMath>{'C(i)'}</InlineMath> = το μέγιστο κέρδος από ράβδο
+          μήκους <InlineMath>{'i'}</InlineMath>. Δεν ξέρουμε ποιο πρώτο κομμάτι{' '}
+          <InlineMath>{'k'}</InlineMath> είναι το βέλτιστο, οπότε{' '}
+          <strong>δοκιμάζουμε όλα</strong>:
+        </p>
         <BlockMath>{'C(i) = \\max_{1 \\le k \\le i}\\bigl(V_k + C(i-k)\\bigr), \\qquad C(0) = 0'}</BlockMath>
-        <p><strong>Παράδειγμα.</strong> Τιμές ανά μήκος <InlineMath>{'1..8'}</InlineMath>: <InlineMath>{'V = (1, 5, 8, 9, 10, 17, 17, 20)'}</InlineMath>. Γεμίζοντας τον πίνακα «από κάτω προς τα πάνω» προκύπτει <InlineMath>{'C = (1, 5, 8, 10, 13, 17, 18, 22)'}</InlineMath>. Για ράβδο <InlineMath>{'8'}</InlineMath> cm το μέγιστο κέρδος είναι <InlineMath>{'C(8) = 22'}</InlineMath>, που επιτυγχάνεται με <InlineMath>{'k = 6'}</InlineMath>: <InlineMath>{'V_6 + C(2) = 17 + 5 = 22'}</InlineMath> — δηλαδή κόβουμε τη ράβδο σε ένα κομμάτι <InlineMath>{'6'}</InlineMath> cm και ένα <InlineMath>{'2'}</InlineMath> cm.</p>
-        <p><strong>Πολυπλοκότητα.</strong> Για κάθε μήκος <InlineMath>{'i'}</InlineMath> δοκιμάζουμε <InlineMath>{'i'}</InlineMath> τιμές του <InlineMath>{'k'}</InlineMath>, καθεμία σε <InlineMath>{'O(1)'}</InlineMath> → συνολικά <InlineMath>{'O(n^2)'}</InlineMath>.</p>
+        <p>
+          <strong>Δες την αναδρομή να τρέχει.</strong> Στιγμιότυπο:{' '}
+          <InlineMath>{'n = 8'}</InlineMath>, τιμές{' '}
+          <InlineMath>{'V = (1, 5, 8, 9, 10, 17, 17, 20)'}</InlineMath>. Πάτησε
+          «Επόμενο» για να γεμίζεις τον πίνακα — σε κάθε{' '}
+          <InlineMath>{'C(i)'}</InlineMath> κρέμεται μία στήλη από υποψήφια{' '}
+          <InlineMath>{'V_k + C(i-k)'}</InlineMath>· κάνε hover πάνω σε κάθε{' '}
+          <InlineMath>{'k'}</InlineMath> για να δεις τη συγκεκριμένη κοπή στη
+          ράβδο:
+        </p>
+        <RodCuttingDP />
+        <p>
+          <strong>Πίνακας:</strong>{' '}
+          <InlineMath>{'C = (0, 1, 5, 8, 10, 13, 17, 18, 22)'}</InlineMath>{' '}
+          (μαζί με <InlineMath>{'C(0) = 0'}</InlineMath>). Για ράβδο 8 cm το
+          μέγιστο κέρδος είναι{' '}
+          <strong>
+            <InlineMath>{'C(8) = 22'}</InlineMath>
+          </strong>
+          , με νικητή <InlineMath>{'k = 6'}</InlineMath>:{' '}
+          <InlineMath>{'V_6 + C(2) = 17 + 5 = 22'}</InlineMath>. Η ράβδος
+          κόβεται σε δύο κομμάτια <strong>6 cm + 2 cm</strong>.
+        </p>
+        <p>
+          <strong>Πολυπλοκότητα.</strong> Για κάθε{' '}
+          <InlineMath>{'i'}</InlineMath> δοκιμάζουμε{' '}
+          <InlineMath>{'i'}</InlineMath> υποψήφια{' '}
+          <InlineMath>{'k'}</InlineMath>, καθένα σε{' '}
+          <InlineMath>{'O(1)'}</InlineMath>. Σύνολο{' '}
+          <InlineMath>{'\\sum_{i=1}^{n} i = \\Theta(n^2)'}</InlineMath>.
+        </p>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — «δοκίμασε όλες τις πρώτες κοπές».</strong>{' '}
+          Όταν το αντικείμενο που βελτιστοποιείς (ράβδος, σχοινί, αρχείο,
+          ακολουθία) διασπάται σε <em>δύο</em> ανεξάρτητα κομμάτια — ένα{' '}
+          «πρώτο» κι ένα «υπόλοιπο» — και η αντίστοιχη πράξη είναι αθροιστική,
+          η αναδρομή είναι{' '}
+          <InlineMath>{'C(i) = \\max_k V_k + C(i - k)'}</InlineMath>. Η
+          δουλειά ανά κελί είναι <InlineMath>{'O(i)'}</InlineMath>· συνολικά{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath>. Ομοιότητα με το{' '}
+          <a href="#exercise:front-set-8-ask4" className="underline">
+            άνοιγμα εστιατορίων
+          </a>{' '}
+          — εκεί το «κάθε <InlineMath>{'k'}</InlineMath>» γίνεται «κάθε
+          πιθανός προκάτοχος», αλλά η ιδέα είναι ίδια.
+        </Callout>
       </>
     ),
   },
@@ -9275,21 +9623,123 @@ K = 101     Σ = 100`}</pre>
     prerequisites: ['lectures/L14-dp-i'],
     statement: (
       <>
-        <p>Σκέφτεστε να ανοίξετε μια σειρά εστιατορίων κατά μήκος ενός αυτοκινητόδρομου. Οι <InlineMath>{'n'}</InlineMath> πιθανές τοποθεσίες σχηματίζουν ευθεία γραμμή, με αποστάσεις από την αρχή (σε χιλιόμετρα, κατά αύξουσα σειρά) <InlineMath>{'m_1, m_2, \\dots, m_n'}</InlineMath>. Σε κάθε τοποθεσία μπορείτε να ανοίξετε το πολύ ένα εστιατόριο· το προσδοκώμενο κέρδος από το άνοιγμα στην τοποθεσία <InlineMath>{'i'}</InlineMath> είναι <InlineMath>{'p_i > 0'}</InlineMath>. Δύο οποιαδήποτε εστιατόρια πρέπει να απέχουν τουλάχιστον <InlineMath>{'k'}</InlineMath> μίλια. Δώστε αποδοτικό αλγόριθμο για τον υπολογισμό του μέγιστου συνολικού κέρδους.</p>
+        <p>
+          Σκέφτεστε να ανοίξετε μια σειρά εστιατορίων κατά μήκος ενός
+          αυτοκινητόδρομου. Οι <InlineMath>{'n'}</InlineMath> πιθανές τοποθεσίες
+          σχηματίζουν ευθεία γραμμή, με αποστάσεις από την αρχή (σε χιλιόμετρα,
+          κατά αύξουσα σειρά){' '}
+          <InlineMath>{'m_1 < m_2 < \\dots < m_n'}</InlineMath>. Σε κάθε
+          τοποθεσία μπορείτε να ανοίξετε το πολύ ένα εστιατόριο· το
+          προσδοκώμενο κέρδος από το άνοιγμα στην τοποθεσία{' '}
+          <InlineMath>{'i'}</InlineMath> είναι{' '}
+          <InlineMath>{'p_i > 0'}</InlineMath>. Δύο οποιαδήποτε εστιατόρια
+          πρέπει να απέχουν τουλάχιστον <InlineMath>{'k'}</InlineMath>{' '}
+          χιλιόμετρα. Δώστε αποδοτικό αλγόριθμο για τον υπολογισμό του μέγιστου
+          συνολικού κέρδους.
+        </p>
       </>
     ),
     solution: (
       <>
-        <p><strong>Η ιδέα.</strong> Για κάθε τοποθεσία υπάρχουν δύο επιλογές — ανοίγουμε ή όχι εστιατόριο — και η απόφαση εξαρτάται από προηγούμενες αποφάσεις (ο περιορισμός απόστασης). Κλασικός δυναμικός προγραμματισμός.</p>
-        <p><strong>Αναδρομική σχέση.</strong> Έστω <InlineMath>{'D(i)'}</InlineMath> = το μέγιστο κέρδος λαμβάνοντας υπόψη μόνο τις τοποθεσίες <InlineMath>{'1, \\dots, i'}</InlineMath>. Για την τοποθεσία <InlineMath>{'i'}</InlineMath>:</p>
+        <p>
+          <strong>Η ιδέα — «μέσα ή έξω» με χωρικό περιορισμό.</strong> Σε κάθε
+          τοποθεσία υπάρχουν δύο επιλογές (ανοίγω ή όχι), και ο περιορισμός
+          απόστασης μεταφράζεται σε «αν ανοίξω εδώ, ο τελευταίος επιτρεπτός
+          γείτονας πρέπει να είναι αρκετά πιο πίσω». Κλασικός DP — η{' '}
+          <a href="#exercise:pt5-th4" className="underline">μέγιστη
+          ανεξάρτητη επιλογή σε μονοπάτι</a>{' '}
+          γενικευμένη: αντί να απαγορεύεται μόνο ο άμεσος γείτονας, ο
+          περιορισμός είναι ένα <em>γεωμετρικό</em>{' '}
+          <InlineMath>{'k'}</InlineMath>-εμβαδό αποκλεισμού.
+        </p>
+        <p>
+          <strong>Αναδρομική σχέση.</strong> Έστω{' '}
+          <InlineMath>{'D(i)'}</InlineMath> = μέγιστο κέρδος χρησιμοποιώντας
+          μόνο τοποθεσίες <InlineMath>{'1, \\dots, i'}</InlineMath>. Στο{' '}
+          <InlineMath>{'i'}</InlineMath>:
+        </p>
         <ul>
-          <li>Δεν ανοίγουμε εκεί → το κέρδος είναι <InlineMath>{'D(i-1)'}</InlineMath>.</li>
-          <li>Ανοίγουμε εκεί → κερδίζουμε <InlineMath>{'p_i'}</InlineMath>, αλλά το προηγούμενο εστιατόριο πρέπει να είναι σε τοποθεσία <InlineMath>{'j'}</InlineMath> με <InlineMath>{'m_i - m_j \\ge k'}</InlineMath>. Παίρνουμε το μεγαλύτερο τέτοιο <InlineMath>{'j'}</InlineMath> και προσθέτουμε <InlineMath>{'D(j)'}</InlineMath>.</li>
+          <li>
+            <strong>ΧΩΡΙΣ εστιατόριο στο{' '}
+            <InlineMath>{'i'}</InlineMath></strong>: κέρδος{' '}
+            <InlineMath>{'D(i-1)'}</InlineMath>.
+          </li>
+          <li>
+            <strong>ΜΕ εστιατόριο στο <InlineMath>{'i'}</InlineMath></strong>:{' '}
+            κερδίζουμε <InlineMath>{'p_i'}</InlineMath> + το βέλτιστο των{' '}
+            «επιτρεπτών» προκατόχων. Ο τελευταίος επιτρεπτός είναι{' '}
+            <InlineMath>{'j^*'}</InlineMath> = ο μεγαλύτερος{' '}
+            <InlineMath>{'j < i'}</InlineMath> με{' '}
+            <InlineMath>{'m_i - m_j \\ge k'}</InlineMath>. Κέρδος{' '}
+            <InlineMath>{'p_i + D(j^*)'}</InlineMath>.
+          </li>
         </ul>
-        <BlockMath>{'D(i) = \\max\\bigl(D(i-1),\\; p_i + D(j)\\bigr)'}</BlockMath>
-        <p>όπου <InlineMath>{'j'}</InlineMath> είναι η κοντινότερη προς το <InlineMath>{'i'}</InlineMath> τοποθεσία με απόσταση <InlineMath>{'\\ge k'}</InlineMath>. Αφού οι αποστάσεις <InlineMath>{'m_1 < m_2 < \\dots'}</InlineMath> είναι ταξινομημένες, το <InlineMath>{'j'}</InlineMath> βρίσκεται με <strong>δυαδική αναζήτηση</strong>.</p>
-        <p><strong>Παράδειγμα.</strong> <InlineMath>{'m = (5, 10, 20, 25, 40, 50)'}</InlineMath>, <InlineMath>{'p = (10, 30, 20, 50, 60, 40)'}</InlineMath>, <InlineMath>{'k = 15'}</InlineMath>. Υπολογίζοντας: <InlineMath>{'D(1)=10'}</InlineMath>, <InlineMath>{'D(2)=30'}</InlineMath>, <InlineMath>{'D(3)=30'}</InlineMath>, <InlineMath>{'D(4)=80'}</InlineMath>, <InlineMath>{'D(5)=140'}</InlineMath>, <InlineMath>{'D(6)=140'}</InlineMath>. Το μέγιστο κέρδος είναι <InlineMath>{'140'}</InlineMath>, με εστιατόρια στις τοποθεσίες <InlineMath>{'2, 4, 5'}</InlineMath>.</p>
-        <p><strong>Πολυπλοκότητα.</strong> <InlineMath>{'O(n)'}</InlineMath> υποπροβλήματα, καθένα με μία δυαδική αναζήτηση <InlineMath>{'O(\\log n)'}</InlineMath> → συνολικά <InlineMath>{'O(n \\log n)'}</InlineMath>.</p>
+        <BlockMath>{'D(i) = \\max\\bigl(D(i-1),\\; p_i + D(j^{*})\\bigr), \\quad D(0) = 0'}</BlockMath>
+        <p>
+          Αφού τα <InlineMath>{'m_j'}</InlineMath> είναι ταξινομημένα, το{' '}
+          <InlineMath>{'j^*'}</InlineMath> βρίσκεται με <strong>δυαδική
+          αναζήτηση</strong> σε <InlineMath>{'O(\\log n)'}</InlineMath>.
+          (Ισοδύναμα: σάρωση δύο δεικτών σε αμορτιζάρισμα{' '}
+          <InlineMath>{'O(n)'}</InlineMath> συνολικά, όπως το{' '}
+          <InlineMath>{'p(j)'}</InlineMath> στο L14.)
+        </p>
+        <p>
+          <strong>Δες την αναδρομή να τρέχει.</strong> Στιγμιότυπο από την
+          εκφώνηση: <InlineMath>{'m = (5, 10, 20, 25, 40, 50)'}</InlineMath>,{' '}
+          <InlineMath>{'p = (10, 30, 20, 50, 60, 40)'}</InlineMath>,{' '}
+          <InlineMath>{'k = 15'}</InlineMath>. Πάτησε «Επόμενο» — η ζώνη
+          αποκλεισμού πλάτους 15 km γύρω από κάθε{' '}
+          <InlineMath>{'i'}</InlineMath> σαρώνει τον δρόμο και δείχνει ποιοι
+          προκάτοχοι παραμένουν επιτρεπτοί:
+        </p>
+        <RestaurantSpacingDP />
+        <p>
+          Ο πίνακας: <InlineMath>{'D = (0, 10, 30, 30, 80, 140, 140)'}</InlineMath>.
+          Μέγιστο κέρδος{' '}
+          <strong>
+            <InlineMath>{'D(6) = 140'}</InlineMath>
+          </strong>
+          , με βέλτιστη επιλογή τα εστιατόρια{' '}
+          <InlineMath>{'\\{2, 4, 5\\}'}</InlineMath> (στα km 10, 25, 40). Δύο
+          παρατηρήσεις:
+        </p>
+        <ul>
+          <li>
+            <InlineMath>{'D(3) = 30'}</InlineMath> ΟΧΙ{' '}
+            <InlineMath>{'50'}</InlineMath>: το{' '}
+            <InlineMath>{'m_3 = 20'}</InlineMath> απέχει από το{' '}
+            <InlineMath>{'m_2 = 10'}</InlineMath> μόνο 10 km, λιγότερο από{' '}
+            <InlineMath>{'k = 15'}</InlineMath>. Άρα αν πάρω το 3, μπορώ να
+            «συμμαχήσω» το πολύ με το <InlineMath>{'D(1) = 10'}</InlineMath>{' '}
+            (τοποθεσία 1 στο km 5, απέχει 15 ≥ k). Σύνολο 30, ίδιο με{' '}
+            <InlineMath>{'D(2)'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'D(6) = 140 = D(5)'}</InlineMath>: ο
+            «κορυφαίος γείτονας» του 6 (στα km 50) που απέχει ≥ 15 km είναι το{' '}
+            <InlineMath>{'j^* = 4'}</InlineMath> (στα km 25), που δίνει{' '}
+            <InlineMath>{'40 + D(4) = 40 + 80 = 120 < D(5) = 140'}</InlineMath>.
+            Άρα το <InlineMath>{'6'}</InlineMath> μένει ΕΞΩ.
+          </li>
+        </ul>
+        <p>
+          <strong>Πολυπλοκότητα.</strong>{' '}
+          <InlineMath>{'O(n)'}</InlineMath> υποπροβλήματα, καθένα με μία
+          δυαδική αναζήτηση <InlineMath>{'O(\\log n)'}</InlineMath> για το{' '}
+          <InlineMath>{'j^*'}</InlineMath> → συνολικά{' '}
+          <InlineMath>{'O(n \\log n)'}</InlineMath>. (Με σάρωση δύο δεικτών:{' '}
+          <InlineMath>{'O(n)'}</InlineMath>.)
+        </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «γείτονας με γεωμετρικό περιορισμό».</strong>{' '}
+          Όταν η επιλογή σου σε κάθε σημείο έχει έναν «νεκρό χώρο» γύρω της
+          (απόσταση, χρόνος, ποσότητα), η DP-αναδρομή «μέσα/έξω» γίνεται{' '}
+          <InlineMath>{'D(i) = \\max(D(i-1),\\, p_i + D(j^*))'}</InlineMath>
+          όπου <InlineMath>{'j^*'}</InlineMath> είναι ο τελευταίος επιτρεπτός
+          προκάτοχος. Σχεδόν πάντα <em>δυαδική αναζήτηση ή δύο δείκτες</em> τον
+          βρίσκει αμορτιζάρισμα γραμμικά. Σήμα: «πιθανές τοποθεσίες πάνω σε
+          ευθεία/χρόνο, με ελάχιστη απόσταση μεταξύ επιλεγμένων» ⇒ ίδιος DP.
+        </Callout>
       </>
     ),
   },

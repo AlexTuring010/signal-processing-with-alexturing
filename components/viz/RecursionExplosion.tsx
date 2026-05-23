@@ -1,22 +1,23 @@
 'use client'
 
 /**
- * RecursionExplosion — the same Fibonacci recursion tree, naive vs memoized.
+ * RecursionExplosion — overlapping-subproblems explosion, naive vs memoized.
  *
- * The single most important picture in the whole DP chapter: a student who
- * does not *feel* the naive tree exploding will never appreciate why
- * memoization matters. Two coupled controls do all the teaching:
+ * Two `instance` presets share the exact same UI:
+ *  - 'fibonacci' (default, used in the L14 lecture page): each call branches
+ *    into k−1 and k−2; base case k ≤ 1.
+ *  - 'tribonacci-max' (used in pt7-th2 — bₙ = 2·max(bₙ₋₁, bₙ₋₂) + bₙ₋₃): each
+ *    call branches into k−1, k−2, k−3; base case k ≤ 3. The recursion tree
+ *    has THREE children per node, so the lower-bound argument
+ *    T(n) ≥ 3 · T(n−3)  ⇒  T(n) ≥ 3^(n/3) = 1.44ⁿ becomes a visible feature
+ *    of the picture: every node has three downward edges, the smallest
+ *    descendant drops the argument by only 3.
  *
- *  - the n slider grows the tree and the call counters at the same time;
- *  - the naive ⇄ memoized toggle keeps n fixed and lets the student watch the
- *    SAME tree collapse from a bushy exponential mess into a thin linear spine
- *    with green «cache hit» stubs.
- *
- * Clicking any node lights up every other call of the same fib(k): in naive
- * mode that is overlapping subproblems made visible; in memoized mode it is
+ * Clicking any node lights up every other call of the same value — in naive
+ * mode that's overlapping subproblems made physical, in memoized mode it's
  * one real computation plus a handful of instant cache hits. A growth table
- * carries the feeling past the drawable range — fib(30) is 2.7 million naive
- * calls against 59 memoized. Built for L14.
+ * carries the feeling past the drawable range — fib(30) is 2.7M naive calls
+ * against 59 memoized, b(20) is millions against ~60.
  */
 
 import { useMemo, useState } from 'react'
@@ -34,69 +35,121 @@ type FibNode = {
   children: FibNode[]
 }
 
-const N_MIN = 3
-const N_MAX = 7
+type Instance = 'fibonacci' | 'tribonacci-max'
 
-const SLOT_W = 34
-const LEVEL_H = 56
-const R = 15
+type Config = {
+  /** how each call branches — children get k − d for each d in deltas */
+  deltas: number[]
+  /** base case: k ≤ baseCutoff returns immediately */
+  baseCutoff: number
+  label: string
+  /** UI lower/upper bounds for the n slider */
+  nMin: number
+  nMax: number
+  defaultN: number
+  /** the size of the function-call counter in the growth table */
+  growthRows: number[]
+  title: string
+  hint: string
+  intro: string
+  /** label used in click-annotation: e.g. «fib({k})» or «b{k}» */
+  callLabel: (k: number) => string
+  nodeLabel: (k: number) => string
+  /** label used in the legend for "the selected call" */
+  selectedLegend: string
+}
+
+const CONFIGS: Record<Instance, Config> = {
+  fibonacci: {
+    deltas: [1, 2],
+    baseCutoff: 1,
+    label: 'fib',
+    nMin: 3,
+    nMax: 7,
+    defaultN: 5,
+    growthRows: [10, 20, 30],
+    title: 'Το δέντρο αναδρομής του Fibonacci',
+    hint:
+      'Σύρε το n και δες το δέντρο κλήσεων. Πάτησε έναν κόμβο για να φωτιστεί κάθε άλλη κλήση του ίδιου fib(k).',
+    intro: 'Αφελής: εκθετική, ≈ 2ⁿ. Memoization: γραμμική, 2n−1. Στο fib(30) η διαφορά είναι ήδη εκατομμύρια προς δεκάδες.',
+    callLabel: (k) => `fib(${k})`,
+    nodeLabel: (k) => `F${k}`,
+    selectedLegend: 'fib(k)',
+  },
+  'tribonacci-max': {
+    deltas: [1, 2, 3],
+    baseCutoff: 3,
+    label: 'b',
+    nMin: 4,
+    nMax: 6,
+    defaultN: 6,
+    growthRows: [10, 15, 20],
+    title: 'Το δέντρο αναδρομής της bₙ = 2·max(bₙ₋₁, bₙ₋₂) + bₙ₋₃',
+    hint:
+      'Κάθε κλήση παράγει ΤΡΕΙΣ κλήσεις (b(k−1), b(k−2), b(k−3)). Άρα κάθε κόμβος έχει 3 παιδιά — και η μικρότερη κλήση ρίχνει το όρισμα μόνο κατά 3.',
+    intro:
+      'Αφελής: εκθετική. Με βάθος ≥ n/3 και διακλάδωση 3, το δέντρο έχει ≥ 3^(n/3) = 1,44ⁿ κόμβους — εκθετικά πολλούς. Με DP: γραμμική (n κλήσεις).',
+    callLabel: (k) => `b(${k})`,
+    nodeLabel: (k) => `b${k}`,
+    selectedLegend: 'b(k)',
+  },
+}
+
+const SLOT_W = 38
+const LEVEL_H = 60
+const R = 17
 const MARGIN = 26
 
-/** Build the full naive recursion tree for fib(n) — every call is a node. */
-function buildNaive(n: number): FibNode {
+function buildNaive(n: number, cfg: Config): FibNode {
   let counter = 0
   function rec(k: number, depth: number): FibNode {
     const uid = `x${counter++}`
-    if (k <= 1) return { uid, k, depth, kind: 'base', children: [] }
-    return {
-      uid,
-      k,
-      depth,
-      kind: 'compute',
-      children: [rec(k - 1, depth + 1), rec(k - 2, depth + 1)],
-    }
+    if (k <= cfg.baseCutoff) return { uid, k, depth, kind: 'base', children: [] }
+    const children = cfg.deltas.map((d) => rec(k - d, depth + 1))
+    return { uid, k, depth, kind: 'compute', children }
   }
   return rec(n, 0)
 }
 
-/**
- * Build the memoized recursion tree for fib(n): the first request for a value
- * recurses, every later request is a cache hit — a leaf with no subtree.
- */
-function buildMemo(n: number): FibNode {
+function buildMemo(n: number, cfg: Config): FibNode {
   const computed = new Set<number>()
   let counter = 0
   function rec(k: number, depth: number): FibNode {
     const uid = `x${counter++}`
     if (computed.has(k)) return { uid, k, depth, kind: 'hit', children: [] }
     computed.add(k)
-    if (k <= 1) return { uid, k, depth, kind: 'base', children: [] }
-    return {
-      uid,
-      k,
-      depth,
-      kind: 'compute',
-      children: [rec(k - 1, depth + 1), rec(k - 2, depth + 1)],
-    }
+    if (k <= cfg.baseCutoff) return { uid, k, depth, kind: 'base', children: [] }
+    const children = cfg.deltas.map((d) => rec(k - d, depth + 1))
+    return { uid, k, depth, kind: 'compute', children }
   }
   return rec(n, 0)
 }
 
-/** Naive call count for fib(n): nodes(k) = 1 + nodes(k−1) + nodes(k−2). */
-function naiveCalls(n: number): number {
-  const c = [1, 1]
-  for (let k = 2; k <= n; k++) c[k] = 1 + c[k - 1] + c[k - 2]
-  return c[n]
+function naiveCalls(n: number, cfg: Config): number {
+  const c: number[] = new Array(Math.max(n + 1, cfg.baseCutoff + 1)).fill(1)
+  for (let k = cfg.baseCutoff + 1; k <= n; k++) {
+    c[k] = 1 + cfg.deltas.reduce((s, d) => s + (k - d >= 0 ? c[k - d] : 0), 0)
+  }
+  return c[n] ?? 1
 }
 
-/** Memoized call count for fib(n): n+1 real computations + (n−2) cache hits. */
-function memoCalls(n: number): number {
-  return n <= 1 ? 1 : 2 * n - 1
+function memoCalls(n: number, cfg: Config): number {
+  if (n <= cfg.baseCutoff) return 1
+  const computed = new Set<number>()
+  let count = 0
+  function rec(k: number) {
+    count++
+    if (computed.has(k)) return
+    computed.add(k)
+    if (k <= cfg.baseCutoff) return
+    for (const d of cfg.deltas) rec(k - d)
+  }
+  rec(n)
+  return count
 }
 
 type Positioned = { uid: string; k: number; depth: number; kind: Kind; x: number; y: number }
 
-/** Assign x to leaves left-to-right, internal nodes at the midpoint of children. */
 function layoutTree(root: FibNode) {
   const pos = new Map<string, { x: number; y: number }>()
   let slot = 0
@@ -128,16 +181,19 @@ function layoutTree(root: FibNode) {
   return { nodes, edges }
 }
 
-const GROWTH_ROWS = [10, 20, 30]
+interface Props {
+  instance?: Instance
+}
 
-export function RecursionExplosion() {
-  const [n, setN] = useState(5)
+export function RecursionExplosion({ instance = 'fibonacci' }: Props) {
+  const cfg = CONFIGS[instance]
+  const [n, setN] = useState(cfg.defaultN)
   const [mode, setMode] = useState<Mode>('naive')
   const [selectedK, setSelectedK] = useState<number | null>(null)
 
   const { nodes, edges } = useMemo(
-    () => layoutTree(mode === 'naive' ? buildNaive(n) : buildMemo(n)),
-    [n, mode],
+    () => layoutTree(mode === 'naive' ? buildNaive(n, cfg) : buildMemo(n, cfg)),
+    [n, mode, cfg],
   )
   const posByUid = useMemo(() => {
     const m = new Map<string, Positioned>()
@@ -145,8 +201,8 @@ export function RecursionExplosion() {
     return m
   }, [nodes])
 
-  const naive = naiveCalls(n)
-  const memo = memoCalls(n)
+  const naive = naiveCalls(n, cfg)
+  const memo = memoCalls(n, cfg)
   const ratio = memo > 0 ? naive / memo : 1
   const ratioLabel = ratio >= 10 ? Math.round(ratio).toString() : (Math.round(ratio * 10) / 10).toString()
 
@@ -168,7 +224,7 @@ export function RecursionExplosion() {
     setSelectedK(null)
   }
   function reset() {
-    setN(5)
+    setN(cfg.defaultN)
     setMode('naive')
     setSelectedK(null)
   }
@@ -178,30 +234,32 @@ export function RecursionExplosion() {
     if (mode === 'naive') {
       note =
         selCount > 1
-          ? `Το fib(${selectedK}) υπολογίζεται ${selCount} φορές μέσα σ' αυτό το δέντρο — και κάθε φορά ξεκινά τον υπολογισμό απ' το μηδέν. Αυτή ακριβώς είναι η επικάλυψη υποπροβλημάτων που κάνει την αφελή αναδρομή εκθετική.`
-          : `Το fib(${selectedK}) εμφανίζεται μόνο μία φορά εδώ — από τους λίγους κόμβους που δεν επαναλαμβάνονται. Πάτησε ένα μικρότερο k για να δεις την επικάλυψη.`
+          ? `Το ${cfg.callLabel(selectedK)} υπολογίζεται ${selCount} φορές μέσα σ' αυτό το δέντρο — και κάθε φορά ξεκινά τον υπολογισμό απ' το μηδέν. Αυτή ακριβώς είναι η επικάλυψη υποπροβλημάτων που κάνει την αφελή αναδρομή εκθετική.`
+          : `Το ${cfg.callLabel(selectedK)} εμφανίζεται μόνο μία φορά εδώ — από τους λίγους κόμβους που δεν επαναλαμβάνονται. Πάτησε ένα μικρότερο k για να δεις την επικάλυψη.`
     } else {
       const hits = selHits
       note =
         hits > 0
-          ? `Το fib(${selectedK}) υπολογίζεται μία μόνο φορά. Ζητείται άλλες ${hits} ${hits === 1 ? 'φορά' : 'φορές'} — και κάθε φορά είναι cache hit (πράσινος κόμβος): η τιμή επιστρέφεται αμέσως, χωρίς κανένα υποδέντρο από κάτω.`
-          : `Το fib(${selectedK}) υπολογίζεται μία φορά και εδώ ζητείται μόνο μία φορά — δεν χρειάστηκε cache hit.`
+          ? `Το ${cfg.callLabel(selectedK)} υπολογίζεται μία μόνο φορά. Ζητείται άλλες ${hits} ${hits === 1 ? 'φορά' : 'φορές'} — και κάθε φορά είναι cache hit (πράσινος κόμβος): η τιμή επιστρέφεται αμέσως, χωρίς κανένα υποδέντρο από κάτω.`
+          : `Το ${cfg.callLabel(selectedK)} υπολογίζεται μία φορά και εδώ ζητείται μόνο μία φορά — δεν χρειάστηκε cache hit.`
     }
   } else if (mode === 'naive') {
     note =
-      'Κάθε κύκλος είναι μία κλήση της fib(). Το δέντρο σχεδόν διπλασιάζεται σε κάθε επίπεδο, γιατί το ίδιο fib(k) ξαναϋπολογίζεται απ’ την αρχή ξανά και ξανά. Πάτησε έναν κόμβο για να το δεις — ή γύρνα στο «Memoized».'
+      instance === 'tribonacci-max'
+        ? 'Κάθε κύκλος είναι μία κλήση της b(). Κάθε κόμβος έχει 3 παιδιά (b(k−1), b(k−2), b(k−3)) — η μικρότερη κλήση ρίχνει το όρισμα μόνο κατά 3, άρα το δέντρο έχει βάθος ≥ n/3. Πάτησε έναν κόμβο για να δεις την επικάλυψη — ή γύρνα στο «Memoized».'
+        : 'Κάθε κύκλος είναι μία κλήση της fib(). Το δέντρο σχεδόν διπλασιάζεται σε κάθε επίπεδο, γιατί το ίδιο fib(k) ξαναϋπολογίζεται απ’ την αρχή ξανά και ξανά. Πάτησε έναν κόμβο για να το δεις — ή γύρνα στο «Memoized».'
   } else {
     note =
-      'Με memoization κάθε fib(k) υπολογίζεται μία μόνο φορά. Κάθε επόμενη φορά που ζητείται, η τιμή επιστρέφεται έτοιμη από τον πίνακα — ο πράσινος κόμβος «cache hit», χωρίς υποδέντρο. Το ίδιο n, αλλά το δέντρο κατέρρευσε.'
+      instance === 'tribonacci-max'
+        ? 'Με memoization κάθε b(k) υπολογίζεται μία μόνο φορά. Όλες οι άλλες κλήσεις είναι cache hits (πράσινοι κόμβοι), χωρίς υποδέντρο. Από εκθετικό σε γραμμικό — αυτό κάνει ο DP.'
+        : 'Με memoization κάθε fib(k) υπολογίζεται μία μόνο φορά. Κάθε επόμενη φορά που ζητείται, η τιμή επιστρέφεται έτοιμη από τον πίνακα — ο πράσινος κόμβος «cache hit», χωρίς υποδέντρο. Το ίδιο n, αλλά το δέντρο κατέρρευσε.'
   }
 
   return (
     <section className="my-6 rounded-xl border border-border bg-bg-elevated p-4 shadow-sm">
       {/* header + mode tabs */}
       <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm font-semibold tracking-tight text-fg">
-          Το δέντρο αναδρομής του Fibonacci
-        </div>
+        <div className="text-sm font-semibold tracking-tight text-fg">{cfg.title}</div>
         <div className="flex gap-1 rounded-md border border-border p-0.5">
           {(['naive', 'memo'] as Mode[]).map((m) => (
             <button
@@ -222,20 +280,17 @@ export function RecursionExplosion() {
           ))}
         </div>
       </div>
-      <p className="mb-3 text-xs text-fg-subtle">
-        Σύρε το <span className="font-semibold text-fg">n</span> και δες το δέντρο
-        κλήσεων. Πάτησε έναν κόμβο για να φωτιστεί κάθε άλλη κλήση του ίδιου fib(k).
-      </p>
+      <p className="mb-3 text-xs text-fg-subtle">{cfg.hint}</p>
 
       {/* n slider */}
       <div className="mb-3 flex items-center gap-3">
         <span className="shrink-0 font-mono text-sm font-bold text-fg">
-          fib(<span className="text-accent">{n}</span>)
+          {cfg.label}(<span className="text-accent">{n}</span>)
         </span>
         <input
           type="range"
-          min={N_MIN}
-          max={N_MAX}
+          min={cfg.nMin}
+          max={cfg.nMax}
           value={n}
           aria-label="Τιμή του n"
           onChange={(e) => changeN(Number(e.target.value))}
@@ -291,7 +346,7 @@ export function RecursionExplosion() {
                 key={nd.uid}
                 role="button"
                 tabIndex={0}
-                aria-label={`fib(${nd.k})${nd.kind === 'hit' ? ', cache hit' : ''}`}
+                aria-label={`${cfg.callLabel(nd.k)}${nd.kind === 'hit' ? ', cache hit' : ''}`}
                 onClick={() => setSelectedK((cur) => (cur === nd.k ? null : nd.k))}
                 onKeyDown={(ev) => {
                   if (ev.key === 'Enter' || ev.key === ' ') {
@@ -324,11 +379,11 @@ export function RecursionExplosion() {
                   y={nd.y + MARGIN}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fontSize={12}
+                  fontSize={11}
                   fontWeight={800}
                   fill="#1c1214"
                 >
-                  F{nd.k}
+                  {cfg.nodeLabel(nd.k)}
                 </text>
               </g>
             )
@@ -350,7 +405,7 @@ export function RecursionExplosion() {
         )}
         <span>
           <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full border-2 border-[#d97706] bg-[#fde68a] align-middle" />
-          επιλεγμένο fib(k)
+          επιλεγμένο {cfg.selectedLegend}
         </span>
       </div>
 
@@ -368,7 +423,7 @@ export function RecursionExplosion() {
           <div className="font-mono text-2xl font-bold tabular-nums text-fg">
             {naive.toLocaleString('el')}
           </div>
-          <div className="text-xs text-fg-subtle">κλήσεις της fib()</div>
+          <div className="text-xs text-fg-subtle">κλήσεις της {cfg.label}()</div>
         </div>
         <div
           className={cn(
@@ -382,11 +437,11 @@ export function RecursionExplosion() {
           <div className="font-mono text-2xl font-bold tabular-nums text-fg">
             {memo.toLocaleString('el')}
           </div>
-          <div className="text-xs text-fg-subtle">κλήσεις της fib()</div>
+          <div className="text-xs text-fg-subtle">κλήσεις της {cfg.label}()</div>
         </div>
       </div>
       <p className="mt-1.5 text-center text-xs text-fg-muted">
-        Για fib({n}) το memoization κάνει{' '}
+        Για {cfg.callLabel(n)} το memoization κάνει{' '}
         <span className="font-bold text-accent">{ratioLabel}×</span> λιγότερες κλήσεις.
       </p>
 
@@ -398,29 +453,26 @@ export function RecursionExplosion() {
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-fg-subtle">
-              <th className="py-1.5 pr-3 font-semibold">fib(n)</th>
+              <th className="py-1.5 pr-3 font-semibold">{cfg.label}(n)</th>
               <th className="py-1.5 pr-3 text-right font-semibold">Αφελής</th>
               <th className="py-1.5 text-right font-semibold">Memoization</th>
             </tr>
           </thead>
           <tbody>
-            {GROWTH_ROWS.map((gn) => (
+            {cfg.growthRows.map((gn) => (
               <tr key={gn} className="border-b border-border/60">
-                <td className="py-1.5 pr-3 font-mono tabular-nums text-fg">fib({gn})</td>
+                <td className="py-1.5 pr-3 font-mono tabular-nums text-fg">{cfg.label}({gn})</td>
                 <td className="py-1.5 pr-3 text-right font-mono font-semibold tabular-nums text-danger">
-                  {naiveCalls(gn).toLocaleString('el')}
+                  {naiveCalls(gn, cfg).toLocaleString('el')}
                 </td>
                 <td className="py-1.5 text-right font-mono font-semibold tabular-nums text-success">
-                  {memoCalls(gn).toLocaleString('el')}
+                  {memoCalls(gn, cfg).toLocaleString('el')}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <p className="mt-1 text-xs text-fg-subtle">
-          Αφελής: εκθετική, ≈ 2ⁿ. Memoization: γραμμική, 2n−1. Στο fib(30) η διαφορά
-          είναι ήδη εκατομμύρια προς δεκάδες.
-        </p>
+        <p className="mt-1 text-xs text-fg-subtle">{cfg.intro}</p>
       </div>
 
       {/* annotation */}

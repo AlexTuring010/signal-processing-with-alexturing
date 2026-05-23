@@ -6,71 +6,157 @@
  * Each step computes M[j] = max{ vⱼ + M[p(j)], M[j−1] } — the "request j
  * in or out?" decision — lighting up the two candidate cells and the
  * interval p(j) it depends on. A final backtrack step reveals which
- * intervals the optimum actually uses. Built for L14, on the lecture's
- * own 8-request instance.
+ * intervals the optimum actually uses.
+ *
+ * Two instances share the exact same UI:
+ *  - 'lecture' (default, the L14 page) — the 8-request lecture example from
+ *    interval-instance.ts. Used in PjExplorer / PjScan too, so the student
+ *    builds one mental picture of these 8 intervals.
+ *  - 'platform' (pt6-th2 — «πλατφόρμα δόνησης») — the tiny 3-request
+ *    counterexample A=[0,10] vp=100, B=[0,5] vp=60, C=[6,10] vp=60. Greedy by
+ *    descending price picks A and stops at 100; the DP finds B+C = 120.
  */
 
 import { useState } from 'react'
 import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { REQS, N, T_MAX, P } from './interval-instance'
+import { REQS as LECTURE_REQS, N as LECTURE_N, T_MAX as LECTURE_T, P as LECTURE_P } from './interval-instance'
+import type { Request } from './interval-instance'
 
-/** M[j] = OPT for the first j requests, plus the in/out decision. */
-const M: number[] = [0]
-const IN: boolean[] = [false]
-for (let j = 1; j <= N; j++) {
-  const take = REQS[j - 1].v + M[P[j]]
-  const skip = M[j - 1]
-  M[j] = Math.max(take, skip)
-  IN[j] = take > skip
+type Instance = 'lecture' | 'platform'
+
+type Bundle = {
+  reqs: readonly Request[]
+  n: number
+  tMax: number
+  /** p[0..n]: predecessor indices */
+  P: readonly number[]
+  /** label for each request, in display order */
+  labelById: (id: number) => string
+  /** intro line — what is the instance about? */
+  intro: string
+  /** badge text for the value (e.g. «αξία» or «συνδρομή p») */
+  valueWord: string
+  /** which integer ticks to show on the time axis */
+  tickStep: number
 }
 
-/** backtrack from n to read off the chosen requests */
-const SOLUTION: number[] = (() => {
-  const out: number[] = []
-  let j = N
-  while (j > 0) {
-    if (IN[j]) {
-      out.push(j)
-      j = P[j]
-    } else j -= 1
-  }
-  return out.sort((a, b) => a - b)
-})()
+const PLATFORM_REQS: readonly Request[] = [
+  // ordered by finish time: B (0..5), A (0..10), C (6..10)
+  { id: 1, s: 0, f: 5, v: 60 },   // B
+  { id: 2, s: 0, f: 10, v: 100 }, // A
+  { id: 3, s: 6, f: 10, v: 60 },  // C
+]
 
-export function WeightedIntervalDP() {
+function computeP(reqs: readonly Request[]): number[] {
+  const n = reqs.length
+  const p: number[] = [0]
+  for (let j = 1; j <= n; j++) {
+    let best = 0
+    for (let i = 1; i < j; i++) {
+      if (reqs[i - 1].f <= reqs[j - 1].s) best = i
+    }
+    p[j] = best
+  }
+  return p
+}
+
+const PLATFORM_P = computeP(PLATFORM_REQS)
+
+const BUNDLES: Record<Instance, Bundle> = {
+  lecture: {
+    reqs: LECTURE_REQS,
+    n: LECTURE_N,
+    tMax: LECTURE_T,
+    P: LECTURE_P,
+    labelById: (id) => `${id}`,
+    intro: 'Τα 8 αιτήματα του παραδείγματος, ταξινομημένα κατά χρόνο λήξης. M[0] = 0. Γεμίζουμε αριστερά → δεξιά.',
+    valueWord: 'v',
+    tickStep: 2,
+  },
+  platform: {
+    reqs: PLATFORM_REQS,
+    n: PLATFORM_REQS.length,
+    tMax: 11,
+    P: PLATFORM_P,
+    labelById: (id) => (id === 1 ? 'B' : id === 2 ? 'A' : 'C'),
+    intro:
+      'Τρία αιτήματα ταξινομημένα κατά χρόνο λήξης: B=[0,5] p=60, A=[0,10] p=100, C=[6,10] p=60. Ο άπληστος «κατά συνδρομή» θα έδινε 100. Δες τι βρίσκει ο DP.',
+    valueWord: 'p',
+    tickStep: 1,
+  },
+}
+
+interface Props {
+  instance?: Instance
+}
+
+export function WeightedIntervalDP({ instance = 'lecture' }: Props) {
+  const cfg = BUNDLES[instance]
+  const { reqs: REQS, n: N, tMax: T_MAX, P, labelById, valueWord } = cfg
+
+  // M and decisions are derived from the bundle.
+  const { M, IN, SOLUTION } = (() => {
+    const M: number[] = [0]
+    const IN: boolean[] = [false]
+    for (let j = 1; j <= N; j++) {
+      const take = REQS[j - 1].v + M[P[j]]
+      const skip = M[j - 1]
+      M[j] = Math.max(take, skip)
+      IN[j] = take > skip
+    }
+    const out: number[] = []
+    let j = N
+    while (j > 0) {
+      if (IN[j]) {
+        out.push(j)
+        j = P[j]
+      } else j -= 1
+    }
+    return { M, IN, SOLUTION: out.sort((a, b) => a - b) }
+  })()
+
   const [step, setStep] = useState(0)
   const last = N + 1 // 0 intro, 1..N fill, N+1 backtrack
 
   const j = step >= 1 && step <= N ? step : 0
   const done = step === last
-  const filledUpto = Math.min(step, N) // M indices 0..filledUpto are known
+  const filledUpto = Math.min(step, N)
 
   const X = (t: number) => 56 + (t / T_MAX) * 560
   const rowY = (id: number) => 30 + (id - 1) * 26
 
   let note: string
   if (step === 0) {
-    note =
-      'Τα αιτήματα ταξινομημένα κατά χρόνο λήξης. M[0] = 0. Θα γεμίσουμε τον πίνακα M από αριστερά προς τα δεξιά.'
+    note = cfg.intro
   } else if (j > 0) {
     const r = REQS[j - 1]
     note =
-      `M[${j}]: το αίτημα ${j} (αξία ${r.v}) — μέσα ή έξω; ` +
-      `ΜΕΣΑ: vⱼ + M[p(${j})] = ${r.v} + M[${P[j]}] = ${r.v + M[P[j]]}. ` +
+      `M[${j}]: το αίτημα ${labelById(r.id)} (${valueWord} = ${r.v}) — μέσα ή έξω; ` +
+      `ΜΕΣΑ: ${valueWord} + M[p(${j})] = ${r.v} + M[${P[j]}] = ${r.v + M[P[j]]}. ` +
       `ΕΞΩ: M[${j - 1}] = ${M[j - 1]}. ` +
-      `Παίρνουμε το μεγαλύτερο → M[${j}] = ${M[j]}, άρα το ${j} είναι ${IN[j] ? 'ΜΕΣΑ' : 'ΕΞΩ'}.`
+      `Παίρνουμε το μεγαλύτερο → M[${j}] = ${M[j]}, άρα το ${labelById(r.id)} είναι ${IN[j] ? 'ΜΕΣΑ' : 'ΕΞΩ'}.`
   } else {
-    note = `Πέρασμα προς τα πίσω: η βέλτιστη λύση είναι τα αιτήματα {${SOLUTION.join(', ')}}, με συνολική αξία M[${N}] = ${M[N]}.`
+    const labels = SOLUTION.map((s) => labelById(REQS[s - 1].id)).join(', ')
+    note =
+      instance === 'platform'
+        ? `Πέρασμα προς τα πίσω: βέλτιστο σύνολο {${labels}}, συνολική συνδρομή M[${N}] = ${M[N]}. Ο άπληστος «κατά συνδρομή» θα έδινε A = 100 — εδώ ο DP βρίσκει 120, νικώντας με δύο φθηνότερα ασύμβατα αιτήματα μαζί.`
+        : `Πέρασμα προς τα πίσω: η βέλτιστη λύση είναι τα αιτήματα {${SOLUTION.join(', ')}}, με συνολική αξία M[${N}] = ${M[N]}.`
   }
 
   const solSet = new Set(done ? SOLUTION : [])
+
+  // Compute viewBox height dynamically — rows are spaced by 26px starting at 30.
+  const svgH = 30 + N * 26 + 40
+  const tickN = Math.floor(T_MAX / cfg.tickStep) + 1
 
   return (
     <section className="my-6 rounded-xl border border-border bg-bg-elevated p-4 shadow-sm">
       <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-semibold tracking-tight text-fg">
-          Σταθμισμένος χρονοπρογραμματισμός — γέμισμα του πίνακα M
+          {instance === 'platform'
+            ? 'Πλατφόρμα δόνησης — γέμισμα του πίνακα M'
+            : 'Σταθμισμένος χρονοπρογραμματισμός — γέμισμα του πίνακα M'}
         </div>
         <span className="shrink-0 rounded-md bg-accent/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-accent">
           {done ? `Βέλτιστο: ${M[N]}` : step === 0 ? 'Αρχή' : `M[${j}]`}
@@ -83,7 +169,7 @@ export function WeightedIntervalDP() {
       {/* intervals timeline */}
       <div className="graph-canvas overflow-x-auto">
         <svg
-          viewBox="0 0 640 260"
+          viewBox={`0 0 640 ${svgH}`}
           className="mx-auto block w-full max-w-2xl"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -125,14 +211,14 @@ export function WeightedIntervalDP() {
                   className="wi-lbl"
                   fill="#1c1214"
                 >
-                  {r.id} · v={r.v}
+                  {labelById(r.id)} · {valueWord}={r.v}
                 </text>
               </g>
             )
           })}
-          <line x1={X(0)} y1={240} x2={X(T_MAX)} y2={240} stroke="#cdbfc0" strokeWidth={1.5} />
-          {Array.from({ length: T_MAX / 2 + 1 }, (_, k) => k * 2).map((t) => (
-            <text key={t} x={X(t)} y={254} className="wi-tick">
+          <line x1={X(0)} y1={svgH - 20} x2={X(T_MAX)} y2={svgH - 20} stroke="#cdbfc0" strokeWidth={1.5} />
+          {Array.from({ length: tickN }, (_, k) => k * cfg.tickStep).map((t) => (
+            <text key={t} x={X(t)} y={svgH - 6} className="wi-tick">
               {t}
             </text>
           ))}
@@ -179,10 +265,10 @@ export function WeightedIntervalDP() {
             )}
           >
             <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
-              Το {j} ΜΕΣΑ
+              Το {labelById(REQS[j - 1].id)} ΜΕΣΑ
             </div>
             <div className="font-mono text-fg">
-              v{j} + M[{P[j]}] = {REQS[j - 1].v} + {M[P[j]]} ={' '}
+              {valueWord}{j} + M[{P[j]}] = {REQS[j - 1].v} + {M[P[j]]} ={' '}
               <strong>{REQS[j - 1].v + M[P[j]]}</strong>
             </div>
           </div>
@@ -193,7 +279,7 @@ export function WeightedIntervalDP() {
             )}
           >
             <div className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
-              Το {j} ΕΞΩ
+              Το {labelById(REQS[j - 1].id)} ΕΞΩ
             </div>
             <div className="font-mono text-fg">
               M[{j - 1}] = <strong>{M[j - 1]}</strong>

@@ -349,22 +349,50 @@ M-ComputeOPT(j):
       topic: 'Σχεδίασε αλγόριθμο DP για νέο πρόβλημα — όρισε υποπρόβλημα, αναδρομή, πολυπλοκότητα',
       likelihood: 'high',
       note: 'Το κυρίαρχο θέμα DP — η εκφώνηση ζητάει «σχεδίασε αποδοτικό αλγόριθμο».',
+      relatedExerciseIds: ['pt1-th3', 'front-set-8-ask3', 'front-set-8-ask4'],
     },
     {
       topic: 'Σταθμισμένος χρονοπρογραμματισμός — γέμισε τον πίνακα M και βρες τη λύση',
       likelihood: 'high',
+      relatedExerciseIds: ['pt6-th2'],
     },
     {
       topic: 'Γιατί ο άπληστος αποτυγχάνει σε πρόβλημα με βάρη — αντιπαράδειγμα',
       likelihood: 'medium',
+      relatedExerciseIds: ['pt5-th4', 'pt6-th2'],
     },
     {
       topic: 'Memoization vs bottom-up — και γιατί ο χρόνος πέφτει από εκθετικός σε γραμμικό',
       likelihood: 'medium',
+      relatedExerciseIds: ['pt7-th2'],
     },
     {
       topic: 'Διάκριση: πότε DP, πότε divide-and-conquer (επικαλυπτόμενα vs ανεξάρτητα υποπροβλήματα)',
       likelihood: 'medium',
+    },
+    {
+      topic: 'Κάτω φράγμα από το μέγεθος του πίνακα — ποια πολυπλοκότητα ΔΕΝ μπορεί να ισχύει',
+      likelihood: 'high',
+      note: 'Σταθερή ερώτηση πολλαπλής επιλογής: 1D ⇒ Ω(n), 2D ⇒ Ω(nm). Αποκλείεται ό,τι ασυμπτωτικά μικρότερο.',
+      relatedExerciseIds: ['pt1-th1-q7', 'pt1-th1-q8', 'pt2-th1-q6', 'pt2-th1-q7'],
+    },
+    {
+      topic: 'Μέγιστο ανεξάρτητο σύνολο σε μονοπάτι — με ή χωρίς γεωμετρικό περιορισμό',
+      likelihood: 'high',
+      note: 'OPT(i) = max(OPT(i−1), v_i + OPT(prev(i))). Από κολώνες φωτισμού ως εστιατόρια κατά μήκος δρόμου.',
+      relatedExerciseIds: ['pt5-th4', 'front-set-8-ask4'],
+    },
+    {
+      topic: 'Δοκίμασε όλα τα «πρώτα κομμάτια» — τεμαχισμός ράβδου / Θ(n²) DP',
+      likelihood: 'medium',
+      note: 'C(i) = max_k(V_k + C(i−k)). Όταν το αντικείμενο σπάει σε δύο ανεξάρτητα τμήματα, η αναδρομή δοκιμάζει όλες τις πρώτες κοπές.',
+      relatedExerciseIds: ['front-set-8-ask3'],
+    },
+    {
+      topic: 'Εκθετικό κάτω φράγμα αφελούς αναδρομής με k κλάδους',
+      likelihood: 'medium',
+      note: 'Δέντρο k παιδιών, βάθος ≥ n / max d_i ⇒ Ω(k^(n / max d_i)).',
+      relatedExerciseIds: ['pt7-th2'],
     },
   ]}
 />
