@@ -28,6 +28,8 @@
 
 import type { Exercise } from './types'
 import { InlineMath, BlockMath } from '@/components/math'
+import { Callout } from '@/components/content/Callout'
+import { ComplexityZooLab } from '@/components/viz/ComplexityZooLab'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -626,6 +628,23 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Σωστές: (iii), (iv).</strong>
         </p>
+        <p>
+          Δες τη θέση του καθενός στον ζωολογικό κήπο — πρόσεξε ιδιαίτερα το
+          ζευγάρι «συντομότερο vs μακρύτερο μονοπάτι»: μοιάζουν, αλλά ζουν σε
+          εντελώς διαφορετικές ζώνες.
+        </p>
+        <ComplexityZooLab focus="longest-path" />
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης για τέτοιες εκφωνήσεις.</strong> Για κάθε όνομα
+          προβλήματος ρώτα τρία πράγματα, με τη σειρά: (1) «ξέρω πολυωνυμικό
+          αλγόριθμο γι' αυτό;» — αν ναι, είναι στο <InlineMath>{'P'}</InlineMath>.
+          (2) «είναι κλασικό NP-πλήρες που έχω συναντήσει;» (SAT, Vertex Cover,
+          Knapsack, Hamilton, TSP, Longest Path) — αν ναι, εκτός P (υπό την
+          εικασία <InlineMath>{'P \\neq NP'}</InlineMath>). (3) Αλλιώς,
+          προσοχή: μπορεί να είναι «στο NP αλλά άγνωστης κατάστασης» — Graph
+          Isomorphism, Integer Factorization. Πρόσεξε το μοτίβο «συντομότερο =
+          εύκολο, μακρύτερο = δύσκολο»: αλλάζεις λέξη, αλλάζεις ζώνη.
+        </Callout>
       </>
     ),
   },
@@ -655,7 +674,8 @@ export const EXERCISES: Exercise[] = [
           «NP-πλήρες» σημαίνει: είναι στο <InlineMath>{'NP'}</InlineMath>{' '}
           <strong>και</strong> είναι από τα πιο δύσκολα του{' '}
           <InlineMath>{'NP'}</InlineMath> (κάθε άλλο πρόβλημα του{' '}
-          <InlineMath>{'NP'}</InlineMath> ανάγεται σε αυτό).
+          <InlineMath>{'NP'}</InlineMath> ανάγεται σε αυτό). Δεν αρκεί απλώς «να
+          είναι στο NP» — αυτό ισχύει για όλα τα παραπάνω.
         </p>
         <ul>
           <li>
@@ -679,6 +699,20 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Σωστές: (ii), (iv).</strong>
         </p>
+        <p>
+          Οι δύο παγίδες — Ισομορφισμός Γραφημάτων και Παραγοντοποίηση
+          Ακεραίων — ζουν στην <strong>μεσαία</strong> ζώνη του κήπου: στο NP,
+          αλλά άγνωστο αν είναι σε P ή NP-πλήρη. Δες πού:
+        </p>
+        <ComplexityZooLab focus="graph-iso" />
+        <Callout type="warning">
+          <strong>«Στο NP» ≠ «NP-πλήρες».</strong> Όλα τα NP-πλήρη είναι στο
+          NP, αλλά το NP περιέχει και ολόκληρο το P, και τη μεσαία ζώνη των
+          «άγνωστων». Όταν η εκφώνηση ρωτά «ποια <em>γνωρίζουμε</em> ότι είναι
+          NP-πλήρη», η απάντηση πρέπει να αποκλείει και τα γνωστά-P (Huffman,
+          shortest path, MST) και τα «άγνωστα» (Graph Iso, Integer Factor) —
+          ακόμη κι αν τα δεύτερα δεν τα ξέρουμε σε P.
+        </Callout>
       </>
     ),
   },
@@ -1474,6 +1508,20 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Σωστές: (ii), (iii).</strong>
         </p>
+        <p>
+          Η μεγάλη παγίδα εδώ είναι το <strong>2-SAT</strong>: φαίνεται σαν
+          SAT, αλλά είναι ειδική περίπτωση που λύνεται πολυωνυμικά. Δες πού
+          ακριβώς ζει:
+        </p>
+        <ComplexityZooLab focus="2sat" />
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης: «μήπως είναι ειδική περίπτωση που πέφτει στο P;»</strong>{' '}
+          Πολλά NP-πλήρη έχουν παραλλαγές που λύνονται γρήγορα: 2-SAT (vs SAT),
+          ελάχιστο vs μακρύτερο μονοπάτι, MST (vs Steiner Tree στον γενικό
+          ορισμό). Όταν δεις παραλλαγή με τη λέξη «δύο», «μέγιστο/ελάχιστο
+          συνδετικό», ή κάποιον περιορισμό σε δομή, ρώτα αν η ειδική περίπτωση
+          είναι σε P — συχνά ναι.
+        </Callout>
       </>
     ),
   },
@@ -1525,6 +1573,21 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Σωστή: (iii).</strong>
         </p>
+        <p>
+          Η Παραγοντοποίηση Ακεραίων ζει στη μεσαία (άγνωστη) ζώνη — μαζί με
+          τον Ισομορφισμό Γραφημάτων. Δες:
+        </p>
+        <ComplexityZooLab focus="integer-factor" />
+        <Callout type="key">
+          <strong>«Δεν γνωρίζουμε αν είναι NP-πλήρες» είναι ξεχωριστή απάντηση.</strong>{' '}
+          Δεν εννοεί «είναι NP-πλήρες» — εννοεί «είμαστε ακόμη αναποφάσιστοι».
+          Μόνο δύο προβλήματα από όσα συναντάς στο μάθημα ζουν εκεί:
+          Παραγοντοποίηση Ακεραίων και Ισομορφισμός Γραφημάτων. Όλα τα άλλα
+          ονόματα (SAT, Hamilton, Vertex Cover, Knapsack, Longest Path) είναι
+          ήδη ταξινομημένα: ή σε P, ή NP-πλήρη. Η ύπαρξη αυτής της «τρίτης
+          απάντησης» είναι η κρυφή ευκολία του ερωτήματος — αν την ξεχάσεις,
+          ψάχνεις απάντηση από λάθος δύο επιλογές.
+        </Callout>
       </>
     ),
   },
@@ -2181,6 +2244,17 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'P'}</InlineMath> ανεξάρτητα από το αν{' '}
           <InlineMath>{'P = NP'}</InlineMath> ή όχι.
         </p>
+        <ComplexityZooLab focus="shortest-path" />
+        <Callout type="warning">
+          <strong>Παγίδα της εικασίας.</strong> Η <InlineMath>{'P \\neq NP'}</InlineMath>{' '}
+          ΔΕΝ «κλειδώνει» όλα τα προβλήματα γραφημάτων έξω από το P. Κλειδώνει
+          μόνο όσα είναι NP-πλήρη (μακρύτερο μονοπάτι, Hamilton, TSP, ...). Όταν
+          σε εκφώνηση Σ/Λ δεις την υπόθεση <InlineMath>{'P \\neq NP'}</InlineMath>{' '}
+          να «αποδεικνύει» ότι κάτι ΔΕΝ είναι σε P, πρώτα ρώτα:{' '}
+          <em>«είναι αυτό το κάτι ήδη γνωστό ότι είναι σε P;»</em> Αν ναι, η
+          δήλωση είναι λάθος ανεξάρτητα από την εικασία. Εδώ, ο Dijkstra είναι η
+          άμεση αντίφαση.
+        </Callout>
       </>
     ),
   },

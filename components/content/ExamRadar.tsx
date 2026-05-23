@@ -10,7 +10,8 @@
  */
 
 import type { ReactNode } from 'react'
-import { Radar } from 'lucide-react'
+import Link from 'next/link'
+import { Radar, ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type Likelihood = 'high' | 'medium' | 'low'
@@ -21,6 +22,13 @@ export type ExamRadarItem = {
   likelihood?: Likelihood
   /** Optional one-line elaboration. */
   note?: ReactNode
+  /**
+   * Optional list of exercise ids in the practice bank that exemplify this
+   * radar item. Rendered as clickable badges that deep-link to
+   * `/practice#exercise:<id>` — the anchor `ExerciseCard` already sets.
+   * Phase D wires these for every lecture.
+   */
+  relatedExerciseIds?: string[]
 }
 
 type Props = {
@@ -62,6 +70,23 @@ export function ExamRadar({ title = 'Ραντάρ εξετάσεων', items }: 
                   {LABEL[lk]}
                 </span>
                 {item.note && <div className="text-sm opacity-90">{item.note}</div>}
+                {item.relatedExerciseIds && item.relatedExerciseIds.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider opacity-60">
+                      Δες το στις ασκήσεις
+                    </span>
+                    {item.relatedExerciseIds.map((id) => (
+                      <Link
+                        key={id}
+                        href={`/practice#exercise:${id}`}
+                        className="inline-flex items-center gap-1 rounded border border-rose-400/50 bg-bg-elevated px-1.5 py-0.5 font-mono text-[11px] font-semibold text-rose-700 transition-colors hover:bg-rose-100 dark:text-rose-200 dark:hover:bg-rose-400/20"
+                      >
+                        {id}
+                        <ExternalLink className="h-2.5 w-2.5 opacity-60" aria-hidden="true" />
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )

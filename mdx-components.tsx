@@ -28,6 +28,7 @@ import { BinarySearchViz } from '@/components/viz/BinarySearchViz'
 import { InstanceDimensionLab } from '@/components/viz/InstanceDimensionLab'
 import { ComplexityCasesExplorer } from '@/components/viz/ComplexityCasesExplorer'
 import { LogVsLinearRace } from '@/components/viz/LogVsLinearRace'
+import { ComplexityZooLab } from '@/components/viz/ComplexityZooLab'
 import { BigOPlayground } from '@/components/viz/BigOPlayground'
 import { DefinitionPlayground } from '@/components/viz/DefinitionPlayground'
 import { HierarchyRace } from '@/components/viz/HierarchyRace'
@@ -172,6 +173,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     InstanceDimensionLab,
     ComplexityCasesExplorer,
     LogVsLinearRace,
+    ComplexityZooLab,
     BigOPlayground,
     DefinitionPlayground,
     HierarchyRace,
