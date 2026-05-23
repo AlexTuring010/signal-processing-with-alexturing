@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'AM Overview — γιατί διαμορφώνουμε και η οικογένεια AM',
   description:
-    'Ξεκινάμε τη modulation: γιατί χρειαζόμαστε διαμόρφωση, η βασική AM ιδέα (πληροφορία στο πλάτος του carrier), και οι τέσσερις παραλλαγές της οικογένειας AM (Conventional, DSB-SC, SSB, VSB) με τη roadmap των κεφαλαίων που ακολουθούν.',
+    'Ξεκινάμε τη modulation: γιατί χρειαζόμαστε διαμόρφωση, η βασική AM ιδέα (πληροφορία στο πλάτος του carrier), η οικογένεια AM (Conventional, DSB-SC, SSB, VSB) με τα φάσματα δίπλα-δίπλα, και ο χώρος των trade-offs που εξηγεί γιατί υπάρχει η καθεμία.',
 }
 
 export const frontmatter = {
@@ -14,8 +14,8 @@ export const frontmatter = {
     'modulation/bridge',
   ],
   examWeight: 5,
-  estimatedReadTime: 18,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 26,
+  lastUpdated: '2026-05-23',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -26,7 +26,7 @@ import Link from 'next/link'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · AM</span>
   <span>·</span>
-  <span>~18 min read</span>
+  <span>~26 min read</span>
 </div>
 
 # AM Overview — η εκκίνηση της modulation
@@ -54,23 +54,51 @@ import Link from 'next/link'
 
 1. Θυμόμαστε **γιατί** χρειαζόμαστε διαμόρφωση (recap από την εισαγωγή).
 2. Πιάνουμε το **βασικό AM concept**: «κωδικοποιούμε την πληροφορία στο πλάτος του carrier».
-3. Βλέπουμε όλη την **οικογένεια AM** σχηματικά — Conventional, DSB-SC, SSB, VSB — με τα φάσματά τους δίπλα-δίπλα.
-4. Παίρνουμε **roadmap** για τα κεφάλαια που έρχονται.
+3. Βλέπουμε όλη την **οικογένεια AM** σχηματικά — Conventional, DSB-SC, SSB, VSB — με τα φάσματά τους δίπλα-δίπλα και έναν decision tree που λέει «ποια διαλέγεις και γιατί».
+4. Χαρτογραφούμε τον **χώρο των trade-offs** (power · bandwidth · receiver complexity) στον οποίο ζει η κάθε παραλλαγή.
+5. Παίρνουμε **roadmap** για τα κεφάλαια που έρχονται.
 
 Ο σκοπός είναι να φύγεις από εδώ ξέροντας **τι ακριβώς θα μάθεις** και **γιατί κάθε παραλλαγή υπάρχει** — όχι ακόμα *πώς* δουλεύει η καθεμία.
 
 ## 1. Γιατί χρειαζόμαστε modulation — γρήγορη υπενθύμιση
 
-Στην [εισαγωγή](/intro#section-7) είδαμε **έξι λόγους** για modulation. Επειδή θα ξαναπαίξουν στις εξετάσεις (το «γιατί διαμορφώνουμε» είναι πάντα μια ερώτηση των 4–5%), τους θυμόμαστε εδώ συνοπτικά:
+Στην [εισαγωγή](/intro#section-7) είδαμε **έξι λόγους** για modulation. Επειδή θα ξαναπαίξουν στις εξετάσεις (το «γιατί διαμορφώνουμε» είναι **ένα από τα συχνότερα 4–5% θέματα** — το είδαμε ολόκληρο σε Ιανουάριο 2026 και επανάληψη στην Πρόοδο Α 2025), τους θυμόμαστε εδώ συνοπτικά:
 
-1. **Μέγεθος κεραίας.** Για ηχητικό σήμα 20 kHz, η ιδανική κεραία (μισό μήκος κύματος) είναι 7.5 km — αδύνατο. Σε 100 MHz κατεβαίνει στα 1.5 m. Η διαμόρφωση μετατοπίζει το σήμα στις υψηλές συχνότητες όπου οι κεραίες είναι πρακτικού μεγέθους.
-2. **Multiplexing (FDM).** Πολλοί χρήστες μοιράζονται τον ίδιο δίαυλο, ο καθένας σε διαφορετική ζώνη συχνοτήτων. Χωρίς διαμόρφωση όλοι θα συνωστίζονταν στο baseband.
+1. **Μέγεθος κεραίας.** Για ηχητικό σήμα 20 kHz, η ιδανική κεραία (τέταρτο μήκος κύματος, $\lambda/4 = c/4f$) είναι ~3.75 km — αδύνατο. Σε 100 MHz κατεβαίνει στα 75 cm. Η διαμόρφωση μετατοπίζει το σήμα στις υψηλές συχνότητες όπου οι κεραίες είναι πρακτικού μεγέθους.
+2. **Multiplexing (FDM).** Πολλοί χρήστες μοιράζονται τον ίδιο δίαυλο, ο καθένας σε διαφορετική ζώνη συχνοτήτων. Χωρίς διαμόρφωση όλοι θα συνωστίζονταν στο baseband και θα αλληλοκαλύπτονταν αμετάκλητα.
 3. **Noise immunity.** Διαφορετικά σχήματα διαμόρφωσης συμπεριφέρονται διαφορετικά στον θόρυβο (το FM είναι πολύ πιο ανθεκτικό από το AM, π.χ.).
-4. **Fading vs frequency.** Διαφορετικές συχνότητες υφίστανται διαφορετικές απώλειες ανά διάδοση. Μπορούμε να επιλέγουμε.
-5. **Regulatory.** Τα κανάλια εκπομπής είναι κατανεμημένα ανά συχνοτική ζώνη από τις αρχές.
+4. **Fading vs frequency.** Διαφορετικές συχνότητες υφίστανται διαφορετικές απώλειες ανά διάδοση. Μπορούμε να επιλέγουμε ζώνη.
+5. **Regulatory.** Τα κανάλια εκπομπής είναι κατανεμημένα ανά συχνοτική ζώνη από τις αρχές — δεν εκπέμπεις όπου σου αρέσει.
 6. **Bandwidth efficiency.** Διαφορετικά σχήματα χρησιμοποιούν διαφορετικά bandwidth — π.χ. SSB στο μισό από conventional AM.
 
-**Η AM** ασχολείται με τους πρώτους δύο κυρίως — μέγεθος κεραίας + multiplexing — και εισάγει την έννοια. Στις επόμενες παραλλαγές (DSB-SC, SSB, VSB) θα δούμε πώς γίνονται trade-offs ανάμεσα σε ισχύ, bandwidth και πολυπλοκότητα.
+**Οι δύο πρώτοι είναι ο λόγος που γεννήθηκε η AM** — μέγεθος κεραίας + multiplexing. Στις επόμενες παραλλαγές (DSB-SC, SSB, VSB) θα δούμε πώς γίνονται trade-offs ανάμεσα σε ισχύ, bandwidth και πολυπλοκότητα δέκτη.
+
+<ClozeDrill
+  id="antenna-size-recall"
+  prompt={
+    <p>
+      Συμπλήρωσε τους αριθμούς για να ξυπνήσει η διαίσθηση της κεραίας.
+      Ταχύτητα φωτός <InlineMath>{'c = 3 \\times 10^8'}</InlineMath> m/s,
+      κεραία <InlineMath>{'\\lambda/4 = c/(4f)'}</InlineMath>.
+    </p>
+  }
+  parts={[
+    'Για f = 20 kHz (baseband ήχος): κεραία λ/4 ≈ ',
+    { blank: 'low', accept: ['3.75', '3750', '~3.75', '3,75'], hint: 'km', size: 5 },
+    ' km — απαγορευτικό. Για f = 100 MHz (FM band): κεραία λ/4 ≈ ',
+    { blank: 'high', accept: ['0.75', '75', '~0.75'], hint: 'm', size: 4 },
+    ' m — βολικό.',
+  ]}
+  solution={
+    <p>
+      <InlineMath>{'\\lambda/4 = 3 \\times 10^8 / (4 \\cdot 20 \\times 10^3) = 3.75'}</InlineMath> km
+      vs <InlineMath>{'\\lambda/4 = 3 \\times 10^8 / (4 \\cdot 10^8) = 0.75'}</InlineMath> m.
+      Με τέσσερις τάξεις μεγέθους διαφορά στο f, παίρνεις τέσσερις τάξεις
+      μεγέθους κάτω στην κεραία. <strong>Αυτό</strong> είναι το πρώτο
+      load-bearing «γιατί» της modulation.
+    </p>
+  }
+/>
 
 ## 2. Το AM concept — info στο πλάτος του carrier
 
@@ -83,6 +111,22 @@ x(t) = [A_c + m(t)] \cdot \cos(2\pi f_c t)
 $$
 
 — Ο carrier «κουβαλάει» την πληροφορία **κρυμμένη στο envelope** του. Αν δεις γραφικά το $x(t)$, θα δεις ένα γρήγορο ταλαντούμενο cosine του οποίου το «πλάτος ταλάντωσης» δεν είναι σταθερό — ακολουθεί το $m(t)$ προσθεμένο σε μια σταθερά $A_c$.
+
+<Callout type="intuition" title="Γιατί προσθέτουμε το A_c; — ο σπόρος όλης της AM οικογένειας">
+Παρατήρησε ότι αν αφαιρέσουμε το $A_c$ από την εξίσωση, μένει
+$x(t) = m(t)\cos(2\pi f_c t)$ — αυτό **είναι** η DSB-SC (επόμενο κεφάλαιο). Άρα
+η Conventional AM = DSB-SC + ένας σταθερός όρος. Γιατί το προσθέτουμε επίτηδες
+ενώ μας κοστίζει ισχύ;
+
+**Επειδή ο σταθερός όρος κρατάει το envelope πάντα θετικό** (όταν $\mu \le 1$).
+Όταν το envelope δεν αλλάζει πρόσημο, ένα παμφθηνό κύκλωμα δίοδος + RC (envelope
+detector) ανακτά το $m(t)$ χωρίς να χρειάζεται καθόλου local oscillator. Όλη η AM
+ραδιοτηλεόραση χτίστηκε πάνω σε αυτή τη μία απόφαση: «πληρώνω 67%+ ισχύς για να
+έχω δέκτη που στοιχίζει ευρώ, όχι εκατοντάδες».
+
+Όλες οι άλλες AM παραλλαγές (DSB-SC, SSB, VSB) είναι **διαφορετικές απαντήσεις** στο
+ίδιο ερώτημα: «πόση ισχύ είμαι διατεθειμένος να ξοδέψω για να απλοποιήσω τον δέκτη;»
+</Callout>
 
 <Callout type="connection" title="Σύνδεση με την I/Q canonical form">
 Από την [§5b του /modulation/bridge](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η Conventional AM είναι η **πρώτη γραμμή** του πίνακα:
@@ -100,6 +144,41 @@ $$
 
 **Όλη η οικογένεια AM** είναι παραλλαγές πάνω σε αυτό το θέμα: «τι κρατάς από το φάσμα;»
 
+<RecallCard
+  title="Συμπύκνωσε — η μία εξίσωση που γεννά τα πάντα"
+  keywords={[
+    <><InlineMath>{'x(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath></>,
+    'A_c → envelope detector',
+    'modulation theorem',
+    'sidebands στις ±f_c',
+  ]}
+  skeleton={[
+    <>Γράφεις την βασική AM εξίσωση: <InlineMath>{'[A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>.</>,
+    <>Αναγνωρίζεις δύο όρους: <strong>carrier</strong> <InlineMath>{'A_c\\cos(2\\pi f_c t)'}</InlineMath> και <strong>DSB-SC κομμάτι</strong> <InlineMath>{'m(t)\\cos(2\\pi f_c t)'}</InlineMath>.</>,
+    <>Στο φάσμα: ο carrier δίνει impulses στις <InlineMath>{'\\pm f_c'}</InlineMath>, το <InlineMath>{'m(t)\\cos'}</InlineMath> δίνει δύο πλευρικές γύρω από <InlineMath>{'\\pm f_c'}</InlineMath>.</>,
+    <>Bandwidth = <InlineMath>{'2W'}</InlineMath> (USB + LSB μαζί).</>,
+  ]}
+  trap={
+    <>
+      Το <strong>envelope</strong> ισούται με <InlineMath>{'A_c + m(t)'}</InlineMath>
+      <em> μόνο αν </em><InlineMath>{'\\mu \\le 1'}</InlineMath>. Στο overmodulation
+      (<InlineMath>{'\\mu > 1'}</InlineMath>) το envelope γίνεται <InlineMath>{'|A_c + m(t)|'}</InlineMath>
+      που «αναποδογυρίζει» κατά τη διέλευση από το μηδέν → ο envelope detector
+      σπάει. Αυτό θα το δούμε αναλυτικά στο <code>/am/conventional</code>.
+    </>
+  }
+/>
+
+### 2α. Δες τη μετατόπιση να συμβαίνει
+
+Πριν περάσουμε στις παραλλαγές, ας **δούμε** τον modulation theorem σε δράση:
+ξεκίνα από ένα baseband σήμα γύρω στο $f = 0$, σύρε το $f_c$ προς τα δεξιά και
+δες το φάσμα να μεταναστεύει στις $\pm f_c$ **χωρίς να αλλάξει σχήμα** —
+ακριβώς η συμπεριφορά που υπόσχεται ο τύπος. Άλλαξε «παραλλαγή» και δες πώς η
+κάθε επιλογή κρατάει διαφορετικό υποσύνολο αυτού του μετατοπισμένου φάσματος.
+
+<BasebandToRfShiftPlayground />
+
 ## 3. Οι τέσσερις παραλλαγές AM — η οικογένεια
 
 Όλες οι AM παραλλαγές ξεκινάνε από την ίδια ιδέα (σήμα $\propto$ envelope) αλλά **κάνουν διαφορετική επιλογή** για το τι κρατάνε στο φάσμα:
@@ -113,7 +192,51 @@ $$
 - **SSB (Single Sideband — Upper ή Lower)** — πετάμε επιπλέον τη μία από τις δύο πλευρικές. Πλεονέκτημα: **μισό bandwidth** (η μία πλευρά αρκεί για ανάκτηση). Μειονέκτημα: πιο πολύπλοκη κατασκευή — χρειάζεται **Hilbert transform** ή **filter SSB** στον πομπό.
 - **VSB (Vestigial Sideband)** — συμβιβασμός μεταξύ SSB και AM: μία πλήρης πλευρά + κατάλοιπο της άλλης + reduced carrier. Επιτρέπει envelope detector και κρατάει σχεδόν το bandwidth του SSB. Χρησιμοποιήθηκε στο NTSC TV broadcasting.
 
-## 4. Πού χρησιμοποιείται καθεμία
+### 3α. Decision tree — ποιο σχήμα διαλέγεις και γιατί;
+
+Η ερώτηση που θα σου κάνουν σε εξεταστική («γιατί αυτή η εφαρμογή χρησιμοποιεί
+αυτό το σχήμα;») είναι τρεις απλές ερωτήσεις βαθιά. Δες:
+
+<ModulationDecisionTree />
+
+<ClozeDrill
+  id="am-bandwidth-cloze"
+  prompt={
+    <p>
+      Για baseband bandwidth <InlineMath>{'W'}</InlineMath>, συμπλήρωσε το
+      bandwidth που χρειάζεται κάθε σχήμα. Δοκίμασέ τα χωρίς να γυρίσεις πάνω.
+    </p>
+  }
+  parts={[
+    <><InlineMath>{'B_{AM}'}</InlineMath> = </>,
+    { blank: 'am', accept: ['2W', '2*W', '2·W'], hint: 'W', size: 4 },
+    ' · ',
+    <><InlineMath>{'B_{DSB\\text{-}SC}'}</InlineMath> = </>,
+    { blank: 'dsb', accept: ['2W', '2*W', '2·W'], hint: 'W', size: 4 },
+    ' · ',
+    <><InlineMath>{'B_{SSB}'}</InlineMath> = </>,
+    { blank: 'ssb', accept: ['W'], hint: 'W', size: 3 },
+  ]}
+  solution={
+    <p>
+      AM και DSB-SC έχουν <strong>ίδιο</strong> bandwidth (2W) γιατί κρατάνε και
+      οι δύο τις πλευρικές. Η εξοικονόμηση του DSB-SC είναι σε{' '}
+      <strong>ισχύ</strong>, όχι σε εύρος. Το SSB κερδίζει και τα δύο
+      πετώντας τη μία πλευρά.
+    </p>
+  }
+/>
+
+## 4. Ο χώρος των trade-offs
+
+Τρεις άξονες αρκούν για να καταλάβεις γιατί η κάθε παραλλαγή υπάρχει: **power
+efficiency · bandwidth efficiency · receiver simplicity**. Καμία δεν είναι
+«καλύτερη παντού» — η σχεδίαση συστήματος είναι **να διαλέξεις σε ποια θυσία**
+είσαι διατεθειμένος να μπεις.
+
+<AMTradeoffSpace />
+
+## 5. Πού χρησιμοποιείται καθεμία
 
 | Σχήμα | Πραγματικές εφαρμογές |
 | --- | --- |
@@ -124,7 +247,7 @@ $$
 
 **Παρατήρηση:** Το γιατί κάθε εφαρμογή διαλέγει ένα συγκεκριμένο σχήμα έχει να κάνει με trade-offs ισχύος, bandwidth, πολυπλοκότητας **του δέκτη**. Στο κλασικό AM ραδιόφωνο, ο δέκτης πρέπει να είναι όσο πιο φθηνός γίνεται (γι' αυτό envelope detector) — ακόμα κι αν αυτό σημαίνει σπατάλη ισχύος στον carrier.
 
-## 5. Roadmap — τι έρχεται
+## 6. Roadmap — τι έρχεται
 
 Τα επόμενα κεφάλαια της AM ομάδας:
 
@@ -139,21 +262,56 @@ $$
 Στην [εισαγωγή](/intro#section-7) υποσχεθήκαμε «πλήρη μεταχείριση της AM και FM σε ξεχωριστά κεφάλαια». Αυτό το κεφάλαιο και τα 6 που ακολουθούν στην AM ομάδα κλείνουν το AM μισό αυτής της υπόσχεσης. Το FM μισό αρχίζει στο `/fm/idea` μετά το τέλος της AM ομάδας.
 </Callout>
 
-## Εξάσκηση
+## Εξάσκηση — εμπέδωση πριν τα past-exam θέματα
 
 <ExerciseProgress slug="am/overview" total={5} />
 
-Πέντε ερωτήσεις για να βεβαιωθείς ότι κατάλαβες τις διαφορές πριν βουτήξουμε σε καθεμία.
+Πέντε ερωτήσεις για να βεβαιωθείς ότι κατάλαβες τις διαφορές πριν βουτήξουμε σε καθεμία. Πριν δεις τις λύσεις, **κάνε μία προσπάθεια από μνήμη** στο drill παρακάτω.
+
+<RecallDrill
+  id="four-variants-recall"
+  prompt={
+    <p>
+      Χωρίς να γυρίσεις πάνω: ζωγράφισε νοερά (ή σε χαρτί) το{' '}
+      <InlineMath>{'|X(f)|'}</InlineMath> γύρω από <InlineMath>{'+f_c'}</InlineMath>{' '}
+      για κάθε μία από τις τέσσερις AM παραλλαγές. Σε ποιες υπάρχει impulse
+      στον carrier; Σε ποιες λείπει η LSB; Πόσο εύρος καταλαμβάνει η κάθε μία;
+    </p>
+  }
+  answer={
+    <ul className="ml-5 list-disc space-y-1">
+      <li>
+        <strong>Conventional AM:</strong> impulse στο{' '}
+        <InlineMath>{'+f_c'}</InlineMath> + USB + LSB. Εύρος{' '}
+        <InlineMath>{'2W'}</InlineMath>.
+      </li>
+      <li>
+        <strong>DSB-SC:</strong> καμία impulse, μόνο USB + LSB. Εύρος{' '}
+        <InlineMath>{'2W'}</InlineMath>.
+      </li>
+      <li>
+        <strong>SSB (USB):</strong> μόνο USB. Εύρος <InlineMath>{'W'}</InlineMath>{' '}
+        — το μισό.
+      </li>
+      <li>
+        <strong>VSB:</strong> πλήρης USB + κατάλοιπο LSB + μειωμένος impulse.
+        Εύρος ~<InlineMath>{'1.25W'}</InlineMath>.
+      </li>
+    </ul>
+  }
+/>
 
 <ExamProblem id="am-bandwidth-baseband" year="Bandwidth" weight="βασικό">
 **Ερώτηση:** Σήμα πληροφορίας έχει bandwidth $W = 10$ kHz. Πόσο είναι το bandwidth του διαμορφωμένου σήματος για: (a) Conventional AM, (b) DSB-SC, (c) SSB;
 
 <Example title="Λύση" defaultOpen={true}>
+**Σκέψη πριν τη λύση:** η ερώτηση μετράει τρία bandwidth — ίδια δομή με τη ΣΕΠ 2025 ΘΕΜΑ 1.3. Αν θυμάσαι από το decision tree «η SSB κερδίζει το μισό», η απάντηση είναι σχεδόν αυτονόητη.
+
 - **(a) AM:** $B = 2W = 20$ kHz (carrier + USB + LSB).
 - **(b) DSB-SC:** $B = 2W = 20$ kHz (USB + LSB, χωρίς carrier — ίδιο εύρος).
 - **(c) SSB:** $B = W = 10$ kHz (μόνο μία sideband).
 
-**Παρατήρηση:** το DSB-SC δεν εξοικονομεί bandwidth σε σχέση με το AM, **εξοικονομεί ισχύ**. Το SSB εξοικονομεί και τα δύο.
+**Παρατήρηση:** το DSB-SC δεν εξοικονομεί bandwidth σε σχέση με το AM, **εξοικονομεί ισχύ**. Το SSB εξοικονομεί και τα δύο. Αυτή ακριβώς η διάκριση είναι το «κατάλαβα ή όχι» κριτήριο για το θέμα ΣΕΠ 2025 1.3.
 </Example>
 </ExamProblem>
 
@@ -164,7 +322,9 @@ $$
 **Σωστό.** Στο μέγιστο (όριο $\mu = 1$), η αποδοτικότητα του conventional AM είναι:
 $$\eta_{max} = \frac{\mu^2/2}{1 + \mu^2/2}\bigg|_{\mu=1} = \frac{1/2}{3/2} = \tfrac{1}{3} \approx 33.3\%$$
 
-Δηλαδή **τουλάχιστον 67%** της ισχύος πάει στον carrier (που δεν φέρει πληροφορία). Γι' αυτό το DSB-SC και το SSB είναι ενεργειακά πολύ πιο αποδοτικά. Το conventional AM «πληρώνει» αυτή την κακή αποδοτικότητα ως αντάλλαγμα για την απλότητα του envelope detector.
+Δηλαδή **τουλάχιστον 67%** της ισχύος πάει στον carrier (που δεν φέρει πληροφορία). Γι' αυτό το DSB-SC και το SSB είναι ενεργειακά πολύ πιο αποδοτικά. Το conventional AM «πληρώνει» αυτή την κακή αποδοτικότητα ως αντάλλαγμα για την απλότητα του envelope detector — ακριβώς το trade-off που είδες στον decision tree παραπάνω.
+
+Η πλήρης παραγωγή της φόρμουλας $\eta(\mu)$ γίνεται στο [/am/conventional](/am/conventional) — εδώ μας ενδιαφέρει μόνο **η σύγκριση** ανάμεσα στα σχήματα.
 </Example>
 </ExamProblem>
 
@@ -191,11 +351,13 @@ $$\eta_{max} = \frac{\mu^2/2}{1 + \mu^2/2}\bigg|_{\mu=1} = \frac{1/2}{3/2} = \tf
 **Ερώτηση:** Γιατί το DSB-SC χρειάζεται **coherent** demodulation, ενώ το conventional AM όχι;
 
 <Example title="Λύση">
+**Πρώτα ταυτοποίησε τι αλλάζει:** η μόνη διαφορά Conventional AM ↔ DSB-SC είναι ο σταθερός όρος $A_c$. Άρα η ερώτηση είναι: «τι ρόλο παίζει το $A_c$ στον envelope detector;»
+
 **Conventional AM:** $x(t) = [A_c + m(t)]\cos(\omega_c t)$. Το envelope είναι $|A_c + m(t)|$ — και εφόσον $\mu \le 1$, το $A_c + m(t) \geq 0$, οπότε το envelope **είναι ίσο με** $A_c + m(t)$. Ένας απλός envelope detector (δίοδος + RC) ανακτά το message.
 
 **DSB-SC:** $x(t) = m(t)\cos(\omega_c t)$. Όταν το $m(t)$ αλλάζει πρόσημο, το «envelope» δεν αλλάζει πρόσημο (πάντα $\ge 0$) — αλλά η phase του carrier κάνει $180°$ flip. Ο envelope detector δίνει $|m(t)|$ αντί για $m(t)$, χάνοντας πληροφορία.
 
-**Λύση για DSB-SC:** πολλαπλασιασμός με τοπικό cosine ίδιας φάσης ($\cos(\omega_c t)$) και LPF — αυτό είναι coherent demod. Χρειάζεται phase-locked loop ή carrier recovery για να συγχρονιστεί.
+**Λύση για DSB-SC:** πολλαπλασιασμός με τοπικό cosine ίδιας φάσης ($\cos(\omega_c t)$) και LPF — αυτό είναι coherent demod. Χρειάζεται phase-locked loop ή carrier recovery για να συγχρονιστεί. Όλο αυτό αναλύεται στο [/am/dsb-sc](/am/dsb-sc).
 </Example>
 </ExamProblem>
 
@@ -203,18 +365,80 @@ $$\eta_{max} = \frac{\mu^2/2}{1 + \mu^2/2}\bigg|_{\mu=1} = \frac{1/2}{3/2} = \tf
 **Ερώτηση:** Γιατί το SSB μπορεί να μεταδώσει την ίδια πληροφορία με **το μισό** bandwidth του DSB-SC;
 
 <Example title="Λύση" defaultOpen={true}>
+**Σημαία:** η ερώτηση είναι «γιατί η μία πλευρά αρκεί;» — αυτό σε γυρίζει στην conjugate symmetry του πραγματικού σήματος.
+
 Για real $m(t)$, ισχύει conjugate symmetry: $M(-f) = M^*(f)$. Δηλαδή η αρνητική πλευρά του φάσματος **είναι ο μιγαδικός συζυγής** της θετικής — δεν φέρει νέα πληροφορία, είναι αναπαραγωγή.
 
 Στο DSB-SC γύρω από $f_c$, βλέπουμε δύο κατοπτρικές sidebands (USB και LSB) — η μία είναι **πλεονασμός** της άλλης. Το SSB πετάει τη μία (π.χ. κρατάει μόνο USB), και χρησιμοποιεί μόνο $W$ bandwidth αντί για $2W$. Στον δέκτη η coherent demodulation ανακτά το πλήρες $m(t)$ γιατί από τη μία sideband «ξαναχτίζεται» η άλλη μέσω της ίδιας conjugate symmetry.
+
+(Πλήρης παραγωγή με Hilbert: [/am/ssb](/am/ssb).)
 </Example>
 </ExamProblem>
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε όλο το AM Overview"
+  keywords={[
+    <><InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath></>,
+    'envelope detector vs coherent',
+    <><InlineMath>{'B_{AM} = B_{DSB} = 2W'}</InlineMath></>,
+    <><InlineMath>{'B_{SSB} = W'}</InlineMath></>,
+    'η ≤ 33% (AM) vs 100% (DSB-SC/SSB)',
+    '3 trade-off άξονες',
+  ]}
+  skeleton={[
+    'Modulation = πολλαπλασιασμός με carrier ⇒ μετατόπιση φάσματος στις ±f_c.',
+    'AM = DSB-SC + σταθερά A_c. Ο σταθερός όρος δίνει envelope detector με κόστος ισχύος.',
+    'DSB-SC = πετάμε τον carrier. 100% χρήσιμη ισχύς, χρειάζεται coherent.',
+    'SSB = πετάμε μία πλευρά. Μισό bandwidth, πολύπλοκος πομπός (Hilbert/φίλτρο).',
+    'VSB = συμβιβασμός. Σχεδόν SSB σε bandwidth, σχεδόν AM σε δέκτη. Χρήση: αναλογική TV.',
+  ]}
+  trap={
+    <>
+      Μη μπερδεύεις «εξοικονόμηση <strong>bandwidth</strong>» με «εξοικονόμηση
+      <strong> ισχύος</strong>». AM και DSB-SC έχουν ίδιο bandwidth (2W) —
+      διαφέρουν στην ισχύ. Το SSB εξοικονομεί και τα δύο. Είναι το σχεδόν πιο
+      συχνό «trip-up» στις True/False ερωτήσεις.
+    </>
+  }
+/>
 
 <Recap>
 - Η **AM** κωδικοποιεί την πληροφορία στο **πλάτος** ενός carrier cosine: $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$.
 - Στη γλώσσα της I/Q canonical form: $x_I = A_c[1 + k_a m(t)]$, $x_Q = 0$ — όλη η πληροφορία στο envelope, μηδέν στη phase.
 - Στη συχνότητα: ο modulation theorem μετατοπίζει το $M(f)$ στις $\pm f_c$ → δύο πλευρικές + carrier impulse.
-- **Τέσσερις παραλλαγές** (Conventional, DSB-SC, SSB, VSB) διαφέρουν στο τι κρατάνε από το φάσμα. Trade-offs: ισχύς, bandwidth, πολυπλοκότητα δέκτη.
+- **Τέσσερις παραλλαγές** (Conventional, DSB-SC, SSB, VSB) διαφέρουν στο τι κρατάνε από το φάσμα. Trade-offs: ισχύς, bandwidth, πολυπλοκότητα δέκτη — το decision tree και το trade-off space παραπάνω σου δίνουν τη συστηματική απάντηση.
 - **Conventional AM** είναι το πιο εξεταστικό σχήμα + αυτό που ακούς πραγματικά στο ραδιόφωνο. Ξεκινάμε από εκεί.
 </Recap>
+
+<ThinkingPattern
+  signals={[
+    'envelope detector',
+    'coherent / σύγχρονη ανίχνευση',
+    'καταστολή φέροντος',
+    'απλής πλευρικής ζώνης',
+    'υπολειπόμενη πλευρική',
+    'γιατί διαμορφώνουμε',
+  ]}
+>
+  <p>
+    Σε εκφώνηση overview-στυλ που σου ζητάει να <strong>συγκρίνεις</strong>{' '}
+    σχήματα ή να <strong>επιλέξεις</strong> ένα για μια εφαρμογή, τρέξε
+    νοητά τις τρεις ερωτήσεις του decision tree (φθηνός δέκτης; · στενή ισχύς;
+    · στενό bandwidth;) — η απάντηση βγαίνει σχεδόν μηχανικά. Αν η ερώτηση είναι
+    «γιατί διαμορφώνουμε», απάντησε με <strong>μέγεθος κεραίας + multiplexing</strong>{' '}
+    πρώτα-πρώτα και τα υπόλοιπα τέσσερα ως δευτερεύοντες λόγους.
+  </p>
+  <p className="mt-2">
+    Για bandwidth/ισχύ συγκρίσεις θυμήσου τη <em>συχνότερη παγίδα</em>: AM και
+    DSB-SC έχουν <strong>ίδιο</strong> bandwidth (2W) — διαφέρουν στην ισχύ.
+    Μόνο το SSB κερδίζει στο εύρος.
+  </p>
+</ThinkingPattern>
+
+<ExamRadar
+  slug="am/overview"
+  title="Πού εμφανίζεται στις τελευταίες εξεταστικές"
+/>
 
 <NextUp slug="am/conventional" />
