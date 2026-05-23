@@ -523,4 +523,431 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
       </>
     ),
   },
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * L03 — Διαίρει και κυρίευε I (mergesort, Master Theorem,
+   *       αναδρομές με ρίζες/τηλεσκόπηση/χαρακτηριστικές εξισώσεις)
+   * ─────────────────────────────────────────────────────────────────── */
+  'pt1-th1-q4': {
+    takeaway: (
+      <>
+        Όποτε δεις <InlineMath>{'\\sqrt{n}'}</InlineMath> στο όρισμα μιας
+        αναδρομής, η μόνη ασφαλής συνταγή είναι{' '}
+        <strong>θέσε <InlineMath>{'n = 2^m'}</InlineMath></strong>. Η ρίζα
+        γίνεται υποδιπλασιασμός, Master Theorem εφαρμόζεται, και στο τέλος
+        επιστρέφεις <InlineMath>{'m = \\log n'}</InlineMath>. Το «αποτύπωμα»
+        στην απάντηση είναι ένα <strong>διπλό log</strong> (
+        <InlineMath>{'\\Theta(\\log\\log n)'}</InlineMath>).
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήματα: <InlineMath>{'T(\\sqrt n)'}</InlineMath>,{' '}
+        <InlineMath>{'T(\\sqrt[k]{n})'}</InlineMath>. Άμεσα γράψε «θέτω n=2ᵐ».
+        Αν a=1 (μία κλήση): απάντηση Θ(log log n). Αν a≥2: μετατρέπεται σε
+        Master Theorem περίπτωση 1 → πολυώνυμο του m → log n (όχι log log n).
+      </>
+    ),
+  },
+  'pt1-th1-q5': {
+    takeaway: (
+      <>
+        Η <InlineMath>{'2T(n/2)+n'}</InlineMath> είναι η ίδια αναδρομή της
+        mergesort: Master Theorem περίπτωση 2 →{' '}
+        <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>. Η πιο κοινή
+        αναδρομή του μαθήματος — αναγνώρισέ τη χωρίς υπολογισμούς.
+      </>
+    ),
+    examRadar: (
+      <>
+        <InlineMath>{'2T(n/2)+n'}</InlineMath>,{' '}
+        <InlineMath>{'2T(n/2)+\\Theta(n)'}</InlineMath>, ή κάθε{' '}
+        <InlineMath>{'aT(n/b)+f'}</InlineMath> όπου ισχύει{' '}
+        <InlineMath>{'\\log_b a = d'}</InlineMath> ⇒ <strong>πάντα</strong>{' '}
+        <InlineMath>{'\\Theta(n^d \\log n)'}</InlineMath>.
+      </>
+    ),
+  },
+  'pt1-th4': {
+    takeaway: (
+      <>
+        Η ύψωση σε δύναμη με <em>τετραγωνισμό</em> μετατρέπει το{' '}
+        <InlineMath>{'O(n)'}</InlineMath> σε{' '}
+        <InlineMath>{'O(\\log n)'}</InlineMath> με μία ταυτότητα:{' '}
+        <InlineMath>{'m^n = (m^{n/2})^2'}</InlineMath>. Δομικό μοτίβο D&amp;C —
+        αναγνώρισέ το όποτε το «πρόβλημα» μειώνεται με μία πράξη που εφαρμόζεται
+        στον εαυτό του.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε ζητείται «αποδοτικός υπολογισμός δύναμης» (αριθμού, πίνακα, modular),
+        η απάντηση είναι <InlineMath>{'O(\\log n)'}</InlineMath> με τετραγωνισμό.
+        Παγίδα: γράψε <InlineMath>{'(\\text{Power}(m, n/2))^2'}</InlineMath>, όχι{' '}
+        <InlineMath>{'\\text{Power}(m, n/2) \\cdot \\text{Power}(m, n/2)'}</InlineMath>{' '}
+        (που θα γινόταν δύο κλήσεις, εκθετικό).
+      </>
+    ),
+  },
+  'pt2-th1-q3': {
+    takeaway: (
+      <>
+        Master Theorem περίπτωση 3 («ρίζα κυριαρχεί»): όταν το{' '}
+        <InlineMath>{'f(n)'}</InlineMath> είναι πολυωνυμικά μεγαλύτερο από το
+        κατώφλι <InlineMath>{'n^{\\log_b a}'}</InlineMath>, η απάντηση είναι{' '}
+        <strong>απλώς <InlineMath>{'\\Theta(f(n))'}</InlineMath></strong>. Καμία
+        έκπληξη, κανένα log.
+      </>
+    ),
+    examRadar: (
+      <>
+        <InlineMath>{'2T(n/2)+n^3'}</InlineMath>,{' '}
+        <InlineMath>{'4T(n/4)+n^2 \\cdot something'}</InlineMath>: αν f είναι
+        πολυωνυμικά μεγαλύτερο από <InlineMath>{'n^{\\log_b a}'}</InlineMath>,
+        αναγνώρισέ το αμέσως και γράψε{' '}
+        <InlineMath>{'\\Theta(f)'}</InlineMath>. Αν διαφέρει μόνο κατά log,
+        χρησιμοποίησε την επεκτεταμένη περίπτωση (όχι την 3).
+      </>
+    ),
+  },
+  'pt2-th1-q4': {
+    takeaway: (
+      <>
+        Η <InlineMath>{'2T(\\sqrt n)+1'}</InlineMath> δίνει{' '}
+        <InlineMath>{'\\Theta(\\log n)'}</InlineMath>, ΟΧΙ{' '}
+        <InlineMath>{'\\Theta(\\log\\log n)'}</InlineMath> — η διαφορά είναι ο
+        συντελεστής 2 μπροστά: μετά την αντικατάσταση{' '}
+        <InlineMath>{'n=2^m'}</InlineMath>, η{' '}
+        <InlineMath>{'S(m)=2S(m/2)+1'}</InlineMath> είναι Master Theorem
+        περίπτωση 1 (φύλλα), όχι 2 (ισορροπία).
+      </>
+    ),
+    examRadar: (
+      <>
+        Παγίδα-κλειδί στις αναδρομές με ρίζα: <strong>μέτρα τον συντελεστή
+        μπροστά!</strong> a=1 → log log n, a=2 → log n, a=k → polynomial του m
+        = poly-log του n. Γράψε πάντα την S(m) ρητά για να αποφύγεις λάθος.
+      </>
+    ),
+  },
+  'pt4-th1-q4': {
+    takeaway: (
+      <>
+        «Δύο αναδρομικές κλήσεις στο n−1» δεν είναι D&amp;C — είναι Fibonacci.
+        Σε κάθε επίπεδο διπλασιάζονται οι κλήσεις και χρειάζονται{' '}
+        <InlineMath>{'n'}</InlineMath> (όχι <InlineMath>{'\\log n'}</InlineMath>)
+        επίπεδα → <InlineMath>{'2^n'}</InlineMath> φύλλα = εκθετικό. Για
+        πολυωνυμικό, χρειάζεσαι αναδρομή σε <InlineMath>{'n/2'}</InlineMath>
+        (όχι σε <InlineMath>{'n-1'}</InlineMath>).
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε δεις <InlineMath>{'aT(n-c)'}</InlineMath> με{' '}
+        <InlineMath>{'a > 1'}</InlineMath>, αναμένει εκθετικό. Σ/Λ προτάσεις
+        που υπόσχονται πολυωνυμικό φράγμα γι' αυτά τα σχήματα είναι σχεδόν
+        πάντα Λάθος.
+      </>
+    ),
+  },
+  'pt4-th3': {
+    takeaway: (
+      <>
+        Όταν η είσοδος έχει «μοναδικό σύνορο» (1ᵐ0ⁿ, sorted array, monotone
+        condition), η δυαδική αναζήτηση δίνει{' '}
+        <InlineMath>{'O(\\log k)'}</InlineMath>. Η αναδρομή είναι πάντα{' '}
+        <InlineMath>{'T(k) = T(k/2) + O(1)'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: «ζητείται <InlineMath>{'O(\\log k)'}</InlineMath>» + «η είσοδος
+        έχει monotone δομή» = δυαδική αναζήτηση. Άκουσε τι ρωτάει η εκφώνηση:
+        αν δίνει υπόδειξη «τι αναδρομική σχέση πρέπει να ισχύει», ο εξεταστής
+        θέλει <InlineMath>{'T(k/2)+O(1)'}</InlineMath>.
+      </>
+    ),
+  },
+  'pt5-th2-b': {
+    takeaway: (
+      <>
+        Σύγκριση δύο D&amp;C αλγορίθμων: γράψε αναδρομή για καθέναν, εφάρμοσε
+        Master Theorem, διάταξε. <InlineMath>{'9T(n/3)+n'}</InlineMath> → Θ(n²)·{' '}
+        <InlineMath>{'2T(n/2)+cn'}</InlineMath> → Θ(n log n). Ο A₂ κερδίζει
+        ξεκάθαρα.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε δεις «ποιος αλγόριθμος είναι ασυμπτωτικά καλύτερος» με αναδρομές,
+        υπολόγισε κάθε <InlineMath>{'\\log_b a'}</InlineMath> και σύγκρινε με
+        το αντίστοιχο d. Δύο αλγόριθμοι με ίδιο{' '}
+        <InlineMath>{'\\log_b a'}</InlineMath> πέφτουν στην ίδια περίπτωση και
+        έχουν την ίδια τάξη ασυμπτωτικά.
+      </>
+    ),
+  },
+  'front-set-3-ask4': {
+    takeaway: (
+      <>
+        Όποτε <InlineMath>{'T(n) = T(n-1) + g(n)'}</InlineMath>, χρησιμοποίησε{' '}
+        <strong>τηλεσκόπηση</strong>: άθροισε{' '}
+        <InlineMath>{'T(i) - T(i-1) = g(i)'}</InlineMath> για i=1..n, οι
+        ενδιάμεσοι όροι διαγράφονται, μένει{' '}
+        <InlineMath>{'T(n) = T(0) + \\sum g(i)'}</InlineMath>. Η τάξη του{' '}
+        <InlineMath>{'T'}</InlineMath> ταυτίζεται με αυτή του αθροίσματος.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήματα τηλεσκόπησης: μη-D&amp;C αναδρομές με{' '}
+        <InlineMath>{'T(n-1)'}</InlineMath>. Για{' '}
+        <InlineMath>{'g(n) = 2^n'}</InlineMath> → Θ(2ⁿ), για{' '}
+        <InlineMath>{'g(n) = n'}</InlineMath> → Θ(n²), για{' '}
+        <InlineMath>{'g(n) = c'}</InlineMath> → Θ(n).
+      </>
+    ),
+  },
+  'front-set-3-ask1': {
+    takeaway: (
+      <>
+        Ομογενείς γραμμικές αναδρομές (Fibonacci, παρόμοιες) λύνονται με{' '}
+        <strong>χαρακτηριστική εξίσωση</strong>: δοκίμασε{' '}
+        <InlineMath>{'F(n) = x^n'}</InlineMath>, βρες τις ρίζες του
+        πολυωνύμου, η ασυμπτωτική κυριαρχείται από τη ρίζα με το μεγαλύτερο
+        μέτρο. Για Fibonacci → <InlineMath>{'\\Theta(\\varphi^n)'}</InlineMath>{' '}
+        (χρυσή τομή).
+      </>
+    ),
+    examRadar: (
+      <>
+        <InlineMath>{'F(n) = c_1 F(n-1) + c_2 F(n-2)'}</InlineMath> χωρίς
+        εξωτερικό προσθετέο = ομογενής γραμμική. Συνταγή: χαρακτηριστική
+        εξίσωση → ρίζες → γενική λύση → σταθερές από F(0), F(1).
+      </>
+    ),
+  },
+  'front-set-3-ask2': {
+    takeaway: (
+      <>
+        Όταν η χαρακτηριστική εξίσωση έχει <strong>διπλή ρίζα</strong>{' '}
+        <InlineMath>{'r'}</InlineMath>, η γενική λύση είναι{' '}
+        <InlineMath>{'\\lambda_1 r^n + \\lambda_2 n r^n'}</InlineMath> — όχι{' '}
+        <InlineMath>{'\\lambda_1 r^n + \\lambda_2 r^n'}</InlineMath> (που θα
+        συγχωνευόταν σε έναν όρο). Για πολλαπλότητα m: επιπλέον{' '}
+        <InlineMath>{'n^k r^n'}</InlineMath> όροι, k = 0..m−1.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όταν λύνεις χαρακτηριστική και βρίσκεις διακρίνουσα Δ = 0, σήμα διπλής
+        ρίζας. Άμεσα γράψε το ×n κόλπο. Παγίδα: αν αμελήσεις το n, οι αρχικές
+        συνθήκες δίνουν αντιφατικό σύστημα.
+      </>
+    ),
+  },
+  'front-set-3-ask7': {
+    takeaway: (
+      <>
+        Σύγκριση πολλών D&amp;C: εφάρμοσε Master Theorem σε καθέναν, βρες τάξη,
+        διάταξε. <InlineMath>{'n\\log n \\prec n^{7/6} \\prec n^{3/2}'}</InlineMath>{' '}
+        (το <InlineMath>{'\\log n'}</InlineMath> χάνει από κάθε θετική δύναμη
+        του <InlineMath>{'n'}</InlineMath>).
+      </>
+    ),
+    examRadar: (
+      <>
+        Όταν συγκρίνεις πολλούς αλγόριθμους D&amp;C, εφάρμοσε MT σε καθένα.
+        Συχνή παγίδα: <InlineMath>{'n\\log n'}</InlineMath> νικάει κάθε{' '}
+        <InlineMath>{'n^{1+\\varepsilon}'}</InlineMath>, παρότι «μοιάζει πιο
+        αργό» λόγω log.
+      </>
+    ),
+  },
+  'front-set-3-ask8': {
+    takeaway: (
+      <>
+        Επαγωγή σε αναδρομή: (1) βάση, (2) ΙΗ, (3) επαγωγικό βήμα ξεκινώντας
+        από τον ορισμό για n+1, εφαρμογή ΙΗ στις αναδρομικές κλήσεις (μέγεθος
+        ≤ n), απλοποίηση με αλγεβρικές ταυτότητες (log a + log b = log ab).
+        Καταλήγεις στον τύπο που υπόσχεσαι.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε ζητείται «απόδειξε με επαγωγή ότι T(n) = …», η συνταγή είναι ίδια
+        πάντα. Συχνότερη χρήση: για n = 2ᵏ ή για όλους τους ακεραίους με ισχυρή
+        επαγωγή. Πρόσεξε την ταυτότητα <InlineMath>{'\\log 2^k = k'}</InlineMath>{' '}
+        — εμφανίζεται σε σχεδόν κάθε τέτοια άσκηση.
+      </>
+    ),
+  },
+  'front-set-3-ask9': {
+    takeaway: (
+      <>
+        Επεκτεταμένη Master Theorem: όταν{' '}
+        <InlineMath>{'f = \\Theta(n^{\\log_b a} \\log^k n)'}</InlineMath>, τότε{' '}
+        <InlineMath>{'T = \\Theta(n^{\\log_b a} \\log^{k+1} n)'}</InlineMath> —{' '}
+        <strong>μία log δύναμη παραπάνω</strong>. Δεν είναι καμία από τις 3
+        κλασικές περιπτώσεις.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: <InlineMath>{'f'}</InlineMath> διαφέρει από το{' '}
+        <InlineMath>{'n^{\\log_b a}'}</InlineMath> κατά μόνο{' '}
+        <InlineMath>{'\\log^k n'}</InlineMath> (όχι πολυωνυμικά). Καμία κλασική
+        περίπτωση δεν εφαρμόζεται — η απάντηση είναι «κατώφλι ×{' '}
+        <InlineMath>{'\\log^{k+1} n'}</InlineMath>».
+      </>
+    ),
+  },
+  'front-set-3-ask10': {
+    takeaway: (
+      <>
+        Ίδια ιστορία με pt1-th1-q4: η <InlineMath>{'T(\\sqrt n) + 1'}</InlineMath>{' '}
+        λύνεται με <InlineMath>{'n = 2^m'}</InlineMath>· δίνει{' '}
+        <InlineMath>{'\\Theta(\\log\\log n)'}</InlineMath> (διπλό log). Το
+        αποτύπωμα του «τετραγωνική ρίζα συν σταθερά».
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε δεις <InlineMath>{'T(\\sqrt n) + c'}</InlineMath> με σταθερό c, η
+        απάντηση είναι Θ(log log n). Αν είχε συντελεστή 2 μπροστά, θα ήταν Θ(log
+        n). Πρόσεξε αυτή τη μικρή διαφορά.
+      </>
+    ),
+  },
+  'front-set-4-ask1': {
+    takeaway: (
+      <>
+        Όποτε η αναδρομή έχει συντελεστή <InlineMath>{'\\sqrt n'}</InlineMath>{' '}
+        ή <InlineMath>{'n^c'}</InlineMath> μπροστά από το{' '}
+        <InlineMath>{'T'}</InlineMath>, διαίρεσε και τις δύο πλευρές με το{' '}
+        αντίστοιχο <InlineMath>{'f(n)'}</InlineMath>. Συχνά εμφανίζεται μια
+        πολύ απλούστερη αναδρομή στη νέα συνάρτηση{' '}
+        <InlineMath>{'S = T/f'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: <InlineMath>{'g(n) \\cdot T(\\cdot) + f(n)'}</InlineMath>. Διαίρεσε
+        με f. Είναι το ίδιο κόλπο που χρησιμοποιείται και στην απόδειξη #1 της
+        mergesort (L03).
+      </>
+    ),
+  },
+  'front-set-4-ask2': {
+    takeaway: (
+      <>
+        Μέθοδος αντικατάστασης = εικασία + απόδειξη με επαγωγή. Όταν θέλεις{' '}
+        <em>ακριβή</em> τύπο (όχι μόνο Θ), αυτή είναι η μόνη επιλογή. Συνταγή:
+        μάντεψε <InlineMath>{'T(n) = n \\log n + n'}</InlineMath> (από
+        αναγνώριση mergesort), επαλήθευσε στη βάση, αντικατέστησε στο επαγωγικό
+        βήμα.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όταν η εκφώνηση ζητάει «ακριβή λύση» ή «λύσε με τη μέθοδο
+        αντικατάστασης», γράψε τα δύο στάδια ρητά: (1) εικασία, (2) επαγωγή. Αν
+        η επαγωγή σπάει με έναν επιπλέον όρο, ίσως χρειάζεσαι{' '}
+        <em>ενίσχυση</em> εικασίας (δες ask3).
+      </>
+    ),
+  },
+  'front-set-4-ask3': {
+    takeaway: (
+      <>
+        Όταν η «προφανής» εικασία{' '}
+        <InlineMath>{'T \\le dn^k'}</InlineMath> δεν κλείνει την επαγωγή λόγω
+        υπόλοιπου, <strong>ενίσχυσε</strong> την σε{' '}
+        <InlineMath>{"T \\le dn^k - d'n^{k-1}"}</InlineMath>. Παράδοξα, η πιο
+        σφιχτή εικασία είναι ευκολότερο να αποδειχθεί.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: εφαρμόζοντας μια εικασία <InlineMath>{'cn^k'}</InlineMath>,
+        καταλήγεις σε <InlineMath>{'cn^k + (\\text{επιπλέον})'}</InlineMath>{' '}
+        που δεν είναι ≤ <InlineMath>{'cn^k'}</InlineMath>. Άμεσα αφαίρεσε
+        έναν όρο τάξης <InlineMath>{'n^{k-1}'}</InlineMath>.
+      </>
+    ),
+  },
+  'front-set-4-ask4': {
+    takeaway: (
+      <>
+        Για άνισες αναδρομές <InlineMath>{'\\sum T(c_i n) + n'}</InlineMath>:
+        ο κρίσιμος αριθμός είναι <InlineMath>{'r = \\sum c_i'}</InlineMath>.
+        r &lt; 1: ρίζα κυριαρχεί → Θ(n). r = 1: όλα ίσα → Θ(n log n). r &gt; 1:
+        φύλλα κυριαρχούν → υπερ-γραμμικό.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε δεις άνιση αναδρομή (πολλά διαφορετικά n/k), πρόσθεσε τα
+        κλάσματα. Αν συγκλίνει (r &lt; 1), εικασία cn και απόδειξη με
+        αντικατάσταση — κλειδώνει.
+      </>
+    ),
+  },
+  'front-set-4-ask7': {
+    takeaway: (
+      <>
+        Η εξάλειψη ενός στοιχείου από ακολουθία με γνωστή δομή («αναμενόμενη
+        τιμή ανά θέση») δημιουργεί <strong>σύνορο</strong> ίδιας μορφής με το{' '}
+        <InlineMath>{'1^m 0^n'}</InlineMath>. Δυαδική αναζήτηση παίζει →{' '}
+        <InlineMath>{'O(\\log n)'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήματα: «λείπει ένας όρος από αριθμητική πρόοδο / γεωμετρική / κάθε
+        γνωστή ακολουθία». Άμεσα δυαδική αναζήτηση. Υπολόγισε την αναμενόμενη
+        τιμή στη θέση mid και σύγκρινε.
+      </>
+    ),
+  },
+  'front-set-4-ask10': {
+    takeaway: (
+      <>
+        Επεκτεταμένη Master Theorem ξανά: όταν{' '}
+        <InlineMath>{'f = n^{\\log_b a} \\cdot \\log n'}</InlineMath>, η
+        απάντηση είναι <InlineMath>{'n^{\\log_b a} \\cdot \\log^2 n'}</InlineMath>{' '}
+        (+1 log). Παγίδα: μη σπεύσεις σε Περίπτωση 3 — η <InlineMath>{'\\log n'}</InlineMath>{' '}
+        διαφορά δεν είναι πολυωνυμική.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε το <InlineMath>{'f'}</InlineMath> έχει την «καρδιά»{' '}
+        <InlineMath>{'n^{\\log_b a}'}</InlineMath> και ένα{' '}
+        <InlineMath>{'\\log^k n'}</InlineMath>, γράψε «επεκτεταμένη περίπτωση»
+        και την απάντηση{' '}
+        <InlineMath>{'n^{\\log_b a} \\log^{k+1} n'}</InlineMath>. Συμβουλή: γράψε
+        ρητά το k.
+      </>
+    ),
+  },
+  'front-set-5-ask1': {
+    takeaway: (
+      <>
+        Stooge Sort: <InlineMath>{'T(n) = 3T(2n/3) + O(1)'}</InlineMath> →{' '}
+        <InlineMath>{'\\Theta(n^{\\log_{3/2} 3}) \\approx \\Theta(n^{2{,}71})'}</InlineMath>{' '}
+        — χειρότερο και από bubble. Το σχήμα D&amp;C δεν εγγυάται ταχύτητα: μετράει
+        ο λόγος <InlineMath>{'a / b^d'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε δεις αναδρομή <InlineMath>{'kT(n \\cdot c) + O(1)'}</InlineMath>{' '}
+        με <InlineMath>{'c > 1/k'}</InlineMath>, αναμένει υπερ-γραμμικό
+        αποτέλεσμα. Για ορθότητα παρόμοιων αναδρομών (3 κλήσεις σε 2/3): δείξε
+        ότι μετά την 1η + 2η κλήση τα μεγαλύτερα στοιχεία κάθονται στο
+        τελευταίο τρίτο.
+      </>
+    ),
+  },
 }

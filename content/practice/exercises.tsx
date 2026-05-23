@@ -36,6 +36,20 @@ import { LoopComplexityTrace } from '@/components/viz/LoopComplexityTrace'
 import { SandwichTheoremViz } from '@/components/viz/SandwichTheoremViz'
 import { ExpectedTimeBreakdown } from '@/components/viz/ExpectedTimeBreakdown'
 import { ExponentiationBreaksO } from '@/components/viz/ExponentiationBreaksO'
+import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
+import { RecurrenceSubstitution } from '@/components/viz/RecurrenceSubstitution'
+import { FastExponentiation } from '@/components/viz/FastExponentiation'
+import { OneZeroBinarySearch } from '@/components/viz/OneZeroBinarySearch'
+import { MissingTermBinarySearch } from '@/components/viz/MissingTermBinarySearch'
+import { RecurrenceTelescope } from '@/components/viz/RecurrenceTelescope'
+import { CharEquationLab } from '@/components/viz/CharEquationLab'
+import { InductionStepper } from '@/components/viz/InductionStepper'
+import { UnequalSplitGeometric } from '@/components/viz/UnequalSplitGeometric'
+import { StrengthenedGuess } from '@/components/viz/StrengthenedGuess'
+import { MasterTheoremExtended } from '@/components/viz/MasterTheoremExtended'
+import { DivideByNTrick } from '@/components/viz/DivideByNTrick'
+import { StoogeSortViz } from '@/components/viz/StoogeSortViz'
+import { BranchingContrast } from '@/components/viz/BranchingContrast'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -366,46 +380,83 @@ export const EXERCISES: Exercise[] = [
       <>
         <p>
           Αν <InlineMath>{'T(n) = T(\\sqrt{n}) + 1'}</InlineMath>, κύκλωσε ποια
-          ισχύουν: (i) <InlineMath>{'T(n) \\in o(n)'}</InlineMath> · (ii){' '}
-          <InlineMath>{'T(n) \\in O(1)'}</InlineMath> · (iii){' '}
-          <InlineMath>{'T(n) \\in o(2^n)'}</InlineMath> · (iv){' '}
-          <InlineMath>{'T(n) \\in O(\\log_2 \\log_2 n)'}</InlineMath>.
+          ισχύουν:
         </p>
+        <ul>
+          <li>
+            (i) <InlineMath>{'T(n) \\in o(n)'}</InlineMath>
+          </li>
+          <li>
+            (ii) <InlineMath>{'T(n) \\in O(1)'}</InlineMath>
+          </li>
+          <li>
+            (iii) <InlineMath>{'T(n) \\in o(2^n)'}</InlineMath>
+          </li>
+          <li>
+            (iv) <InlineMath>{'T(n) \\in O(\\log_2 \\log_2 n)'}</InlineMath>
+          </li>
+        </ul>
       </>
     ),
     solution: (
       <>
         <p>
-          Η ρίζα κάνει αλλαγή μεταβλητής λίγο δύσκολη — οπότε κάνουμε ένα κόλπο.
-          Θέτουμε <InlineMath>{'n = 2^m'}</InlineMath>, δηλαδή{' '}
+          Πρώτο σήμα: εμφανίζεται <InlineMath>{'\\sqrt{n}'}</InlineMath> στο
+          όρισμα — Master Theorem δεν εφαρμόζεται κατευθείαν, χρειάζεται{' '}
+          <strong>αλλαγή μεταβλητής</strong>. Το κλασικό κόλπο: θέτουμε{' '}
+          <InlineMath>{'n = 2^m'}</InlineMath>, δηλαδή{' '}
           <InlineMath>{'m = \\log_2 n'}</InlineMath>. Τότε{' '}
-          <InlineMath>{'\\sqrt{n} = 2^{m/2}'}</InlineMath>, και η αναδρομή γίνεται
+          <InlineMath>{'\\sqrt{n} = 2^{m/2}'}</InlineMath> και, με{' '}
+          <InlineMath>{'S(m) = T(2^m)'}</InlineMath>, η αναδρομή γίνεται απλή:
         </p>
-        <BlockMath>{'S(m) = S(m/2) + 1, \\quad \\text{όπου } S(m) = T(2^m).'}</BlockMath>
+        <BlockMath>{'S(m) = S(m/2) + 1.'}</BlockMath>
         <p>
-          Αυτή την ξέρουμε: κάθε βήμα <strong>υποδιπλασιάζει</strong> το{' '}
-          <InlineMath>{'m'}</InlineMath> και προσθέτει <InlineMath>{'1'}</InlineMath>.
-          Πόσες φορές υποδιπλασιάζεις το <InlineMath>{'m'}</InlineMath> μέχρι να
-          φτάσεις στο <InlineMath>{'1'}</InlineMath>; <InlineMath>{'\\log_2 m'}</InlineMath>{' '}
-          φορές. Άρα <InlineMath>{'S(m) = \\Theta(\\log m)'}</InlineMath>.
+          Δες κάθε στάδιο της λύσης:
         </p>
+        <RecurrenceSubstitution preset="pt1-th1-q4" />
         <p>
-          Γυρνάμε πίσω: <InlineMath>{'m = \\log_2 n'}</InlineMath>, οπότε
+          Το ωραίο είναι ότι η νέα <InlineMath>{'S(m)'}</InlineMath> είναι αυτή
+          ακριβώς της δυαδικής αναζήτησης: κάθε βήμα{' '}
+          <strong>υποδιπλασιάζει</strong> το <InlineMath>{'m'}</InlineMath> και
+          προσθέτει <InlineMath>{'1'}</InlineMath>· συνολικά{' '}
+          <InlineMath>{'\\log_2 m'}</InlineMath> βήματα. Άρα{' '}
+          <InlineMath>{'S(m) = \\Theta(\\log m)'}</InlineMath>, και
+          επιστρέφοντας στο <InlineMath>{'n'}</InlineMath>:
         </p>
         <BlockMath>{'T(n) = \\Theta(\\log m) = \\Theta(\\log\\log n).'}</BlockMath>
         <p>
           Το <InlineMath>{'\\log\\log n'}</InlineMath> μεγαλώνει{' '}
-          <strong>εξαιρετικά αργά</strong>. Ελέγχουμε: (i){' '}
-          <InlineMath>{'o(n)'}</InlineMath> ✓ (πολύ μικρότερο του{' '}
-          <InlineMath>{'n'}</InlineMath>). (ii) <InlineMath>{'O(1)'}</InlineMath>{' '}
-          ✗ (μεγαλώνει, σιγά αλλά μεγαλώνει). (iii){' '}
-          <InlineMath>{'o(2^n)'}</InlineMath> ✓. (iv){' '}
-          <InlineMath>{'O(\\log_2\\log_2 n)'}</InlineMath> ✓ (ακριβώς αυτή είναι η
-          τάξη του).
+          <strong>εξαιρετικά αργά</strong> — για{' '}
+          <InlineMath>{'n = 2^{64}'}</InlineMath> είναι 6. Ελέγχουμε:
         </p>
+        <ul>
+          <li>
+            (i) <InlineMath>{'o(n)'}</InlineMath> ✓ (πολύ μικρότερο)
+          </li>
+          <li>
+            (ii) <InlineMath>{'O(1)'}</InlineMath> ✗ (μεγαλώνει, σιγά αλλά
+            μεγαλώνει)
+          </li>
+          <li>
+            (iii) <InlineMath>{'o(2^n)'}</InlineMath> ✓
+          </li>
+          <li>
+            (iv) <InlineMath>{'O(\\log_2\\log_2 n)'}</InlineMath> ✓ (ακριβώς η
+            τάξη του)
+          </li>
+        </ul>
         <p>
           <strong>Σωστές: (i), (iii), (iv).</strong>
         </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «ρίζα στο όρισμα ⇒ θέτω n = 2ᵐ».</strong>{' '}
+          Όποτε δεις <InlineMath>{'T(\\sqrt{n})'}</InlineMath> στην αναδρομή,
+          αντικατάστησε <InlineMath>{'n = 2^m'}</InlineMath>· η ρίζα γίνεται
+          υποδιπλασιασμός, Master Theorem εφαρμόζεται, και στο τέλος επιστρέφεις{' '}
+          <InlineMath>{'m = \\log n'}</InlineMath>. Το χαρακτηριστικό σήμα στην
+          απάντηση είναι ένα <strong>«διπλό log»</strong>:{' '}
+          <InlineMath>{'\\log\\log n'}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -424,44 +475,69 @@ export const EXERCISES: Exercise[] = [
       <>
         <p>
           Αν <InlineMath>{'T(n) = 2T(n/2) + n'}</InlineMath>, κύκλωσε ποια
-          ισχύουν: (i) <InlineMath>{'O(n\\log_2 n)'}</InlineMath> · (ii){' '}
-          <InlineMath>{'o(n)'}</InlineMath> · (iii) <InlineMath>{'O(n)'}</InlineMath>{' '}
-          · (iv) <InlineMath>{'o(n^3)'}</InlineMath>.
+          ισχύουν:
         </p>
+        <ul>
+          <li>
+            (i) <InlineMath>{'O(n\\log_2 n)'}</InlineMath>
+          </li>
+          <li>
+            (ii) <InlineMath>{'o(n)'}</InlineMath>
+          </li>
+          <li>
+            (iii) <InlineMath>{'O(n)'}</InlineMath>
+          </li>
+          <li>
+            (iv) <InlineMath>{'o(n^3)'}</InlineMath>
+          </li>
+        </ul>
       </>
     ),
     solution: (
       <>
         <p>
-          Αυτή είναι η πιο κλασική αναδρομή — η ίδια με τη συγχωνευτική
-          ταξινόμηση (mergesort). Χρησιμοποιούμε το Master Theorem με{' '}
+          Αυτή είναι η πιο κλασική αναδρομή — ταυτόσημη με τη{' '}
+          <strong>συγχωνευτική ταξινόμηση</strong>. Master Theorem με{' '}
           <InlineMath>{'a = 2'}</InlineMath>, <InlineMath>{'b = 2'}</InlineMath>,{' '}
-          <InlineMath>{'f(n) = n'}</InlineMath>.
+          <InlineMath>{'f(n) = n^1'}</InlineMath> (άρα d = 1). Συγκρίνουμε{' '}
+          <InlineMath>{'d = 1'}</InlineMath> με{' '}
+          <InlineMath>{'\\log_b a = \\log_2 2 = 1'}</InlineMath>: είναι{' '}
+          <strong>ίσα</strong> — Περίπτωση 2. Δες το ζωντανά:
         </p>
+        <RecurrenceClassifier preset="pt1-th1-q5" />
         <p>
-          Συγκρίνουμε το <InlineMath>{'f(n) = n'}</InlineMath> με το{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{\\log_2 2} = n^1 = n'}</InlineMath>.
-          Είναι <strong>ίσα</strong> — αυτή είναι η Περίπτωση 2. Η Περίπτωση 2
-          δίνει
+          Η Περίπτωση 2 δίνει <InlineMath>{'T(n) = \\Theta(n \\log n)'}</InlineMath>:
+          το δέντρο αναδρομής έχει <InlineMath>{'\\log_2 n'}</InlineMath> επίπεδα
+          και κάθε επίπεδο κάνει συνολικά <InlineMath>{'\\Theta(n)'}</InlineMath>{' '}
+          δουλειά (όπως στο σχήμα ράβδων που μένουν ίσες).
         </p>
-        <BlockMath>{'T(n) = \\Theta(n \\log n).'}</BlockMath>
-        <p>
-          Διαισθητικά: το δέντρο αναδρομής έχει{' '}
-          <InlineMath>{'\\log_2 n'}</InlineMath> επίπεδα και κάθε επίπεδο κάνει
-          συνολικά <InlineMath>{'\\Theta(n)'}</InlineMath> δουλειά → γινόμενο{' '}
-          <InlineMath>{'n\\log n'}</InlineMath>.
-        </p>
-        <p>
-          Ελέγχουμε: (i) <InlineMath>{'O(n\\log n)'}</InlineMath> ✓. (ii){' '}
-          <InlineMath>{'o(n)'}</InlineMath> ✗ (το <InlineMath>{'n\\log n'}</InlineMath>{' '}
-          είναι μεγαλύτερο του <InlineMath>{'n'}</InlineMath>). (iii){' '}
-          <InlineMath>{'O(n)'}</InlineMath> ✗ (ίδιος λόγος). (iv){' '}
-          <InlineMath>{'o(n^3)'}</InlineMath> ✓ (το <InlineMath>{'n\\log n'}</InlineMath>{' '}
-          είναι πολύ μικρότερο του <InlineMath>{'n^3'}</InlineMath>).
-        </p>
+        <p>Ελέγχουμε:</p>
+        <ul>
+          <li>
+            (i) <InlineMath>{'O(n\\log n)'}</InlineMath> ✓
+          </li>
+          <li>
+            (ii) <InlineMath>{'o(n)'}</InlineMath> ✗ —{' '}
+            <InlineMath>{'n\\log n > n'}</InlineMath>
+          </li>
+          <li>
+            (iii) <InlineMath>{'O(n)'}</InlineMath> ✗ — ίδιος λόγος
+          </li>
+          <li>
+            (iv) <InlineMath>{'o(n^3)'}</InlineMath> ✓ —{' '}
+            <InlineMath>{'n\\log n \\ll n^3'}</InlineMath>
+          </li>
+        </ul>
         <p>
           <strong>Σωστές: (i), (iv).</strong>
         </p>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — «η αναδρομή της mergesort».</strong> Όποτε δεις{' '}
+          <InlineMath>{'2T(n/2) + n'}</InlineMath>, η απάντηση είναι{' '}
+          <strong>πάντα</strong> <InlineMath>{'\\Theta(n\\log n)'}</InlineMath> —{' '}
+          Master Theorem περίπτωση 2. Δεν χρειάζεται να ξεδιπλώσεις τίποτα: είναι
+          η πιο κοινή αναδρομή του μαθήματος.
+        </Callout>
       </>
     ),
   },
@@ -1034,50 +1110,57 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>Η αφελής λύση.</strong> Πολλαπλασιάζουμε το{' '}
+          <strong>Η αφελής λύση.</strong> Πολλαπλασίασε το{' '}
           <InlineMath>{'m'}</InlineMath> με τον εαυτό του{' '}
-          <InlineMath>{'n'}</InlineMath> φορές: <InlineMath>{'n - 1'}</InlineMath>{' '}
-          πολλαπλασιασμοί → <InlineMath>{'O(n)'}</InlineMath>. Δουλεύει, αλλά
-          μπορούμε πολύ καλύτερα.
+          <InlineMath>{'n-1'}</InlineMath> φορές → <InlineMath>{'O(n)'}</InlineMath>.
+          Δουλεύει — αλλά είναι σπατάλη.
         </p>
         <p>
-          <strong>Η ιδέα «διαίρει και κυρίευε».</strong> Παρατήρησε ότι
+          <strong>Η ιδέα «διαίρει και κυρίευε»: τετραγώνισε αντί να
+          πολλαπλασιάσεις.</strong> Παρατήρησε ότι
         </p>
         <BlockMath>{'m^n = m^{n/2} \\cdot m^{n/2} = \\bigl(m^{n/2}\\bigr)^2.'}</BlockMath>
         <p>
-          Δηλαδή, αν ξέρω το <InlineMath>{'m^{n/2}'}</InlineMath>, το{' '}
-          <InlineMath>{'m^n'}</InlineMath> προκύπτει με{' '}
-          <strong>έναν μόνο</strong> πολλαπλασιασμό! Δεν χρειάζεται να το
-          υπολογίσω δύο φορές — το υπολογίζω <strong>μία φορά</strong> και το
-          τετραγωνίζω.
+          Αν ξέρω το <InlineMath>{'m^{n/2}'}</InlineMath>, το{' '}
+          <InlineMath>{'m^n'}</InlineMath> προκύπτει με <strong>έναν μόνο</strong>{' '}
+          πολλαπλασιασμό. Όχι «το υπολογίζω δύο φορές» — το υπολογίζω{' '}
+          <em>μία φορά</em> και το τετραγωνίζω. Δες τη διαφορά κλίμακας
+          σπρώχνοντας το slider:
         </p>
-        <p>{'Power(m, n):'}</p>
+        <FastExponentiation />
+        <p>
+          <strong>Ο αλγόριθμος.</strong>
+        </p>
         <BlockMath>{'\\text{Power}(m, n) = \\begin{cases} 1 & n = 0 \\\\ \\bigl(\\text{Power}(m, n/2)\\bigr)^2 & n > 0 \\end{cases}'}</BlockMath>
         <p>
-          <strong>Ορθότητα.</strong> Με επαγωγή στο{' '}
+          <strong>Ορθότητα.</strong> Επαγωγή στο{' '}
           <InlineMath>{'n'}</InlineMath>. Βάση: <InlineMath>{'n = 0'}</InlineMath>,{' '}
           <InlineMath>{'m^0 = 1'}</InlineMath> ✓. Επαγωγικό βήμα: υποθέτουμε ότι
-          το <InlineMath>{'\\text{Power}(m, n/2)'}</InlineMath> επιστρέφει σωστά
-          το <InlineMath>{'m^{n/2}'}</InlineMath>· τότε η συνάρτηση επιστρέφει το
-          τετράγωνό του, <InlineMath>{'(m^{n/2})^2 = m^n'}</InlineMath> ✓. Άρα
-          είναι σωστή για κάθε <InlineMath>{'n = 2^k'}</InlineMath>.
+          η κλήση <InlineMath>{'\\text{Power}(m, n/2)'}</InlineMath> επιστρέφει
+          σωστά το <InlineMath>{'m^{n/2}'}</InlineMath>· τότε η συνάρτηση
+          επιστρέφει το τετράγωνό του, <InlineMath>{'(m^{n/2})^2 = m^n'}</InlineMath>.
         </p>
         <p>
-          <strong>Πολυπλοκότητα.</strong> Σε κάθε κλήση κάνουμε{' '}
-          <strong>μία</strong> αναδρομική κλήση στο μισό{' '}
-          <InlineMath>{'n'}</InlineMath> και έναν πολλαπλασιασμό{' '}
-          <InlineMath>{'O(1)'}</InlineMath>:
+          <strong>Πολυπλοκότητα.</strong> Μία αναδρομική κλήση στο μισό{' '}
+          <InlineMath>{'n'}</InlineMath> + ένας <InlineMath>{'O(1)'}</InlineMath>{' '}
+          πολλαπλασιασμός:
         </p>
-        <BlockMath>{'T(n) = T(n/2) + O(1).'}</BlockMath>
+        <BlockMath>{'T(n) = T(n/2) + O(1) \\;\\Longrightarrow\\; T(n) = O(\\log n).'}</BlockMath>
         <p>
-          Αυτή η αναδρομή λύνεται σε <strong><InlineMath>{'O(\\log n)'}</InlineMath></strong>{' '}
-          — κάθε βήμα υποδιπλασιάζει το <InlineMath>{'n'}</InlineMath>, άρα
-          φτάνουμε στη βάση μετά από <InlineMath>{'\\log_2 n = k'}</InlineMath>{' '}
-          βήματα. Από <InlineMath>{'O(n)'}</InlineMath> σε{' '}
-          <InlineMath>{'O(\\log n)'}</InlineMath> — τεράστια βελτίωση: για{' '}
-          <InlineMath>{'n = 1{,}000{,}000'}</InlineMath>, από ένα εκατομμύριο
-          πολλαπλασιασμούς σε περίπου 20.
+          Από <InlineMath>{'O(n)'}</InlineMath> σε{' '}
+          <InlineMath>{'O(\\log n)'}</InlineMath>: για{' '}
+          <InlineMath>{'n = 10^6'}</InlineMath>, από ένα εκατομμύριο
+          πολλαπλασιασμούς σε <strong>περίπου 20</strong>.
         </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «τετραγώνισε αντί να πολλαπλασιάσεις».</strong>{' '}
+          Όποτε ζητείται «αποδοτικός υπολογισμός μιας δύναμης / στοιχείου σε
+          γρήγορη πτώση», ψάξε για ταυτότητα της μορφής{' '}
+          <InlineMath>{'f(n) = g(f(n/2))'}</InlineMath> με σταθερό κόστος{' '}
+          <InlineMath>{'g'}</InlineMath>. Παραδείγματα: ύψωση σε δύναμη, ύψωση
+          πίνακα σε δύναμη (για γρήγορο Fibonacci), modular exponentiation στην
+          κρυπτογραφία.
+        </Callout>
       </>
     ),
   },
@@ -1227,32 +1310,48 @@ export const EXERCISES: Exercise[] = [
       <>
         <p>
           Master Theorem με <InlineMath>{'a = 2'}</InlineMath>,{' '}
-          <InlineMath>{'b = 2'}</InlineMath>, <InlineMath>{'f(n) = n^3'}</InlineMath>.
-          Συγκρίνουμε το <InlineMath>{'f'}</InlineMath> με το{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{\\log_2 2} = n'}</InlineMath>.
+          <InlineMath>{'b = 2'}</InlineMath>, <InlineMath>{'f(n) = n^3'}</InlineMath>{' '}
+          (άρα d = 3). Συγκρίνουμε <InlineMath>{'d = 3'}</InlineMath> με{' '}
+          <InlineMath>{'\\log_b a = \\log_2 2 = 1'}</InlineMath>:{' '}
+          <InlineMath>{'3 > 1'}</InlineMath>, <strong>Περίπτωση 3</strong>. Δες
+          γιατί η ρίζα κυριαρχεί στη ράβδο «δουλειά ανά επίπεδο» — οι όροι
+          φθίνουν γεωμετρικά:
         </p>
+        <RecurrenceClassifier preset="pt2-th1-q3" />
         <p>
-          Το <InlineMath>{'n^3'}</InlineMath> είναι <strong>πολύ μεγαλύτερο</strong>{' '}
-          από το <InlineMath>{'n'}</InlineMath> — Περίπτωση 3. Εκεί κυριαρχεί ο
-          όρος <InlineMath>{'f(n)'}</InlineMath> και
+          Στην περίπτωση 3 κυριαρχεί ο όρος <InlineMath>{'f(n)'}</InlineMath>{' '}
+          («τα φύλλα κάνουν λιγότερη δουλειά από τη ρίζα»):
         </p>
         <BlockMath>{'T(n) = \\Theta(f(n)) = \\Theta(n^3).'}</BlockMath>
-        <p>
-          Διαισθητικά: τόση δουλειά γίνεται στη ρίζα του δέντρου αναδρομής που τα
-          υπο-επίπεδα δεν προσθέτουν τίποτα ουσιαστικό.
-        </p>
-        <p>
-          Ελέγχουμε: (i) <InlineMath>{'\\Omega(n^2)'}</InlineMath> ✓ (το{' '}
-          <InlineMath>{'n^3'}</InlineMath> είναι σίγουρα{' '}
-          <InlineMath>{'\\ge n^2'}</InlineMath>). (ii){' '}
-          <InlineMath>{'O(n^3)'}</InlineMath> ✓. (iii){' '}
-          <InlineMath>{'\\Theta(n^3\\log n)'}</InlineMath> ✗ (δεν υπάρχει
-          λογάριθμος — αυτή θα ήταν η Περίπτωση 2). (iv){' '}
-          <InlineMath>{'\\Theta(n^3)'}</InlineMath> ✓.
-        </p>
+        <p>Ελέγχουμε:</p>
+        <ul>
+          <li>
+            (i) <InlineMath>{'\\Omega(n^2)'}</InlineMath> ✓ —{' '}
+            <InlineMath>{'n^3 \\ge n^2'}</InlineMath>
+          </li>
+          <li>
+            (ii) <InlineMath>{'O(n^3)'}</InlineMath> ✓
+          </li>
+          <li>
+            (iii) <InlineMath>{'\\Theta(n^3\\log n)'}</InlineMath> ✗ — δεν υπάρχει
+            λογάριθμος (θα ήταν η Περίπτωση 2)
+          </li>
+          <li>
+            (iv) <InlineMath>{'\\Theta(n^3)'}</InlineMath> ✓
+          </li>
+        </ul>
         <p>
           <strong>Σωστές: (i), (ii), (iv).</strong>
         </p>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — «ακριβός συνδυασμός ⇒ ρίζα κυριαρχεί».</strong>{' '}
+          Όταν το <InlineMath>{'f(n)'}</InlineMath> είναι πολυωνυμικά
+          μεγαλύτερο από <InlineMath>{'n^{\\log_b a}'}</InlineMath>, η Περίπτωση
+          3 σου χαρίζει την απάντηση: απλώς γράφεις{' '}
+          <InlineMath>{'\\Theta(f(n))'}</InlineMath>. Παγίδα: αν διαφέρει μόνο
+          κατά <InlineMath>{'\\log'}</InlineMath> (όχι πολυωνυμικά), πέφτεις
+          στην επεκτεταμένη περίπτωση — όχι στην 3.
+        </Callout>
       </>
     ),
   },
@@ -1267,40 +1366,55 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['lectures/L03-divide-and-conquer-i'],
     statement: (
-      <p>
-        Αν <InlineMath>{'T(n) = 2T(\\sqrt{n}) + 1'}</InlineMath>, κύκλωσε ποια
-        ισχύουν: (i) <InlineMath>{'\\Theta(n)'}</InlineMath> · (ii){' '}
-        <InlineMath>{'\\Theta(\\log_2 n)'}</InlineMath> · (iii){' '}
-        <InlineMath>{'\\Theta(\\sqrt{n})'}</InlineMath> · (iv){' '}
-        <InlineMath>{'\\Omega(2^n)'}</InlineMath>.
-      </p>
+      <>
+        <p>
+          Αν <InlineMath>{'T(n) = 2T(\\sqrt{n}) + 1'}</InlineMath>, κύκλωσε ποια
+          ισχύουν:
+        </p>
+        <ul>
+          <li>
+            (i) <InlineMath>{'\\Theta(n)'}</InlineMath>
+          </li>
+          <li>
+            (ii) <InlineMath>{'\\Theta(\\log_2 n)'}</InlineMath>
+          </li>
+          <li>
+            (iii) <InlineMath>{'\\Theta(\\sqrt{n})'}</InlineMath>
+          </li>
+          <li>
+            (iv) <InlineMath>{'\\Omega(2^n)'}</InlineMath>
+          </li>
+        </ul>
+      </>
     ),
     solution: (
       <>
         <p>
-          Η ρίζα ξανά — οπότε το ίδιο κόλπο: θέτουμε{' '}
-          <InlineMath>{'n = 2^m'}</InlineMath>, δηλαδή{' '}
-          <InlineMath>{'m = \\log_2 n'}</InlineMath>. Τότε{' '}
-          <InlineMath>{'\\sqrt{n} = 2^{m/2}'}</InlineMath> και, με{' '}
-          <InlineMath>{'S(m) = T(2^m)'}</InlineMath>:
+          Η ρίζα ξανά — ίδιο κόλπο όπως στο{' '}
+          <InlineMath>{'T(\\sqrt{n})+1'}</InlineMath>: θέτουμε{' '}
+          <InlineMath>{'n = 2^m'}</InlineMath>· τώρα όμως ο συντελεστής 2
+          μπροστά αλλάζει την κατάληξη — η νέα <InlineMath>{'S(m)'}</InlineMath>{' '}
+          είναι <InlineMath>{'2S(m/2)+1'}</InlineMath>, που πέφτει στην{' '}
+          <strong>Περίπτωση 1</strong> και δίνει Θ(m), όχι Θ(log m).
         </p>
-        <BlockMath>{'S(m) = 2\\,S(m/2) + 1.'}</BlockMath>
+        <RecurrenceSubstitution preset="pt2-th1-q4" />
         <p>
-          Master Theorem για το <InlineMath>{'S'}</InlineMath>:{' '}
-          <InlineMath>{'a = 2, b = 2'}</InlineMath>,{' '}
-          <InlineMath>{'m^{\\log_b a} = m'}</InlineMath>, και{' '}
-          <InlineMath>{'f(m) = 1'}</InlineMath> που είναι πολύ μικρότερο του{' '}
-          <InlineMath>{'m'}</InlineMath> — Περίπτωση 1. Άρα{' '}
-          <InlineMath>{'S(m) = \\Theta(m)'}</InlineMath>.
+          Επιστρέφοντας <InlineMath>{'m = \\log_2 n'}</InlineMath>:
         </p>
+        <BlockMath>{'T(n) = \\Theta(\\log n).'}</BlockMath>
         <p>
-          Γυρνάμε: <InlineMath>{'m = \\log_2 n'}</InlineMath>, οπότε{' '}
-          <strong><InlineMath>{'T(n) = \\Theta(\\log n)'}</InlineMath></strong>.
+          Ελέγχουμε: μόνο η (ii) είναι σωστή.{' '}
+          <strong>Σωστή: (ii).</strong>
         </p>
-        <p>
-          Ελέγχουμε: μόνο η (ii) <InlineMath>{'\\Theta(\\log_2 n)'}</InlineMath>{' '}
-          είναι σωστή. <strong>Σωστή: (ii).</strong>
-        </p>
+        <Callout type="warning">
+          <strong>Παγίδα — μη μπερδέψεις με το «T(√n)+1»!</strong> Το{' '}
+          <InlineMath>{'T(\\sqrt{n})+1'}</InlineMath> δίνει{' '}
+          <InlineMath>{'\\Theta(\\log\\log n)'}</InlineMath> (διπλό log)· το{' '}
+          <InlineMath>{'2T(\\sqrt{n})+1'}</InlineMath> δίνει{' '}
+          <InlineMath>{'\\Theta(\\log n)'}</InlineMath> (απλό log). Η διαφορά
+          είναι ο συντελεστής μπροστά: a=1 → MT περίπτωση 2 στο S(m), a=2 → MT
+          περίπτωση 1.
+        </Callout>
       </>
     ),
   },
@@ -2451,32 +2565,39 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>ΛΑΘΟΣ.</strong>
+          <strong>ΛΑΘΟΣ.</strong> Η πρόταση μοιάζει αληθοφανής («δύο αναδρομικές
+          κλήσεις + γραμμική δουλειά → πρέπει να μοιάζει με mergesort») αλλά
+          είναι τελείως λάθος. Η ζωτική διαφορά: <strong>μικραίνει κατά 1</strong>{' '}
+          (όχι στο μισό). Σύγκρινε με το μάτι τα δύο δέντρα:
         </p>
+        <BranchingContrast />
         <p>
-          Η παγίδα: το <InlineMath>{'2T(n-1)'}</InlineMath> δεν είναι «διαίρει
-          και κυρίευε» — δεν <em>μικραίνει</em> το πρόβλημα στο μισό, το μικραίνει
-          μόνο κατά <InlineMath>{'1'}</InlineMath>, ενώ ταυτόχρονα το{' '}
-          <strong>διπλασιάζει</strong>. Αυτό εκρήγνυται.
+          Στο <InlineMath>{'2T(n-1)'}</InlineMath> κάθε επίπεδο διπλασιάζει το
+          πλήθος υποπροβλημάτων ΚΑΙ χρειάζονται <InlineMath>{'n'}</InlineMath>{' '}
+          επίπεδα (όχι <InlineMath>{'\\log n'}</InlineMath>). Άρα τα φύλλα είναι{' '}
+          <InlineMath>{'2^n'}</InlineMath> — εκθετικά. Ξεδιπλώνοντας:
         </p>
+        <BlockMath>{'T(n) = 2T(n-1) + cn = 4T(n-2) + 2c(n-1) + cn = \\dots = 2^n\\,T(0) + \\text{(πολυωνυμικοί όροι)}.'}</BlockMath>
         <p>
-          Ξετυλίγουμε: σε κάθε βήμα τα υποπροβλήματα διπλασιάζονται. Μετά από{' '}
-          <InlineMath>{'n'}</InlineMath> βήματα έχουμε{' '}
-          <InlineMath>{'2^n'}</InlineMath> «φύλλα»:
+          Μόνο ο όρος <InlineMath>{'2^n T(0)'}</InlineMath> είναι ήδη εκθετικός
+          — άρα <InlineMath>{'T(n) = \\Theta(2^n)'}</InlineMath>, ούτε καν
+          πολυωνυμικό φράγμα.
         </p>
-        <BlockMath>{'T(n) = 2T(n-1) + cn = 4T(n-2) + 2c(n-1) + cn = \\dots = 2^n\\,T(0) + (\\text{όροι}).'}</BlockMath>
-        <p>
-          Μόνο ο όρος <InlineMath>{'2^n T(0)'}</InlineMath> είναι ήδη{' '}
-          <strong>εκθετικός</strong>. Άρα <InlineMath>{'T(n) = \\Theta(2^n)'}</InlineMath>{' '}
-          — δεν φράσσεται από κανένα πολυώνυμο, πόσο μάλλον από το{' '}
-          <InlineMath>{'n^2'}</InlineMath>.
-        </p>
-        <p>
-          <strong>Διαισθητικά:</strong> «δύο αναδρομικές κλήσεις στο{' '}
-          <InlineMath>{'n-1'}</InlineMath>» μοιάζει με τον αφελή Fibonacci —
-          εκθετικό. Για πολυωνυμικό αποτέλεσμα θα έπρεπε να είχαμε{' '}
-          <InlineMath>{'T(n/2)'}</InlineMath>, όχι <InlineMath>{'T(n-1)'}</InlineMath>.
-        </p>
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης — δύο κλήσεις στο n−1 = εκθετικό, στο n/2 = πολυωνυμικό.</strong>{' '}
+          Στις αναδρομές «πλήθος κλήσεων» × «πόσο μικραίνει» καθορίζει τα πάντα:
+          <ul>
+            <li>
+              <InlineMath>{'2T(n-1)'}</InlineMath> → βάθος n, fanout 2 → 2ⁿ φύλλα → <strong>εκθετικό</strong>.
+            </li>
+            <li>
+              <InlineMath>{'2T(n/2)'}</InlineMath> → βάθος log n, fanout 2 → n φύλλα → <strong>πολυωνυμικό</strong>.
+            </li>
+          </ul>
+          Όποιος βλέπει <InlineMath>{'2T(n-1)'}</InlineMath> ή{' '}
+          <InlineMath>{'aT(n-c)'}</InlineMath> για <InlineMath>{'a > 1'}</InlineMath>{' '}
+          πρέπει αμέσως να ψάχνει για εκθετική απάντηση — όπως ακριβώς ο Hanoi.
+        </Callout>
       </>
     ),
   },
@@ -2688,54 +2809,51 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>Η παρατήρηση-κλειδί.</strong> Η συμβολοσειρά είναι «κιόλας
-          ταξινομημένη»: πρώτα όλα τα <InlineMath>{'1'}</InlineMath>, μετά όλα τα{' '}
+          <strong>Η παρατήρηση-κλειδί: η συμβολοσειρά είναι ήδη ταξινομημένη.</strong>{' '}
+          Πρώτα όλα τα <InlineMath>{'1'}</InlineMath>, μετά όλα τα{' '}
           <InlineMath>{'0'}</InlineMath>. Υπάρχει ένα μοναδικό{' '}
-          <strong>σύνορο</strong> — το σημείο όπου τελειώνουν τα{' '}
-          <InlineMath>{'1'}</InlineMath> και αρχίζουν τα{' '}
-          <InlineMath>{'0'}</InlineMath>. Αν βρούμε αυτό το σύνορο, βρήκαμε το{' '}
-          <InlineMath>{'n'}</InlineMath>.
+          <strong>σύνορο</strong> — βρες το, βρήκες και το{' '}
+          <InlineMath>{'n'}</InlineMath>. Αυτή ακριβώς η ιδέα είναι η συνταγή της{' '}
+          <strong>δυαδικής αναζήτησης</strong>: σε κάθε βήμα μισαρίζεις το
+          διάστημα όπου ξέρεις ότι ζει το σύνορο.
         </p>
         <p>
-          Δεν χρειάζεται να μετρήσουμε ένα-ένα τα <InlineMath>{'0'}</InlineMath>{' '}
-          (αυτό θα ήταν <InlineMath>{'O(k)'}</InlineMath>). Επειδή η ακολουθία
-          είναι ταξινομημένη, κάνουμε <strong>δυαδική αναζήτηση</strong>.
-        </p>
-        <p>
-          <strong>Ο αλγόριθμος.</strong> Κοίτα τον <strong>μεσαίο</strong>{' '}
-          χαρακτήρα <InlineMath>{'S[\\text{mid}]'}</InlineMath>:
+          <strong>Ο αλγόριθμος.</strong> Κοίτα τον μεσαίο χαρακτήρα{' '}
+          <InlineMath>{'S[\\text{mid}]'}</InlineMath>:
         </p>
         <ul>
           <li>
-            Αν <InlineMath>{'S[\\text{mid}] = 1'}</InlineMath>: το σύνορο είναι{' '}
-            <strong>δεξιότερα</strong> — όλα αριστερά του mid είναι{' '}
-            <InlineMath>{'1'}</InlineMath>. Συνέχισε στο δεξί μισό.
+            <InlineMath>{'S[\\text{mid}] = 1'}</InlineMath> → όλα αριστερά είναι
+            επίσης <InlineMath>{'1'}</InlineMath>· συνέχισε <strong>δεξιά</strong>.
           </li>
           <li>
-            Αν <InlineMath>{'S[\\text{mid}] = 0'}</InlineMath>: το σύνορο είναι{' '}
-            στο mid ή <strong>αριστερότερα</strong>. Συνέχισε στο αριστερό μισό.
+            <InlineMath>{'S[\\text{mid}] = 0'}</InlineMath> → το σύνορο είναι
+            στο mid ή πριν· συνέχισε <strong>αριστερά</strong>.
           </li>
         </ul>
         <p>
-          Συνεχίζεις μέχρι να εντοπίσεις το <strong>πρώτο</strong>{' '}
-          <InlineMath>{'0'}</InlineMath>, έστω στη θέση <InlineMath>{'p'}</InlineMath>{' '}
-          (μετρώντας από το 1). Τότε <InlineMath>{'m = p - 1'}</InlineMath> και{' '}
-          <InlineMath>{'n = k - m = k - p + 1'}</InlineMath>.
+          Δες το να εκτελείται — οι σλάιντερ ρυθμίζουν m, n και το κουμπί
+          «Επόμενο βήμα» κάνει μία σύγκριση κάθε φορά:
+        </p>
+        <OneZeroBinarySearch />
+        <p>
+          <strong>Ορθότητα — αναλλοίωτη.</strong> «Το σύνορο ζει εντός του
+          τρέχοντος διαστήματος.» Επειδή η ακολουθία είναι μονότονη, κάθε
+          σύγκριση συμπεραίνει ασφαλώς προς ποια κατεύθυνση να μειώσουμε.
         </p>
         <p>
-          <strong>Ορθότητα.</strong> Σε κάθε βήμα η αναζήτηση κρατάει την
-          ιδιότητα-αναλλοίωτη ότι «το σύνορο βρίσκεται μέσα στο τρέχον διάστημα».
-          Αφού η συμβολοσειρά είναι μονότονη (<InlineMath>{'1'}</InlineMath>-μετά-<InlineMath>{'0'}</InlineMath>),
-          ένας χαρακτήρας <InlineMath>{'1'}</InlineMath> σημαίνει με βεβαιότητα ότι
-          το σύνορο είναι δεξιά, και ένα <InlineMath>{'0'}</InlineMath> ότι είναι
-          (το πολύ) εκεί. Άρα δεν «χάνουμε» ποτέ το σύνορο.
-        </p>
-        <p>
-          <strong>Πολυπλοκότητα.</strong> Κάθε βήμα <strong>υποδιπλασιάζει</strong>{' '}
-          το διάστημα αναζήτησης και κάνει <InlineMath>{'O(1)'}</InlineMath>{' '}
-          δουλειά. Άρα η αναδρομική σχέση που ζητάει η υπόδειξη είναι
+          <strong>Πολυπλοκότητα.</strong> Κάθε βήμα υποδιπλασιάζει το διάστημα με{' '}
+          <InlineMath>{'O(1)'}</InlineMath> δουλειά:
         </p>
         <BlockMath>{'T(k) = T(k/2) + O(1) \\;\\Longrightarrow\\; T(k) = O(\\log k).'}</BlockMath>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «αν η είσοδος έχει μοναδικό σύνορο, δυαδική αναζήτηση».</strong>{' '}
+          Όποτε δεις μονότονη συνθήκη («πριν μια θέση Α, μετά Β»), η απάντηση
+          είναι σχεδόν πάντα δυαδική αναζήτηση — <InlineMath>{'O(\\log k)'}</InlineMath>.
+          Παραδείγματα: πρώτη εμφάνιση στοιχείου σε ταξινομημένο πίνακα, χαμένος
+          όρος αριθμητικής προόδου (front-set-4-ask7), πρώτο/τελευταίο TRUE σε
+          μονότονη συνάρτηση.
+        </Callout>
       </>
     ),
   },
@@ -3103,38 +3221,47 @@ export const EXERCISES: Exercise[] = [
       <>
         <p>
           Κάθε αλγόριθμος D&amp;C δίνει αναδρομή{' '}
-          <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath>. Το Master
-          Theorem συγκρίνει το <InlineMath>{'f(n)'}</InlineMath> με το{' '}
-          <InlineMath>{'n^{\\log_b a}'}</InlineMath>.
+          <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath>. Master Theorem
+          συγκρίνει το <InlineMath>{'f(n)'}</InlineMath> με το{' '}
+          <InlineMath>{'n^{\\log_b a}'}</InlineMath>· περίπτωση 1 αν f μικρότερο
+          (φύλλα κυριαρχούν), περίπτωση 2 αν ίσα (κάθε επίπεδο το ίδιο),
+          περίπτωση 3 αν f μεγαλύτερο (ρίζα κυριαρχεί).
         </p>
         <p>
           <strong>Αλγόριθμος <InlineMath>{'A_1'}</InlineMath>:</strong>{' '}
-          <InlineMath>{'T(n) = 9\\,T(n/3) + n'}</InlineMath>. Με{' '}
+          <InlineMath>{'T_1(n) = 9\\,T_1(n/3) + n'}</InlineMath>. Με{' '}
           <InlineMath>{'a = 9,\\ b = 3'}</InlineMath>:{' '}
-          <InlineMath>{'\\log_b a = \\log_3 9 = 2'}</InlineMath>, άρα{' '}
-          <InlineMath>{'n^{\\log_b a} = n^2'}</InlineMath>. Το{' '}
-          <InlineMath>{'f(n) = n'}</InlineMath> είναι{' '}
-          <em>πολυωνυμικά μικρότερο</em> (<InlineMath>{'n = O(n^{2-\\varepsilon})'}</InlineMath>{' '}
-          με <InlineMath>{'\\varepsilon = 1'}</InlineMath>) →{' '}
-          <strong>περίπτωση 1</strong> →{' '}
-          <InlineMath>{'T(n) = \\Theta(n^2)'}</InlineMath>.
+          <InlineMath>{'\\log_3 9 = 2'}</InlineMath>, άρα κατώφλι{' '}
+          <InlineMath>{'n^2'}</InlineMath>. Το{' '}
+          <InlineMath>{'f(n) = n'}</InlineMath> είναι πολυωνυμικά μικρότερο →{' '}
+          <strong>περίπτωση 1</strong> → <InlineMath>{'\\Theta(n^2)'}</InlineMath>:
         </p>
+        <RecurrenceClassifier preset="pt5-th2-b-A1" />
         <p>
           <strong>Αλγόριθμος <InlineMath>{'A_2'}</InlineMath>:</strong>{' '}
-          <InlineMath>{'T(n) = 2\\,T(n/2) + cn'}</InlineMath>. Με{' '}
+          <InlineMath>{'T_2(n) = 2\\,T_2(n/2) + cn'}</InlineMath>. Με{' '}
           <InlineMath>{'a = 2,\\ b = 2'}</InlineMath>:{' '}
-          <InlineMath>{'\\log_b a = \\log_2 2 = 1'}</InlineMath>, άρα{' '}
-          <InlineMath>{'n^{\\log_b a} = n'}</InlineMath>. Το{' '}
-          <InlineMath>{'f(n) = cn = \\Theta(n) = \\Theta(n^{\\log_b a})'}</InlineMath>{' '}
-          → <strong>περίπτωση 2</strong> →{' '}
-          <InlineMath>{'T(n) = \\Theta(n\\log n)'}</InlineMath>.
+          <InlineMath>{'\\log_2 2 = 1'}</InlineMath>, κατώφλι{' '}
+          <InlineMath>{'n'}</InlineMath>. Το{' '}
+          <InlineMath>{'f(n) = cn = \\Theta(n)'}</InlineMath> ταιριάζει — η{' '}
+          αναδρομή της mergesort, <strong>περίπτωση 2</strong> →{' '}
+          <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>:
         </p>
+        <RecurrenceClassifier preset="pt5-th2-b-A2" />
         <p>
-          Συμπέρασμα: ο <InlineMath>{'A_2'}</InlineMath>{' '}
-          (<InlineMath>{'\\Theta(n\\log n)'}</InlineMath>) είναι ασυμπτωτικά
-          ταχύτερος από τον <InlineMath>{'A_1'}</InlineMath>{' '}
-          (<InlineMath>{'\\Theta(n^2)'}</InlineMath>).
+          Σύγκριση:{' '}
+          <InlineMath>{'\\Theta(n\\log n) \\prec \\Theta(n^2)'}</InlineMath> — ο{' '}
+          <InlineMath>{'A_2'}</InlineMath> νικάει με μεγάλη διαφορά.
         </p>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — δύο σχήματα D&amp;C σε αντιπαράθεση.</strong>{' '}
+          Όταν σου δίνουν περιγραφή τύπου «διασπά σε a κομμάτια μεγέθους n/b,
+          συνδέει σε χρόνο f», γράψε αμέσως την αναδρομή{' '}
+          <InlineMath>{'aT(n/b)+f'}</InlineMath> και εφάρμοσε Master Theorem. Η
+          μόνη σύγκριση που πρέπει να κάνεις είναι d (εκθέτης του f) vs{' '}
+          <InlineMath>{'\\log_b a'}</InlineMath>: μικρότερο→περίπτωση 1, ίσο→2,
+          μεγαλύτερο→3.
+        </Callout>
       </>
     ),
   },
@@ -4426,28 +4553,31 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Εδώ δεν εφαρμόζεται το Master Theorem (το πρόβλημα μικραίνει κατά{' '}
-          <InlineMath>{'1'}</InlineMath>, όχι με διαίρεση). Χρησιμοποιούμε τη{' '}
-          μέθοδο της <strong>τηλεσκόπησης</strong>: γράφουμε τη σχέση για
-          διαδοχικά <InlineMath>{'n'}</InlineMath> και προσθέτουμε.
+          Master Theorem δεν εφαρμόζεται — το πρόβλημα μικραίνει{' '}
+          <em>κατά 1</em>, όχι με διαίρεση. Πάμε σε{' '}
+          <strong>τηλεσκόπηση</strong>: γράφουμε τη σχέση για διαδοχικά{' '}
+          <InlineMath>{'n'}</InlineMath> και προσθέτουμε κατά μέλη — οι
+          ενδιάμεσοι όροι αλληλοαναιρούνται. Πάτα «+ Επόμενη γραμμή» για να
+          δεις τη συσσώρευση:
         </p>
-        <BlockMath>{'\\begin{aligned} T(1) - T(0) &= 2^1 \\\\ T(2) - T(1) &= 2^2 \\\\ &\\;\\;\\vdots \\\\ T(n) - T(n-1) &= 2^n \\end{aligned}'}</BlockMath>
+        <RecurrenceTelescope preset="front-set-3-ask4" />
         <p>
-          Προσθέτοντας <strong>κατά μέλη</strong>, όλοι οι ενδιάμεσοι όροι στην
-          αριστερή στήλη αλληλοαναιρούνται (τηλεσκόπηση) και μένει:
+          Συγκεντρωτικά: όλοι οι όροι <InlineMath>{'T(1), T(2), \\dots, T(n-1)'}</InlineMath>{' '}
+          εμφανίζονται μία φορά θετικοί και μία αρνητικοί — διαγράφονται. Μένει
+          μόνο
         </p>
         <BlockMath>{'T(n) - T(0) = \\sum_{i=1}^{n} 2^i = 2^{n+1} - 2.'}</BlockMath>
-        <p>
-          (Το <InlineMath>{'\\sum_{i=1}^n 2^i = 2^{n+1}-2'}</InlineMath> είναι
-          γεωμετρική σειρά.) Με <InlineMath>{'T(0) = 5'}</InlineMath>:
-        </p>
-        <BlockMath>{'T(n) = 2^{n+1} - 2 + 5 = 2^{n+1} + 3.'}</BlockMath>
-        <p>
-          Τέλος, <InlineMath>{'2^{n+1} = 2 \\cdot 2^n'}</InlineMath> — σταθερά
-          επί <InlineMath>{'2^n'}</InlineMath> — άρα{' '}
-          <strong><InlineMath>{'T(n) = \\Theta(2^n)'}</InlineMath></strong>,
-          εκθετική.
-        </p>
+        <p>Με <InlineMath>{'T(0) = 5'}</InlineMath>:</p>
+        <BlockMath>{'T(n) = 2^{n+1} + 3 = \\Theta(2^n).'}</BlockMath>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «μικραίνει κατά 1 ⇒ τηλεσκόπηση».</strong>{' '}
+          Για αναδρομές <InlineMath>{'T(n) = T(n-1) + g(n)'}</InlineMath>:
+          γράψε τη σχέση για 1, 2, …, n, πρόσθεσε κατά μέλη, αναγνώρισε το{' '}
+          άθροισμα <InlineMath>{'\\sum g(i)'}</InlineMath>. Η ασυμπτωτική του{' '}
+          <InlineMath>{'T(n)'}</InlineMath> ταυτίζεται με αυτή του αθροίσματος:{' '}
+          g=c → Θ(n), g=i → Θ(n²), g=2ⁱ → Θ(2ⁿ) (η σειρά κυριαρχείται από τον
+          τελευταίο όρο).
+        </Callout>
       </>
     ),
   },
@@ -4476,50 +4606,38 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Η σχέση είναι <strong>ομογενής γραμμική αναδρομή</strong> (κάθε όρος
-          είναι σταθερός συνδυασμός προηγούμενων όρων, χωρίς «εξωτερικό»
-          προσθετέο). Γι' αυτές δουλεύει η μέθοδος της{' '}
-          <strong>χαρακτηριστικής εξίσωσης</strong>.
+          Η <InlineMath>{'F(n) = F(n-1) + F(n-2)'}</InlineMath> είναι{' '}
+          <strong>ομογενής γραμμική αναδρομή</strong> — κάθε όρος είναι
+          σταθερός γραμμικός συνδυασμός προηγούμενων, χωρίς εξωτερικό
+          προσθετέο. Η μέθοδος-εργαλείο για αυτές είναι η{' '}
+          <strong>χαρακτηριστική εξίσωση</strong>: μάντεψε λύση{' '}
+          <InlineMath>{'F(n) = x^n'}</InlineMath>, αντικατάστησε, βρες ρίζες,
+          γράψε γενική λύση, βρες σταθερές από τις αρχικές συνθήκες. Δες κάθε
+          βήμα ζωντανά (επιλεγμένη η καρτέλα Fibonacci):
         </p>
+        <CharEquationLab initialMode="fib" />
         <p>
-          <strong>Βήμα 1 — δοκιμαστική λύση.</strong> Υποθέτουμε ότι η λύση έχει
-          μορφή <InlineMath>{'F(n) = x^n'}</InlineMath> και την αντικαθιστούμε:
+          <strong>Σύνοψη.</strong> Η χαρακτηριστική <InlineMath>{'x^2-x-1=0'}</InlineMath>{' '}
+          δίνει δύο διαφορετικές ρίζες <InlineMath>{'\\varphi, \\psi'}</InlineMath>.
+          Από τις <InlineMath>{'F_0=0, F_1=1'}</InlineMath> προκύπτει ο τύπος
+          του Binet:
         </p>
-        <BlockMath>{'x^n - x^{n-1} - x^{n-2} = 0 \\;\\Rightarrow\\; x^{n-2}(x^2 - x - 1) = 0'}</BlockMath>
+        <BlockMath>{'F_n = \\frac{1}{\\sqrt5}\\,\\varphi^n - \\frac{1}{\\sqrt5}\\,\\psi^n'}</BlockMath>
         <p>
-          Αφού το <InlineMath>{'x^{n-2}'}</InlineMath> δεν είναι μηδέν, μένει η{' '}
-          <strong>χαρακτηριστική εξίσωση</strong>{' '}
-          <InlineMath>{'x^2 - x - 1 = 0'}</InlineMath>.
+          Επειδή <InlineMath>{'|\\psi| < 1'}</InlineMath>, ο δεύτερος όρος
+          φθίνει στο μηδέν. Κυριαρχεί ο πρώτος:
         </p>
-        <p>
-          <strong>Βήμα 2 — οι ρίζες.</strong> Διακρίνουσα{' '}
-          <InlineMath>{'\\Delta = 1 + 4 = 5'}</InlineMath>, οπότε:
-        </p>
-        <BlockMath>{'x_1 = \\frac{1+\\sqrt5}{2} \\approx 1{,}618, \\qquad x_2 = \\frac{1-\\sqrt5}{2} \\approx -0{,}618'}</BlockMath>
-        <p>
-          (Το <InlineMath>{'x_1'}</InlineMath> είναι η περίφημη <em>χρυσή
-          τομή</em>.) Δύο <strong>διαφορετικές</strong> ρίζες ⇒ η γενική λύση
-          είναι <InlineMath>{'F_n = \\lambda_1 x_1^{\\,n} + \\lambda_2 x_2^{\\,n}'}</InlineMath>.
-        </p>
-        <p>
-          <strong>Βήμα 3 — οι σταθερές από τις αρχικές συνθήκες.</strong>
-        </p>
-        <BlockMath>{'F_0 = 0: \\;\\; \\lambda_1 + \\lambda_2 = 0 \\;\\Rightarrow\\; \\lambda_1 = -\\lambda_2'}</BlockMath>
-        <BlockMath>{'F_1 = 1: \\;\\; \\lambda_1 x_1 + \\lambda_2 x_2 = \\lambda_1(x_1 - x_2) = \\lambda_1\\sqrt5 = 1 \\;\\Rightarrow\\; \\lambda_1 = \\tfrac{1}{\\sqrt5},\\ \\lambda_2 = -\\tfrac{1}{\\sqrt5}'}</BlockMath>
-        <p>
-          <strong>Αποτέλεσμα (τύπος του Binet):</strong>
-        </p>
-        <BlockMath>{'F_n = \\frac{1}{\\sqrt5}\\left(\\frac{1+\\sqrt5}{2}\\right)^{\\!n} - \\frac{1}{\\sqrt5}\\left(\\frac{1-\\sqrt5}{2}\\right)^{\\!n}'}</BlockMath>
-        <p>
-          <strong>Ασυμπτωτική τάξη.</strong> Επειδή{' '}
-          <InlineMath>{'|x_2| \\approx 0{,}618 < 1'}</InlineMath>, ο δεύτερος όρος{' '}
-          <InlineMath>{'x_2^{\\,n} \\to 0'}</InlineMath> και γίνεται αμελητέος.
-          Άρα κυριαρχεί ο πρώτος όρος:{' '}
-          <InlineMath>{'F_n = \\Theta\\!\\left(\\varphi^{\\,n}\\right)'}</InlineMath>{' '}
-          με <InlineMath>{'\\varphi = \\tfrac{1+\\sqrt5}{2}'}</InlineMath> —{' '}
-          <strong>εκθετική</strong> αύξηση. Γι' αυτό ο αφελής αναδρομικός
-          υπολογισμός του Fibonacci είναι εκθετικά αργός.
-        </p>
+        <BlockMath>{'F_n = \\Theta(\\varphi^n) \\approx \\Theta(1{,}618^n) - \\text{εκθετική.}'}</BlockMath>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «ομογενής γραμμική ⇒ χαρακτηριστική εξίσωση».</strong>{' '}
+          Όποτε δεις <InlineMath>{'T(n) = c_1 T(n-1) + c_2 T(n-2) + \\cdots'}</InlineMath>{' '}
+          χωρίς εξωτερικό όρο, ακολούθησε τη συνταγή σε 3 βήματα: (1) γράψε τη
+          χαρακτηριστική πολυωνυμική εξίσωση, (2) βρες ρίζες — αν διαφορετικές,
+          γενική λύση = γραμμικός συνδυασμός των <InlineMath>{'r_i^n'}</InlineMath>,
+          αν διπλή πολλαπλασίαζε με n (δες front-set-3-ask2), (3) λύσε για τις
+          σταθερές από τις αρχικές συνθήκες. Η ασυμπτωτική κυριαρχείται από τη{' '}
+          ρίζα με μεγαλύτερο μέτρο.
+        </Callout>
       </>
     ),
   },
@@ -4541,29 +4659,31 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Πάλι <strong>ομογενής γραμμική αναδρομή</strong> → μέθοδος
-          χαρακτηριστικής εξίσωσης. Θέτουμε{' '}
-          <InlineMath>{'T(n) = x^n'}</InlineMath>:
+          Πάλι ομογενής γραμμική → χαρακτηριστική εξίσωση. Η{' '}
+          <strong>παγίδα εδώ</strong>: η εξίσωση{' '}
+          <InlineMath>{'x^2 - 4x + 4 = 0'}</InlineMath> έχει{' '}
+          <strong>διπλή ρίζα</strong> <InlineMath>{'x = 2'}</InlineMath>. Δύο
+          πανομοιότυποι όροι <InlineMath>{'\\lambda_1 2^n + \\lambda_2 2^n'}</InlineMath>{' '}
+          συνθλίβονται σε έναν — χάνουμε ένα βαθμό ελευθερίας και δεν μπορούμε
+          να ικανοποιήσουμε δύο αρχικές συνθήκες. <strong>Το ×n κόλπο</strong>{' '}
+          λύνει το πρόβλημα: ο δεύτερος όρος γίνεται{' '}
+          <InlineMath>{'\\lambda_2 \\cdot n \\cdot 2^n'}</InlineMath>.
         </p>
-        <BlockMath>{'x^n - 4x^{n-1} + 4x^{n-2} = 0 \\;\\Rightarrow\\; x^{n-2}(x^2 - 4x + 4) = 0 \\;\\Rightarrow\\; (x-2)^2 = 0'}</BlockMath>
+        <CharEquationLab initialMode="double" />
         <p>
-          <strong>Η παγίδα: διπλή ρίζα.</strong> Η εξίσωση δίνει{' '}
-          <InlineMath>{'x_1 = x_2 = 2'}</InlineMath> — μία ρίζα με{' '}
-          <em>πολλαπλότητα 2</em>. Όταν συμβαίνει αυτό, η γενική λύση{' '}
-          <strong>δεν</strong> είναι <InlineMath>{'\\lambda_1 2^n + \\lambda_2 2^n'}</InlineMath>{' '}
-          (θα ήταν ουσιαστικά ένας μόνο όρος). Πολλαπλασιάζουμε τον δεύτερο όρο
-          με <InlineMath>{'n'}</InlineMath>:
+          <strong>Σύνοψη.</strong> Με <InlineMath>{'\\lambda_1 = 3, \\lambda_2 = 1'}</InlineMath>:
         </p>
-        <BlockMath>{'T_n = \\lambda_1 \\, 2^n + \\lambda_2 \\, n \\, 2^n'}</BlockMath>
-        <p>
-          <strong>Σταθερές από τις αρχικές συνθήκες:</strong>
-        </p>
-        <BlockMath>{'T_0 = 3: \\;\\; \\lambda_1 \\cdot 2^0 + \\lambda_2 \\cdot 0 \\cdot 2^0 = \\lambda_1 = 3'}</BlockMath>
-        <BlockMath>{'T_1 = 8: \\;\\; \\lambda_1 \\cdot 2 + \\lambda_2 \\cdot 1 \\cdot 2 = 6 + 2\\lambda_2 = 8 \\;\\Rightarrow\\; \\lambda_2 = 1'}</BlockMath>
-        <p>
-          <strong>Αποτέλεσμα:</strong>
-        </p>
-        <BlockMath>{'T_n = 3\\cdot 2^n + n\\cdot 2^n = (n+3)\\,2^n = \\Theta(n\\,2^n)'}</BlockMath>
+        <BlockMath>{'T_n = 3\\cdot 2^n + n\\cdot 2^n = (n+3)\\,2^n = \\Theta(n\\,2^n).'}</BlockMath>
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης — «πολλαπλότητα m ⇒ πολλαπλασίαζε με n^k».</strong>{' '}
+          Όταν μια ρίζα <InlineMath>{'r'}</InlineMath> έχει πολλαπλότητα{' '}
+          <InlineMath>{'m'}</InlineMath>, η συνεισφορά της στη γενική λύση είναι{' '}
+          <InlineMath>{'\\lambda_0 r^n + \\lambda_1 n r^n + \\cdots + \\lambda_{m-1} n^{m-1} r^n'}</InlineMath>.
+          Το γενικό κόλπο για χαμένα γραμμικά συστήματα. (Συνηθισμένη εξεταστική
+          παγίδα: φοιτητής γράφει «<InlineMath>{'\\lambda_1 r^n + \\lambda_2 r^n'}</InlineMath>»{' '}
+          και τα δύο λ συγχωνεύονται σε ένα — οι δύο αρχικές συνθήκες δίνουν
+          αντιφατικό σύστημα.)
+        </Callout>
       </>
     ),
   },
@@ -4624,86 +4744,55 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Κάθε αλγόριθμος D&amp;C δίνει αναδρομή της μορφής{' '}
-          <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath>, όπου{' '}
-          <InlineMath>{'a'}</InlineMath> = πλήθος υποπροβλημάτων,{' '}
-          <InlineMath>{'b'}</InlineMath> = συντελεστής σμίκρυνσης,{' '}
-          <InlineMath>{'f(n)'}</InlineMath> = κόστος διάσπασης + σύνθεσης. Το
-          Master Theorem συγκρίνει το <InlineMath>{'f(n)'}</InlineMath> με το{' '}
-          <InlineMath>{'n^{\\log_b a}'}</InlineMath>.
+          Κάθε αλγόριθμος δίνει αναδρομή{' '}
+          <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath>. Εφαρμόζουμε
+          Master Theorem σε καθέναν και βλέπουμε ποια περίπτωση «παίζει»:
         </p>
         <p>
-          <strong>(Α) Αλγόριθμος <InlineMath>{'A_1'}</InlineMath>.</strong>{' '}
-          <InlineMath>{'T_1(n) = 4\\,T_1(n/4) + 12n'}</InlineMath>:{' '}
-          <InlineMath>{'a = 4,\\ b = 4'}</InlineMath>, άρα{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{\\log_4 4} = n^1 = n'}</InlineMath>.
-          Το <InlineMath>{'f(n) = 12n = \\Theta(n) = \\Theta(n^{\\log_b a})'}</InlineMath>{' '}
-          → <strong>περίπτωση 2</strong> →{' '}
-          <InlineMath>{'T_1(n) = \\Theta(n\\log n)'}</InlineMath>.
+          <strong>(Α) Αλγόριθμος <InlineMath>{'A_1'}</InlineMath>:</strong>{' '}
+          <InlineMath>{'4T(n/4) + 12n'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_4 4 = 1'}</InlineMath>, και{' '}
+          <InlineMath>{'f = \\Theta(n)'}</InlineMath> ταιριάζει — Περίπτωση 2 →{' '}
+          <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>:
         </p>
+        <RecurrenceClassifier preset="front-set-3-ask7-A1" />
         <p>
-          <strong>Αλγόριθμος <InlineMath>{'A_2'}</InlineMath>.</strong>{' '}
-          <InlineMath>{'T_2(n) = 3\\,T_2(n/9) + n^{7/6}'}</InlineMath>:{' '}
-          <InlineMath>{'a = 3,\\ b = 9'}</InlineMath>, άρα{' '}
-          <InlineMath>{'\\log_b a = \\log_9 3 = \\tfrac12'}</InlineMath> και{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{1/2}'}</InlineMath>. Εδώ το{' '}
-          <InlineMath>{'f(n) = n^{7/6}'}</InlineMath> είναι{' '}
-          <em>πολυωνυμικά μεγαλύτερο</em>:{' '}
-          <InlineMath>{'n^{7/6} = \\Omega(n^{1/2+\\varepsilon})'}</InlineMath>{' '}
-          με <InlineMath>{'\\varepsilon = 2/3'}</InlineMath> (αφού{' '}
-          <InlineMath>{'\\tfrac12+\\tfrac23 = \\tfrac76'}</InlineMath>). Ελέγχουμε
-          και τη συνθήκη κανονικότητας:{' '}
-          <InlineMath>{'a\\,f(n/b) = 3\\,(n/9)^{7/6} = \\tfrac{1}{3^{4/3}}\\,f(n) \\le c\\,f(n)'}</InlineMath>{' '}
-          με <InlineMath>{'\\tfrac{1}{3^{4/3}} \\le c < 1'}</InlineMath> → ισχύει.
-          <strong> Περίπτωση 3</strong> →{' '}
-          <InlineMath>{'T_2(n) = \\Theta(n^{7/6})'}</InlineMath>.
+          <strong>Αλγόριθμος <InlineMath>{'A_2'}</InlineMath>:</strong>{' '}
+          <InlineMath>{'3T(n/9) + n^{7/6}'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_9 3 = 1/2'}</InlineMath>. Το{' '}
+          <InlineMath>{'f = n^{7/6}'}</InlineMath> είναι πολυωνυμικά μεγαλύτερο
+          από <InlineMath>{'n^{1/2}'}</InlineMath> (διαφορά εκθέτη{' '}
+          <InlineMath>{'2/3'}</InlineMath>) — <strong>Περίπτωση 3</strong> →{' '}
+          <InlineMath>{'\\Theta(n^{7/6})'}</InlineMath>:
         </p>
+        <RecurrenceClassifier preset="front-set-3-ask7-A2" />
         <p>
-          <strong>Αλγόριθμος <InlineMath>{'A_4'}</InlineMath>.</strong>{' '}
-          <InlineMath>{'T_4(n) = 27\\,T_4(n/9) + n^{11/12}'}</InlineMath>:{' '}
-          <InlineMath>{'a = 27,\\ b = 9'}</InlineMath>, άρα{' '}
-          <InlineMath>{'\\log_b a = \\log_9 27 = \\tfrac32'}</InlineMath> και{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{3/2}'}</InlineMath>. Το{' '}
-          <InlineMath>{'f(n) = n^{11/12}'}</InlineMath> είναι{' '}
-          <em>πολυωνυμικά μικρότερο</em>:{' '}
-          <InlineMath>{'n^{11/12} = O(n^{3/2-\\varepsilon})'}</InlineMath> με{' '}
-          <InlineMath>{'\\varepsilon = 7/12'}</InlineMath>.{' '}
-          <strong>Περίπτωση 1</strong> →{' '}
-          <InlineMath>{'T_4(n) = \\Theta(n^{3/2})'}</InlineMath>.
+          <strong>Αλγόριθμος <InlineMath>{'A_4'}</InlineMath>:</strong>{' '}
+          <InlineMath>{'27T(n/9) + n^{11/12}'}</InlineMath>.{' '}
+          <InlineMath>{'\\log_9 27 = 3/2'}</InlineMath>. Το{' '}
+          <InlineMath>{'f = n^{11/12}'}</InlineMath> είναι πολυωνυμικά μικρότερο
+          από <InlineMath>{'n^{3/2}'}</InlineMath> (διαφορά{' '}
+          <InlineMath>{'7/12'}</InlineMath>) — <strong>Περίπτωση 1</strong>,
+          φύλλα κυριαρχούν →{' '}
+          <InlineMath>{'\\Theta(n^{3/2})'}</InlineMath>:
         </p>
+        <RecurrenceClassifier preset="front-set-3-ask7-A4" />
         <p>
-          <strong>(Β) Σύγκριση.</strong> Έχουμε τρεις τάξεις:{' '}
-          <InlineMath>{'A_1 = \\Theta(n\\log n)'}</InlineMath>,{' '}
-          <InlineMath>{'A_2 = \\Theta(n^{7/6})'}</InlineMath>,{' '}
-          <InlineMath>{'A_4 = \\Theta(n^{3/2})'}</InlineMath>. Συγκρίνουμε:
-        </p>
-        <ul>
-          <li>
-            <InlineMath>{'n^{7/6}'}</InlineMath> vs{' '}
-            <InlineMath>{'n^{3/2}'}</InlineMath>: αφού{' '}
-            <InlineMath>{'\\tfrac76 < \\tfrac32'}</InlineMath>, είναι{' '}
-            <InlineMath>{'n^{7/6} < n^{3/2}'}</InlineMath> → ο{' '}
-            <InlineMath>{'A_2'}</InlineMath> νικά τον{' '}
-            <InlineMath>{'A_4'}</InlineMath>.
-          </li>
-          <li>
-            <InlineMath>{'n\\log n'}</InlineMath> vs{' '}
-            <InlineMath>{'n^{7/6}'}</InlineMath>: εξετάζουμε το όριο{' '}
-            <InlineMath>{'\\lim_{n\\to\\infty}\\frac{n\\log n}{n^{7/6}} = \\lim_{n\\to\\infty}\\frac{\\log n}{n^{1/6}}'}</InlineMath>.
-            Με κανόνα L'Hôpital αυτό τείνει στο{' '}
-            <InlineMath>{'0'}</InlineMath> (ο λογάριθμος «χάνει» από κάθε θετική
-            δύναμη του <InlineMath>{'n'}</InlineMath>). Άρα{' '}
-            <InlineMath>{'n\\log n = o(n^{7/6})'}</InlineMath> — ο{' '}
-            <InlineMath>{'A_1'}</InlineMath> νικά τον{' '}
-            <InlineMath>{'A_2'}</InlineMath>.
-          </li>
-        </ul>
-        <p>
-          Τελική διάταξη:{' '}
-          <InlineMath>{'\\Theta(n\\log n) < \\Theta(n^{7/6}) < \\Theta(n^{3/2})'}</InlineMath>.
-          Ο <strong>ασυμπτωτικά αποδοτικότερος</strong> είναι ο{' '}
+          <strong>(Β) Σύγκριση.</strong>{' '}
+          <InlineMath>{'n\\log n \\prec n^{7/6} \\prec n^{3/2}'}</InlineMath>{' '}
+          (η <InlineMath>{'\\log n'}</InlineMath> χάνει από κάθε θετική δύναμη
+          του <InlineMath>{'n'}</InlineMath> — L'Hôpital στο όριο{' '}
+          <InlineMath>{'\\log n / n^{1/6} \\to 0'}</InlineMath>). Νικητής: ο{' '}
           <InlineMath>{'A_1'}</InlineMath>.
         </p>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — «τρεις αλγόριθμοι, τρεις περιπτώσεις».</strong>{' '}
+          Όταν συγκρίνεις πολλούς D&amp;C, μην προσπαθήσεις να μαντέψεις
+          εμπειρικά — εφάρμοσε Master Theorem σε καθένα και διάταξε τις τελικές
+          πολυπλοκότητες. Συχνή παγίδα: <InlineMath>{'n\\log n'}</InlineMath>{' '}
+          νικάει κάθε <InlineMath>{'n^{1+\\varepsilon}'}</InlineMath>, παρότι
+          εμφανίζεται «πιο τρομακτικό» λόγω log.
+        </Callout>
       </>
     ),
   },
@@ -4732,35 +4821,22 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Επειδή το <InlineMath>{'n'}</InlineMath> είναι δύναμη του{' '}
-          <InlineMath>{'2'}</InlineMath>, γράφουμε{' '}
-          <InlineMath>{'n = 2^k'}</InlineMath> και κάνουμε{' '}
-          <strong>επαγωγή στο <InlineMath>{'k'}</InlineMath></strong>.
+          Επειδή <InlineMath>{'n = 2^k'}</InlineMath>, κάνουμε{' '}
+          <strong>επαγωγή στο <InlineMath>{'k'}</InlineMath></strong>: στόχος
+          είναι <InlineMath>{'T(2^k) = k \\cdot 2^k'}</InlineMath> (το ίδιο με{' '}
+          <InlineMath>{'n\\log n'}</InlineMath>). Δες γραμμή προς γραμμή τι
+          κάνει κάθε βήμα — η αναγνώριση των τριών moves («ορισμός», «εφαρμογή
+          IH», «log a + log b = log ab») είναι το ζητούμενο:
         </p>
-        <p>
-          <strong>Βάση (<InlineMath>{'k = 1'}</InlineMath>).</strong> Τότε{' '}
-          <InlineMath>{'n = 2'}</InlineMath> και <InlineMath>{'T(2) = 2'}</InlineMath>{' '}
-          από τον ορισμό. Ελέγχουμε τον τύπο:{' '}
-          <InlineMath>{'n\\log n = 2\\log 2 = 2\\cdot 1 = 2'}</InlineMath>. Ταιριάζει. ✓
-        </p>
-        <p>
-          <strong>Επαγωγική υπόθεση.</strong> Υποθέτουμε ότι ο τύπος ισχύει για{' '}
-          <InlineMath>{'k = m'}</InlineMath>, δηλαδή:
-        </p>
-        <BlockMath>{'T(2^m) = 2^m \\log 2^m = m\\cdot 2^m'}</BlockMath>
-        <p>
-          <strong>Επαγωγικό βήμα.</strong> Θα δείξουμε ότι ισχύει και για{' '}
-          <InlineMath>{'k = m+1'}</InlineMath>. Ξεκινάμε από τον ορισμό της
-          αναδρομής για <InlineMath>{'n = 2^{m+1}'}</InlineMath>:
-        </p>
-        <BlockMath>{'\\begin{aligned} T(2^{m+1}) &= 2\\,T\\!\\left(\\tfrac{2^{m+1}}{2}\\right) + 2^{m+1} \\\\ &= 2\\,T(2^m) + 2^{m+1} \\\\ &= 2\\,(2^m \\log 2^m) + 2^{m+1} \\quad (\\text{επαγωγική υπόθεση}) \\\\ &= 2^{m+1}\\log 2^m + 2^{m+1} \\\\ &= 2^{m+1}(\\log 2^m + 1) \\\\ &= 2^{m+1}(m + 1) = 2^{m+1}\\log 2^{m+1} \\end{aligned}'}</BlockMath>
-        <p>
-          Άρα ο τύπος ισχύει και για <InlineMath>{'m+1'}</InlineMath>. Με την
-          αρχή της μαθηματικής επαγωγής, ισχύει{' '}
-          <InlineMath>{'T(n) = n\\log n'}</InlineMath> για κάθε{' '}
-          <InlineMath>{'n'}</InlineMath> που είναι δύναμη του{' '}
-          <InlineMath>{'2'}</InlineMath>.
-        </p>
+        <InductionStepper preset="front-set-3-ask8" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — επαγωγή σε αναδρομές πάντα ίδια συνταγή.</strong>{' '}
+          (1) Βάση: επαλήθευσε στο μικρότερο n. (2) ΙΗ: «έστω ότι ισχύει για k».
+          (3) Επαγωγικό βήμα: ξεκίνα από τον ορισμό της αναδρομής για k+1,
+          εφάρμοσε την ΙΗ στις αναδρομικές κλήσεις (που είναι ≤ k), και χρησιμοποίησε
+          αλγεβρικές ταυτότητες (log a+log b=log ab, n−1+1=n, …) για να καταλήξεις
+          στον τύπο που υπόσχεσαι.
+        </Callout>
       </>
     ),
   },
@@ -4783,30 +4859,29 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Έχουμε <InlineMath>{'a = 2,\\ b = 2'}</InlineMath>, άρα{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{\\log_2 2} = n^1 = n'}</InlineMath>.
+          Πρώτη ένδειξη παγίδας: <InlineMath>{'f(n) = n\\log n'}</InlineMath>{' '}
+          είναι μεγαλύτερο από <InlineMath>{'n^{\\log_2 2} = n'}</InlineMath>, αλλά{' '}
+          <em>όχι πολυωνυμικά μεγαλύτερο</em> — η διαφορά είναι μόνο ένα log.
+          Καμία από τις τρεις κλασικές περιπτώσεις δεν εφαρμόζεται. Δες γιατί:
         </p>
+        <MasterTheoremExtended preset="front-set-3-ask9" />
         <p>
-          <strong>Η παγίδα.</strong> Συγκρίνουμε το{' '}
-          <InlineMath>{'f(n) = n\\log n'}</InlineMath> με το{' '}
-          <InlineMath>{'n'}</InlineMath>. Το <InlineMath>{'f(n)'}</InlineMath>{' '}
-          είναι μεγαλύτερο, αλλά <em>όχι πολυωνυμικά</em> μεγαλύτερο — διαφέρει
-          μόνο κατά έναν παράγοντα <InlineMath>{'\\log n'}</InlineMath>. Άρα{' '}
-          <strong>δεν εφαρμόζεται η περίπτωση 3</strong> (που απαιτεί{' '}
-          <InlineMath>{'f(n) = \\Omega(n^{\\log_b a + \\varepsilon})'}</InlineMath>{' '}
-          για κάποια σταθερά <InlineMath>{'\\varepsilon > 0'}</InlineMath>).
+          <strong>Σύνοψη.</strong> Επεκτεταμένη περίπτωση: αν{' '}
+          <InlineMath>{'f(n) = \\Theta(n^{\\log_b a}\\log^k n)'}</InlineMath>{' '}
+          τότε <InlineMath>{'T(n) = \\Theta(n^{\\log_b a}\\log^{k+1} n)'}</InlineMath>{' '}
+          — μία log δύναμη παραπάνω. Εδώ k=1, άρα:
         </p>
-        <p>
-          Χρησιμοποιούμε την <strong>εκτεταμένη περίπτωση</strong> του Master
-          Theorem: αν <InlineMath>{'f(n) = \\Theta(n^{\\log_b a}\\log^k n)'}</InlineMath>{' '}
-          με <InlineMath>{'k \\ge 0'}</InlineMath>, τότε{' '}
-          <InlineMath>{'T(n) = \\Theta(n^{\\log_b a}\\log^{k+1} n)'}</InlineMath>.
-        </p>
-        <p>
-          Εδώ <InlineMath>{'f(n) = n\\log n = \\Theta(n^1\\log^1 n)'}</InlineMath>,
-          δηλαδή <InlineMath>{'k = 1'}</InlineMath>. Άρα:
-        </p>
-        <BlockMath>{'T(n) = \\Theta(n^1\\log^{1+1} n) = \\Theta(n\\log^2 n)'}</BlockMath>
+        <BlockMath>{'T(n) = \\Theta(n\\log^2 n).'}</BlockMath>
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης — «log χωρίς πολυωνυμική απόσταση = +1 log».</strong>{' '}
+          Όταν η f έχει την «καρδιά» του κατωφλιού{' '}
+          <InlineMath>{'n^{\\log_b a}'}</InlineMath> και επιπλέον{' '}
+          <InlineMath>{'\\log^k n'}</InlineMath> για κάποιο{' '}
+          <InlineMath>{'k \\ge 0'}</InlineMath>, η απάντηση είναι το ίδιο
+          κατώφλι επί <InlineMath>{'\\log^{k+1} n'}</InlineMath> — μία log
+          δύναμη παραπάνω. Συμβουλή: γράψε πάντα το <InlineMath>{'k'}</InlineMath>{' '}
+          ρητά, για να μη μετρήσεις λάθος.
+        </Callout>
       </>
     ),
   },
@@ -4830,38 +4905,27 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          <strong>Γιατί δεν εφαρμόζεται κατευθείαν το Master Theorem.</strong>{' '}
-          Εδώ το πρόβλημα δεν <em>διαιρείται</em> (π.χ. σε{' '}
-          <InlineMath>{'n/2'}</InlineMath>) — μικραίνει με{' '}
-          <strong>τετραγωνική ρίζα</strong>. Η μορφή{' '}
-          <InlineMath>{'aT(n/b)+f(n)'}</InlineMath> δεν ταιριάζει. Χρειάζεται
-          μια <strong>αλλαγή μεταβλητής</strong>.
+          Το πρόβλημα δεν <em>διαιρείται</em> — μικραίνει με{' '}
+          <strong>τετραγωνική ρίζα</strong>. Master Theorem δεν εφαρμόζεται
+          κατευθείαν, χρειάζεται αλλαγή μεταβλητής. Δες τη συνταγή:
         </p>
+        <RecurrenceSubstitution preset="front-set-3-ask10" />
         <p>
-          <strong>Βήμα 1 — η αντικατάσταση.</strong> Θέτουμε{' '}
-          <InlineMath>{'m = \\log n'}</InlineMath>, δηλαδή{' '}
-          <InlineMath>{'n = 2^m'}</InlineMath>. Τότε η ρίζα γίνεται:
+          <strong>Σύνοψη.</strong> Θέτω <InlineMath>{'n = 2^m'}</InlineMath>· η{' '}
+          <InlineMath>{'\\sqrt{n} = 2^{m/2}'}</InlineMath>, ορίζω{' '}
+          <InlineMath>{'S(m) = T(2^m)'}</InlineMath> και η αναδρομή γίνεται{' '}
+          <InlineMath>{'S(m) = S(m/2) + 1'}</InlineMath>. Master Theorem
+          (περίπτωση 2): <InlineMath>{'S(m) = \\Theta(\\log m)'}</InlineMath>.
+          Επιστροφή <InlineMath>{'m = \\log n'}</InlineMath>:
         </p>
-        <BlockMath>{'\\sqrt{n} = n^{1/2} = (2^m)^{1/2} = 2^{m/2}'}</BlockMath>
-        <p>
-          <strong>Βήμα 2 — νέα συνάρτηση.</strong> Ορίζουμε{' '}
-          <InlineMath>{'S(m) = T(2^m)'}</InlineMath>. Τότε:
-        </p>
-        <BlockMath>{'S(m) = T(2^m) = T(\\sqrt{n}) + 1 = T(2^{m/2}) + 1 = S(m/2) + 1'}</BlockMath>
-        <p>
-          <strong>Βήμα 3 — τώρα εφαρμόζεται το Master Theorem.</strong> Η{' '}
-          <InlineMath>{'S(m) = S(m/2) + 1'}</InlineMath> έχει{' '}
-          <InlineMath>{'a = 1,\\ b = 2'}</InlineMath>, άρα{' '}
-          <InlineMath>{'m^{\\log_b a} = m^{\\log_2 1} = m^0 = 1'}</InlineMath>.
-          Το <InlineMath>{'f(m) = 1 = \\Theta(m^0)'}</InlineMath> → ταιριάζει
-          ακριβώς, <strong>περίπτωση 2</strong>:
-        </p>
-        <BlockMath>{'S(m) = \\Theta(m^{\\log_b a}\\log m) = \\Theta(\\log m)'}</BlockMath>
-        <p>
-          <strong>Βήμα 4 — επιστροφή στη μεταβλητή <InlineMath>{'n'}</InlineMath>.</strong>{' '}
-          Αφού <InlineMath>{'m = \\log n'}</InlineMath>:
-        </p>
-        <BlockMath>{'T(n) = S(\\log n) = \\Theta(\\log\\log n)'}</BlockMath>
+        <BlockMath>{'T(n) = \\Theta(\\log\\log n).'}</BlockMath>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — η «n = 2ᵐ» αντικατάσταση.</strong> Όποτε
+          εμφανίζεται <InlineMath>{'\\sqrt{n}'}</InlineMath> ή{' '}
+          <InlineMath>{'\\sqrt[k]{n}'}</InlineMath> στο όρισμα της αναδρομής,
+          αυτή είναι η μόνη ασφαλής συνταγή. Το διπλό log στην απάντηση είναι
+          το χαρακτηριστικό «αποτύπωμα» — όπως ακριβώς και στο pt1-th1-q4.
+        </Callout>
       </>
     ),
   },
@@ -4883,32 +4947,32 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Δύσκολη αναδρομή — και ρίζα, και συντελεστής{' '}
+          Δύο δυσκολίες ταυτόχρονα: ρίζα στο όρισμα <em>και</em> συντελεστής{' '}
           <InlineMath>{'\\sqrt{n}'}</InlineMath> μπροστά. Το κλειδί είναι ένα
-          έξυπνο κόλπο: <strong>διαιρούμε και τις δύο πλευρές με{' '}
-          <InlineMath>{'n'}</InlineMath></strong>.
+          έξυπνο κόλπο: <strong>διαιρούμε και τις δύο πλευρές με n</strong> —
+          ο συντελεστής εξαφανίζεται και αποκαλύπτεται μια ήδη γνωστή
+          αναδρομή. Δες τα 5 στάδια:
         </p>
-        <BlockMath>{'\\frac{T(n)}{n} = \\frac{\\sqrt{n}\\;T(\\sqrt{n})}{n} + \\frac{n}{n} = \\frac{T(\\sqrt{n})}{\\sqrt{n}} + 1.'}</BlockMath>
+        <DivideByNTrick />
         <p>
-          Τώρα ορίζουμε μια νέα συνάρτηση{' '}
-          <InlineMath>{'S(n) = T(n)/n'}</InlineMath>. Πρόσεξε ότι ο όρος{' '}
-          <InlineMath>{'T(\\sqrt{n})/\\sqrt{n}'}</InlineMath> είναι ακριβώς{' '}
-          <InlineMath>{'S(\\sqrt{n})'}</InlineMath>. Άρα η σχέση γίνεται απλή:
+          <strong>Σύνοψη.</strong> Με <InlineMath>{'S(n) = T(n)/n'}</InlineMath>{' '}
+          η σχέση γίνεται <InlineMath>{'S(n) = S(\\sqrt{n}) + 1'}</InlineMath>{' '}
+          (που λύνεται όπως το pt1-th1-q4 με{' '}
+          <InlineMath>{'n = 2^m'}</InlineMath>), δίνοντας{' '}
+          <InlineMath>{'S(n) = \\Theta(\\log\\log n)'}</InlineMath>. Πολλαπλασιάζουμε
+          με <InlineMath>{'n'}</InlineMath>:
         </p>
-        <BlockMath>{'S(n) = S(\\sqrt{n}) + 1.'}</BlockMath>
-        <p>
-          Αυτή τη λύνουμε με αλλαγή μεταβλητής <InlineMath>{'n = 2^m'}</InlineMath>:
-          τότε <InlineMath>{'\\sqrt{n} = 2^{m/2}'}</InlineMath>, και με{' '}
-          <InlineMath>{'R(m) = S(2^m)'}</InlineMath> παίρνουμε{' '}
-          <InlineMath>{'R(m) = R(m/2) + 1'}</InlineMath> — κάθε βήμα
-          υποδιπλασιάζει το <InlineMath>{'m'}</InlineMath>, άρα{' '}
-          <InlineMath>{'R(m) = \\Theta(\\log m)'}</InlineMath>. Επιστρέφοντας:{' '}
-          <InlineMath>{'S(n) = \\Theta(\\log m) = \\Theta(\\log\\log n)'}</InlineMath>.
-        </p>
-        <p>
-          Τέλος, αφού <InlineMath>{'S(n) = T(n)/n'}</InlineMath>:
-        </p>
-        <BlockMath>{'T(n) = n \\cdot S(n) = \\Theta(n \\log\\log n).'}</BlockMath>
+        <BlockMath>{'T(n) = n \\cdot S(n) = \\Theta(n\\log\\log n).'}</BlockMath>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — «διαίρεσε με n για να ξεθαμπώσεις τη μορφή».</strong>{' '}
+          Όποτε η αναδρομή έχει συντελεστή <InlineMath>{'\\sqrt{n}'}</InlineMath>{' '}
+          ή <InlineMath>{'n^c'}</InlineMath> μπροστά από{' '}
+          <InlineMath>{'T(\\cdot)'}</InlineMath>, διαίρεσε και τις δύο πλευρές με{' '}
+          το <InlineMath>{'f(n)'}</InlineMath> (συνήθως n) και όρισε{' '}
+          <InlineMath>{'S(n) = T(n)/f(n)'}</InlineMath>. Συχνά αυτό απλοποιεί
+          την αναδρομή σε γνωστή. Είναι το ίδιο κόλπο που χρησιμοποιείται και
+          στην απόδειξη #1 της mergesort στο L03.
+        </Callout>
       </>
     ),
   },
@@ -4935,35 +4999,29 @@ procedure CALC(w):
         <p>
           Η <strong>μέθοδος αντικατάστασης</strong> δουλεύει σε δύο φάσεις:{' '}
           (1) <em>μαντεύεις</em> τη μορφή της λύσης, (2) την{' '}
-          <em>αποδεικνύεις με επαγωγή</em>. (Γράφουμε{' '}
-          <InlineMath>{'\\lg = \\log_2'}</InlineMath>.)
+          <em>αποδεικνύεις με επαγωγή</em>. Εδώ η εικασία{' '}
+          <InlineMath>{'T(n) = n\\log n + n'}</InlineMath> προκύπτει από το ότι
+          η <InlineMath>{'2T(n/2)+n'}</InlineMath> είναι η αναδρομή της
+          mergesort — Θ(n log n) — αλλά θέλουμε ακριβή σταθερά. Δες κάθε γραμμή
+          του επαγωγικού βήματος:
         </p>
+        <InductionStepper preset="front-set-4-ask2" />
         <p>
-          <strong>Βήμα 1 — η εικασία.</strong> Η αναδρομή{' '}
-          <InlineMath>{'2T(n/2)+n'}</InlineMath> είναι αυτή της mergesort, που
-          ξέρουμε ότι δίνει <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>.
-          Μαντεύουμε λοιπόν τον ακριβή τύπο{' '}
-          <InlineMath>{'T(n) = n\\lg n + n = n(\\lg n + 1)'}</InlineMath>.
+          <strong>Πετυχημένο.</strong>{' '}
+          <InlineMath>{'T(n) = n\\log n + n = \\Theta(n\\log n)'}</InlineMath>.
         </p>
-        <p>
-          <strong>Βήμα 2 — επαγωγή. Βάση</strong>{' '}
-          (<InlineMath>{'n = 1'}</InlineMath>):{' '}
-          <InlineMath>{'n\\lg n + n = 1\\cdot\\lg 1 + 1 = 0 + 1 = 1 = T(1)'}</InlineMath>. ✓
-        </p>
-        <p>
-          <strong>Επαγωγική υπόθεση:</strong>{' '}
-          <InlineMath>{'T(k) = k\\lg k + k'}</InlineMath> για κάθε{' '}
-          <InlineMath>{'k < n'}</InlineMath>.
-        </p>
-        <p>
-          <strong>Επαγωγικό βήμα</strong> (εφαρμόζουμε την υπόθεση για{' '}
-          <InlineMath>{'k = n/2 < n'}</InlineMath>):
-        </p>
-        <BlockMath>{'\\begin{aligned} T(n) &= 2\\,T(n/2) + n \\\\ &= 2\\left(\\tfrac n2 \\lg\\tfrac n2 + \\tfrac n2\\right) + n \\\\ &= n\\lg\\tfrac n2 + n + n \\\\ &= n(\\lg n - \\lg 2) + n + n \\\\ &= n\\lg n - n + n + n = n\\lg n + n \\end{aligned}'}</BlockMath>
-        <p>
-          Το αποτέλεσμα ταυτίζεται με την εικασία, άρα ο τύπος ισχύει:{' '}
-          <strong><InlineMath>{'T(n) = n\\lg n + n = \\Theta(n\\log n)'}</InlineMath></strong>.
-        </p>
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης — «εικασία + απόδειξη με επαγωγή».</strong>{' '}
+          Όταν το Master Theorem δεν είναι αρκετό (π.χ. χρειάζεσαι ακριβή
+          σταθερά), η μέθοδος αντικατάστασης σε καλύπτει:
+          <ul>
+            <li>Μάντεψε την εικασία από οπτική αναγνώριση (mergesort = Θ(n log n)).</li>
+            <li>Επαλήθευσε στη βάση.</li>
+            <li>Στο επαγωγικό βήμα: αντικατάστησε την ΙΗ στις αναδρομικές κλήσεις και απλοποίησε με τις ταυτότητες του log.</li>
+          </ul>
+          Αν η επαγωγή σπάει με ένα «επιπλέον» όρο, ίσως χρειάζεσαι ενίσχυση
+          της εικασίας — δες front-set-4-ask3.
+        </Callout>
       </>
     ),
   },
@@ -4986,36 +5044,30 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Αφού ψάχνουμε άνω φράγμα, γράφουμε{' '}
-          <InlineMath>{'T(n) \\le 8\\,T(n/2) + cn^2'}</InlineMath> για κάποια
-          σταθερά <InlineMath>{'c > 0'}</InlineMath>. Με{' '}
-          <InlineMath>{'a = 8,\\ b = 2'}</InlineMath> «μυρίζεται» ότι η απάντηση
-          είναι κοντά στο <InlineMath>{'n^{\\log_2 8} = n^3'}</InlineMath>.
+          Με <InlineMath>{'a = 8,\\ b = 2'}</InlineMath> ξέρουμε ότι το{' '}
+          <InlineMath>{'n^{\\log_2 8} = n^3'}</InlineMath> κυριαρχεί — Master
+          Theorem περίπτωση 1 θα έδινε <InlineMath>{'\\Theta(n^3)'}</InlineMath>{' '}
+          αν το <InlineMath>{'cn^2'}</InlineMath> ήταν πολυωνυμικά μικρότερο
+          (που είναι). Αλλά αν θέλουμε να το <em>αποδείξουμε</em> με τη μέθοδο
+          αντικατάστασης, πέφτουμε σε μια κλασική παγίδα: η «προφανής» εικασία{' '}
+          <InlineMath>{'T \\le dn^3'}</InlineMath> δεν κλείνει την επαγωγή.
         </p>
+        <StrengthenedGuess />
         <p>
-          <strong>Πρώτη απόπειρα — εικασία{' '}
-          <InlineMath>{'T(n) \\le dn^3'}</InlineMath>:</strong>
+          <strong>Σύνοψη.</strong> Η «πιο σφιχτή» εικασία{' '}
+          <InlineMath>{"T(n) \\le dn^3 - d'n^2"}</InlineMath> κλείνει την επαγωγή
+          για κάθε <InlineMath>{"d' \\ge c"}</InlineMath>. Άρα{' '}
+          <InlineMath>{'T(n) = O(n^3)'}</InlineMath>.
         </p>
-        <BlockMath>{'T(n) \\le 8d(n/2)^3 + cn^2 = 8d\\cdot\\tfrac{n^3}{8} + cn^2 = dn^3 + cn^2'}</BlockMath>
-        <p>
-          Καταλήξαμε σε <InlineMath>{'dn^3 + cn^2'}</InlineMath>, που{' '}
-          <strong>δεν</strong> είναι <InlineMath>{'\\le dn^3'}</InlineMath> — το
-          επιπλέον <InlineMath>{'cn^2'}</InlineMath> χαλάει την επαγωγή. Η
-          εικασία είναι «πολύ σφιχτή».
-        </p>
-        <p>
-          <strong>Το κόλπο — ενισχύουμε την εικασία.</strong> Φαίνεται
-          παράδοξο, αλλά αν <em>αφαιρέσουμε</em> έναν μικρότερης τάξης όρο, η
-          επαγωγή «κλείνει». Δοκιμάζουμε{' '}
-          <InlineMath>{'T(n) \\le dn^3 - d\'n^2'}</InlineMath> με{' '}
-          <InlineMath>{'d, d\' > 0'}</InlineMath>:
-        </p>
-        <BlockMath>{'\\begin{aligned} T(n) &\\le 8\\left(d(n/2)^3 - d\'(n/2)^2\\right) + cn^2 \\\\ &= 8d\\cdot\\tfrac{n^3}{8} - 8d\'\\cdot\\tfrac{n^2}{4} + cn^2 \\\\ &= dn^3 - 2d\'n^2 + cn^2 \\\\ &= dn^3 - d\'n^2 \\;\\underbrace{-\\,d\'n^2 + cn^2}_{\\le\\,0\\ \\text{αν}\\ d\' \\ge c} \\\\ &\\le dn^3 - d\'n^2 \\end{aligned}'}</BlockMath>
-        <p>
-          Διαλέγοντας <InlineMath>{'d\' \\ge c'}</InlineMath>, η επαγωγή
-          περνάει. Άρα <InlineMath>{'T(n) \\le dn^3 - d\'n^2 \\le dn^3'}</InlineMath>,
-          δηλαδή <strong><InlineMath>{'T(n) = O(n^3)'}</InlineMath></strong>.
-        </p>
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης — «αν σπάει η επαγωγή, ΕΝΙΣΧΥΣΕ την εικασία».</strong>{' '}
+          Είναι αντι-διαισθητικό αλλά συμβαίνει συνεχώς: μια σφιχτότερη υπόθεση{' '}
+          αφήνει στην επαγωγή έναν επιπλέον αρνητικό όρο που μπορεί να
+          απορροφήσει τον «παράδικο» θετικό όρο της σχέσης. Συνταγή: αν η
+          εικασία <InlineMath>{'cn^k'}</InlineMath> αφήνει υπόλειμμα τάξης{' '}
+          <InlineMath>{'n^{k-1}'}</InlineMath>, δοκίμασε{' '}
+          <InlineMath>{"cn^k - c'n^{k-1}"}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -5037,30 +5089,36 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Εδώ τα υποπροβλήματα <strong>δεν έχουν ίσο μέγεθος</strong>{' '}
-          (<InlineMath>{'n/2, n/4, n/8'}</InlineMath>), οπότε το Master Theorem
-          δεν εφαρμόζεται κατευθείαν. Δουλεύουμε με αντικατάσταση.
+          Master Theorem δεν εφαρμόζεται — τα υποπροβλήματα έχουν{' '}
+          <em>διαφορετικό μέγεθος</em>. Η σωτηρία είναι μια απλή παρατήρηση:{' '}
+          <InlineMath>{'1/2 + 1/4 + 1/8 = 7/8 < 1'}</InlineMath>. Κάθε επίπεδο
+          συνολικά είναι μόνο 7/8 του προηγουμένου — γεωμετρική σειρά που
+          συγκλίνει. Δες το ζωντανά και σύγκρινε με τις «οριακές» περιπτώσεις:
         </p>
+        <UnequalSplitGeometric />
         <p>
-          <strong>Εικασία:</strong>{' '}
-          <InlineMath>{'T(n) \\le cn'}</InlineMath> για κάποια{' '}
-          <InlineMath>{'c > 0'}</InlineMath>. Αντικαθιστούμε:
+          <strong>Επιβεβαίωση με αντικατάσταση.</strong> Εικασία{' '}
+          <InlineMath>{'T(n) \\le cn'}</InlineMath>:
         </p>
-        <BlockMath>{'\\begin{aligned} T(n) &= T(n/2) + T(n/4) + T(n/8) + n \\\\ &\\le \\tfrac{cn}{2} + \\tfrac{cn}{4} + \\tfrac{cn}{8} + n \\\\ &= \\tfrac{7cn}{8} + n = \\left(\\tfrac{7c}{8} + 1\\right)n \\end{aligned}'}</BlockMath>
+        <BlockMath>{'T(n) \\le \\tfrac{cn}{2} + \\tfrac{cn}{4} + \\tfrac{cn}{8} + n = \\tfrac{7cn}{8} + n.'}</BlockMath>
         <p>
-          Θέλουμε το αποτέλεσμα να είναι <InlineMath>{'\\le cn'}</InlineMath>,
-          δηλαδή <InlineMath>{'\\tfrac{7c}{8} + 1 \\le c'}</InlineMath>. Λύνοντας:{' '}
-          <InlineMath>{'1 \\le c - \\tfrac{7c}{8} = \\tfrac c8'}</InlineMath>, άρα{' '}
-          <InlineMath>{'c \\ge 8'}</InlineMath>.
+          Θέλουμε <InlineMath>{'\\tfrac{7c}{8} + 1 \\le c'}</InlineMath>, δηλαδή{' '}
+          <InlineMath>{'c \\ge 8'}</InlineMath>. Διαλέγουμε{' '}
+          <InlineMath>{'c = 8'}</InlineMath>, η επαγωγή κλείνει →{' '}
+          <InlineMath>{'T(n) = O(n)'}</InlineMath>.
         </p>
-        <p>
-          Επιλέγοντας <InlineMath>{'c = 8'}</InlineMath>, η επαγωγή ισχύει και{' '}
-          <strong><InlineMath>{'T(n) = O(n)'}</InlineMath></strong>. Η διαίσθηση:
-          το συνολικό μέγεθος των υποπροβλημάτων κάθε επιπέδου είναι μόνο{' '}
-          <InlineMath>{'7/8'}</InlineMath> του προηγούμενου — μια
-          <strong> φθίνουσα γεωμετρική σειρά</strong> που συγκλίνει, οπότε
-          κυριαρχεί το κόστος <InlineMath>{'n'}</InlineMath> της ρίζας.
-        </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — άθροισμα κλασμάτων &lt;/=/&gt; 1.</strong>{' '}
+          Για αναδρομές <InlineMath>{'\\sum T(c_i n) + n^d'}</InlineMath> με{' '}
+          γραμμικό f, το κρίσιμο νούμερο είναι <InlineMath>{'r = \\sum c_i'}</InlineMath>:
+          <ul>
+            <li>r &lt; 1: γεωμετρικά φθίνουσα → η ρίζα κυριαρχεί → Θ(n).</li>
+            <li>r = 1: όλα τα επίπεδα ίσα → +log n παράγοντας → Θ(n log n).</li>
+            <li>r &gt; 1: τα φύλλα κυριαρχούν → Θ(n^{`{log_? r}`}).</li>
+          </ul>
+          Για άνισες αναδρομές, αυτό είναι ο πρώτος έλεγχος που πρέπει να
+          κάνεις.
+        </Callout>
       </>
     ),
   },
@@ -5281,54 +5339,40 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          Σε μια αριθμητική πρόοδο κάθε όρος προκύπτει προσθέτοντας στον
-          προηγούμενο μια σταθερή <strong>κοινή διαφορά{' '}
-          <InlineMath>{'d'}</InlineMath></strong>:{' '}
-          <InlineMath>{'a_i = a_0 + (i-1)d'}</InlineMath>. Τη διαφορά{' '}
-          <InlineMath>{'d'}</InlineMath> τη βρίσκουμε εύκολα από τα πρώτα
-          στοιχεία (όπου σίγουρα δεν λείπει όρος). Επειδή λείπει ακριβώς ένας
-          όρος, ο πίνακας «σπάει»: πριν το κενό οι όροι κάθονται στις
-          αναμενόμενες θέσεις τους, μετά το κενό είναι όλοι μετατοπισμένοι.
+          Σε αριθμητική πρόοδο: <InlineMath>{'a_i = a_0 + i \\cdot d'}</InlineMath>.
+          Τη διαφορά <InlineMath>{'d'}</InlineMath> τη βρίσκουμε από τα πρώτα
+          στοιχεία. Επειδή λείπει ακριβώς ένας όρος, ο πίνακας «σπάει» στο κενό:
+          <strong>πριν</strong> το κενό κάθε <InlineMath>{'A[i]'}</InlineMath>{' '}
+          ισούται με τον αναμενόμενο <InlineMath>{'a_0 + i d'}</InlineMath>·{' '}
+          <strong>μετά</strong> το κενό είναι όλα μετατοπισμένα κατά d. Η
+          μονοτονία αυτή ακριβώς ξεκλειδώνει τη δυαδική αναζήτηση.
         </p>
         <p>
-          <strong>Δυαδική αναζήτηση του κενού.</strong> Δεν χρειάζεται να
-          σαρώσουμε όλο τον πίνακα — αρκεί <InlineMath>{'O(\\log n)'}</InlineMath>:
+          <strong>Ο αλγόριθμος.</strong> Σε κάθε βήμα, σύγκρινε{' '}
+          <InlineMath>{'A[\\text{mid}]'}</InlineMath> με τον αναμενόμενο{' '}
+          <InlineMath>{'a_0 + \\text{mid} \\cdot d'}</InlineMath>:
         </p>
         <ul>
-          <li>
-            Εξέτασε το μεσαίο στοιχείο <InlineMath>{'A[\\text{mid}]'}</InlineMath>.
-            Έλεγξε αν η διαφορά του από το προηγούμενο{' '}
-            <em>και</em> το επόμενο στοιχείο ισούται με{' '}
-            <InlineMath>{'d'}</InlineMath>.
-          </li>
-          <li>
-            <strong>Αν όχι</strong> (κάποια γειτονική διαφορά είναι{' '}
-            <InlineMath>{'2d'}</InlineMath>): το κενό είναι ακριβώς δίπλα στο{' '}
-            <InlineMath>{'A[\\text{mid}]'}</InlineMath> — βρήκες τον χαμένο όρο.
-          </li>
-          <li>
-            <strong>Αν ναι</strong> (το <InlineMath>{'A[\\text{mid}]'}</InlineMath>{' '}
-            ισούται με τον αναμενόμενο όρο της θέσης του): το κενό είναι{' '}
-            <em>μετά</em> το <InlineMath>{'\\text{mid}'}</InlineMath> → συνέχισε
-            αναδρομικά στο δεξί μισό. Αλλιώς, αν το{' '}
-            <InlineMath>{'A[\\text{mid}]'}</InlineMath> είναι ήδη μεγαλύτερο από
-            το αναμενόμενο, το κενό είναι <em>πριν</em> → συνέχισε στο αριστερό.
-          </li>
+          <li>Ταιριάζει → το κενό είναι δεξιά· συνέχισε εκεί.</li>
+          <li>Δεν ταιριάζει → το κενό είναι αριστερά (ή ακριβώς εδώ)· συνέχισε αριστερά.</li>
         </ul>
         <p>
-          <strong>Παράδειγμα.</strong> <InlineMath>{'A = [1,2,3,4,5,7,8,9,10]'}</InlineMath>{' '}
-          με <InlineMath>{'d = 1'}</InlineMath>. Μεσαίο:{' '}
-          <InlineMath>{'A[5] = 5'}</InlineMath>· γείτονες{' '}
-          <InlineMath>{'A[4] = 4'}</InlineMath>,{' '}
-          <InlineMath>{'A[6] = 7'}</InlineMath>. Η αριστερή διαφορά είναι{' '}
-          <InlineMath>{'1 = d'}</InlineMath>, αλλά η δεξιά είναι{' '}
-          <InlineMath>{'2 \\ne d'}</InlineMath> → ο χαμένος όρος είναι ανάμεσα,
-          δηλαδή το <InlineMath>{'6'}</InlineMath>.
+          Δοκίμασέ το — οι σλάιντερ ρυθμίζουν n, d και θέση κενού:
         </p>
+        <MissingTermBinarySearch />
         <p>
-          Κάθε βήμα υποδιπλασιάζει τον πίνακα, άρα ο αλγόριθμος είναι{' '}
-          <strong><InlineMath>{'O(\\log n)'}</InlineMath></strong>.
+          Κάθε βήμα υποδιπλασιάζει τον πίνακα →{' '}
+          <InlineMath>{'O(\\log n)'}</InlineMath>.
         </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «μετατόπιση κατά μία θέση = μονότονη συνθήκη»</strong>.
+          Η εξάλειψη ενός στοιχείου από ταξινομημένο/υπολογίσιμο πίνακα δημιουργεί
+          ένα <strong>σύνορο</strong> ίδιας μορφής με το{' '}
+          <InlineMath>{'1^m 0^n'}</InlineMath> του pt4-th3. Αν μπορείς να ορίσεις{' '}
+          «αναμενόμενη τιμή» στη θέση i και να δεις πότε αρχίζει η διαφορά,
+          η δυαδική αναζήτηση παίζει — <InlineMath>{'O(\\log n)'}</InlineMath>{' '}
+          αντί για <InlineMath>{'O(n)'}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -5511,30 +5555,30 @@ procedure CALC(w):
     solution: (
       <>
         <p>
-          <strong>Βήμα 1 — απλοποίησε το <InlineMath>{'f(n)'}</InlineMath>.</strong>{' '}
-          <InlineMath>{'(\\sqrt{n})^3 = (n^{1/2})^3 = n^{3/2}'}</InlineMath>,
-          οπότε <InlineMath>{'f(n) = n^{3/2}\\lg n'}</InlineMath>.
+          <strong>Βήμα 1 — απλοποίησε το <InlineMath>{'f'}</InlineMath>:</strong>{' '}
+          <InlineMath>{'(\\sqrt{n})^3 = n^{3/2}'}</InlineMath>, άρα{' '}
+          <InlineMath>{'f(n) = n^{3/2}\\lg n'}</InlineMath>. Με{' '}
+          <InlineMath>{'a = 27,\\ b = 9'}</InlineMath>:{' '}
+          <InlineMath>{'\\log_9 27 = 3/2'}</InlineMath>, κατώφλι{' '}
+          <InlineMath>{'n^{3/2}'}</InlineMath>. Η f είναι «ακριβώς πάνω στο
+          κατώφλι» επί <InlineMath>{'\\log n'}</InlineMath> — η επεκτεταμένη
+          περίπτωση. Δες τη συνταγή:
         </p>
+        <MasterTheoremExtended preset="front-set-4-ask10" />
         <p>
-          <strong>Βήμα 2 — το «κατώφλι» <InlineMath>{'n^{\\log_b a}'}</InlineMath>.</strong>{' '}
-          Με <InlineMath>{'a = 27,\\ b = 9'}</InlineMath>:{' '}
-          <InlineMath>{'\\log_b a = \\log_9 27 = \\tfrac32'}</InlineMath>, άρα{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{3/2}'}</InlineMath>.
+          <strong>Αποτέλεσμα.</strong>
         </p>
-        <p>
-          <strong>Βήμα 3 — σύγκριση.</strong> Το{' '}
-          <InlineMath>{'f(n) = n^{3/2}\\lg n'}</InlineMath> είναι το{' '}
-          <InlineMath>{'n^{\\log_b a}'}</InlineMath> πολλαπλασιασμένο με έναν
-          παράγοντα <InlineMath>{'\\lg n'}</InlineMath> — δηλαδή{' '}
-          <InlineMath>{'f(n) = \\Theta(n^{\\log_b a}\\log^k n)'}</InlineMath> με{' '}
-          <InlineMath>{'k = 1'}</InlineMath>. Αυτή είναι η{' '}
-          <strong>εκτεταμένη περίπτωση</strong> του Master Theorem:
-        </p>
-        <BlockMath>{'f(n) = \\Theta(n^{\\log_b a}\\log^k n) \\;\\Rightarrow\\; T(n) = \\Theta(n^{\\log_b a}\\log^{k+1} n)'}</BlockMath>
-        <p>
-          <strong>Αποτέλεσμα.</strong> Με <InlineMath>{'k = 1'}</InlineMath>:
-        </p>
-        <BlockMath>{'T(n) = \\Theta(n^{3/2}\\log^{2} n)'}</BlockMath>
+        <BlockMath>{'T(n) = \\Theta(n^{3/2}\\log^2 n).'}</BlockMath>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης — «log πάνω στο κατώφλι ⇒ +1 log».</strong>{' '}
+          Όποτε δεις <InlineMath>{'f = n^{\\log_b a} \\cdot \\log^k n'}</InlineMath>,
+          η απάντηση είναι το ίδιο κατώφλι επί <InlineMath>{'\\log^{k+1} n'}</InlineMath>.
+          Συνηθισμένα παραδείγματα στις εξετάσεις: <InlineMath>{'k = 1'}</InlineMath>{' '}
+          (συνηθέστατο), <InlineMath>{'k = 0'}</InlineMath> (αυτό είναι ακριβώς
+          η Περίπτωση 2). Συμβουλή: γράψε ρητά το{' '}
+          <InlineMath>{'\\log^k'}</InlineMath> ξεχωριστά από το κατώφλι για να
+          μη ξεχάσεις το +1.
+        </Callout>
       </>
     ),
   },
@@ -5861,64 +5905,64 @@ procedure CALC(m)
     solution: (
       <>
         <p>
-          <strong>(α) Ορθότητα — με επαγωγή στο μήκος{' '}
-          <InlineMath>{'n'}</InlineMath>.</strong>
+          <strong>(α) Ορθότητα — επαγωγή στο μήκος n.</strong> Βάση: για n=1
+          τετριμμένο, για n=2 η αρχική συγκριτική γραμμή κάνει τη δουλειά.
+          Επαγωγική υπόθεση: σωστή ταξινόμηση για κάθε k &lt; n· κάθε
+          αναδρομική κλήση γίνεται σε <InlineMath>{'2n/3 < n'}</InlineMath>,
+          άρα είναι σωστή.
         </p>
         <p>
-          <strong>Βάση:</strong> για <InlineMath>{'n = 1'}</InlineMath> ο πίνακας
-          είναι ήδη ταξινομημένος· για <InlineMath>{'n = 2'}</InlineMath> η
-          πρώτη γραμμή (<InlineMath>{'\\text{if } A[l]>A[r]'}</InlineMath>) τα
-          βάζει στη σειρά και η <InlineMath>{'l+1>r'}</InlineMath> επιστρέφει. ✓
+          Το «καρδιά» του επιχειρήματος για n μήκος: σκέψου τον πίνακα σε τρία
+          ίσα τρίτα. Δες τις 3 κλήσεις και τι κάνει η καθεμία στα τρίτα:
         </p>
-        <p>
-          <strong>Επαγωγική υπόθεση:</strong> ο αλγόριθμος ταξινομεί σωστά κάθε
-          πίνακα μήκους <InlineMath>{'< n'}</InlineMath>. Κάθε αναδρομική κλήση
-          γίνεται σε μήκος <InlineMath>{'2n/3 < n'}</InlineMath>, άρα — με την
-          υπόθεση — ταξινομεί σωστά το κομμάτι της.
-        </p>
-        <p>
-          <strong>Επαγωγικό βήμα.</strong> Σκέψου τον πίνακα σε τρία ίσα τρίτα.
-        </p>
+        <StoogeSortViz />
         <ul>
           <li>
-            Η <strong>1η κλήση</strong> ταξινομεί τα πρώτα{' '}
-            <InlineMath>{'2/3'}</InlineMath>. Μετά απ' αυτήν, τα{' '}
-            <InlineMath>{'k'}</InlineMath> μεγαλύτερα στοιχεία αυτού του
-            τμήματος βρίσκονται στο <em>μεσαίο</em> τρίτο.
+            <strong>1η κλήση</strong>: ταξινομεί τα πρώτα 2/3 → τα{' '}
+            <InlineMath>{'k'}</InlineMath> μεγαλύτερα αυτών μετακινούνται στο
+            μεσαίο τρίτο.
           </li>
           <li>
-            Η <strong>2η κλήση</strong> ταξινομεί τα τελευταία{' '}
-            <InlineMath>{'2/3'}</InlineMath> (μεσαίο + τελευταίο τρίτο). Έτσι τα
-            μεγαλύτερα <InlineMath>{'k'}</InlineMath> στοιχεία <em>όλου</em> του
-            πίνακα καταλήγουν, ταξινομημένα, στο τελευταίο τρίτο — και μένουν
-            εκεί οριστικά.
+            <strong>2η κλήση</strong>: ταξινομεί τα τελευταία 2/3 (μεσαίο +
+            τελευταίο) → τα{' '}
+            <InlineMath>{'k'}</InlineMath> μεγαλύτερα όλου του πίνακα
+            καταλήγουν, ταξινομημένα, στο τελευταίο τρίτο.
           </li>
           <li>
-            Η <strong>3η κλήση</strong> ξανα-ταξινομεί τα πρώτα{' '}
-            <InlineMath>{'2/3'}</InlineMath>, που τώρα περιέχουν τα{' '}
-            <InlineMath>{'2n/3'}</InlineMath> μικρότερα στοιχεία. Τέλος, όλος ο
-            πίνακας είναι ταξινομημένος. ✓
+            <strong>3η κλήση</strong>: ξαναταξινομεί τα πρώτα 2/3, που πλέον
+            περιέχουν τα <InlineMath>{'2n/3'}</InlineMath> μικρότερα στοιχεία.
           </li>
         </ul>
         <p>
-          <strong>(β) Πολυπλοκότητα.</strong> Κάθε κλήση κάνει σταθερή δουλειά
-          (μια σύγκριση/αντιμετάθεση) και τρεις αναδρομικές κλήσεις σε μέγεθος{' '}
-          <InlineMath>{'2n/3'}</InlineMath>:
+          <strong>(β) Πολυπλοκότητα.</strong> Κάθε κλήση: σταθερή δουλειά +
+          τρεις αναδρομικές σε μέγεθος <InlineMath>{'2n/3'}</InlineMath>:
         </p>
-        <BlockMath>{'T(n) = 3\\,T(2n/3) + O(1)'}</BlockMath>
+        <BlockMath>{'T(n) = 3\\,T(2n/3) + O(1).'}</BlockMath>
         <p>
-          Master Theorem με <InlineMath>{'a = 3,\\ b = 3/2'}</InlineMath>:{' '}
-          <InlineMath>{'n^{\\log_b a} = n^{\\log_{3/2} 3}'}</InlineMath>. Το{' '}
-          <InlineMath>{'f(n) = O(1)'}</InlineMath> είναι πολυωνυμικά μικρότερο →{' '}
-          <strong>περίπτωση 1</strong>:
+          Master Theorem με <InlineMath>{'a=3, b=3/2'}</InlineMath>:{' '}
+          <InlineMath>{'n^{\\log_{3/2} 3} \\approx n^{2{,}71}'}</InlineMath>. Το{' '}
+          <InlineMath>{'f = O(1)'}</InlineMath> είναι πολυωνυμικά μικρότερο →
+          Περίπτωση 1:
         </p>
-        <BlockMath>{'T(n) = \\Theta\\!\\left(n^{\\log_{3/2} 3}\\right) \\approx \\Theta(n^{2{,}71})'}</BlockMath>
+        <BlockMath>{'T(n) = \\Theta(n^{\\log_{3/2} 3}) \\approx \\Theta(n^{2{,}71}).'}</BlockMath>
         <p>
-          Δηλαδή η Stooge Sort είναι <em>χειρότερη</em> ακόμα και από την απλή
-          ταξινόμηση φυσαλίδας <InlineMath>{'\\Theta(n^2)'}</InlineMath> — εξ ου
-          και το όνομα. Η πολυπλοκότητα είναι ίδια σε κάθε περίπτωση (χειρότερη,
-          μέση, βέλτιστη συμπίπτουν).
+          Δηλαδή η Stooge Sort είναι <em>χειρότερη</em> και από την bubble{' '}
+          <InlineMath>{'\\Theta(n^2)'}</InlineMath> — εξ ου και το όνομα.
         </p>
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης — «D&amp;C δεν εγγυάται ταχύτητα».</strong> Όταν
+          βλέπεις «a αναδρομικές κλήσεις σε μέγεθος n/b», η πολυπλοκότητα
+          εξαρτάται κρίσιμα από τη σχέση{' '}
+          <InlineMath>{'a'}</InlineMath> vs <InlineMath>{'b'}</InlineMath>:
+          <ul>
+            <li>2T(n/2): n φύλλα → Θ(n log n) — γρήγορο.</li>
+            <li>3T(2n/3): n^{`{log_{3/2} 3}`} ≈ n^{`{2.71}`} φύλλα — αργό.</li>
+            <li>2T(n−1): 2ⁿ φύλλα — εκθετικό.</li>
+          </ul>
+          Όπως είδαμε στον Hanoi στο L03 — D&amp;C χωρίς «καλή» αναδρομή =
+          βλακεία. Το λόγο εκθέτη δίνει το{' '}
+          <InlineMath>{'\\log_{n_{old}/n_{new}}(a)'}</InlineMath>.
+        </Callout>
       </>
     ),
   },

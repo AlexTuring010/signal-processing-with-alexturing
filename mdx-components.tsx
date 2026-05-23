@@ -49,6 +49,19 @@ import { SplitRatioExplorer } from '@/components/viz/SplitRatioExplorer'
 import { HanoiAnimator } from '@/components/viz/HanoiAnimator'
 import { DecisionTreeLowerBound } from '@/components/viz/DecisionTreeLowerBound'
 import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
+import { RecurrenceSubstitution } from '@/components/viz/RecurrenceSubstitution'
+import { FastExponentiation } from '@/components/viz/FastExponentiation'
+import { OneZeroBinarySearch } from '@/components/viz/OneZeroBinarySearch'
+import { MissingTermBinarySearch } from '@/components/viz/MissingTermBinarySearch'
+import { RecurrenceTelescope } from '@/components/viz/RecurrenceTelescope'
+import { CharEquationLab } from '@/components/viz/CharEquationLab'
+import { InductionStepper } from '@/components/viz/InductionStepper'
+import { UnequalSplitGeometric } from '@/components/viz/UnequalSplitGeometric'
+import { StrengthenedGuess } from '@/components/viz/StrengthenedGuess'
+import { MasterTheoremExtended } from '@/components/viz/MasterTheoremExtended'
+import { DivideByNTrick } from '@/components/viz/DivideByNTrick'
+import { StoogeSortViz } from '@/components/viz/StoogeSortViz'
+import { BranchingContrast } from '@/components/viz/BranchingContrast'
 import { InversionCounter } from '@/components/viz/InversionCounter'
 import { InversionTypeExplorer } from '@/components/viz/InversionTypeExplorer'
 import { DominantColourBoard } from '@/components/viz/DominantColourBoard'
@@ -200,6 +213,19 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     HanoiAnimator,
     DecisionTreeLowerBound,
     RecurrenceClassifier,
+    RecurrenceSubstitution,
+    FastExponentiation,
+    OneZeroBinarySearch,
+    MissingTermBinarySearch,
+    RecurrenceTelescope,
+    CharEquationLab,
+    InductionStepper,
+    UnequalSplitGeometric,
+    StrengthenedGuess,
+    MasterTheoremExtended,
+    DivideByNTrick,
+    StoogeSortViz,
+    BranchingContrast,
     InversionCounter,
     InversionTypeExplorer,
     DominantColourBoard,
