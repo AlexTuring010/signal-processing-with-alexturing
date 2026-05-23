@@ -276,6 +276,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ cos(x) dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\cos(x)\\, dx = \\sin(x) + C'}</BlockMath>,
       },
       {
@@ -283,6 +284,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ sin(x) dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\sin(x)\\, dx = -\\cos(x) + C'}</BlockMath>,
       },
       {
@@ -290,6 +292,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (a + bx)ⁿ dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: (
           <BlockMath>{'\\int (a + bx)^{n}\\, dx = \\frac{(a + bx)^{n+1}}{b\\,(n + 1)} + C \\quad (n \\neq -1)'}</BlockMath>
         ),
@@ -299,6 +302,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ eˣ dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int e^{x}\\, dx = e^{x} + C'}</BlockMath>,
       },
       {
@@ -306,6 +310,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ ln(x) dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\ln(x)\\, dx = x\\,\\ln(x) - x + C'}</BlockMath>,
       },
       {
@@ -313,6 +318,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (1/x) dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\frac{1}{x}\\, dx = \\ln|x| + C'}</BlockMath>,
       },
       {
@@ -320,6 +326,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (1/cos²(x)) dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\frac{1}{\\cos^2(x)}\\, dx = \\tan(x) + C'}</BlockMath>,
       },
       {
@@ -327,6 +334,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (1/sin²(x)) dx',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\frac{1}{\\sin^2(x)}\\, dx = -\\cot(x) + C'}</BlockMath>,
       },
     ],

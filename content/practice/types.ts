@@ -215,6 +215,7 @@ export const SECTION_TITLES: Record<string, string> = {
   'reference/spectrum-conventions': 'Συμβάσεις φάσματος',
   'reference/fourier-pairs': 'Fourier pairs',
   'reference/trig-identities': 'Τριγωνομετρικές ταυτότητες',
+  'reference/integrals': 'Βασικά ολοκληρώματα',
   formulas: 'Τυπολόγιο',
   cheatsheet: 'Συνιστώμενη πινακίδα',
 }

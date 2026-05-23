@@ -42,18 +42,16 @@ Format:
        Source material: `Εργαστήριο_3Γραμμικά_συστήματα_συνεχούς_χρόνου.pdf`
        Notes: Page currently a 🚧 placeholder. Must add: numeric linearity / TI checks for several systems, `conv` usage in MATLAB and comparison to analytical solutions, cascade/parallel composition.
 
-- [ ] **Reference page for τυπολόγιο basic integrals**
-       Where it appears: implied across the site every time a topic page would otherwise inline general math
-       Where it should be fulfilled: `/reference/integrals`
-       Notes: Short page — mostly a clean mirror of the τυπολόγιο integrals section (∫cos, ∫sin, ∫(a+bx)ⁿ, ∫eˣ, ∫ln(x), ∫1/x, ∫1/cos², ∫1/sin²) so theory pages can link "from typology integral 3" instead of inlining. The trig identities sibling (originally bundled with this commitment) is now closed — see the fulfilled list.
-
-
-
 ---
 
 ## Fulfilled commitments
 
 (Move entries here when satisfied. Keep them for traceability.)
+
+- [x] **Reference page for τυπολόγιο basic integrals** (closed 2026-05-23)
+       Originally part of: bundled "Reference pages for trig identities, Fourier pairs, and integrals" commitment. The trig-identities and Fourier-pairs siblings were closed earlier in Phase 0 sub-tasks 6 and 8; integrals is the last and closes the original bundle entirely.
+       Fulfilled in: `/reference/integrals`
+       Notes: Clean τυπολόγιο mirror of all 8 basic integrals (∫cos, ∫sin, ∫(a+bx)ⁿ, ∫eˣ, ∫ln(x), ∫1/x, ∫1/cos², ∫1/sin²) so theory pages can link "από το τυπολόγιο, integral 3" instead of inlining. Each entry shown with a one-line antiderivative-check proof and a "where it shows up in SP" anchor where relevant. Includes a critical §4 "bridge" section on **∫cos² and ∫sin² over a period = T/2** — these are NOT directly in the τυπολόγιο but are derived in two lines from double-angle (typology) + ∫cos (typology), and they are the actual workhorse of every SP average-power calculation (P = A²/2). The bridge makes explicit that "not in typology" doesn't mean "must memorize" — it means "two lines of algebra from typology entries." Includes §3a explanation of the 1/b factor in ∫(a+bx)ⁿ (most-missed coefficient on FM phase integration) and §3b worked FM-phase-of-linear-message example. Three worked exercises: (i) cosine average power derived from typology entries without using P=A²/2, (ii) FM phase from linear ramp using ∫(a+bx)ⁿ with n=1, (iii) orthogonality-based power-sum for two cosines of different frequencies. Each typology entry in `FORMULA_SHEET` (int-cos, int-sin, int-power, int-exp, int-ln, int-one-over-x, int-sec-squared, int-csc-squared) now has `derivedIn: 'reference/integrals'`, so the "Δες παραγωγή" link on /formulas opens this page. `SECTION_TITLES` map updated with `reference/integrals` → 'Βασικά ολοκληρώματα'. **No new viz components** (these are pure algebra; the value is the prose anchoring + worked-example drill, same pattern as the trig-identities reference page). **This commitment closes Phase 0 of the SP rework** — Phase A (AM lecture deep-passes) opens next.
 
 - [x] **Reference page for trig identities** (closed 2026-05-23)
        Originally part of: bundled "Reference pages for trig identities, Fourier pairs, and integrals" commitment.

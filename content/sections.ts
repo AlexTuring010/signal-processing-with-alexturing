@@ -80,6 +80,12 @@ export const CHAPTERS: Chapter[] = [
         available: true,
         group: 'reference',
       },
+      {
+        slug: 'reference/integrals',
+        title: 'Βασικά ολοκληρώματα',
+        available: true,
+        group: 'reference',
+      },
     ],
   },
   {
