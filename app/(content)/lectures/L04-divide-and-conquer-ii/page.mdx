@@ -10,8 +10,8 @@ export const frontmatter = {
   order: 4,
   prerequisites: ['lectures/L03-divide-and-conquer-i'],
   examWeight: 6,
-  estimatedReadTime: 42,
-  lastUpdated: '2026-05-22',
+  estimatedReadTime: 52,
+  lastUpdated: '2026-05-23',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -23,7 +23,7 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   <span>·</span>
   <span>Διάλεξη 4</span>
   <span>·</span>
-  <span>~42 min</span>
+  <span>~52 min</span>
 </div>
 
 # L04 · D&C II — Inversions, Dominant Colour &amp; Karatsuba
@@ -37,7 +37,7 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <SourceDoc
   sources={{ pdf: 'L04 - Διαίρει και Κυρίευε ΙΙ (Μέτρηση Αντιστροφών, Κυρίαρχο Χρώμα και Πολλαπλασιασμός).pdf' }}
-  note="92 διαφάνειες — οι πρώτες επαναλαμβάνουν το Master Theorem από το L03, και οι υπόλοιπες καλύπτουν τα τρία προβλήματα αυτής της σελίδας."
+  note="92 σελίδες (pdfinfo) — οι πρώτες επαναλαμβάνουν το Master Theorem από το L03, και οι υπόλοιπες καλύπτουν τα τρία προβλήματα αυτής της σελίδας."
 />
 
 ## Τι θα δούμε
@@ -181,43 +181,17 @@ $$
 
 ### Η ιδέα D&C: τρία είδη αντιστροφών
 
-Εφαρμόζουμε το σχήμα του L03. **Σπάμε** τον πίνακα στη μέση, σε ένα αριστερό μισό $A_1$ κι ένα δεξί $A_2$. Τώρα κάθε αντιστροφή — κάθε ζευγάρι $(i,j)$ — ανήκει υποχρεωτικά σε **ένα ακριβώς** από τρία είδη, ανάλογα με το πού πέφτουν οι δύο θέσεις:
+Εφαρμόζουμε το σχήμα του L03. **Σπάμε** τον πίνακα στη μέση, σε ένα αριστερό μισό $A_1$ κι ένα δεξί $A_2$. Τώρα κάθε αντιστροφή — κάθε ζευγάρι θέσεων $(i,j)$ — ανήκει υποχρεωτικά σε **ένα ακριβώς** από τρία είδη, ανάλογα με το πού πέφτουν οι δύο θέσεις:
 
-<div className="graph-canvas">
-<svg viewBox="0 0 720 260" className="w-full max-w-3xl" xmlns="http://www.w3.org/2000/svg">
-  <style>{`
-    .iv-title { font: 700 14px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
-    .iv-bar-l { fill: rgb(244 63 94 / 0.16); stroke: rgb(244 63 94); stroke-width: 1.5; }
-    .iv-bar-r { fill: rgb(56 189 248 / 0.16); stroke: rgb(56 189 248); stroke-width: 1.5; }
-    .iv-bar-txt { font: 700 16px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
-    .iv-arc-l { fill: none; stroke: rgb(244 63 94); stroke-width: 2; }
-    .iv-arc-r { fill: none; stroke: rgb(56 189 248); stroke-width: 2; }
-    .iv-arc-m { fill: none; stroke: rgb(var(--accent)); stroke-width: 2.5; }
-    .iv-lbl { font: 600 12px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
-    .iv-sub { font: 500 11px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
-    .iv-eq { font: 600 13px ui-monospace, monospace; fill: rgb(var(--accent)); text-anchor: middle; }
-  `}</style>
-  <text x="360" y="22" className="iv-title">Κάθε αντιστροφή ανήκει σε ΕΝΑ από τρία είδη</text>
-  {/* arcs within halves */}
-  <path d="M 120 112 Q 235 50 350 112" className="iv-arc-l" />
-  <path d="M 370 112 Q 485 50 600 112" className="iv-arc-r" />
-  <text x="235" y="44" className="iv-lbl">① και οι δύο θέσεις στο A₁</text>
-  <text x="235" y="90" className="iv-sub">→ λύνεται αναδρομικά</text>
-  <text x="485" y="44" className="iv-lbl">② και οι δύο θέσεις στο A₂</text>
-  <text x="485" y="90" className="iv-sub">→ λύνεται αναδρομικά</text>
-  {/* the bar */}
-  <rect x="80" y="112" width="280" height="44" className="iv-bar-l" />
-  <rect x="360" y="112" width="280" height="44" className="iv-bar-r" />
-  <text x="220" y="140" className="iv-bar-txt">A₁</text>
-  <text x="500" y="140" className="iv-bar-txt">A₂</text>
-  {/* mixed arc below */}
-  <path d="M 250 156 Q 360 230 470 156" className="iv-arc-m" />
-  <text x="360" y="196" className="iv-sub">→ γραμμική σάρωση (merge-and-count)</text>
-  <text x="360" y="250" className="iv-lbl">③ μία θέση στο A₁, μία στο A₂ — «μικτές»</text>
-</svg>
-</div>
+- **① μέσα στο $A_1$**: και οι δύο θέσεις στο αριστερό μισό.
+- **② μέσα στο $A_2$**: και οι δύο θέσεις στο δεξί μισό.
+- **③ μικτές**: μία θέση στο $A_1$, μία στο $A_2$.
 
-Αυτή η διάσπαση είναι **ακριβής** — κάθε ζευγάρι μετριέται σε ένα και μόνο ένα είδος. Άρα:
+Δες το να συμβαίνει σε έναν πραγματικό πίνακα. Πάτα **Επόμενο** και θα διατρέξεις και τα 28 δυνατά ζευγάρια — κάθε ένα θα προσγειωθεί σε ακριβώς ένα από τα τρία είδη, και οι τρεις μετρητές θα κρατούν παράλληλα τα δικά τους ποσά:
+
+<InversionTypeExplorer />
+
+Η διάσπαση είναι **ακριβής**: κάθε ζευγάρι έπεσε σε ένα και μόνο ένα κουτί, και τα τρία κουτιά αθροισμένα δίνουν ΟΛΕΣ τις αντιστροφές. Άρα:
 
 $$
 \text{σύνολο} \;=\; \underbrace{(\text{μέσα στο } A_1)}_{\text{αναδρομή}} \;+\; \underbrace{(\text{μέσα στο } A_2)}_{\text{αναδρομή}} \;+\; \underbrace{(\text{μικτές})}_{?}
@@ -382,49 +356,27 @@ $$
 
 <Callout type="key">
 **Παρατήρηση-κλειδί.** Αν η ολόκληρη σκακιέρα έχει κυρίαρχο χρώμα $c$, τότε το $c$ είναι κυρίαρχο σε **τουλάχιστον μία** από τις 4 υποσκακιέρες.
+</Callout>
 
-**Απόδειξη (με απαγωγή σε άτοπο).** Έστω ότι το $c$ είναι κυρίαρχο στη μεγάλη σκακιέρα — εμφανίζεται $> n^2/2$ φορές. Υπόθεσε, για άτοπο, ότι **δεν** είναι κυρίαρχο σε **καμία** υποσκακιέρα. Τότε σε κάθε μία εμφανίζεται **το πολύ** τις μισές φορές, δηλαδή $\le \tfrac{1}{2}\left(\tfrac{n}{2}\right)^2$. Αθροίζοντας και τις τέσσερις:
+Η παρατήρηση ακούγεται «προφανής» — δεν είναι. Λέει κάτι πολύ συγκεκριμένο: ένα χρώμα δεν μπορεί να έχει διάσπαρτη πλειοψηφία σε όλη τη σκακιέρα *χωρίς* να συγκεντρώνεται κάπου. Πριν την αποδείξουμε με μολύβι, παίξε με τους τέσσερις slider — καθένας ανεβάζει πόσες φορές εμφανίζεται το κόκκινο σε ένα τεταρτημόριο, **κλειδωμένο** στο «όχι κυρίαρχο εδώ» (δηλαδή το πολύ $\tfrac{1}{2}(\tfrac{n}{2})^2$). Σπρώξε τους όλους στο μέγιστο και κοίτα το συνολικό μετρητή:
+
+<DominantColourProof />
+
+Τι μόλις είδες: όσο και να σπρώξεις τους τέσσερις slider, το σύνολο δεν φτάνει ποτέ το $n^2/2 + 1$. Επομένως αν το $c$ ήταν κυρίαρχο στη μεγάλη σκακιέρα (δηλαδή $> n^2/2$ εμφανίσεις), τότε **δεν γίνεται** να μην κυριαρχεί σε *τουλάχιστον ένα* τεταρτημόριο. Σε μαθηματικά:
 
 $$
 4 \cdot \frac{1}{2}\left(\frac{n}{2}\right)^2 = 4 \cdot \frac{n^2}{8} = \frac{n^2}{2}
 $$
 
-Άρα το $c$ θα εμφανιζόταν συνολικά **το πολύ** $n^2/2$ φορές — αντίφαση με το ότι εμφανίζεται $> n^2/2$. Άρα κάποια υποσκακιέρα **πρέπει** να το έχει ως κυρίαρχο. $\blacksquare$
-</Callout>
+— το αριστερό μέρος είναι το «πάνω όριο αν δεν κυριαρχεί πουθενά», το δεξί είναι το «κατώφλι κυριαρχίας»: ίσα. Άρα αν θέλεις *αυστηρά* $> n^2/2$, τουλάχιστον ένας slider πρέπει να σπάσει το όριο — δηλαδή να κυριαρχήσει σε κάποιο τεταρτημόριο. $\blacksquare$
 
 Η συνέπεια είναι καθοριστική: οι **μόνοι** πιθανοί υποψήφιοι για κυρίαρχο της μεγάλης σκακιέρας είναι τα (το πολύ) **4 χρώματα** που γυρίζουν οι 4 αναδρομικές κλήσεις. Δεν χρειάζεται να σκεφτούμε κανένα άλλο.
 
-<div className="graph-canvas">
-<svg viewBox="0 0 560 312" className="w-full max-w-xl" xmlns="http://www.w3.org/2000/svg">
-  <style>{`
-    .dc-title { font: 700 13px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
-    .dc-sq { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--border-strong)); stroke-width: 1.5; }
-    .dc-sz { font: 600 12px ui-monospace, monospace; fill: rgb(var(--fg-muted)); text-anchor: middle; }
-    .dc-ci { font: 700 13px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
-    .dc-arrow { stroke: rgb(var(--fg-subtle)); stroke-width: 1.5; fill: none; }
-    .dc-res { fill: rgb(var(--accent) / 0.1); stroke: rgb(var(--accent)); stroke-width: 1.5; }
-    .dc-res-txt { font: 600 12px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
-  `}</style>
-  <text x="280" y="22" className="dc-title">Σπάσε σε 4 — κάθε τεταρτημόριο δίνει 1 υποψήφιο</text>
-  {[
-    { x: 152, y: 44, c: 'c₁', fill: 'rgb(244 63 94)' },
-    { x: 288, y: 44, c: 'c₂', fill: 'rgb(56 189 248)' },
-    { x: 152, y: 156, c: 'c₃', fill: 'rgb(250 204 21)' },
-    { x: 288, y: 156, c: 'c₄', fill: 'rgb(52 211 153)' },
-  ].map((q) => (
-    <g key={q.c}>
-      <rect x={q.x} y={q.y} width="120" height="96" className="dc-sq" />
-      <text x={q.x + 60} y={q.y + 38} className="dc-sz">n/2 × n/2</text>
-      <circle cx={q.x + 48} cy={q.y + 62} r="9" fill={q.fill} />
-      <text x={q.x + 72} y={q.y + 66} className="dc-ci">{q.c}</text>
-    </g>
-  ))}
-  <line x1="280" y1="252" x2="280" y2="268" className="dc-arrow" />
-  <path d="M 274 262 L 280 270 L 286 262" className="dc-arrow" />
-  <rect x="96" y="270" width="368" height="34" rx="6" className="dc-res" />
-  <text x="280" y="291" className="dc-res-txt">Υποψήφιοι: μόνο c₁, c₂, c₃, c₄ — μέτρα καθένα σε O(n²)</text>
-</svg>
-</div>
+### Δες τον αλγόριθμο να τρέχει
+
+Στη σκακιέρα παρακάτω, διάλεξε ένα από τα τρία σενάρια (ή πάτα «Ζωγράφισε» και φτιάξε δικό σου χρωματισμό), και πάτα **Επόμενο** για να σπάσει σε 4 τεταρτημόρια, να βγάλει αναδρομικά τους ≤ 4 υποψήφιους, να μετρήσει το καθένα σε ολόκληρη τη σκακιέρα, και να εκδώσει ετυμηγορία. Πρόσεξε ότι στο σενάριο «Σφιχτό 8 vs 8», 8 κόκκινα **δεν** είναι κυρίαρχα — η ανισότητα είναι αυστηρά μεγαλύτερο, όχι μεγαλύτερο-ή-ίσο:
+
+<DominantColourBoard />
 
 Για κάθε ένα από αυτά τα (το πολύ) 4 χρώματα, μετράμε σε **ολόκληρη** τη σκακιέρα πόσες φορές εμφανίζεται — ένα πέρασμα $O(n^2)$ το καθένα. Τέσσερα περάσματα → $O(4 n^2) = O(n^2)$ συνολικός χρόνος συνδυασμού.
 
@@ -549,11 +501,17 @@ $$T(n) = O(n^{\log_2 4}) = O(n^2)$$
 **Δεν κερδίσαμε τίποτα.** $O(n^2)$ — ακριβώς ίδια πολυπλοκότητα με τον σχολικό τρόπο. Το σκέτο «σπάσε στη μέση» δεν αρκεί: με **4** αναδρομικές κλήσεις, το δέντρο αναδρομής πληθαίνει πολύ γρήγορα και τα φύλλα κυριαρχούν. Χρειαζόμαστε λιγότερες κλήσεις.
 </Callout>
 
+«Πληθαίνει πολύ γρήγορα» δεν είναι σχήμα λόγου — είναι αυτό που βλέπεις παρακάτω. Στα αριστερά, το δέντρο της αφελούς διάσπασης ($a = 4$): κάθε κόμβος γεννά 4 παιδιά, οπότε σε κάθε επίπεδο τα υποπροβλήματα τετραπλασιάζονται. Στα δεξιά, το δέντρο που θα φτιάξουμε σε λίγο ($a = 3$). Πάτα **Παίξε** και άσε τα δύο επίπεδα να γεμίσουν παράλληλα — στο τελευταίο επίπεδο, μεταξύ των δύο δέντρων ανοίγει ένας πραγματικά τεράστιος λόγος:
+
+<RecursionTreeBranching />
+
+Με μία μόνο λιγότερη αναδρομική κλήση ανά κόμβο (4 → 3), το πλήθος φύλλων πέφτει από $4^{\log n} = n^2$ σε $3^{\log n} = n^{\log_2 3} \approx n^{1.585}$ — και τα φύλλα κυβερνούν τη συνολική δουλειά. Όλο το ζητούμενο, λοιπόν, είναι: **πώς γίνεται 3 αντί για 4;**
+
 ### Το έξυπνο τρικ του Karatsuba (1962)
 
 Κοίτα ξανά τι θέλουμε από τον τύπο: τρεις ποσότητες — το $\alpha\gamma$, το $\beta\delta$, και το **μεσαίο** $\alpha\delta + \beta\gamma$. Αν καταφέρναμε να τις βρούμε με **τρεις** αντί για τέσσερις πολλαπλασιασμούς, η αναδρομή θα γινόταν $T(n) = 3T(n/2) + O(n)$ — και, όπως θα δούμε, αυτό αλλάζει τα πάντα.
 
-Το $\alpha\gamma$ και το $\beta\delta$ τα θέλουμούμε ούτως ή άλλως — δύο πολλαπλασιασμοί. Το πρόβλημα είναι το μεσαίο $\alpha\delta + \beta\gamma$, που μοιάζει να απαιτεί δύο ακόμη. Το κόλπο: ξεκίνα από το γινόμενο των αθροισμάτων.
+Το $\alpha\gamma$ και το $\beta\delta$ τα θέλουμε ούτως ή άλλως — αυτά είναι δύο από τους τρεις πολλαπλασιασμούς. Το πρόβλημα είναι το **μεσαίο** $\alpha\delta + \beta\gamma$, που μοιάζει να απαιτεί δύο ακόμη πολλαπλασιασμούς ($\alpha\delta$ και $\beta\gamma$ ξεχωριστά). Το κόλπο: ξεκίνα από το γινόμενο των αθροισμάτων και άσε την άλγεβρα να σου χαρίσει το μεσαίο.
 
 $$
 (\alpha + \beta)(\gamma + \delta) = \alpha\gamma + \alpha\delta + \beta\gamma + \beta\delta
@@ -580,6 +538,10 @@ $$
 <Callout type="intuition">
 **Τι μόλις έγινε.** «Αγοράσαμε» το μεσαίο γινόμενο **χωρίς** να πληρώσουμε έναν τέταρτο πολλαπλασιασμό — το πληρώσαμε με μερικές **προσθέσεις και αφαιρέσεις**, που κοστίζουν μόνο $O(n)$, δηλαδή ασήμαντα μπροστά σε έναν πολλαπλασιασμό. Ανταλλάσσουμε μια ακριβή πράξη με τρεις φθηνές. Η ίδια ιδέα ανήκει στον Gauss, που την είχε χρησιμοποιήσει για να πολλαπλασιάζει μιγαδικούς αριθμούς με 3 αντί για 4 πολλαπλασιασμούς· ο Karatsuba την έφερε στους ακεραίους το 1962.
 </Callout>
+
+Δες την ταυτότητα να γίνεται αριθμοί. Στο πάνω επίπεδο της αναδρομής για $1357 \cdot 2468$, ο Karatsuba σπάει σε $\alpha=13, \beta=57, \gamma=24, \delta=68$, κάνει **3** πολλαπλασιασμούς ($z_1, z_2, z_3$), και τραβάει το μεσαίο ως απλή αφαίρεση. Πάτα **Επόμενο** και πρόσεξε τη στιγμή του ελέγχου ταυτότητας — όπου ο τύπος $\alpha\delta + \beta\gamma$ (αφελής, με 2 πολλαπλασιασμούς) γίνεται $z_3 - z_1 - z_2$ (μία αφαίρεση) και τα δύο νούμερα ταιριάζουν:
+
+<KaratsubaStep />
 
 ### Ο αλγόριθμος Karatsuba
 
@@ -611,37 +573,6 @@ $$
 />
 
 </Algorithm>
-
-<div className="graph-canvas">
-<svg viewBox="0 0 700 280" className="w-full max-w-3xl" xmlns="http://www.w3.org/2000/svg">
-  <style>{`
-    .knode { fill: rgb(var(--bg-elevated)); stroke: rgb(var(--border-strong)); stroke-width: 1.5; }
-    .kroot { fill: rgb(244 63 94 / 0.16); stroke: rgb(244 63 94); stroke-width: 2; }
-    .ktxt { font: 600 13px ui-sans-serif, system-ui; fill: rgb(var(--fg)); text-anchor: middle; }
-    .kann { font: 500 11px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
-    .kline { stroke: rgb(var(--fg-subtle)); stroke-width: 1.5; fill: none; }
-    .kcombine { font: 600 12px ui-sans-serif, system-ui; fill: rgb(var(--fg-muted)); text-anchor: middle; }
-    .kformula { font: 700 13px ui-monospace, monospace; fill: rgb(var(--accent)); text-anchor: middle; }
-  `}</style>
-  <rect x="270" y="20" width="160" height="50" rx="6" className="knode kroot" />
-  <text x="350" y="42" className="ktxt">x · y</text>
-  <text x="350" y="60" className="kann">n ψηφία</text>
-  <line x1="320" y1="70" x2="120" y2="128" className="kline" />
-  <line x1="350" y1="70" x2="350" y2="128" className="kline" />
-  <line x1="380" y1="70" x2="580" y2="128" className="kline" />
-  <rect x="40" y="128" width="160" height="50" rx="6" className="knode" />
-  <text x="120" y="150" className="ktxt">z₁ = α · γ</text>
-  <text x="120" y="168" className="kann">n/2 ψηφία</text>
-  <rect x="270" y="128" width="160" height="50" rx="6" className="knode" />
-  <text x="350" y="150" className="ktxt">z₂ = β · δ</text>
-  <text x="350" y="168" className="kann">n/2 ψηφία</text>
-  <rect x="500" y="128" width="160" height="50" rx="6" className="knode" />
-  <text x="580" y="150" className="ktxt">z₃ = (α+β)(γ+δ)</text>
-  <text x="580" y="168" className="kann">~n/2 ψηφία</text>
-  <text x="350" y="214" className="kcombine">Combine: O(n) προσθέσεις, αφαιρέσεις, μετατοπίσεις</text>
-  <text x="350" y="244" className="kformula">x · y = z₁·10ⁿ + (z₃ − z₁ − z₂)·10^(n/2) + z₂</text>
-</svg>
-</div>
 
 ### Πολυπλοκότητα
 

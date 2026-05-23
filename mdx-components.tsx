@@ -38,6 +38,11 @@ import { HanoiAnimator } from '@/components/viz/HanoiAnimator'
 import { DecisionTreeLowerBound } from '@/components/viz/DecisionTreeLowerBound'
 import { RecurrenceClassifier } from '@/components/viz/RecurrenceClassifier'
 import { InversionCounter } from '@/components/viz/InversionCounter'
+import { InversionTypeExplorer } from '@/components/viz/InversionTypeExplorer'
+import { DominantColourBoard } from '@/components/viz/DominantColourBoard'
+import { DominantColourProof } from '@/components/viz/DominantColourProof'
+import { KaratsubaStep } from '@/components/viz/KaratsubaStep'
+import { RecursionTreeBranching } from '@/components/viz/RecursionTreeBranching'
 import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
 import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
 import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
@@ -149,6 +154,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     DecisionTreeLowerBound,
     RecurrenceClassifier,
     InversionCounter,
+    InversionTypeExplorer,
+    DominantColourBoard,
+    DominantColourProof,
+    KaratsubaStep,
+    RecursionTreeBranching,
     ClosestPairScan,
     GraphRepresentations,
     BipartiteChecker,
