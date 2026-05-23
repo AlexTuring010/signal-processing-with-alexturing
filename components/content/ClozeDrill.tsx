@@ -144,43 +144,57 @@ export function ClozeDrill({
             }
             const ok = checked?.[p.blank]
             const inputSize = p.size ?? Math.max(3, p.accept[0]?.length ?? 4)
+            // When solution is revealed, show the canonical answer (accept[0])
+            // in read-only mode with a distinct amber style so it's clear this
+            // is the answer-from-solution, not the user's correct attempt.
+            const displayValue = revealed
+              ? (p.accept[0] ?? '')
+              : (values[p.blank] ?? '')
             return (
               <span key={i} className="inline-flex items-center gap-1">
                 <input
                   type="text"
-                  value={values[p.blank] ?? ''}
+                  value={displayValue}
                   onChange={(e) => setValue(p.blank, e.target.value)}
                   size={inputSize}
                   placeholder={p.hint ?? '?'}
                   aria-label={p.hint ?? `Κενό ${i + 1}`}
+                  readOnly={revealed}
                   className={cn(
                     'rounded border bg-bg px-1.5 py-0.5 text-center font-mono text-[0.95em] outline-none transition',
-                    ok === true
-                      ? 'border-success/60 bg-success/10 text-success'
-                      : ok === false
-                        ? 'border-rose-400/60 bg-rose-400/10'
-                        : 'border-border focus:border-accent',
+                    revealed
+                      ? 'border-dashed border-amber-400/70 bg-amber-400/10 text-amber-800 dark:text-amber-200'
+                      : ok === true
+                        ? 'border-success/60 bg-success/10 text-success'
+                        : ok === false
+                          ? 'border-rose-400/60 bg-rose-400/10'
+                          : 'border-border focus:border-accent',
                   )}
                   autoComplete="off"
                   spellCheck={false}
                 />
-                {ok === true && (
+                {!revealed && ok === true && (
                   <Check className="h-3.5 w-3.5 text-success" aria-hidden="true" />
                 )}
-                {ok === false && (
+                {!revealed && ok === false && (
                   <X className="h-3.5 w-3.5 text-rose-500" aria-hidden="true" />
                 )}
               </span>
             )
           })}
         </div>
+        {revealed && (
+          <p className="mt-2 text-[11px] font-medium uppercase tracking-wider text-amber-700 dark:text-amber-300">
+            Λύση — τα κενά γέμισαν αυτόματα. «Κρύψε λύση» για επιστροφή στην προσπάθειά σου.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center gap-2 px-4 pb-4 pt-3">
         <button
           type="button"
           onClick={check}
-          disabled={blanks.length === 0}
+          disabled={blanks.length === 0 || revealed}
           className="inline-flex items-center gap-1.5 rounded-md border border-accent/40 bg-accent-soft/40 px-3 py-1.5 text-sm font-medium transition hover:bg-accent-soft/60 disabled:opacity-50"
         >
           <Check className="h-3.5 w-3.5" aria-hidden="true" />
@@ -194,20 +208,19 @@ export function ClozeDrill({
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           Άδειασε
         </button>
-        {solution && (
-          <button
-            type="button"
-            onClick={() => setRevealed((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted transition hover:border-fg-muted/40 hover:text-fg"
-            aria-expanded={revealed}
-          >
-            {revealed ? 'Κρύψε λύση' : 'Δες λύση'}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setRevealed((v) => !v)}
+          disabled={blanks.length === 0}
+          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm text-fg-muted transition hover:border-fg-muted/40 hover:text-fg disabled:opacity-50"
+          aria-expanded={revealed}
+        >
+          {revealed ? 'Κρύψε λύση' : 'Δες λύση'}
+        </button>
       </div>
 
       {revealed && solution && (
-        <div className="border-t border-border bg-bg px-4 py-3 text-[0.95rem] leading-relaxed">
+        <div className="border-t border-amber-400/30 bg-amber-50/50 px-4 py-3 text-[0.95rem] leading-relaxed dark:bg-amber-400/5">
           {solution}
         </div>
       )}
