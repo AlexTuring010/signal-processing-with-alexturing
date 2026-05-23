@@ -94,6 +94,16 @@ export const FORMULA_SHEET: FormulaSection[] = [
         ),
       },
       {
+        id: 'fourier-pair-const-delta',
+        title: 'Σταθερά ↔ δ(f) (και η δυϊκότητα δ(t) ↔ 1)',
+        topic: 'foundations',
+        inTypology: true,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <BlockMath>{'1 \\;\\leftrightarrow\\; \\delta(f) \\quad,\\quad \\delta(t) \\;\\leftrightarrow\\; 1'}</BlockMath>
+        ),
+      },
+      {
         id: 'fourier-scaling',
         title: 'Scaling',
         topic: 'foundations',

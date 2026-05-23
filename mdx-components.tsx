@@ -68,6 +68,11 @@ import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
 import { CounterRotatingPhasors } from '@/components/viz/CounterRotatingPhasors'
 import { TwoSidedVsOneSidedCosine } from '@/components/viz/TwoSidedVsOneSidedCosine'
+import { TriToSincSquaredViz } from '@/components/viz/TriToSincSquaredViz'
+import { CosineFrequencyPairViz } from '@/components/viz/CosineFrequencyPairViz'
+import { SineFrequencyPairViz } from '@/components/viz/SineFrequencyPairViz'
+import { SgnToInversePiFViz } from '@/components/viz/SgnToInversePiFViz'
+import { ConstantDeltaDualityViz } from '@/components/viz/ConstantDeltaDualityViz'
 import { AMFamilySpectra } from '@/components/viz/AMFamilySpectra'
 import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
@@ -189,6 +194,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ModulationTheoremViz,
     TransformPairsGallery,
     ConvolutionInFrequency,
+
+    // Visualizations — reference / fourier-pairs
+    TriToSincSquaredViz,
+    CosineFrequencyPairViz,
+    SineFrequencyPairViz,
+    SgnToInversePiFViz,
+    ConstantDeltaDualityViz,
 
     // Visualizations — reference / spectrum-conventions
     CounterRotatingPhasors,

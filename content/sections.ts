@@ -68,6 +68,12 @@ export const CHAPTERS: Chapter[] = [
         available: true,
         group: 'reference',
       },
+      {
+        slug: 'reference/fourier-pairs',
+        title: 'Fourier pairs — πινακοθήκη',
+        available: true,
+        group: 'reference',
+      },
     ],
   },
   {

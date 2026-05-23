@@ -42,10 +42,10 @@ Format:
        Source material: `Εργαστήριο_3Γραμμικά_συστήματα_συνεχούς_χρόνου.pdf`
        Notes: Page currently a 🚧 placeholder. Must add: numeric linearity / TI checks for several systems, `conv` usage in MATLAB and comparison to analytical solutions, cascade/parallel composition.
 
-- [ ] **Reference pages for trig identities, Fourier pairs, and integrals**
+- [ ] **Reference pages for trig identities and integrals**
        Where it appears: implied across the site every time a topic page would otherwise inline general math
-       Where it should be fulfilled: `/reference/trig-identities`, `/reference/fourier-pairs`, `/reference/integrals`
-       Notes: We started the pattern with `/foundations/signal-transformations` and `/reference/complex-numbers` — general math = reference page, topic-specific application = topic page. As later chapters need product-to-sum trig identities (modulation chapters lean on these constantly), the canonical Fourier pairs from the typology, or the integrals from the typology, build the corresponding reference page and link instead of inlining.
+       Where it should be fulfilled: `/reference/trig-identities`, `/reference/integrals`
+       Notes: We started the pattern with `/foundations/signal-transformations` and `/reference/complex-numbers` — general math = reference page, topic-specific application = topic page. As later chapters need product-to-sum trig identities (modulation chapters lean on these constantly), or the integrals from the typology, build the corresponding reference page and link instead of inlining. The Fourier-pairs companion (originally bundled with this commitment) is now closed — see the fulfilled list.
 
 
 
@@ -54,6 +54,11 @@ Format:
 ## Fulfilled commitments
 
 (Move entries here when satisfied. Keep them for traceability.)
+
+- [x] **Reference page for Fourier pairs** (closed 2026-05-23)
+       Originally part of: bundled "Reference pages for trig identities, Fourier pairs, and integrals" commitment.
+       Fulfilled in: `/reference/fourier-pairs`
+       Notes: Six pair sections (rect↔sinc, τρίγωνο↔sinc², cos↔impulses, sin↔impulses, sgn↔1/(jπf), σταθερά↔δ) with a bespoke drag-and-watch viz per pair. Each section deep-links to the matching `/formulas#formula:fourier-pair-…` entry. Added a missing `fourier-pair-const-delta` entry to `FORMULA_SHEET` so the σταθερά↔δ card has a real entry to link to (was flagged as missing in `[[sp-reference-design]]` τυπολόγιο ground truth). The page also closes the visual-gallery promise from `CLAUDE.md` line 181 ("`/formulas` has interactive expansions e.g. tap a Fourier pair to see a derivation/visualization") for the Fourier-pair surface. Trig identities and integrals reference pages remain open.
 
 - [x] **Convolution definition and the connection to δ(t)**
        Originally appeared: `/foundations/signals` section 4g

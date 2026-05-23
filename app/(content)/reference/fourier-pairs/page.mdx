@@ -1,0 +1,381 @@
+export const metadata = {
+  title: 'Fourier pairs — Πινακοθήκη με drag-it-yourself παραδείγματα',
+  description:
+    'Έξι «πρωταγωνιστές» Fourier pairs του τυπολογίου, με ζωντανά viz: rect↔sinc, τρίγωνο↔sinc², cos↔impulses, sin↔impulses, sgn↔1/(jπf), σταθερά↔δ. Κάθε pair έχει drag-and-watch interactive και link στο /τυπολόγιο.',
+}
+
+export const frontmatter = {
+  title: 'Fourier pairs — Πινακοθήκη με drag-it-yourself παραδείγματα',
+  slug: 'reference/fourier-pairs',
+  order: 96,
+  prerequisites: ['foundations/fourier-transform'],
+  examWeight: 5,
+  estimatedReadTime: 14,
+  lastUpdated: '2026-05-23',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Foundations · Reference</span>
+  <span>·</span>
+  <span>~14 min read</span>
+</div>
+
+# Fourier pairs — Πινακοθήκη με drag-it-yourself παραδείγματα
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="reference/fourier-pairs" />
+  <Bookmark id="reference/fourier-pairs" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<Callout type="note">
+  Σελίδα **αναφοράς** — όχι μέρος της κύριας ροής. Έξι ζευγάρια Fourier transform που είναι **στο [τυπολόγιο](/slides/formulas.pdf)** σου δίνονται στην εξέταση. Εδώ τα ξαναβλέπεις με ζωντανό **drag-and-watch viz** και κάθε ζευγάρι κάνει deep-link στο αντίστοιχο entry στο [/formulas](/formulas) (mini-viz + παραγωγή + παλιά θέματα). Η λογική: στο τυπολόγιο διαβάζεις, εδώ **βλέπεις τι αλλάζει**.
+</Callout>
+
+Όλος ο Fourier transform είναι «κωδικοποίηση σε ταλαντώσεις». Όταν αλλάζει το σήμα, αλλάζει και το **σχήμα** της κωδικοποίησης. Αυτή η σελίδα δείχνει τα έξι ζευγάρια που ξαναεμφανίζονται **παντού** στο μάθημα — από τη συνέλιξη μέχρι την AM και τον θόρυβο — και τους δίνει ένα slider το καθένα ώστε να δεις τη συμμετρία time ↔ frequency να ενεργεί ζωντανά.
+
+<Callout type="key" title="Μία αρχή που διατρέχει όλη τη σελίδα">
+**Time-frequency duality.** Όσο πιο **συγκεντρωμένο** ένα σήμα στο ένα πεδίο, τόσο πιο **απλωμένο** είναι στο άλλο. Στενός παλμός ⇒ πλατύ φάσμα. Στενό φάσμα ⇒ πλατύ σήμα. Στο όριο: <span className="font-mono">δ</span> στο ένα πεδίο ⇒ <span className="font-mono">σταθερά</span> στο άλλο. Σύρε τα sliders παρακάτω και κοίτα τη συμμετρία να ζωντανεύει.
+</Callout>
+
+<span id="rect-sinc" />
+
+## 1. Rect ↔ sinc — ο «πρωταγωνιστής» πρώτος
+
+Ο ορθογώνιος παλμός <InlineMath>{'\\mathrm{rect}(t/T)'}</InlineMath> είναι το πιο απλό «σήμα συγκεντρωμένο στον χρόνο»: σταθερό ύψος <InlineMath>1</InlineMath> πάνω στο διάστημα <InlineMath>{'[-T/2, T/2]'}</InlineMath>, μηδέν αλλιώς. Όταν το πας στη συχνότητα παίρνεις τη **sinc**:
+
+$$
+\mathrm{rect}(t/T) \;\leftrightarrow\; T\,\mathrm{sinc}(fT)
+$$
+
+Παρατήρησε δύο πράγματα στο sinc:
+- Η **κεντρική κορυφή** στο <InlineMath>{'f = 0'}</InlineMath> έχει ύψος <InlineMath>T</InlineMath> — είναι η συνολική «επιφάνεια» του rect (αν περπατούσες τη σταθερή 1 σε όλο το rect, η αθροιστική συμβολή θα ήταν <InlineMath>T</InlineMath>).
+- Οι **μηδενισμοί** είναι στις <InlineMath>{'f = \\pm k/T'}</InlineMath> — στενός παλμός ⇒ μακρινοί μηδενισμοί ⇒ πλατύ φάσμα.
+
+<RectToSincViz />
+
+**Παραγωγή σε δύο γραμμές.**
+
+$$
+\int_{-T/2}^{T/2} e^{-j 2\pi f t}\,dt = \frac{\sin(\pi f T)}{\pi f} = T\,\mathrm{sinc}(fT)
+$$
+
+Πλήρης παραγωγή και συζήτηση είναι στο [/foundations/fourier-transform](/foundations/fourier-transform). Επιπλέον intuition + παλιά θέματα στο [/formulas#formula:fourier-pair-rect](/formulas#formula:fourier-pair-rect).
+
+<Callout type="intuition" title="Πού θα το ξαναδείς">
+- Στο **bandwidth** των ψηφιακών συμβόλων: ένα σύμβολο ζει σαν rect στον χρόνο, οπότε το φάσμα του είναι sinc → αλληλεπικάλυψη μεταξύ συμβόλων ([/foundations/filters](/foundations/filters)).
+- Στο **SSB** όπου το ιδανικό φίλτρο που «κόβει» τη μια πλευρά είναι rect στη συχνότητα → sinc στον χρόνο → μη αιτιατό.
+- Στο **windowing** σε φασματική ανάλυση — κάθε «κουτί» που κόβεις στο χρόνο φέρνει sinc convolutions στο φάσμα.
+</Callout>
+
+<span id="tri-sinc2" />
+
+## 2. Τρίγωνο ↔ sinc² — γιατί η sinc τετράγωνη
+
+Το τρίγωνο <InlineMath>{'\\Lambda(t/T)'}</InlineMath> είναι ένας ορθογώνιος **πιο smooth**: ύψος 1 στο <InlineMath>{'t = 0'}</InlineMath>, μηδέν στις <InlineMath>{'t = \\pm T'}</InlineMath>, γραμμικά ενδιάμεσα. Το ζευγάρι του είναι:
+
+$$
+\Lambda(t/T) \;\leftrightarrow\; T\,\mathrm{sinc}^2(fT)
+$$
+
+<TriToSincSquaredViz />
+
+**Γιατί το spectrum είναι ακριβώς το τετράγωνο του rect spectrum;** Γιατί το τρίγωνο είναι **το rect convolved με τον εαυτό του**:
+
+$$
+\Lambda(t/T) = \frac{1}{T}\,\mathrm{rect}(t/T) * \mathrm{rect}(t/T)
+$$
+
+Από το **convolution theorem**, convolution στον χρόνο γίνεται πολλαπλασιασμός στη συχνότητα. Δύο φορές ορθογώνιος → δύο φορές sinc → <InlineMath>{'\\mathrm{sinc} \\cdot \\mathrm{sinc} = \\mathrm{sinc}^2'}</InlineMath>. Και αφού ο πολλαπλασιασμός ενός πραγματικού αριθμού με τον εαυτό του δεν αλλάζει πρόσημο, **όλες οι πλευρικές γίνονται θετικές**.
+
+<Callout type="intuition" title="Δύο πιο smooth, ίσο με πιο γρήγορη απόσβεση φάσματος">
+Το rect spectrum πέφτει σαν <InlineMath>{'1/f'}</InlineMath> (sinc). Το τρίγωνο spectrum πέφτει σαν <InlineMath>{'1/f^2'}</InlineMath> (sinc²) — πιο γρήγορα. Γενικός κανόνας: όσο πιο smooth ένα σήμα στον χρόνο (περισσότερες συνεχείς παράγωγοι), τόσο πιο γρήγορα πέφτει το φάσμα του στις υψηλές συχνότητες. Θα ξαναεμφανιστεί στο [/foundations/filters](/foundations/filters) — οι «στρόγγυλες» κρουστικές αποκρίσεις φιλτράρουν καθαρότερα.
+</Callout>
+
+Deep-dive entry: [/formulas#formula:fourier-pair-tri](/formulas#formula:fourier-pair-tri).
+
+<span id="cos-impulses" />
+
+## 3. cos(2π f₀ t) ↔ ½[δ(f − f₀) + δ(f + f₀)]
+
+Ένα καθαρό cosine ζει σε **μία και μόνο** συχνότητα <InlineMath>{'f_0'}</InlineMath>. Αλλά ο Fourier transform «βλέπει» τα cosines σαν **άθροισμα δύο complex exponentials** (από Euler), οπότε στο φάσμα εμφανίζονται **δύο** κρούσεις: μία στη <InlineMath>{'+f_0'}</InlineMath> και μία στη <InlineMath>{'-f_0'}</InlineMath>.
+
+$$
+\cos(2\pi f_0 t) = \tfrac{1}{2}\bigl(e^{j 2\pi f_0 t} + e^{-j 2\pi f_0 t}\bigr)
+\;\;\Longrightarrow\;\;
+\cos(2\pi f_0 t) \;\leftrightarrow\; \tfrac{1}{2}[\delta(f - f_0) + \delta(f + f_0)]
+$$
+
+<CosineFrequencyPairViz />
+
+Το πλάτος μοιράζεται στα δύο: <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> σε κάθε πλευρά. **Real-and-even time signal** ⇒ **real-and-even spectrum** — γι' αυτό οι δύο κρούσεις είναι ταυτόσημες και συμμετρικές γύρω από το <InlineMath>{'f = 0'}</InlineMath>.
+
+<Callout type="warning" title="Μην μπερδέψεις το two-sided με one-sided">
+Στο two-sided φάσμα (αυτό που χρησιμοποιεί όλη η θεωρία FT) το cosine έχει **δύο** impulses ύψους <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>. Στο one-sided έχει **ένα** impulse ύψους **1**. Ίδιο σήμα, διαφορετική σύμβαση σχεδίασης. Λεπτομέρειες στο [/reference/spectrum-conventions](/reference/spectrum-conventions).
+</Callout>
+
+Deep-dive entry: [/formulas#formula:fourier-pair-cos](/formulas#formula:fourier-pair-cos).
+
+<span id="sin-impulses" />
+
+## 4. sin(2π f₀ t) ↔ (j/2)[δ(f + f₀) − δ(f − f₀)]
+
+Το sine είναι σαν το cosine αλλά καθυστερημένο κατά 90°. Στην Euler αναπαράσταση οι δύο phasors **αφαιρούνται** αντί να προστίθενται:
+
+$$
+\sin(2\pi f_0 t) = \tfrac{1}{2j}\bigl(e^{j 2\pi f_0 t} - e^{-j 2\pi f_0 t}\bigr)
+$$
+
+Το αποτέλεσμα στο φάσμα: ίδιες κρούσεις σε **μέτρο** (<InlineMath>{'\\tfrac{1}{2}'}</InlineMath> πάλι), αλλά με βάρη <InlineMath>{'\\pm 1/(2j) = \\mp j/2'}</InlineMath>. Δηλαδή:
+- <InlineMath>{'+j/2'}</InlineMath> στη <InlineMath>{'-f_0'}</InlineMath>
+- <InlineMath>{'-j/2'}</InlineMath> στη <InlineMath>{'+f_0'}</InlineMath>
+
+Το spectrum είναι **καθαρά imaginary** και **antisymmetric** — αντίγραφο του πρότυπου: **real-and-odd time signal ↔ imaginary-and-odd spectrum**.
+
+<SineFrequencyPairViz />
+
+<Callout type="intuition" title="Cosine vs sine — η ίδια ενέργεια, διαφορετική γωνία">
+Αν συγκρίνεις το cosine και το sine viz, το μέτρο των impulses είναι ίδιο (<InlineMath>{'\\tfrac{1}{2}'}</InlineMath> σε κάθε πλευρά). Διαφέρει η **φάση**: για το cosine η phase είναι 0 (real), για το sine η phase είναι <InlineMath>{'\\pm \\pi/2'}</InlineMath> (imaginary). Έτσι θα ξαναβρείς και τη σχέση time-shift ↔ phase shift: <InlineMath>{'\\cos'}</InlineMath> και <InlineMath>{'\\sin'}</InlineMath> διαφέρουν κατά time shift <InlineMath>{'T/4'}</InlineMath>, που είναι ακριβώς phase shift <InlineMath>{'-\\pi/2'}</InlineMath> πάνω στα impulses στο spectrum.
+</Callout>
+
+Deep-dive entry: [/formulas#formula:fourier-pair-sin](/formulas#formula:fourier-pair-sin).
+
+<span id="sgn-pair" />
+
+## 5. sgn(t) ↔ 1/(jπf) — η αλγεβρική απόσβεση 1/f
+
+Η σύμβαση: <InlineMath>{'\\mathrm{sgn}(t) = +1'}</InlineMath> για <InlineMath>{'t > 0'}</InlineMath>, <InlineMath>{'-1'}</InlineMath> για <InlineMath>{'t < 0'}</InlineMath>, <InlineMath>0</InlineMath> στο μηδέν. Έχει **άλμα 2** στο <InlineMath>{'t = 0'}</InlineMath> και δεν είναι integrable με τη συνηθισμένη έννοια — η FT υπάρχει σαν **distribution**:
+
+$$
+\mathrm{sgn}(t) \;\leftrightarrow\; \frac{1}{j\pi f}
+$$
+
+Το spectrum είναι **καθαρά imaginary**, **antisymmetric**, και πέφτει σαν <InlineMath>{'1/|f|'}</InlineMath>. Αυτή η αργή απόσβεση δείχνει ότι η ασυνέχεια κρατάει ενέργεια **σε όλες** τις συχνότητες — δεν μπορείς να αναπαραστήσεις ένα jump με λίγες χαμηλές συχνότητες, χρειάζεσαι ένα μακρύ tail.
+
+<SgnToInversePiFViz />
+
+**Γιατί είναι σημαντικό σε αυτό το μάθημα;** Επειδή το dual ζευγάρι (αν αλλάξεις τις θέσεις των δύο πεδίων με τη duality property)
+
+$$
+\frac{1}{\pi t} \;\leftrightarrow\; -j\,\mathrm{sgn}(f)
+$$
+
+είναι **ο πυρήνας του Hilbert transform** που χρησιμοποιείται σε όλη την SSB, στις pre-envelope expansions και στις I/Q αναλύσεις. Δες λεπτομερώς στο [/modulation/bridge](/modulation/bridge).
+
+<Callout type="key" title="«Πόσο γρήγορα πέφτει το φάσμα» = «πόσο smooth είναι το σήμα»">
+- <span className="font-mono">δ(t)</span> (απείρως «sharp») ⇒ φάσμα **flat** (πέφτει σαν <InlineMath>{'1/f^0'}</InlineMath>).
+- <span className="font-mono">sgn(t)</span> (άλμα) ⇒ <InlineMath>{'1/f'}</InlineMath>.
+- <span className="font-mono">rect</span> (jump σε ύψος, μετά flat) ⇒ <InlineMath>{'1/f'}</InlineMath> (sinc).
+- <span className="font-mono">Λ(τρίγωνο)</span> (continuous, γωνιά στην παράγωγο) ⇒ <InlineMath>{'1/f^2'}</InlineMath> (sinc²).
+- Gaussian (απείρως smooth) ⇒ άλλη Gaussian (εκθετική απόσβεση).
+
+Κάθε «βαθμίδα smoothness» κερδίζει ένα <InlineMath>{'1/f'}</InlineMath> στην απόσβεση του φάσματος.
+</Callout>
+
+Deep-dive entry: [/formulas#formula:fourier-pair-sgn](/formulas#formula:fourier-pair-sgn).
+
+<span id="const-delta" />
+
+## 6. Σταθερά ↔ δ(f) (και η δυϊκότητα δ(t) ↔ 1)
+
+Δύο ζευγάρια στο τυπολόγιο, αλλά μαθηματικά **είναι το ίδιο**:
+
+$$
+1 \;\leftrightarrow\; \delta(f) \quad,\quad \delta(t) \;\leftrightarrow\; 1
+$$
+
+Είναι οι **ακραίες** εκδοχές του time-frequency duality: ένα **τέλεια localized** σήμα στο ένα πεδίο (impulse) γίνεται **τέλεια flat** στο άλλο (constant), και αντίστροφα.
+
+<ConstantDeltaDualityViz />
+
+Δες πώς ο rect, καθώς απλώνει για να πιάσει όλο το χρονικό παράθυρο, πλησιάζει τη σταθερά 1 — και η sinc του στενεύει γύρω από το <InlineMath>{'f = 0'}</InlineMath>, πλησιάζοντας την κρούση <InlineMath>{'\\delta(f)'}</InlineMath>. Το ίδιο σχήμα **με τα πεδία ανάποδα** (στενός παλμός στον χρόνο → flat στη συχνότητα) δίνει το <InlineMath>{'\\delta(t) \\leftrightarrow 1'}</InlineMath>.
+
+<Callout type="intuition" title="Sifting property — γιατί η FT του δ(t) είναι 1">
+Από τον ορισμό του Fourier transform:
+
+$$
+\mathcal{F}\{\delta(t)\} = \int \delta(t)\, e^{-j 2\pi f t}\,dt = e^{-j 2\pi f \cdot 0} = 1
+$$
+
+Η sifting property του <InlineMath>{'\\delta'}</InlineMath> «τραβάει» την τιμή του <InlineMath>{'e^{-j 2\\pi f t}'}</InlineMath> στο <InlineMath>{'t = 0'}</InlineMath>, που είναι <InlineMath>1</InlineMath>. Για κάθε <InlineMath>f</InlineMath>. Έτσι το spectrum είναι **flat = 1 παντού**.
+</Callout>
+
+Deep-dive entry: [/formulas#formula:fourier-pair-const-delta](/formulas#formula:fourier-pair-const-delta).
+
+## Η βαθύτερη συμμετρία — duality
+
+Πρόσεξες ότι κάθε ζευγάρι που είδαμε μπορεί να «γυριστεί» αν αλλάξεις τις θέσεις των δύο πεδίων;
+
+| Pair | Dual |
+| --- | --- |
+| <InlineMath>{'\\mathrm{rect}(t/T) \\leftrightarrow T\\,\\mathrm{sinc}(fT)'}</InlineMath> | <InlineMath>{'\\mathrm{sinc}(t/T) \\leftrightarrow T\\,\\mathrm{rect}(fT)'}</InlineMath> |
+| <InlineMath>{'\\delta(t) \\leftrightarrow 1'}</InlineMath> | <InlineMath>{'1 \\leftrightarrow \\delta(f)'}</InlineMath> |
+| <InlineMath>{'\\mathrm{sgn}(t) \\leftrightarrow \\tfrac{1}{j\\pi f}'}</InlineMath> | <InlineMath>{'\\tfrac{1}{j\\pi t} \\leftrightarrow \\mathrm{sgn}(f)'}</InlineMath> (το dual <InlineMath>{'1/(\\pi t)'}</InlineMath> είναι ο πυρήνας του Hilbert) |
+| <InlineMath>{'\\cos(2\\pi f_0 t) \\leftrightarrow'}</InlineMath> impulses σε <InlineMath>{'\\pm f_0'}</InlineMath> | impulses σε <InlineMath>{'\\pm t_0'}</InlineMath> <InlineMath>{'\\leftrightarrow \\cos(2\\pi f t_0)'}</InlineMath> |
+
+Αυτή είναι η **duality property** του Fourier transform: αν <InlineMath>{'x(t) \\leftrightarrow X(f)'}</InlineMath>, τότε επίσης <InlineMath>{'X(t) \\leftrightarrow x(-f)'}</InlineMath>. Το μάθεις *ένα* ζευγάρι και ξέρεις και το άλλο **δωρεάν**.
+
+<Callout type="key" title="Time-frequency duality: ο μοναδικός κανόνας που χρειάζεσαι">
+Όσο πιο **localized** ένα σήμα σε ένα πεδίο, τόσο πιο **spread** είναι στο άλλο. Στενός παλμός ⇒ πλατύ φάσμα. Στενό φάσμα ⇒ πλατύ σήμα. Αυτή η αρχή κάθεται κάτω από το **Carson's rule** του FM, το **bandwidth efficiency** της SSB, και το **uncertainty principle** της φασματικής ανάλυσης.
+</Callout>
+
+## Συμμετρίες με μια ματιά
+
+Τα έξι ζευγάρια που είδαμε ταξινομούνται σε τρεις κατηγορίες:
+
+| Σήμα στον χρόνο | Spectrum |
+| --- | --- |
+| real-and-even (rect, τρίγωνο, cos, σταθερά, <InlineMath>{'\\delta'}</InlineMath>) | **real-and-even** |
+| real-and-odd (sin, sgn) | **imaginary-and-odd** |
+| general real (any of the above + a time shift) | **conjugate-symmetric:** <InlineMath>{'X(-f) = X^*(f)'}</InlineMath> |
+
+Αυτές οι τρεις γραμμές είναι όλη η θεωρία **conjugate symmetry** του Fourier transform σε ένα κουτί. Πλήρης ανάλυση στην [Section 8 του FT chapter](/foundations/fourier-transform#8-conjugate-symmetry-γιατί-τα-φάσματα-real-signals-είναι-συμμετρικά). Για τις συμβάσεις σχεδίασης (two-sided vs one-sided, τι κάνεις με τις αρνητικές συχνότητες), δες [/reference/spectrum-conventions](/reference/spectrum-conventions).
+
+## Εξάσκηση
+
+<ExerciseProgress slug="reference/fourier-pairs" total={7} />
+
+Επτά ερωτήσεις για να δοκιμάσεις αν τα ζευγάρια «κάθισαν». Μερικές είναι quick recognition («ποιο pair;»), μερικές απαιτούν συνδυασμό με properties.
+
+<ExamProblem id="recognize-rect-spectrum" year="Αναγνώριση" weight="quick">
+**Ερώτηση:** Ένα σήμα έχει spectrum <InlineMath>{'X(f) = 2\\,\\mathrm{sinc}(2f)'}</InlineMath>. Τι είναι το <InlineMath>{'x(t)'}</InlineMath>;
+
+<Example title="Λύση" defaultOpen={true}>
+Από <InlineMath>{'\\mathrm{rect}(t/T) \\leftrightarrow T\\,\\mathrm{sinc}(fT)'}</InlineMath> με <InlineMath>{'T = 2'}</InlineMath>:
+
+$$
+x(t) = \mathrm{rect}(t/2)
+$$
+
+Δηλαδή rect πλάτους 2 (διάστημα <InlineMath>{'[-1, 1]'}</InlineMath>), ύψος 1.
+
+**Έλεγχος:** Το peak του sinc στο <InlineMath>{'f = 0'}</InlineMath> είναι <InlineMath>{'X(0) = 2'}</InlineMath>, που είναι η επιφάνεια του rect. ✓ Ο πρώτος μηδενισμός είναι στο <InlineMath>{'f = \\pm 1/2'}</InlineMath>, που είναι <InlineMath>{'\\pm 1/T'}</InlineMath>. ✓
+</Example>
+</ExamProblem>
+
+<ExamProblem id="cos-shifted" year="Pair + property" weight="συνδυασμός">
+**Ερώτηση:** Βρες το spectrum του <InlineMath>{'y(t) = \\cos(2\\pi\\cdot 100\\, (t - 0.01))'}</InlineMath>.
+
+<Example title="Λύση" defaultOpen={true}>
+Δύο τρόποι, ίδιο αποτέλεσμα.
+
+**Α) Με Euler + time-shift property.**
+
+$$
+y(t) = \cos(2\pi\cdot 100\, t - 2\pi) = \cos(2\pi\cdot 100\, t)
+$$
+
+Αλλά γενικά για <InlineMath>{'\\cos(2\\pi f_0 (t - t_0))'}</InlineMath>: από time-shift <InlineMath>{'(t - t_0)'}</InlineMath>, το spectrum πολλαπλασιάζεται με <InlineMath>{'e^{-j 2\\pi f t_0}'}</InlineMath>. Στα δύο impulses στις <InlineMath>{'\\pm f_0'}</InlineMath> γίνεται:
+
+$$
+Y(f) = \tfrac{1}{2}[\delta(f - f_0)e^{-j 2\pi f_0 t_0} + \delta(f + f_0)e^{j 2\pi f_0 t_0}]
+$$
+
+**Β) Στην ειδική περίπτωση** <InlineMath>{'2\\pi f_0 t_0 = 2\\pi'}</InlineMath> (δηλ. <InlineMath>{'t_0 = 1/f_0'}</InlineMath> — μία πλήρης περίοδος), η phase rotation είναι <InlineMath>{'e^{\\mp j 2\\pi} = 1'}</InlineMath>: ίδιο spectrum με το αρχικό cosine.
+
+**Take-away:** ένα cosine με time-shift κρατάει το **ίδιο** magnitude spectrum (δύο impulses στις <InlineMath>{'\\pm f_0'}</InlineMath>), αλλάζει μόνο η phase τους.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="sinc-area" year="Pair + Parseval" weight="DC value">
+**Ερώτηση:** Πόσο είναι το <InlineMath>{'\\int_{-\\infty}^{\\infty} \\mathrm{sinc}(t)\\,dt'}</InlineMath>;
+
+<Example title="Λύση" defaultOpen={true}>
+Trick: αυτό είναι <InlineMath>{'X(0)'}</InlineMath> για <InlineMath>{'x(t) = \\mathrm{sinc}(t)'}</InlineMath>, μιας και ο τύπος του FT στη <InlineMath>{'f = 0'}</InlineMath> δίνει το ολοκλήρωμα:
+
+$$
+X(0) = \int x(t)\, e^{-j 2\pi \cdot 0 \cdot t}\,dt = \int x(t)\,dt
+$$
+
+Από duality του rect↔sinc pair: αν <InlineMath>{'\\mathrm{rect}(t) \\leftrightarrow \\mathrm{sinc}(f)'}</InlineMath>, τότε <InlineMath>{'\\mathrm{sinc}(t) \\leftrightarrow \\mathrm{rect}(f)'}</InlineMath> (duality + even symmetry του rect). Άρα <InlineMath>{'X(f) = \\mathrm{rect}(f)'}</InlineMath>, και <InlineMath>{'X(0) = \\mathrm{rect}(0) = 1'}</InlineMath>.
+
+$$
+\boxed{\int_{-\infty}^{\infty} \mathrm{sinc}(t)\,dt = 1}
+$$
+
+**Take-away:** δεν χρειάζεσαι να ολοκληρώσεις την sinc αναλυτικά (δύσκολο!) — η duality + <InlineMath>{'X(0) = \\int x(t)\\,dt'}</InlineMath> λύνει το πρόβλημα σε δύο γραμμές.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="recognize-imag-spectrum" year="Συμμετρία" weight="recognition">
+**Δήλωση:** Ένα σήμα έχει spectrum καθαρά imaginary και antisymmetric. Άρα είναι περιττό και πραγματικό στον χρόνο.
+
+<Example title="Λύση" defaultOpen={true}>
+**Σωστό.** Από τον πίνακα συμμετριών:
+
+- Real-and-odd time signal ⇒ imaginary-and-odd spectrum.
+- Imaginary-and-odd spectrum ⇒ real-and-odd time signal.
+
+Παραδείγματα: <InlineMath>{'\\sin(2\\pi f_0 t)'}</InlineMath>, <InlineMath>{'\\mathrm{sgn}(t)'}</InlineMath>.
+
+**Sanity check:** Αν δεις imaginary spectrum **και** antisymmetric, ξέρεις ότι το σήμα στον χρόνο είναι «πραγματικό + περιττό» — δηλαδή <InlineMath>{'x(-t) = -x(t)'}</InlineMath> και δεν περιέχει κανένα cosine-like (άρτιο) μέρος. Καμία επιπλέον πληροφορία δεν χρειάζεται — η μορφή του spectrum πιστοποιεί άμεσα τη συμμετρία στον χρόνο.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="cos-modulated-rect" year="Pair + modulation theorem" weight="κλασικό μετα-FT">
+**Ερώτηση:** Έστω <InlineMath>{'x(t) = \\mathrm{rect}(t/T)\\cdot\\cos(2\\pi f_c t)'}</InlineMath> με <InlineMath>{'f_c \\gg 1/T'}</InlineMath>. Σχεδίασε το spectrum <InlineMath>{'X(f)'}</InlineMath>.
+
+<Example title="Λύση">
+**Συστατικά:** το <InlineMath>{'\\mathrm{rect}(t/T)'}</InlineMath> έχει spectrum <InlineMath>{'T\\,\\mathrm{sinc}(fT)'}</InlineMath>, και το <InlineMath>{'\\cos(2\\pi f_c t)'}</InlineMath> δουλεύει σαν carrier.
+
+**Modulation theorem:** πολλαπλασιασμός με cos μετατοπίζει το spectrum κατά <InlineMath>{'\\pm f_c'}</InlineMath> με βάρος ½:
+
+$$
+X(f) = \tfrac{T}{2}\bigl[\mathrm{sinc}((f - f_c)T) + \mathrm{sinc}((f + f_c)T)\bigr]
+$$
+
+**Σχήμα:** δύο sinc-πλούμες, μία κεντραρισμένη γύρω από τη <InlineMath>{'+f_c'}</InlineMath>, μία γύρω από τη <InlineMath>{'-f_c'}</InlineMath>, καθεμία με peak <InlineMath>{'T/2'}</InlineMath> και πρώτο μηδενισμό σε απόσταση <InlineMath>{'1/T'}</InlineMath> από τη <InlineMath>{'\\pm f_c'}</InlineMath>.
+
+**Σύνδεση:** αυτό είναι ακριβώς το spectrum ενός DSB-SC σήματος με ορθογώνιο message — η ίδια λογική θα ξαναεμφανιστεί στο [/am/dsb-sc](/am/dsb-sc).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="dual-rect-spectrum" year="Duality" weight="key insight">
+**Ερώτηση:** Ποιο σήμα στον χρόνο έχει spectrum <InlineMath>{'X(f) = \\mathrm{rect}(f/W)'}</InlineMath>;
+
+<Example title="Λύση" defaultOpen={true}>
+Από duality property: αν <InlineMath>{'\\mathrm{rect}(t/T) \\leftrightarrow T\\,\\mathrm{sinc}(fT)'}</InlineMath>, τότε <InlineMath>{'T\\,\\mathrm{sinc}(tT) \\leftrightarrow \\mathrm{rect}(-f/T) = \\mathrm{rect}(f/T)'}</InlineMath> (ο rect είναι άρτιος).
+
+Αντικαθιστώντας <InlineMath>{'T \\to W'}</InlineMath>:
+
+$$
+x(t) = W\,\mathrm{sinc}(tW)
+$$
+
+**Φυσική σημασία:** αυτό είναι η κρουστική απόκριση **ιδανικού lowpass φίλτρου** με cutoff <InlineMath>{'\\pm W/2'}</InlineMath> Hz. Επεκτείνεται σε όλο τον άξονα του χρόνου (συμπεριλαμβανομένων αρνητικών χρόνων) → **μη αιτιατό**. Γι' αυτό τα ιδανικά φίλτρα δεν υλοποιούνται. Δες [/foundations/filters](/foundations/filters).
+
+**Take-away:** η duality property σου δίνει ζευγάρια **χωρίς νέα ολοκλήρωση** — απλώς εναλλαγή πεδίων.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="impulse-train-thinking" year="δ pair + sampling" weight="extension">
+**Ερώτηση:** Ένα σήμα <InlineMath>{'s(t)'}</InlineMath> έχει spectrum <InlineMath>{'S(f) = 1 + \\delta(f - 50) + \\delta(f + 50)'}</InlineMath>. Σε ποιο σήμα του χρόνου αντιστοιχεί;
+
+<Example title="Λύση">
+Inverse FT, ένα όρο τη φορά:
+
+- <InlineMath>{'1 \\leftrightarrow \\delta(t)'}</InlineMath> (duality του <InlineMath>{'\\delta(t) \\leftrightarrow 1'}</InlineMath>).
+- <InlineMath>{'\\delta(f - 50) + \\delta(f + 50) \\leftrightarrow 2\\cos(2\\pi\\cdot 50\\, t)'}</InlineMath> (αντίστροφο του cos pair).
+
+Άρα:
+
+$$
+s(t) = \delta(t) + 2\cos(2\pi\cdot 50\, t)
+$$
+
+**Συγκέντρωση εμπειρίας:** ένα spectrum που είναι «σταθερά + impulses στις ±f₀» αντιστοιχεί σε «δέλτα + cosine» στον χρόνο. Πιο γενικά: συστατικά του spectrum ⇄ συστατικά του σήματος, με τις ιδιότητες linearity + pair recognition.
+</Example>
+</ExamProblem>
+
+## Σχετικές σελίδες
+
+- **Παραγωγή κάθε ζευγαριού** και η πλήρης συζήτηση properties (linearity, scaling, shift, convolution, modulation theorem, Parseval, conjugate symmetry): [/foundations/fourier-transform](/foundations/fourier-transform).
+- **Συμβάσεις σχεδίασης φάσματος** (two-sided vs one-sided, τι σημαίνει «αρνητική συχνότητα», γιατί το πλάτος μοιράζεται στις <InlineMath>{'\\pm f_0'}</InlineMath>): [/reference/spectrum-conventions](/reference/spectrum-conventions).
+- **Μιγαδικοί αριθμοί** (Euler, conjugate, πολική μορφή) — η αλγεβρική βάση όλων αυτών των pairs: [/reference/complex-numbers](/reference/complex-numbers).
+- **Πλήρες τυπολόγιο** με mini-vizzes ανά τύπο, παραγωγή σε δύο γραμμές, και cited-by exercises: [/formulas](/formulas).
+- **Hilbert transform** (η εφαρμοσμένη χρήση του <InlineMath>{'1/(\\pi t) \\leftrightarrow -j\\,\\mathrm{sgn}(f)'}</InlineMath> pair): [/modulation/bridge](/modulation/bridge).

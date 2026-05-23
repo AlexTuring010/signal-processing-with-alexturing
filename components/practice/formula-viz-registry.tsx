@@ -17,8 +17,12 @@ import { RectToSincViz } from '@/components/viz/RectToSincViz'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
 import { PhaseTimeShiftDemo } from '@/components/viz/PhaseTimeShiftDemo'
-import { TwoSidedVsOneSidedCosine } from '@/components/viz/TwoSidedVsOneSidedCosine'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
+import { TriToSincSquaredViz } from '@/components/viz/TriToSincSquaredViz'
+import { CosineFrequencyPairViz } from '@/components/viz/CosineFrequencyPairViz'
+import { SineFrequencyPairViz } from '@/components/viz/SineFrequencyPairViz'
+import { SgnToInversePiFViz } from '@/components/viz/SgnToInversePiFViz'
+import { ConstantDeltaDualityViz } from '@/components/viz/ConstantDeltaDualityViz'
 import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
 import { AMPowerCalculator } from '@/components/viz/AMPowerCalculator'
@@ -40,9 +44,11 @@ import { SNRPlaygroundViz } from '@/components/viz/SNRPlaygroundViz'
 const REGISTRY: Record<string, () => ReactNode> = {
   // Foundations · Fourier pairs / properties
   'fourier-pair-rect': () => <RectToSincViz />,
-  'fourier-pair-cos': () => <TwoSidedVsOneSidedCosine />,
-  'fourier-pair-sin': () => <TwoSidedVsOneSidedCosine />,
-  'fourier-pair-sgn': () => <HilbertTransformViz />,
+  'fourier-pair-tri': () => <TriToSincSquaredViz />,
+  'fourier-pair-cos': () => <CosineFrequencyPairViz />,
+  'fourier-pair-sin': () => <SineFrequencyPairViz />,
+  'fourier-pair-sgn': () => <SgnToInversePiFViz />,
+  'fourier-pair-const-delta': () => <ConstantDeltaDualityViz />,
   'fourier-shift': () => <PhaseTimeShiftDemo />,
   'fourier-convolution': () => <ConvolutionInFrequency />,
   'fourier-modulation-theorem': () => <ModulationTheoremViz />,

@@ -90,6 +90,24 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'fourier-pair-const-delta': {
+    intuition: (
+      <>
+        Το πιο ακραίο time-frequency tradeoff: ένα τέλεια localized σήμα στο ένα πεδίο
+        γίνεται τέλεια flat στο άλλο. Από την duality property: αν{' '}
+        <InlineMath>{'x(t) \\leftrightarrow X(f)'}</InlineMath>, τότε{' '}
+        <InlineMath>{'X(t) \\leftrightarrow x(-f)'}</InlineMath> — γι' αυτό τα δύο
+        ζευγάρια <InlineMath>{'1 \\leftrightarrow \\delta(f)'}</InlineMath> και{' '}
+        <InlineMath>{'\\delta(t) \\leftrightarrow 1'}</InlineMath> είναι το ίδιο.
+      </>
+    ),
+    derivation: (
+      <>
+        <InlineMath>{'\\mathcal{F}\\{\\delta(t)\\} = \\int \\delta(t) e^{-j2\\pi ft}\\,dt = 1'}</InlineMath>{' '}
+        (sifting property). Duality ⇒ <InlineMath>{'\\mathcal{F}\\{1\\} = \\delta(f)'}</InlineMath>.
+      </>
+    ),
+  },
   'fourier-pair-sgn': {
     intuition: (
       <>
