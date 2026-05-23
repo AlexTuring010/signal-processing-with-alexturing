@@ -1,11 +1,11 @@
 export const metadata = {
-  title: 'DSB-SC — Conventional AM χωρίς τον carrier',
+  title: 'DSB-AM-SC — Conventional AM χωρίς τον carrier',
   description:
-    'DSB-SC (Double-Sideband, Suppressed Carrier): η AM χωρίς το carrier component. Πετάει 67% της ισχύος που σπαταλούσε η Conventional AM, αλλά απαιτεί coherent demodulation. Φάσμα, ισχύς (100% efficient), envelope-detector failure, coherent receiver, ευαισθησία στη φάση.',
+    'DSB-AM-SC / DSB-SC (Διπλής Πλευρικής Ζώνης AM με κατηργημένο φέρον): η AM χωρίς το carrier component. Πετάει 67% της ισχύος που σπαταλούσε η Conventional AM, αλλά απαιτεί σύμφωνη (coherent) αποδιαμόρφωση. Πλήρης παραγωγή ισχύος μέσω της περιβάλλουσας (P_x = A_c² P_m / 2), envelope-detector failure με τη συνθήκη m(t) ≥ 0, ισοσταθμισμένος διαμορφωτής, μετατροπή συχνότητας ως μίξη.',
 }
 
 export const frontmatter = {
-  title: 'DSB-SC',
+  title: 'DSB-AM-SC',
   slug: 'am/dsb-sc',
   order: 3,
   prerequisites: [
@@ -14,8 +14,8 @@ export const frontmatter = {
     'am/conventional',
   ],
   examWeight: 5,
-  estimatedReadTime: 32,
-  lastUpdated: '2026-05-23',
+  estimatedReadTime: 36,
+  lastUpdated: '2026-05-24',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -26,7 +26,7 @@ import Link from 'next/link'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · AM</span>
   <span>·</span>
-  <span>~32 min read</span>
+  <span>~36 min read</span>
   <span>·</span>
   <span className="font-semibold text-amber-700 dark:text-amber-400">🟠 Medium exam · 5%</span>
 </div>
@@ -42,8 +42,8 @@ import Link from 'next/link'
 
 <SourceDoc
   sources={[
-    { pdf: 'SE_session11&12&13.pdf', slides: '52–66', label: 'DSB-AM-SC: ορισμός, time-domain demos, φάσμα, coherent demod' },
-    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM' },
+    { pdf: 'SE_session11&12&13.pdf', slides: '49–67', label: 'Σύμφωνη Αποδιαμόρφωση AM + DSB-AM-SC: ορισμός, time-domain demos, φάσμα, ισχύς, balanced modulator, αποδιαμόρφωση' },
+    { pdf: 'SE_session14_AM.pdf', slides: '14', label: 'Άσκηση 4 (Παράδειγμα 4.13): μετατροπή συχνότητας DSB-AM-SC από f₁ σε f₂' },
   ]}
 />
 
@@ -74,6 +74,24 @@ $$
 \boxed{\,x_{DSB}(t) = m(t)\,\cos(2\pi f_c t)\,}
 $$
 
+<Callout type="key" title="Πώς ορίζει το DSB-AM-SC ο καθηγητής (slide 53)">
+  <p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+    «Στο συμβατικό AM το <InlineMath>{'x(t) = (A_c + m(t))\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+    (το φέρον συνεισφέρει <InlineMath>{'A_c^2/2'}</InlineMath> στην ισχύ). Προφανώς, ο όρος{' '}
+    <InlineMath>{'A_c\\cos(2\\pi f_c t)'}</InlineMath> δεν περιέχει πληροφορία κι η αφαίρεσή του θα συνδράμει στην αύξηση της ενεργειακής αποδοτικότητας της διαμόρφωσης. Πρόκειται για τη <strong>διαμόρφωση AM διπλής πλευρικής ζώνης με κατηργημένο φέρον (DSB-AM-SC)</strong>.»
+  </p>
+
+  Το πλήρες όνομα από το slide είναι **DSB-AM-SC** (*Double Side Band AM, Suppressed Carrier*) — *διπλής πλευρικής ζώνης AM με κατηργημένο φέρον*. Στις διαφάνειες και στις εξεταστικές θα δεις και τις δύο μορφές: τη μακρά «DSB-AM-SC» (επίσημη ονομασία του καθηγητή) και τη συντομογραφία «DSB-SC» (διεθνής). Χρησιμοποιούμε τη συντομογραφία στο κείμενο, αλλά αναγνώρισε και τη μακρά μορφή.
+
+  Η μορφή που γράφει ο καθηγητής στον χρόνο **κρατά τον <InlineMath>{'A_c'}</InlineMath> ρητό**:
+
+  $$
+  x(t) = A_c\, m(t)\,\cos(2\pi f_c t)
+  $$
+
+  Αλγεβρικά ισοδύναμη με τη <InlineMath>{'x = m\\cos'}</InlineMath> μορφή παραπάνω (απορροφάς τον <InlineMath>{'A_c'}</InlineMath> στο <InlineMath>{'m'}</InlineMath>). Αλλά όταν μια εξεταστική σου δίνει εκφώνηση με ρητό <InlineMath>{'A_c'}</InlineMath>, το καθαρότερο είναι να τον κρατήσεις εμφανή — έτσι ο τύπος ισχύος βγαίνει αμέσως <InlineMath>{'P_x = (A_c^2/2)\\,P_m'}</InlineMath>, με το <InlineMath>{'A_c^2'}</InlineMath> πιασμένο εξωτερικά.
+</Callout>
+
 Καμία προσθετική σταθερά, μόνο message × carrier. Για **single-tone** $m(t) = A_m\cos(2\pi f_m t)$, ξανατυπώνουμε με product-to-sum:
 
 $$
@@ -82,14 +100,20 @@ $$
 
 Δύο cosines στις $f_c \pm f_m$ — οι δύο sidebands. **Κανένα cos στη συχνότητα $f_c$** — αυτό είναι το «Suppressed Carrier» στο όνομα.
 
-<Callout type="connection" title="Σύνδεση με την I/Q canonical form">
-Από τον [πίνακα στο /modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), η DSB-SC είναι η **δεύτερη γραμμή**:
+<Callout type="connection" title="Σύνδεση με την I/Q canonical form (slide 53)">
+Από τον [πίνακα στο /modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή), το DSB-AM-SC είναι η **δεύτερη γραμμή**:
 
 $$
 x_I(t) = A_c\, m(t), \qquad x_Q(t) = 0
 $$
 
-Όπως και στη Conventional AM, $x_Q = 0$ — όλη η πληροφορία στο envelope. Αλλά τώρα **το envelope είναι $|m(t)|$**, όχι $|A_c + m(t)|$. Όταν το $m(t)$ αλλάζει πρόσημο, το envelope «αναποδογυρίζει» — και αυτό είναι ακριβώς που διαλύει τον envelope detector.
+$$
+V(t) = |A_c\, m(t)|, \qquad \theta(t) = 0
+$$
+
+(Το <InlineMath>{'\\theta(t) = 0'}</InlineMath> ακολουθεί από <InlineMath>{'x_Q = 0'}</InlineMath>: <InlineMath>{'\\theta = \\arctan(x_Q/x_I) = 0'}</InlineMath>. Αυτές οι δύο γραμμές είναι **ακριβώς** ό,τι αναφέρει ο καθηγητής στο slide 53.)
+
+Όπως και στη Conventional AM, <InlineMath>{'x_Q = 0'}</InlineMath> — όλη η πληροφορία στο envelope. Αλλά τώρα **το envelope είναι <InlineMath>{'|A_c m(t)|'}</InlineMath>**, όχι <InlineMath>{'|A_c + m(t)|'}</InlineMath>. Η απόλυτη τιμή είναι **εκ φύσεως μη γραμμική**: όταν το <InlineMath>{'m(t)'}</InlineMath> αλλάζει πρόσημο, το envelope «αναποδογυρίζει» — και αυτό είναι ακριβώς που διαλύει τον envelope detector.
 </Callout>
 
 ## 2. Time-domain — γιατί ο envelope detector αποτυγχάνει
@@ -126,6 +150,16 @@ $$
 Στη Conventional AM, ο envelope detector δούλευε γιατί η σταθερά $A_c$ κρατούσε το envelope πάντα θετικό (όταν $\mu \leq 1$). Η DSB-SC **δεν** έχει αυτή τη σταθερά. Το envelope είναι $|m(t)|$ — ο message μέσα από rectifier. Αυτή η παραμόρφωση είναι **γεωμετρική**, όχι θόρυβος — **δεν φεύγει με κανένα φίλτρο**, γιατί η rectification δημιουργεί αρμονικές μέσα στο baseband.
 
 **Λύση:** χρειαζόμαστε **coherent demodulator** — που γνωρίζει τη φάση του carrier και διορθώνει τα phase reversals. Θα το δούμε στο §4.
+</Callout>
+
+<Callout type="key" title="Πότε *θα* δούλευε ο envelope detector — η συνθήκη m(t) ≥ 0 (slide 67)">
+  <p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+    «Δεν αρκεί η χρήση <strong>ασύμφωνης αποδιαμόρφωσης</strong> αφού <InlineMath>{'V(t) = |A_c m(t)|'}</InlineMath>. Για να αρκούσε θα έπρεπε <InlineMath>{'m(t) \\geq 0\\ \\forall t'}</InlineMath>, το οποίο σπάνια συμβαίνει στα σήματα πληροφορίας στα συστήματα επικοινωνιών.»
+  </p>
+
+  Η μαθηματική συνθήκη είναι ακριβής: αν <InlineMath>{'m(t) \\geq 0'}</InlineMath> για κάθε <InlineMath>{'t'}</InlineMath>, τότε <InlineMath>{'|m(t)| = m(t)'}</InlineMath> και η rectification δεν αλλάζει τίποτα — ο envelope detector βγάζει ακριβώς το <InlineMath>{'m(t)'}</InlineMath>. Αλλά τα πραγματικά σήματα πληροφορίας (audio, video, μετρήσεις) **έχουν αρνητικές τιμές** και συνήθως μέση τιμή <InlineMath>{'\\bar m = 0'}</InlineMath> (αλλιώς σπαταλάς ισχύ στο DC). Επομένως η συνθήκη παραβιάζεται **σχεδόν πάντα** — γι' αυτό το DSB-AM-SC υποχρεωτικά απαιτεί coherent demod.
+
+  **Βαθύτερη σύνδεση με το Conventional AM:** ο όρος <InlineMath>{'A_c'}</InlineMath> που η Conventional AM προσθέτει στο message είναι ακριβώς ο όρος που εξασφαλίζει <InlineMath>{'A_c + m(t) \\geq 0\\ \\forall t'}</InlineMath> (για <InlineMath>{'\\mu \\leq 1'}</InlineMath>). Άρα η Conventional AM είναι κυριολεκτικά **DSB-AM-SC + DC offset που γυρίζει τη συνθήκη <InlineMath>{'m \\geq 0'}</InlineMath> πάντα αληθή**. Πληρώνεις σε ισχύ (carrier δαπανά <InlineMath>{'A_c^2/2'}</InlineMath>), κερδίζεις απλούστερο δέκτη.
 </Callout>
 
 <RecallCard
@@ -194,9 +228,19 @@ $$
 
 **Bandwidth μένει ίδιο** — δεν κερδίζουμε φάσμα. Η μόνη βελτίωση είναι η ισχύς. (Αν θέλουμε να κόψουμε το bandwidth στο μισό, πάμε σε **SSB** στο επόμενο κεφάλαιο.)
 
+<Callout type="connection" title="Πώς γεννιέται πρακτικά το DSB-AM-SC — ο ισοσταθμισμένος διαμορφωτής (slide 66)">
+Η μορφή <InlineMath>{'x = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath> γράφεται εύκολα στο χαρτί — αλλά στην πράξη ο **πολλαπλασιαστής** δεν είναι τετριμμένο κύκλωμα: αναλογικοί πολλαπλασιαστές κοστίζουν και έχουν περιορισμένο dynamic range. Ο καθηγητής στο slide 66 παρουσιάζει την κανονική πρακτική λύση — τον **ισοσταθμισμένο διαμορφωτή** (*balanced modulator*) που χρησιμοποιεί δύο πανομοιότυπα μη γραμμικά στοιχεία σε αντισυμμετρική διάταξη ώστε:
+
+- **Ο carrier ακυρώνεται** στην έξοδο μέσω αλγεβρικής διαφοράς (δεν χρειάζεται BPF τόσο επιλεκτικό όσο στο Conventional AM).
+- **Οι κοινοί όροι** <InlineMath>{'\\cos^2'}</InlineMath> και <InlineMath>{'m^2'}</InlineMath> ακυρώνονται από την ίδια αντισυμμετρία.
+- **Μένει** μόνο ο σταυρωτός όρος <InlineMath>{'4d_2\\, m(t)\\cos(2\\pi f_c t)'}</InlineMath> → ακριβώς DSB-AM-SC.
+
+Πλήρης ανάλυση + viz της ακύρωσης βήμα-βήμα στο [`/am/modulator-demodulator §1c`](/am/modulator-demodulator#1c-balanced-modulator-για-dsb-sc). Το γιατί αυτή η συγκεκριμένη τοπολογία είναι η «συνηθέστερη» (slide 66) για DSB-AM-SC καλύπτεται εκεί.
+</Callout>
+
 ## 4. Coherent demodulation — γιατί δουλεύει
 
-Στον δέκτη παίρνουμε το λαμβανόμενο σήμα και το **πολλαπλασιάζουμε** με ένα τοπικό cosine ίδιας συχνότητας **και φάσης** με τον αρχικό carrier:
+Στον δέκτη παίρνουμε το λαμβανόμενο σήμα και το **πολλαπλασιάζουμε** (το κύκλωμα-πολλαπλασιαστής λέγεται **μίκτης** / *mixer* στις διαφάνειες — slide 51) με ένα τοπικό cosine ίδιας συχνότητας **και φάσης** με τον αρχικό carrier:
 
 $$
 y(t) = x_{DSB}(t) \cdot 2\cos(2\pi f_c t)
@@ -287,13 +331,31 @@ $$
 P_{DSB,\text{total}} = 2 \cdot \frac{A_m^2}{8} = \frac{A_m^2}{4}
 $$
 
-Αν προτιμάς να το δεις από την «message power» πλευρά: για γενικό message ισχύος $P_m = \overline{m^2(t)}$,
+### 5a. Γενική μορφή — η ταυτότητα μέσω της περιβάλλουσας (slide 64)
+
+Το single-tone αποτέλεσμα <InlineMath>{'A_m^2/4'}</InlineMath> είναι ειδική περίπτωση. Ο καθηγητής στο slide 64 δίνει τον **γενικό τύπο** που δουλεύει για κάθε message <InlineMath>{'m(t)'}</InlineMath> — όχι μόνο για single-tone — παράγοντάς τον **μέσω της περιβάλλουσας** <InlineMath>{'V(t) = |A_c m(t)|'}</InlineMath>. Είναι ο ίδιος αλγεβρικός σκελετός που χρησιμοποιήσαμε στη [Conventional AM §5cγ](/am/conventional#5-ισχύς-εκπομπής).
+
+Για κάθε bandpass σήμα <InlineMath>{'x(t) = V(t)\\cos(2\\pi f_c t + \\theta(t))'}</InlineMath> με <InlineMath>{'f_c \\gg W'}</InlineMath>, η μέση ισχύς είναι **το μισό της μέσης τιμής του τετραγώνου της περιβάλλουσας**:
 
 $$
-P_{DSB} = \frac{A_c^2 \, P_m}{2}
+P_x = \frac{1}{2}\,\overline{V^2(t)} = \frac{P_V}{2}
 $$
 
-(όπου εδώ θεωρούμε $x_{DSB} = A_c m(t)\cos(\omega_c t)$ — αν $A_c = 1$ και το $m$ είναι single-tone $A_m \cos$, τότε $P_m = A_m^2/2$ και ξαναβρίσκουμε $P_{DSB} = A_m^2/4$.) Δες την [αντίστοιχη entry στο τυπολόγιο](/formulas#formula:dsb-sc-power).
+(Ο λόγος είναι ότι <InlineMath>{'\\cos^2 = \\tfrac{1}{2}(1 + \\cos\\, 2(\\cdot))'}</InlineMath> — ο γρήγορος όρος στις <InlineMath>{'2f_c'}</InlineMath> δεν συνεισφέρει στη μέση τιμή, και μένει ο παράγοντας <InlineMath>{'1/2'}</InlineMath>.) Για το DSB-AM-SC, <InlineMath>{'V = |A_c m|'}</InlineMath>, οπότε <InlineMath>{'V^2 = A_c^2\\, m^2'}</InlineMath> (η απόλυτη τιμή φεύγει στο τετράγωνο). Άρα η παραγωγή του καθηγητή είναι:
+
+$$
+P_x \;=\; \frac{1}{2}\, \overline{V^2(t)} \;=\; \frac{1}{2}\, \overline{A_c^2\, m^2(t)} \;=\; \frac{A_c^2}{2}\, P_m
+$$
+
+$$
+\boxed{\;P_{DSB\text{-}AM\text{-}SC} \;=\; \frac{A_c^2\, P_m}{2}\;}
+$$
+
+**Αυτή είναι η master μορφή** που χρησιμοποιεί ο καθηγητής στις εξεταστικές — δουλεύει για οποιοδήποτε <InlineMath>{'m(t)'}</InlineMath> (single-tone, multi-tone, sinc, οτιδήποτε). Δες την [αντίστοιχη entry στο τυπολόγιο](/formulas#formula:dsb-sc-power).
+
+**Sanity check single-tone.** Με <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath>, η message power είναι <InlineMath>{'P_m = A_m^2/2'}</InlineMath>. Άρα <InlineMath>{'P_{DSB} = A_c^2 \\cdot (A_m^2/2)/2 = A_c^2 A_m^2 / 4'}</InlineMath>. Για <InlineMath>{'A_c = 1'}</InlineMath> (έτσι όπως γράφτηκε το <InlineMath>{'x_{DSB} = m(t)\\cos'}</InlineMath> στην αρχή της §5), παίρνουμε <InlineMath>{'P_{DSB} = A_m^2/4'}</InlineMath> — ταυτίζεται με την κατευθείαν παραγωγή «δύο cosines πλάτους <InlineMath>{'A_m/2'}</InlineMath>» παραπάνω. ✓
+
+### 5b. Power efficiency
 
 **Όλη η ισχύς είναι «χρήσιμη»** — είναι όλη στις sidebands που κουβαλάνε πληροφορία:
 
@@ -401,9 +463,9 @@ $$
 
 ## Εξάσκηση
 
-<ExerciseProgress slug="am/dsb-sc" total={5} />
+<ExerciseProgress slug="am/dsb-sc" total={8} />
 
-Έξι ερωτήσεις. Πριν δεις τη λύση κάθε μίας, **κάνε μια προσπάθεια από μνήμη** στο `RecallDrill` παρακάτω — αν δεν μπορείς να εξηγήσεις τι **κυριολεκτικά** βλέπει ο envelope detector σε DSB-SC, οι ασκήσεις θα σου γράψουν τα ίδια λάθη.
+Οκτώ ερωτήσεις. Πριν δεις τη λύση κάθε μίας, **κάνε μια προσπάθεια από μνήμη** στο `RecallDrill` παρακάτω — αν δεν μπορείς να εξηγήσεις τι **κυριολεκτικά** βλέπει ο envelope detector σε DSB-AM-SC, οι ασκήσεις θα σου γράψουν τα ίδια λάθη.
 
 <RecallDrill
   id="explain-envelope-detector-failure-dsb"
@@ -613,19 +675,65 @@ Bandwidth = $2W$, σύμφωνο με τη γενική $\text{BW}_{DSB} = 2W$.
 Πολλαπλασιάζοντας με $2\cos(\omega_c t)$ (διπλάσιο πλάτος τοπικού oscillator) ξαναβρίσκουμε ακριβώς $m(t)$. Καθαρός τύπος, όχι θεμελιώδης φυσική. Στις πραγματικές υλοποιήσεις ο κανονικοποιός ×2 τον αναλαμβάνει είτε ο oscillator (μέσω gain) είτε ένα μεταγενέστερο amplifier.
 
 **Σημείο.** Στο `CoherentDemodChainViz` παραπάνω, το στάδιο 2 χρησιμοποιεί $2\cos$ ακριβώς για να μη μείνει αυτός ο παράγοντας $1/2$ — και έτσι στο στάδιο 3 βγαίνει $\hat m = m$ ακριβώς. Καθαρή παρουσίαση.
+
+**Σύμβαση καθηγητή.** Στις διαφάνειες (slides 51, 79), ο καθηγητής σταθερά **δεν** βάζει τον παράγοντα $2$ — γράφει `y(t) = x(t)·cos(2πf_c t)` και κρατάει τον $1/2$ μπροστά στο `m(t)` στην έξοδο: <InlineMath>{'\\hat m = (1/2) A_c m(t)'}</InlineMath>. Είναι μαθηματικά **ισοδύναμη** σύμβαση. Αν μια εξεταστική σου δώσει τον τοπικό ταλαντωτή ως πλάτους $1$, μη ξεχάσεις το $1/2$.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="dsb-frequency-conversion" year="Παράδ. 4.13" weight="Εφαρμογή · μίξη">
+**Ερώτηση (askisis deck Άσκηση 4):** Σε πολλές τηλεπικοινωνιακές εφαρμογές είναι απαραίτητη η μετατροπή της συχνότητας του διαμορφωμένου σήματος από $f_1$ σε $f_2$. Πώς υλοποιείται η μετατροπή αυτή σε σήματα DSB-AM-SC;
+
+<Example title="Λύση" defaultOpen={true}>
+
+**Σκέψη:** η μετατόπιση συχνότητας είναι **το ίδιο εργαλείο** με τη διαμόρφωση — πολλαπλασιαστής (*μίκτης*) + BPF. Αν έχουμε DSB-AM-SC γύρω από $f_1$ και θέλουμε αυτό γύρω από $f_2$, πολλαπλασιάζουμε με τοπικό cosine που μετατοπίζει το ζεύγος πλευρικών στη νέα θέση.
+
+**Δεδομένο σήμα:**
+$$
+x_1(t) = A_c\, m(t)\, \cos(2\pi f_1 t)
+$$
+
+**Στάδιο 1 — Πολλαπλασιασμός με LO.** Έστω $f_{LO} = f_2 - f_1$ (υποθέτουμε $f_2 > f_1$ για συγκεκριμενότητα — το ανάποδο δουλεύει συμμετρικά). Πολλαπλασιάζουμε:
+$$
+y(t) = x_1(t) \cdot 2\cos(2\pi f_{LO} t) = 2 A_c m(t)\cos(2\pi f_1 t)\cos(2\pi f_{LO} t)
+$$
+
+Με product-to-sum:
+$$
+y(t) = A_c m(t)\Big[\cos(2\pi(\underbrace{f_1 + f_{LO}}_{= f_2})t) + \cos(2\pi(\underbrace{f_1 - f_{LO}}_{= 2f_1 - f_2})t)\Big]
+$$
+
+Δύο αντίγραφα του DSB-AM-SC: ένα **στο επιθυμητό** $f_2$ και ένα **image** στο $2f_1 - f_2$.
+
+**Στάδιο 2 — BPF γύρω από $f_2$.** Φιλτράρουμε με bandpass εύρους τουλάχιστον $2W$ κεντραρισμένο στο $f_2$. Απορρίπτει το image, αφήνει το επιθυμητό:
+
+$$
+\boxed{\,x_2(t) = A_c\, m(t)\, \cos(2\pi f_2 t)\,}
+$$
+
+**Ίδιο message $m(t)$, μεταφερμένο σε νέο φέρον $f_2$.** Καμία αλλοίωση πληροφορίας, καμία απώλεια ισχύος (πέρα από τις ιδεατές ατέλειες του BPF).
+
+**Συνθήκη για να ξεχωρίσει το BPF τα δύο.** Η απόσταση επιθυμητού-image στο φάσμα είναι $|f_2 - (2f_1 - f_2)| = 2|f_2 - f_1| = 2 f_{LO}$. Πρέπει $2 f_{LO} \gg 2W$, δηλαδή $f_{LO} \gg W$. Αλλιώς το image «τρώει» το επιθυμητό.
+
+**Γιατί ειδικά το DSB-AM-SC ξεκλειδώνει αυτή τη μετατόπιση τόσο καθαρά:** δεν έχει carrier impulse που να μεταφέρεται ξεχωριστά — μόνο ζεύγη πλευρικών που γλιστράνε ως ομάδες. Στο Conventional AM η αλγεβρική δομή είναι η ίδια, αλλά παίρνεις και τον carrier $A_c$ μαζί σε νέα συχνότητα (επιπλέον σπαταλώμενη ισχύς).
+
+**Βαθύτερη σύνδεση.** Η coherent demodulation στο §4 είναι η **ειδική περίπτωση** $f_2 = 0$ αυτής της μετατροπής — αντί BPF γύρω από $f_2 > 0$, βάζεις LPF γύρω από το $0$. Η αλγεβρική δομή είναι ταυτόσημη: πολλαπλασιαστής + ζωνοπερατό φίλτρο που κρατάει τη μία από τις δύο εικόνες. Αυτή είναι η **πεμπτουσία της μίξης** — η ίδια τοπολογία δουλεύει για modulation (baseband → $f_c$), demodulation ($f_c$ → baseband), και frequency conversion ($f_1$ → $f_2$).
 </Example>
 </ExamProblem>
 
 ## 8. Recap
 
 <Recap>
-- **DSB-SC** = Conventional AM χωρίς το $A_c$ component: $x_{DSB}(t) = m(t)\cos(2\pi f_c t)$.
-- Στην I/Q canonical form: $x_I = A_c m(t)$, $x_Q = 0$.
-- **Φάσμα:** μόνο sidebands $\frac{1}{2}M(f \mp f_c)$, καθόλου carrier impulses. Bandwidth = $2W$ (ίδιο με Conventional AM).
+- **DSB-AM-SC** (πλήρες όνομα του καθηγητή· συντομογραφία **DSB-SC**) = Conventional AM χωρίς το $A_c$ component: $x(t) = A_c m(t)\cos(2\pi f_c t)$. Επίσης γράφεται με τον $A_c$ απορροφημένο: $x(t) = m(t)\cos(2\pi f_c t)$.
+- Στην I/Q canonical form (slide 53): $x_I = A_c m(t)$, $x_Q = 0$, $V(t) = |A_c m(t)|$, $\theta(t) = 0$.
+- **Φάσμα:** μόνο sidebands $\frac{A_c}{2}M(f \mp f_c)$, καθόλου carrier impulses. Bandwidth = $2W$ (ίδιο με Conventional AM).
+- **Ισχύς — master form (slide 64):** $P_x = \frac{1}{2}\overline{V^2} = \frac{A_c^2}{2}P_m$. Δουλεύει για κάθε $m(t)$, όχι μόνο single-tone. Single-tone ειδική περίπτωση: $A_m^2/4$ για $A_c = 1$.
 - **Power efficiency = 100%** — όλη η ισχύς στις sidebands. Σύγκριση: για ίδιο message, χρησιμοποιεί ~9× λιγότερη συνολική ισχύ από Conventional AM στο $\mu = 0.5$.
-- **Envelope detector NON-OK**: ο envelope είναι $|m(t)|$, rectified message. Phase reversals $\pi$ στα zero crossings του $m(t)$.
-- **Coherent demodulation:** πολλαπλασιασμός με τοπικό $2\cos(2\pi f_c t)$ + LPF. Στο φάσμα: shift back to baseband + isolate. Recovers $m(t)$ ακριβώς όταν η φάση = 0.
-- **Phase sensitivity:** error $\varphi$ → output $m(t)\cos\varphi$. Στις $90°$ τίποτα (quadrature null). Χρειάζεται PLL/Costas loop ή pilot στον δέκτη — γι' αυτό το DSB-SC είναι «πιο δύσκολο» από AM σε αναλογικό hardware.
+- **Envelope detector NON-OK** (slide 67): ο envelope είναι $|A_c m(t)|$, rectified message. Phase reversals $\pi$ στα zero crossings του $m(t)$. Η ασύμφωνη αποδιαμόρφωση θα δούλευε **μόνο αν** $m(t) \geq 0\ \forall t$ — σπάνιο σε πραγματικά σήματα.
+- **Βαθύτερη σύνδεση Conventional ↔ DSB-AM-SC:** ο $A_c$ της Conventional AM είναι ακριβώς ο DC offset που εξασφαλίζει $A_c + m \geq 0$ πάντα ⇒ envelope detector OK. Πληρώνεις σε ισχύ ($A_c^2/2$), κερδίζεις απλούστερο δέκτη.
+- **Coherent demodulation (μίκτης + LPF):** πολλαπλασιασμός με τοπικό $2\cos(2\pi f_c t)$ (ή ισοδύναμα $\cos$ με παράγοντα $1/2$ στην έξοδο — η σύμβαση του καθηγητή) + LPF. Στο φάσμα: shift back to baseband + isolate. Recovers $m(t)$ ακριβώς όταν η φάση = 0.
+- **Phase sensitivity:** error $\varphi$ → output $m(t)\cos\varphi$. Στις $90°$ τίποτα (quadrature null). Χρειάζεται PLL/Costas loop ή pilot στον δέκτη — γι' αυτό το DSB-AM-SC είναι «πιο δύσκολο» από AM σε αναλογικό hardware.
+- **Πομπός — ισοσταθμισμένος διαμορφωτής (slide 66):** δύο πανομοιότυπα μη γραμμικά στοιχεία σε αντισυμμετρική διάταξη — ο carrier ακυρώνεται αλγεβρικά, μένει μόνο ο σταυρωτός όρος $m(t)\cos$. Πλήρης ανάλυση στο [/am/modulator-demodulator §1c](/am/modulator-demodulator#1c-balanced-modulator-για-dsb-sc).
+- **Μετατροπή συχνότητας ($f_1 \to f_2$):** ίδιο εργαλείο, αλλάζει μόνο το φίλτρο. Πολλαπλασιαστής με $\cos(2\pi(f_2-f_1)t)$ + BPF γύρω από $f_2$. Coherent demod = ειδική περίπτωση $f_2 = 0$ με LPF.
 - **Σπάνια standalone** σε εμπορικά ραδιόφωνα — αλλά κρίσιμο σε stereo FM (L−R), color TV chrominance, FDM προβλήματα στην εξεταστική.
 - Επόμενο σχήμα: **SSB**, που πετάει επιπλέον τη μία από τις δύο sidebands και μειώνει το bandwidth στο μισό.
 </Recap>
@@ -667,17 +775,24 @@ Bandwidth = $2W$, σύμφωνο με τη γενική $\text{BW}_{DSB} = 2W$.
 
 <ThinkingPattern
   signals={[
+    'DSB-AM-SC',
     'DSB-SC',
     'Double-Sideband Suppressed Carrier',
     'καταστολή φέροντος',
+    'κατηργημένο φέρον',
+    'διπλής πλευρικής ζώνης',
     'coherent demodulation',
-    'σύγχρονη αποδιαμόρφωση',
+    'Σύμφωνη Αποδιαμόρφωση',
+    'Ασύμφωνη Αποδιαμόρφωση',
+    'μίκτης',
     'phase error',
     'σφάλμα φάσης',
     'quadrature null',
     'PLL',
     'Costas loop',
     'envelope detector — γιατί όχι',
+    'frequency conversion',
+    'μίξη συχνοτήτων',
   ]}
 >
   <p>
