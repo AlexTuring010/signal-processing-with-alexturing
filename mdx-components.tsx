@@ -90,6 +90,10 @@ import { ConnectivityExplorer } from '@/components/viz/ConnectivityExplorer'
 import { TreeThreeProperties } from '@/components/viz/TreeThreeProperties'
 import { RootedTreeReroot } from '@/components/viz/RootedTreeReroot'
 import { MetroModelingViz } from '@/components/viz/MetroModelingViz'
+import { ComponentsBfsSweep } from '@/components/viz/ComponentsBfsSweep'
+import { NeighborhoodCostViz } from '@/components/viz/NeighborhoodCostViz'
+import { RiverCrossingStateGraph } from '@/components/viz/RiverCrossingStateGraph'
+import { PartyDegreeFilter } from '@/components/viz/PartyDegreeFilter'
 import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
 import { StrongConnectivityViz } from '@/components/viz/StrongConnectivityViz'
 import { FloodFillGrid } from '@/components/viz/FloodFillGrid'
@@ -260,6 +264,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TreeThreeProperties,
     RootedTreeReroot,
     MetroModelingViz,
+    ComponentsBfsSweep,
+    NeighborhoodCostViz,
+    RiverCrossingStateGraph,
+    PartyDegreeFilter,
     BipartiteChecker,
     StrongConnectivityViz,
     FloodFillGrid,
