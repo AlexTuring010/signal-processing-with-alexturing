@@ -24,24 +24,27 @@
   --danger: 190 18 60;          /* rose-700 — distinct from accent */
 }
 
-/* Dark theme — deep maroon/wine base, dark-red accent. Backgrounds are
-   warm dark (a touch of red in the grey) so the whole UI reads as a
-   single family without losing legibility. Foreground stays high-contrast. */
+/* Dark theme — neutral warm-stone chrome with a crimson accent reserved
+   for clickables and brand surfaces. Backgrounds, borders and muted text
+   are slate/stone-grey (warm-tinted, NOT red-tinted) so the page reads as
+   neutral; only links/buttons/badges carry the brand colour. This keeps
+   the same warm family as the light theme while removing the "everything
+   looks red" effect from the chrome itself. */
 [data-theme='dark'] {
-  --bg: 22 12 14;               /* warm near-black with crimson undertone */
-  --bg-soft: 32 18 21;          /* lifted surface */
-  --bg-elevated: 42 24 28;      /* card surface — slightly redder */
-  --fg: 245 232 234;            /* warm white */
-  --fg-muted: 200 168 174;      /* dusty rose */
-  --fg-subtle: 158 124 132;     /* darker dusty rose */
-  --border: 78 36 46;           /* deep maroon */
-  --border-strong: 110 50 64;
-  --accent: 244 63 94;          /* rose-500 — bright crimson, readable on dark */
-  --accent-soft: 76 5 25;       /* rose-950 */
+  --bg: 14 12 11;               /* near-black, very subtle warm cast (stone-950) */
+  --bg-soft: 28 25 23;          /* lifted surface (stone-900) */
+  --bg-elevated: 41 37 36;      /* card surface (stone-800) */
+  --fg: 244 240 235;            /* warm white */
+  --fg-muted: 180 168 158;      /* warm neutral muted (stone-400-ish) */
+  --fg-subtle: 130 118 110;     /* warm neutral subtle (stone-500-ish) */
+  --border: 68 62 58;           /* warm neutral border (stone-700) */
+  --border-strong: 110 100 92;  /* warm neutral border-strong (stone-600-ish) */
+  --accent: 244 63 94;          /* rose-500 — bright crimson, links + buttons */
+  --accent-soft: 76 5 25;       /* rose-950 — backdrop for accent surfaces */
   --accent-fg: 28 4 10;
-  --success: 52 211 153;        /* emerald-400 — kept */
-  --warn: 251 191 36;            /* amber-400 — kept */
-  --danger: 251 113 133;         /* rose-400 — distinct from accent */
+  --success: 52 211 153;        /* emerald-400 */
+  --warn: 251 191 36;           /* amber-400 */
+  --danger: 251 113 133;        /* rose-400 — distinct from accent */
 }
 
 html {
