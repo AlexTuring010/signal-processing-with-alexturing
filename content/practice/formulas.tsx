@@ -202,6 +202,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos(x ± y)',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos(x \\pm y) = \\cos(x)\\cos(y) \\mp \\sin(x)\\sin(y)'}</BlockMath>,
       },
       {
@@ -209,6 +210,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x ± y)',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x \\pm y) = \\sin(x)\\cos(y) \\pm \\cos(x)\\sin(y)'}</BlockMath>,
       },
       {
@@ -216,6 +218,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos(x) μέσω εκθετικών',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos(x) = \\tfrac{1}{2}\\!\\left(e^{jx} + e^{-jx}\\right)'}</BlockMath>,
       },
       {
@@ -223,6 +226,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x) μέσω εκθετικών',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x) = \\tfrac{1}{2j}\\!\\left(e^{jx} - e^{-jx}\\right)'}</BlockMath>,
       },
       {
@@ -230,6 +234,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos(x)·cos(y) → product-to-sum',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos(x)\\cos(y) = \\tfrac{1}{2}\\,[\\cos(x - y) + \\cos(x + y)]'}</BlockMath>,
       },
       {
@@ -237,6 +242,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x)·sin(y) → product-to-sum',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x)\\sin(y) = \\tfrac{1}{2}\\,[\\cos(x - y) - \\cos(x + y)]'}</BlockMath>,
       },
       {
@@ -244,6 +250,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x)·cos(y) → product-to-sum',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x)\\cos(y) = \\tfrac{1}{2}\\,[\\sin(x - y) + \\sin(x + y)]'}</BlockMath>,
       },
       {
@@ -251,6 +258,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos²(x) (διπλάσιο τόξο)',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos^2(x) = \\tfrac{1}{2}\\,[1 + \\cos(2x)]'}</BlockMath>,
       },
       {
@@ -258,6 +266,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin²(x) (διπλάσιο τόξο)',
         topic: 'foundations',
         inTypology: true,
+        derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin^2(x) = \\tfrac{1}{2}\\,[1 - \\cos(2x)]'}</BlockMath>,
       },
 

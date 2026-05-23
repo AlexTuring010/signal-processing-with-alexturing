@@ -211,6 +211,10 @@ export const SECTION_TITLES: Record<string, string> = {
   'noise/white-noise': 'White noise',
   'noise/through-filters': 'Noise through filters',
   'noise/snr': 'SNR',
+  'reference/complex-numbers': 'Μιγαδικοί αριθμοί',
+  'reference/spectrum-conventions': 'Συμβάσεις φάσματος',
+  'reference/fourier-pairs': 'Fourier pairs',
+  'reference/trig-identities': 'Τριγωνομετρικές ταυτότητες',
   formulas: 'Τυπολόγιο',
   cheatsheet: 'Συνιστώμενη πινακίδα',
 }

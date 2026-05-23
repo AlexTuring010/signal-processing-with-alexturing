@@ -1,0 +1,681 @@
+export const metadata = {
+  title: 'Τριγωνομετρικές ταυτότητες — οι μηχανές αλγεβρικής μετασχηματοποίησης της διαμόρφωσης',
+  description:
+    'Οι εννέα τριγωνομετρικές ταυτότητες του τυπολογίου — sum/difference, complex-exponential, product-to-sum, double-angle — δοσμένες όχι σαν λίστα αλλά μέσα στις πραγματικές παραγωγές διαμόρφωσης όπου τις χρησιμοποιείς: DSB-SC sidebands, coherent demodulation, NBFM, SSB, FM ισχύς, random-process autocorrelation.',
+}
+
+export const frontmatter = {
+  title: 'Τριγωνομετρικές ταυτότητες — από το τυπολόγιο στην παραγωγή',
+  slug: 'reference/trig-identities',
+  order: 95,
+  prerequisites: ['reference/complex-numbers'],
+  examWeight: 2,
+  estimatedReadTime: 18,
+  lastUpdated: '2026-05-23',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Foundations · Reference</span>
+  <span>·</span>
+  <span>~18 min read</span>
+</div>
+
+# Τριγωνομετρικές ταυτότητες — από το τυπολόγιο στην παραγωγή
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="reference/trig-identities" />
+  <Bookmark id="reference/trig-identities" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<Callout type="note">
+  Σελίδα **αναφοράς** — όχι μέρος της κύριας ροής. Οι **εννέα** τριγωνομετρικές ταυτότητες που ζουν στο [τυπολόγιο](/slides/formulas.pdf) είναι **τα εργαλεία** που μετατρέπουν τις διαμορφώσεις σε φασματικά αντικείμενα που μπορείς να σχεδιάσεις. Αντί να σου τις παρουσιάσουμε ξανά σαν στείρα λίστα, εδώ τις δίνουμε **στην παραγωγή όπου τις χρησιμοποιείς**: DSB-SC sidebands, coherent demodulation, NBFM expansion, SSB Hilbert, FM ισχύς, autocorrelation. Κράτα τη σελίδα δίπλα όταν διαβάζεις τα κεφάλαια AM/FM/Random.
+</Callout>
+
+Η αλγεβρική φύση όλης της διαμόρφωσης είναι **πολλαπλασιασμός cosines**. Όταν πολλαπλασιάζεις δύο cosines, παίρνεις άθροισμα δύο νέων cosines (product-to-sum). Όταν τετραγωνίζεις ένα cosine, παίρνεις DC + cosine στη διπλή συχνότητα (double-angle). Όταν αναλύεις σύνθετες γωνίες, αναπτύσσεις με τα sum/difference identities ή ξεκινάς από Euler. Όλα τα συμπεράσματα της θεωρίας — bandwidth, ισχύς, sidebands, demodulation — προκύπτουν από αυτές τις **εννέα αλγεβρικές κινήσεις**.
+
+<Callout type="key" title="Μία αρχή που διατρέχει όλη τη σελίδα">
+**Πολλαπλασιασμός στον χρόνο = συνέλιξη στη συχνότητα.** Οι τριγωνομετρικές ταυτότητες είναι ο **ευθύς τρόπος** να υπολογίσεις αυτή τη συνέλιξη όταν τα δύο σήματα είναι cosines: αντί για συνέλιξη impulses, χρησιμοποιείς product-to-sum και διαβάζεις τις **θέσεις των νέων impulses** απευθείας ($f_c \pm f_m$, $\pm 2f_c$, κτλ). Αυτή η ισοδυναμία είναι ο λόγος που τα κεφάλαια AM/FM αναπτύσσονται κυρίως με αλγεβρικές ταυτότητες, όχι με ολοκληρώματα Fourier.
+</Callout>
+
+<span id="why" />
+
+## 1. Γιατί χρειαζόμαστε αυτές τις εννέα ταυτότητες
+
+Η διαμόρφωση είναι **τρεις πράξεις σε ένα carrier**:
+
+1. **Πολλαπλασιασμός** του message με τον carrier (DSB-SC, conventional AM, mixers): `m(t) · cos(2π f_c t)`.
+2. **Τετραγωνισμός** σε στάδιο demodulation (coherent receiver, power calculation): `cos²(2π f_c t)`.
+3. **Σύνθεση γωνιών** μέσα στον carrier (FM, PM, phase-shift SSB): `cos(2π f_c t + φ(t))`.
+
+Καμία από αυτές τις πράξεις **δεν** είναι Fourier-friendly από μόνη της. Για να βρεις τι κάνουν στο φάσμα, χρειάζεσαι ένα από αυτά τα τρία εργαλεία:
+
+| Πράξη | Εργαλείο | Ταυτότητα |
+| --- | --- | --- |
+| Πολλαπλασιασμός δύο cosines | **product-to-sum** | $\cos x \cos y = \tfrac{1}{2}[\cos(x-y) + \cos(x+y)]$ και sin·sin, sin·cos |
+| Τετραγωνισμός | **double-angle** | $\cos^2 x = \tfrac{1}{2}[1 + \cos 2x]$, $\sin^2 x = \tfrac{1}{2}[1 - \cos 2x]$ |
+| Σύνθεση γωνιών | **sum/difference** | $\cos(x \pm y) = \cos x \cos y \mp \sin x \sin y$ και sin variant |
+| Όλα τα παραπάνω σε Fourier-διαθέσιμη μορφή | **complex exponentials** | $\cos x = \tfrac{1}{2}(e^{jx} + e^{-jx})$, $\sin x = \tfrac{1}{2j}(e^{jx} - e^{-jx})$ |
+
+Όλες οι ταυτότητες είναι **απλές αναδιατάξεις** της σχέσης του Euler — αυτό το συζητάμε αναλυτικά παρακάτω και το αφήνουμε για backbone-cross-link στο [/reference/complex-numbers#euler](/reference/complex-numbers#euler). Εδώ ασχολούμαστε με το **πώς και πού** τις χρησιμοποιούμε.
+
+<span id="sum-diff" />
+
+## 2. Sum/difference — `cos(x ± y)` και `sin(x ± y)`
+
+$$
+\boxed{\,\cos(x \pm y) = \cos x \cos y \mp \sin x \sin y\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+$$
+\boxed{\,\sin(x \pm y) = \sin x \cos y \pm \cos x \sin y\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+**Πρόσεξε το πρόσημο.** Στο cosine: αν το αριστερό μέλος έχει **+**, το δεξί έχει **−**. Στο sine: τα πρόσημα συμφωνούν. Το λάθος πρόσημο είναι ο πιο συνηθισμένος αλγεβρικός γκάφας του εξαμήνου — γράψε τις σχέσεις πρώτη φορά **αργά**, με τις σωστές αναλογίες προσήμων στο μυαλό σου.
+
+### 2a. Γρήγορη παραγωγή με Euler
+
+Εκκινώντας από $e^{j(x+y)} = e^{jx}\,e^{jy}$, αναλύουμε με τον τύπο του Euler:
+
+$$
+\cos(x+y) + j\sin(x+y) = (\cos x + j\sin x)(\cos y + j\sin y)
+$$
+
+Αναπτύσσοντας το γινόμενο:
+
+$$
+= \underbrace{(\cos x \cos y - \sin x \sin y)}_{\text{real}} + j\underbrace{(\sin x \cos y + \cos x \sin y)}_{\text{imag}}
+$$
+
+Εξισώνοντας real και imaginary parts:
+
+$$
+\cos(x+y) = \cos x \cos y - \sin x \sin y, \qquad \sin(x+y) = \sin x \cos y + \cos x \sin y
+$$
+
+Για την περίπτωση `x − y`, αντικατάστησε `y → −y` (cosine άρτιο, sine περιττό): παίρνεις τα `∓` και `±` αντίστοιχα. **Δύο γραμμές, και οι τέσσερις ταυτότητες ξεκλειδώνονται.**
+
+<Callout type="connection" title="Σύνδεση — γιατί ο Euler είναι «η μάνα» των ταυτοτήτων">
+Παρατήρησε ότι όλη η παραπάνω παραγωγή χρησιμοποίησε **μόνο** μια ιδιότητα: ότι το γινόμενο εκθετικών είναι το εκθετικό του αθροίσματος των εκθετών. Όλη η τριγωνομετρία είναι «κρυμμένη» μέσα στους μιγαδικούς αριθμούς. Αυτός είναι ο λόγος που η αλγεβρική κίνηση στις τηλεπικοινωνίες σχεδόν πάντα **πρώτα μετατρέπει cosines σε εκθετικά**, κάνει αλγεβρική δουλειά εκεί, και επιστρέφει σε cosines στο τέλος. Πλήρης εισαγωγή στο [/reference/complex-numbers](/reference/complex-numbers).
+</Callout>
+
+### 2b. Πού τις χρησιμοποιείς — Coherent demodulation με phase error
+
+Στην [DSB-SC](/am/dsb-sc#3-coherent-demodulation) ο δέκτης πολλαπλασιάζει το λαμβανόμενο σήμα με έναν τοπικό oscillator που **ιδανικά** ταυτίζεται με τον carrier. Στην πράξη, ο τοπικός oscillator μπορεί να έχει σφάλμα φάσης $\phi$:
+
+$$
+y(t) = x_{DSB}(t) \cdot 2\cos(2\pi f_c t + \phi) = 2\,m(t)\,\cos(2\pi f_c t)\,\cos(2\pi f_c t + \phi)
+$$
+
+Το γινόμενο δύο cosines στις ίδιες συχνότητες — αλλά **με phase shift**. Το ξεμπλέκουμε με την product-to-sum (που θα δούμε αναλυτικά παρακάτω στο §4):
+
+$$
+2\cos(a)\cos(a+\phi) = \cos(-\phi) + \cos(2a + \phi) = \cos(\phi) + \cos(2a + \phi)
+$$
+
+Άρα:
+
+$$
+y(t) = m(t)\,\cos(\phi) + m(t)\,\cos(4\pi f_c t + \phi)
+$$
+
+Το δεύτερο όρο τον σβήνει το LPF στον δέκτη. **Μένει:**
+
+$$
+\boxed{\,y_{LPF}(t) = m(t)\,\cos(\phi)\,}
+$$
+
+Το $\cos(\phi)$ είναι ο **factor εξασθένησης** του message από το phase error. Όταν $\phi = 0$: τέλεια recovery. Όταν $\phi = \pi/2$ (quadrature): $\cos(\pi/2) = 0$ → **το message χάνεται εντελώς** (quadrature null). Αυτή η ευαισθησία στη φάση είναι ο κύριος λόγος που η DSB-SC είναι πιο δύσκολη στην υλοποίηση από την Conventional AM.
+
+<Callout type="intuition" title="Γεωμετρική ερμηνεία του cos(φ) factor">
+Σκέψου τον carrier σαν μοναδιαίο διάνυσμα στο μιγαδικό επίπεδο. Ο τοπικός oscillator του δέκτη είναι ένα δεύτερο διάνυσμα στραμμένο κατά γωνία $\phi$. Το **εσωτερικό γινόμενο** των δύο διανυσμάτων (αυτό που μένει μετά το LPF) είναι ακριβώς $\cos(\phi)$. Στη γωνία 0° βλέπεις πλήρες σήμα· στις 90° (quadrature) δεν βλέπεις τίποτα. Είναι η ίδια ιδέα της προβολής που εμφανίζεται στους Fourier coefficients (αν είδες ήδη τους [vector decomposition vizzes](/foundations/fourier-series)).
+</Callout>
+
+<span id="complex-exp" />
+
+## 3. Complex-exponential μορφή — `cos(x) = ½(e^{jx} + e^{-jx})`, `sin(x) = (e^{jx} − e^{-jx})/(2j)`
+
+$$
+\boxed{\,\cos x = \tfrac{1}{2}\!\left(e^{jx} + e^{-jx}\right)\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+$$
+\boxed{\,\sin x = \tfrac{1}{2j}\!\left(e^{jx} - e^{-jx}\right)\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+Αυτές οι δύο σχέσεις είναι η **καρδιά** όλης της θεωρίας Fourier και διαμόρφωσης. Κάθε φορά που χρειάζεσαι να βρεις το **φάσμα** ενός cosine ή ενός γινομένου που περιέχει cosines, μετατρέπεις σε εκθετικά. Δες πλήρη εισαγωγή στο [/reference/complex-numbers#euler](/reference/complex-numbers#euler).
+
+### 3a. Παραγωγή — απλή αλγεβρική κίνηση από Euler
+
+Από τον τύπο του Euler:
+
+$$
+e^{jx} = \cos x + j\sin x, \qquad e^{-jx} = \cos x - j\sin x
+$$
+
+Πρόσθεσε τις δύο σχέσεις:
+
+$$
+e^{jx} + e^{-jx} = 2\cos x \;\Longrightarrow\; \cos x = \tfrac{1}{2}(e^{jx} + e^{-jx})
+$$
+
+Αφαίρεσέ τες:
+
+$$
+e^{jx} - e^{-jx} = 2j\sin x \;\Longrightarrow\; \sin x = \tfrac{1}{2j}(e^{jx} - e^{-jx})
+$$
+
+Δύο γραμμές, δύο ταυτότητες. Αυτές οι σχέσεις λένε ότι **κάθε cosine ή sine είναι το άθροισμα δύο rotating phasors** — ένα που στρίβει αριστερόστροφα στη θετική συχνότητα και ένα που στρίβει δεξιόστροφα στην αρνητική. Γι' αυτό κάθε real cosine δίνει **δύο impulses** στο φάσμα: μία στη $+f_0$ και μία στη $-f_0$.
+
+### 3b. Πού τις χρησιμοποιείς — Απόδειξη του modulation theorem
+
+Στο [modulation theorem](/foundations/fourier-transform#7-modulation-theorem) γράφουμε:
+
+$$
+\mathcal{F}\{m(t)\,\cos(2\pi f_c t)\} = \tfrac{1}{2}M(f - f_c) + \tfrac{1}{2}M(f + f_c)
+$$
+
+**Πώς το αποδεικνύεις σε τρεις γραμμές;** Γράφε το cosine σε exponential μορφή:
+
+$$
+m(t)\,\cos(2\pi f_c t) = \tfrac{1}{2}\,m(t)\,e^{j 2\pi f_c t} + \tfrac{1}{2}\,m(t)\,e^{-j 2\pi f_c t}
+$$
+
+Παίρνε FT γραμμικά. Κάθε όρος είναι message πολλαπλασιασμένο με complex exponential — αυτό είναι ακριβώς η **frequency-shift property**: $m(t)\,e^{j 2\pi f_c t} \;\leftrightarrow\; M(f - f_c)$:
+
+$$
+\mathcal{F}\{m(t)\,\cos(2\pi f_c t)\} = \tfrac{1}{2}M(f - f_c) + \tfrac{1}{2}M(f + f_c)
+$$
+
+**Όλος ο modulation theorem είναι αυτή η αλγεβρική κίνηση** — μετατροπή του cosine σε δύο εκθετικά, και εφαρμογή frequency-shift δύο φορές. Όλη η AM, DSB-SC, SSB, FM υπάρχουν επειδή ισχύει αυτή η σχέση.
+
+### 3c. Πού τις χρησιμοποιείς — FT του ίδιου του cosine
+
+Το **πιο διάσημο pair** του τυπολογίου:
+
+$$
+\cos(2\pi f_0 t) \;\leftrightarrow\; \tfrac{1}{2}\bigl[\delta(f - f_0) + \delta(f + f_0)\bigr]
+$$
+
+Πάλι, η παραγωγή είναι **μία γραμμή** αν χρησιμοποιήσεις την exponential μορφή. Γράψε:
+
+$$
+\cos(2\pi f_0 t) = \tfrac{1}{2}e^{j 2\pi f_0 t} + \tfrac{1}{2}e^{-j 2\pi f_0 t}
+$$
+
+Από το pair $e^{j 2\pi f_0 t} \leftrightarrow \delta(f - f_0)$ (που έρχεται με τη σειρά του από το pair $\delta(t) \leftrightarrow 1$ μέσω duality), παίρνεις απευθείας:
+
+$$
+\cos(2\pi f_0 t) \leftrightarrow \tfrac{1}{2}\delta(f - f_0) + \tfrac{1}{2}\delta(f + f_0)
+$$
+
+Δες την πλήρη οπτική παρουσίαση στο [/reference/fourier-pairs#cos-impulses](/reference/fourier-pairs#cos-impulses).
+
+<Callout type="key" title="Γιατί κάθε real cosine έχει «δύο πλευρές» στο φάσμα">
+Από την exponential μορφή, **κάθε real cosine είναι άθροισμα δύο rotating phasors** — ένας στη $+f_0$, ένας στη $-f_0$. Επομένως κάθε real cosine δίνει **δύο** impulses στο two-sided φάσμα, καθένα με βάρος $\tfrac{1}{2}$. Δεν είναι σύμβαση σχεδίασης — είναι μαθηματικό γεγονός που πηγάζει από τη σχέση $\cos x = \tfrac{1}{2}(e^{jx} + e^{-jx})$. Πλήρης συζήτηση για τις conventions σχεδίασης στο [/reference/spectrum-conventions](/reference/spectrum-conventions).
+</Callout>
+
+<span id="product-to-sum" />
+
+## 4. Product-to-sum — οι τρεις «μαγικές» ταυτότητες της AM
+
+Όταν πολλαπλασιάζεις δύο cosines (ή sine·cos, ή sin·sin), το αποτέλεσμα είναι **άθροισμα δύο cosines στις συχνότητες-άθροισμα και -διαφορά**. Αυτή η αναγωγή είναι **η** αλγεβρική κίνηση που γεννά τις sidebands.
+
+$$
+\boxed{\,\cos x \cos y = \tfrac{1}{2}\,[\cos(x-y) + \cos(x+y)]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+$$
+\boxed{\,\sin x \sin y = \tfrac{1}{2}\,[\cos(x-y) - \cos(x+y)]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+$$
+\boxed{\,\sin x \cos y = \tfrac{1}{2}\,[\sin(x-y) + \sin(x+y)]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+**Πώς τις θυμάσαι:** όλες είναι **αναδιάταξη** των sum/difference identities της §2. Πάρε το $\cos(x+y)$ και το $\cos(x-y)$:
+
+$$
+\cos(x-y) = \cos x \cos y + \sin x \sin y
+$$
+$$
+\cos(x+y) = \cos x \cos y - \sin x \sin y
+$$
+
+Πρόσθεσέ τες: $\cos(x-y) + \cos(x+y) = 2\cos x \cos y$, που δίνει την πρώτη product-to-sum. Αφαίρεσέ τες: $\cos(x-y) - \cos(x+y) = 2\sin x \sin y$, που δίνει τη δεύτερη. Παρόμοια αλγεβρική κίνηση παράγει την τρίτη από τα sine sum/difference. **Δεν είναι ξεχωριστές «μαγικές» ταυτότητες — είναι ξανά οι sum/difference, αντίστροφα.**
+
+### 4a. cos·cos — DSB-SC sidebands από single-tone
+
+Αυτή είναι η κορυφαία χρήση τόσο στις εξετάσεις όσο και στη θεωρία. Στη [DSB-SC](/am/dsb-sc#1-από-conventional-am-στο-dsb-sc) με single-tone message $m(t) = A_m\cos(2\pi f_m t)$ έχεις:
+
+$$
+x_{DSB}(t) = m(t)\cos(2\pi f_c t) = A_m\cos(2\pi f_m t)\cos(2\pi f_c t)
+$$
+
+Product-to-sum με $x = 2\pi f_c t$, $y = 2\pi f_m t$ (έχεις cos·cos, οπότε χρησιμοποιείς την πρώτη):
+
+$$
+\boxed{\,x_{DSB}(t) = \frac{A_m}{2}\,\cos(2\pi(f_c - f_m)t) + \frac{A_m}{2}\,\cos(2\pi(f_c + f_m)t)\,}
+$$
+
+**Δύο cosines στις $f_c \pm f_m$**, καθένα με πλάτος $A_m/2$. **Αυτές είναι οι δύο sidebands.** Το bandwidth είναι:
+
+$$
+B_{DSB} = (f_c + f_m) - (f_c - f_m) = 2f_m
+$$
+
+Η σχέση **«bandwidth = 2 × message frequency»** για DSB-SC, που είδες στα κεφάλαια AM, πηγάζει **απευθείας από την product-to-sum**. Καμία Fourier-ολοκλήρωση δεν χρειάζεται.
+
+<Callout type="connection" title="Σύνδεση — γιατί η DSB-SC ονομάζεται «double sideband»">
+Από την product-to-sum, ένα cosine message παράγει **δύο** sidebands — μία στην $f_c - f_m$ (LSB, lower sideband) και μία στην $f_c + f_m$ (USB, upper sideband). Στη γενική περίπτωση message με bandwidth $W$, παράγονται **δύο φασματικά bands** στις $[f_c - W, f_c]$ και $[f_c, f_c + W]$. Γι' αυτό η DSB έχει total bandwidth $2W$ — και γι' αυτό η [SSB](/am/ssb) πετάει τη μία από αυτές για να μειώσει το bandwidth στο μισό.
+</Callout>
+
+### 4b. cos·cos — Conventional AM expansion
+
+Στην [Conventional AM](/am/conventional#3-φάσμα) με single-tone $m(t) = A_m\cos(2\pi f_m t)$:
+
+$$
+x_{AM}(t) = [A_c + A_m\cos(2\pi f_m t)]\,\cos(2\pi f_c t)
+$$
+
+Αναπτύσσοντας:
+
+$$
+= A_c\cos(2\pi f_c t) + A_m\cos(2\pi f_m t)\cos(2\pi f_c t)
+$$
+
+Ο πρώτος όρος είναι ο **carrier** (impulse στο $\pm f_c$). Ο δεύτερος όρος είναι **ακριβώς** η DSB-SC του §4a. Με product-to-sum:
+
+$$
+\boxed{\,x_{AM}(t) = A_c\cos(2\pi f_c t) + \frac{A_m}{2}\cos(2\pi(f_c - f_m)t) + \frac{A_m}{2}\cos(2\pi(f_c + f_m)t)\,}
+$$
+
+**Τρία cosines:** carrier στη $f_c$, LSB στη $f_c - f_m$, USB στη $f_c + f_m$. Όλα τα συμπεράσματα για την AM ισχύ (η ½ του $A_c^2$ για τον carrier, $\mu^2 A_c^2/8$ ανά sideband) προκύπτουν **διαβάζοντας τα πλάτη** αυτής της σχέσης και εφαρμόζοντας τον τύπο $P = A^2/2$ για κάθε cosine.
+
+### 4c. sin·sin — NBFM expansion (cos(a−b) − cos(a+b))
+
+Στην [NBFM](/fm/pm#7-nbfm-vs-am) με μικρό modulation index $\beta \ll 1$, η FM προσεγγίζεται γραμμικά:
+
+$$
+x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) - A_c\,\beta\,\sin(2\pi f_m t)\,\sin(2\pi f_c t)
+$$
+
+Ο δεύτερος όρος έχει **γινόμενο δύο sines** — προσοχή, sin·sin, όχι cos·cos. Από την product-to-sum $\sin x \sin y = \tfrac{1}{2}[\cos(x-y) - \cos(x+y)]$:
+
+$$
+\sin(2\pi f_c t)\,\sin(2\pi f_m t) = \tfrac{1}{2}\bigl[\cos(2\pi(f_c - f_m)t) - \cos(2\pi(f_c + f_m)t)\bigr]
+$$
+
+Πρόσεξε το **κρίσιμο πρόσημο −** μεταξύ των δύο cosines (από τη sin·sin, διαφορετικά από τη cos·cos). Αντικαθιστώντας:
+
+$$
+\boxed{\,x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) + \frac{A_c\beta}{2}\cos(2\pi(f_c + f_m)t) - \frac{A_c\beta}{2}\cos(2\pi(f_c - f_m)t)\,}
+$$
+
+**Σύγκρινε με το AM single-tone της §4b:** ίδια **τρία cosines στις ίδιες θέσεις**, αλλά **η μία sideband έχει πρόσημο −**. Αυτό το αρνητικό πρόσημο είναι **η μόνη αλγεβρική διαφορά** μεταξύ NBFM και AM μικρού $\mu$. Δίνει την περιστροφή του phasor στο [I/Q canonical form](/modulation/bridge#5b) και την constant-envelope ιδιότητα της FM.
+
+<Callout type="warning" title="cos·cos vs sin·sin — μην ξεχάσεις το −">
+**Η πιο κοινή γκάφα στο NBFM:** χρησιμοποιείς την cos·cos product-to-sum (που έχει **+** μεταξύ των cosines) αντί της σωστής sin·sin (που έχει **−**). Αποτέλεσμα: παίρνεις ίδιο σήμα με AM, χάνεις την NBFM-vs-AM διάκριση. Το πρόσημο **+/−** στις product-to-sum **είναι** η διαφορά μεταξύ AM και NBFM.
+</Callout>
+
+### 4d. sin·cos — SSB από Hilbert pair
+
+Στην [SSB](/am/ssb#2b-phase-shift-hilbert-method) με Hilbert μέθοδο γράφεις:
+
+$$
+x_{USB}(t) = m(t)\,\cos(2\pi f_c t) - \hat{m}(t)\,\sin(2\pi f_c t)
+$$
+
+όπου $\hat{m}(t)$ είναι ο Hilbert transform του message (phase shift κατά $-\pi/2$ σε όλες τις θετικές συχνότητες).
+
+Για να δεις γιατί αυτή η συνδυασμός δίνει **μόνο** την USB, πάρε single-tone $m(t) = \cos(2\pi f_m t)$, οπότε $\hat{m}(t) = \sin(2\pi f_m t)$ (cos → sin μέσω Hilbert):
+
+$$
+x_{USB}(t) = \cos(2\pi f_m t)\cos(2\pi f_c t) - \sin(2\pi f_m t)\sin(2\pi f_c t)
+$$
+
+**Αυτή είναι ακριβώς η σχέση** $\cos(x+y) = \cos x \cos y - \sin x \sin y$ από τη §2, με $x = 2\pi f_c t$, $y = 2\pi f_m t$:
+
+$$
+\boxed{\,x_{USB}(t) = \cos(2\pi(f_c + f_m)t)\,}
+$$
+
+**Μόνο** ένα cosine στη συχνότητα $f_c + f_m$ — δηλαδή **μόνο** η upper sideband. Καμία LSB. Αυτό είναι το αλγεβρικό «θαύμα» της SSB: ο σωστός συνδυασμός με Hilbert pair κάνει τη μία sideband να **αλληλοαναιρεθεί**.
+
+Αν αντί για `−` βάλεις `+`:
+
+$$
+x_{LSB}(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)
+$$
+
+Με την ταυτότητα $\cos(x-y) = \cos x \cos y + \sin x \sin y$:
+
+$$
+\boxed{\,x_{LSB}(t) = \cos(2\pi(f_c - f_m)t)\,}
+$$
+
+**Μόνο** η lower sideband. Το πρόσημο `±` στον Hilbert όρο **επιλέγει** USB ή LSB.
+
+<Callout type="connection" title="Σύνδεση — γιατί η SSB ονομάζεται «phase method»">
+Παρατήρησε ότι η SSB δεν χρησιμοποίησε φίλτρο — χρησιμοποίησε **αλγεβρική κίνηση**: ένας από τους δύο όρους ($m\cos$, $\hat{m}\sin$) έχει σωστή φάση ώστε να αλληλοαναιρέσει τη μία sideband. Αυτή η φάση-shift είναι η δουλειά του Hilbert. Γι' αυτό η μέθοδος ονομάζεται «phase shift method» — και γι' αυτό ολόκληρη η §2 του [/modulation/bridge](/modulation/bridge) χτίστηκε γύρω από τον Hilbert.
+</Callout>
+
+### 4e. cos·cos — Random-process autocorrelation
+
+Στους [random processes με τυχαία φάση](/randomness/random-processes), αν $X(t) = A\cos(2\pi f_0 t + \Theta)$ με $\Theta \sim U[0, 2\pi)$, η autocorrelation είναι:
+
+$$
+R_X(t_1, t_2) = E\{X(t_1) X(t_2)\} = A^2 E\{\cos(2\pi f_0 t_1 + \Theta)\cos(2\pi f_0 t_2 + \Theta)\}
+$$
+
+Product-to-sum με $x = 2\pi f_0 t_1 + \Theta$, $y = 2\pi f_0 t_2 + \Theta$:
+
+$$
+\cos x \cos y = \tfrac{1}{2}\bigl[\cos(2\pi f_0 (t_1 - t_2)) + \cos(2\pi f_0 (t_1 + t_2) + 2\Theta)\bigr]
+$$
+
+Παίρνοντας expectation: ο πρώτος όρος **δεν εξαρτάται** από το $\Theta$ — μένει ως έχει. Ο δεύτερος όρος είναι cosine με τυχαία φάση $2\Theta$ — ο μέσος όρος cosine πάνω σε uniform φάση = 0. Μένει:
+
+$$
+\boxed{\,R_X(\tau) = \frac{A^2}{2}\,\cos(2\pi f_0 \tau)\,} \quad (\tau = t_1 - t_2)
+$$
+
+**Εξαρτάται μόνο από $\tau = t_1 - t_2$** — το process είναι WSS. Όλη η ανάλυση WSS του random-phase cosine υλοποιείται με αυτή τη μία εφαρμογή της cos·cos product-to-sum.
+
+<span id="double-angle" />
+
+## 5. Double-angle — `cos²` και `sin²`
+
+$$
+\boxed{\,\cos^2 x = \tfrac{1}{2}\,[1 + \cos(2x)]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+$$
+\boxed{\,\sin^2 x = \tfrac{1}{2}\,[1 - \cos(2x)]\,} \quad \text{✓ Στο τυπολόγιο}
+$$
+
+**Πώς τις θυμάσαι σε δύο γραμμές:** είναι **η product-to-sum με $y = x$**. Πάρε $\cos x \cos y$ με $y = x$:
+
+$$
+\cos x \cos x = \tfrac{1}{2}[\cos(x-x) + \cos(x+x)] = \tfrac{1}{2}[\cos 0 + \cos 2x] = \tfrac{1}{2}[1 + \cos 2x]
+$$
+
+Όμοια για το sin·sin. **Δεν είναι ξεχωριστές ταυτότητες — είναι ξανά οι product-to-sum με $y = x$.** Αυτή η παρατήρηση σου εξοικονομεί memory load στις εξετάσεις.
+
+Επίσης παρατήρησε: $\cos^2 x + \sin^2 x = \tfrac{1}{2}[1 + \cos 2x] + \tfrac{1}{2}[1 - \cos 2x] = 1$ — η **Πυθαγόρεια ταυτότητα** επιβεβαιώνεται απευθείας.
+
+### 5a. cos² — Coherent demodulation που «εκσπρέι» τον carrier
+
+Η κορυφαία χρήση της cos² είναι στη [DSB-SC coherent demodulation](/am/dsb-sc#3-coherent-demodulation). Ο δέκτης πολλαπλασιάζει το λαμβανόμενο σήμα με $2\cos(2\pi f_c t)$:
+
+$$
+y(t) = x_{DSB}(t) \cdot 2\cos(2\pi f_c t) = 2\,m(t)\,\cos^2(2\pi f_c t)
+$$
+
+Εφαρμόζοντας $\cos^2 \theta = \tfrac{1}{2}(1 + \cos 2\theta)$ με $\theta = 2\pi f_c t$:
+
+$$
+y(t) = 2\,m(t) \cdot \tfrac{1}{2}\bigl[1 + \cos(4\pi f_c t)\bigr] = m(t) + m(t)\cos(4\pi f_c t)
+$$
+
+**Δύο όροι:** το ζητούμενο message στο baseband, και ένα αντίγραφο μετατοπισμένο στις $\pm 2f_c$ (μακριά, ώστε να το σβήσει ένα LPF). Μετά το LPF μένει $m(t)$ — **τέλεια recovery του message**.
+
+<Callout type="key" title="Γιατί ο coherent receiver «δουλεύει»">
+Η ουσία είναι αυτή η μία γραμμή: $2\cos^2(2\pi f_c t) = 1 + \cos(4\pi f_c t)$. Ο «1» αφήνει το message στο baseband (recovered). Το $\cos(4\pi f_c t)$ μετατοπίζει ένα αντίγραφο στις $\pm 2f_c$ (LPF το σβήνει). **Όλη η coherent demodulation είναι αυτή η μία double-angle κίνηση.**
+</Callout>
+
+### 5b. sin² — Μέση ισχύς cosines
+
+Η μέση ισχύς ενός cosine υπολογίζεται απευθείας από το $\sin^2$:
+
+$$
+P = \frac{1}{T}\int_0^T \bigl[A\cos(2\pi f t)\bigr]^2\,dt = A^2 \cdot \frac{1}{T}\int_0^T \cos^2(2\pi f t)\,dt
+$$
+
+Από $\cos^2 \theta = \tfrac{1}{2}(1 + \cos 2\theta)$:
+
+$$
+\frac{1}{T}\int_0^T \cos^2(2\pi f t)\,dt = \tfrac{1}{2} + \tfrac{1}{2}\cdot\frac{1}{T}\int_0^T \cos(4\pi f t)\,dt
+$$
+
+Το δεύτερο ολοκλήρωμα είναι **0** (μέσος του cosine πάνω σε ακέραιες περιόδους):
+
+$$
+\boxed{\,P = \frac{A^2}{2}\,}
+$$
+
+Αυτή είναι η **πιο εξεταζόμενη** σχέση ισχύος όλου του εξαμήνου: «μέση ισχύς cosine = πλάτος² / 2». Όλες οι σχέσεις $P_c = A_c^2/2$, $P_{sb} = (\mu A_c)^2/8$ (DSB sidebands), $P_{FM} = A_c^2/2$ (FM constant envelope) πηγάζουν από αυτή τη μία διπλή ταυτότητα.
+
+### 5c. cos² + sin² = 1 — Constant envelope της FM/PM
+
+Στις [FM](/fm/idea) και [PM](/fm/pm#5-pm-σε-iq-canonical-form), το I/Q canonical form δίνει:
+
+$$
+x_{FM}(t) = A_c\cos\phi(t)\cos(2\pi f_c t) - A_c\sin\phi(t)\sin(2\pi f_c t)
+$$
+
+όπου $\phi(t) = 2\pi k_f \int m(\tau)d\tau$. Το **envelope** του σήματος (το πλάτος στο μιγαδικό I/Q επίπεδο) είναι:
+
+$$
+V(t) = \sqrt{x_I^2(t) + x_Q^2(t)} = A_c\sqrt{\cos^2\phi(t) + \sin^2\phi(t)} = A_c
+$$
+
+**Σταθερό** — ανεξάρτητο του message. Αυτή είναι η **constant envelope** ιδιότητα της FM, που:
+- Επιτρέπει στον δέκτη να χρησιμοποιήσει **limiter** για να σβήσει amplitude noise.
+- Καθιστά τη μέση ισχύ του FM **ανεξάρτητη** από το $\beta$: $P_{FM} = A_c^2/2$.
+- Διαφοροποιεί τη FM από την AM (που έχει envelope εξαρτημένο από message).
+
+Όλη η πιο σημαντική ιδιότητα της FM στηρίζεται σε αυτή τη **μία γραμμή Πυθαγόρειας** — που με τη σειρά της προκύπτει από τις δύο double-angle.
+
+<span id="quick-ref" />
+
+## 6. Quick reference card — όλες οι εννέα μαζί
+
+| Ταυτότητα | Τύπος | Κύρια χρήση |
+| --- | --- | --- |
+| `cos(x±y)` | $\cos x \cos y \mp \sin x \sin y$ | sum/difference στις γωνιακές αποδείξεις, coherent demod με phase error |
+| `sin(x±y)` | $\sin x \cos y \pm \cos x \sin y$ | SSB derivations, time-shift sine analysis |
+| `cos(x)` | $\tfrac{1}{2}(e^{jx} + e^{-jx})$ | FT, modulation theorem, frequency analysis |
+| `sin(x)` | $\tfrac{1}{2j}(e^{jx} - e^{-jx})$ | FT του sine, Hilbert relation |
+| `cos·cos` | $\tfrac{1}{2}[\cos(x-y) + \cos(x+y)]$ | **DSB-SC sidebands, AM expansion, autocorrelation** |
+| `sin·sin` | $\tfrac{1}{2}[\cos(x-y) - \cos(x+y)]$ | **NBFM expansion** (πρόσεξε το −) |
+| `sin·cos` | $\tfrac{1}{2}[\sin(x-y) + \sin(x+y)]$ | **SSB sideband cancellation** |
+| `cos²` | $\tfrac{1}{2}[1 + \cos 2x]$ | **Coherent demod recovery, μέση ισχύς cosine** |
+| `sin²` | $\tfrac{1}{2}[1 - \cos 2x]$ | Μέση ισχύς sine, $\cos^2 + \sin^2 = 1$ → FM constant envelope |
+
+Όλες έχουν deep-link στις αντίστοιχες entries του τυπολογίου: [trig-cos-sum-diff](/formulas#formula:trig-cos-sum-diff) · [trig-sin-sum-diff](/formulas#formula:trig-sin-sum-diff) · [trig-cos-complex-exp](/formulas#formula:trig-cos-complex-exp) · [trig-sin-complex-exp](/formulas#formula:trig-sin-complex-exp) · [trig-prod-cos-cos](/formulas#formula:trig-prod-cos-cos) · [trig-prod-sin-sin](/formulas#formula:trig-prod-sin-sin) · [trig-prod-sin-cos](/formulas#formula:trig-prod-sin-cos) · [trig-double-cos](/formulas#formula:trig-double-cos) · [trig-double-sin](/formulas#formula:trig-double-sin).
+
+<Callout type="key" title="Όλο το «μνημονικό» σε μία γραμμή">
+**Sum/difference → product-to-sum → double-angle είναι όλα η ίδια οικογένεια.** Ξέρεις τα sum/difference από Euler (§2a). Από αυτά παίρνεις τα product-to-sum με πρόσθεση/αφαίρεση (§4). Από τα product-to-sum παίρνεις τα double-angle με $y = x$ (§5). **Τρεις ταυτότητες — εννέα συνέπειες.** Στις εξετάσεις, αν δεν θυμάσαι κάποια, ξεκίνα από τις sum/difference που έχεις στο τυπολόγιο, και αναπτύξτη.
+</Callout>
+
+## Εξάσκηση
+
+<ExerciseProgress slug="reference/trig-identities" total={6} />
+
+Έξι ασκήσεις που εξετάζουν αυτές τις ταυτότητες **στο πλαίσιο των διαμορφώσεων** — όχι ως αποσπασμένη τριγωνομετρία. Λύσε τες πριν προχωρήσεις στα κεφάλαια AM/FM.
+
+<ExamProblem id="trig-am-single-tone-expand" year="Επανάληψη §4b" weight="βασικό">
+**Ερώτηση:** Έστω η AM σήμα $x(t) = [10 + 4\cos(2\pi \cdot 1000\, t)]\cos(2\pi \cdot 100\,000\, t)$ V. Γράψε το $x(t)$ ως άθροισμα τριών cosines.
+
+<Example title="Λύση" defaultOpen={true}>
+Διαχωρίζω σε carrier + DSB-SC κομμάτι:
+
+$$
+x(t) = 10\cos(2\pi \cdot 100\,000\, t) + 4\cos(2\pi \cdot 1000\, t)\cos(2\pi \cdot 100\,000\, t)
+$$
+
+Στο δεύτερο όρο, **product-to-sum cos·cos** με $x = 2\pi \cdot 100\,000\, t$, $y = 2\pi \cdot 1000\, t$:
+
+$$
+4\cos(y)\cos(x) = 4 \cdot \tfrac{1}{2}[\cos(x-y) + \cos(x+y)] = 2\cos(2\pi \cdot 99\,000\, t) + 2\cos(2\pi \cdot 101\,000\, t)
+$$
+
+Τελικό αποτέλεσμα:
+
+$$
+\boxed{\,x(t) = 10\cos(2\pi \cdot 100\,000\, t) + 2\cos(2\pi \cdot 99\,000\, t) + 2\cos(2\pi \cdot 101\,000\, t)\,}
+$$
+
+**Τρία cosines:** carrier στη $f_c = 100$ kHz με πλάτος 10, LSB στη $f_c - f_m = 99$ kHz με πλάτος 2, USB στη $f_c + f_m = 101$ kHz με πλάτος 2. **Bandwidth = 2 kHz**, **modulation index** $\mu = A_m/A_c = 0.4$.
+
+**Take-away:** η μετάβαση από «AM εξίσωση» σε «τρεις cosines» είναι **μία product-to-sum κίνηση**. Από εκεί διαβάζεις απευθείας όλα τα μεγέθη.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="trig-coherent-phase-error" year="Επανάληψη §2b" weight="μεσαίο">
+**Ερώτηση:** Σε έναν DSB-SC δέκτη ο τοπικός oscillator έχει σφάλμα φάσης $\phi = 30°$. Πόσο message ισχύος εξασθενεί στο output;
+
+<Example title="Λύση" defaultOpen={true}>
+Από τη §2b, το output του LPF είναι $y_{LPF}(t) = m(t)\,\cos(\phi)$.
+
+Στις 30°: $\cos(30°) = \sqrt{3}/2 \approx 0.866$.
+
+Άρα το **πλάτος** του message εξασθενεί κατά factor 0.866. Η **ισχύς** εξασθενεί κατά:
+
+$$
+\frac{P_{out}}{P_{in}} = \cos^2(30°) = \frac{3}{4} = 0.75
+$$
+
+Δηλαδή **−1.25 dB** απώλεια ισχύος. Όχι καταστροφικό, αλλά μη αμελητέο.
+
+**Πατέντα:** αυτή είναι η μόνη απώλεια ισχύος του DSB-SC με phase error — όχι παραμόρφωση, απλά exponential κάτω από τη γωνία. Στις **90°** ($\phi = \pi/2$): $\cos^2 = 0$ → **πλήρης απώλεια** του message (quadrature null).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="trig-cosine-power" year="Επανάληψη §5b" weight="βασικό">
+**Ερώτηση:** Υπολογίσε τη μέση ισχύ του $x(t) = 5\cos(2\pi \cdot 1000\, t) + 3\cos(2\pi \cdot 3000\, t)$ V.
+
+<Example title="Λύση" defaultOpen={true}>
+Επειδή τα δύο cosines είναι σε **διαφορετικές** συχνότητες (1000 Hz και 3000 Hz), είναι ορθογώνια — οι σταυρωτοί όροι μηδενίζονται στη μέση. Άρα η συνολική ισχύς είναι το άθροισμα των ισχύων κάθε cosine.
+
+Από τον τύπο $P = A^2/2$ (από τη §5b):
+
+$$
+P_1 = \frac{5^2}{2} = 12.5 \text{ W}, \qquad P_2 = \frac{3^2}{2} = 4.5 \text{ W}
+$$
+
+$$
+\boxed{\,P_{total} = 12.5 + 4.5 = 17 \text{ W}\,}
+$$
+
+**Διπλό-τσεκ:** χρησιμοποιώντας απευθείας το $\cos^2 = \tfrac{1}{2}(1 + \cos 2x)$:
+
+$$
+\frac{1}{T}\int_0^T [5\cos(2\pi \cdot 1000\, t)]^2\,dt = 25 \cdot \tfrac{1}{2} = 12.5
+$$
+
+Όμοια για το δεύτερο. Άρα 17 W. ✓
+</Example>
+</ExamProblem>
+
+<ExamProblem id="trig-nbfm-spectrum" year="Επανάληψη §4c" weight="μεσαίο">
+**Ερώτηση:** Δίνεται NBFM σήμα $x(t) = 10\cos(2\pi \cdot 10^6 t) - 10 \cdot 0.2 \cdot \sin(2\pi \cdot 1000\, t)\sin(2\pi \cdot 10^6 t)$ V. Γράψε ως άθροισμα τριών cosines και βρες το φάσμα πλάτους.
+
+<Example title="Λύση" defaultOpen={true}>
+Έχουμε $A_c = 10$, $\beta = 0.2$, $f_c = 1$ MHz, $f_m = 1$ kHz.
+
+Στον δεύτερο όρο, **product-to-sum sin·sin** με $x = 2\pi \cdot 10^6 t$, $y = 2\pi \cdot 1000\, t$:
+
+$$
+\sin(x)\sin(y) = \tfrac{1}{2}[\cos(x-y) - \cos(x+y)]
+$$
+
+(Πρόσεξε το **−** μεταξύ των cosines, χαρακτηριστικό της sin·sin.) Άρα:
+
+$$
+-2\sin(x)\sin(y) = -[\cos(x-y) - \cos(x+y)] = \cos(x+y) - \cos(x-y)
+$$
+
+Αντικαθιστώντας στο $x(t)$:
+
+$$
+x(t) = 10\cos(2\pi \cdot 10^6 t) + \cos(2\pi \cdot 1\,001\,000\, t) - \cos(2\pi \cdot 999\,000\, t)
+$$
+
+**Φάσμα πλάτους** (one-sided): carrier impulse στη $f_c = 1$ MHz πλάτους 10, USB impulse στη $f_c + f_m = 1.001$ MHz πλάτους 1, LSB impulse στη $f_c - f_m = 0.999$ MHz πλάτους 1. Στο φάσμα φάσης: η LSB έχει επιπλέον $\pi$ phase shift (το αρνητικό πρόσημο).
+
+**Σύγκριση με AM ίδιου $\mu = 0.2$:** ίδια **πλάτη**, αλλά στο AM **και οι δύο sidebands είναι θετικές** (από cos·cos product-to-sum, που έχει **+**). Η **180° διαφορά φάσης** στην LSB είναι ο φασματικός υπογραφέας του NBFM vs AM.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="trig-ssb-cancel" year="Επανάληψη §4d" weight="προχωρημένο">
+**Ερώτηση:** Δείξε ότι αν $m(t) = A\cos(2\pi f_m t)$, τότε το σήμα $x(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)$ είναι ένα **καθαρό cosine** στη συχνότητα $f_c - f_m$ (LSB).
+
+<Example title="Λύση" defaultOpen={true}>
+Με $m(t) = A\cos(2\pi f_m t)$, ο Hilbert transform είναι $\hat{m}(t) = A\sin(2\pi f_m t)$ (cos → sin, [bridge §2](/modulation/bridge#2-hilbert-transform)).
+
+Αντικαθιστώντας:
+
+$$
+x(t) = A\cos(2\pi f_m t)\cos(2\pi f_c t) + A\sin(2\pi f_m t)\sin(2\pi f_c t)
+$$
+
+**Αναγνώρισε** την ταυτότητα $\cos(x-y) = \cos x \cos y + \sin x \sin y$ με $x = 2\pi f_c t$, $y = 2\pi f_m t$:
+
+$$
+\boxed{\,x(t) = A\cos(2\pi(f_c - f_m)t)\,}
+$$
+
+**Μόνο** η LSB. Καμία USB. Η αλγεβρική κίνηση που έσβησε την USB είναι ακριβώς η ταυτότητα **cos(x − y)** εφαρμοσμένη ανάποδα — αναγνωρίσεις δύο όρους ως «το ανάπτυγμα του cos(x − y)» και τους συμπιέζεις σε ένα cosine.
+
+**Take-away:** η SSB είναι **δομικό αλγεβρικό φαινόμενο**. Αν ο Hilbert όρος ήταν με `−` αντί για `+`, θα έπαιρνες την USB. Το πρόσημο επιλέγει sideband.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="trig-random-phase-autocorr" year="Επανάληψη §4e" weight="random-process">
+**Ερώτηση:** Δίνεται $X(t) = A\cos(2\pi f_0 t + \Theta)$ με $\Theta$ ομοιόμορφα κατανεμημένο στο $[0, 2\pi)$ και ανεξάρτητο από τον χρόνο. Βρες την autocorrelation $R_X(\tau)$.
+
+<Example title="Λύση" defaultOpen={true}>
+Από τον ορισμό:
+
+$$
+R_X(\tau) = E\{X(t)\,X(t+\tau)\} = A^2 E\{\cos(2\pi f_0 t + \Theta)\cos(2\pi f_0 (t+\tau) + \Theta)\}
+$$
+
+**Product-to-sum cos·cos** με $x = 2\pi f_0 t + \Theta$, $y = 2\pi f_0 (t+\tau) + \Theta$:
+
+$$
+\cos x \cos y = \tfrac{1}{2}\bigl[\cos(x-y) + \cos(x+y)\bigr]
+$$
+
+Υπολογίζω:
+
+- $x - y = -2\pi f_0 \tau$ — **σταθερό**, χωρίς $\Theta$.
+- $x + y = 4\pi f_0 t + 2\pi f_0 \tau + 2\Theta$ — εξαρτάται από $\Theta$.
+
+Παίρνοντας expectation:
+
+$$
+R_X(\tau) = \frac{A^2}{2}\bigl[\cos(2\pi f_0 \tau) + E\{\cos(4\pi f_0 t + 2\pi f_0 \tau + 2\Theta)\}\bigr]
+$$
+
+Ο μέσος όρος cosine με τυχαία ομοιόμορφη φάση $2\Theta$ είναι **0** (επειδή το $2\Theta$ διανύει πλήρη περίοδο $4\pi$ που ανήκει στα ολοκληρώματα cosine = 0). Άρα:
+
+$$
+\boxed{\,R_X(\tau) = \frac{A^2}{2}\cos(2\pi f_0 \tau)\,}
+$$
+
+**Παρατηρήσεις:**
+- Εξαρτάται **μόνο** από $\tau$ → το process είναι **WSS**.
+- $R_X(0) = A^2/2$ — η μέση ισχύς, που ταιριάζει με τη §5b.
+- Η autocorrelation είναι **cosine στη συχνότητα $f_0$** — γι' αυτό η PSD (Wiener-Khinchin FT) είναι δύο impulses στις $\pm f_0$, ακριβώς όπως ένα ντετερμινιστικό cosine.
+
+**Take-away:** όλη η ανάλυση WSS του random-phase cosine είναι **μία εφαρμογή της cos·cos product-to-sum + ένα expectation που σβήνει το τυχαίο κομμάτι**.
+</Example>
+</ExamProblem>
+
+## Σχετικές σελίδες
+
+- **Μιγαδικοί αριθμοί και Euler** — η αλγεβρική βάση όλων των ταυτοτήτων αυτής της σελίδας: [/reference/complex-numbers](/reference/complex-numbers#euler).
+- **Πλήρες τυπολόγιο** με όλες τις 9 ταυτότητες και deep-links σε derivations και παλιά θέματα που τις χρησιμοποιούν: [/formulas](/formulas#topic-foundations).
+- **Συνιστώμενη πινακίδα εξέτασης** — όπου αυτές οι ταυτότητες εμφανίζονται στη Σελίδα 2 (τυπολογικό mirror): [/cheatsheet](/cheatsheet).
+- **AM applications** — όπου η cos·cos δίνει sidebands: [/am/conventional](/am/conventional#3-φάσμα), [/am/dsb-sc](/am/dsb-sc#1-από-conventional-am-στο-dsb-sc), [/am/ssb](/am/ssb#2b-phase-shift-hilbert-method).
+- **FM applications** — όπου η sin·sin δίνει NBFM sidebands και η Πυθαγόρεια δίνει constant envelope: [/fm/pm](/fm/pm#7-nbfm-vs-am), [/fm/idea](/fm/idea), [/fm/bessel](/fm/bessel) (όπου το Jacobi-Anger expansion γενικεύει σε υψηλά $\beta$).
+- **Random-process applications** — όπου η cos·cos δίνει autocorrelation: [/randomness/random-processes](/randomness/random-processes), [/randomness/stationarity](/randomness/stationarity).
+- **Fourier pairs** — όπου η complex-exp μορφή των cos/sin δίνει το impulse-pair φάσμα: [/reference/fourier-pairs#cos-impulses](/reference/fourier-pairs#cos-impulses), [/reference/fourier-pairs#sin-impulses](/reference/fourier-pairs#sin-impulses).

@@ -42,10 +42,10 @@ Format:
        Source material: `Εργαστήριο_3Γραμμικά_συστήματα_συνεχούς_χρόνου.pdf`
        Notes: Page currently a 🚧 placeholder. Must add: numeric linearity / TI checks for several systems, `conv` usage in MATLAB and comparison to analytical solutions, cascade/parallel composition.
 
-- [ ] **Reference pages for trig identities and integrals**
+- [ ] **Reference page for τυπολόγιο basic integrals**
        Where it appears: implied across the site every time a topic page would otherwise inline general math
-       Where it should be fulfilled: `/reference/trig-identities`, `/reference/integrals`
-       Notes: We started the pattern with `/foundations/signal-transformations` and `/reference/complex-numbers` — general math = reference page, topic-specific application = topic page. As later chapters need product-to-sum trig identities (modulation chapters lean on these constantly), or the integrals from the typology, build the corresponding reference page and link instead of inlining. The Fourier-pairs companion (originally bundled with this commitment) is now closed — see the fulfilled list.
+       Where it should be fulfilled: `/reference/integrals`
+       Notes: Short page — mostly a clean mirror of the τυπολόγιο integrals section (∫cos, ∫sin, ∫(a+bx)ⁿ, ∫eˣ, ∫ln(x), ∫1/x, ∫1/cos², ∫1/sin²) so theory pages can link "from typology integral 3" instead of inlining. The trig identities sibling (originally bundled with this commitment) is now closed — see the fulfilled list.
 
 
 
@@ -54,6 +54,11 @@ Format:
 ## Fulfilled commitments
 
 (Move entries here when satisfied. Keep them for traceability.)
+
+- [x] **Reference page for trig identities** (closed 2026-05-23)
+       Originally part of: bundled "Reference pages for trig identities, Fourier pairs, and integrals" commitment.
+       Fulfilled in: `/reference/trig-identities`
+       Notes: Each of the nine τυπολόγιο trig identities (sum/difference, complex-exponential, three product-to-sum, two double-angle) is presented inside a real modulation derivation where it carries weight — DSB-SC sidebands (cos·cos), coherent demod recovery and average cosine power (cos²), NBFM expansion that distinguishes FM from AM (sin·sin minus sign), SSB Hilbert phase-shift method that cancels one sideband (sin·cos via cos(x−y)), random-process WSS autocorrelation (cos·cos with random phase), modulation theorem proof (cos as complex exponentials), and the Pythagorean cos²+sin²=1 that gives FM constant envelope. Page is prose-only (no new vizzes — these are pure algebra), but is anchored in six worked exercises in modulation context. Each typology entry in `FORMULA_SHEET` now has `derivedIn: 'reference/trig-identities'`, so the "Δες παραγωγή" link on /formulas opens this page. `SECTION_TITLES` map updated to render the page title in chips. Integrals reference page remains open as a separate item.
 
 - [x] **Recommended exam cheatsheet (Συνιστώμενη πινακίδα εξέτασης)** (closed 2026-05-23)
        Originally added: Phase 0 sub-task 7 of the SP rework (`plans/you-re-picking-up-sleepy-sketch.md`), after a Discord exchange (Δήλος, June 2025) surfaced that the prof allows students to bring their **own** custom cheatsheet to the exam in addition to the official τυπολόγιο.

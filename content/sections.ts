@@ -74,6 +74,12 @@ export const CHAPTERS: Chapter[] = [
         available: true,
         group: 'reference',
       },
+      {
+        slug: 'reference/trig-identities',
+        title: 'Τριγωνομετρικές ταυτότητες',
+        available: true,
+        group: 'reference',
+      },
     ],
   },
   {
