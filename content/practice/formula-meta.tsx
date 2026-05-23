@@ -673,6 +673,28 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'ssb-power': {
+    intuition: (
+      <>
+        Παρόλο που στο φάσμα «πέταξες» τη μία πλευρά, ο δεύτερος όρος{' '}
+        <InlineMath>{'A_c \\hat m \\sin'}</InlineMath> ξαναβάζει ακριβώς την
+        ίδια ισχύ — γι' αυτό το <InlineMath>{'P_x'}</InlineMath> είναι{' '}
+        <InlineMath>{'A_c^2 P_m'}</InlineMath> και όχι{' '}
+        <InlineMath>{'A_c^2 P_m / 2'}</InlineMath>. Η Hilbert energy
+        preservation <InlineMath>{'P_{\\hat m} = P_m'}</InlineMath> είναι ο
+        λόγος.
+      </>
+    ),
+    derivation: (
+      <>
+        <InlineMath>{'V = A_c\\sqrt{m^2 + \\hat m^2}'}</InlineMath> ⇒{' '}
+        <InlineMath>{'\\langle V^2 \\rangle = A_c^2(P_m + P_{\\hat m}) = 2 A_c^2 P_m'}</InlineMath>
+        · και <InlineMath>{'P_x = \\tfrac{1}{2}\\langle V^2 \\rangle = A_c^2 P_m'}</InlineMath>.
+        (Hilbert: <InlineMath>{'|{-j\\,\\mathrm{sgn}(f)}| = 1'}</InlineMath> ⇒
+        Parseval ⇒ <InlineMath>{'P_{\\hat m} = P_m'}</InlineMath>.)
+      </>
+    ),
+  },
   hilbert: {
     intuition: (
       <>

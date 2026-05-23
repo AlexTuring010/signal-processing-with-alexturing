@@ -66,6 +66,7 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'am-eta': () => <AMPowerCalculator />,
   'dsb-sc-signal': () => <DSBSCSignalViz />,
   'ssb-signal': () => <SSBSpectrumViz />,
+  'ssb-power': () => <SSBSpectrumViz />,
   hilbert: () => <HilbertTransformViz />,
   'am-bandwidth': () => <AMFamilySpectra />,
   'vsb-signal': () => <VSBShapingViz />,

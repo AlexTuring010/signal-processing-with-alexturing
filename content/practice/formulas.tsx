@@ -416,6 +416,14 @@ export const FORMULA_SHEET: FormulaSection[] = [
         ),
       },
       {
+        id: 'ssb-power',
+        title: 'SSB-AM ισχύς',
+        topic: 'am',
+        inTypology: false,
+        derivedIn: 'am/ssb',
+        content: <BlockMath>{'P_x = A_c^{\\,2}\\, P_m \\quad \\text{(χωρίς τον 1/2 του DSB-AM-SC)}'}</BlockMath>,
+      },
+      {
         id: 'hilbert',
         title: 'Hilbert transform',
         topic: 'am',
