@@ -44,6 +44,13 @@ import { DominantColourProof } from '@/components/viz/DominantColourProof'
 import { KaratsubaStep } from '@/components/viz/KaratsubaStep'
 import { RecursionTreeBranching } from '@/components/viz/RecursionTreeBranching'
 import { ClosestPairScan } from '@/components/viz/ClosestPairScan'
+import { OneDClosestPair } from '@/components/viz/OneDClosestPair'
+import { QuadrantSplitFail } from '@/components/viz/QuadrantSplitFail'
+import { MedianLineSplit } from '@/components/viz/MedianLineSplit'
+import { StripJustification } from '@/components/viz/StripJustification'
+import { DeltaHalfBoxes } from '@/components/viz/DeltaHalfBoxes'
+import { PresortTrick } from '@/components/viz/PresortTrick'
+import { PeakFinder } from '@/components/viz/PeakFinder'
 import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
 import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
 import { StrongConnectivityViz } from '@/components/viz/StrongConnectivityViz'
@@ -160,6 +167,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     KaratsubaStep,
     RecursionTreeBranching,
     ClosestPairScan,
+    OneDClosestPair,
+    QuadrantSplitFail,
+    MedianLineSplit,
+    StripJustification,
+    DeltaHalfBoxes,
+    PresortTrick,
+    PeakFinder,
     GraphRepresentations,
     BipartiteChecker,
     StrongConnectivityViz,
