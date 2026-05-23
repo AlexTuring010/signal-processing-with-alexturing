@@ -61,6 +61,12 @@ import { ComponentsBfsSweep } from '@/components/viz/ComponentsBfsSweep'
 import { NeighborhoodCostViz } from '@/components/viz/NeighborhoodCostViz'
 import { RiverCrossingStateGraph } from '@/components/viz/RiverCrossingStateGraph'
 import { PartyDegreeFilter } from '@/components/viz/PartyDegreeFilter'
+import { ReliabilityLogTransform } from '@/components/viz/ReliabilityLogTransform'
+import { LayeredSubsetsDAG } from '@/components/viz/LayeredSubsetsDAG'
+import { DAGUnreliableTwoWays } from '@/components/viz/DAGUnreliableTwoWays'
+import { MultVsAddPaths } from '@/components/viz/MultVsAddPaths'
+import { LayeredTripPlanner } from '@/components/viz/LayeredTripPlanner'
+import { ConstantShiftFail } from '@/components/viz/ConstantShiftFail'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -6394,52 +6400,62 @@ procedure CALC(m)
     solution: (
       <>
         <p>
-          <strong>1. Το πρόβλημα και το κόλπο.</strong> Η αξιοπιστία ενός
-          μονοπατιού είναι το <em>γινόμενο</em> των πιθανοτήτων των ακμών του.
-          Θέλουμε να <strong>μεγιστοποιήσουμε γινόμενο</strong> — αλλά ο{' '}
-          Dijkstra ελαχιστοποιεί <em>άθροισμα</em>. Τα γεφυρώνουμε με λογάριθμο:
+          <strong>Η διαίσθηση πριν την άλγεβρα.</strong> Η αξιοπιστία ενός
+          μονοπατιού είναι το <em>γινόμενο</em> των πιθανοτήτων στις ακμές του —
+          κάθε νέα ακμή <em>πολλαπλασιάζει</em> την επιβίωση. Θέλουμε να
+          μεγιστοποιήσουμε <em>γινόμενο</em>, αλλά ο Dijkstra ξέρει να
+          ελαχιστοποιεί <em>άθροισμα</em>. Μας λείπει μια γέφυρα ανάμεσα στις
+          δύο γλώσσες.
+        </p>
+        <p>
+          <strong>Η γέφυρα — λογάριθμος.</strong> Ο λογάριθμος είναι ακριβώς ο
+          μετατροπέας «γινόμενο → άθροισμα»:{' '}
+          <InlineMath>{'\\log\\!\\left(\\prod P\\right) = \\sum \\log P'}</InlineMath>.
+          Συν: επειδή ο λογάριθμος είναι αύξουσα συνάρτηση, διατηρεί τη σειρά —{' '}
+          αν <InlineMath>{'\\prod P_1 > \\prod P_2'}</InlineMath>, τότε και{' '}
+          <InlineMath>{'\\sum \\log P_1 > \\sum \\log P_2'}</InlineMath>.
         </p>
         <BlockMath>{'\\max \\prod P \\;\\Longleftrightarrow\\; \\max \\sum \\log P \\;\\Longleftrightarrow\\; \\min \\sum (-\\log P)'}</BlockMath>
         <p>
-          Θέτουμε νέο βάρος <InlineMath>{'w(i,j) = -\\log P(i,j)'}</InlineMath>.
+          Θέτουμε νέο βάρος <InlineMath>{'w(i,j) = -\\log_2 P(i,j)'}</InlineMath>.
           Αφού <InlineMath>{'P \\le 1'}</InlineMath>, είναι{' '}
           <InlineMath>{'w \\ge 0'}</InlineMath> — μη αρνητικά βάρη, οπότε ο{' '}
           <strong>Dijkstra</strong> εφαρμόζεται. Το συντομότερο μονοπάτι στον
-          μετασχηματισμένο γράφο = μονοπάτι μέγιστης αξιοπιστίας.
+          μετασχηματισμένο γράφο = μονοπάτι μέγιστης αξιοπιστίας στον αρχικό.
         </p>
         <p>
-          <strong>2. Εφαρμογή.</strong> Μετασχηματισμένα βάρη (με{' '}
-          <InlineMath>{'-\\log_2'}</InlineMath>):{' '}
+          <strong>Εφαρμογή στο συγκεκριμένο γράφημα.</strong> Με{' '}
+          <InlineMath>{'-\\log_2'}</InlineMath>:{' '}
           <InlineMath>{'w(s,v_1)=0'}</InlineMath>,{' '}
           <InlineMath>{'w(s,v_2)=3'}</InlineMath>,{' '}
           <InlineMath>{'w(v_1,v_2)=1'}</InlineMath>,{' '}
           <InlineMath>{'w(v_2,t)=1'}</InlineMath>,{' '}
-          <InlineMath>{'w(v_1,t)=4'}</InlineMath>.
+          <InlineMath>{'w(v_1,t)=4'}</InlineMath>. Άλλαξε το tab για να δεις
+          την ίδια εικόνα και στις δύο γλώσσες· πέρνα από τις τρεις υποψήφιες
+          διαδρομές για να συγκρίνεις:
         </p>
+        <ReliabilityLogTransform />
         <p>
-          Dijkstra από το <InlineMath>{'s'}</InlineMath>. Τα τρία υποψήφια
-          μονοπάτια προς <InlineMath>{'t'}</InlineMath>:
+          Το συντομότερο μονοπάτι στα <InlineMath>{'w'}</InlineMath> έχει βάρος{' '}
+          <InlineMath>{'2'}</InlineMath>, άρα το μονοπάτι μέγιστης αξιοπιστίας
+          είναι <InlineMath>{'s \\to v_1 \\to v_2 \\to t'}</InlineMath> με
+          αξιοπιστία <InlineMath>{'2^{-2} = 1/4'}</InlineMath>. Παρατήρησε ότι
+          οι δύο «προφανείς» μονοπάτια <InlineMath>{'s \\to v_1 \\to t'}</InlineMath>{' '}
+          και <InlineMath>{'s \\to v_2 \\to t'}</InlineMath> έχουν την ίδια
+          αξιοπιστία <InlineMath>{'1/16'}</InlineMath> — και ο μετασχηματισμός
+          το δείχνει αμέσως: <InlineMath>{'0+4=4 = 3+1'}</InlineMath>.
         </p>
-        <ul>
-          <li>
-            <InlineMath>{'s \\to v_1 \\to t'}</InlineMath>:{' '}
-            <InlineMath>{'0 + 4 = 4'}</InlineMath>.
-          </li>
-          <li>
-            <InlineMath>{'s \\to v_2 \\to t'}</InlineMath>:{' '}
-            <InlineMath>{'3 + 1 = 4'}</InlineMath>.
-          </li>
-          <li>
-            <InlineMath>{'s \\to v_1 \\to v_2 \\to t'}</InlineMath>:{' '}
-            <InlineMath>{'0 + 1 + 1 = 2'}</InlineMath> ← ελάχιστο.
-          </li>
-        </ul>
-        <p>
-          Το συντομότερο μονοπάτι έχει βάρος <InlineMath>{'2'}</InlineMath>, άρα
-          το μονοπάτι μέγιστης αξιοπιστίας είναι{' '}
-          <InlineMath>{'s \\to v_1 \\to v_2 \\to t'}</InlineMath> με αξιοπιστία{' '}
-          <InlineMath>{'2^{-2} = 1/4'}</InlineMath>.
-        </p>
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «γινόμενο πάει σε άθροισμα με λογάριθμο».</strong>{' '}
+            Όποτε δεις βελτιστοποίηση γινομένου (αξιοπιστία, πιθανότητα
+            επιτυχίας, παράγοντες ποιότητας) ζητούμενη πάνω σε μονοπάτι, η πρώτη
+            σου σκέψη είναι: «μπορώ να την κάνω άθροισμα;». Λογάριθμος συν
+            πρόσημο φέρνει το πρόβλημα σε ένα γνωστό shortest-path πλαίσιο. Δες
+            ποιο πρόσημο σώζει την «μη αρνητικότητα» (Dijkstra) και ποιο όχι
+            (Bellman-Ford / DAG-relaxation).
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -6469,40 +6485,58 @@ procedure CALC(m)
     solution: (
       <>
         <p>
-          <strong>Η ιδέα — φτιάχνουμε έναν «στρωματικό» DAG.</strong> Η
-          απαίτηση «η <InlineMath>{'i'}</InlineMath>-οστή κορυφή από το{' '}
-          <InlineMath>{'C_i'}</InlineMath>» σημαίνει ότι το μονοπάτι περνά
-          διαδοχικά από τα υποσύνολα με μια <em>σταθερή σειρά</em>. Αυτό μας
-          δίνει φυσική τοπολογική διάταξη.
+          <strong>Πού «κολλάει» κανείς στην εκφώνηση.</strong> Ο γράφος είναι
+          πλήρης (κάθε κορυφή με κάθε άλλη), τα βάρη είναι αυθαίρετα — και ο
+          ορισμός του μονοπατιού φαίνεται ελεύθερος. Η περιοριστική φράση
+          κρύβεται σε δύο λέξεις: <em>«της μορφής</em>{' '}
+          <InlineMath>{'c_1 \\to c_2 \\to \\cdots \\to c_k'}</InlineMath>, με{' '}
+          <InlineMath>{'c_i \\in C_i'}</InlineMath><em>»</em>. Αυτό κάνει τη
+          σειρά των <InlineMath>{'C_i'}</InlineMath> προ-καθορισμένη — και η
+          προ-καθορισμένη σειρά είναι <strong>χρυσάφι</strong> για συντομότερο
+          μονοπάτι: σου χαρίζει τοπολογική διάταξη.
+        </p>
+        <p>
+          <strong>Η κατασκευή — από πλήρη γράφο σε στρωματικό DAG.</strong>
         </p>
         <ul>
           <li>
             Κράτησε ως κορυφές μόνο τα στοιχεία των{' '}
             <InlineMath>{'C_1, \\ldots, C_k'}</InlineMath>, σε{' '}
-            <InlineMath>{'k'}</InlineMath> «στρώματα».
+            <InlineMath>{'k'}</InlineMath> «στρώματα» που τα σχεδιάζουμε ως
+            στήλες.
           </li>
           <li>
             Βάλε κατευθυνόμενες ακμές <em>μόνο</em> από κάθε κορυφή του{' '}
             <InlineMath>{'C_i'}</InlineMath> προς κάθε κορυφή του{' '}
             <InlineMath>{'C_{i+1}'}</InlineMath>, με το αρχικό τους βάρος.
+            (Ακμές εντός στρώματος ή πίσω σε προηγούμενο στρώμα{' '}
+            <em>αφαιρούνται</em>.)
           </li>
           <li>
-            Πρόσθεσε πηγή <InlineMath>{'s'}</InlineMath> με ακμές βάρους{' '}
-            <InlineMath>{'0'}</InlineMath> προς όλο το{' '}
-            <InlineMath>{'C_1'}</InlineMath>, και προορισμό{' '}
+            Πρόσθεσε εικονική πηγή <InlineMath>{'s'}</InlineMath> με ακμές
+            βάρους <InlineMath>{'0'}</InlineMath> προς όλο το{' '}
+            <InlineMath>{'C_1'}</InlineMath>, και εικονικό προορισμό{' '}
             <InlineMath>{'t'}</InlineMath> με ακμές βάρους{' '}
             <InlineMath>{'0'}</InlineMath> από όλο το{' '}
-            <InlineMath>{'C_k'}</InlineMath>.
+            <InlineMath>{'C_k'}</InlineMath>. Έτσι δεν χρειάζεται να δοκιμάσεις
+            «n εκκινήσεις» από όλο το <InlineMath>{'C_1'}</InlineMath>.
           </li>
         </ul>
         <p>
+          Δοκίμασέ το στα δύο tabs σε ένα παράδειγμα 7 κορυφών χωρισμένων σε
+          τρία υποσύνολα — δες πόσες ακμές εξαφανίζονται και πόσο καθαρή γίνεται
+          η λύση:
+        </p>
+        <LayeredSubsetsDAG />
+        <p>
           Το αποτέλεσμα είναι ένας <strong>ακυκλικός κατευθυνόμενος γράφος
-          (DAG)</strong> με σαφή τοπολογική διάταξη{' '}
+          (DAG)</strong> με σαφή τοπολογική σειρά{' '}
           <InlineMath>{'s, C_1, \\ldots, C_k, t'}</InlineMath>. Τρέξε{' '}
           <strong>συντομότερο μονοπάτι σε DAG</strong> (τοπολογική ταξινόμηση +
-          χαλάρωση ακμών). Το ελάχιστο <InlineMath>{'s \\to t'}</InlineMath>{' '}
-          μονοπάτι, αφαιρώντας τα <InlineMath>{'s, t'}</InlineMath>, δίνει το
-          ζητούμενο (χρειάζεται <InlineMath>{'k \\ge 2'}</InlineMath>).
+          μία χαλάρωση ακμών — δες L09). Το ελάχιστο{' '}
+          <InlineMath>{'s \\to t'}</InlineMath> μονοπάτι, αν αφαιρέσεις τα{' '}
+          <InlineMath>{'s, t'}</InlineMath>, δίνει το ζητούμενο (χρειάζεται{' '}
+          <InlineMath>{'k \\ge 2'}</InlineMath>).
         </p>
         <p>
           <strong>Πολυπλοκότητα.</strong> Το συντομότερο μονοπάτι σε DAG με
@@ -6511,6 +6545,17 @@ procedure CALC(m)
           πλήρης, <InlineMath>{'|E| = O(|V|^2)'}</InlineMath>, άρα ο αλγόριθμος
           είναι <InlineMath>{'O(|V|^2)'}</InlineMath> — πολυωνυμικός.
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «η προ-καθορισμένη σειρά υποσυνόλων
+            φτιάχνει DAG».</strong> Όταν η εκφώνηση επιβάλλει σε ένα μονοπάτι να{' '}
+            <em>περάσει διαδοχικά</em> από συγκεκριμένα στρώματα/φάσεις/χρώματα,
+            δεν λύνεις γενικό shortest path — λύνεις shortest path σε DAG. Η
+            σειρά είναι ήδη η τοπολογική σου. Στρώμα-στρώμα DAG με 0-βάρους
+            ακμές σε εικονικό s/t είναι το προεπιλεγμένο pattern και βγάζει{' '}
+            <InlineMath>{'O(|V| + |E|)'}</InlineMath>.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -6546,50 +6591,66 @@ procedure CALC(m)
     solution: (
       <>
         <p>
-          Η αξιοπιστία ενός μονοπατιού είναι το <em>γινόμενο</em>{' '}
-          <InlineMath>{'\\prod r'}</InlineMath> των ακμών του. «Πιο
-          αναξιόπιστο» = <strong>ελάχιστο γινόμενο</strong>. Παίρνουμε
-          λογάριθμο: <InlineMath>{'\\log\\prod r = \\sum \\log r'}</InlineMath>,
-          και επειδή <InlineMath>{'r \\le 1'}</InlineMath> κάθε{' '}
-          <InlineMath>{'\\log r \\le 0'}</InlineMath>.
+          <strong>Τι σημαίνει «πιο αναξιόπιστο».</strong> Η αξιοπιστία ενός
+          μονοπατιού είναι το γινόμενο <InlineMath>{'\\prod r_e'}</InlineMath>{' '}
+          των ακμών του (ανεξάρτητα γεγονότα: όλες πρέπει να μην αποτύχουν).
+          «Πιο αναξιόπιστο» = <strong>ελάχιστο γινόμενο</strong>. Όπως στην
+          ask6, παίρνουμε λογάριθμο για να μετατρέψουμε το γινόμενο σε
+          άθροισμα: <InlineMath>{'\\log\\prod r = \\sum \\log r'}</InlineMath>.
+          Επειδή <InlineMath>{'r \\in [0,1]'}</InlineMath> κάθε{' '}
+          <InlineMath>{'\\log r \\le 0'}</InlineMath> — και αυτό το πρόσημο
+          ορίζει ποια διατύπωση θα διαλέξεις.
         </p>
         <p>
-          <strong>Αλγόριθμος 1 — ως μονοπάτι μέγιστου κόστους.</strong> Θέσε
-          βάρος <InlineMath>{'w = -\\log r \\ge 0'}</InlineMath>. Τότε{' '}
-          ελαχιστοποίηση του <InlineMath>{'\\prod r'}</InlineMath> ⟺{' '}
-          μεγιστοποίηση του <InlineMath>{'\\sum(-\\log r)'}</InlineMath>. Άρα{' '}
-          ψάχνουμε το <strong>μονοπάτι μέγιστου κόστους</strong>. Αφού ο γράφος
-          είναι DAG, αυτό λύνεται με <strong>τοπολογική ταξινόμηση</strong> και
-          χαλάρωση κρατώντας το <em>μέγιστο</em> σε κάθε κορυφή.
+          <strong>Αλγόριθμος 1 — μονοπάτι μέγιστου κόστους (w ≥ 0).</strong>{' '}
+          Θέσε <InlineMath>{'w = -\\log r'}</InlineMath>· επειδή{' '}
+          <InlineMath>{'r \\le 1'}</InlineMath> έχεις{' '}
+          <InlineMath>{'w \\ge 0'}</InlineMath>. Ελαχιστοποίηση του{' '}
+          <InlineMath>{'\\prod r'}</InlineMath> ⟺ μεγιστοποίηση του{' '}
+          <InlineMath>{'\\sum(-\\log r)'}</InlineMath> ⟺ ψάχνεις{' '}
+          <strong>longest path σε DAG</strong>. Αφού ο γράφος είναι ακυκλικός,
+          τοπολογική ταξινόμηση + χαλάρωση κρατώντας το <em>μέγιστο</em> σε
+          κάθε κορυφή.
         </p>
         <p>
-          <strong>Αλγόριθμος 2 — ως μονοπάτι ελάχιστου κόστους.</strong> Θέσε
-          βάρος <InlineMath>{'w = \\log r \\le 0'}</InlineMath>.{' '}
-          Ελαχιστοποίηση του <InlineMath>{'\\prod r'}</InlineMath> ⟺{' '}
-          ελαχιστοποίηση του <InlineMath>{'\\sum \\log r'}</InlineMath>. Τα βάρη
-          είναι αρνητικά, οπότε ο Dijkstra <em>δεν</em> ισχύει — αλλά αφού ο
-          γράφος είναι DAG, η τοπολογική ταξινόμηση + χαλάρωση δουλεύει ακόμη και
-          με αρνητικά βάρη.
+          <strong>Αλγόριθμος 2 — μονοπάτι ελάχιστου κόστους (w ≤ 0).</strong>{' '}
+          Θέσε <InlineMath>{'w = \\log r \\le 0'}</InlineMath>. Ελαχιστοποίηση
+          του <InlineMath>{'\\prod r'}</InlineMath> ⟺ ελαχιστοποίηση του{' '}
+          <InlineMath>{'\\sum \\log r'}</InlineMath>. Εδώ είναι το λεπτό
+          σημείο: τα βάρη είναι <strong>αρνητικά</strong>, οπότε ο{' '}
+          <strong>Dijkstra δεν ισχύει</strong>. Όμως ο γράφος είναι DAG —
+          μπορούμε να χαλαρώσουμε τις ακμές με τοπολογική σειρά κρατώντας το{' '}
+          <em>ελάχιστο</em>, χωρίς να μας ενοχλούν τα αρνητικά (γιατί δεν
+          υπάρχουν κύκλοι για να «τρέξει η αξία προς το μείον άπειρο»).
+        </p>
+        <p>
+          Δες και τις δύο διατυπώσεις να καταλήγουν στο ίδιο μονοπάτι:
+        </p>
+        <DAGUnreliableTwoWays />
+        <p>
+          Από την κορυφή <InlineMath>{'A'}</InlineMath>, η πιο αναξιόπιστη
+          διαδρομή στο παράδειγμα είναι{' '}
+          <strong><InlineMath>{'A \\to C \\to D \\to F \\to H'}</InlineMath></strong>{' '}
+          με αξιοπιστία <InlineMath>{'0{,}5 \\cdot 0{,}4 \\cdot 0{,}3 \\cdot 0{,}9 \\approx 0{,}054'}</InlineMath>{' '}
+          — και οι δύο αλγόριθμοι το επιλέγουν.
         </p>
         <p>
           <strong>Πολυπλοκότητα.</strong> Και οι δύο μέθοδοι (τοπολογική
           ταξινόμηση + ένα πέρασμα χαλάρωσης) κοστίζουν{' '}
           <InlineMath>{'\\Theta(|V| + |E|)'}</InlineMath>.
         </p>
-        <p>
-          <strong>Εφαρμογή — μέγιστο κόστος από την κορυφή{' '}
-          <InlineMath>{'A'}</InlineMath>.</strong> Διατρέχοντας τις κορυφές σε
-          τοπολογική σειρά και χαλαρώνοντας, ο τελικός πίνακας{' '}
-          <InlineMath>{'\\text{dist}'}</InlineMath> (μέγιστο κόστος από το{' '}
-          <InlineMath>{'A'}</InlineMath>) είναι:
-        </p>
-        <BlockMath>{'A{:}\\,0,\\ B{:}\\,0{,}17,\\ C{:}\\,2{,}40,\\ D{:}\\,4{,}0,\\ E{:}\\,0{,}81,\\ F{:}\\,10{,}64,\\ G{:}\\,1{,}93,\\ H{:}\\,7{,}63'}</BlockMath>
-        <p>
-          Η μέγιστη τιμή είναι <InlineMath>{'10{,}64'}</InlineMath> και
-          προκύπτει από το μονοπάτι{' '}
-          <strong><InlineMath>{'A \\to C \\to D \\to F'}</InlineMath></strong>{' '}
-          (το πιο αναξιόπιστο).
-        </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «DAG ξεκλειδώνει τα αρνητικά βάρη».</strong>{' '}
+            Όταν το πρόσημο των βαρών «βρωμίζει» τον Dijkstra (κάποια ακμή
+            έχει <InlineMath>{'w \\le 0'}</InlineMath>) και ο γράφος{' '}
+            <em>τυχαίνει</em> να είναι ακυκλικός, μην ψάξεις Bellman-Ford — η
+            τοπολογική σάρωση δουλεύει και είναι γρηγορότερη. Και ο διπλός
+            μετασχηματισμός (max με <InlineMath>{'-\\log r'}</InlineMath> vs min
+            με <InlineMath>{'\\log r'}</InlineMath>) είναι μαθηματικά ισοδύναμος —{' '}
+            διάλεξε ό,τι κάνει το γράψιμο της αναδρομικής σχέσης πιο φυσικό.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -6617,41 +6678,69 @@ procedure CALC(m)
     solution: (
       <>
         <p>
-          <strong>Α. ΣΩΣΤΟ.</strong> Έστω το συντομότερο μονοπάτι έχει άθροισμα
-          βαρών <InlineMath>{'\\sum_i w_i'}</InlineMath> και κάθε άλλο μονοπάτι{' '}
+          <strong>Το ζητούμενο πίσω από την ερώτηση.</strong> «Δεν μεταβάλλεται
+          το συντομότερο μονοπάτι» ισοδυναμεί με «η <em>σχετική σειρά</em> των
+          μονοπατιών διατηρείται κάτω από τον μετασχηματισμό». Ένας
+          μετασχηματισμός που διατηρεί τη σειρά για κάθε ζεύγος μονοπατιών —
+          ανεξάρτητα από το πόσες ακμές έχουν — σώζει την απάντηση.
+        </p>
+        <p>
+          <strong>Α. Πολλαπλασιασμός με θετικό αριθμό — ΣΩΣΤΟ.</strong> Έστω το
+          συντομότερο μονοπάτι έχει άθροισμα βαρών{' '}
+          <InlineMath>{'\\sum_i w_i'}</InlineMath> και κάθε άλλο μονοπάτι{' '}
           <InlineMath>{'\\sum_j w_j'}</InlineMath>, με{' '}
           <InlineMath>{'\\sum_i w_i < \\sum_j w_j'}</InlineMath>. Αν
           πολλαπλασιάσουμε κάθε ακμή με <InlineMath>{'a > 0'}</InlineMath>:
         </p>
         <BlockMath>{'a\\sum_i w_i = \\sum_i a\\,w_i \\;<\\; \\sum_j a\\,w_j = a\\sum_j w_j'}</BlockMath>
         <p>
-          Η ανισότητα <strong>διατηρείται</strong> (πολλαπλασιασμός με θετικό
-          αριθμό), άρα το ίδιο μονοπάτι παραμένει το συντομότερο.
+          Η ανισότητα <strong>διατηρείται</strong> ως ολοκληρωμένη ταυτότητα —
+          δηλαδή ο πολλαπλασιασμός σκαλώνει <em>όλα</em> τα μονοπάτια με τον
+          ίδιο συντελεστή, ανεξάρτητα από το πλήθος των ακμών τους. Άρα το ίδιο
+          μονοπάτι παραμένει το συντομότερο.
         </p>
         <p>
-          <strong>Β. ΛΑΘΟΣ.</strong> Η πρόσθεση μιας σταθεράς{' '}
-          <InlineMath>{'\\alpha'}</InlineMath> σε <em>κάθε ακμή</em> τιμωρεί τα
-          μονοπάτια με <strong>περισσότερες ακμές</strong>: ένα μονοπάτι με{' '}
-          <InlineMath>{'\\ell'}</InlineMath> ακμές χρεώνεται επιπλέον{' '}
-          <InlineMath>{'\\ell\\cdot\\alpha'}</InlineMath>. Έτσι, ένα μονοπάτι με
-          λίγες «βαριές» ακμές μπορεί να προσπεράσει ένα με πολλές «ελαφριές».
+          <strong>Β. Πρόσθεση σταθεράς σε κάθε ακμή — ΛΑΘΟΣ.</strong> Η
+          πρόσθεση μιας σταθεράς <InlineMath>{'\\alpha'}</InlineMath> δεν είναι
+          πια «ομοιόμορφη» μεταξύ μονοπατιών: ένα μονοπάτι με{' '}
+          <InlineMath>{'\\ell'}</InlineMath> ακμές χρεώνεται{' '}
+          <InlineMath>{'\\ell \\cdot \\alpha'}</InlineMath> — το μέγεθος της
+          προσαύξησης εξαρτάται από το πόσες ακμές έχει. Όσα μονοπάτια έχουν
+          περισσότερες ακμές «πληρώνουν» αναλογικά περισσότερο, και ο νικητής
+          μπορεί να αλλάξει.
         </p>
         <p>
-          <strong>Αντιπαράδειγμα.</strong> Δύο κορυφές συνδέονται με δύο
-          μονοπάτια: το πάνω με <strong>3 ακμές</strong> βάρους{' '}
-          <InlineMath>{'1'}</InlineMath> (σύνολο{' '}
-          <InlineMath>{'3'}</InlineMath>), το κάτω με{' '}
-          <strong>2 ακμές</strong> βάρους <InlineMath>{'2'}</InlineMath>{' '}
-          (σύνολο <InlineMath>{'4'}</InlineMath>). Αρχικά συντομότερο = το πάνω
+          Σύρε ταυτόχρονα τα δύο sliders· δες ποιο πείραμα κρατάει το ίδιο
+          αποτέλεσμα (×k) και ποιο σπάει (+α):
+        </p>
+        <MultVsAddPaths />
+        <p>
+          <strong>Αντιπαράδειγμα — κρατώντας το αριθμητικά.</strong> Δύο κορυφές
+          με δύο μονοπάτια: A με <strong>3 ακμές</strong> βάρους{' '}
+          <InlineMath>{'1'}</InlineMath> (σύνολο <InlineMath>{'3'}</InlineMath>),
+          B με <strong>2 ακμές</strong> βάρους <InlineMath>{'2'}</InlineMath>{' '}
+          (σύνολο <InlineMath>{'4'}</InlineMath>). Στην αρχή νικά η A
           (<InlineMath>{'3 < 4'}</InlineMath>). Προσθέτουμε{' '}
           <InlineMath>{'\\alpha = 10'}</InlineMath> σε κάθε ακμή:
         </p>
-        <BlockMath>{'\\text{πάνω}: 3\\times 11 = 33, \\qquad \\text{κάτω}: 2\\times 12 = 24'}</BlockMath>
+        <BlockMath>{'A: 3\\times 11 = 33, \\qquad B: 2\\times 12 = 24'}</BlockMath>
         <p>
-          Τώρα συντομότερο είναι το <em>κάτω</em>{' '}
-          (<InlineMath>{'24 < 33'}</InlineMath>) — το συντομότερο μονοπάτι{' '}
-          <strong>άλλαξε</strong>.
+          Τώρα νικά η B (<InlineMath>{'24 < 33'}</InlineMath>) — το συντομότερο
+          μονοπάτι <strong>άλλαξε</strong>.
         </p>
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «×k κρατά τη σειρά, +α την σπάει».</strong>{' '}
+            Όταν εξετάζεις αν ένας μετασχηματισμός βαρών διατηρεί συντομότερα
+            μονοπάτια, ρώτησε: «είναι μονότονος <em>ανά μονοπάτι</em> με τρόπο
+            ανεξάρτητο από το πλήθος ακμών;» Πολλαπλασιασμός με
+            θετική σταθερά — ναι. Πρόσθεση σταθεράς — όχι, γιατί τιμωρεί
+            ασύμμετρα τα πιο «μακριά» μονοπάτια. Αυτή η ίδια λογική εξηγεί
+            γιατί η <em>τιπική «διόρθωση»</em> για αρνητικά βάρη («πρόσθεσε μια
+            σταθερά + Dijkstra») είναι λάθος — δες αμέσως μετά την ask10 του{' '}
+            σετ #7.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7016,11 +7105,82 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>Η ιδέα: φτιάχνουμε έναν νέο, «στρωματωμένο» γράφο όπου το συντομότερο μονοπάτι δίνει την απάντηση.</strong></p>
-        <p><strong>Βήμα 1 — αποστάσεις πόλεων.</strong> Πρώτα υπολογίζουμε όλες τις αποστάσεις <InlineMath>{'d(i, j)'}</InlineMath> μεταξύ ζευγών πόλεων: τρέχουμε τον αλγόριθμο του Dijkstra μία φορά από κάθε πόλη. Κόστος: <InlineMath>{'n'}</InlineMath> εκτελέσεις, η καθεμία <InlineMath>{'O(n^2)'}</InlineMath> → συνολικά <InlineMath>{'O(n^3)'}</InlineMath>.</p>
-        <p><strong>Βήμα 2 — στρωματωμένος (ακυκλικός) γράφος.</strong> Επειδή απαγορεύεται να μείνεις δύο συνεχόμενες ημέρες στην ίδια πόλη, δημιουργούμε έναν κόμβο <InlineMath>{'v_{i,p}'}</InlineMath> για κάθε πόλη <InlineMath>{'i'}</InlineMath> και κάθε ημέρα <InlineMath>{'p \\in \\{0, 1, \\dots, m\\}'}</InlineMath> — δηλαδή <InlineMath>{'n(m+1)'}</InlineMath> κόμβους. Βάζουμε ακμή από τον <InlineMath>{'v_{i,p-1}'}</InlineMath> στον <InlineMath>{'v_{j,p}'}</InlineMath> μόνο όταν <InlineMath>{'i \\ne j'}</InlineMath> (αλλάζεις πόλη) και <InlineMath>{'d(i, j) \\le u(p)'}</InlineMath> (η μετακίνηση χωράει στο όριο της ημέρας). Σε αυτήν την ακμή δίνουμε βάρος <InlineMath>{'c(j)'}</InlineMath> — το κόστος της νέας διανυκτέρευσης. Οι ακμές είναι <InlineMath>{'O(n^2 m)'}</InlineMath>.</p>
-        <p><strong>Βήμα 3 — συντομότερο μονοπάτι.</strong> Ο γράφος είναι ακυκλικός (κάθε ακμή προχωρά κατά μία ημέρα), άρα βρίσκουμε το ελάχιστου κόστους μονοπάτι από τον <InlineMath>{'v_{s,0}'}</InlineMath> στον <InlineMath>{'v_{t,m}'}</InlineMath> με μία απλή σάρωση κατά τοπολογική σειρά (ανά ημέρα), σε χρόνο ανάλογο των ακμών, <InlineMath>{'O(n^2 m)'}</InlineMath>. Αν δεν υπάρχει τέτοιο μονοπάτι, η εκδρομή είναι αδύνατη.</p>
-        <p><strong>Συνολική πολυπλοκότητα.</strong> <InlineMath>{'O(n^3) + O(n^2 m) = O(n^2(n + m))'}</InlineMath> — όπως ζητείται. Το «κόλπο» είναι ότι ο περιορισμός «ακριβώς <InlineMath>{'m'}</InlineMath> ημέρες» γίνεται απλώς «διαδρομή <InlineMath>{'m'}</InlineMath> ακμών» αφού στρωματώσουμε τον γράφο κατά ημέρα.</p>
+        <p>
+          <strong>Γιατί δεν είναι «απλό» shortest path.</strong> Η εκδρομή έχει
+          <em>τρεις συγχρόνους περιορισμούς</em>: «ακριβώς m ημέρες», «όχι δύο
+          συνεχόμενες ημέρες στην ίδια πόλη», «η διαδρομή της p-στής ημέρας ≤
+          u(p)». Αυτοί δεν χωράνε στον αρχικό γράφο των πόλεων — εκεί δεν
+          υπάρχει η έννοια «ημέρα» και τα όρια αλλάζουν ανά μέρα. Το κόλπο
+          είναι να <em>ενσωματώσεις τον χρόνο μέσα στον γράφο</em>.
+        </p>
+        <p>
+          <strong>Βήμα 1 — αποστάσεις πόλεων.</strong> Πρώτα υπολογίζουμε όλες
+          τις αποστάσεις <InlineMath>{'d(i, j)'}</InlineMath> μεταξύ ζευγών
+          πόλεων με <InlineMath>{'n'}</InlineMath> εκτελέσεις Dijkstra (μία ανά
+          πόλη ως αφετηρία), η καθεμία{' '}
+          <InlineMath>{'O(n^2)'}</InlineMath> → συνολικά{' '}
+          <InlineMath>{'O(n^3)'}</InlineMath>. (Αν ο γράφος είναι αραιός, οι
+          αποστάσεις βγαίνουν φθηνότερα· κρατάμε όμως το γενικό όριο.)
+        </p>
+        <p>
+          <strong>Βήμα 2 — στρωματωμένος (ακυκλικός) γράφος.</strong> Δημιουργούμε
+          κόμβο <InlineMath>{'v_{i,p}'}</InlineMath> για κάθε πόλη{' '}
+          <InlineMath>{'i'}</InlineMath> και κάθε ημέρα{' '}
+          <InlineMath>{'p \\in \\{0, 1, \\dots, m\\}'}</InlineMath> — δηλαδή{' '}
+          <InlineMath>{'n(m+1)'}</InlineMath> κόμβους. Βάζουμε ακμή{' '}
+          <InlineMath>{'v_{i,p-1} \\to v_{j,p}'}</InlineMath> μόνο όταν:
+        </p>
+        <ul>
+          <li>
+            <InlineMath>{'i \\ne j'}</InlineMath> — αλλάζεις πόλη (ο
+            περιορισμός «όχι δύο συνεχόμενες ημέρες στην ίδια»).
+          </li>
+          <li>
+            <InlineMath>{'d(i, j) \\le u(p)'}</InlineMath> — η μετακίνηση χωράει
+            στο όριο της ημέρας.
+          </li>
+        </ul>
+        <p>
+          Σε αυτήν την ακμή δίνουμε βάρος <InlineMath>{'c(j)'}</InlineMath> — το
+          κόστος της νέας διανυκτέρευσης. Παρατήρησε: ο περιορισμός «ακριβώς m
+          ημέρες» δεν χρειάζεται να μπει σε λογική του αλγορίθμου — έχει ήδη
+          ενσωματωθεί στη γεωμετρία του γράφου, αφού το μονοπάτι από{' '}
+          <InlineMath>{'v_{s,0}'}</InlineMath> σε{' '}
+          <InlineMath>{'v_{t,m}'}</InlineMath> είναι υποχρεωτικά μήκους{' '}
+          <InlineMath>{'m'}</InlineMath> ακμών (μία ανά ημέρα).
+        </p>
+        <p>
+          Δες την κατασκευή σε δράση πάνω σε ένα μικρό παράδειγμα 4 πόλεων / 3
+          ημερών:
+        </p>
+        <LayeredTripPlanner />
+        <p>
+          <strong>Βήμα 3 — συντομότερο μονοπάτι.</strong> Ο νέος γράφος είναι
+          ακυκλικός (κάθε ακμή προχωράει αυστηρά κατά μία ημέρα), άρα το{' '}
+          <InlineMath>{'v_{s,0} \\to v_{t,m}'}</InlineMath> shortest path
+          βρίσκεται με μία σάρωση σε τοπολογική σειρά (ημέρα-ημέρα), σε χρόνο
+          ανάλογο των ακμών, <InlineMath>{'O(n^2 m)'}</InlineMath>. Αν δεν
+          υπάρχει τέτοιο μονοπάτι, η εκδρομή είναι αδύνατη με αυτά τα όρια.
+        </p>
+        <p>
+          <strong>Συνολική πολυπλοκότητα.</strong>{' '}
+          <InlineMath>{'O(n^3) + O(n^2 m) = O(n^2(n + m))'}</InlineMath> — όπως
+          ζητείται.
+        </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «ο χρόνος γίνεται διάσταση του γράφου».</strong>{' '}
+            Όταν ένα πρόβλημα έχει «φάσεις» (ημέρες, βήματα, χρώματα, καταστάσεις)
+            με <em>διαφορετικούς περιορισμούς</em> ή <em>διαφορετικά κόστη</em>{' '}
+            ανά φάση, ξεχωρίζεις τις φάσεις ως δεύτερη διάσταση. Κάθε φυσική
+            κορυφή <InlineMath>{'i'}</InlineMath> γίνεται{' '}
+            <InlineMath>{'(i, \\phi)'}</InlineMath> για κάθε φάση{' '}
+            <InlineMath>{'\\phi'}</InlineMath>· οι ακμές προχωρούν τη φάση κατά
+            ένα. Αυτό μετατρέπει σχεδόν κάθε «πολυφασικό» πρόβλημα σε shortest
+            path σε DAG. Έλεγξε το αν είδες «k βήματα», «t ημέρες», «p στάδια»
+            στην εκφώνηση.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7515,11 +7675,74 @@ K = 101     Σ = 100`}</pre>
     ),
     solution: (
       <>
-        <p><strong>ΟΧΙ, ο αλγόριθμος είναι λανθασμένος.</strong></p>
-        <p><strong>Το σφάλμα.</strong> Αν προσθέσουμε σταθερά <InlineMath>{'c'}</InlineMath> σε <em>κάθε</em> ακμή, τότε ένα μονοπάτι με <InlineMath>{'\\ell'}</InlineMath> ακμές βλέπει το κόστος του να αυξάνεται κατά <InlineMath>{'c \\cdot \\ell'}</InlineMath>. Η αύξηση δεν είναι ίδια για όλα τα μονοπάτια — εξαρτάται από το <em>πλήθος ακμών</em>. Έτσι ο μετασχηματισμός «τιμωρεί» τα μονοπάτια με πολλές ακμές και μπορεί να αλλάξει ποιο μονοπάτι είναι το συντομότερο.</p>
-        <p><strong>Αντιπαράδειγμα.</strong> Κόμβοι <InlineMath>{'u, v, w'}</InlineMath> με ακμές <InlineMath>{'u \\to v'}</InlineMath> βάρους <InlineMath>{'-1'}</InlineMath>, <InlineMath>{'v \\to w'}</InlineMath> βάρους <InlineMath>{'-3'}</InlineMath>, και <InlineMath>{'u \\to w'}</InlineMath> βάρους <InlineMath>{'-3'}</InlineMath>. Το πραγματικό συντομότερο <InlineMath>{'u \\to w'}</InlineMath> είναι το <InlineMath>{'u \\to v \\to w'}</InlineMath> με κόστος <InlineMath>{'-4'}</InlineMath> (έναντι <InlineMath>{'-3'}</InlineMath> της απευθείας ακμής).</p>
-        <p>Προσθέτουμε <InlineMath>{'c = 4'}</InlineMath> σε όλα: <InlineMath>{'u \\to v = 3'}</InlineMath>, <InlineMath>{'v \\to w = 1'}</InlineMath>, <InlineMath>{'u \\to w = 1'}</InlineMath>. Τώρα η διαδρομή <InlineMath>{'u \\to v \\to w'}</InlineMath> κοστίζει <InlineMath>{'3 + 1 = 4'}</InlineMath>, ενώ η απευθείας <InlineMath>{'u \\to w'}</InlineMath> κοστίζει <InlineMath>{'1'}</InlineMath>. Ο Dijkstra επιστρέφει την απευθείας ακμή — λάθος απάντηση.</p>
-        <p><strong>Η σωστή λύση.</strong> Για γράφους με αρνητικά βάρη (χωρίς αρνητικούς κύκλους) χρησιμοποιούμε τον αλγόριθμο <strong>Bellman-Ford</strong>, που χειρίζεται σωστά τα αρνητικά βάρη με χρόνο <InlineMath>{'O(V \\cdot E)'}</InlineMath>.</p>
+        <p>
+          <strong>ΟΧΙ, ο αλγόριθμος του Εξυπνούλη είναι λανθασμένος.</strong>{' '}
+          Η ίδια αρχή που είδαμε στην <em>ask9 / πρόσθεση σταθεράς</em>: όταν
+          προσθέτεις την ίδια ποσότητα σε κάθε ακμή, μονοπάτια με{' '}
+          <em>περισσότερες</em> ακμές τιμωρούνται περισσότερο. Άρα ο
+          μετασχηματισμός μπορεί να αλλάξει ποιο μονοπάτι είναι το συντομότερο.
+        </p>
+        <p>
+          <strong>Το κρίσιμο σημείο.</strong> Αν προσθέσουμε σταθερά{' '}
+          <InlineMath>{'c'}</InlineMath> σε <em>κάθε</em> ακμή, τότε ένα
+          μονοπάτι με <InlineMath>{'\\ell'}</InlineMath> ακμές βλέπει το κόστος
+          του να αυξάνεται κατά <InlineMath>{'c \\cdot \\ell'}</InlineMath>. Η
+          αύξηση εξαρτάται από το <em>πλήθος ακμών</em> — δεν είναι ίδια για
+          όλους. Ο Dijkstra απαιτεί μη-αρνητικά βάρη ακριβώς για να μη χρειαστεί
+          ποτέ να ξανα-εξετάσει μια κορυφή, και η «πρόσθεση σταθεράς» δεν
+          σέβεται αυτή την απαίτηση σε επίπεδο <em>μονοπατιών</em>, μόνο σε
+          επίπεδο ακμών.
+        </p>
+        <p>
+          <strong>Αντιπαράδειγμα.</strong> Κόμβοι{' '}
+          <InlineMath>{'u, v, w'}</InlineMath> με ακμές{' '}
+          <InlineMath>{'u \\to v'}</InlineMath> βάρους{' '}
+          <InlineMath>{'-1'}</InlineMath>,{' '}
+          <InlineMath>{'v \\to w'}</InlineMath> βάρους{' '}
+          <InlineMath>{'-3'}</InlineMath>, και{' '}
+          <InlineMath>{'u \\to w'}</InlineMath> βάρους{' '}
+          <InlineMath>{'-3'}</InlineMath>. Το πραγματικό συντομότερο{' '}
+          <InlineMath>{'u \\to w'}</InlineMath> είναι το{' '}
+          <InlineMath>{'u \\to v \\to w'}</InlineMath> με κόστος{' '}
+          <InlineMath>{'-1 + (-3) = -4'}</InlineMath>, έναντι{' '}
+          <InlineMath>{'-3'}</InlineMath> της απευθείας ακμής. Σύρε τον slider
+          για να δεις τον Dijkstra να γίνεται «σωστός για λάθος λόγο» στο
+          ενδιάμεσο, και τελικά να επιστρέφει λάθος απάντηση όταν όλα τα βάρη
+          έγιναν θετικά:
+        </p>
+        <ConstantShiftFail instance="ask10" />
+        <p>
+          <strong>Πιο συγκεκριμένα:</strong> προσθέτουμε{' '}
+          <InlineMath>{'c = 4'}</InlineMath> σε όλα →{' '}
+          <InlineMath>{'u \\to v = 3'}</InlineMath>,{' '}
+          <InlineMath>{'v \\to w = 1'}</InlineMath>,{' '}
+          <InlineMath>{'u \\to w = 1'}</InlineMath>. Η διαδρομή{' '}
+          <InlineMath>{'u \\to v \\to w'}</InlineMath> κοστίζει τώρα{' '}
+          <InlineMath>{'3 + 1 = 4'}</InlineMath>, ενώ η απευθείας{' '}
+          <InlineMath>{'u \\to w'}</InlineMath> μόλις{' '}
+          <InlineMath>{'1'}</InlineMath>. Ο Dijkstra επιστρέφει την απευθείας —
+          λάθος απάντηση.
+        </p>
+        <p>
+          <strong>Η σωστή λύση.</strong> Για γράφους με αρνητικά βάρη χωρίς
+          αρνητικούς κύκλους, ο αλγόριθμος <strong>Bellman-Ford</strong>{' '}
+          χειρίζεται σωστά τα αρνητικά σε χρόνο{' '}
+          <InlineMath>{'O(|V| \\cdot |E|)'}</InlineMath>. Για γενική
+          απελευθέρωση από το «πρόσημο», υπάρχει επίσης ο μετασχηματισμός{' '}
+          <em>Johnson</em> (δες κατευθυνόμενα/προχωρημένα μαθήματα), που
+          χρησιμοποιεί <em>vertex potentials</em>, όχι σταθερά ανά ακμή.
+        </p>
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «δεν μπορείς να φτιάξεις τα αρνητικά με
+            +σταθερά».</strong> Ο πειρασμός είναι μεγάλος: «πρόσθεσε τόσο ώστε
+            να μην υπάρχουν αρνητικά, και μετά Dijkstra». Αλλά η ασύμμετρη
+            επιβάρυνση ανά μήκος μονοπατιού καταστρέφει τη βελτιστότητα. Αν
+            βλέπεις αρνητικά βάρη, η σωστή αντίδραση είναι{' '}
+            <strong>Bellman-Ford</strong> (ή τοπολογική χαλάρωση αν ο γράφος
+            είναι DAG, όπως στην ask8).
+          </p>
+        </Callout>
       </>
     ),
   },

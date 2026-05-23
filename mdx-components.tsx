@@ -94,6 +94,11 @@ import { ComponentsBfsSweep } from '@/components/viz/ComponentsBfsSweep'
 import { NeighborhoodCostViz } from '@/components/viz/NeighborhoodCostViz'
 import { RiverCrossingStateGraph } from '@/components/viz/RiverCrossingStateGraph'
 import { PartyDegreeFilter } from '@/components/viz/PartyDegreeFilter'
+import { ReliabilityLogTransform } from '@/components/viz/ReliabilityLogTransform'
+import { LayeredSubsetsDAG } from '@/components/viz/LayeredSubsetsDAG'
+import { DAGUnreliableTwoWays } from '@/components/viz/DAGUnreliableTwoWays'
+import { MultVsAddPaths } from '@/components/viz/MultVsAddPaths'
+import { LayeredTripPlanner } from '@/components/viz/LayeredTripPlanner'
 import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
 import { StrongConnectivityViz } from '@/components/viz/StrongConnectivityViz'
 import { FloodFillGrid } from '@/components/viz/FloodFillGrid'
@@ -268,6 +273,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     NeighborhoodCostViz,
     RiverCrossingStateGraph,
     PartyDegreeFilter,
+    ReliabilityLogTransform,
+    LayeredSubsetsDAG,
+    DAGUnreliableTwoWays,
+    MultVsAddPaths,
+    LayeredTripPlanner,
     BipartiteChecker,
     StrongConnectivityViz,
     FloodFillGrid,

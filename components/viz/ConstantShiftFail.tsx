@@ -5,39 +5,96 @@
  * then run Dijkstra" does not work.
  *
  * The tempting fix for negative weights: shift every edge up by a constant k.
- * It silently changes the answer. This viz puts two s→t paths side by side —
- * a 2-edge route (real length 2) and a 4-edge route (real length −1, the
- * genuine shortest). A slider raises k. Because the longer route has more
- * edges, it absorbs the constant more times: each +1 of k costs path B +4 but
- * path A only +2. Past k = 1.5 the shorter route wins on paper — and the
- * minimum shift that makes all weights ≥ 0 (k = 4) is already well past that.
- * Built for L17.
+ * It silently changes the answer. This viz puts two s→t paths side by side
+ * and a slider raises k. Because the longer route has more edges, it absorbs
+ * the constant more times — so the path with FEWER edges (and worse real
+ * total) overtakes the genuine shortest past some k.
+ *
+ * Presets (`instance` prop):
+ *  • 'l17' (default) — 2-edge route A (real length 2) vs 4-edge route B
+ *    (real length −1, the genuine shortest). At k = 4, all weights ≥ 0, and
+ *    Dijkstra returns the wrong path. Used by L17 theory.
+ *  • 'ask10' — the three-vertex u → v → w example from φροντιστηριακό #7
+ *    ask 10: edge u→v = −1, v→w = −3, direct u→w = −3. The 2-hop path is
+ *    truly shorter (−4 vs −3); after +4 to every edge, Dijkstra picks the
+ *    1-edge direct route (1 vs 4) — wrong.
  */
 
 import { useState } from 'react'
 
 type CNode = { id: string; x: number; y: number }
-const S: CNode = { id: 's', x: 54, y: 150 }
-const A: CNode = { id: 'a', x: 252, y: 64 }
-const T: CNode = { id: 't', x: 452, y: 150 }
-const B: CNode = { id: 'b', x: 160, y: 238 }
-const C: CNode = { id: 'c', x: 252, y: 238 }
-const D: CNode = { id: 'd', x: 344, y: 238 }
-const R = 22
 
 type CEdge = { from: CNode; to: CNode; base: number }
-const PATH_A: CEdge[] = [
-  { from: S, to: A, base: 1 },
-  { from: A, to: T, base: 1 },
-]
-const PATH_B: CEdge[] = [
-  { from: S, to: B, base: 1 },
-  { from: B, to: C, base: 1 },
-  { from: C, to: D, base: 1 },
-  { from: D, to: T, base: -4 },
-]
-/** smallest k that lifts every weight to ≥ 0 — the most negative edge is −4. */
-const K_NONNEG = 4
+
+type Preset = {
+  pathA: CEdge[]
+  pathB: CEdge[]
+  /** smallest k that lifts every weight to ≥ 0 — used in the verdict copy. */
+  kNonneg: number
+  kMax: number
+  /** Which path is the genuine shortest — declared up front so the verdict
+   *  logic doesn't have to re-derive it. Must match the path of strictly
+   *  smaller real total. */
+  realShortest: 'A' | 'B'
+  caption: { left: string; right: string }
+  intro: { realA: string; realB: string }
+}
+
+// ── L17 preset (default) ───────────────────────────────────────────────────
+const S_L17: CNode = { id: 's', x: 54, y: 150 }
+const A_L17: CNode = { id: 'a', x: 252, y: 64 }
+const T_L17: CNode = { id: 't', x: 452, y: 150 }
+const B_L17: CNode = { id: 'b', x: 160, y: 238 }
+const C_L17: CNode = { id: 'c', x: 252, y: 238 }
+const D_L17: CNode = { id: 'd', x: 344, y: 238 }
+
+const PRESET_L17: Preset = {
+  pathA: [
+    { from: S_L17, to: A_L17, base: 1 },
+    { from: A_L17, to: T_L17, base: 1 },
+  ],
+  pathB: [
+    { from: S_L17, to: B_L17, base: 1 },
+    { from: B_L17, to: C_L17, base: 1 },
+    { from: C_L17, to: D_L17, base: 1 },
+    { from: D_L17, to: T_L17, base: -4 },
+  ],
+  kNonneg: 4,
+  kMax: 5,
+  realShortest: 'B',
+  caption: {
+    left: 'Διαδρομή A — 2 ακμές',
+    right: 'Διαδρομή B — 4 ακμές',
+  },
+  intro: { realA: 'A = 2', realB: 'B = −1' },
+}
+
+// ── ask10 preset ───────────────────────────────────────────────────────────
+const U_AS: CNode = { id: 'u', x: 80, y: 80 }
+const V_AS: CNode = { id: 'v', x: 252, y: 220 }
+const W_AS: CNode = { id: 'w', x: 424, y: 80 }
+
+const PRESET_ASK10: Preset = {
+  // path A = direct edge u → w; path B = 2-hop u → v → w (the real shortest)
+  pathA: [{ from: U_AS, to: W_AS, base: -3 }],
+  pathB: [
+    { from: U_AS, to: V_AS, base: -1 },
+    { from: V_AS, to: W_AS, base: -3 },
+  ],
+  kNonneg: 3,
+  kMax: 5,
+  realShortest: 'B',
+  caption: {
+    left: 'Άμεση u → w · 1 ακμή',
+    right: 'Έμμεση u → v → w · 2 ακμές',
+  },
+  intro: { realA: 'A = −3', realB: 'B = −4' },
+}
+
+const PRESETS: Record<string, Preset> = {
+  l17: PRESET_L17,
+  ask10: PRESET_ASK10,
+}
 
 function trim(a: CNode, b: CNode, r: number) {
   const dx = b.x - a.x
@@ -51,18 +108,34 @@ function trim(a: CNode, b: CNode, r: number) {
   }
 }
 
-export function ConstantShiftFail() {
+const R = 22
+
+export function ConstantShiftFail({ instance = 'l17' }: { instance?: string } = {}) {
+  const preset = PRESETS[instance] ?? PRESET_L17
+  const { pathA, pathB, kNonneg, kMax, realShortest, caption, intro } = preset
   const [k, setK] = useState(0)
 
-  const edgesA = PATH_A.length // 2
-  const edgesB = PATH_B.length // 4
-  const realA = PATH_A.reduce((s, e) => s + e.base, 0) // 2
-  const realB = PATH_B.reduce((s, e) => s + e.base, 0) // −1
+  const edgesA = pathA.length
+  const edgesB = pathB.length
+  const realA = pathA.reduce((s, e) => s + e.base, 0)
+  const realB = pathB.reduce((s, e) => s + e.base, 0)
   const totalA = realA + edgesA * k
   const totalB = realB + edgesB * k
 
   const dijkstraPicks: 'A' | 'B' = totalA < totalB ? 'A' : 'B'
-  const correct = dijkstraPicks === 'B' // B is the genuine shortest
+  const correct = dijkstraPicks === realShortest
+
+  // collect unique nodes for rendering
+  const nodeMap = new Map<string, CNode>()
+  for (const e of [...pathA, ...pathB]) {
+    nodeMap.set(e.from.id, e.from)
+    nodeMap.set(e.to.id, e.to)
+  }
+  const terminalIds = new Set<string>()
+  if (pathA.length > 0) {
+    terminalIds.add(pathA[0].from.id)
+    terminalIds.add(pathA[pathA.length - 1].to.id)
+  }
 
   return (
     <section className="my-6 rounded-xl border border-border bg-bg-elevated p-4 shadow-sm">
@@ -82,8 +155,11 @@ export function ConstantShiftFail() {
         </span>
       </div>
       <p className="mb-2 text-xs text-fg-subtle">
-        Δύο διαδρομές s→t. Πραγματικά μήκη: A = {realA}, B = {realB} — άρα η{' '}
-        <strong className="text-fg">B</strong> είναι όντως η συντομότερη.
+        Δύο διαδρομές. Πραγματικά μήκη: {intro.realA}, {intro.realB} — άρα η{' '}
+        <strong className="text-fg">
+          {realShortest === 'A' ? caption.left : caption.right}
+        </strong>{' '}
+        είναι όντως η συντομότερη.
       </p>
 
       <div className="graph-canvas overflow-x-auto">
@@ -119,17 +195,17 @@ export function ConstantShiftFail() {
 
           {/* path labels */}
           <text x={256} y={24} textAnchor="middle" fontSize={12} fontWeight={700} fill="#5a4a4d">
-            Διαδρομή A — {edgesA} ακμές
+            {caption.left}
           </text>
           <text x={256} y={290} textAnchor="middle" fontSize={12} fontWeight={700} fill="#5a4a4d">
-            Διαδρομή B — {edgesB} ακμές
+            {caption.right}
           </text>
 
           {/* edges */}
           {(
             [
-              { edges: PATH_A, path: 'A' as const },
-              { edges: PATH_B, path: 'B' as const },
+              { edges: pathA, path: 'A' as const },
+              { edges: pathB, path: 'B' as const },
             ]
           ).flatMap(({ edges, path }) =>
             edges.map((e, i) => {
@@ -176,8 +252,8 @@ export function ConstantShiftFail() {
           )}
 
           {/* nodes */}
-          {[S, A, T, B, C, D].map((n) => {
-            const terminal = n.id === 's' || n.id === 't'
+          {Array.from(nodeMap.values()).map((n) => {
+            const terminal = terminalIds.has(n.id)
             return (
               <g key={n.id}>
                 <circle
@@ -213,7 +289,7 @@ export function ConstantShiftFail() {
         <input
           type="range"
           min={0}
-          max={5}
+          max={kMax}
           step={1}
           value={k}
           aria-label="Σταθερά k που προστίθεται σε κάθε ακμή"
@@ -235,7 +311,7 @@ export function ConstantShiftFail() {
               : 'border-border bg-bg-soft/40')
           }
         >
-          <div className="font-semibold text-fg">Διαδρομή A · {edgesA} ακμές</div>
+          <div className="font-semibold text-fg">{caption.left}</div>
           <div className="mt-0.5 font-mono text-fg-muted">
             {realA} + {edgesA}·{k} ={' '}
             <span className="text-lg font-bold text-fg">{totalA}</span>
@@ -249,7 +325,7 @@ export function ConstantShiftFail() {
               : 'border-border bg-bg-soft/40')
           }
         >
-          <div className="font-semibold text-fg">Διαδρομή B · {edgesB} ακμές</div>
+          <div className="font-semibold text-fg">{caption.right}</div>
           <div className="mt-0.5 font-mono text-fg-muted">
             {realB} + {edgesB}·{k} ={' '}
             <span className="text-lg font-bold text-fg">{totalB}</span>
@@ -268,20 +344,17 @@ export function ConstantShiftFail() {
       >
         {correct ? (
           <>
-            Με k = {k}, ο Dijkstra θα διάλεγε την{' '}
-            <strong className="text-fg">B</strong> ({totalB} &lt; {totalA}) —
-            σωστά. {k < K_NONNEG && 'Αλλά υπάρχουν ακόμη αρνητικά βάρη — '}
-            {k < K_NONNEG &&
-              `χρειάζεται k ≥ ${K_NONNEG} για να γίνουν όλα ≥ 0. Σύρε το παραπέρα.`}
+            Με k = {k}, ο Dijkstra επιλέγει την πραγματικά συντομότερη — σωστά.
+            {k < kNonneg && ' Αλλά υπάρχουν ακόμη αρνητικά βάρη — '}
+            {k < kNonneg &&
+              `χρειάζεται k ≥ ${kNonneg} για να γίνουν όλα ≥ 0. Σύρε το παραπέρα.`}
           </>
         ) : (
           <>
-            Με k = {k}, ο Dijkstra θα διάλεγε την{' '}
-            <strong className="text-danger">A</strong> ({totalA} &lt; {totalB}){' '}
-            — <strong className="text-fg">λάθος</strong>: η πραγματικά
-            συντομότερη είναι η B.{' '}
-            {k >= K_NONNEG &&
-              `Και με k = ${K_NONNEG} όλα τα βάρη έγιναν ήδη ≥ 0 — δηλαδή η «διόρθωση» χαλάει την απάντηση πριν καν ολοκληρωθεί.`}
+            Με k = {k}, ο Dijkstra επιλέγει τη <strong className="text-danger">λάθος</strong>{' '}
+            διαδρομή — αυτή με λιγότερες ακμές αλλά μεγαλύτερο πραγματικό βάρος.{' '}
+            {k >= kNonneg &&
+              `Και με k = ${kNonneg} όλα τα βάρη έγιναν ήδη ≥ 0 — δηλαδή η «διόρθωση» χαλάει την απάντηση πριν καν ολοκληρωθεί.`}
           </>
         )}
       </div>
@@ -289,11 +362,10 @@ export function ConstantShiftFail() {
       {/* why */}
       <div className="mt-2 rounded-lg border border-accent/30 bg-accent/5 px-3 py-2 text-sm leading-relaxed text-fg-muted">
         <span className="font-semibold text-fg">Γιατί:</span> κάθε +1 στο k
-        ακριβαίνει τη B κατά <strong className="text-fg">+{edgesB}</strong> (μία
-        φορά ανά ακμή) αλλά την A μόνο κατά{' '}
-        <strong className="text-fg">+{edgesA}</strong>. Μια διαδρομή με
-        περισσότερες ακμές μετράει τη σταθερά περισσότερες φορές — έτσι η
-        σύγκριση αλλοιώνεται.
+        ακριβαίνει τη μία διαδρομή κατά <strong className="text-fg">+{edgesA}</strong> και
+        την άλλη κατά <strong className="text-fg">+{edgesB}</strong>. Μια
+        διαδρομή με περισσότερες ακμές μετράει τη σταθερά περισσότερες φορές —
+        έτσι η σύγκριση αλλοιώνεται.
       </div>
     </section>
   )
