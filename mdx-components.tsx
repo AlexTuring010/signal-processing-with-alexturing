@@ -52,6 +52,13 @@ import { DeltaHalfBoxes } from '@/components/viz/DeltaHalfBoxes'
 import { PresortTrick } from '@/components/viz/PresortTrick'
 import { PeakFinder } from '@/components/viz/PeakFinder'
 import { GraphRepresentations } from '@/components/viz/GraphRepresentations'
+import { HandshakeLemmaViz } from '@/components/viz/HandshakeLemmaViz'
+import { CycleExplorer } from '@/components/viz/CycleExplorer'
+import { PathBuilder } from '@/components/viz/PathBuilder'
+import { ConnectivityExplorer } from '@/components/viz/ConnectivityExplorer'
+import { TreeThreeProperties } from '@/components/viz/TreeThreeProperties'
+import { RootedTreeReroot } from '@/components/viz/RootedTreeReroot'
+import { MetroModelingViz } from '@/components/viz/MetroModelingViz'
 import { BipartiteChecker } from '@/components/viz/BipartiteChecker'
 import { StrongConnectivityViz } from '@/components/viz/StrongConnectivityViz'
 import { FloodFillGrid } from '@/components/viz/FloodFillGrid'
@@ -175,6 +182,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PresortTrick,
     PeakFinder,
     GraphRepresentations,
+    HandshakeLemmaViz,
+    CycleExplorer,
+    PathBuilder,
+    ConnectivityExplorer,
+    TreeThreeProperties,
+    RootedTreeReroot,
+    MetroModelingViz,
     BipartiteChecker,
     StrongConnectivityViz,
     FloodFillGrid,
