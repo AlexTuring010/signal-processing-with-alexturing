@@ -26,17 +26,25 @@ import { cn } from '@/lib/utils'
 
 type Candidate = {
   label: string
-  /** TRUE when the class could contain a function that is ≥ Ω(n·m) (1D: ≥ Ω(n)). */
+  /** TRUE when the verdict is positive — the precise semantics is preset-specific (see `verdictLabels`). */
   feasible: boolean
   reason: string
 }
 
 type Preset = {
   dim: 1 | 2
-  /** label shown in the verdict-chip header for the «κατώφλι» */
+  /** label shown in the verdict-chip header (e.g. «κατώφλι» or «πραγματικός χρόνος») */
   threshold: string
   candidates: Candidate[]
   intro: string
+  /** override the chip prefix; defaults to «κατώφλι». */
+  thresholdLabel?: string
+  /** override the section title (defaults to «… γιατί χρειάζεται τουλάχιστον …»). */
+  titleOverride?: string
+  /** override the candidate-grid header (defaults to «Οι τέσσερις υποψήφιες πολυπλοκότητες»). */
+  candidatesHeader?: string
+  /** override the green/red chip labels (defaults to «✓ Πιθανό / ✗ Αδύνατο»). */
+  verdictLabels?: { yes: string; no: string }
 }
 
 const PRESETS: Record<string, Preset> = {
@@ -126,6 +134,48 @@ const PRESETS: Record<string, Preset> = {
         label: 'O(m²·n²)',
         feasible: true,
         reason: 'Πολύ πάνω από το κατώφλι — εύλογο αν κάθε κελί θέλει O(mn) δουλειά.',
+      },
+    ],
+  },
+
+  /* pt2-th1-q8 — 2D LCS upper-bound MCQ. Different semantics from q6/q7: we
+     have the EXACT complexity Θ(mn) and ask which of the four listed bounds
+     are correct *upper* bounds. So the verdict chips flip from
+     «αδύνατο/πιθανό» to «λάθος/ορθό». */
+  'pt2-th1-q8': {
+    dim: 2,
+    threshold: 'Θ(m·n)',
+    thresholdLabel: 'πραγματική πολυπλοκότητα',
+    titleOverride:
+      'Πίνακας DP του LCS — m × n κελιά, O(1) ανά κελί → ακριβώς Θ(m·n)',
+    candidatesHeader: 'Τα τέσσερα υποψήφια φράγματα',
+    verdictLabels: { yes: '✓ Ορθό', no: '✗ Λάθος' },
+    intro:
+      'Ο πίνακας του LCS έχει m·n κελιά και κάθε κελί υπολογίζεται σε O(1) (μία σύγκριση, ένα max). Άρα η πραγματική πολυπλοκότητα είναι ΑΚΡΙΒΩΣ Θ(mn) — όχι ένα κατώφλι, η τελική τιμή. Ποιο από τα παρακάτω είναι ορθό φράγμα γι’ αυτή την τιμή;',
+    candidates: [
+      {
+        label: 'O(n)',
+        feasible: false,
+        reason:
+          'Το mn δεν είναι O(n) όταν m μεγαλώνει — π.χ. αν m = n, το mn = n² ξεπερνά κάθε σταθερά × n. ✗',
+      },
+      {
+        label: 'O(n²m²)',
+        feasible: true,
+        reason:
+          'Σίγουρα mn ≤ n²m² (πολλαπλασιάζουμε με n·m ≥ 1). Σωστό άνω φράγμα — χαλαρό, αλλά σωστό. ✓',
+      },
+      {
+        label: 'O(n·log m)',
+        feasible: false,
+        reason:
+          'Το mn μεγαλώνει σαν n × m, ενώ το n log m σαν n × log m. Για m ≥ 2 το m > log m, άρα mn ∉ O(n log m). ✗',
+      },
+      {
+        label: 'Θ(mn · log n)',
+        feasible: false,
+        reason:
+          'Το Θ απαιτεί ΑΚΡΙΒΗ τάξη και προς τα δύο. Ο αλγόριθμος τρέχει σε Θ(mn), που είναι o(mn log n) — άρα δεν είναι Θ(mn log n). ✗',
       },
     ],
   },
@@ -237,12 +287,13 @@ export function DPTableLowerBound({ preset }: Props) {
     <section className="my-6 rounded-xl border border-border bg-bg-elevated p-4 shadow-sm">
       <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-semibold tracking-tight text-fg">
-          {cfg.dim === 2
-            ? 'Πίνακας DP n × m — γιατί χρειάζεται τουλάχιστον n·m δουλειά'
-            : 'Πίνακας DP μήκους n — γιατί χρειάζεται τουλάχιστον n δουλειά'}
+          {cfg.titleOverride
+            ?? (cfg.dim === 2
+              ? 'Πίνακας DP n × m — γιατί χρειάζεται τουλάχιστον n·m δουλειά'
+              : 'Πίνακας DP μήκους n — γιατί χρειάζεται τουλάχιστον n δουλειά')}
         </div>
         <span className="shrink-0 rounded-md bg-accent/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-accent">
-          κατώφλι: {cfg.threshold}
+          {cfg.thresholdLabel ?? 'κατώφλι'}: {cfg.threshold}
         </span>
       </div>
       <p className="mb-3 text-xs text-fg-subtle">{cfg.intro}</p>
@@ -348,7 +399,7 @@ export function DPTableLowerBound({ preset }: Props) {
       {/* candidate verdicts */}
       <div className="mt-4">
         <div className="mb-1 text-xs font-semibold uppercase tracking-wider text-fg-subtle">
-          Οι τέσσερις υποψήφιες πολυπλοκότητες
+          {cfg.candidatesHeader ?? 'Οι τέσσερις υποψήφιες πολυπλοκότητες'}
         </div>
         <div className="grid gap-2 sm:grid-cols-2">
           {cfg.candidates.map((c) => (
@@ -369,7 +420,9 @@ export function DPTableLowerBound({ preset }: Props) {
                     c.feasible ? 'bg-success text-white' : 'bg-danger text-white',
                   )}
                 >
-                  {c.feasible ? '✓ Πιθανό' : '✗ Αδύνατο'}
+                  {c.feasible
+                    ? (cfg.verdictLabels?.yes ?? '✓ Πιθανό')
+                    : (cfg.verdictLabels?.no ?? '✗ Αδύνατο')}
                 </span>
               </div>
               <p className="mt-1 text-xs leading-relaxed text-fg-muted">{c.reason}</p>

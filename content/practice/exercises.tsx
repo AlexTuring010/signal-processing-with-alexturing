@@ -103,6 +103,10 @@ import { RecursionExplosion } from '@/components/viz/RecursionExplosion'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
 import { RodCuttingDP } from '@/components/viz/RodCuttingDP'
 import { RestaurantSpacingDP } from '@/components/viz/RestaurantSpacingDP'
+import { ShortestSupersequenceTable } from '@/components/viz/ShortestSupersequenceTable'
+import { KnapsackTable } from '@/components/viz/KnapsackTable'
+import { KnapsackRatioVsDp } from '@/components/viz/KnapsackRatioVsDp'
+import { KnapsackToIntervalScheduling } from '@/components/viz/KnapsackToIntervalScheduling'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -1789,41 +1793,46 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Ο αλγόριθμος DP για τη μέγιστη κοινή υπακολουθία (LCS) γεμίζει έναν
-          πίνακα <InlineMath>{'m \\times n'}</InlineMath> με{' '}
-          <InlineMath>{'O(1)'}</InlineMath> δουλειά ανά κελί — άρα τρέχει σε{' '}
-          <strong><InlineMath>{'\\Theta(mn)'}</InlineMath></strong>.
+          <strong>Πρώτα η αλήθεια για το LCS.</strong> Ο πίνακας έχει{' '}
+          <InlineMath>{'(m+1)(n+1)'}</InlineMath> κελιά, κάθε ένα γεμίζει με{' '}
+          μία σύγκριση + ένα <InlineMath>{'\\max'}</InlineMath> — δουλειά{' '}
+          <InlineMath>{'O(1)'}</InlineMath>. Άρα ο αλγόριθμος τρέχει σε{' '}
+          <strong><InlineMath>{'\\Theta(mn)'}</InlineMath></strong>. Όχι «κάπου
+          γύρω στο <InlineMath>{'mn'}</InlineMath>» — <em>ακριβώς</em> τάξης{' '}
+          <InlineMath>{'mn'}</InlineMath>.
         </p>
         <p>
-          «Ορθό φράγμα» = ένα φράγμα που η πραγματική πολυπλοκότητα{' '}
-          <InlineMath>{'\\Theta(mn)'}</InlineMath> όντως το ικανοποιεί.
+          Η ερώτηση «ποιο είναι ορθό φράγμα;» γίνεται έτσι: <em>ποιο από τα
+          τέσσερα ικανοποιείται από το <InlineMath>{'\\Theta(mn)'}</InlineMath>;</em>{' '}
+          Για κάθε <InlineMath>{'O'}</InlineMath>-φράγμα ζητάς «είναι το{' '}
+          <InlineMath>{'mn'}</InlineMath> μικρότερο ή ίσο με αυτή την κλάση;»
+          Για ένα <InlineMath>{'\\Theta'}</InlineMath> ζητάς «είναι ακριβώς της
+          ίδιας τάξης;» — αυστηρότερο.
         </p>
-        <ul>
-          <li>
-            (i) <InlineMath>{'O(n)'}</InlineMath>: το{' '}
-            <InlineMath>{'mn'}</InlineMath> δεν είναι <InlineMath>{'O(n)'}</InlineMath>{' '}
-            (όταν <InlineMath>{'m > 1'}</InlineMath>). ✗
-          </li>
-          <li>
-            (ii) <InlineMath>{'O(n^2 m^2)'}</InlineMath>: το{' '}
-            <InlineMath>{'mn'}</InlineMath> είναι σίγουρα{' '}
-            <InlineMath>{'\\le n^2 m^2'}</InlineMath> — σωστό (χαλαρό) άνω φράγμα.
-            ✓
-          </li>
-          <li>
-            (iii) <InlineMath>{'O(n\\log m)'}</InlineMath>: πολύ μικρότερο του{' '}
-            <InlineMath>{'mn'}</InlineMath>. ✗
-          </li>
-          <li>
-            (iv) <InlineMath>{'\\Theta(mn\\log n)'}</InlineMath>: το{' '}
-            <InlineMath>{'\\Theta'}</InlineMath> απαιτεί <em>ακριβή</em> τάξη — ο
-            αλγόριθμος είναι <InlineMath>{'\\Theta(mn)'}</InlineMath>, όχι{' '}
-            <InlineMath>{'\\Theta(mn\\log n)'}</InlineMath>. ✗
-          </li>
-        </ul>
+        <DPTableLowerBound preset="pt2-th1-q8" />
         <p>
-          <strong>Σωστή: (ii).</strong>
+          <strong>Σωστή: (ii) <InlineMath>{'O(n^2 m^2)'}</InlineMath>.</strong>{' '}
+          Το (i) και το (iii) μένουν κάτω από <InlineMath>{'mn'}</InlineMath>,
+          οπότε δεν αρκούν ως άνω φράγματα. Το (iv) σπάει επειδή το{' '}
+          <InlineMath>{'\\Theta'}</InlineMath> απαιτεί <em>ακριβή</em>{' '}
+          συμπεριφορά — ο αλγόριθμος δεν παίρνει επιπλέον λογαριθμικό
+          παράγοντα.
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «ποια είναι ακριβώς η πραγματική
+            πολυπλοκότητα; και ποια κλάση τη χωράει;».</strong> Πριν κρίνεις τα
+            φράγματα, βγάλε πρώτα την πραγματική τιμή. Μετά:{' '}
+            <InlineMath>{'O(f)'}</InlineMath> σωστό αν{' '}
+            <InlineMath>{'\\text{real} = O(f)'}</InlineMath>·{' '}
+            <InlineMath>{'\\Omega(f)'}</InlineMath> σωστό αν{' '}
+            <InlineMath>{'\\text{real} = \\Omega(f)'}</InlineMath>·{' '}
+            <InlineMath>{'\\Theta(f)'}</InlineMath> σωστό μόνο αν είναι{' '}
+            <em>και τα δύο</em>. Το <InlineMath>{'\\Theta'}</InlineMath> έχει
+            «διπλή πόρτα» — εύκολο να ξεγλιστρήσει ένα παραπλήσιο φράγμα που
+            είναι κοντά αλλά όχι ίδιο. Δες π.χ. το (iv) εδώ.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -2239,9 +2248,16 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Αυτό το πρόβλημα λέγεται <strong>συντομότερη κοινή υπερακολουθία</strong>{' '}
-          (shortest common supersequence) — το «αντίστροφο» της μέγιστης κοινής
-          υπακολουθίας.
+          <strong>Η διαίσθηση — γιατί υπάρχει «δωρεάν χώρος».</strong> Αν
+          απλώς κολλήσεις τα δύο ονόματα, παίρνεις κάτι σαν ΓΑΒΜΙΑΟΥ —{' '}
+          <InlineMath>{'m + n = 8'}</InlineMath> γράμματα. Όμως αν τα δύο
+          ονόματα μοιράζονται έστω ένα γράμμα (εδώ, το «Α»), μπορούμε να βάλουμε
+          το κοινό γράμμα <em>μία</em> φορά και να αφήσουμε ν’ «εξυπηρετήσει»
+          και τα δύο: ΓΑΒ + ΜΙΑΟΥ → ΜΙΓΑΒΟΥ, 7 γράμματα — εξοικονομήσαμε 1.
+          Γενικά, κάθε κοινό γράμμα στη <em>σωστή θέση</em> μάς γλιτώνει 1.
+          Μάλιστα ισχύει η ταυτότητα <InlineMath>{'|SCS| + |LCS| = m + n'}</InlineMath>:
+          η συντομότερη υπερακολουθία και η μέγιστη κοινή υπακολουθία είναι
+          δύο όψεις του ίδιου νομίσματος.
         </p>
         <p>
           <strong>(i)</strong> Θέλουμε όνομα που να περιέχει{' '}
@@ -2252,44 +2268,63 @@ export const EXERCISES: Exercise[] = [
           <strong><InlineMath>{'\\text{OPT}(m, n)'}</InlineMath></strong>.
         </p>
         <p>
-          <strong>(ii) Η σκέψη.</strong> Χτίζουμε το όνομα γράμμα-γράμμα και
-          κοιτάμε το <strong>τελευταίο</strong> γράμμα που βάζουμε. Συγκρίνουμε
-          τα τελευταία γράμματα <InlineMath>{'s_1[i]'}</InlineMath> και{' '}
-          <InlineMath>{'s_2[j]'}</InlineMath>:
+          <strong>(ii) Η αναδρομή.</strong> Χτίζουμε το όνομα γράμμα-γράμμα και
+          κοιτάμε το <strong>τελευταίο</strong> γράμμα που γράφουμε. Είναι μία
+          επιλογή με <em>δύο πραγματικές</em> κινήσεις:
         </p>
         <ul>
           <li>
-            <strong>Αν <InlineMath>{'s_1[i] = s_2[j]'}</InlineMath>:</strong> ένα
-            μόνο γράμμα στο τέλος «εξυπηρετεί και τους δύο». Το βάζουμε μία φορά
-            (κόστος 1) και λύνουμε το υπόλοιπο για{' '}
-            <InlineMath>{'(i-1, j-1)'}</InlineMath>.
+            <strong>Αν <InlineMath>{'s_1[i] = s_2[j]'}</InlineMath>:</strong> το
+            ίδιο γράμμα κλείνει και τα δύο prefixes. <em>Πάντα</em> συμφέρει
+            να ζευγαρώσουμε εδώ — γλιτώνουμε ένα γράμμα. Κόστος 1, μένει το{' '}
+            <InlineMath>{'\\text{OPT}(i-1, j-1)'}</InlineMath> — η διαγώνια
+            κίνηση.
           </li>
           <li>
-            <strong>Αν διαφέρουν:</strong> το τελευταίο γράμμα του ονόματος είναι{' '}
-            είτε το <InlineMath>{'s_1[i]'}</InlineMath> είτε το{' '}
-            <InlineMath>{'s_2[j]'}</InlineMath> (όχι και τα δύο μαζί). Πληρώνουμε
-            1 και παίρνουμε το <strong>καλύτερο</strong> από τις δύο επιλογές.
+            <strong>Αν διαφέρουν:</strong> κάποιο από τα δύο γράμματα πρέπει να
+            είναι το τελευταίο. Δοκίμασε και τα δύο και κράτα το{' '}
+            <em>μικρότερο</em>: <InlineMath>{'1 + \\min\\{\\text{OPT}(i-1,j),\\, \\text{OPT}(i,j-1)\\}'}</InlineMath>{' '}
+            — μία κίνηση πάνω (κρατάς το <InlineMath>{'s_1[i]'}</InlineMath>) ή
+            αριστερά (κρατάς το <InlineMath>{'s_2[j]'}</InlineMath>).
           </li>
         </ul>
         <BlockMath>{'\\text{OPT}(i,j) = \\begin{cases} j & i = 0 \\\\ i & j = 0 \\\\ 1 + \\text{OPT}(i-1,j-1) & s_1[i] = s_2[j] \\\\ 1 + \\min\\{ \\text{OPT}(i-1,j),\\, \\text{OPT}(i,j-1) \\} & s_1[i] \\neq s_2[j] \\end{cases}'}</BlockMath>
         <p>
-          Οι βασικές περιπτώσεις: αν η μία συμβολοσειρά τελείωσε, πρέπει απλώς να
-          «γράψουμε» ό,τι μένει από την άλλη — <InlineMath>{'j'}</InlineMath> ή{' '}
-          <InlineMath>{'i'}</InlineMath> γράμματα.
+          Οι βασικές περιπτώσεις: αν η μία πλευρά τελείωσε, πρέπει απλώς να
+          γράψουμε ό,τι μένει από την άλλη — <InlineMath>{'j'}</InlineMath>{' '}
+          γράμματα από το <InlineMath>{'s_2'}</InlineMath> ή{' '}
+          <InlineMath>{'i'}</InlineMath> από το <InlineMath>{'s_1'}</InlineMath>.
+          Άρα το πρώτο «κενό prefix» κοστίζει ίσο με το μήκος του άλλου.
         </p>
         <p>
-          <strong>Παράδειγμα (ΓΑΒ, ΜΙΑΟΥ).</strong> Το κοινό γράμμα είναι το «Α».
-          Η συντομότερη υπερακολουθία βάζει το «Α» <em>μία</em> φορά και
-          μπλέκει γύρω του τα υπόλοιπα: π.χ. ΜΙ-Γ-Α-ΒΟΥ → «ΜΙΓΑΒΟΥ», μήκος 7
-          (ενώ το αφελές «κόλλημα» ΓΑΒ+ΜΙΑΟΥ δίνει 8).
+          Δες το να συμβαίνει — γέμισμα γραμμή-γραμμή για τα{' '}
+          <InlineMath>{'s_1 = \\text{ΓΑΒ}'}</InlineMath> και{' '}
+          <InlineMath>{'s_2 = \\text{ΜΙΑΟΥ}'}</InlineMath>, και μετά πέρασμα
+          προς τα πίσω που <em>χτίζει</em> την υπερακολουθία γράμμα-γράμμα:
         </p>
+        <ShortestSupersequenceTable />
         <p>
           <strong>(iii) Πολυπλοκότητα.</strong> Ο πίνακας έχει{' '}
           <InlineMath>{'(m+1)(n+1)'}</InlineMath> κελιά και κάθε κελί
           υπολογίζεται σε <InlineMath>{'O(1)'}</InlineMath> (μία σύγκριση, ένα{' '}
           <InlineMath>{'\\min'}</InlineMath>). Άρα{' '}
-          <strong><InlineMath>{'\\Theta(mn)'}</InlineMath></strong>.
+          <strong><InlineMath>{'\\Theta(mn)'}</InlineMath></strong> — ίδιος
+          χρόνος με την LCS, που δεν είναι σύμπτωση: είναι το ίδιο πρόβλημα
+          ντυμένο διαφορετικά.
         </p>
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «το αντίθετο του LCS πληρώνει την ίδια ταρίφα».</strong>{' '}
+            Όποτε δεις «συντομότερη υπερακολουθία» / «μέγιστη κοινή
+            υπακολουθία» / «edit distance χωρίς αντικατάσταση», ο πίνακας
+            <InlineMath>{'(i, j)'}</InlineMath> πάνω σε προθέματα είναι ο{' '}
+            σωστός φακός. Η διαφορά είναι ένας <InlineMath>{'\\max'}</InlineMath>{' '}
+            ↔ <InlineMath>{'\\min'}</InlineMath>: για κάτι «μέγιστο μέσα στις
+            ομοιότητες» χρησιμοποιείς max· για κάτι «ελάχιστο που τα χωράει και
+            τα δύο» χρησιμοποιείς min. Σε όλες τις παραλλαγές, η πολυπλοκότητα
+            είναι <InlineMath>{'\\Theta(mn)'}</InlineMath>.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -3217,10 +3252,12 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          Αυτό είναι ακριβώς το <strong>πρόβλημα του Σακιδίου (Knapsack)</strong>:
-          «διάρκεια» <InlineMath>{'t_i'}</InlineMath> = βάρος αντικειμένου,
-          «κέρδος» <InlineMath>{'p_i'}</InlineMath> = αξία, και ο διαθέσιμος
-          χρόνος <InlineMath>{'T'}</InlineMath> = χωρητικότητα σακιδίου.
+          <strong>Πρώτα η αναγνώριση — αυτό είναι Σακίδιο.</strong> Άλλαξε
+          ονόματα και η ταυτότητα είναι η ίδια: «διάρκεια»{' '}
+          <InlineMath>{'t_i'}</InlineMath> ↔ βάρος αντικειμένου, «κέρδος»{' '}
+          <InlineMath>{'p_i'}</InlineMath> ↔ αξία, «διαθέσιμος χρόνος»{' '}
+          <InlineMath>{'T'}</InlineMath> ↔ χωρητικότητα σακιδίου. Όλα τα
+          εργαλεία της διάλεξης μεταφέρονται αυτούσια.
         </p>
         <p>
           <strong>(α)</strong> Θέλουμε το μέγιστο κέρδος έχοντας στη διάθεσή μας{' '}
@@ -3229,40 +3266,88 @@ export const EXERCISES: Exercise[] = [
           είναι <strong><InlineMath>{'\\text{OPT}(n, T)'}</InlineMath></strong>.
         </p>
         <p>
-          <strong>(β)</strong> Κοιτάμε τη διαφήμιση <InlineMath>{'i'}</InlineMath>{' '}
-          — μέσα ή έξω; Αν δεν χωράει (<InlineMath>{'t_i > t'}</InlineMath>) είναι
-          αναγκαστικά έξω. Αλλιώς παίρνουμε το καλύτερο από «έξω» και «μέσα»:
+          <strong>(β) Η αναδρομή.</strong> Κοιτάμε τη διαφήμιση{' '}
+          <InlineMath>{'i'}</InlineMath> — μέσα ή έξω; Αν δεν χωράει (
+          <InlineMath>{'t_i > t'}</InlineMath>), είναι αναγκαστικά έξω. Αλλιώς
+          δοκιμάζουμε και τα δύο και κρατάμε το καλύτερο. Όχι «πρώτα τα
+          ακριβότερα» — αυτό είναι ακριβώς ο άπληστος που <em>δεν</em>{' '}
+          δουλεύει στο 0-1 (δες <InlineMath>{'\\text{KnapsackGreedyFail}'}</InlineMath>{' '}
+          στη διάλεξη). Δοκιμάζουμε ΚΑΙ ΤΑ ΔΥΟ και κρατάμε το max:
         </p>
         <BlockMath>{'\\text{OPT}(i,t) = \\begin{cases} 0 & i = 0 \\\\ \\text{OPT}(i-1,t) & t_i > t \\\\ \\max\\{\\, \\text{OPT}(i-1,t),\\ \\ p_i + \\text{OPT}(i-1,\\,t - t_i) \\,\\} & \\text{αλλιώς} \\end{cases}'}</BlockMath>
         <p>
-          <strong>(γ)</strong> Ο πίνακας έχει <InlineMath>{'n \\cdot T'}</InlineMath>{' '}
-          κελιά και κάθε κελί υπολογίζεται σε <InlineMath>{'O(1)'}</InlineMath>{' '}
-          (ένα <InlineMath>{'\\max'}</InlineMath>). Άρα{' '}
-          <strong><InlineMath>{'\\Theta(nT)'}</InlineMath></strong>. Προσοχή:
-          αυτό είναι <strong>ψευδοπολυωνυμικό</strong> — το{' '}
-          <InlineMath>{'T'}</InlineMath> είναι ένας αριθμός, που γράφεται με{' '}
-          <InlineMath>{'\\log T'}</InlineMath> δυφία, οπότε το{' '}
-          <InlineMath>{'nT'}</InlineMath> είναι εκθετικό ως προς το μέγεθος της
-          εισόδου.
+          <strong>(γ) Πολυπλοκότητα.</strong> Ο πίνακας έχει{' '}
+          <InlineMath>{'(n+1)(T+1)'}</InlineMath> κελιά και κάθε κελί
+          υπολογίζεται σε <InlineMath>{'O(1)'}</InlineMath> (ένα{' '}
+          <InlineMath>{'\\max'}</InlineMath>). Άρα{' '}
+          <strong><InlineMath>{'\\Theta(nT)'}</InlineMath></strong>. <strong>Η
+          παγίδα:</strong> το <InlineMath>{'T'}</InlineMath> είναι ένας
+          αριθμός που γράφεται με <InlineMath>{'\\log T'}</InlineMath> δυφία,
+          οπότε <InlineMath>{'nT'}</InlineMath> είναι <em>εκθετικό</em> ως προς
+          το πραγματικό μέγεθος της εισόδου. Λέγεται{' '}
+          <strong>ψευδοπολυωνυμικό</strong> — δουλεύει γρήγορα όταν το{' '}
+          <InlineMath>{'T'}</InlineMath> είναι μικρό, αλλά εκρήγνυται όταν το{' '}
+          <InlineMath>{'T'}</InlineMath> διπλασιάζεται μόνο σε bits. Δες τη
+          συμπεριφορά του πίνακα στη λεκτοριακή έκδοση του σακιδίου:
+        </p>
+        <KnapsackTable />
+        <p>
+          <strong>(δ) Εντοπισμός των επιλεγμένων διαφημίσεων.</strong> Με
+          έτοιμο τον πίνακα, ξεκινάμε από το{' '}
+          <InlineMath>{'M[n][T]'}</InlineMath> και «ξεθάβουμε» τις επιλογές:
+          για κάθε <InlineMath>{'i = n, n-1, \\dots, 1'}</InlineMath>, αν{' '}
+          <InlineMath>{'M[i][w] = M[i-1][w]'}</InlineMath> η διαφήμιση{' '}
+          <InlineMath>{'i'}</InlineMath> ΔΕΝ μπήκε (συνέχισε με ίδιο{' '}
+          <InlineMath>{'w'}</InlineMath>)· αλλιώς ΜΠΗΚΕ, την προσθέτουμε στη
+          λύση και αφαιρούμε τη διάρκεια (
+          <InlineMath>{'w \\leftarrow w - t_i'}</InlineMath>). Μία σύγκριση ανά{' '}
+          <InlineMath>{'i'}</InlineMath>· συνολικά{' '}
+          <strong><InlineMath>{'O(n)'}</InlineMath></strong>. Στο εργαλείο
+          παραπάνω, μετά το γέμισμα φωτίζονται ακριβώς αυτές οι διαφημίσεις.
         </p>
         <p>
-          <strong>(δ)</strong> Έχοντας έτοιμο τον πίνακα, εντοπίζουμε{' '}
-          <em>ποιες</em> διαφημίσεις επιλέχθηκαν με ένα πέρασμα προς τα πίσω:
-          ξεκινάμε από το <InlineMath>{'\\text{OPT}(n,T)'}</InlineMath> και σε
-          κάθε <InlineMath>{'i'}</InlineMath> ρωτάμε «κέρδισε το “μέσα” ή το
-          “έξω”;» — μία σύγκριση <InlineMath>{'O(1)'}</InlineMath>, μετά πάμε στο{' '}
-          <InlineMath>{'i-1'}</InlineMath>. Συνολικά{' '}
-          <strong><InlineMath>{'O(n)'}</InlineMath></strong>.
+          <strong>(ε) Όταν οι διαφημίσεις έχουν σταθερό παράθυρο.</strong> Αν
+          η διαφήμιση <InlineMath>{'i'}</InlineMath> πρέπει να προβληθεί στο{' '}
+          <em>συγκεκριμένο</em> διάστημα{' '}
+          <InlineMath>{'[s_i, s_i + t_i]'}</InlineMath>, χάνεται η ελευθερία να
+          τις βάλεις «όπου θες». Δύο διαφημίσεις με επικαλυπτόμενα παράθυρα
+          συγκρούονται — δεν μπορούν και οι δύο να μπουν, ακόμα κι αν χωρούσαν
+          χρονικά αθροιστικά. Αυτό μετατρέπει το πρόβλημα σε <strong>Σταθμισμένο
+          Χρονοπρογραμματισμό Διαστημάτων</strong> (weighted interval
+          scheduling) — το πρόβλημα του{' '}
+          <a className="underline" href="/lectures/L14-dp-i">
+            L14
+          </a>
+          . Δες την αλλαγή με το ίδιο σύνολο 5 διαφημίσεων: ο σακιδίου τις
+          μετράει σαν «πόσος χρόνος» — μπορεί να πάρει μέχρι 4 από αυτές· ο
+          χρονοπρογραμματισμός τις βλέπει σαν «μη-συμβατά διαστήματα» — μπορεί
+          να πάρει το πολύ 3 και με χαμηλότερο κέρδος:
         </p>
+        <KnapsackToIntervalScheduling />
         <p>
-          <strong>(ε)</strong> Αν επιπλέον κάθε διαφήμιση έχει{' '}
-          <strong>καθορισμένο</strong> χρονικό παράθυρο{' '}
-          <InlineMath>{'[s_i, s_i + t_i]'}</InlineMath>, δεν επιλέγουμε πια απλώς
-          «πόσος χρόνος» — επιλέγουμε <em>μη-επικαλυπτόμενα διαστήματα</em>{' '}
-          μέγιστου κέρδους. Αυτό είναι ο{' '}
-          <strong>Σταθμισμένος Χρονοπρογραμματισμός Διαστημάτων</strong>{' '}
-          (weighted interval scheduling).
+          Στο χρονοπρογραμματισμό η αναδρομή αλλάζει: αντί για «μέσα ή έξω με
+          βάση χωρητικότητα», γίνεται «μέσα ή έξω με βάση συμβατότητα» —{' '}
+          <InlineMath>{'\\text{OPT}(j) = \\max\\{\\text{OPT}(j-1),\\ p_j + \\text{OPT}(p(j))\\}'}</InlineMath>,
+          όπου <InlineMath>{'p(j)'}</InlineMath> = ο δείκτης της τελευταίας
+          διαφήμισης που τελειώνει πριν αρχίσει η <InlineMath>{'j'}</InlineMath>.
+          Πολυπλοκότητα <InlineMath>{'O(n \\log n)'}</InlineMath> (κυρίως
+          ταξινόμηση) — <em>γνήσια</em> πολυωνυμικό, σε αντίθεση με το ψευδο-
+          πολυωνυμικό του σακιδίου.
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «αναγνώρισε το γνωστό πρόβλημα κάτω από
+            το ντύσιμο».</strong> Διαφημίσεις, αντικείμενα σε σακίδιο, projects
+            με χρόνο και κέρδος — όλα μιλούν το ίδιο. Δύο διαγνωστικά:{' '}
+            (i) «Επιλογή υποσυνόλου με συνολικό «βάρος» ≤ κάποιο όριο, για να
+            μεγιστοποιήσω «αξία»» → 0-1 Σακίδιο, <InlineMath>{'\\Theta(nT)'}</InlineMath>{' '}
+            ψευδοπολυωνυμικό. (ii) «Επιλογή χωρίς επικαλύψεις σε χρονική ευθεία,
+            με βάρη» → Σταθμισμένος Χρονοπρογραμματισμός Διαστημάτων,{' '}
+            <InlineMath>{'O(n \\log n)'}</InlineMath> γνήσια πολυωνυμικό. Η
+            λέξη που τα ξεχωρίζει: <em>σταθερή θυρίδα</em> στον χρόνο. Αν
+            υπάρχει, είσαι στο (ii)· αν είναι μόνο διάρκεια, είσαι στο (i).
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -7759,20 +7844,90 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>i. Ο άπληστος αλγόριθμος.</strong> Για κάθε αντικείμενο υπολόγισε τον <em>λόγο αξίας ανά βάρος</em> <InlineMath>{'r_i = c_i / a_i'}</InlineMath>. Ταξινόμησε τα αντικείμενα κατά φθίνον <InlineMath>{'r_i'}</InlineMath>. Σάρωσέ τα με αυτή τη σειρά και βάλε στο σακίδιο κάθε αντικείμενο που χωράει ακόμη (το βάρος που μένει το επιτρέπει).</p>
-        <p><strong>ii. Πολυπλοκότητα.</strong> Ο υπολογισμός των λόγων είναι <InlineMath>{'O(n)'}</InlineMath>, η ταξινόμηση <InlineMath>{'O(n \\log n)'}</InlineMath>, η σάρωση <InlineMath>{'O(n)'}</InlineMath>. Σύνολο <InlineMath>{'O(n \\log n)'}</InlineMath>.</p>
-        <p><strong>iii. Εφαρμογή.</strong> Οι λόγοι: αντικ. 1: <InlineMath>{'16/8 = 2'}</InlineMath>· αντικ. 2: <InlineMath>{'9/5 = 1{,}8'}</InlineMath>· αντικ. 3: <InlineMath>{'7/4 = 1{,}75'}</InlineMath>· αντικ. 4: <InlineMath>{'15/9 \\approx 1{,}67'}</InlineMath>· αντικ. 5: <InlineMath>{'10/6 \\approx 1{,}67'}</InlineMath>· αντικ. 6: <InlineMath>{'1/1 = 1'}</InlineMath>. Φθίνουσα σειρά: <InlineMath>{'1, 2, 3, 4, 5, 6'}</InlineMath>. Με <InlineMath>{'b = 12'}</InlineMath>:</p>
-        <ul>
-          <li>Αντικ. 1 (<InlineMath>{'a = 8'}</InlineMath>): χωράει → μπαίνει. Μένει χώρος <InlineMath>{'12 - 8 = 4'}</InlineMath>, αξία <InlineMath>{'16'}</InlineMath>.</li>
-          <li>Αντικ. 2 (<InlineMath>{'a = 5 > 4'}</InlineMath>): δεν χωράει → προσπερνιέται.</li>
-          <li>Αντικ. 3 (<InlineMath>{'a = 4 \\le 4'}</InlineMath>): χωράει → μπαίνει. Μένει χώρος <InlineMath>{'0'}</InlineMath>, αξία <InlineMath>{'16 + 7 = 23'}</InlineMath>.</li>
-          <li>Αντικ. 4, 5, 6: δεν χωράει τίποτα πια.</li>
-        </ul>
-        <p>Ο άπληστος επιστρέφει τα αντικείμενα <InlineMath>{'\\{1, 3\\}'}</InlineMath>, με βάρος <InlineMath>{'12'}</InlineMath> και συνολική αξία <strong><InlineMath>{'23'}</InlineMath></strong> (που τυχαίνει εδώ να είναι και η βέλτιστη — έλεγξε π.χ. ότι <InlineMath>{'\\{2,5,6\\}'}</InlineMath> δίνει μόλις <InlineMath>{'20'}</InlineMath>).</p>
-        <p><strong>iv. Όχι.</strong> Δεν μπορεί ένας πολυωνυμικός αλγόριθμος να δίνει <em>πάντα</em> τη βέλτιστη λύση: το 0-1 σακίδιο είναι <strong>NP-δύσκολο</strong>, και πολυωνυμικός βέλτιστος αλγόριθμος θα σήμαινε <InlineMath>{'P = NP'}</InlineMath>. Ο άπληστος «λόγος αξίας/βάρους» είναι βέλτιστος για το <em>κλασματικό</em> σακίδιο (όπου μπορείς να κόψεις αντικείμενα), αλλά όχι για το 0-1: εκεί ένα αντικείμενο με τέλειο λόγο μπορεί να «κλέψει» χώρο που θα αξιοποιούνταν καλύτερα από συνδυασμό άλλων.</p>
-        <p><strong>v. Δυναμικός προγραμματισμός.</strong> Ορίζουμε <InlineMath>{'K(i, w)'}</InlineMath> = η μέγιστη αξία χρησιμοποιώντας μόνο τα πρώτα <InlineMath>{'i'}</InlineMath> αντικείμενα με διαθέσιμη χωρητικότητα <InlineMath>{'w'}</InlineMath>. Οι δείκτες κινούνται <InlineMath>{'i \\in \\{0, \\dots, n\\}'}</InlineMath> και <InlineMath>{'w \\in \\{0, \\dots, b\\}'}</InlineMath>, άρα τα υποπροβλήματα είναι <InlineMath>{'(n+1)(b+1) = O(n \\cdot b)'}</InlineMath>. Αναδρομική σχέση:</p>
+        <p>
+          <strong>i. Ο άπληστος αλγόριθμος.</strong> Για κάθε αντικείμενο
+          υπολόγισε τον <em>λόγο αξίας ανά βάρος</em>{' '}
+          <InlineMath>{'r_i = c_i / a_i'}</InlineMath>. Ταξινόμησε τα
+          αντικείμενα κατά <em>φθίνον</em> <InlineMath>{'r_i'}</InlineMath>{' '}
+          και σάρωσέ τα: όποιο χωράει ακόμη στο σακίδιο, μπαίνει· αλλιώς,
+          προσπερνιέται. Διαίσθηση: «πρώτα τα πιο πυκνά σε αξία ανά κιλό».
+        </p>
+        <p>
+          <strong>ii. Πολυπλοκότητα.</strong> Υπολογισμός λόγων{' '}
+          <InlineMath>{'O(n)'}</InlineMath>, ταξινόμηση{' '}
+          <InlineMath>{'O(n \\log n)'}</InlineMath>, σάρωση{' '}
+          <InlineMath>{'O(n)'}</InlineMath>. Σύνολο{' '}
+          <strong><InlineMath>{'O(n \\log n)'}</InlineMath></strong>.
+        </p>
+        <p>
+          <strong>iii. Εφαρμογή στο στιγμιότυπο.</strong> Με{' '}
+          <InlineMath>{'c = (16,9,7,15,10,1)'}</InlineMath>,{' '}
+          <InlineMath>{'a = (8,5,4,9,6,1)'}</InlineMath>,{' '}
+          <InlineMath>{'b = 12'}</InlineMath>, οι λόγοι βγαίνουν ήδη φθίνοντες
+          με αρχική σειρά αντικειμένων: <InlineMath>{'2 > 1{,}8 > 1{,}75 > 1{,}67 \\approx 1{,}67 > 1'}</InlineMath>.
+          Παρακολούθησε τη σάρωση δίπλα-δίπλα με τον DP — και τα δύο
+          τερματίζουν στις 23, αλλά ο δρόμος είναι διαφορετικός:
+        </p>
+        <KnapsackRatioVsDp />
+        <p>
+          Ο άπληστος βάζει τα αντικείμενα <InlineMath>{'\\{1, 3\\}'}</InlineMath>,
+          με βάρος <InlineMath>{'8 + 4 = 12'}</InlineMath> και αξία{' '}
+          <strong><InlineMath>{'23'}</InlineMath></strong>. Σε αυτή τη βάση
+          εισόδου είναι όντως η βέλτιστη απάντηση — αλλά αυτό είναι{' '}
+          <em>τύχη</em>: σε άλλη βάση ο ίδιος αλγόριθμος αποτυγχάνει (δες την
+          επόμενη ερώτηση).
+        </p>
+        <p>
+          <strong>iv. Όχι, δεν μπορεί να είναι ταυτόχρονα πολυωνυμικός και
+          πάντα βέλτιστος.</strong> Το 0-1 σακίδιο είναι{' '}
+          <strong>NP-δύσκολο</strong>· πολυωνυμικός αλγόριθμος που το λύνει
+          πάντα βέλτιστα θα έδειχνε <InlineMath>{'P = NP'}</InlineMath>. Ο
+          λόγος γιατί ο «λόγος αξίας/βάρους» αποτυγχάνει στο 0-1: ένα μικρό
+          αντικείμενο με τέλειο λόγο μπορεί να «κλέψει» τη θέση που θα
+          εκμεταλλευόταν καλύτερα ένας συνδυασμός — η διάλεξη το δείχνει
+          ζωντανά με <strong>KnapsackGreedyFail</strong> (4 αντικείμενα, ίδιος
+          άπληστος, αποτέλεσμα 7 αντί για βέλτιστο 10). Στο{' '}
+          <em>κλασματικό</em> σακίδιο, όπου μπορείς να κόψεις, ο ίδιος
+          άπληστος είναι αποδεδειγμένα βέλτιστος — εκεί η ταυτότητα «λόγος
+          δείχνει σωστά» δεν σπάει επειδή δεν υπάρχει «κενό που δεν γεμίζει».
+        </p>
+        <p>
+          <strong>v. Δυναμικός προγραμματισμός.</strong> Ορίζουμε{' '}
+          <InlineMath>{'K(i, w)'}</InlineMath> = η μέγιστη αξία με τα πρώτα{' '}
+          <InlineMath>{'i'}</InlineMath> αντικείμενα και χωρητικότητα{' '}
+          <InlineMath>{'w'}</InlineMath>. Οι δείκτες παίρνουν{' '}
+          <InlineMath>{'i \\in \\{0, \\dots, n\\}'}</InlineMath> και{' '}
+          <InlineMath>{'w \\in \\{0, \\dots, b\\}'}</InlineMath>, άρα τα
+          υποπροβλήματα είναι <InlineMath>{'(n+1)(b+1) = O(n \\cdot b)'}</InlineMath>.
+          Αναδρομή — «μέσα ή έξω» για το αντικείμενο{' '}
+          <InlineMath>{'i'}</InlineMath>:
+        </p>
         <BlockMath>{'K(i, w) = \\begin{cases} K(i-1, w), & a_i > w \\\\[4pt] \\max\\bigl(K(i-1, w),\\; c_i + K(i-1, w - a_i)\\bigr), & a_i \\le w \\end{cases}'}</BlockMath>
-        <p>με <InlineMath>{'K(0, w) = 0'}</InlineMath>. Είτε αφήνουμε το αντικείμενο <InlineMath>{'i'}</InlineMath> έξω, είτε (αν χωράει) το βάζουμε και κερδίζουμε <InlineMath>{'c_i'}</InlineMath>. Σημείωση: το <InlineMath>{'O(n \\cdot b)'}</InlineMath> είναι <em>ψευδο-πολυωνυμικό</em> — εξαρτάται από την τιμή <InlineMath>{'b'}</InlineMath>, όχι από το πλήθος των bits της.</p>
+        <p>
+          με <InlineMath>{'K(0, w) = 0'}</InlineMath>. Δες τον πίνακα γεμάτο
+          στο εργαλείο: το κάτω-δεξιά κελί{' '}
+          <InlineMath>{'K(6, 12) = 23'}</InlineMath> επιβεβαιώνει το αποτέλεσμα
+          του άπληστου σε αυτή τη βάση εισόδου· για άλλες είσοδες όμως, η
+          ΔΥΟ τιμές αποκλίνουν, και ο DP είναι αυτός που λέει την αλήθεια.{' '}
+          <strong>Παγίδα ορολογίας:</strong> το{' '}
+          <InlineMath>{'O(nb)'}</InlineMath> είναι <em>ψευδοπολυωνυμικό</em> —
+          εξαρτάται από την <em>τιμή</em> του <InlineMath>{'b'}</InlineMath>,
+          όχι από τα δυφία της.
+        </p>
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «μερικές φορές ο άπληστος βγαίνει, αλλά
+            δεν υπολογίζεις σε αυτό».</strong> Σε ερωτήσεις «τρέξε greedy + DP
+            στο ίδιο στιγμιότυπο», το γεγονός ότι συμπίπτουν δεν αποδεικνύει
+            ότι ο άπληστος είναι γενικά σωστός — αποδεικνύει μόνο ότι σε αυτή τη
+            βάση εισόδου τυχαίνει να βρει το βέλτιστο. Όταν σε ρωτούν «είναι ο
+            άπληστος βέλτιστος;», η σωστή απάντηση είναι «όχι γενικά — το
+            πρόβλημα είναι NP-δύσκολο» + ένα <em>αντιπαράδειγμα</em> (όχι το
+            πρόσφατο στιγμιότυπο). Η ταυτότητα «λόγος = πυκνότητα αξίας» χρειάζεται{' '}
+            «cut-and-fill» για να αποδειχθεί σωστή — άρα δουλεύει στο
+            κλασματικό σακίδιο, σπάει στο 0-1.
+          </p>
+        </Callout>
       </>
     ),
   },
