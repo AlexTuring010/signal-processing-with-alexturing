@@ -109,6 +109,9 @@ import { KnapsackRatioVsDp } from '@/components/viz/KnapsackRatioVsDp'
 import { KnapsackToIntervalScheduling } from '@/components/viz/KnapsackToIntervalScheduling'
 import { MinMaxFlipExplainer } from '@/components/viz/MinMaxFlipExplainer'
 import { DnaScoreAlignTable } from '@/components/viz/DnaScoreAlignTable'
+import { NegativeCycleDetector } from '@/components/viz/NegativeCycleDetector'
+import { GreedyVsDpRelaxation } from '@/components/viz/GreedyVsDpRelaxation'
+import { DagAveragePathCost } from '@/components/viz/DagAveragePathCost'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -1000,19 +1003,59 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>Ο αλγόριθμος Bellman-Ford.</strong>
+          <strong>Ο αλγόριθμος Bellman-Ford</strong> — αλλά με ένα μικρό «κόλπο».
         </p>
         <p>
-          Γιατί αυτός; Ο Bellman-Ford «χαλαρώνει» (relax) όλες τις ακμές{' '}
-          <InlineMath>{'n - 1'}</InlineMath> γύρους, και μετά από τόσους γύρους
-          οι αποστάσεις έχουν <strong>σταθεροποιηθεί</strong> — εφόσον δεν
-          υπάρχει αρνητικός κύκλος. Άρα κάνουμε <strong>έναν ακόμη</strong>,{' '}
-          <InlineMath>{'n'}</InlineMath>-οστό γύρο: αν εκεί κάποια απόσταση{' '}
-          <strong>μειωθεί κι άλλο</strong>, σημαίνει ότι μπορούμε να
-          «κερδίζουμε» επ' άπειρον γυρνώντας σε έναν κύκλο — δηλαδή υπάρχει
-          αρνητικός κύκλος. Ο Dijkstra δεν μπορεί να το κάνει αυτό, γιατί δεν
-          δουλεύει καν με αρνητικά βάρη.
+          <strong>Η ιδέα σε μία γραμμή.</strong> Η αναδρομή του Bellman-Ford
+          ορίζει <InlineMath>{'\\text{OPT}(i, v)'}</InlineMath> = το συντομότερο{' '}
+          <InlineMath>{'v\\to t'}</InlineMath> μονοπάτι που χρησιμοποιεί{' '}
+          <strong>το πολύ <InlineMath>{'i'}</InlineMath> ακμές</strong> (
+          <a href="/lectures/L17-dp-iv" className="underline">L17</a>). Αν δεν
+          υπάρχει αρνητικός κύκλος, η συντομότερη διαδρομή είναι{' '}
+          <em>απλή</em>, οπότε έχει το πολύ{' '}
+          <InlineMath>{'n - 1'}</InlineMath> ακμές. Συμπέρασμα: η γραμμή{' '}
+          <InlineMath>{'M[n-1, \\cdot]'}</InlineMath> πρέπει να είναι ίδια με την{' '}
+          <InlineMath>{'M[n, \\cdot]'}</InlineMath> — γιατί ο εξτρά γύρος δεν
+          έχει τι παραπάνω να βρει.
         </p>
+        <p>
+          <strong>Το κόλπο.</strong> Τρέξε <strong>έναν εξτρά γύρο</strong>{' '}
+          (συνολικά <InlineMath>{'n'}</InlineMath>). Αν στον γύρο αυτόν κάποια
+          τιμή <strong>μειώνεται ξανά</strong>, ο πίνακας ΔΕΝ συγκλίνει —
+          υπάρχει μια κορυφή που γλιστράει σε κύκλο και μαζεύει «δωρεάν»
+          μειώσεις κάθε φορά. Δηλαδή υπάρχει αρνητικός κύκλος προσβάσιμος προς
+          το <InlineMath>{'t'}</InlineMath>. Αλλιώς, ο πίνακας είναι σταθερός
+          και δεν υπάρχει.
+        </p>
+        <p>
+          Εναλλάξτε τις δύο καρτέλες και πατήστε «Επόμενος γύρος» μέχρι τον
+          γύρο ελέγχου. Στο «Χωρίς αρνητικό κύκλο» η γραμμή <InlineMath>{'i = n'}</InlineMath>{' '}
+          είναι πανομοιότυπη με την <InlineMath>{'i = n - 1'}</InlineMath>· στο
+          «Με αρνητικό κύκλο» η γραμμή <InlineMath>{'i = n'}</InlineMath>{' '}
+          ΑΛΛΑΖΕΙ τιμή — και αυτό είναι το σήμα:
+        </p>
+        <NegativeCycleDetector />
+        <p>
+          <strong>Γιατί όχι Dijkstra;</strong> Ο Dijkstra (
+          <a href="/lectures/L09-graphs-iv" className="underline">L09</a>)
+          προϋποθέτει θετικά βάρη — «κλειδώνει» μια κορυφή μόλις την εξάγει.
+          Μια αρνητική ακμή σπάει αυτή τη δέσμευση (δες{' '}
+          <a href="/lectures/L17-dp-iv#%CE%B3%CE%B9%CE%B1%CF%84%CE%AF-%CE%BF-dijkstra-%CE%B1%CF%80%CE%BF%CF%84%CF%85%CE%B3%CF%87%CE%AC%CE%BD%CE%B5%CE%B9" className="underline">DijkstraNegFail</a>).
+          Άρα ο Dijkstra ούτε καν τρέχει σωστά στο γράφημα — πόσο μάλλον να
+          αποφασίσει αν υπάρχει αρνητικός κύκλος.
+        </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «έξτρα γύρος = ανιχνευτής».</strong>{' '}
+            Όποτε σου ζητούν να αποφασίσεις αν υπάρχει αρνητικός κύκλος, η
+            απάντηση είναι Bellman-Ford με <InlineMath>{'n'}</InlineMath> (όχι{' '}
+            <InlineMath>{'n - 1'}</InlineMath>) γύρους. Το διαγνωστικό:{' '}
+            <em>«μετά τους <InlineMath>{'n-1'}</InlineMath> γύρους ο πίνακας
+            πρέπει να έχει συγκλίνει — αν δεν έχει, υπάρχει αρνητικός
+            κύκλος»</em>. Σε εξετάσεις περιγράφεις το κόλπο με 2-3 γραμμές +
+            πολυπλοκότητα <InlineMath>{'\\Theta(mn)'}</InlineMath> — και τελείωσες.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -2879,24 +2922,90 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>ΛΑΘΟΣ.</strong>
+          <strong>ΛΑΘΟΣ.</strong> Ο Bellman-Ford είναι{' '}
+          <strong>δυναμικός προγραμματισμός</strong>, όχι άπληστος.
         </p>
         <p>
-          Ο Bellman-Ford είναι αλγόριθμος <strong>δυναμικού προγραμματισμού</strong>,
-          όχι άπληστος. Δες πώς δουλεύει: ορίζει υποπροβλήματα{' '}
-          <InlineMath>{'\\text{OPT}(i, v)'}</InlineMath> = «συντομότερο{' '}
-          <InlineMath>{'v \\to t'}</InlineMath> μονοπάτι με το πολύ{' '}
-          <InlineMath>{'i'}</InlineMath> ακμές», και χτίζει τη λύση για όλο και
-          μεγαλύτερα <InlineMath>{'i'}</InlineMath>, ξαναχρησιμοποιώντας
-          αποθηκευμένες τιμές. Αυτό είναι η υπογραφή του DP.
+          <strong>Η παγίδα.</strong> Και οι δύο αλγόριθμοι «χαλαρώνουν» ακμές —
+          αυτό μπορεί να μπερδέψει. Η <em>πραγματική</em> διαφορά είναι όχι σε
+          τι κάνουν, αλλά <em>πώς το θυμούνται</em>:
         </p>
+        <ul>
+          <li>
+            <strong>Άπληστος = «μία αμετάκλητη απόφαση τη φορά».</strong> Ο
+            Dijkstra εξάγει την κορυφή με το μικρότερο{' '}
+            <InlineMath>{'d'}</InlineMath>, την κλειδώνει, και ΔΕΝ την
+            ξανακοιτάει — οριστικοποίηση είναι δέσμευση.
+          </li>
+          <li>
+            <strong>DP = «ξαναγράφω ολόκληρο το διάνυσμα από το προηγούμενο».</strong>{' '}
+            Ο Bellman-Ford κρατάει πίνακα{' '}
+            <InlineMath>{'M[i, v]'}</InlineMath>· κάθε γύρος{' '}
+            <InlineMath>{'i'}</InlineMath> γράφει μια καινούργια γραμμή{' '}
+            διαβάζοντας ολόκληρη τη γραμμή <InlineMath>{'i-1'}</InlineMath>.
+            Καμία κορυφή δεν «κλειδώνει» — μπορεί να ξαναγραφτεί όσες φορές
+            θέλει.
+          </li>
+        </ul>
         <p>
-          Ένας <em>άπληστος</em> αλγόριθμος παίρνει μία αμετάκλητη τοπική απόφαση
-          σε κάθε βήμα και δεν την ξανακοιτάζει (όπως ο Dijkstra ή ο Kruskal). Ο
-          Bellman-Ford, αντίθετα, «χαλαρώνει» ακμές ξανά και ξανά για{' '}
-          <InlineMath>{'n - 1'}</InlineMath> γύρους — αναθεωρεί συνεχώς. Καθαρό
-          δυναμικό προγραμματισμό.
+          Δες τα δύο πρόσωπα στο ίδιο γράφημα, βήμα προς βήμα:
         </p>
+        <GreedyVsDpRelaxation />
+        <p>
+          <strong>Η ίδια απάντηση, διαφορετική μηχανική.</strong> Και τα δύο
+          βρίσκουν <InlineMath>{'d(s, t) = 6'}</InlineMath> — γιατί έτσι έχουν
+          φτιαχτεί. Αλλά:
+        </p>
+        <ul>
+          <li>
+            Ο Dijkstra έκανε <strong>4 εξαγωγές + κλειδώματα</strong> και κάθε
+            κορυφή κλειδώθηκε ακριβώς μία φορά — greedy.
+          </li>
+          <li>
+            Ο Bellman-Ford έκανε <strong>3 γύρους</strong> και κάθε γραμμή του
+            πίνακα διαβάζει την προηγούμενη — DP. Στο μέσο βήμα, το{' '}
+            <InlineMath>{'M[2, b]'}</InlineMath> υπολογίστηκε από το{' '}
+            <InlineMath>{'M[1, a] + 2 = 3'}</InlineMath>, ΞΑΝΑγράφοντας πάνω
+            από την προηγούμενη τιμή 4 — χωρίς δέσμευση πουθενά.
+          </li>
+        </ul>
+        <p>
+          Είναι αυτή η διαφορά που επιτρέπει στον Bellman-Ford να δουλέψει με
+          αρνητικά βάρη και να ανιχνεύει αρνητικούς κύκλους (
+          <a href="#exercise:pt1-th2-a" className="underline">pt1-th2-a</a>),
+          ενώ ο Dijkstra σπάει αμέσως μόλις δει το πρώτο αρνητικό. Το{' '}
+          «κλείδωμα» δεν είναι λεπτομέρεια — είναι η ζωτική διαφορά στρατηγικής
+          μνήμης.
+        </p>
+        <Callout type="warning">
+          <p>
+            <strong>Πρότυπο σκέψης — «κλείδωμα ή πίνακας;».</strong> Το
+            διαγνωστικό για άπληστο vs DP δεν είναι «πόσο γρήγορος είναι» ή
+            «πόσο απλός φαίνεται», αλλά:
+          </p>
+          <ul>
+            <li>
+              <strong>Άπληστος</strong> ⇔ μία απόφαση το βήμα, αμετάκλητη·
+              δομές: ουρά προτεραιότητας + locked set· πολυπλοκότητα συνήθως{' '}
+              <InlineMath>{'O(m \\log n)'}</InlineMath> ή{' '}
+              <InlineMath>{'O(m \\alpha(n))'}</InlineMath>.
+            </li>
+            <li>
+              <strong>DP</strong> ⇔ πίνακας με υποπροβλήματα ταξινομημένα σε
+              μια <em>μονότονη παράμετρο</em>, νέα γραμμή διαβάζει την
+              προηγούμενη· πολυπλοκότητα συνήθως{' '}
+              <InlineMath>{'\\Theta(\\text{μέγεθος πίνακα})'}</InlineMath>.
+            </li>
+          </ul>
+          <p>
+            Ο Bellman-Ford έχει πίνακα <InlineMath>{'M[i,v]'}</InlineMath>{' '}
+            παραμετροποιημένο με «πλήθος ακμών», άρα DP. Άλλοι DP-σε-γραφήματα
+            της διάλεξης: ανεξάρτητο σύνολο σε δέντρο (παραμετροποίηση με
+            υποδέντρα), shortest path σε DAG (παραμετροποίηση με τοπολογική
+            σειρά). Άπληστοι σε γραφήματα: Dijkstra, Prim, Kruskal — όλοι με
+            «extract + lock» μηχανική.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -9643,14 +9752,91 @@ K = 101     Σ = 100`}</pre>
     ),
     solution: (
       <>
-        <p><strong>Η ιδέα.</strong> «Μέσο κόστος» = (άθροισμα κοστών όλων των μονοπατιών) / (πλήθος μονοπατιών). Θα υπολογίσουμε <em>και τα δύο</em> με δυναμικό προγραμματισμό πάνω στον DAG.</p>
-        <p><strong>Ορισμοί.</strong> Για κάθε κορυφή <InlineMath>{'x'}</InlineMath>: <InlineMath>{'count[x]'}</InlineMath> = πλήθος διακριτών μονοπατιών από το <InlineMath>{'x'}</InlineMath> ως το <InlineMath>{'t'}</InlineMath>· <InlineMath>{'sum[x]'}</InlineMath> = άθροισμα των κοστών αυτών των μονοπατιών.</p>
-        <p><strong>Αναδρομικές σχέσεις.</strong> Κάθε μονοπάτι από το <InlineMath>{'x'}</InlineMath> ξεκινά με μία ακμή <InlineMath>{'(x, y)'}</InlineMath> και συνεχίζει με ένα μονοπάτι από το <InlineMath>{'y'}</InlineMath>:</p>
-        <BlockMath>{'count[x] = \\sum_{y:\\,(x,y)\\in E} count[y], \\qquad count[t] = 1'}</BlockMath>
-        <BlockMath>{'sum[x] = \\sum_{y:\\,(x,y)\\in E} \\bigl(count[y]\\cdot w(x,y) + sum[y]\\bigr), \\qquad sum[t] = 0'}</BlockMath>
-        <p>Στο <InlineMath>{'sum[x]'}</InlineMath>: η ακμή <InlineMath>{'(x,y)'}</InlineMath> με βάρος <InlineMath>{'w(x,y)'}</InlineMath> προστίθεται σε καθένα από τα <InlineMath>{'count[y]'}</InlineMath> μονοπάτια που περνούν από εκεί, και επιπλέον αθροίζονται τα ήδη υπάρχοντα κόστη <InlineMath>{'sum[y]'}</InlineMath>.</p>
-        <p><strong>Σειρά υπολογισμού.</strong> Αφού ο γράφος είναι ακυκλικός, κάνουμε <strong>τοπολογική ταξινόμηση</strong> και επεξεργαζόμαστε τις κορυφές με αντίστροφη σειρά — ξεκινώντας από το <InlineMath>{'t'}</InlineMath> και προχωρώντας προς το <InlineMath>{'s'}</InlineMath> — ώστε όταν φτάνουμε σε μια κορυφή, οι διάδοχοί της να έχουν ήδη υπολογιστεί.</p>
-        <p><strong>Απάντηση & πολυπλοκότητα.</strong> Το ζητούμενο μέσο κόστος είναι ο λόγος <InlineMath>{'sum[s] / count[s]'}</InlineMath>. Κάθε κορυφή και κάθε ακμή εξετάζεται σταθερό αριθμό φορών → <InlineMath>{'\\Theta(V + E)'}</InlineMath>.</p>
+        <p>
+          <strong>Πρώτη κίνηση — μετάφραση.</strong> «Μέσο κόστος όλων των
+          μονοπατιών» είναι ένας λόγος δύο ποσοτήτων: το{' '}
+          <em>άθροισμα</em> των κοστών δια το <em>πλήθος</em> τους. Δύο
+          απαντήσεις που πρέπει να υπολογίσουμε ταυτόχρονα — και αν προσπαθούμε
+          να μετρήσουμε μόνο τη μία (π.χ. μόνο το άθροισμα ή μόνο το πλήθος),
+          δεν θα έχουμε αρκετή πληροφορία να σχηματίσουμε το όλο.
+        </p>
+        <p>
+          <strong>Η ιδέα.</strong> Φανταστείτε ότι στεκόμαστε σε μια κορυφή{' '}
+          <InlineMath>{'x'}</InlineMath> και ρωτάμε: «πόσα μονοπάτια ξεκινούν
+          εδώ και τελειώνουν στο <InlineMath>{'t'}</InlineMath>, και τι κόστος
+          έχουν;». Κάθε τέτοιο μονοπάτι ξεκινά με ΜΙΑ εξερχόμενη ακμή{' '}
+          <InlineMath>{'(x, y)'}</InlineMath> και ύστερα γίνεται «πρόβλημα για
+          τον <InlineMath>{'y'}</InlineMath>». Αν ξέρω την απάντηση για κάθε
+          διάδοχο <InlineMath>{'y'}</InlineMath>, ξέρω και για το{' '}
+          <InlineMath>{'x'}</InlineMath> — αυτή είναι η αναδρομή.
+        </p>
+        <p>
+          <strong>Δύο τιμές ανά κορυφή.</strong> Όπως στο{' '}
+          <a href="/lectures/L17-dp-iv" className="underline">ανεξάρτητο σύνολο σε δέντρο</a>{' '}
+          του L17, μία τιμή δεν αρκεί — χρειαζόμαστε δύο:
+        </p>
+        <ul>
+          <li>
+            <InlineMath>{'count[x]'}</InlineMath> = πλήθος διακριτών μονοπατιών{' '}
+            <InlineMath>{'x\\to t'}</InlineMath>.
+          </li>
+          <li>
+            <InlineMath>{'sum[x]'}</InlineMath> = άθροισμα των κοστών αυτών των
+            μονοπατιών.
+          </li>
+        </ul>
+        <p>
+          Με βάσεις <InlineMath>{'count[t] = 1, sum[t] = 0'}</InlineMath> (το
+          «κενό» μονοπάτι από το <InlineMath>{'t'}</InlineMath> στον εαυτό
+          του), οι αναδρομές είναι:
+        </p>
+        <BlockMath>{'count[x] = \\sum_{y:\\,(x,y)\\in E} count[y]'}</BlockMath>
+        <BlockMath>{'sum[x] = \\sum_{y:\\,(x,y)\\in E} \\bigl(count[y]\\cdot w(x,y) + sum[y]\\bigr)'}</BlockMath>
+        <p>
+          <strong>Διαβάστε σε λόγια τη δεύτερη σχέση:</strong> κάθε ακμή{' '}
+          <InlineMath>{'(x, y)'}</InlineMath> με βάρος{' '}
+          <InlineMath>{'w(x, y)'}</InlineMath> προσφέρεται σε ΟΛΑ τα{' '}
+          <InlineMath>{'count[y]'}</InlineMath> μονοπάτια που ξεκινούν μέσω
+          αυτής (γι' αυτό πολλαπλασιάζουμε), και επιπλέον αθροίζονται τα ήδη
+          υπολογισμένα κόστη <InlineMath>{'sum[y]'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Σειρά υπολογισμού.</strong> Επεξεργαζόμαστε τις κορυφές σε{' '}
+          <strong>αντίστροφη τοπολογική σειρά</strong>, ξεκινώντας από το{' '}
+          <InlineMath>{'t'}</InlineMath> και προχωρώντας προς το{' '}
+          <InlineMath>{'s'}</InlineMath>: όταν φτάνουμε σε μια κορυφή, οι
+          διάδοχοί της έχουν ήδη ολοκληρωθεί. Δες ένα συγκεκριμένο στιγμιότυπο
+          να γεμίζει βήμα-βήμα:
+        </p>
+        <DagAveragePathCost />
+        <p>
+          <strong>Η απάντηση.</strong> Το ζητούμενο μέσο κόστος είναι ο λόγος{' '}
+          <InlineMath>{'\\dfrac{sum[s]}{count[s]}'}</InlineMath>. Στο
+          στιγμιότυπο της εικόνας: 4 διακριτά μονοπάτια, άθροισμα κοστών 42,
+          οπότε <InlineMath>{'42/4 = 10{,}5'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Πολυπλοκότητα.</strong> Κάθε κορυφή επεξεργάζεται μία φορά,
+          και κάθε ακμή <InlineMath>{'(x, y)'}</InlineMath> ψηφίζει ακριβώς μία
+          φορά στο <InlineMath>{'count[x]'}</InlineMath> και στο{' '}
+          <InlineMath>{'sum[x]'}</InlineMath>· συνολικά{' '}
+          <InlineMath>{'\\Theta(V + E)'}</InlineMath>. Η τοπολογική ταξινόμηση
+          γίνεται μία φορά σε <InlineMath>{'\\Theta(V + E)'}</InlineMath> με DFS.
+        </p>
+        <Callout type="intuition">
+          <p>
+            <strong>Πρότυπο σκέψης — «μέσος όρος ⇒ άθροισμα + πλήθος ΜΑΖΙ».</strong>{' '}
+            Όποτε σου ζητούν μέσο όρο πάνω σε ολόκληρη οικογένεια αντικειμένων
+            (μονοπάτια, δέντρα, λύσεις, υποακολουθίες), δεν αρκεί να
+            υπολογίσεις μόνο το άθροισμα ή μόνο το πλήθος — χρειάζεσαι ΔΥΟ
+            παράλληλες αναδρομές που γεμίζουν σε λοκ-στεπ. Το ίδιο τέχνασμα
+            δουλεύει για: «μέσο μήκος συντομότερων μονοπατιών», «πλήθος
+            βέλτιστων λύσεων», «πλήθος + κόστος συνδυασμών», ακόμα και
+            «αναμενόμενη τιμή κάποιας τυχαίας πορείας σε DAG». Η συνταγή:
+            παίρνεις τη γνωστή αναδρομή της μιας ποσότητας, βρίσκεις την
+            παράλληλη αναδρομή της δεύτερης, και τις τρέχεις μαζί.
+          </p>
+        </Callout>
       </>
     ),
   },

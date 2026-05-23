@@ -189,6 +189,9 @@ import { DijkstraNegFail } from '@/components/viz/DijkstraNegFail'
 import { ConstantShiftFail } from '@/components/viz/ConstantShiftFail'
 import { NegativeCycleWalk } from '@/components/viz/NegativeCycleWalk'
 import { BellmanFordAnimator } from '@/components/viz/BellmanFordAnimator'
+import { NegativeCycleDetector } from '@/components/viz/NegativeCycleDetector'
+import { GreedyVsDpRelaxation } from '@/components/viz/GreedyVsDpRelaxation'
+import { DagAveragePathCost } from '@/components/viz/DagAveragePathCost'
 import { RecallDrill, ClozeDrill, ReorderDrill } from '@/components/viz/RecallDrill'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
@@ -395,6 +398,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ConstantShiftFail,
     NegativeCycleWalk,
     BellmanFordAnimator,
+    NegativeCycleDetector,
+    GreedyVsDpRelaxation,
+    DagAveragePathCost,
     RecallDrill,
     ClozeDrill,
     ReorderDrill,
