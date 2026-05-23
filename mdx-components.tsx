@@ -36,6 +36,12 @@ import { FasterComputerLab } from '@/components/viz/FasterComputerLab'
 import { LimitRatioPlot } from '@/components/viz/LimitRatioPlot'
 import { StrictVsLooseExplorer } from '@/components/viz/StrictVsLooseExplorer'
 import { OscillatorComparison } from '@/components/viz/OscillatorComparison'
+import { AsymptoticVerdictExplorer } from '@/components/viz/AsymptoticVerdictExplorer'
+import { FunctionOrderingRace } from '@/components/viz/FunctionOrderingRace'
+import { LoopComplexityTrace } from '@/components/viz/LoopComplexityTrace'
+import { SandwichTheoremViz } from '@/components/viz/SandwichTheoremViz'
+import { ExpectedTimeBreakdown } from '@/components/viz/ExpectedTimeBreakdown'
+import { ExponentiationBreaksO } from '@/components/viz/ExponentiationBreaksO'
 import { MergeSortAnimator } from '@/components/viz/MergeSortAnimator'
 import { SortRace } from '@/components/viz/SortRace'
 import { TwoPointerMerge } from '@/components/viz/TwoPointerMerge'
@@ -181,6 +187,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     LimitRatioPlot,
     StrictVsLooseExplorer,
     OscillatorComparison,
+    AsymptoticVerdictExplorer,
+    FunctionOrderingRace,
+    LoopComplexityTrace,
+    SandwichTheoremViz,
+    ExpectedTimeBreakdown,
+    ExponentiationBreaksO,
     MergeSortAnimator,
     SortRace,
     TwoPointerMerge,

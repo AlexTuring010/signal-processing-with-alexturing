@@ -30,6 +30,12 @@ import type { Exercise } from './types'
 import { InlineMath, BlockMath } from '@/components/math'
 import { Callout } from '@/components/content/Callout'
 import { ComplexityZooLab } from '@/components/viz/ComplexityZooLab'
+import { AsymptoticVerdictExplorer } from '@/components/viz/AsymptoticVerdictExplorer'
+import { FunctionOrderingRace } from '@/components/viz/FunctionOrderingRace'
+import { LoopComplexityTrace } from '@/components/viz/LoopComplexityTrace'
+import { SandwichTheoremViz } from '@/components/viz/SandwichTheoremViz'
+import { ExpectedTimeBreakdown } from '@/components/viz/ExpectedTimeBreakdown'
+import { ExponentiationBreaksO } from '@/components/viz/ExponentiationBreaksO'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -193,6 +199,20 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Σωστές: (i), (iii), (v).</strong>
         </p>
+        <p>
+          Δες πώς δουλεύουν οι πέντε «κουμπιά» πάνω στις δύο σταθερές —
+          ο λόγος <InlineMath>{'1/4'}</InlineMath> κάθεται μόνιμα ανάμεσα,
+          αρνείται να φύγει στο 0 ή στο ∞:
+        </p>
+        <AsymptoticVerdictExplorer preset="pt1-th1-q1" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης για σταθερές.</strong> Όταν και οι δύο
+          συναρτήσεις είναι θετικές σταθερές (ή απλοποιούνται σε σταθερές),
+          ισχύουν αυτόματα <strong>O, Ω, Θ</strong> — και αυτόματα{' '}
+          <strong>όχι o, όχι ω</strong>. Η ταυτότητα{' '}
+          <InlineMath>{'\\log_n n = 1'}</InlineMath> είναι το «δόλωμα» που
+          μετατρέπει το πρόβλημα σε αυτή την τετριμμένη περίπτωση.
+        </Callout>
       </>
     ),
   },
@@ -246,6 +266,21 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Σωστές: (i), (ii).</strong>
         </p>
+        <p>
+          Δες το ρυθμό αύξησης πραγματικά: η <InlineMath>{'n'}</InlineMath> και η{' '}
+          <InlineMath>{'n^{\\log n}'}</InlineMath> πλάι-πλάι, ο λόγος καταρρέει.
+        </p>
+        <AsymptoticVerdictExplorer preset="pt1-th1-q2" />
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης: απλοποίησε ΠΡΙΝ συγκρίνεις.</strong> Όροι
+          όπως <InlineMath>{'2^{\\log_2 n}'}</InlineMath>,{' '}
+          <InlineMath>{'\\log(n^k)'}</InlineMath>, ή{' '}
+          <InlineMath>{'\\log_a b'}</InlineMath> κρύβουν την πραγματική τάξη
+          τους. Πρώτη κίνηση πάντα: ξεμπλέκεις τις ταυτότητες, μετά μπαίνεις
+          στη σύγκριση. Εδώ <InlineMath>{'f = n'}</InlineMath> και{' '}
+          <InlineMath>{'g = n^{\\log n}'}</InlineMath> — μια απλή «πολυωνυμικό
+          vs υπερ-πολυωνυμικό» μάχη, αλλά μόνο αφού καθαρίσει η αριστερή πλευρά.
+        </Callout>
       </>
     ),
   },
@@ -298,6 +333,22 @@ export const EXERCISES: Exercise[] = [
           εκθέτη: <strong>σωστή είναι η (vi) — μη-συγκρίσιμες</strong> (με την
           έννοια ότι η σχέση τους είναι απροσδιόριστη).
         </p>
+        <p>
+          Σύρε το <InlineMath>{'\\varphi'}</InlineMath> και κοίτα τα verdicts να
+          αλλάζουν: όταν περνά τα κρίσιμα <InlineMath>{'\\varphi'}</InlineMath>{' '}
+          (όπου ο εκθέτης ισούται με 2), όλα τα chips κάνουν «flip». Η εκφώνηση
+          δεν εγγυάται καμία συγκεκριμένη φ — άρα καμία σχέση δεν ισχύει σίγουρα.
+        </p>
+        <AsymptoticVerdictExplorer preset="pt1-th1-q3" />
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης: «παράμετρος που μπορεί να πάρει κάθε τιμή»</strong> →
+          αυτόματο σήμα ότι η σχέση δεν είναι μονοσήμαντη. Η{' '}
+          <InlineMath>{'\\tan\\varphi'}</InlineMath> είναι το κλασικό όχημα γι' αυτό:
+          διατρέχει όλο το <InlineMath>{'\\mathbb{R}'}</InlineMath> καθώς το{' '}
+          <InlineMath>{'\\varphi'}</InlineMath> διατρέχει το{' '}
+          <InlineMath>{'[0, 2\\pi]'}</InlineMath>. Η σωστή απάντηση είναι
+          «μη-συγκρίσιμες» — όχι «δεν ξέρω».
+        </Callout>
       </>
     ),
   },
@@ -1079,6 +1130,15 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'f = \\Omega(g)'}</InlineMath>.{' '}
           <strong>Σωστές: (iii), (iv).</strong>
         </p>
+        <AsymptoticVerdictExplorer preset="pt2-th1-q1" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: άθροισμα → κλείστος τύπος (ή φράγμα).</strong>{' '}
+          Πριν συγκρίνεις, βάζε το άθροισμα σε «αναγνωρίσιμη» μορφή. Τα τρία
+          πιο χρήσιμα κλειστά: <InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>,{' '}
+          <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>,{' '}
+          <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath>. Αν δεν θυμάσαι
+          τον τύπο, φράξε: το άθροισμα n όρων με μέγιστο M είναι μεταξύ M και nM.
+        </Callout>
       </>
     ),
   },
@@ -1130,6 +1190,16 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Σωστές: (iii), (iv).</strong>
         </p>
+        <AsymptoticVerdictExplorer preset="pt2-th1-q2" />
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης: «τρομακτικές εκφράσεις απλοποιούνται όλες».</strong>{' '}
+          Όταν δεις <InlineMath>{'\\sum 1/k'}</InlineMath>, σκέψου{' '}
+          <InlineMath>{'\\Theta(\\log n)'}</InlineMath>. Όταν δεις{' '}
+          <InlineMath>{'\\log(\\sqrt x)'}</InlineMath>, σκέψου{' '}
+          <InlineMath>{'\\tfrac12 \\log x'}</InlineMath>. Σχεδόν κάθε «εξωτικός»
+          όρος του L02 ανάγεται σε log, n, ή πολυώνυμο — μην παγώσεις απ' την
+          εμφάνιση.
+        </Callout>
       </>
     ),
   },
@@ -2305,6 +2375,19 @@ export const EXERCISES: Exercise[] = [
           <strong>άσχετη</strong> — η ιδιότητα ισχύει για <em>κάθε</em> ζεύγος
           θετικών συναρτήσεων. Είναι ένα «δόλωμα» που δεν αλλάζει τίποτα.
         </p>
+        <p>
+          Δες τη σφήνα ζωντανά — άλλαξε ζευγάρι <InlineMath>{'(f, g)'}</InlineMath>{' '}
+          και κάνε <InlineMath>{'f = g'}</InlineMath>· η ιδιότητα ισχύει το ίδιο:
+        </p>
+        <SandwichTheoremViz preset="pt4-th1-q2" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: «πιάσε σφήνα γύρω από το άγνωστο».</strong>{' '}
+          Όταν μια ποσότητα <InlineMath>{'X'}</InlineMath> μπαίνει μεταξύ δύο
+          εκφράσεων ίδιας τάξης (<InlineMath>{'c_1 \\cdot M \\le X \\le c_2 \\cdot M'}</InlineMath>),
+          τότε <InlineMath>{'X \\in \\Theta(M)'}</InlineMath> αυτόματα. Δύο πρακτικές
+          παραλλαγές: «το άθροισμα είναι μεταξύ του μέγιστου όρου και n φορές το
+          μέγιστο» και «κάθε όρος αθροίσματος φράσσεται από σταθερές → άθροισμα Θ(n)».
+        </Callout>
       </>
     ),
   },
@@ -2439,6 +2522,14 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'\\le n \\cdot n = n^2'}</InlineMath> →{' '}
           <InlineMath>{'O(n^2)'}</InlineMath>. Μαζί: <InlineMath>{'\\Theta(n^2)'}</InlineMath>.
         </p>
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: τύπος-κλειδί για κάθε αριθμητικό άθροισμα.</strong>{' '}
+          <InlineMath>{'1 + 2 + \\cdots + n = n(n+1)/2 = \\Theta(n^2)'}</InlineMath>{' '}
+          εμφανίζεται κάθε φορά που έχεις «εξωτερικό βρόχο 1..n, εσωτερικός 1..i»
+          (διπλοί βρόχοι με κάτω τριγωνική δομή). Δεύτερο πιο συχνό:{' '}
+          <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>. Αν τα ξέρεις
+          απ' έξω, οι ασκήσεις πολυπλοκότητας λύνονται σε δύο γραμμές.
+        </Callout>
       </>
     ),
   },
@@ -2881,6 +2972,20 @@ export const EXERCISES: Exercise[] = [
           (Στην πραγματικότητα ισχύει και το ισχυρότερο{' '}
           <InlineMath>{'\\omega'}</InlineMath>.)
         </p>
+        <p>
+          Δες τη μάχη στους <em>λογαρίθμους</em> των δύο εκφράσεων — εκεί όπου
+          η σύγκριση γίνεται διαχειρίσιμη («πολυωνυμικό vs πολυλογάριθμος»):
+        </p>
+        <AsymptoticVerdictExplorer preset="pt5-th1b" />
+        <Callout type="intuition">
+          <strong>Πρότυπο σκέψης: «log και στις δύο πλευρές».</strong> Όταν δεις
+          εκθετικούς πύργους ή υπερβολικές δυνάμεις, πάρε λογάριθμο πρώτα. Η
+          σύγκριση διατηρείται (γνησίως αύξων), αλλά μεταφέρεται σε αναγνωρίσιμες
+          τάξεις (πολυώνυμα, polylog, σταθερές). Εδώ ο λογάριθμος μετατρέπει «τα
+          δύο τέρατα» σε <InlineMath>{'\\sqrt{n\\log n}'}</InlineMath> vs{' '}
+          <InlineMath>{'\\log^3 n'}</InlineMath> — η πρώτη περιέχει πολυωνυμικό
+          παράγοντα <InlineMath>{'\\sqrt n'}</InlineMath>, νικάει αυτόματα.
+        </Callout>
       </>
     ),
   },
@@ -2941,6 +3046,17 @@ export const EXERCISES: Exercise[] = [
           <strong><InlineMath>{'o(n)'}</InlineMath></strong> — μεγαλώνει
           γνήσια πιο αργά από το <InlineMath>{'n'}</InlineMath>.
         </p>
+        <AsymptoticVerdictExplorer preset="pt5-th2-a" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: «ίδια βάση → σύγκριση εκθετών».</strong> Όταν
+          συγκρίνεις <InlineMath>{'a^{u(n)}'}</InlineMath> και{' '}
+          <InlineMath>{'a^{v(n)}'}</InlineMath>, αρκεί να συγκρίνεις τα{' '}
+          <InlineMath>{'u(n)'}</InlineMath> και <InlineMath>{'v(n)'}</InlineMath>{' '}
+          — η εκθετική είναι γνησίως αύξουσα. Εδώ:{' '}
+          <InlineMath>{'n = 2^{\\log n}'}</InlineMath>, οπότε{' '}
+          <InlineMath>{'g/n = 2^{\\sqrt{\\log n} - \\log n}'}</InlineMath>, και ο
+          εκθέτης φεύγει στο <InlineMath>{'-\\infty'}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -3338,6 +3454,16 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'\\Theta(n^3) = O(2^n)'}</InlineMath>, και η πρόταση είναι{' '}
           <strong>σωστή</strong>.
         </p>
+        <AsymptoticVerdictExplorer preset="front-set-1-ask0" />
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης: «ψευδο-εκθετικοί» όροι.</strong> Όροι σαν{' '}
+          <InlineMath>{'2^{\\log n}'}</InlineMath>,{' '}
+          <InlineMath>{'3^{\\log_3 n}'}</InlineMath>,{' '}
+          <InlineMath>{'c^{\\log_c n}'}</InlineMath> ΦΑΙΝΟΝΤΑΙ εκθετικοί αλλά
+          είναι απλώς <InlineMath>{'n'}</InlineMath> μεταμφιεσμένο. Πιο γενικά:{' '}
+          <InlineMath>{'a^{\\log_a x} = x'}</InlineMath>. Πάντα πρώτα απλοποίηση,
+          μετά «κράτα τον κυρίαρχο», μετά εφαρμογή ιεραρχίας.
+        </Callout>
       </>
     ),
   },
@@ -3480,6 +3606,22 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'c_2 < c_3'}</InlineMath>. Διάταξη Γ:{' '}
           <InlineMath>{'c_2 < c_3 < c_5 < c_1 < c_4'}</InlineMath>.
         </p>
+        <p>
+          Δες τις τρεις ομάδες να ταξινομούνται live καθώς αυξάνεται το{' '}
+          <InlineMath>{'n'}</InlineMath> — οι μπάρες ξεκινούν μπερδεμένες και
+          σταθεροποιούνται στην κανονική διάταξη:
+        </p>
+        <FunctionOrderingRace preset="fs1-ask1-A" />
+        <FunctionOrderingRace preset="fs1-ask1-B" />
+        <FunctionOrderingRace preset="fs1-ask1-C" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: «πρώτα απλοποίησε σε Θ-class, μετά διάταξε».</strong>{' '}
+          Σπάνια συγκρίνεις τις πραγματικές εκφράσεις — σχεδόν πάντα υπάρχει
+          αλγεβρική απλοποίηση που τις φέρνει σε γνωστή τάξη (Θ(1), Θ(log n),
+          Θ(n^k), Θ(2^n), Θ(n!)). Δύο εξωτικές περιπτώσεις: (α) δύο όροι
+          αλληλοαναιρούνται → σταθερά· (β) δύο εκφράσεις πέφτουν στην ΙΔΙΑ
+          Θ-class — μόνο τότε χρειάζεσαι λεπτότερη σύγκριση συντελεστών.
+        </Callout>
       </>
     ),
   },
@@ -3547,6 +3689,22 @@ export const EXERCISES: Exercise[] = [
           Αυτό το σώμα είναι εμφωλευμένο στον εξωτερικό βρόχο, άρα:
         </p>
         <BlockMath>{'T(n) = O(n) \\cdot O(\\log^* n) = O(n\\log^* n)'}</BlockMath>
+        <p>
+          Δες το trace ζωντανά — η εσωτερική <code>for j ← 1 to m</code>{' '}
+          εμφανίζεται με σήμα «trap» γιατί ΔΕΝ τρέχει ΠΟΤΕ (το{' '}
+          <InlineMath>{'m'}</InlineMath> είναι ήδη <InlineMath>{'\\le 0'}</InlineMath>):
+        </p>
+        <LoopComplexityTrace preset="front-set-1-ask3" />
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης: «διάβασε το state ΠΡΙΝ από κάθε βρόχο».</strong>{' '}
+          Η πιο συχνή παγίδα σε ανάλυση εμφωλευμένων: ο εσωτερικός βρόχος
+          ΦΑΙΝΕΤΑΙ να τρέχει αλλά ΔΕΝ τρέχει επειδή το όριό του είναι ≤ 0 (ή
+          δεν αλλάζει). Έλεγξε τις τιμές των μεταβλητών στο σημείο που μπαίνεις
+          στον βρόχο. Δεύτερη παγίδα: <InlineMath>{'\\log^* n'}</InlineMath>{' '}
+          (επαναλαμβανόμενος λογάριθμος) είναι σχεδόν σταθερά — γρήγορη
+          εκτίμηση: για κάθε ρεαλιστικό <InlineMath>{'n'}</InlineMath>{' '}
+          (ως 2^65536), <InlineMath>{'\\log^* n \\le 5'}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -3605,6 +3763,23 @@ export const EXERCISES: Exercise[] = [
           «δωρεάν» πρόταση που ελέγχει αν προσέχεις: η δεξιά και η αριστερή
           πλευρά είναι πανομοιότυπες.
         </p>
+        <p>
+          Δες τα δύο πιο διδακτικά υπο-ερωτήματα ζωντανά — η αρμονική σειρά
+          συμπεριφέρεται σαν λογάριθμος, και ο λογάριθμος του παραγοντικού
+          συμπεριφέρεται σαν <InlineMath>{'n\\log n'}</InlineMath>:
+        </p>
+        <AsymptoticVerdictExplorer preset="front-set-2-ask2-a" />
+        <AsymptoticVerdictExplorer preset="front-set-2-ask2-b" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: αναγνώρισε τα τέσσερα «αναπόφευκτα» αθροίσματα.</strong>{' '}
+          (α) <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath> (αρμονικό
+          → λογάριθμος μέσω ολοκληρώματος του <InlineMath>{'1/x'}</InlineMath>).
+          (β) <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath> (Stirling
+          — ή απευθείας: οι μισοί όροι είναι <InlineMath>{'\\ge \\log(n/2)'}</InlineMath>).
+          (γ) <InlineMath>{'\\sum \\binom{n}{k} = 2^n'}</InlineMath> ακριβώς (διωνυμικό
+          θεώρημα). (δ) Ανακλαστικότητα — αν το αριστερό = δεξιό, η σχέση είναι
+          τετριμμένα Θ.
+        </Callout>
       </>
     ),
   },
@@ -3665,6 +3840,25 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'f_1 < f_3'}</InlineMath>. Τελική σειρά:{' '}
           <strong><InlineMath>{'f_5 < f_2 < f_1 < f_3 < f_4'}</InlineMath></strong>.
         </p>
+        <p>
+          Δες τους δύο διαγωνισμούς live. Πρόσεξε ιδιαίτερα στην ομάδα b: το{' '}
+          <InlineMath>{'b_4 = 4002^{4002}'}</InlineMath> είναι τεράστια
+          σταθερά — στο γράφημα φαίνεται γιγάντιο, αλλά οριακά πέφτει κάτω από
+          τα παραμετρικά σε <InlineMath>{'n'}</InlineMath> μόλις αυτά πιάσουν
+          την (τεράστια!) τιμή της σταθεράς.
+        </p>
+        <FunctionOrderingRace preset="fs2-ask0-b" />
+        <FunctionOrderingRace preset="fs2-ask0-f" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: «log και των δύο» για εκθετικούς πύργους.</strong>{' '}
+          Όταν συγκρίνεις <InlineMath>{'a^{u(n)}'}</InlineMath> με{' '}
+          <InlineMath>{'b^{v(n)}'}</InlineMath>, παίρνεις log:{' '}
+          <InlineMath>{'u(n)\\log a'}</InlineMath> vs{' '}
+          <InlineMath>{'v(n)\\log b'}</InlineMath>. Συνήθως αρκεί. Πρόσεξε
+          σταθερές που μεταμφιέζονται σε «τέρατα» (<InlineMath>{'4002^{4002}'}</InlineMath>{' '}
+          είναι σταθερά — όχι συνάρτηση του n!) και ζευγάρια που πέφτουν στην
+          ίδια κλάση — εκεί χρειάζεσαι σύγκριση συντελεστών.
+        </Callout>
       </>
     ),
   },
@@ -3728,6 +3922,21 @@ export const EXERCISES: Exercise[] = [
           Παρά την «τρομακτική» κατανομή, η σειριακή αναζήτηση μένει γραμμική
           κατά μέσο όρο.
         </p>
+        <p>
+          Δες την συνεισφορά κάθε ζώνης ξεχωριστά — η ροζ ζώνη (οι δύο
+          τελευταίες θέσεις με <InlineMath>{'p = 1/8'}</InlineMath> η καθεμία)
+          από μόνη της φορτώνει <InlineMath>{'\\ge n/4'}</InlineMath> στον λογαριασμό:
+        </p>
+        <ExpectedTimeBreakdown />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: «ψάξε για ζώνη που από μόνη της δίνει Ω(τάξης)».</strong>{' '}
+          Για να αποδείξεις ασυμπτωτικά κάτω φράγμα σε αναμενόμενο χρόνο, αρκεί
+          να βρεις ΜΙΑ ομάδα εκβάσεων με «αρκετή» πιθανότητα και «αρκετό»
+          κόστος. Για άνω φράγμα, χρησιμοποίησε ότι κάθε κόστος είναι το πολύ
+          το maximum (συνήθως <InlineMath>{'n+1'}</InlineMath>) και ότι οι
+          πιθανότητες αθροίζουν σε 1. Συνήθως τα δύο φράγματα πέφτουν στην ίδια
+          τάξη — άρα Θ.
+        </Callout>
       </>
     ),
   },
@@ -3781,6 +3990,29 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'n\\cdot 2 = 2n'}</InlineMath> — δηλαδή{' '}
           <InlineMath>{'g(n) = \\Theta(n)'}</InlineMath>.
         </p>
+        <p>
+          <strong>Για το (α) — δες τι σπάει.</strong> Πάρε{' '}
+          <InlineMath>{'f = kn,\\ g = n'}</InlineMath>. Σταθερός λόγος{' '}
+          <InlineMath>{'f/g = k'}</InlineMath> → <InlineMath>{'f = O(g)'}</InlineMath>.
+          Αλλά μετά την εκθετικοποίηση, ο λόγος γίνεται{' '}
+          <InlineMath>{'2^{(k-1)n}'}</InlineMath> και φεύγει στο ∞:
+        </p>
+        <ExponentiationBreaksO />
+        <p>
+          <strong>Για το (β) — η κλασική σφήνα.</strong> Κάθε όρος{' '}
+          <InlineMath>{'k^{1/k}'}</InlineMath> είναι «σφηνωμένος» μεταξύ 1 και 2:
+        </p>
+        <SandwichTheoremViz preset="front-set-2-ask3-b" />
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης: O ΔΕΝ διατηρείται κάτω από εκθετικοποίηση.</strong>{' '}
+          Σταθερός παράγοντας στον εκθέτη γίνεται εκθετικός παράγοντας έξω:{' '}
+          <InlineMath>{'2^{kn} = (2^n)^k'}</InlineMath>. Παρόμοιες παγίδες: το O
+          ΔΕΝ διατηρείται και κάτω από <strong>τετράγωνο</strong>
+          (<InlineMath>{'f = O(g) \\not\\Rightarrow f^2 = O(g)'}</InlineMath>, π.χ.{' '}
+          <InlineMath>{'n = O(n)'}</InlineMath> αλλά <InlineMath>{'n^2 \\notin O(n)'}</InlineMath>) —
+          αλλά διατηρείται κάτω από <strong>σταθερές δυνάμεις</strong> από κοινού (αν{' '}
+          <InlineMath>{'f = O(g)'}</InlineMath> τότε <InlineMath>{'f^k = O(g^k)'}</InlineMath>).
+        </Callout>
       </>
     ),
   },
@@ -3833,6 +4065,27 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'f(n) \\to 0'}</InlineMath>, δηλαδή{' '}
           <strong><InlineMath>{'f(n) = o(1)'}</InlineMath></strong>.
         </p>
+        <p>
+          <strong>(α) ζωντανά</strong> — το ίδιο preset με την πρόταση{' '}
+          <InlineMath>{'pt5\\text{-}th2\\text{-}a'}</InlineMath>, αφού το (α) είναι
+          ίδια εκφώνηση:
+        </p>
+        <AsymptoticVerdictExplorer preset="pt5-th2-a" />
+        <p>
+          <strong>(β) ζωντανά</strong> — η εκθετική κατάρρευση της{' '}
+          <InlineMath>{'(2/5)^n'}</InlineMath> κερδίζει εύκολα το{' '}
+          <InlineMath>{'n^2'}</InlineMath>· ο λόγος f/1 πάει στο 0:
+        </p>
+        <AsymptoticVerdictExplorer preset="front-set-2-ask5-b" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: «βάση εκθετικού».</strong> Όταν δεις{' '}
+          <InlineMath>{'a^n'}</InlineMath>: αν <InlineMath>{'a > 1'}</InlineMath>{' '}
+          η συνάρτηση εκρήγνυται· αν <InlineMath>{'a < 1'}</InlineMath> καταρρέει
+          εκθετικά· αν <InlineMath>{'a = 1'}</InlineMath> είναι σταθερά. Η εκθετική
+          κατάρρευση είναι αρκετά γρήγορη ώστε να νικά κάθε πολυωνυμικό μπροστά
+          της. Άρα <InlineMath>{'n^k \\cdot a^n \\to 0'}</InlineMath> για κάθε{' '}
+          <InlineMath>{'k'}</InlineMath> και <InlineMath>{'a < 1'}</InlineMath>.
+        </Callout>
       </>
     ),
   },
@@ -3897,6 +4150,19 @@ procedure CALC(w):
           Η συνολική πολυπλοκότητα είναι{' '}
           <strong><InlineMath>{'\\Theta(n^4)'}</InlineMath></strong>.
         </p>
+        <LoopComplexityTrace preset="front-set-2-ask6" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: από μέσα προς τα έξω, πολλαπλασίασε τάξεις.</strong>{' '}
+          Για εμφωλευμένους βρόχους:
+          (1) Ξεκίνα από την πιο εσωτερική διαδικασία (εδώ CALC) — μέτρα τις
+          επαναλήψεις της ως συνάρτηση του ορίσματος.
+          (2) Πολλαπλασίασε με τις επαναλήψεις του επόμενου επιπέδου.
+          (3) Συνέχισε προς τα έξω.
+          Πρόσεξε: βήμα μη-μοναδιαίο (π.χ. 0.1) είναι σταθερά — δεν αλλάζει την
+          τάξη. Όριο βρόχου που εξαρτάται από το <InlineMath>{'i'}</InlineMath>{' '}
+          (όπως <InlineMath>{'i'}</InlineMath> ως <InlineMath>{'i^2'}</InlineMath>) απαιτεί άθροισμα,
+          όχι απλό πολλαπλασιασμό.
+        </Callout>
       </>
     ),
   },
@@ -3983,6 +4249,27 @@ procedure CALC(w):
           και <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath> (Stirling).
           Ίδια τάξη → <InlineMath>{'\\Theta'}</InlineMath>.
         </p>
+        <p>
+          Έξι ζευγάρια, έξι σύντομα verdict-explorers. Δες πώς κάθε
+          γραμμή του πίνακα αντιστοιχεί σε διαφορετική «λογική»:
+        </p>
+        <AsymptoticVerdictExplorer preset="front-set-2-ask7-1" />
+        <AsymptoticVerdictExplorer preset="front-set-2-ask7-2" />
+        <AsymptoticVerdictExplorer preset="front-set-2-ask7-3" />
+        <AsymptoticVerdictExplorer preset="front-set-2-ask7-4" />
+        <AsymptoticVerdictExplorer preset="front-set-2-ask7-5" />
+        <AsymptoticVerdictExplorer preset="front-set-2-ask7-6" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: αναγνώρισε ποια από τις «6 αρχέτυπες» μάχες είσαι σε.</strong>{' '}
+          Σχεδόν κάθε σύγκριση ασυμπτωτικού πέφτει σε μία από αυτές:
+          (1) πολυλογάριθμος vs πολυώνυμο,
+          (2) πολυώνυμο vs εκθετικό,
+          (3) ταλάντωση → ασύγκριτες,
+          (4) ίδια βάση, διαφορετικός εκθέτης → τετράγωνο/κύβος,
+          (5) η ταυτότητα <InlineMath>{'n^{\\log c} = c^{\\log n}'}</InlineMath>{' '}
+          (κρυφή ισότητα),
+          (6) log(n!) = Θ(log(n^n)) (Stirling).
+        </Callout>
       </>
     ),
   },
@@ -4101,6 +4388,22 @@ procedure CALC(w):
           μικρότερη στη μεγαλύτερη:
         </p>
         <BlockMath>{'\\underbrace{\\Theta(n)}_{(\\alpha\')} \\;<\\; \\underbrace{\\Theta(n^{1{,}6})}_{(\\gamma\')} \\;<\\; \\underbrace{\\Theta(n^2)}_{(\\beta\')} \\;<\\; \\underbrace{\\Theta(n^2\\log n)}_{(\\delta\')}'}</BlockMath>
+        <p>
+          Δες τη «παγίδα» του (γ΄) ζωντανά — η <InlineMath>{'5^{H_n}'}</InlineMath>{' '}
+          φαίνεται εκθετική, αλλά ο αρμονικός αριθμός στον εκθέτη την μετατρέπει σε
+          πολυώνυμο <InlineMath>{'n^{\\ln 5} \\approx n^{1.6}'}</InlineMath>:
+        </p>
+        <AsymptoticVerdictExplorer preset="front-set-2-ask4-c" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: «σφήνωσε από κάτω και από πάνω».</strong> Όταν
+          δεν μπορείς να υπολογίσεις απευθείας μια συνάρτηση, βρες μια μικρότερη
+          και μια μεγαλύτερη με την ΙΔΙΑ ασυμπτωτική τάξη. Εδώ:{' '}
+          <InlineMath>{'\\Theta(n^2) \\le \\sum k\\sqrt[k]{k} \\le \\Theta(n^2)'}</InlineMath>{' '}
+          → πιάστηκε η μέση σε <InlineMath>{'\\Theta(n^2)'}</InlineMath>. Πρόσεξε
+          επίσης το ψεύδο-εκθετικό <InlineMath>{'a^{H_n}'}</InlineMath>: ο{' '}
+          <InlineMath>{'H_n \\approx \\ln n'}</InlineMath> μετατρέπει την σε{' '}
+          <InlineMath>{'n^{\\ln a}'}</InlineMath> — πολυώνυμο με μη-ακέραιο εκθέτη.
+        </Callout>
       </>
     ),
   },
@@ -5308,6 +5611,17 @@ procedure CALC(w)
           (Με ακριβή υπολογισμό αθροισμάτων προκύπτει η ίδια τάξη,{' '}
           <InlineMath>{'\\Theta(n^4)'}</InlineMath>.)
         </p>
+        <LoopComplexityTrace preset="front-set-4-e0-ask6" />
+        <Callout type="key">
+          <strong>Πρότυπο σκέψης: τρεις εμφωλευμένοι → πολλαπλασιασμός τριών τάξεων.</strong>{' '}
+          Όταν όλοι οι βρόχοι έχουν ανεξάρτητα όρια στο <InlineMath>{'n'}</InlineMath>{' '}
+          (ή σε φραγμένη συνάρτηση του εξωτερικού δείκτη), αρκεί πολλαπλασιασμός.
+          Όταν όμως το όριο εξαρτάται από εξωτερικό δείκτη (π.χ.{' '}
+          <InlineMath>{'j'}</InlineMath> από <InlineMath>{'i'}</InlineMath> έως{' '}
+          <InlineMath>{'i^2'}</InlineMath>), προτίμα <em>άθροισμα</em>: η χονδρική
+          εκτίμηση παίρνει το χειρότερο όριο, και κατά κανόνα ταυτίζεται με το
+          πραγματικό άθροισμα μέχρι σταθερά.
+        </Callout>
       </>
     ),
   },
@@ -5401,6 +5715,27 @@ procedure CALC(m)
           φορές. Άρα ο <strong>Algorithm 2</strong> είναι{' '}
           <InlineMath>{'O(n^2)'}</InlineMath>.
         </p>
+        <p>
+          Δες και τους δύο αλγορίθμους ζωντανά. Πρόσεξε στο Algo 1 ότι η CALC
+          κρύβει αθροιστή <InlineMath>{'1+2+\\cdots+i'}</InlineMath> — σταματάει
+          στο <InlineMath>{'i \\approx \\sqrt{2m}'}</InlineMath>, άρα{' '}
+          <InlineMath>{'\\sqrt{m}'}</InlineMath> κόστος. Στο Algo 2 η παγίδα είναι
+          το βήμα <InlineMath>{'(2 \\cdot j)'}</InlineMath>: σημαίνει{' '}
+          <InlineMath>{'j \\leftarrow 3j'}</InlineMath> — γεωμετρικό, οπότε{' '}
+          <InlineMath>{'\\log_3 n'}</InlineMath> επαναλήψεις:
+        </p>
+        <LoopComplexityTrace preset="front-set-4-thema4-a" />
+        <LoopComplexityTrace preset="front-set-4-thema4-b" />
+        <Callout type="warning">
+          <strong>Πρότυπο σκέψης: «τι βήμα έχει ο βρόχος;»</strong>{' '}
+          (1) <strong>Σταθερό βήμα +1</strong> → γραμμικός σε όριο.
+          (2) <strong>Σταθερός πολλαπλασιαστής (×2, ×3, ...)</strong> →{' '}
+          <em>λογαριθμικός</em> σε όριο. Η ψευδο-έκφραση «<code>step (2·j)</code>»
+          είναι ύπουλη — δεν είναι σταθερό βήμα, είναι{' '}
+          <InlineMath>{'j \\leftarrow j + 2j = 3j'}</InlineMath>.
+          (3) <strong>Συνάρτηση του ορίσματος</strong> (CALC με while που χτίζει
+          άθροισμα) → δες το αναλυτικά ποια ισότητα ικανοποιεί η συνθήκη τερματισμού.
+        </Callout>
       </>
     ),
   },
