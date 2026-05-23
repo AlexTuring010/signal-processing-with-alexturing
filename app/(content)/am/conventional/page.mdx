@@ -14,8 +14,8 @@ export const frontmatter = {
     'am/overview',
   ],
   examWeight: 15,
-  estimatedReadTime: 35,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 45,
+  lastUpdated: '2026-05-23',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -26,9 +26,9 @@ import Link from 'next/link'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · AM</span>
   <span>·</span>
-  <span>~35 min read</span>
+  <span>~45 min read</span>
   <span>·</span>
-  <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam</span>
+  <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam · 15%</span>
 </div>
 
 # Conventional AM (DSB-AM-TC)
@@ -49,14 +49,16 @@ import Link from 'next/link'
 
 <Collectible id="am-jacket" />
 
-Από την [AM overview](/am/overview) ξέρουμε τι είναι η Conventional AM σε γενικές γραμμές: «το message βάζει διακυμάνσεις στο πλάτος του carrier». Σε αυτό το κεφάλαιο πάμε σε βάθος. Στο τέλος θα ξέρεις:
+Από την [AM overview](/am/overview) ξέρουμε τι είναι η Conventional AM σε γενικές γραμμές: «το message βάζει διακυμάνσεις στο πλάτος του carrier, και πληρώνουμε έναν σταθερό όρο $A_c$ για να μπορεί ένας απλός envelope detector να ανακτά το μήνυμα». Σε αυτό το κεφάλαιο πάμε στη **βαθιά** εκδοχή — αυτό είναι το **15% κεφάλαιο** της εξεταστικής, και κάθε σχεδόν εξεταστική του χρόνου έχει τουλάχιστον ένα θέμα που πέφτει εδώ.
+
+Στο τέλος θα ξέρεις:
 
 1. Την **εξίσωση** $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$ και τη γεωμετρική της σημασία.
-2. Το **modulation index** $\mu$, πώς ορίζεται, και γιατί πρέπει να μένει ≤ 1.
-3. Τι ακριβώς είναι **υπερδιαμόρφωση** (overmodulation) και τι σπάει όταν συμβεί.
-4. Το **φάσμα** του AM σήματος — carrier impulse + δύο πλευρικές, με συνολικό **bandwidth = 2W**.
-5. Πώς να υπολογίσεις **carrier power, sideband power, total power, efficiency** για single-tone modulation.
-6. Πώς λύνεται το κανονικό εξεταστικό πρόβλημα τύπου «δίνεται $A_c, A_m$, βρες $\mu$ και ισχύεις».
+2. Το **modulation index** $\mu$, γιατί ορίζεται έτσι, και τι σημαίνει «**μ ≤ 1**».
+3. Τι ακριβώς είναι **υπερδιαμόρφωση** — και να δεις, όχι μόνο να ακούσεις, **τι σπάει**.
+4. Το **φάσμα** του AM — carrier impulses + δύο πλευρικές, με συνολικό **bandwidth = 2W**.
+5. Πώς υπολογίζεις **carrier power, sideband power, total power, efficiency η** — και να νιώσεις το **33.3% τοίχο**.
+6. Πώς λύνεται το κανονικό εξεταστικό πρόβλημα τύπου «δίνεται $A_c, A_m$, βρες $\mu$ και ισχύεις» — σε λιγότερο από 5 λεπτά.
 
 ## 1. Η εξίσωση Conventional AM
 
@@ -67,15 +69,15 @@ $$
 με $A_c > 0$ μια σταθερά και $m(t)$ το **message signal** (baseband, με bandwidth $W$). Αναπτύσσοντας:
 
 $$
-x(t) = A_c\cos(2\pi f_c t) \;+\; m(t)\cos(2\pi f_c t)
+x(t) = \underbrace{A_c\cos(2\pi f_c t)}_{\text{carrier}} \;+\; \underbrace{m(t)\cos(2\pi f_c t)}_{\text{DSB-SC κομμάτι}}
 $$
 
-Δύο όροι:
+Δύο όροι, δύο διαφορετικές δουλειές:
 
-- $A_c\cos(2\pi f_c t)$ — το **carrier component**: ένα καθαρό cosine στη συχνότητα $f_c$. Αυτός ο όρος **δεν μεταφέρει πληροφορία** — απλά «βρίσκεται εκεί».
-- $m(t)\cos(2\pi f_c t)$ — το **DSB-SC κομμάτι**: ο πολλαπλασιασμός του message με το carrier (το οποίο είναι το αντικείμενο του [/am/dsb-sc](/am/dsb-sc) κεφαλαίου). Αυτός ο όρος κουβαλάει την πληροφορία, μετατοπισμένη στις $\pm f_c$.
+- $A_c\cos(2\pi f_c t)$ — το **carrier component**: ένα καθαρό cosine στο $f_c$ που **δεν μεταφέρει πληροφορία**. Είναι «φάρος» — απλά υπάρχει.
+- $m(t)\cos(2\pi f_c t)$ — η **DSB-SC συνιστώσα** ([επόμενο κεφάλαιο](/am/dsb-sc)): ο πολλαπλασιασμός του message με τον carrier μετατοπίζει το $M(f)$ στις $\pm f_c$. Αυτός ο όρος κουβαλάει **όλη** την πληροφορία.
 
-Η Conventional AM είναι λοιπόν **DSB-SC + carrier**. Το extra carrier κοστίζει ισχύ αλλά αγοράζει εύκολη demodulation με envelope detector.
+Άρα **Conventional AM = DSB-SC + carrier**. Ο extra carrier κοστίζει ισχύ — όπως θα δούμε στη §5, **τουλάχιστον** το 67% της εκπεμπόμενης ισχύος πάει σ' αυτόν. Σε αντάλλαγμα αγοράζουμε έναν **παμφθηνό δέκτη** (δίοδος + RC, χωρίς local oscillator). Όλη η AM ραδιοτηλεόραση χτίστηκε πάνω σ' αυτό το trade — η ισχύς γίνεται στον πομπό, η απλότητα γίνεται στον δέκτη.
 
 <Callout type="connection" title="Σύνδεση με την I/Q canonical form">
 Από [/modulation/bridge §5b](/modulation/bridge), η Conventional AM γράφεται στην canonical I/Q μορφή ως:
@@ -86,15 +88,15 @@ $$
 
 (Συχνά γράφεται και σαν $x_I = A_c[1 + k_a m(t)]$ όπου $k_a$ ένα κανονικοποιημένο gain — οι δύο μορφές είναι ισοδύναμες με $m_{here}(t) = A_c k_a m_{normalised}(t)$.)
 
-Επειδή $x_Q = 0$, το envelope είναι $V(t) = |x_I(t)| = |A_c + m(t)|$ και η phase είναι σταθερά μηδέν (ή $\pi$ όταν $A_c + m(t) < 0$). **Όλη η πληροφορία ζει στο envelope.**
+Επειδή $x_Q = 0$, το envelope είναι $V(t) = |x_I(t)| = |A_c + m(t)|$ και η phase είναι σταθερά μηδέν (ή $\pi$ όταν $A_c + m(t) < 0$ — η περίπτωση που ο envelope detector σπάει). **Όλη η πληροφορία ζει στο envelope.**
 </Callout>
 
-## 2. Modulation index μ
+## 2. Modulation index μ — ο «χορτασμός» της διαμόρφωσης
 
 **Ορισμός:**
 
 $$
-\boxed{\,\mu = \frac{|\min m(t)|}{A_c}\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,\mu = \frac{|\min m(t)|}{A_c}\,} \quad \text{✓ Ορίζεται μέσα στη Conventional AM (όχι στο τυπολόγιο)}
 $$
 
 Με λόγια: ο λόγος του «πιο αρνητικού σημείου» του message προς το carrier amplitude. Για **single-tone** message $m(t) = A_m\cos(2\pi f_m t)$ απλοποιείται σε:
@@ -103,42 +105,80 @@ $$
 \mu = \frac{A_m}{A_c}
 $$
 
-(γιατί $\min m(t) = -A_m$).
+(γιατί $\min m(t) = -A_m$). Συχνά γράφεται και ως ποσοστό: $\mu = 0.6 \equiv 60\%$ διαμόρφωση.
 
-### 2a. Γιατί ορίζεται έτσι
+### 2a. Γιατί ορίζεται έτσι;
 
-Η ποσότητα $A_c + m(t)$ είναι το envelope του AM σήματος. Όταν $\mu < 1$, ισχύει $A_c + m(t) > 0$ για κάθε $t$, και το envelope μένει θετικό. Όταν $\mu = 1$, το envelope **ακριβώς αγγίζει το μηδέν** στις «κοιλάδες» του message. Όταν $\mu > 1$, το envelope **πάει αρνητικό** σε κάποια διαστήματα — αυτό είναι **overmodulation**.
+Η ποσότητα $A_c + m(t)$ είναι το **envelope** του AM σήματος — αυτό που «βλέπει» ο envelope detector. Τρεις περιπτώσεις:
+
+- **$\mu < 1$** (υποδιαμόρφωση): $A_c + m(t) > 0$ πάντοτε. Το envelope μένει αυστηρά θετικό. Ο envelope detector ανακτά **ακριβώς** το $m(t)$ (μετά από DC-block).
+- **$\mu = 1$** (κρίσιμη): το envelope **ακριβώς αγγίζει το μηδέν** στις «κοιλάδες» του message. Στη θεωρία ακόμα δουλεύει· στην πράξη αφήνουμε margin.
+- **$\mu > 1$** (υπερδιαμόρφωση): το envelope **πάει αρνητικό** σε διαστήματα — και ο envelope detector βγάζει $|A_c + m(t)|$, **όχι** $A_c + m(t)$. Η ανάκτηση καταστρέφεται.
+
+Στις ραδιοφωνικές προδιαγραφές, οι σταθμοί δουλεύουν συνήθως σε $\mu \approx 80\text{–}90\%$ — αρκετά υψηλά για καλή ποιότητα ήχου (το $\eta$ ανεβαίνει με το $\mu^2$, όπως θα δούμε), αλλά με margin για να μη χτυπήσουν στο 100% σε peaks.
 
 <AMSignalViz />
 
-### 2b. Σε ποσοστό
+<RecallCard
+  title="Συμπύκνωσε — modulation index μ"
+  keywords={[
+    <><InlineMath>{'\\mu = |\\min m|/A_c'}</InlineMath></>,
+    <>single-tone: <InlineMath>{'\\mu = A_m/A_c'}</InlineMath></>,
+    <><InlineMath>{'\\mu \\le 1'}</InlineMath> ⇒ envelope detector OK</>,
+    <><InlineMath>{'\\mu > 1'}</InlineMath> ⇒ phase reversal</>,
+  ]}
+  skeleton={[
+    <>Από το single-tone message, ταυτοποιείς το <InlineMath>{'A_m'}</InlineMath> (πλάτος).</>,
+    <>Από την εκφώνηση του AM (τη μορφή <InlineMath>{'[A_c + m(t)]\\cos'}</InlineMath>), ταυτοποιείς το <InlineMath>{'A_c'}</InlineMath>.</>,
+    <>Υπολογίζεις <InlineMath>{'\\mu = A_m/A_c'}</InlineMath>.</>,
+    <>Ελέγχεις <InlineMath>{'\\mu \\le 1'}</InlineMath>: αν ναι, η ανάκτηση είναι καθαρή.</>,
+  ]}
+  trap={
+    <>
+      Για <strong>μη-tone</strong> message, ο τύπος είναι{' '}
+      <InlineMath>{'\\mu = |\\min m|/A_c'}</InlineMath> — όχι{' '}
+      <InlineMath>{'\\max m / A_c'}</InlineMath>. Αν το{' '}
+      <InlineMath>{'m(t)'}</InlineMath> είναι ασύμμετρο (π.χ. εκθετική πτώση), το{' '}
+      <InlineMath>{'\\max'}</InlineMath> και το <InlineMath>{'|\\min|'}</InlineMath>{' '}
+      είναι διαφορετικά — και η υπερδιαμόρφωση εμφανίζεται από την αρνητική
+      πλευρά.
+    </>
+  }
+/>
 
-Συχνά γράφεται και ως ποσοστό: $\mu = 0.6 \equiv 60\%$ modulation. Στις ραδιοφωνικές προδιαγραφές, οι σταθμοί συνήθως δουλεύουν σε $\mu \approx 80\text{–}90\%$ — αρκετά υψηλά για καλή ποιότητα ήχου, αλλά με margin για να μη χτυπήσουν στο 100% σε peaks.
-
-## 3. Υπερδιαμόρφωση (overmodulation)
+## 3. Υπερδιαμόρφωση (overmodulation) — τι σπάει και γιατί
 
 Όταν $\mu > 1$:
-- Σε κάποια χρονικά διαστήματα, $A_c + m(t) < 0$.
-- Το envelope του πραγματικού σήματος (που ένας envelope detector βλέπει) είναι $|A_c + m(t)|$ — δηλαδή η **απόλυτη τιμή**.
-- Όπου το $A_c + m(t)$ θα έπρεπε να είναι αρνητικό, ο envelope detector το «αναποδογυρίζει» στο θετικό.
 
-**Συνέπεια:** το ανακτημένο message δεν είναι πλέον $m(t)$ — είναι μια **παραμορφωμένη** εκδοχή. Το σχήμα της κυματομορφής αλλάζει στις κορυφές. Αυτή η παραμόρφωση ακούγεται ως «κρακ» και «βρόχοι» στον ήχο.
+- Σε κάποια χρονικά διαστήματα, $A_c + m(t) < 0$.
+- Το envelope του πραγματικού σήματος είναι $|A_c + m(t)|$ — η **απόλυτη τιμή**.
+- Όπου το $A_c + m(t)$ θα έπρεπε να ήταν αρνητικό, ο envelope detector το **«αναποδογυρίζει»** στο θετικό.
+
+**Συνέπεια:** το ανακτημένο message δεν είναι πλέον $m(t)$ — είναι μια **διπλωμένη** εκδοχή. Το σχήμα της κυματομορφής αλλάζει στις κοιλάδες σε αιχμές, και ο envelope detector βγάζει ένα σήμα γεμάτο **αρμονικές** που το LPF μετά **δεν μπορεί να φιλτράρει** (είναι μέσα στο baseband). Αυτή η παραμόρφωση ακούγεται ως «κρακ» και αλλοίωση στον ήχο. Φτηνά AM ραδιόφωνα όταν ο σταθμός «το παρακάνει» — αυτό ακούς.
+
+### 3a. Δες ακριβώς τι βγάζει ο detector
+
+Η παραπάνω παράγραφος δεν είναι μύθος — η αναδίπλωση είναι **γεωμετρική** συνέπεια του $|\cdot|$. Πάρε το $\mu$ από το $0.5$ προς το $1.5$ και κράτησε το βλέμμα σου στο μεσαίο pane (signed vs absolute) και το κάτω pane (ανακτημένο vs αληθινό message):
+
+<OvermodulationPhaseReversalViz />
+
+Τι παρατηρείς:
+
+1. Όσο $\mu \le 1$, η μπλε καμπύλη του $|A_c + m(t)|$ **ταυτίζεται** με την violet καμπύλη του $A_c + m(t)$ — δεν αναδιπλώνεται γιατί η violet δεν περνά κάτω από το 0.
+2. Στο $\mu > 1$, η μπλε καμπύλη «πηδάει» — οπουδήποτε η violet βυθίζεται κάτω από το 0, η μπλε **διπλώνει πάνω**.
+3. Στο κάτω pane, το ανακτημένο $\hat m(t)$ (μπλε) γίνεται μια **διαφορετική κυματομορφή** από το αληθινό $m(t)$ (πορτοκαλί): οι κοιλάδες έχουν αντικατασταθεί από αιχμές. Η κόκκινη γέμιση δείχνει την ενέργεια της παραμόρφωσης.
 
 <Callout type="warning" title="Πρακτικός κανόνας">
-Πάντα **κρατάμε μ ≤ 1** στη Conventional AM. Αν δεν μπορούμε (π.χ. το message έχει μεγάλα peaks), περιορίζουμε το πλάτος του message ή χρησιμοποιούμε **DSB-SC** (όπου ο carrier δεν περιορίζει τίποτα — εκεί δεν υπάρχει envelope να σπάσει).
+Πάντα **κρατάμε μ ≤ 1** στη Conventional AM. Αν δεν μπορούμε (π.χ. το message έχει μεγάλα peaks), περιορίζουμε το πλάτος του message ή χρησιμοποιούμε **DSB-SC** (όπου δεν υπάρχει envelope να σπάσει — η πληροφορία είναι στις πλευρικές, ο dec επιλύει με coherent demod).
 </Callout>
 
-### 3a. Πώς αναγνωρίζεται οπτικά
+### 3β. Phase reversal — η οπτική υπογραφή στο carrier
 
-Στο time-domain plot, η υπερδιαμόρφωση φαίνεται ως:
-- Σημεία όπου το envelope «**περνάει**» τον άξονα x και πέφτει στο αρνητικό μέρος.
-- Σπασίματα στη φάση του carrier (το cosine «αναποδογυρίζει» κατά $\pi$ σε εκείνες τις στιγμές).
-
-Στο πάνω viz, σύρε το $\mu$ πάνω από 1 και δες τις κόκκινες σκιασμένες ζώνες όπου το envelope πέφτει κάτω από το 0.
+Στο πάνω pane (το εκπεμπόμενο $x(t)$) πρόσεξε τα κόκκινα ↺ markers: εκεί που το $A_c + m(t)$ διασταυρώνει το μηδέν, **ο carrier κάνει $\pi$ flip** — αλλάζει πρόσημο στιγμιαία. Στον oscilloscope αυτό εμφανίζεται ως «το cosine πάει ξαφνικά ανάποδα». Αυτό είναι το σήμα ότι έχεις περάσει το όριο.
 
 ## 4. Φάσμα του AM σήματος
 
-Παίρνοντας FT του $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$, με τη βοήθεια του [modulation theorem](/foundations/fourier-transform#7-modulation-theorem-) και της 4d (FT of constant = δ):
+Παίρνοντας FT του $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$, με τη βοήθεια του [modulation theorem](/foundations/fourier-transform#7-modulation-theorem-) και της 4d (FT της σταθεράς $A_c$ = $A_c\delta(f)$, που μετά το $\cos$ γίνεται $\tfrac{A_c}{2}[\delta(f-f_c)+\delta(f+f_c)]$):
 
 $$
 X(f) = \frac{A_c}{2}\big[\delta(f - f_c) + \delta(f + f_c)\big] \;+\; \frac{1}{2}\big[M(f - f_c) + M(f + f_c)\big]
@@ -146,10 +186,10 @@ $$
 
 Δύο συνιστώσες:
 
-- **Carrier impulses** στις $\pm f_c$, ύψους $\frac{A_c}{2}$ η καθεμία. Δεν εξαρτώνται από το $m(t)$ — είναι πάντα εκεί.
-- **Sidebands**: αντίγραφα του $M(f)$ μετατοπισμένα στις $\pm f_c$, ύψους $\frac{1}{2}$ από το original. Αυτά κουβαλάνε όλη την πληροφορία.
+- **Carrier impulses** στις $\pm f_c$, ύψους $\tfrac{A_c}{2}$ η καθεμία. **Δεν εξαρτώνται** από το $m(t)$ — είναι πάντα εκεί, ακόμα και αν $m \equiv 0$.
+- **Sidebands**: αντίγραφα του $M(f)$ μετατοπισμένα στις $\pm f_c$, ύψους $\tfrac{1}{2}$ από το original. Αυτά κουβαλάνε όλη την πληροφορία.
 
-Για **single-tone** message $m(t) = A_m\cos(2\pi f_m t)$, το $M(f) = \frac{A_m}{2}[\delta(f - f_m) + \delta(f + f_m)]$ και το AM φάσμα γίνεται 6 impulses:
+Για **single-tone** message $m(t) = A_m\cos(2\pi f_m t)$, το $M(f) = \tfrac{A_m}{2}[\delta(f - f_m) + \delta(f + f_m)]$ και το AM φάσμα γίνεται **6 impulses** (3 ζεύγη):
 
 $$
 X(f) = \underbrace{\tfrac{A_c}{2}[\delta(f \mp f_c)]}_{\text{carrier}} + \underbrace{\tfrac{\mu A_c}{4}[\delta(f \mp (f_c + f_m))]}_{\text{upper sidebands}} + \underbrace{\tfrac{\mu A_c}{4}[\delta(f \mp (f_c - f_m))]}_{\text{lower sidebands}}
@@ -164,18 +204,58 @@ $$
 Για γενικό message με bandwidth $W$, το $M(f)$ ζει στο $[-W, +W]$. Μετά τη μετατόπιση στις $\pm f_c$, οι sidebands εκτείνονται από $f_c - W$ έως $f_c + W$ (και αντίστοιχα στις αρνητικές). Άρα:
 
 $$
-\boxed{\,\mathrm{BW}_{\text{AM}} = 2W\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,\mathrm{BW}_{\text{AM}} = 2W\,}
 $$
 
-— **διπλάσιο του message bandwidth**. Αυτή είναι μια από τις σημαντικές «αδυναμίες» της AM: αν το message έχει 10 kHz, το AM σήμα καταλαμβάνει 20 kHz φάσματος. Στη DSB-SC το ίδιο. Στη SSB μειώνεται στο $W$ (μισό).
+— **διπλάσιο του message bandwidth**. Αυτή είναι μια από τις σημαντικές «αδυναμίες» της AM: αν το message έχει $W = 10$ kHz, το AM σήμα καταλαμβάνει $20$ kHz φάσματος. Στη DSB-SC το ίδιο (κρατάει και οι δύο πλευρικές). Στη SSB μειώνεται στο $W$ (μισό, αφού κρατά μόνο τη μία πλευρά).
 
-## 5. Ισχύς και efficiency
+<ClozeDrill
+  id="am-spectrum-cloze"
+  prompt={
+    <p>
+      Έχεις AM single-tone σήμα με <InlineMath>{'A_c = 4'}</InlineMath>,{' '}
+      <InlineMath>{'\\mu = 0.5'}</InlineMath>, <InlineMath>{'f_c = 100'}</InlineMath> kHz,{' '}
+      <InlineMath>{'f_m = 2'}</InlineMath> kHz. Συμπλήρωσε ύψος και θέση κάθε
+      ζεύγους impulse στο φάσμα <InlineMath>{'|X(f)|'}</InlineMath> (θετικές
+      συχνότητες μόνο).
+    </p>
+  }
+  parts={[
+    'Carrier στο f = ',
+    { blank: 'fc', accept: ['100', '100kHz', '100 kHz'], hint: 'kHz', size: 5 },
+    ' kHz, ύψος = ',
+    { blank: 'ac2', accept: ['2', '2.0', 'A_c/2'], hint: '?', size: 4 },
+    '.   USB στο f = ',
+    { blank: 'usb-f', accept: ['102', '102kHz', '102 kHz'], hint: 'kHz', size: 5 },
+    ' kHz, ύψος = ',
+    { blank: 'sb-h', accept: ['0.5', '0,5', '1/2', '0.50'], hint: '?', size: 5 },
+    '.   LSB στο f = ',
+    { blank: 'lsb-f', accept: ['98', '98kHz', '98 kHz'], hint: 'kHz', size: 5 },
+    ' kHz, ύψος = ',
+    { blank: 'sb-h2', accept: ['0.5', '0,5', '1/2', '0.50'], hint: '?', size: 5 },
+    '.   Bandwidth = ',
+    { blank: 'bw', accept: ['4', '4kHz', '4 kHz', '4000'], hint: 'kHz', size: 4 },
+    ' kHz.',
+  ]}
+  solution={
+    <p>
+      Carrier ύψος = <InlineMath>{'A_c/2 = 2'}</InlineMath>. Sideband ύψη
+      = <InlineMath>{'\\mu A_c / 4 = 0.5 \\cdot 4 / 4 = 0.5'}</InlineMath>. Οι
+      sidebands στις <InlineMath>{'f_c \\pm f_m = 100 \\pm 2'}</InlineMath> kHz.
+      Bandwidth = <InlineMath>{'2 f_m = 4'}</InlineMath> kHz. Στο γενικότερο
+      message με bandwidth <InlineMath>{'W'}</InlineMath>: BW
+      <InlineMath>{'= 2W'}</InlineMath>.
+    </p>
+  }
+/>
+
+## 5. Ισχύς, αποδοτικότητα και η ταυτότητα της AM
 
 Για **single-tone** modulation $m(t) = A_m\cos(2\pi f_m t) = \mu A_c \cos(2\pi f_m t)$:
 
 ### 5a. Carrier power
 
-Από το $A_c\cos(2\pi f_c t)$ — απλό cosine πλάτους $A_c$:
+Από το $A_c\cos(2\pi f_c t)$ — απλό cosine πλάτους $A_c$ (μέση ισχύς ενός cosine $= A^2/2$):
 
 $$
 P_c = \frac{A_c^2}{2}
@@ -183,21 +263,21 @@ $$
 
 ### 5b. Sideband power (κάθε μία)
 
-Κάθε sideband είναι $\frac{\mu A_c}{2}\cos(2\pi (f_c \pm f_m) t)$ — cosine πλάτους $\frac{\mu A_c}{2}$:
+Κάθε sideband είναι $\tfrac{\mu A_c}{2}\cos(2\pi (f_c \pm f_m) t)$ — cosine πλάτους $\tfrac{\mu A_c}{2}$:
 
 $$
 P_{sb} = \frac{1}{2}\left(\frac{\mu A_c}{2}\right)^2 = \frac{\mu^2 A_c^2}{8}
 $$
 
-(Αυτή είναι η ισχύς **κάθε** sideband. Έχουμε δύο — upper και lower.)
+(Αυτή είναι η ισχύς **κάθε** sideband ξεχωριστά. Έχουμε δύο — upper και lower — οπότε η συνολική «χρήσιμη» ισχύς είναι $2 P_{sb} = \mu^2 A_c^2 / 4$.)
 
 ### 5c. Total power
 
 $$
-P_{\text{total}} = P_c + 2 P_{sb} = \frac{A_c^2}{2} + 2\cdot\frac{\mu^2 A_c^2}{8} = \frac{A_c^2}{2}\left(1 + \frac{\mu^2}{2}\right)
+P_{\text{total}} = P_c + 2 P_{sb} = \frac{A_c^2}{2} + \frac{\mu^2 A_c^2}{4} = \frac{A_c^2}{2}\left(1 + \frac{\mu^2}{2}\right)
 $$
 
-### 5d. Efficiency η
+### 5d. Efficiency η — το «πόσο πάει σε χρήσιμη πληροφορία»
 
 «Χρήσιμη» ισχύς = αυτή που κουβαλάει πληροφορία = ισχύς των sidebands. Άρα:
 
@@ -205,26 +285,92 @@ $$
 \eta = \frac{P_{\text{useful}}}{P_{\text{total}}} = \frac{2 P_{sb}}{P_c + 2 P_{sb}} = \frac{\mu^2/2}{1 + \mu^2/2}
 $$
 
-Για $\mu = 1$ (μέγιστη χρήσιμη modulation):
+Για $\mu = 1$ (μέγιστη χρήσιμη modulation πριν την υπερδιαμόρφωση):
 
 $$
-\eta_{\max} = \frac{1/2}{3/2} = \frac{1}{3} \approx 33.3\%
+\boxed{\,\eta_{\max} = \frac{1/2}{3/2} = \frac{1}{3} \approx 33.3\%\,}
 $$
 
-**Δύο τρίτα της ισχύος σπαταλιούνται πάντα στον carrier**, ακόμα και στην καλύτερη περίπτωση. Αυτή είναι η μεγάλη αδυναμία της Conventional AM — και ο λόγος που υπάρχει το DSB-SC (που πετάει τον carrier και έχει $\eta = 100\%$).
+**Δύο τρίτα της ισχύος σπαταλιούνται πάντα στον carrier**, ακόμα και στην καλύτερη επιτρεπτή λειτουργία. Αυτή είναι η μεγάλη αδυναμία της Conventional AM — και η αφορμή για το επόμενο κεφάλαιο της οικογένειας (DSB-SC, που πετάει τον carrier και έχει $\eta = 100\%$).
 
 <AMPowerCalculator />
 
-### 5e. Σύνοψη formulas (στο τυπολόγιο)
+### 5ε. Δες τον τοίχο
 
-| Ποσότητα | Τύπος (single-tone) |
+Ο τύπος $\eta(\mu) = (\mu^2/2)/(1 + \mu^2/2)$ είναι **αύξουσα συνάρτηση**: αυξάνεις το $\mu$, αυξάνει η αποδοτικότητα. Αλλά **φραγμένη** από το $1/3$ στο $\mu = 1$. Σύρε το $\mu$ πάνω στην καμπύλη και νιώσε γιατί η AM δεν φτάνει ποτέ στο 50%:
+
+<EfficiencyVsMuCurveViz />
+
+Γεωμετρικά: ο **carrier δεν μειώνεται** όσο ανεβαίνει το $\mu$ — μένει σταθερά στο $A_c^2/2$. Μόνο τα sidebands μεγαλώνουν, και $\propto \mu^2$. Στο $\mu = 1$, η συνολική ισχύς sidebands ($2P_{sb} = A_c^2/4$) είναι **το μισό** της ισχύος του carrier — εκεί κολλάει η $\eta$ στο $1/3$.
+
+### 5ζ. Η ταυτότητα σε **Watts στην κεραία**
+
+Το $\eta = 33.3\%$ ακούγεται αφηρημένο. Πιο συγκεκριμένα: για να μεταδώσει ένας AM-πομπός **1 W μηνύματος**, πρέπει να εκπέμψει **3 W**. Ένας DSB-SC πομπός θα έπρεπε να εκπέμψει μόνο **1 W**. Ένας SSB μόνο **0.5 W** (κρατάει μόνο μία πλευρά — μισή η ενέργεια του DSB-SC). Δες τους τρεις δίσκους — οι περιοχές τους είναι **κυριολεκτικά** ισχύς:
+
+<CarrierVsSidebandPowerSplitViz />
+
+Η κόκκινη διακεκομμένη που μαρκάρει το «AM size» πάνω στους DSB-SC/SSB δίσκους είναι η ποσότητα ισχύος που σπαταλάει η AM σε σχέση με τα δύο άλλα. **Αυτή είναι η πραγματική τιμή που πληρώνεις** για τη χρήση envelope detector — μετράται σε Watts κεραίας, και είναι η αιτία που τα AM ραδιόφωνα ιστορικά απαιτούσαν πομπούς **εκατοντάδων kW** για κάλυψη μιας πόλης.
+
+### 5η. Σύνοψη τύπων (single-tone)
+
+| Ποσότητα | Τύπος |
 | --- | --- |
 | Modulation index | $\mu = A_m / A_c$ |
 | Carrier power | $P_c = A_c^2 / 2$ |
-| Sideband power (each) | $P_{sb} = \mu^2 A_c^2 / 8$ |
+| Sideband power (κάθε μία) | $P_{sb} = \mu^2 A_c^2 / 8$ |
+| Total sideband power | $2P_{sb} = \mu^2 A_c^2 / 4$ |
 | Total power | $P_{\text{total}} = (A_c^2/2)(1 + \mu^2/2)$ |
-| Efficiency | $\eta = (\mu^2/2)/(1 + \mu^2/2)$ |
+| Efficiency | $\eta = (\mu^2/2)/(1 + \mu^2/2) \;\le\; 1/3$ |
 | Bandwidth | $\mathrm{BW} = 2 f_m$ (= $2W$ γενικά) |
+
+<RecallCard
+  title="Συμπύκνωσε — η αλυσίδα ισχύος"
+  keywords={[
+    <><InlineMath>{'P_c = A_c^2/2'}</InlineMath></>,
+    <><InlineMath>{'P_{sb} = \\mu^2 A_c^2/8'}</InlineMath> (κάθε μία)</>,
+    <><InlineMath>{'P_{total} = (A_c^2/2)(1 + \\mu^2/2)'}</InlineMath></>,
+    <><InlineMath>{'\\eta_{max} = 1/3'}</InlineMath> στο <InlineMath>{'\\mu=1'}</InlineMath></>,
+  ]}
+  skeleton={[
+    <>Από <InlineMath>{'A_c'}</InlineMath>: <InlineMath>{'P_c = A_c^2/2'}</InlineMath>.</>,
+    <>Από <InlineMath>{'\\mu, A_c'}</InlineMath>: <InlineMath>{'P_{sb} = (\\mu A_c)^2/8'}</InlineMath> για κάθε sideband (όχι ξεχάσεις το <InlineMath>{'/8'}</InlineMath>).</>,
+    <>Κάνε το άθροισμα: <InlineMath>{'P_{total} = P_c + 2P_{sb}'}</InlineMath>.</>,
+    <>Επιβεβαίωσε με τον compact: <InlineMath>{'P_{total} = (A_c^2/2)(1 + \\mu^2/2)'}</InlineMath>.</>,
+    <>Efficiency: <InlineMath>{'\\eta = 2P_{sb}/P_{total} = (\\mu^2/2)/(1+\\mu^2/2)'}</InlineMath>.</>,
+  ]}
+  trap={
+    <>
+      Δύο κλασικά λάθη: <strong>(1)</strong> γράφεις{' '}
+      <InlineMath>{'P_{sb} = \\mu^2 A_c^2 / 4'}</InlineMath> αντί για{' '}
+      <InlineMath>{'/8'}</InlineMath> — το <InlineMath>{'/8'}</InlineMath> είναι
+      για <em>κάθε μία</em>, το <InlineMath>{'/4'}</InlineMath> για{' '}
+      <em>και τις δύο μαζί</em>. <strong>(2)</strong> Χρησιμοποιείς το{' '}
+      <InlineMath>{'(A_c+A_m)^2/2'}</InlineMath> νομίζοντας ότι είναι peak
+      power — όχι, η σωστή τιμή είναι το ολοκλήρωμα του{' '}
+      <InlineMath>{'x^2(t)'}</InlineMath>, που δίνει το{' '}
+      <InlineMath>{'P_{total}'}</InlineMath> παραπάνω.
+    </>
+  }
+/>
+
+<ReorderDrill
+  id="power-calc-recipe"
+  prompt={
+    <p>
+      Βάλε τα βήματα σε σωστή σειρά για να λύσεις: «δίνεται{' '}
+      <InlineMath>{'A_c, A_m'}</InlineMath>, βρες{' '}
+      <InlineMath>{'\\mu, P_c, P_{total}, \\eta'}</InlineMath>». Αυτή είναι η
+      ακριβής αλληλουχία της Sept 2025 ΘΕΜΑ 1.2 και επανέρχεται κάθε εξεταστική.
+    </p>
+  }
+  steps={[
+    <>① Υπολόγισε <InlineMath>{'\\mu = A_m / A_c'}</InlineMath> και επιβεβαίωσε <InlineMath>{'\\mu \\le 1'}</InlineMath> (αν όχι, η εκφώνηση έχει πρόβλημα ή ζητάει distortion).</>,
+    <>② Υπολόγισε <InlineMath>{'P_c = A_c^2 / 2'}</InlineMath>.</>,
+    <>③ Υπολόγισε <InlineMath>{'P_{sb} = (\\mu A_c)^2 / 8'}</InlineMath> (κάθε sideband).</>,
+    <>④ <InlineMath>{'P_{total} = P_c + 2 P_{sb}'}</InlineMath>, ή ισοδύναμα <InlineMath>{'(A_c^2/2)(1+\\mu^2/2)'}</InlineMath>.</>,
+    <>⑤ <InlineMath>{'\\eta = 2P_{sb} / P_{total}'}</InlineMath> — απάντησε σε ποσοστό.</>,
+  ]}
+/>
 
 ## 6. Worked example — το κανονικό εξεταστικό πρόβλημα
 
@@ -236,14 +382,14 @@ $$
 
 ---
 
-**Λύση.**
+**Σκέψη πριν τη λύση.** Δες την εκφώνηση: σου δίνει $A_c$ και $A_m$ σε Volts, ζητάει τέσσερα νούμερα που είναι **όλα single-tone formulas**. Αυτή είναι η αλυσίδα που οργάνωσες στο `ReorderDrill` παραπάνω: ① μ → ② $P_c$ → ③ $P_{sb}$ → ④ $P_{total}$ → ⑤ $\eta$. Δεν χρειάζεται φαντασία· χρειάζεται σταθερότητα.
 
 **Βήμα 1 — Modulation index.**
 $$
 \mu = \frac{A_m}{A_c} = \frac{5}{10} = 0.5
 $$
 
-(Ισοδύναμα: 50% modulation. Όχι overmodulation αφού $\mu \leq 1$.)
+(Δηλαδή 50% modulation. Όχι overmodulation αφού $\mu \leq 1$. Margin άνετο.)
 
 **Βήμα 2 — Carrier power.**
 $$
@@ -260,7 +406,7 @@ $$
 P_{\text{total}} = P_c + 2 P_{sb} = 50 + 6.25 = 56.25 \text{ W}
 $$
 
-Ή απευθείας από τον τύπο:
+Ή απευθείας από τον compact:
 $$
 P_{\text{total}} = \frac{A_c^2}{2}\left(1 + \frac{\mu^2}{2}\right) = 50 \cdot (1 + 0.125) = 50 \cdot 1.125 = 56.25 \text{ W} \;\checkmark
 $$
@@ -270,39 +416,66 @@ $$
 \eta = \frac{2 P_{sb}}{P_{\text{total}}} = \frac{6.25}{56.25} \approx 0.111 = 11.1\%
 $$
 
-Δηλαδή **μόλις το 11% της εκπεμπόμενης ισχύος κουβαλάει πληροφορία**. Το υπόλοιπο 89% πάει στον carrier (που δεν χρειάζεται για demodulation σε όλους τους receivers — απλά τον στέλνουμε για να επιτρέπεται envelope detection).
+Δηλαδή **μόλις το 11% της εκπεμπόμενης ισχύος κουβαλάει πληροφορία**. Το υπόλοιπο 89% πάει στον carrier. Στο `EfficiencyVsMuCurveViz` παραπάνω θα δεις ότι στο $\mu = 0.5$ είσαι ακόμα **πολύ μακριά** από τον τοίχο του $1/3$ — γι' αυτό οι ραδιοφωνικοί σταθμοί δεν μένουν στο 50%· πιέζουν προς το 80–90%.
 
 </Example>
-
-<ExamProblem id="sept-2025-th1-2" year="2025-09" weight="10%" title="Sept 2025 Θ1.2 — AM ισχύς και modulation index">
-
-**Εκφώνηση:** Για AM σήμα με $A_c = 10$ V και $m(t) = 5\cos(2\pi f_m t)$ V, υπολογίστε: (α) τον δείκτη διαμόρφωσης $\mu$, (β) την ισχύ του carrier, (γ) τη συνολική ισχύ του διαμορφωμένου σήματος.
-
-<Example title="Λύση" defaultOpen={false}>
-
-(α) $\mu = A_m/A_c = 5/10 = 0.5$.
-
-(β) $P_c = A_c^2/2 = 100/2 = 50$ W.
-
-(γ) $P_{\text{total}} = P_c(1 + \mu^2/2) = 50 \cdot (1 + 0.125) = 56.25$ W.
-
-</Example>
-
-</ExamProblem>
 
 ## Εξάσκηση
 
 <ExerciseProgress slug="am/conventional" total={6} />
 
-Πέντε ερωτήσεις τύπου εξετάσεων — όλες πιθανές στις τελικές.
+Πέντε ερωτήσεις τύπου εξετάσεων — όλες πιθανές στις τελικές. Πριν δεις τη λύση κάθε μίας, **κάνε μια προσπάθεια από μνήμη** στο `RecallDrill` παρακάτω — αν δεν ζωγραφίζεις σωστά το φάσμα, οι ασκήσεις θα σου γράψουν τα ίδια λάθη.
+
+<RecallDrill
+  id="sketch-am-spectrum-from-memory"
+  prompt={
+    <p>
+      Χωρίς να γυρίσεις πάνω: ζωγράφισε νοερά το{' '}
+      <InlineMath>{'|X(f)|'}</InlineMath> ενός single-tone AM σήματος γύρω από{' '}
+      <InlineMath>{'+f_c'}</InlineMath>. Πόσες impulses; Σε ποιες θέσεις; Με τι
+      ύψος η καθεμία; Πόσο bandwidth συνολικά; Πόσο κουβαλάει η μία sideband
+      σε σχέση με το carrier;
+    </p>
+  }
+  answer={
+    <ul className="ml-5 list-disc space-y-1">
+      <li>
+        <strong>Τρεις impulses</strong> στο θετικό μισό:{' '}
+        <InlineMath>{'f_c'}</InlineMath>, <InlineMath>{'f_c - f_m'}</InlineMath> (LSB),{' '}
+        <InlineMath>{'f_c + f_m'}</InlineMath> (USB).
+      </li>
+      <li>
+        <strong>Ύψος carrier</strong> = <InlineMath>{'A_c/2'}</InlineMath>.{' '}
+        <strong>Ύψος κάθε sideband</strong> = <InlineMath>{'\\mu A_c / 4 = A_m / 4'}</InlineMath>.
+        Άρα κάθε sideband έχει ύψος{' '}
+        <InlineMath>{'\\mu/2'}</InlineMath> φορές το ύψος του carrier — στο μ=1
+        είναι μισό του carrier.
+      </li>
+      <li>
+        <strong>Bandwidth</strong> = <InlineMath>{'2 f_m'}</InlineMath> (συνολικά,
+        περιλαμβάνοντας και τις δύο sidebands).
+      </li>
+      <li>
+        <strong>Λόγος ισχύος μίας sideband προς carrier</strong> ={' '}
+        <InlineMath>{'P_{sb}/P_c = \\mu^2/4'}</InlineMath>. Στο{' '}
+        <InlineMath>{'\\mu=1'}</InlineMath>: κάθε sideband έχει το ¼ της ισχύος
+        του carrier.
+      </li>
+    </ul>
+  }
+/>
 
 <ExamProblem id="mu-from-amplitudes" year="Computation" weight="βασικό μ">
 **Ερώτηση:** Carrier $A_c = 8$ V, message single-tone με peak $A_m = 6$ V. Βρες το $\mu$ και πες αν υπάρχει overmodulation.
 
 <Example title="Λύση" defaultOpen={true}>
+
+**Σκέψη:** δίνει $A_c$ και $A_m$, ζητάει $\mu$. Single-tone, οπότε ο τύπος είναι ο απλούστερος.
+
 $$\mu = \frac{A_m}{A_c} = \frac{6}{8} = 0.75$$
 
-$\mu = 0.75 < 1$, οπότε **όχι overmodulation**. 75% modulation — μέσα στα όρια όπου ο envelope detector δουλεύει σωστά.
+$\mu = 0.75 < 1$, οπότε **όχι overmodulation**. 75% modulation — μέσα στα όρια όπου ο envelope detector δουλεύει σωστά. Αν ήταν π.χ. $A_m = 9$ V (μ = 1.125), τότε ναι, υπερδιαμόρφωση — και θα φαινόταν σαν τις κόκκινες περιοχές του `OvermodulationPhaseReversalViz`.
+
 </Example>
 </ExamProblem>
 
@@ -310,9 +483,13 @@ $\mu = 0.75 < 1$, οπότε **όχι overmodulation**. 75% modulation — μέ�
 **Δήλωση:** Στην overmodulation ($\mu > 1$), το envelope του AM σήματος αλλάζει πρόσημο.
 
 <Example title="Λύση" defaultOpen={true}>
-**Λάθος (technicality):** το envelope ως φυσική ποσότητα είναι **πάντα μη-αρνητικό** ($V(t) = |A_c + m(t)| \geq 0$). Αυτό όμως που αλλάζει πρόσημο είναι το «$A_c + m(t)$» — όταν $\mu > 1$, αυτό γίνεται αρνητικό σε κάποια διαστήματα, και ο envelope detector διαβάζει $|A_c + m(t)|$ αντί για $A_c + m(t)$. **Αποτέλεσμα:** phase reversals ορατά στο waveform, παραμόρφωση εξόδου του envelope detector.
 
-Αν η δήλωση εννοούσε «το $A_c + m(t)$ αλλάζει πρόσημο» τότε σωστό. Στην εξέταση η συνηθισμένη διατύπωση είναι «το envelope διασταυρώνει το μηδέν» — αυτό είναι ακριβές.
+**Σκέψη:** η δήλωση χρησιμοποιεί τη λέξη «envelope» — και υπάρχει μια λεπτή διάκριση μεταξύ «envelope ως φυσική ποσότητα» και «$A_c + m(t)$». Αυτή η διάκριση είναι η ψυχή της ερώτησης.
+
+**Λάθος (technicality):** το envelope ως φυσική ποσότητα είναι **πάντα μη-αρνητικό** ($V(t) = |A_c + m(t)| \geq 0$ — δεν αλλάζει πρόσημο, παίρνει την απόλυτη τιμή). Αυτό που αλλάζει πρόσημο είναι το «$A_c + m(t)$» — όταν $\mu > 1$, αυτό γίνεται αρνητικό σε κάποια διαστήματα, και ο envelope detector διαβάζει $|A_c + m(t)|$ αντί για $A_c + m(t)$. **Αποτέλεσμα:** phase reversals ορατά στο waveform (δες τα κόκκινα ↺ markers στο πάνω pane του `OvermodulationPhaseReversalViz`), παραμόρφωση εξόδου του envelope detector.
+
+Αν η δήλωση εννοούσε «το $A_c + m(t)$ αλλάζει πρόσημο» τότε **σωστό**. Στην εξέταση η συνηθισμένη διατύπωση είναι «το envelope διασταυρώνει το μηδέν» — αυτό είναι ακριβές και αποδεκτό ως αληθές για $\mu > 1$.
+
 </Example>
 </ExamProblem>
 
@@ -320,9 +497,13 @@ $\mu = 0.75 < 1$, οπότε **όχι overmodulation**. 75% modulation — μέ�
 **Ερώτηση:** Έχεις conventional AM με $\mu = 0.5$. Πόσο % της συνολικής ισχύος μεταφέρει πληροφορία;
 
 <Example title="Λύση">
+
+**Σκέψη:** το «πόσο % κουβαλάει πληροφορία» είναι κυριολεκτικά η $\eta$. Δεν χρειάζεται καν να ξέρεις $A_c$ ή $A_m$ — η $\eta(\mu)$ εξαρτάται μόνο από το $\mu$.
+
 $$\eta = \frac{\mu^2/2}{1 + \mu^2/2} = \frac{0.125}{1.125} \approx 0.111 = 11.1\%$$
 
-Δηλαδή σχεδόν **89%** στον carrier. Πολύ κακή αποδοτικότητα — γι' αυτό σε high-power broadcasting θέλουμε όσο πιο κοντά στο $\mu = 1$ μπορούμε χωρίς overmodulation. Στο $\mu = 1$: $\eta_{max} = 33.3\%$.
+Δηλαδή σχεδόν **89%** στον carrier. Πολύ κακή αποδοτικότητα — γι' αυτό σε high-power broadcasting θέλουμε όσο πιο κοντά στο $\mu = 1$ μπορούμε χωρίς overmodulation. Στο $\mu = 1$: $\eta_{max} = 33.3\%$ (κοίτα τον τοίχο στο `EfficiencyVsMuCurveViz`). Για να φτάσεις σε ψηλότερο, **πρέπει** να αλλάξεις σχήμα (DSB-SC, SSB).
+
 </Example>
 </ExamProblem>
 
@@ -330,16 +511,23 @@ $$\eta = \frac{\mu^2/2}{1 + \mu^2/2} = \frac{0.125}{1.125} \approx 0.111 = 11.1\
 **Ερώτηση:** Σχεδίασε το φάσμα πλάτους του $x(t) = [10 + 4\cos(2\pi\cdot 1000\,t)]\cos(2\pi\cdot 100\,000\,t)$ V (στις θετικές συχνότητες).
 
 <Example title="Λύση">
-$f_c = 100$ kHz, $f_m = 1$ kHz, $A_c = 10$ V, $A_m = 4$ V.
 
-Το σήμα: carrier ($10\cos\omega_c t$) + DSB-SC ($4\cos\omega_m t \cdot \cos\omega_c t = 2\cos((\omega_c-\omega_m)t) + 2\cos((\omega_c+\omega_m)t)$).
+**Σκέψη:** η εκφώνηση είναι στη μορφή $[A_c + m(t)]\cos$, οπότε ταυτοποιείς πρώτα τις παραμέτρους:
+- $A_c = 10$ V, $A_m = 4$ V → $\mu = 0.4$
+- $f_c = 100$ kHz, $f_m = 1$ kHz
 
-**Φάσμα στις θετικές συχνότητες:**
-- Carrier impulse στο $f_c = 100$ kHz, μέτρο $A_c/2 = 5$.
-- LSB impulse στο $f_c - f_m = 99$ kHz, μέτρο $A_m/4 = 1$.
-- USB impulse στο $f_c + f_m = 101$ kHz, μέτρο $A_m/4 = 1$.
+Τώρα εφαρμόζεις το recipe του single-tone φάσματος:
 
-Bandwidth = $2 f_m = 2$ kHz. Modulation index $\mu = A_m/A_c = 0.4$.
+**Carrier impulse** στο $f_c = 100$ kHz, ύψος $A_c/2 = 5$.
+
+**LSB impulse** στο $f_c - f_m = 99$ kHz, ύψος $A_m/4 = 1$. (Ή ισοδύναμα $\mu A_c / 4 = 0.4 \cdot 10 / 4 = 1$.)
+
+**USB impulse** στο $f_c + f_m = 101$ kHz, ύψος $A_m/4 = 1$.
+
+**Bandwidth** = $2 f_m = 2$ kHz.
+
+(Σύγκρινε με το `AMSpectrumViz` παραπάνω — ταιριάζει με $\mu \approx 0.4$.)
+
 </Example>
 </ExamProblem>
 
@@ -347,14 +535,38 @@ Bandwidth = $2 f_m = 2$ kHz. Modulation index $\mu = A_m/A_c = 0.4$.
 **Ερώτηση:** Δείξε γιατί η αποδοτικότητα του conventional AM δεν μπορεί ποτέ να υπερβεί το 33.3% (single-tone, $\mu \leq 1$).
 
 <Example title="Λύση">
+
+**Σκέψη:** η ερώτηση δεν ζητάει αριθμό — ζητάει **απόδειξη**. Πρέπει να δείξεις (1) ότι η $\eta(\mu)$ είναι αύξουσα στο $[0,1]$, (2) ότι το $\mu$ δεν επιτρέπεται πάνω από 1.
+
 Από τους τύπους:
 $$\eta(\mu) = \frac{\mu^2/2}{1 + \mu^2/2}$$
 
-Η $\eta$ είναι **αύξουσα συνάρτηση του $\mu$** στο $[0, 1]$ (παράγωγος θετική). Άρα μέγιστο στο όριο $\mu = 1$:
-$$\eta_{max} = \frac{1/2}{1 + 1/2} = \frac{1/2}{3/2} = \tfrac{1}{3}$$
+Παραγωγίζοντας ή με απλή παρατήρηση: γράφω $\eta = 1 - 1/(1 + \mu^2/2)$, οπότε ως $\mu$ αυξάνει, ο παρανομαστής $1 + \mu^2/2$ αυξάνει, το $1/(\cdot)$ μειώνεται, το $\eta$ αυξάνει. **Αύξουσα συνάρτηση**. Επομένως:
+$$\eta_{max} = \eta(1) = \frac{1/2}{1 + 1/2} = \frac{1/2}{3/2} = \frac{1}{3}$$
 
-Πάνω από $\mu = 1$ έχουμε overmodulation (μη-αποδεκτό). Επομένως **κανένας single-tone conventional AM δεν ξεπερνάει 33.3%**. Για non-tone messages η ίδια αρχή ισχύει με $\mu = |\min m|/A_c$.
+Πάνω από $\mu = 1$ έχουμε overmodulation (μη-αποδεκτό για envelope detection — δες τις κόκκινες περιοχές του `OvermodulationPhaseReversalViz`). Επομένως **κανένας single-tone conventional AM εντός προδιαγραφών δεν ξεπερνά 33.3%**.
+
+Για non-tone messages η ίδια αρχή ισχύει αν ορίσεις $\mu = |\min m|/A_c$ και θεωρήσεις σχετικά «καλά» m(t): πάντα το $P_c = A_c^2/2$ μένει σταθερό, και η αναλογία useful/total είναι φραγμένη.
+
 </Example>
+</ExamProblem>
+
+<ExamProblem id="sept-2025-th1-2" year="2025-09" weight="10%" title="Sept 2025 Θ1.2 — AM ισχύς και modulation index">
+
+**Εκφώνηση:** Για AM σήμα με $A_c = 10$ V και $m(t) = 5\cos(2\pi f_m t)$ V, υπολογίστε: (α) τον δείκτη διαμόρφωσης $\mu$, (β) την ισχύ του carrier, (γ) τη συνολική ισχύ του διαμορφωμένου σήματος.
+
+<Example title="Λύση" defaultOpen={false}>
+
+Παίρνεις την recipe από το §6 worked example παραπάνω:
+
+(α) $\mu = A_m/A_c = 5/10 = 0.5$.
+
+(β) $P_c = A_c^2/2 = 100/2 = 50$ W.
+
+(γ) $P_{\text{total}} = P_c(1 + \mu^2/2) = 50 \cdot 1.125 = 56.25$ W.
+
+</Example>
+
 </ExamProblem>
 
 ## 7. Recap
@@ -362,12 +574,79 @@ $$\eta_{max} = \frac{1/2}{1 + 1/2} = \frac{1/2}{3/2} = \tfrac{1}{3}$$
 <Recap>
 - **Conventional AM:** $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$. Decomposes σε carrier ($A_c \cos$) + DSB-SC ($m \cos$). Ο carrier δεν κουβαλάει πληροφορία.
 - **Modulation index** $\mu = |\min m(t)|/A_c$, για single-tone απλά $A_m/A_c$.
-- **Πρέπει** $\mu \leq 1$ για να αποφύγεις **overmodulation** (envelope πέφτει αρνητικό → envelope detector παραμορφώνει).
+- **Πρέπει** $\mu \leq 1$ για να αποφύγεις **overmodulation** ($A_c + m(t)$ πέφτει αρνητικό → envelope detector βγάζει $|A_c+m(t)|$ → φαινόμενο αναδίπλωσης → παραμόρφωση που δεν φιλτράρεται).
+- **Phase reversal**: σε υπερδιαμόρφωση ο carrier «αναποδογυρίζει» όπου το $A_c+m(t)$ διασταυρώνει το 0 — ορατό στο time-domain.
 - **Φάσμα:** carrier impulses στα $\pm f_c$ ύψους $A_c/2$ + sidebands $M(f \mp f_c)/2$ στις δύο πλευρές.
 - **Bandwidth = 2W** — διπλάσιο του message bandwidth.
 - **Single-tone power:** $P_c = A_c^2/2$, $P_{sb} = \mu^2 A_c^2/8$ each, $P_{\text{total}} = (A_c^2/2)(1 + \mu^2/2)$.
-- **Efficiency** $\eta = (\mu^2/2)/(1+\mu^2/2)$, μέγιστο **33.3%** στο $\mu=1$. Πάνω από 67% της ισχύος σπαταλιέται πάντα στον carrier.
+- **Efficiency** $\eta = (\mu^2/2)/(1+\mu^2/2)$, **μέγιστο 33.3% στο μ=1**. Δύο τρίτα της ισχύος πάντα στον carrier.
+- Σε **πραγματικά Watt κεραίας**: για 1 W μηνύματος, AM ζητάει ~3 W, DSB-SC 1 W, SSB 0.5 W.
 - Για να βελτιώσεις efficiency χωρίς να αλλάξεις σχήμα: αδύνατο. Πρέπει να πας σε **DSB-SC** (επόμενο κεφάλαιο) ή SSB.
 </Recap>
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε όλο το Conventional AM"
+  keywords={[
+    <><InlineMath>{'x(t)=[A_c+m(t)]\\cos(2\\pi f_c t)'}</InlineMath></>,
+    <><InlineMath>{'\\mu=A_m/A_c \\le 1'}</InlineMath></>,
+    <><InlineMath>{'BW = 2W'}</InlineMath></>,
+    <><InlineMath>{'P_c = A_c^2/2'}</InlineMath></>,
+    <><InlineMath>{'P_{sb}=(\\mu A_c)^2/8'}</InlineMath> ανά πλευρά</>,
+    <><InlineMath>{'\\eta_{max}=1/3'}</InlineMath></>,
+    'envelope detector ⇔ μ ≤ 1',
+  ]}
+  skeleton={[
+    'Γράφεις την βασική εξίσωση και ταυτοποιείς A_c και m(t).',
+    'Υπολογίζεις μ. Επιβεβαιώνεις μ ≤ 1 (αλλιώς overmodulation + distortion αρμονικές).',
+    'Φάσμα: 6 impulses (single-tone), 3 ζεύγη στις ±f_c, ±(f_c±f_m). Bandwidth = 2W.',
+    'Ισχύς: P_c = A_c²/2 (πάντα), P_sb = μ²A_c²/8 (κάθε μία), P_total = sum.',
+    'Efficiency: η = useful/total ≤ 1/3. Στο μ=1 είσαι στον τοίχο.',
+  ]}
+  trap={
+    <>
+      Η συχνότερη παγίδα: μπερδεύεις <strong>P_sb κάθε μίας</strong> (= μ²A_c²/8){' '}
+      με <strong>P_sb συνολικό</strong> (= μ²A_c²/4). Έλεγχος sanity: το{' '}
+      P_sb κάθε σιδηροδρόμου είναι <em>τέταρτο</em> του P_c στο μ=1 (όχι μισό).
+      Αν βγάλεις efficiency &gt; 33.3% στο μ ≤ 1, **ξανακάνε τα νούμερα**.
+    </>
+  }
+/>
+
+<ThinkingPattern
+  signals={[
+    'modulation index',
+    'δείκτης διαμόρφωσης',
+    'A_c και A_m',
+    'απόδοση ισχύος',
+    'efficiency',
+    'overmodulation',
+    'υπερδιαμόρφωση',
+    'envelope detector',
+    'φάσμα AM',
+  ]}
+>
+  <p>
+    Σχεδόν κάθε εξεταστική Conventional AM έχει την ίδια ραχοκοκαλιά: σου δίνει{' '}
+    <strong>μερικά νούμερα</strong> (A_c, A_m, ή ισοδύναμα μ και ένα πλάτος) και
+    ζητάει <strong>τα κανονικά νούμερα της AM</strong>: μ, P_c, P_sb, P_total, η,
+    BW. Η σταθερή recipe είναι ① <strong>μ</strong> ② <strong>P_c = A_c²/2</strong>{' '}
+    ③ <strong>P_sb = (μA_c)²/8</strong> ξεχωριστά για κάθε πλευρά ④ <strong>P_total</strong>{' '}
+    ⑤ <strong>η</strong>. Αν η εκφώνηση ξεκινάει με «δίνεται το αναπτυγμένο σήμα{' '}
+    <em>x(t) = …</em>», η πρώτη σου κίνηση είναι να το γράψεις σε μορφή{' '}
+    <InlineMath>{'[A_c+m(t)]\\cos'}</InlineMath> για να βγάλεις A_c, A_m, f_c, f_m.
+  </p>
+  <p className="mt-2">
+    Αν η εκφώνηση ρωτάει «τι συμβαίνει όταν...» (overmodulation, demod, BW), πας
+    σε <em>concept</em>: phase reversal για μ &gt; 1, BW = 2W, η ≤ 1/3 για το «γιατί
+    αλλάζουμε σχήμα». Σχεδόν ποτέ δεν χρειάζεσαι μη-tone υπολογισμό — εκφωνήσεις
+    με <em>γενικό</em> m(t) δίνουν συνήθως μόνο το <InlineMath>{'P_m = \\overline{m^2}'}</InlineMath>{' '}
+    απευθείας ή σου ζητούν να εκφράσεις P_total σε όρους P_m. Σε αυτή την περίπτωση
+    χρησιμοποιείς <InlineMath>{'P_{AM} = A_c^2/2 + P_m/2'}</InlineMath> (τύπος στο{' '}
+    <a className="underline" href="/formulas#formula:am-power">τυπολόγιο</a>).
+  </p>
+</ThinkingPattern>
+
+<ExamRadar slug="am/conventional" topic="am" />
 
 <NextUp slug="am/dsb-sc" />

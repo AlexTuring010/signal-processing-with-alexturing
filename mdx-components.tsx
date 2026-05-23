@@ -80,6 +80,9 @@ import { AMTradeoffSpace } from '@/components/viz/AMTradeoffSpace'
 import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
 import { AMPowerCalculator } from '@/components/viz/AMPowerCalculator'
+import { OvermodulationPhaseReversalViz } from '@/components/viz/OvermodulationPhaseReversalViz'
+import { EfficiencyVsMuCurveViz } from '@/components/viz/EfficiencyVsMuCurveViz'
+import { CarrierVsSidebandPowerSplitViz } from '@/components/viz/CarrierVsSidebandPowerSplitViz'
 import { DSBSCSignalViz } from '@/components/viz/DSBSCSignalViz'
 import { CoherentDemodulationViz } from '@/components/viz/CoherentDemodulationViz'
 import { SSBSpectrumViz } from '@/components/viz/SSBSpectrumViz'
@@ -228,6 +231,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     AMSignalViz,
     AMSpectrumViz,
     AMPowerCalculator,
+    OvermodulationPhaseReversalViz,
+    EfficiencyVsMuCurveViz,
+    CarrierVsSidebandPowerSplitViz,
 
     // Visualizations — am / dsb-sc
     DSBSCSignalViz,
