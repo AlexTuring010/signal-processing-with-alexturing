@@ -133,6 +133,10 @@ import { HeapsortAnimator } from '@/components/viz/HeapsortAnimator'
 import { UnionFindForest } from '@/components/viz/UnionFindForest'
 import { UnionBySizeRace } from '@/components/viz/UnionBySizeRace'
 import { PathCompressionViz } from '@/components/viz/PathCompressionViz'
+import { PythagoreanQuadHash } from '@/components/viz/PythagoreanQuadHash'
+import { PairSumHashStream } from '@/components/viz/PairSumHashStream'
+import { MasterCase1Tree } from '@/components/viz/MasterCase1Tree'
+import { MaxHeapKeyDecrease } from '@/components/viz/MaxHeapKeyDecrease'
 import { GreedyHorizon } from '@/components/viz/GreedyHorizon'
 import { IntervalScheduling } from '@/components/viz/IntervalScheduling'
 import { GreedyStaysAhead } from '@/components/viz/GreedyStaysAhead'
@@ -319,6 +323,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     UnionFindForest,
     UnionBySizeRace,
     PathCompressionViz,
+    PythagoreanQuadHash,
+    PairSumHashStream,
+    MasterCase1Tree,
+    MaxHeapKeyDecrease,
     GreedyHorizon,
     IntervalScheduling,
     GreedyStaysAhead,

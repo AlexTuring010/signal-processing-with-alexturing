@@ -1619,4 +1619,78 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
       </>
     ),
   },
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * L10 — Δομές δεδομένων (σωροί, hash, union-find)
+   * ─────────────────────────────────────────────────────────────────── */
+  'front-set-5-ask10': {
+    takeaway: (
+      <>
+        Όταν μία εξίσωση{' '}
+        <InlineMath>{'F(a_1, \\ldots, a_k) = 0'}</InlineMath> χωρίζεται σε
+        «αριστερή πλευρά» και «δεξιά πλευρά» με ίδιο πλήθος μεταβλητών,{' '}
+        <strong>meet in the middle</strong>: χτίσε όλες τις τιμές της μίας
+        πλευράς σε hash σε <InlineMath>{'O(n^{k/2})'}</InlineMath>, μετά ρώτα
+        κάθε τιμή της άλλης σε <InlineMath>{'O(n^{k/2})'}</InlineMath>. Από{' '}
+        <InlineMath>{'O(n^k)'}</InlineMath> πέφτεις στο{' '}
+        <InlineMath>{'O(n^{k/2})'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήμα: «βρες αν υπάρχουν <InlineMath>{'k'}</InlineMath> στοιχεία που
+        ικανοποιούν μία αλγεβρική σχέση», με <InlineMath>{'k = 3, 4'}</InlineMath>{' '}
+        και ζητούμενο{' '}
+        <InlineMath>{'O(n^{k/2})'}</InlineMath>. Άμεση κίνηση: ψάξε αν η σχέση
+        αναδιατάσσεται σε «δύο μισά αθροιστή/γινόμενα», βάλε το ένα μισό σε
+        hash, ρώτα το άλλο.
+      </>
+    ),
+  },
+  'front-set-5-ask11': {
+    takeaway: (
+      <>
+        Όταν το εύρος τιμών είναι τεράστιο (π.χ.{' '}
+        <InlineMath>{'\\{1, \\ldots, n^4\\}'}</InlineMath>) αλλά τα{' '}
+        <em>στοιχεία</em> είναι λίγα, το hash είναι η μόνη λύση — όχι ο άμεσος
+        πίνακας. <strong>n εγγραφές, O(1) αναμενόμενη αναζήτηση</strong>,
+        ανεξάρτητα από το μέγεθος των τιμών.
+      </>
+    ),
+    examRadar: (
+      <>
+        Σήματα: «τιμές στο{' '}
+        <InlineMath>{'\\{1, \\ldots, U\\}'}</InlineMath> με{' '}
+        <InlineMath>{'U \\gg n'}</InlineMath>», «εύρος τιμών{' '}
+        <InlineMath>{'n^c'}</InlineMath>», «αναζήτηση συμπληρώματος». Άμεσα
+        hash. Πάντα γράψε «αναμενόμενος χρόνος» — σε χείριστη υλοποίηση το hash
+        πέφτει σε <InlineMath>{'O(n^2)'}</InlineMath>.
+      </>
+    ),
+  },
+  'pt6-th3': {
+    takeaway: (
+      <>
+        Δύο αναδρομές με ίδια διαίρεση{' '}
+        <InlineMath>{'2n/3'}</InlineMath> αλλά διαφορετικό{' '}
+        <InlineMath>{'a'}</InlineMath> δίνουν εντελώς διαφορετικές απαντήσεις:{' '}
+        <InlineMath>{'a = 3'}</InlineMath> → φύλλα κυριαρχούν →{' '}
+        <InlineMath>{'\\Theta(n^{\\log_{3/2} 3}) \\approx \\Theta(n^{2{,}71})'}</InlineMath>·{' '}
+        <InlineMath>{'a = 1'}</InlineMath> → ένα μονοπάτι →{' '}
+        <InlineMath>{'\\Theta(\\log n)'}</InlineMath>. Επίσης: όλες οι σωρο-πράξεις
+        ζουν στο μονοπάτι, άρα <InlineMath>{'O(\\log n)'}</InlineMath>.
+      </>
+    ),
+    examRadar: (
+      <>
+        Όποτε δεις αναδρομή με <InlineMath>{'b'}</InlineMath> κλασματικό
+        (π.χ. <InlineMath>{'3/2, 4/3'}</InlineMath>), μη μπερδευτείς —
+        Master Theorem παίζει κανονικά, αρκεί να γράψεις{' '}
+        <InlineMath>{'n^{\\log_b a}'}</InlineMath> και να το συγκρίνεις με το{' '}
+        <InlineMath>{'f(n)'}</InlineMath>. Για σωρό μετά από αλλαγή κλειδιού:
+        η μείωση τιμής σε max-heap → βύθιση (sift-down) με ανταλλαγή προς το{' '}
+        <strong>μεγαλύτερο</strong> παιδί (όχι όποιο τύχει).
+      </>
+    ),
+  },
 }

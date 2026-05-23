@@ -76,6 +76,10 @@ import { MstPreorderTSP } from '@/components/viz/MstPreorderTSP'
 import { DijkstraTreeVsMstTriangle } from '@/components/viz/DijkstraTreeVsMstTriangle'
 import { MaxEdgeAsBridge } from '@/components/viz/MaxEdgeAsBridge'
 import { KruskalAnimator } from '@/components/viz/KruskalAnimator'
+import { PythagoreanQuadHash } from '@/components/viz/PythagoreanQuadHash'
+import { PairSumHashStream } from '@/components/viz/PairSumHashStream'
+import { MasterCase1Tree } from '@/components/viz/MasterCase1Tree'
+import { MaxHeapKeyDecrease } from '@/components/viz/MaxHeapKeyDecrease'
 
 /**
  * Every lecture slug, in order. Used so a paper that hits "all lectures"
@@ -6012,66 +6016,80 @@ procedure CALC(m)
     solution: (
       <>
         <p>
-          <strong>Η αφελής λύση.</strong> Δοκίμασε όλες τις τετράδες{' '}
-          <InlineMath>{'(a,b,c,d)'}</InlineMath>: τέσσερις εμφωλευμένοι βρόχοι →{' '}
-          <InlineMath>{'O(n^4)'}</InlineMath>. Πολύ αργό. Στόχος{' '}
-          <InlineMath>{'O(n^2)'}</InlineMath>.
+          <strong>Γιατί η αφελής αποτυγχάνει.</strong> Δοκιμή κάθε τετράδας{' '}
+          <InlineMath>{'(a, b, c, d)'}</InlineMath> = τέσσερις εμφωλευμένοι βρόχοι ={' '}
+          <InlineMath>{'O(n^4)'}</InlineMath>. Για <InlineMath>{'n = 1000'}</InlineMath>{' '}
+          είναι <InlineMath>{'10^{12}'}</InlineMath> δοκιμές — μη πραγματοποιήσιμο. Ο
+          στόχος <InlineMath>{'O(n^2)'}</InlineMath> σημαίνει: <em>όχι ολόκληρες τετράδες,
+          ζευγάρωμα ζευγαριών</em>.
         </p>
         <p>
-          <strong>Η ιδέα-κλειδί.</strong> Αναδιατάσσουμε την εξίσωση:
+          <strong>Το κλειδί — μετακινούμε ένα τετράγωνο απέναντι.</strong>
         </p>
-        <BlockMath>{'a^2 + b^2 + c^2 = d^2 \\;\\Longleftrightarrow\\; a^2 + b^2 = d^2 - c^2.'}</BlockMath>
+        <BlockMath>{'a^2 + b^2 + c^2 = d^2 \\;\\Longleftrightarrow\\; \\underbrace{a^2 + b^2}_{\\text{«αριστερό άθροισμα»}} \\;=\\; \\underbrace{d^2 - c^2}_{\\text{«δεξιά διαφορά»}}.'}</BlockMath>
         <p>
-          Δηλαδή ψάχνουμε ένα ζεύγος <InlineMath>{'(a,b)'}</InlineMath> και ένα
-          ζεύγος <InlineMath>{'(c,d)'}</InlineMath> που να συμφωνούν σε αυτή την
-          τιμή. Τα <strong>ζεύγη</strong> είναι μόνο{' '}
-          <InlineMath>{'O(n^2)'}</InlineMath> — όχι οι τετράδες. Αν κάναμε
-          γραμμικό ψάξιμο για κάθε ζεύγος, θα πέφταμε πάλι σε{' '}
-          <InlineMath>{'O(n^4)'}</InlineMath>· γι' αυτό χρειαζόμαστε αναζήτηση{' '}
-          <InlineMath>{'O(1)'}</InlineMath> — έναν <strong>πίνακα
-          κατακερματισμού</strong> (hash table, από το L10).
+          Δύο διαφορετικά είδη ζεύγους με το ίδιο όνομα. Αν για κάποιο{' '}
+          <InlineMath>{'(a, b)'}</InlineMath> και κάποιο <InlineMath>{'(c, d)'}</InlineMath>{' '}
+          οι τιμές συμπίπτουν, βρήκαμε τετράδα. Πόσα ζεύγη; <InlineMath>{'O(n^2)'}</InlineMath>{' '}
+          — ακριβώς όσα θέλουμε. Αν για κάθε «δεξιά διαφορά» κάναμε γραμμική σάρωση
+          στις «αριστερές αθροίσεις», θα ξαναπέφταμε σε <InlineMath>{'O(n^4)'}</InlineMath>·
+          γι' αυτό η αναζήτηση πρέπει να γίνει <InlineMath>{'O(1)'}</InlineMath>. Αυτό το
+          κάνει ο <strong>πίνακας κατακερματισμού</strong>: χτίζεις όλες τις αριστερές
+          τιμές μια φορά, μετά ρωτάς κάθε δεξιά.
         </p>
+        <PythagoreanQuadHash />
         <p>
-          <strong>Ο αλγόριθμος.</strong>
+          <strong>Ο αλγόριθμος, με δομή.</strong>
         </p>
         <ul>
           <li>
-            <strong>Φάση 1 — χτίσιμο.</strong> Για κάθε ζεύγος στοιχείων{' '}
-            <InlineMath>{'(a, b)'}</InlineMath> του πίνακα ({' '}
-            <InlineMath>{'O(n^2)'}</InlineMath> ζεύγη), υπολόγισε το άθροισμα{' '}
-            <InlineMath>{'a^2 + b^2'}</InlineMath> και βάλ' το σε ένα{' '}
-            <strong>hash set</strong> <InlineMath>{'H'}</InlineMath>. Κόστος:{' '}
-            <InlineMath>{'O(n^2)'}</InlineMath> (κάθε εισαγωγή{' '}
-            <InlineMath>{'O(1)'}</InlineMath> κατά μέσο όρο).
+            <strong>Φάση 1 — χτίσιμο.</strong> Για κάθε ζεύγος{' '}
+            <InlineMath>{'(a, b)'}</InlineMath> ({' '}
+            <InlineMath>{'O(n^2)'}</InlineMath> ζεύγη), βάλε στο hash set{' '}
+            <InlineMath>{'H'}</InlineMath> το κλειδί <InlineMath>{'a^2 + b^2'}</InlineMath>.
+            Κάθε εισαγωγή <InlineMath>{'O(1)'}</InlineMath> κατά μέσο όρο.
           </li>
           <li>
             <strong>Φάση 2 — ψάξιμο.</strong> Για κάθε ζεύγος{' '}
-            <InlineMath>{'(c, d)'}</InlineMath> ({' '}
-            <InlineMath>{'O(n^2)'}</InlineMath> ζεύγη), υπολόγισε{' '}
-            <InlineMath>{'d^2 - c^2'}</InlineMath>. Αν είναι θετικό{' '}
-            <strong>και</strong> υπάρχει στο <InlineMath>{'H'}</InlineMath> →{' '}
-            βρήκαμε Πυθαγόρεια τετράδα, επίστρεψε «ΝΑΙ». Κάθε αναζήτηση{' '}
-            <InlineMath>{'O(1)'}</InlineMath>.
+            <InlineMath>{'(c, d)'}</InlineMath> με <InlineMath>{'d > c'}</InlineMath>,
+            υπολόγισε <InlineMath>{'d^2 - c^2'}</InlineMath> (θετικό) και ψάξε στο{' '}
+            <InlineMath>{'H'}</InlineMath>. Αν βρεθεί → υπάρχει Πυθαγόρεια τετράδα.
           </li>
-          <li>Αν κανένα ζεύγος δεν πετύχει, επίστρεψε «ΟΧΙ».</li>
+          <li>Αν τίποτα δεν ταιριάξει σε όλη τη Φάση 2, η απάντηση είναι «ΟΧΙ».</li>
         </ul>
         <p>
           <strong>Ορθότητα.</strong> Αν υπάρχει τετράδα με{' '}
-          <InlineMath>{'a^2+b^2+c^2=d^2'}</InlineMath>, τότε το άθροισμα{' '}
-          <InlineMath>{'a^2+b^2'}</InlineMath> μπήκε στο{' '}
-          <InlineMath>{'H'}</InlineMath> στη Φάση 1, και το ζεύγος{' '}
-          <InlineMath>{'(c,d)'}</InlineMath> θα το βρει στη Φάση 2 αφού{' '}
-          <InlineMath>{'d^2-c^2 = a^2+b^2'}</InlineMath>. Η πολλαπλή χρήση
-          στοιχείου επιτρέπεται, οπότε δεν χρειάζεται ειδικός χειρισμός για{' '}
-          ίσα <InlineMath>{'a,b,c,d'}</InlineMath>.
+          <InlineMath>{'a^2+b^2+c^2=d^2'}</InlineMath>, η τιμή{' '}
+          <InlineMath>{'a^2+b^2'}</InlineMath> μπήκε σίγουρα στο{' '}
+          <InlineMath>{'H'}</InlineMath> στη Φάση 1, και η ίδια τιμή θα ζητηθεί
+          ως <InlineMath>{'d^2-c^2'}</InlineMath> στη Φάση 2 — άρα θα βρεθεί.
+          Αντίστροφα, αν βρούμε ταίρι, η ισότητα ισχύει εξ ορισμού. Η πολλαπλή
+          χρήση στοιχείου επιτρέπεται, άρα δεν χρειάζεται ειδικός χειρισμός για
+          ίσα <InlineMath>{'a, b, c, d'}</InlineMath>.
         </p>
         <p>
-          <strong>Πολυπλοκότητα.</strong> <InlineMath>{'O(n^2) + O(n^2) = O(n^2)'}</InlineMath>{' '}
-          (αναμενόμενος χρόνος). Ο πίνακας κατακερματισμού είναι αυτός που
-          μετατρέπει το «ψάξε αν υπάρχει» από <InlineMath>{'O(n^2)'}</InlineMath>{' '}
-          σε <InlineMath>{'O(1)'}</InlineMath> — χωρίς αυτόν δεν πιάναμε το{' '}
-          φράγμα.
+          <strong>Πολυπλοκότητα.</strong>{' '}
+          <InlineMath>{'O(n^2) + O(n^2) = O(n^2)'}</InlineMath> αναμενόμενος
+          χρόνος και <InlineMath>{'O(n^2)'}</InlineMath> χώρος (για το{' '}
+          <InlineMath>{'H'}</InlineMath>). Το hash είναι ο μετασχηματιστής:
+          μετατρέπει «ψάξε αν υπάρχει» από γραμμικό σε σταθερό χρόνο, και
+          ολόκληρο το πρόβλημα πέφτει δύο τάξεις πιο κάτω.
         </p>
+        <Callout type="key">
+          <p>
+            <strong>Πρότυπο σκέψης — «meet in the middle» με hash.</strong>{' '}
+            Όταν θες να αποφασίσεις αν υπάρχει συνδυασμός{' '}
+            <InlineMath>{'k'}</InlineMath> στοιχείων που ικανοποιεί μία εξίσωση,
+            κοίτα αν χωρίζεται σε «αριστερή πλευρά = δεξιά πλευρά» με κάθε
+            πλευρά να αφορά <InlineMath>{'k/2'}</InlineMath> στοιχεία. Αν ναι:
+            υπολόγισε όλες τις τιμές της μίας πλευράς (<InlineMath>{'O(n^{k/2})'}</InlineMath>)
+            → βάλε σε hash → ρώτα για κάθε τιμή της άλλης (επίσης{' '}
+            <InlineMath>{'O(n^{k/2})'}</InlineMath>). Συνολικά{' '}
+            <InlineMath>{'O(n^{k/2})'}</InlineMath> αντί{' '}
+            <InlineMath>{'O(n^k)'}</InlineMath>. Η Πυθαγόρεια τετράδα είναι το
+            πιο καθαρό παράδειγμα του πρωτύπου με <InlineMath>{'k = 4'}</InlineMath>.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -6844,40 +6862,71 @@ procedure CALC(m)
     solution: (
       <>
         <p>
-          <strong>Γιατί όχι απλός πίνακας;</strong> Οι τιμές φτάνουν το{' '}
-          <InlineMath>{'n^4'}</InlineMath> — ένας πίνακας άμεσης διευθυνσιοδότησης
-          μεγέθους <InlineMath>{'n^4'}</InlineMath> θα ήταν τεράστια σπατάλη
-          μνήμης. Χρησιμοποιούμε <strong>πίνακα κατακερματισμού</strong> (hash
-          table): αποθηκεύει <InlineMath>{'n'}</InlineMath> στοιχεία και δίνει
-          εισαγωγή / αναζήτηση <InlineMath>{'O(1)'}</InlineMath> κατά μέσο όρο,
-          ανεξάρτητα από το πόσο μεγάλες είναι οι τιμές.
+          <strong>Η πρώτη πιθανή ιδέα — και γιατί η μνήμη την σταματά.</strong>{' '}
+          Άμεσος πίνακας: φτιάξε <InlineMath>{'V[1..n^4]'}</InlineMath>, γράψε{' '}
+          <InlineMath>{'V[A[i]] = i'}</InlineMath>· για κάθε{' '}
+          <InlineMath>{'A[i]'}</InlineMath>, διάβασε{' '}
+          <InlineMath>{'V[x - A[i]]'}</InlineMath>. Λειτουργεί λογικά αλλά
+          απαιτεί <InlineMath>{'n^4'}</InlineMath> κελιά — για{' '}
+          <InlineMath>{'n = 1000'}</InlineMath> αυτό είναι{' '}
+          <InlineMath>{'10^{12}'}</InlineMath> bytes. Πέφτει η μνήμη πριν η
+          CPU.
         </p>
         <p>
-          <strong>Ο αλγόριθμος — σε δύο περάσματα.</strong>
+          <strong>Το hash σπάει αυτόν τον δεσμό.</strong> Ένας πίνακας
+          κατακερματισμού κρατά <em>μόνο</em> <InlineMath>{'n'}</InlineMath>{' '}
+          εγγραφές αλλά εξακολουθεί να απαντά <InlineMath>{'O(1)'}</InlineMath>{' '}
+          κατά μέσο όρο — δεν τον νοιάζει το μέγεθος της τιμής που ψάχνεις,
+          μόνο πόσες τιμές υπάρχουν στη συλλογή. Αυτό είναι το βασικό κέρδος
+          του hash σε σχέση με την άμεση διευθυνσιοδότηση.
+        </p>
+        <PairSumHashStream />
+        <p>
+          <strong>
+            Ο αλγόριθμος — δύο περάσματα, καθαρά <InlineMath>{'O(n)'}</InlineMath>.
+          </strong>
         </p>
         <ul>
           <li>
-            <strong>Φάση 1.</strong> Πέρασε όλον τον πίνακα και τοποθέτησε κάθε
-            τιμή <InlineMath>{'A[i]'}</InlineMath> (μαζί με τον δείκτη της) σε
-            έναν πίνακα κατακερματισμού. Κόστος{' '}
-            <InlineMath>{'O(n)'}</InlineMath> αναμενόμενο.
+            <strong>Φάση 1.</strong> Για κάθε <InlineMath>{'i'}</InlineMath>,
+            εισάγαγε στο hash <InlineMath>{'H'}</InlineMath> το ζεύγος (τιμή{' '}
+            <InlineMath>{'A[i]'}</InlineMath>, δείκτης{' '}
+            <InlineMath>{'i'}</InlineMath>). Συνολικά{' '}
+            <InlineMath>{'n'}</InlineMath> εγγραφές,{' '}
+            <InlineMath>{'O(n)'}</InlineMath> αναμενόμενα.
           </li>
           <li>
-            <strong>Φάση 2.</strong> Για κάθε <InlineMath>{'A[i]'}</InlineMath>,
-            υπολόγισε το «συμπλήρωμα»{' '}
-            <InlineMath>{'b = x - A[i]'}</InlineMath> και ψάξε το στον πίνακα
-            κατακερματισμού. Αν βρεθεί, τότε το{' '}
-            <InlineMath>{'(A[i], b)'}</InlineMath> είναι ζεύγος με άθροισμα{' '}
-            <InlineMath>{'x'}</InlineMath> — εκτύπωσέ το. Κάθε αναζήτηση{' '}
-            <InlineMath>{'O(1)'}</InlineMath> αναμενόμενα.
+            <strong>Φάση 2.</strong> Για κάθε <InlineMath>{'i'}</InlineMath>,
+            υπολόγισε το συμπλήρωμα{' '}
+            <InlineMath>{'b = x - A[i]'}</InlineMath> και ψάξε το στο{' '}
+            <InlineMath>{'H'}</InlineMath>. Αν βρεθεί σε δείκτη{' '}
+            <InlineMath>{'j \\ne i'}</InlineMath>, εκτύπωσε το ζεύγος{' '}
+            <InlineMath>{'(i, j)'}</InlineMath> (φιλτράρισμα{' '}
+            <InlineMath>{'i < j'}</InlineMath> αρκεί για να μην το ξαναεκτυπώσεις).
           </li>
         </ul>
         <p>
           <strong>Πολυπλοκότητα.</strong>{' '}
-          <InlineMath>{'O(n) + O(n) = O(n)'}</InlineMath> αναμενόμενος χρόνος.
-          Ο πίνακας κατακερματισμού είναι το κλειδί: μετατρέπει το «υπάρχει το
-          συμπλήρωμα;» από γραμμικό ψάξιμο σε σταθερό χρόνο.
+          <InlineMath>{'O(n) + O(n) = O(n)'}</InlineMath> αναμενόμενος χρόνος
+          και <InlineMath>{'O(n)'}</InlineMath> χώρος. Σε σύγκριση με τα{' '}
+          <InlineMath>{'10^{12}'}</InlineMath> bytes της άμεσης διευθυνσιοδότησης
+          — τρεις τάξεις μεγέθους εξοικονόμηση μνήμης, χωρίς απώλεια σε χρόνο.
         </p>
+        <Callout type="intuition">
+          <p>
+            <strong>
+              Πρότυπο σκέψης — «μεγάλο εύρος τιμών, λίγα στοιχεία → hash, όχι πίνακας».
+            </strong>{' '}
+            Όποτε η εκφώνηση λέει «τιμές στο{' '}
+            <InlineMath>{'\\{1, \\ldots, U\\}'}</InlineMath>» με{' '}
+            <InlineMath>{'U \\gg n'}</InlineMath>, ξέχνα την άμεση
+            διευθυνσιοδότηση — θες χώρο που εξαρτάται από τα <em>στοιχεία</em>,
+            όχι από το <em>εύρος</em>. Hash: <InlineMath>{'n'}</InlineMath>{' '}
+            εγγραφές, <InlineMath>{'O(1)'}</InlineMath> αναμενόμενη αναζήτηση.
+            Παγίδα: γράψε πάντα «αναμενόμενο» — με χειρότερη υλοποίηση το hash
+            πέφτει σε <InlineMath>{'O(n^2)'}</InlineMath>.
+          </p>
+        </Callout>
       </>
     ),
   },
@@ -6980,11 +7029,47 @@ procedure CALC(m)
     ),
     solution: (
       <>
-        <p><strong>(Α) Master Theorem.</strong> Έχουμε <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath> με <InlineMath>{'a = 3'}</InlineMath>, <InlineMath>{'b = 3/2'}</InlineMath> (αφού <InlineMath>{'2n/3 = n / (3/2)'}</InlineMath>) και <InlineMath>{'f(n) = c = \\Theta(1)'}</InlineMath>.</p>
-        <p>Συγκρίνουμε το <InlineMath>{'f(n)'}</InlineMath> με το <InlineMath>{'n^{\\log_b a} = n^{\\log_{3/2} 3}'}</InlineMath>. Επειδή <InlineMath>{'\\log_{3/2} 3 \\approx 2{,}71 > 0'}</InlineMath>, η συνάρτηση <InlineMath>{'n^{\\log_b a}'}</InlineMath> μεγαλώνει πολυωνυμικά, ενώ το <InlineMath>{'f(n) = \\Theta(1)'}</InlineMath> είναι σταθερό — άρα <em>πολυωνυμικά μικρότερο</em>. Αυτή είναι η <strong>περίπτωση 1</strong> του θεωρήματος:</p>
+        <p>
+          <strong>(Α) Master Theorem — η περίπτωση 1, όπου τα φύλλα κυριαρχούν.</strong>{' '}
+          Διαβάζοντας <InlineMath>{'T(n) = 3T(2n/3) + c'}</InlineMath> με τη γλώσσα του
+          θεωρήματος: <InlineMath>{'a = 3'}</InlineMath> (πόσες κλήσεις ανά επίπεδο),{' '}
+          <InlineMath>{'b = 3/2'}</InlineMath> (αφού{' '}
+          <InlineMath>{'2n/3 = n/(3/2)'}</InlineMath>),{' '}
+          <InlineMath>{'f(n) = c = \\Theta(1)'}</InlineMath>. Το «κατώφλι» του
+          θεωρήματος είναι το{' '}
+          <InlineMath>{'n^{\\log_b a} = n^{\\log_{3/2} 3} \\approx n^{2{,}71}'}</InlineMath>.
+        </p>
+        <p>
+          Αυτό είναι <em>πολυωνυμικά μεγαλύτερο</em> από το{' '}
+          <InlineMath>{'f(n) = \\Theta(1)'}</InlineMath> — οπότε το άθροισμα των
+          φύλλων κερδίζει· περίπτωση 1.
+        </p>
         <BlockMath>{'T(n) = \\Theta\\!\\left(n^{\\log_{3/2} 3}\\right) \\approx \\Theta(n^{2{,}71})'}</BlockMath>
-        <p>Διαισθητικά: η δουλειά συγκεντρώνεται στα φύλλα της αναδρομής. Σε κάθε επίπεδο ο αριθμός των κλήσεων τριπλασιάζεται ενώ το μέγεθος μειώνεται με ρυθμό <InlineMath>{'2/3'}</InlineMath>, οπότε το πλήθος των φύλλων κυριαρχεί.</p>
-        <p><strong>(Β) i. Ο αλγόριθμος <InlineMath>{'RA(H, i)'}</InlineMath> — «βύθιση» (sift-down).</strong> Σε έναν max-heap κάθε γονιός είναι <InlineMath>{'\\ge'}</InlineMath> από τα παιδιά του. Όταν ένας όρος <em>μικραίνει</em>, το μόνο που μπορεί να χαλάσει είναι: ο κόμβος να γίνει μικρότερος από κάποιο παιδί του (προς τα πάνω είναι εντάξει — ο γονιός του ήταν ήδη μεγαλύτερος). Άρα:</p>
+        <p>
+          Διαισθητικά: σε κάθε επίπεδο τριπλασιάζονται οι κόμβοι, ενώ το μέγεθος
+          μειώνεται μόνο κατά <InlineMath>{'2/3'}</InlineMath>. Η δουλειά
+          εκτοξεύεται προς τα κάτω. Δες πόσο διαφορετική γίνεται η εικόνα όταν
+          μένει η ίδια διαίρεση αλλά αλλάξει μόνο το <InlineMath>{'a'}</InlineMath>:
+        </p>
+        <MasterCase1Tree />
+        <p>
+          Με την ίδια διαίρεση <InlineMath>{'2n/3'}</InlineMath> ανά κλήση, ένα
+          μόνο μικρότερο <InlineMath>{'a'}</InlineMath> καταρρέει την απάντηση
+          από <InlineMath>{'n^{2{,}71}'}</InlineMath> σε{' '}
+          <InlineMath>{'\\log n'}</InlineMath>. Κράτα αυτή την εικόνα — θα μας
+          χρειαστεί ξανά στο (Β-iii).
+        </p>
+        <p>
+          <strong>
+            (Β) i. Ο αλγόριθμος <InlineMath>{'RA(H, i)'}</InlineMath> — «βύθιση» (sift-down).
+          </strong>{' '}
+          Σε max-heap κάθε γονιός είναι <InlineMath>{'\\ge'}</InlineMath> από τα
+          παιδιά του. Όταν ένας όρος <em>μικραίνει</em>, το μόνο που μπορεί να
+          χαλάσει είναι: ο κόμβος να γίνει μικρότερος από κάποιο παιδί του.
+          Προς τα πάνω δεν χρειάζεται έλεγχος — ο γονιός του ήταν ήδη μεγαλύτερος
+          (και παραμένει, αφού η τιμή μειώθηκε). Άρα η επιδιόρθωση κατευθύνεται
+          προς τα <strong>κάτω</strong>:
+        </p>
         <pre className="overflow-x-auto rounded-lg border border-border bg-bg-soft p-3 text-[13px] leading-relaxed">{`RA(H, i):
   μέγιστο := i
   αν αριστερό παιδί υπάρχει και H[left] > H[μέγιστο]: μέγιστο := left
@@ -6992,17 +7077,77 @@ procedure CALC(m)
   αν μέγιστο ≠ i:
       αντάλλαξε H[i] με H[μέγιστο]
       RA(H, μέγιστο)        // αναδρομή στο παιδί που πήρε τον κόμβο`}</pre>
-        <p>Δηλαδή: σύγκρινε τον κόμβο με τα δύο παιδιά του· αν κάποιο είναι μεγαλύτερο, αντάλλαξέ τον με το <em>μεγαλύτερο</em> παιδί και επανάλαβε από εκεί. Σταματά όταν ο κόμβος είναι <InlineMath>{'\\ge'}</InlineMath> και από τα δύο παιδιά, ή φτάσει σε φύλλο.</p>
-        <p><strong>ii. Αναδρομική σχέση.</strong> Σε κάθε κλήση γίνεται σταθερή δουλειά (δύο συγκρίσεις, μία αντιμετάθεση) και το πολύ μία αναδρομική κλήση σε ένα υποδέντρο. Στη χείριστη περίπτωση το υποδέντρο ενός παιδιού έχει μέγεθος έως <InlineMath>{'2n/3'}</InlineMath> των κόμβων:</p>
+        <p>
+          Σύγκρινε τον κόμβο με τα δύο παιδιά του· αν κάποιο είναι μεγαλύτερο,
+          αντάλλαξέ τον με το <em>μεγαλύτερο</em> παιδί (όχι με όποιο τύχει —
+          αλλιώς θα παραβίαζε αμέσως ξανά την ιδιότητα με το άλλο αδέλφι) και
+          επανάλαβε από εκεί. Σταματά όταν ο κόμβος είναι{' '}
+          <InlineMath>{'\\ge'}</InlineMath> και από τα δύο παιδιά, ή φτάσει σε
+          φύλλο.
+        </p>
+        <p>
+          <strong>ii. Αναδρομική σχέση.</strong> Σε κάθε κλήση γίνεται σταθερή
+          δουλειά (δύο συγκρίσεις, μία αντιμετάθεση) και το πολύ <em>μία</em>{' '}
+          αναδρομική κλήση σε ένα από τα δύο υποδέντρα. Στη χείριστη περίπτωση
+          το υποδέντρο ενός παιδιού έχει μέγεθος μέχρι{' '}
+          <InlineMath>{'2n/3'}</InlineMath> κορυφές (όριο για ισοσταθμισμένο
+          σωρό):
+        </p>
         <BlockMath>{'S(n) = S(2n/3) + \\Theta(1)'}</BlockMath>
-        <p><strong>iii. Επίλυση.</strong> Master Theorem με <InlineMath>{'a = 1'}</InlineMath>, <InlineMath>{'b = 3/2'}</InlineMath>, <InlineMath>{'f(n) = \\Theta(1)'}</InlineMath>: <InlineMath>{'n^{\\log_b a} = n^0 = 1'}</InlineMath>, ίσο τάξης με το <InlineMath>{'f(n)'}</InlineMath> → <strong>περίπτωση 2</strong>:</p>
+        <p>
+          <strong>iii. Επίλυση.</strong> Αυτό είναι ακριβώς η περίπτωση{' '}
+          <InlineMath>{'a = 1'}</InlineMath> του πάνω εργαλείου — ίδια διαίρεση
+          με το (Α), αλλά <em>χωρίς</em> το τριπλό branching.{' '}
+          <InlineMath>{'n^{\\log_{3/2} 1} = n^0 = 1'}</InlineMath>, ίσο με το{' '}
+          <InlineMath>{'f(n) = \\Theta(1)'}</InlineMath> → <strong>περίπτωση 2</strong>:
+        </p>
         <BlockMath>{'S(n) = \\Theta(\\log n)'}</BlockMath>
-        <p>Λογικό: η βύθιση διασχίζει το πολύ ένα μονοπάτι από τη ρίζα ως φύλλο, και το ύψος ενός σωρού <InlineMath>{'n'}</InlineMath> στοιχείων είναι <InlineMath>{'\\Theta(\\log n)'}</InlineMath>.</p>
-        <p><strong>iv. Εφαρμογή.</strong> Ο κόμβος που άλλαξε έχει παιδιά με τιμές <InlineMath>{'8'}</InlineMath> και <InlineMath>{'10'}</InlineMath>.</p>
+        <p>
+          Λογικά: η βύθιση διασχίζει το πολύ ένα μονοπάτι από τον κόμβο μέχρι
+          ένα φύλλο. Το ύψος ενός σωρού <InlineMath>{'n'}</InlineMath> στοιχείων
+          είναι <InlineMath>{'\\Theta(\\log n)'}</InlineMath> — άρα το{' '}
+          <InlineMath>{'\\log n'}</InlineMath> δεν είναι μαθηματικό τέχνασμα,
+          είναι το <em>ύψος του δέντρου</em>.
+        </p>
+        <p>
+          <strong>iv. Εφαρμογή — δύο σενάρια.</strong> Ο επηρεαζόμενος κόμβος
+          είχε τιμή <InlineMath>{'14'}</InlineMath> με παιδιά{' '}
+          <InlineMath>{'8'}</InlineMath> και <InlineMath>{'10'}</InlineMath>.
+          Άλλαξε την τιμή — δες τι κάνει το <InlineMath>{'RA'}</InlineMath>:
+        </p>
+        <MaxHeapKeyDecrease />
         <ul>
-          <li><strong><InlineMath>{'14 \\to 13'}</InlineMath>:</strong> ελέγχουμε <InlineMath>{'13'}</InlineMath> με τα παιδιά <InlineMath>{'8, 10'}</InlineMath>. Είναι <InlineMath>{'13 \\ge 8'}</InlineMath> και <InlineMath>{'13 \\ge 10'}</InlineMath> → η ιδιότητα σωρού ισχύει ήδη, ο <InlineMath>{'RA'}</InlineMath> δεν κάνει <em>καμία</em> αντιμετάθεση.</li>
-          <li><strong><InlineMath>{'14 \\to 6'}</InlineMath>:</strong> τώρα <InlineMath>{'6 < 10'}</InlineMath> (το μεγαλύτερο παιδί) → αντάλλαξε: το <InlineMath>{'10'}</InlineMath> ανεβαίνει, το <InlineMath>{'6'}</InlineMath> κατεβαίνει στη θέση του πρώην <InlineMath>{'10'}</InlineMath>. Η αναδρομή συνεχίζει: συγκρίνουμε ξανά το <InlineMath>{'6'}</InlineMath> με τα νέα του παιδιά· όσο υπάρχει μεγαλύτερο παιδί, ξανα-βυθίζεται, αλλιώς σταματά. Το <InlineMath>{'6'}</InlineMath> κατεβαίνει κατά μήκος ενός μονοπατιού μέχρι να βρει τη σωστή του θέση.</li>
+          <li>
+            <strong><InlineMath>{'14 \\to 13'}</InlineMath>:</strong> ο{' '}
+            <InlineMath>{'RA'}</InlineMath> κάνει μία σύγκριση, αναγνωρίζει ότι{' '}
+            <InlineMath>{'13 \\ge \\max(8, 10) = 10'}</InlineMath> και σταματά
+            αμέσως — <strong>καμία αντιμετάθεση</strong>.
+          </li>
+          <li>
+            <strong><InlineMath>{'14 \\to 6'}</InlineMath>:</strong> δύο
+            αντιμεταθέσεις. Το <InlineMath>{'6'}</InlineMath> κατεβαίνει
+            διαδοχικά κάτω από <InlineMath>{'10'}</InlineMath>, μετά κάτω από{' '}
+            <InlineMath>{'9'}</InlineMath>, και σταματά όταν συναντήσει παιδί{' '}
+            <InlineMath>{'\\le'}</InlineMath>. Συνολικά διασχίζει μονοπάτι
+            μήκους <InlineMath>{'2'}</InlineMath> — γενικά μέχρι{' '}
+            <InlineMath>{'\\le \\log_2 n'}</InlineMath>.
+          </li>
         </ul>
+        <Callout type="key">
+          <p>
+            <strong>
+              Πρότυπο σκέψης — «κάθε σωρός-πράξη φωτογραφίζεται από το ύψος του δέντρου».
+            </strong>{' '}
+            Heapify-up, heapify-down, decrease-key, increase-key: όλες διασχίζουν
+            ένα μονοπάτι από κορυφή σε ρίζα ή σε φύλλο. Άρα κοστίζουν{' '}
+            <InlineMath>{'O(\\log n)'}</InlineMath>, και η αναδρομική τους
+            σχέση είναι πάντα της μορφής{' '}
+            <InlineMath>{'S(n) = S(\\text{παιδί ή γονέας}) + O(1)'}</InlineMath>,
+            στην περίπτωση 2 του Master Theorem. Διαφορετική κατεύθυνση — ίδιο
+            φράγμα. Σημείωσε επίσης την παγίδα του (i): πάντα ανταλλαγή με το{' '}
+            <em>μεγαλύτερο</em> παιδί, ποτέ τυχαία επιλογή.
+          </p>
+        </Callout>
       </>
     ),
   },
