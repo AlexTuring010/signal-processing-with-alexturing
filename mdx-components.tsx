@@ -153,6 +153,9 @@ import { LatenessExchangeViz } from '@/components/viz/LatenessExchangeViz'
 import { TopoOrderBuilder } from '@/components/viz/TopoOrderBuilder'
 import { DagSourceWalk } from '@/components/viz/DagSourceWalk'
 import { TopologicalSortViz } from '@/components/viz/TopologicalSortViz'
+import { TopoSortClassMatrix } from '@/components/viz/TopoSortClassMatrix'
+import { WaitTimeShortestFirst } from '@/components/viz/WaitTimeShortestFirst'
+import { LaundryFlowShop } from '@/components/viz/LaundryFlowShop'
 import { HuffmanTreeBuilder } from '@/components/viz/HuffmanTreeBuilder'
 import { CompressionCostLab } from '@/components/viz/CompressionCostLab'
 import { PrefixDecoder } from '@/components/viz/PrefixDecoder'
@@ -350,6 +353,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TopoOrderBuilder,
     DagSourceWalk,
     TopologicalSortViz,
+    TopoSortClassMatrix,
+    WaitTimeShortestFirst,
+    LaundryFlowShop,
     HuffmanTreeBuilder,
     CompressionCostLab,
     PrefixDecoder,
