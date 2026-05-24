@@ -52,6 +52,8 @@ import { LinearityChecker } from '@/components/viz/LinearityChecker'
 import { TimeInvarianceChecker } from '@/components/viz/TimeInvarianceChecker'
 import { ImpulseResponseDemo } from '@/components/viz/ImpulseResponseDemo'
 import { ConvolutionFlipAndSlide } from '@/components/viz/ConvolutionFlipAndSlide'
+import { AskisiFourConvolutionViz } from '@/components/viz/AskisiFourConvolutionViz'
+import { ComplexExpThroughLtiViz } from '@/components/viz/ComplexExpThroughLtiViz'
 import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
 import { TransformationDemo } from '@/components/viz/TransformationDemo'
 import { TransformationWorkedExample } from '@/components/viz/TransformationWorkedExample'
@@ -218,6 +220,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TimeInvarianceChecker,
     ImpulseResponseDemo,
     ConvolutionFlipAndSlide,
+    AskisiFourConvolutionViz,
+    ComplexExpThroughLtiViz,
     EigenfunctionDemo,
     TransformationDemo,
     TransformationWorkedExample,

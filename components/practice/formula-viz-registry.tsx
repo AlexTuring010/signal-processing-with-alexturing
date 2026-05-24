@@ -54,6 +54,11 @@ import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
 import { WhiteNoiseSimulationViz } from '@/components/viz/WhiteNoiseSimulationViz'
 import { NoiseFilterShapingViz } from '@/components/viz/NoiseFilterShapingViz'
 import { SNRPlaygroundViz } from '@/components/viz/SNRPlaygroundViz'
+import { ConvolutionFlipAndSlide } from '@/components/viz/ConvolutionFlipAndSlide'
+import { AskisiFourConvolutionViz } from '@/components/viz/AskisiFourConvolutionViz'
+import { ComplexExpThroughLtiViz } from '@/components/viz/ComplexExpThroughLtiViz'
+import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
+import { ImpulseResponseDemo } from '@/components/viz/ImpulseResponseDemo'
 
 const REGISTRY: Record<string, () => ReactNode> = {
   // Foundations · Signal definitions + properties
@@ -67,6 +72,14 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'discrete-periodic-condition': () => <DiscretePeriodicityChecker />,
   'continuous-periodic-condition': () => <PeriodicityChecker />,
   'dc-rms': () => <EnergyPowerCalculator />,
+
+  // Foundations · Systems · LTI / convolution / eigenfunction
+  'convolution-definition': () => <ConvolutionFlipAndSlide />,
+  'convolution-properties': () => <AskisiFourConvolutionViz />,
+  'lti-eigenfunction': () => <ComplexExpThroughLtiViz />,
+  'lti-frequency-response': () => <EigenfunctionDemo />,
+  'lti-cosine-response': () => <EigenfunctionDemo />,
+  'bibo-stability': () => <ImpulseResponseDemo />,
 
   // Foundations · Fourier pairs / properties
   'fourier-pair-rect': () => <RectToSincViz />,

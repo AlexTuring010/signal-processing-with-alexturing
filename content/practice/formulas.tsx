@@ -157,6 +157,80 @@ export const FORMULA_SHEET: FormulaSection[] = [
           </>
         ),
       },
+      // Systems · LTI + convolution + eigenfunction (derived in /foundations/systems)
+      {
+        id: 'convolution-definition',
+        title: 'Συνέλιξη — ορισμός (slide 4)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/systems',
+        content: (
+          <>
+            <BlockMath>{'y(t) = x(t) * h(t) = \\int_{-\\infty}^{\\infty} x(\\tau)\\,h(t-\\tau)\\,d\\tau = \\int_{-\\infty}^{\\infty} h(\\tau)\\,x(t-\\tau)\\,d\\tau'}</BlockMath>
+            <BlockMath>{'\\text{αντιμεταθετική:}\\quad x * h = h * x'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'convolution-properties',
+        title: 'Ιδιότητες συνέλιξης — cascade, parallel, identity',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/systems',
+        content: (
+          <>
+            <BlockMath>{'\\text{προσεταιριστική (cascade):}\\quad (x * h_1) * h_2 = x * (h_1 * h_2)'}</BlockMath>
+            <BlockMath>{'\\text{επιμεριστική (parallel):}\\quad x * (h_1 + h_2) = x * h_1 + x * h_2'}</BlockMath>
+            <BlockMath>{'\\text{ταυτοτική:}\\quad x(t) * \\delta(t - t_0) = x(t - t_0)'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'lti-eigenfunction',
+        title: 'Eigenfunction property (slide 16)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/systems',
+        content: (
+          <>
+            <BlockMath>{'x(t) = A\\,e^{j(2\\pi f_0 t + \\varphi)} \\;\\xrightarrow{\\text{ΓΧΑ } h}\\; y(t) = H(f_0)\\,x(t)'}</BlockMath>
+            <BlockMath>{'\\text{δηλαδή το complex exp περνά αναλλοίωτο, multiplied by ένα μιγαδικό } H(f_0).'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'lti-frequency-response',
+        title: 'Frequency response H(f) — ορισμός',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/systems',
+        content: (
+          <>
+            <BlockMath>{'H(f) = \\int_{-\\infty}^{\\infty} h(\\tau)\\,e^{-j 2\\pi f \\tau}\\,d\\tau'}</BlockMath>
+            <BlockMath>{'\\text{πολική μορφή:}\\quad H(f) = |H(f)|\\,e^{j\\angle H(f)}'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'lti-cosine-response',
+        title: 'LTI σε cosine — corollary',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/systems',
+        content: (
+          <BlockMath>{'x(t) = A\\cos(2\\pi f_0 t + \\varphi) \\;\\xrightarrow{\\text{ΓΧΑ}}\\; y(t) = A\\,|H(f_0)|\\,\\cos\\bigl(2\\pi f_0 t + \\varphi + \\angle H(f_0)\\bigr)'}</BlockMath>
+        ),
+      },
+      {
+        id: 'bibo-stability',
+        title: 'Ευσταθές LTI — BIBO',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/systems',
+        content: (
+          <BlockMath>{'\\text{LTI BIBO-ευσταθές} \\;\\Longleftrightarrow\\; \\int_{-\\infty}^{\\infty} |h(t)|\\,dt < \\infty'}</BlockMath>
+        ),
+      },
       {
         id: 'fourier-pair-rect',
         title: 'Rect ↔ sinc',

@@ -152,6 +152,88 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
     derivation: <>Slide 26.</>,
   },
 
+  // ── Foundations · Systems / LTI / convolution / eigenfunction ──
+  'convolution-definition': {
+    intuition: (
+      <>
+        Ένα ΓΧΑ σύστημα δουλεύει σε <strong>κάθε σήμα</strong> με μία και μόνο πράξη: τη συνέλιξη
+        της εισόδου με την κρουστική απόκριση. Η συνέλιξη προκύπτει αναγκαστικά από τρεις
+        ιδιότητες: (1) sifting της <InlineMath>{'\\delta'}</InlineMath>, (2) χρονική
+        αμεταβλητότητα, (3) γραμμικότητα. Δύο εναλλακτικές μορφές, ισοδύναμες λόγω αντιμεταθετικής.
+      </>
+    ),
+    derivation: <>Slide 4. Παραγωγή στο /foundations/systems §3.</>,
+  },
+  'convolution-properties': {
+    intuition: (
+      <>
+        Οι τρεις βασικές αλγεβρικές ιδιότητες της συνέλιξης αντιστοιχούν σε φυσικές
+        διατάξεις: <strong>cascade</strong> = δύο LTI σε σειρά, <strong>parallel</strong> = δύο LTI
+        παράλληλα (με άθροιση), <strong>ταυτοτική</strong> = το <InlineMath>{'\\delta'}</InlineMath>{' '}
+        είναι το «ουδέτερο» στοιχείο (καθαρή καθυστέρηση μέσω <InlineMath>{'\\delta(t-t_0)'}</InlineMath>).
+      </>
+    ),
+    derivation: <>Slides 6-8.</>,
+  },
+  'lti-eigenfunction': {
+    intuition: (
+      <>
+        Το <strong>πιο σημαντικό αποτέλεσμα</strong> για ΓΧΑ συστήματα: τα complex
+        exponentials είναι «eigenfunctions» — περνούν αναλλοίωτα, μόνο πολλαπλασιάζονται με
+        έναν μιγαδικό αριθμό <InlineMath>{'H(f_0)'}</InlineMath>. Καμία αλλαγή σχήματος,
+        καμία νέα συχνότητα. Όλη η Fourier θεωρία στηρίζεται σε αυτό.
+      </>
+    ),
+    derivation: (
+      <>
+        Slide 16. Βγάλε το <InlineMath>{'A\\,e^{j(2\\pi f_0 t + \\varphi)}'}</InlineMath> έξω από
+        το ολοκλήρωμα της συνέλιξης — αυτό που μένει είναι ακριβώς το{' '}
+        <InlineMath>{'H(f_0)'}</InlineMath>.
+      </>
+    ),
+  },
+  'lti-frequency-response': {
+    intuition: (
+      <>
+        Το <InlineMath>{'H(f)'}</InlineMath> είναι ο μετασχηματισμός Fourier της κρουστικής
+        απόκρισης (αυτό αποδεικνύεται φόρμαλ στο FT chapter). Πακετάρει τα{' '}
+        <strong>δύο νούμερα ανά συχνότητα</strong> που χρειάζεσαι: το μέτρο (πόσο scaling) και
+        τη φάση (πόση χρονική ολίσθηση).
+      </>
+    ),
+    derivation: <>Slide 16, ορίζεται μέσα στην παραγωγή του eigenfunction property.</>,
+  },
+  'lti-cosine-response': {
+    intuition: (
+      <>
+        Το πρακτικό αποτέλεσμα για κάθε real cosine είσοδο — corollary του slide-16 μέσω Euler.
+        <strong> Cosine ίδιας συχνότητας έξω</strong>, με πλάτος{' '}
+        <InlineMath>{'A|H(f_0)|'}</InlineMath> και φάση{' '}
+        <InlineMath>{'\\varphi + \\angle H(f_0)'}</InlineMath>. Καμία συνέλιξη χρειάζεται όταν
+        η είσοδος είναι sinusoid — μόνο τα δύο νούμερα <InlineMath>{'|H|, \\angle H'}</InlineMath>.
+      </>
+    ),
+    derivation: (
+      <>
+        Euler split: cos = ζεύγος <InlineMath>{'e^{\\pm j 2\\pi f_0 t}'}</InlineMath>. Εφαρμογή
+        slide-16 σε κάθε όρο + conjugate symmetry <InlineMath>{'H(-f_0) = H^*(f_0)'}</InlineMath>{' '}
+        για real h ⇒ real cosine έξω.
+      </>
+    ),
+  },
+  'bibo-stability': {
+    intuition: (
+      <>
+        Ένα LTI είναι ευσταθές «BIBO» (Bounded Input → Bounded Output) ακριβώς όταν η
+        κρουστική απόκριση είναι <strong>απολύτως ολοκληρώσιμη</strong>. Διαισθητικά: αν η
+        «μάζα» της <InlineMath>{'h(t)'}</InlineMath> δεν συγκλίνει, ένα φραγμένο σήμα μπορεί να
+        συνελιχθεί και να δώσει άπειρη απόκριση. Όλα τα φυσικά συστήματα που μας ενδιαφέρουν
+        είναι BIBO-σταθερά.
+      </>
+    ),
+    derivation: <>Άμεση συνέπεια της τριγωνικής ανισότητας στο ολοκλήρωμα της συνέλιξης.</>,
+  },
+
   // ── Foundations · Fourier pairs ──────────────────────────────
   'fourier-pair-rect': {
     intuition: (
