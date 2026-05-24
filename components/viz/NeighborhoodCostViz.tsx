@@ -110,7 +110,7 @@ export function NeighborhoodCostViz() {
                   'rounded-md border px-2 py-1 text-sm tabular-nums',
                   id === v
                     ? 'border-rose-700 bg-rose-50 font-semibold text-rose-900'
-                    : 'border-border bg-white hover:bg-bg-soft',
+                    : 'border-border bg-bg-elevated hover:bg-bg-soft',
                 )}
                 title={`Δ(${id}) = ${d}`}
               >
@@ -247,7 +247,7 @@ export function NeighborhoodCostViz() {
               type="button"
               onClick={stepBack}
               disabled={k === 0}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
             >
               <ChevronLeft size={16} /> πίσω
             </button>
@@ -255,7 +255,7 @@ export function NeighborhoodCostViz() {
               type="button"
               onClick={() => setPlaying(!playing)}
               disabled={k >= totalTicks}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
             >
               {playing ? <Pause size={16} /> : <Play size={16} />}
               {playing ? 'παύση' : 'παίξε'}
@@ -264,14 +264,14 @@ export function NeighborhoodCostViz() {
               type="button"
               onClick={stepForward}
               disabled={k >= totalTicks}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
             >
               επόμενο <ChevronRight size={16} />
             </button>
             <button
               type="button"
               onClick={reset}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft"
             >
               <RotateCcw size={14} /> reset
             </button>

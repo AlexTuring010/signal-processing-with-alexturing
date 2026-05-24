@@ -408,7 +408,7 @@ export function RiverCrossingStateGraph() {
               type="button"
               onClick={stepBack}
               disabled={k === 0}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
             >
               <ChevronLeft size={16} /> πίσω
             </button>
@@ -416,7 +416,7 @@ export function RiverCrossingStateGraph() {
               type="button"
               onClick={() => setPlaying(!playing)}
               disabled={k >= SOLUTION.length}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
             >
               {playing ? <Pause size={16} /> : <Play size={16} />}
               {playing ? 'παύση' : 'παίξε'}
@@ -425,14 +425,14 @@ export function RiverCrossingStateGraph() {
               type="button"
               onClick={stepForward}
               disabled={k >= SOLUTION.length}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft disabled:opacity-40"
             >
               επόμενο <ChevronRight size={16} />
             </button>
             <button
               type="button"
               onClick={reset}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2.5 py-1.5 text-sm hover:bg-bg-soft"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-bg-elevated px-2.5 py-1.5 text-sm hover:bg-bg-soft"
             >
               <RotateCcw size={14} /> reset
             </button>
