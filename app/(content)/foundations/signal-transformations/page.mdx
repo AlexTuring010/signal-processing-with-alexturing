@@ -116,6 +116,25 @@ import { Bookmark } from '@/components/layout/Bookmark'
 
 <TransformationWorkedExample />
 
+**Παίξε με συνδυασμούς ζωντανά.** Το παρακάτω viz σου δίνει σύρτεσσα $A, a, b$ για το πλήρες $y(t) = A \cdot x(at + b)$, σχεδιάζει κάθε στάδιο του canonical pipeline (scale → shift κατά $-b/a$ → amplitude), και έχει toggle για το «naive: shift πρώτα» μονοπάτι ώστε να φανεί γιατί η σειρά υπάρχει.
+
+<CombinedTransformationsViz />
+
+<ReorderDrill
+  id="signal-transformations-order-drill"
+  prompt={
+    <>
+      Σου δίνεται <InlineMath>{'y(t) = A \\cdot x(a\\,t + b)'}</InlineMath>. Βάλε τα 4 βήματα στη σωστή σειρά για να αποφύγεις τα signs που μπερδεύουν.
+    </>
+  }
+  steps={[
+    'Ξαναγράψε τη μορφή ως A·x(a(t + b/a)) — βγάλε τον συντελεστή a έξω από την παρένθεση.',
+    'Εφάρμοσε scaling στο time-axis κατά a (αν a<0, αυτό περιλαμβάνει και flip): από x(t) σε x(at).',
+    'Εφάρμοσε shift κατά −b/a (όχι κατά −b!) — η κορυφή πάει από t=1/a στο t=(1−b)/a.',
+    'Εφάρμοσε amplitude scaling κατά A — πολλαπλασιάζεις τις τιμές, ο time-axis δεν αλλάζει.',
+  ]}
+/>
+
 ## Εξάσκηση
 
 <ExerciseProgress slug="foundations/signal-transformations" total={5} />

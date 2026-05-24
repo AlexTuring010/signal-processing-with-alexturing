@@ -57,6 +57,7 @@ import { ComplexExpThroughLtiViz } from '@/components/viz/ComplexExpThroughLtiVi
 import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
 import { TransformationDemo } from '@/components/viz/TransformationDemo'
 import { TransformationWorkedExample } from '@/components/viz/TransformationWorkedExample'
+import { CombinedTransformationsViz } from '@/components/viz/CombinedTransformationsViz'
 import { PhaseTimeShiftDemo } from '@/components/viz/PhaseTimeShiftDemo'
 import { ComplexPlaneViz } from '@/components/viz/ComplexPlaneViz'
 import { EulerUnitCircleViz } from '@/components/viz/EulerUnitCircleViz'
@@ -228,6 +229,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     EigenfunctionDemo,
     TransformationDemo,
     TransformationWorkedExample,
+    CombinedTransformationsViz,
     PhaseTimeShiftDemo,
     ComplexPlaneViz,
     EulerUnitCircleViz,
