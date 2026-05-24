@@ -108,6 +108,9 @@ import { FdmCanonicalProblemViz } from '@/components/viz/FdmCanonicalProblemViz'
 import { FdmCrossTalkViz } from '@/components/viz/FdmCrossTalkViz'
 import { SuperheterodyneReceiverViz } from '@/components/viz/SuperheterodyneReceiverViz'
 import { FMSignalViz } from '@/components/viz/FMSignalViz'
+import { NbfmVsAmSpectrumViz } from '@/components/viz/NbfmVsAmSpectrumViz'
+import { PmVsFmDualityViz } from '@/components/viz/PmVsFmDualityViz'
+import { ConstantEnvelopeCircleViz } from '@/components/viz/ConstantEnvelopeCircleViz'
 import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
 import { BesselTable } from '@/components/viz/BesselTable'
 import { CarsonRuleViz } from '@/components/viz/CarsonRuleViz'
@@ -287,6 +290,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — fm / idea
     FMSignalViz,
+    NbfmVsAmSpectrumViz,
+    PmVsFmDualityViz,
+    ConstantEnvelopeCircleViz,
 
     // Visualizations — fm / bessel
     BesselSpectrumViz,

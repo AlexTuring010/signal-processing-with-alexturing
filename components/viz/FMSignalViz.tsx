@@ -7,14 +7,18 @@ import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 /**
  * FM signal in time. Three stacked panels:
  *   1. message m(t) (cosine for clarity)
- *   2. instantaneous frequency f_inst(t) = f_c + k_f m(t) — the carrier
- *      frequency moves around f_c following the message
- *   3. FM signal x(t) = A_c cos(2π f_c t + 2π k_f ∫m(τ)dτ) — visibly
- *      "compressed" where f_inst is high, "stretched" where it's low
+ *   2. instantaneous frequency f_i(t) = f_c + K_f m(t) — the carrier
+ *      frequency moves around f_c following the message (prof's notation:
+ *      f_i subscript means «instantaneous»; analogous to instantaneous
+ *      velocity in Mechanics — slide 6)
+ *   3. FM signal x(t) = A_c cos(2π f_c t + 2π K_f ∫m(τ)dτ) — visibly
+ *      "compressed" where f_i is high, "stretched" where it's low
  *
- * Slider: β = k_f A_m / f_m. For sinusoidal m, β controls how much the
- * frequency wobbles around f_c. β = 0 → pure carrier, no information.
- * β = 1 → moderate wobble (NBFM ↔ WBFM boundary). β = 5 → wide deviation.
+ * Slider: β_f = Δf_max / W = K_f · max|m(t)| / W. For sinusoidal m with
+ * unit amplitude and bandwidth W = f_m, this reduces to β_f = K_f / f_m.
+ * β_f ≪ 1 → NBFM; β_f much greater than 1 → WBFM (per slide 29 of the
+ * prof's deck; the «β = 0.3» convention from textbooks is a rough cutoff,
+ * not the formal definition).
  *
  * Key visual: the FM signal envelope stays CONSTANT. Unlike AM where
  * envelope carries info, in FM all info is in the phase/frequency.
@@ -45,7 +49,7 @@ export function FMSignalViz() {
     return () => cancelAnimationFrame(raf)
   }, [running, beta])
 
-  const fDeviation = beta * FM // Δf = β · f_m
+  const fDeviation = beta * FM // Δf = β_f · f_m (single-tone)
   const isNB = beta < 0.3
   const isWB = beta > 1
 
@@ -69,11 +73,13 @@ export function FMSignalViz() {
       <p className="mb-3 text-xs text-fg-muted">
         Πάνω: message <span className="font-mono">m(t)</span>. Μέσο: η{' '}
         <strong>στιγμιαία συχνότητα</strong>{' '}
-        <span className="font-mono">f(t) = f_c + k_f · m(t)</span> — αυξάνεται
-        όπου το m είναι θετικό, πέφτει όπου είναι αρνητικό. Κάτω: το FM
-        σήμα <span className="font-mono">x(t)</span> — δες πώς οι κορυφές
-        «συμπιέζονται» όπου f είναι ψηλή και «απλώνονται» όπου είναι χαμηλή.
-        <strong> Το envelope μένει σταθερό</strong> — όλη η πληροφορία στη φάση.
+        <span className="font-mono">f_i(t) = f_c + K_f · m(t)</span> — αυξάνεται
+        όπου το m είναι θετικό, πέφτει όπου είναι αρνητικό (η μηχανική
+        αναλογία του καθηγητή, slide 6: «όπως η στιγμιαία ταχύτητα»). Κάτω:
+        το FM σήμα <span className="font-mono">x(t)</span> — δες πώς οι
+        κορυφές «συμπιέζονται» όπου f_i είναι ψηλή και «απλώνονται» όπου
+        είναι χαμηλή.{' '}
+        <strong>Το envelope μένει σταθερό</strong> — όλη η πληροφορία στη φάση.
       </p>
 
       <canvas
@@ -85,7 +91,7 @@ export function FMSignalViz() {
 
       <div className="mt-3">
         <label className="block text-xs text-fg-muted">
-          β = Δf / f_m ={' '}
+          β_f = Δf / W ={' '}
           <span className="font-mono text-fg tabular-nums">{beta.toFixed(2)}</span>
           {' · '}
           frequency deviation Δf ={' '}
@@ -94,11 +100,11 @@ export function FMSignalViz() {
           </span>
           {' · '}
           {isNB ? (
-            <span className="text-green-700 dark:text-green-400">NBFM (β &lt; 0.3)</span>
+            <span className="text-green-700 dark:text-green-400">NBFM (β_f ≪ 1)</span>
           ) : isWB ? (
-            <span className="text-amber-600 dark:text-amber-400">WBFM (β &gt; 1)</span>
+            <span className="text-amber-600 dark:text-amber-400">WBFM (β_f ≫ 1)</span>
           ) : (
-            <span className="text-fg-muted">Intermediate</span>
+            <span className="text-fg-muted">Ενδιάμεση περιοχή</span>
           )}
         </label>
         <input
@@ -115,10 +121,12 @@ export function FMSignalViz() {
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
         Η <strong>στιγμιαία συχνότητα</strong> είναι κρίσιμη έννοια στο FM:{' '}
-        <span className="font-mono">f(t) = f_c + Δf · m(t)/max(m)</span>. Όταν
-        το message αυξάνει, η συχνότητα του carrier ανεβαίνει — όχι το πλάτος.
+        <span className="font-mono">f_i(t) = f_c + K_f · m(t)</span>. Όταν το
+        message αυξάνει, η συχνότητα του carrier ανεβαίνει — όχι το πλάτος.
         Γι' αυτό η FM είναι <strong>ανοσοποιημένη στο amplitude noise</strong>:
-        τα peaks του θορύβου επηρεάζουν το envelope, όχι τη συχνότητα.
+        τα peaks του θορύβου επηρεάζουν το envelope, όχι τη συχνότητα. Αυτή
+        η σταθερότητα του envelope είναι και ο λόγος που η ισχύς της FM
+        παραμένει <span className="font-mono">A_c²/2</span> ανεξάρτητα του β.
       </div>
     </figure>
   )
@@ -223,7 +231,7 @@ function drawInstFreq(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText(`Στιγμιαία συχνότητα f(t) = f_c + Δf · m(t)/A_m  (Δf = β·f_m)`, x0 + PAD_X, y0 + 10)
+  ctx.fillText(`Στιγμιαία συχνότητα f_i(t) = f_c + K_f · m(t)  (Δf = β_f·f_m στο single-tone)`, x0 + PAD_X, y0 + 10)
 
   // f_c reference line (dashed)
   ctx.strokeStyle = colors.border
@@ -285,7 +293,7 @@ function drawFMSignal(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('FM σήμα x(t) = A_c cos(2π f_c t + β sin(2π f_m t))', x0 + PAD_X, y0 + 10)
+  ctx.fillText('FM σήμα x(t) = A_c cos(2π f_c t + β_f sin(2π f_m t))', x0 + PAD_X, y0 + 10)
 
   ctx.strokeStyle = colors.border
   ctx.lineWidth = 1

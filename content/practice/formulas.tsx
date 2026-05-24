@@ -545,7 +545,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         topic: 'fm',
         inTypology: false,
         derivedIn: 'fm/idea',
-        content: <BlockMath>{'f(t) = \\frac{1}{2\\pi}\\frac{d\\theta(t)}{dt} = f_c + K_f\\, m(t)'}</BlockMath>,
+        content: <BlockMath>{'f_i(t) \\triangleq \\frac{1}{2\\pi}\\frac{d\\theta(t)}{dt} = f_c + \\frac{1}{2\\pi}\\frac{d\\phi(t)}{dt} = f_c + K_f\\, m(t) \\;\\text{(FM)}'}</BlockMath>,
       },
       {
         id: 'fm-beta',
