@@ -8978,6 +8978,42 @@ K = 101     Σ = 100`}</pre>
     ),
     solution: (
       <>
+        <p>Πριν τη γραφο-μοντελοποίηση, δες την αρχική εικόνα του γρίφου — οι περιορισμοί ζωντανεύουν αμέσως:</p>
+        <div className="not-prose my-4 flex justify-center">
+          <svg
+            viewBox="0 0 640 200"
+            className="w-full max-w-xl rounded-lg border border-border bg-bg-elevated"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="Ο γρίφος: ο βαρκάρης πρέπει να μεταφέρει λύκο, κατσίκα και λάχανο από την αρχική στην απέναντι όχθη με τους περιορισμούς της εκφώνησης."
+          >
+            <rect x="0" y="50" width="180" height="150" fill="rgb(132 204 22 / 0.3)" />
+            <rect x="460" y="50" width="180" height="150" fill="rgb(132 204 22 / 0.3)" />
+            <rect x="180" y="50" width="280" height="150" fill="rgb(59 130 246 / 0.3)" />
+            <path d="M 195 110 q 18 -5 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0" stroke="rgb(59 130 246 / 0.6)" strokeWidth="1.5" fill="none" />
+            <path d="M 195 145 q 18 -5 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0" stroke="rgb(59 130 246 / 0.6)" strokeWidth="1.5" fill="none" />
+            <text x="90" y="28" textAnchor="middle" fontSize="14" fontWeight="600" fill="rgb(var(--fg))">Αρχική όχθη</text>
+            <text x="320" y="28" textAnchor="middle" fontSize="13" fontStyle="italic" fill="rgb(var(--fg-subtle))">ποταμός</text>
+            <text x="550" y="28" textAnchor="middle" fontSize="14" fontWeight="600" fill="rgb(var(--fg))">Απέναντι όχθη</text>
+            <path d="M 195 158 L 255 158 L 247 178 L 203 178 Z" fill="rgb(180 83 9)" stroke="rgb(120 53 15)" strokeWidth="2" />
+            <text x="225" y="150" textAnchor="middle" fontSize="11" fontStyle="italic" fill="rgb(var(--fg-muted))">βάρκα</text>
+            <circle cx="35" cy="115" r="20" fill="rgb(244 63 94)" />
+            <text x="35" y="121" textAnchor="middle" fontSize="15" fontWeight="700" fill="white">B</text>
+            <text x="35" y="160" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">βαρκάρης</text>
+            <circle cx="80" cy="115" r="20" fill="rgb(82 82 91)" />
+            <text x="80" y="121" textAnchor="middle" fontSize="15" fontWeight="700" fill="white">W</text>
+            <text x="80" y="160" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">λύκος</text>
+            <circle cx="125" cy="115" r="18" fill="rgb(202 138 4)" />
+            <text x="125" y="121" textAnchor="middle" fontSize="14" fontWeight="700" fill="white">G</text>
+            <text x="125" y="160" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">κατσίκα</text>
+            <circle cx="165" cy="115" r="16" fill="rgb(22 163 74)" />
+            <text x="165" y="120" textAnchor="middle" fontSize="13" fontWeight="700" fill="white">C</text>
+            <text x="165" y="160" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">λάχανο</text>
+            <text x="320" y="195" textAnchor="middle" fontSize="11.5" fontStyle="italic" fill="rgb(var(--fg-muted))">
+              Χωρίς τον βαρκάρη: λύκος + κατσίκα ⇒ φάγωμα · κατσίκα + λάχανο ⇒ φάγωμα
+            </text>
+          </svg>
+        </div>
         <p><strong>Η ιδέα — «κάνε το γρίφο γράφο».</strong> Δεν χρειάζεται «έξυπνη» έμπνευση. Το μόνο που θέλει ο γρίφος είναι η σωστή <em>μοντελοποίηση</em>: μόλις γίνει γράφος, ο αλγόριθμος που τον λύνει είναι BFS του βιβλίου.</p>
         <p>Συμβολίζουμε με <InlineMath>{'B'}</InlineMath> τον βαρκάρη, <InlineMath>{'C'}</InlineMath> το λάχανο, <InlineMath>{'G'}</InlineMath> την κατσίκα, <InlineMath>{'W'}</InlineMath> τον λύκο. Η <strong>κατάσταση</strong> του κόσμου περιγράφεται μονοσήμαντα από <em>ποιοι βρίσκονται στην απέναντι όχθη</em> — οι υπόλοιποι, εξ ορισμού, είναι στην αρχική. Υπάρχουν <InlineMath>{'2^4 = 16'}</InlineMath> δυνητικές υποσύνολα του <InlineMath>{'\\{B, C, G, W\\}'}</InlineMath>.</p>
         <p><strong>Κόμβοι:</strong> κάθε <em>ασφαλής</em> κατάσταση (αποκλείουμε αυτές όπου λύκος+κατσίκα ή κατσίκα+λάχανο μένουν μόνοι σε κάποια όχθη — εκεί ένα ζωντανό «φαγώνεται»). Μένουν <strong>10</strong> κόμβοι από τους 16.{' '}
