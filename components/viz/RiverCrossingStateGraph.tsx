@@ -246,6 +246,32 @@ export function RiverCrossingStateGraph() {
                 ((activeEdge.a === e.a && activeEdge.b === e.b) ||
                   (activeEdge.a === e.b && activeEdge.b === e.a))
               const isVisited = visited.has(e.a) && visited.has(e.b)
+              const stroke = hi ? '#dc2626' : isVisited ? '#0ea5a2' : '#cbb3b8'
+              const strokeWidth = hi ? 4 : isVisited ? 2.4 : 1.4
+              const opacity = hi || isVisited ? 1 : 0.7
+              // Long-horizontal edges that span 2+ columns at nearly the same y
+              // would pass straight through an intermediate col-2 node's box —
+              // the rect then occludes the middle of the line and creates the
+              // false visual cue of «two edges meeting at the col-2 node». Curve
+              // those edges away (up for the top row, down for the bottom row)
+              // so they read as one continuous arc that clearly avoids the
+              // intermediate node.
+              const spanCols = Math.abs(farBank(e.a).length - farBank(e.b).length)
+              const dy = Math.abs(pa.y - pb.y)
+              if (spanCols >= 2 && dy < 20) {
+                const mx = (pa.x + pb.x) / 2
+                const cy = pa.y < 175 ? pa.y - 60 : pa.y + 60
+                return (
+                  <path
+                    key={i}
+                    d={`M ${pa.x} ${pa.y} Q ${mx} ${cy} ${pb.x} ${pb.y}`}
+                    fill="none"
+                    stroke={stroke}
+                    strokeWidth={strokeWidth}
+                    opacity={opacity}
+                  />
+                )
+              }
               return (
                 <line
                   key={i}
@@ -253,9 +279,9 @@ export function RiverCrossingStateGraph() {
                   y1={pa.y}
                   x2={pb.x}
                   y2={pb.y}
-                  stroke={hi ? '#dc2626' : isVisited ? '#0ea5a2' : '#cbb3b8'}
-                  strokeWidth={hi ? 4 : isVisited ? 2.4 : 1.4}
-                  opacity={hi || isVisited ? 1 : 0.7}
+                  stroke={stroke}
+                  strokeWidth={strokeWidth}
+                  opacity={opacity}
                 />
               )
             })}
