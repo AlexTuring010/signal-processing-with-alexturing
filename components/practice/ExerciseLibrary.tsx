@@ -118,11 +118,13 @@ export function ExerciseLibrary({ exercises }: Props) {
       const ra = orderRank(a.origin)
       const rb = orderRank(b.origin)
       if (ra !== rb) return ra - rb
-      // Within the same origin, group by anonymised paper label, then by
-      // the printed problem number.
-      const la = a.paperLabel ?? ''
-      const lb = b.paperLabel ?? ''
-      if (la !== lb) return la.localeCompare(lb, 'el')
+      // Within the same origin, group by source (dated paper), then by the
+      // printed problem number. Sources are kebab-case slugs like
+      // 'june-2025'; ordering them lexically gives a stable, semester-aware
+      // grouping (june-2024 < june-2025 < sept-2024 < sept-2025).
+      const la = a.source ?? ''
+      const lb = b.source ?? ''
+      if (la !== lb) return la.localeCompare(lb, 'en')
       return (a.problemNumber ?? '').localeCompare(b.problemNumber ?? '', 'el')
     })
   }, [filtered])

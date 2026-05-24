@@ -48,7 +48,7 @@ a sub-list. Update this section in the same commit that finishes the task.
   - ☑ Q1 — commit the 4 `material/past_exams/` PDFs (done 2026-05-24, commit `f516ec3`).
   - ☑ Q2 — de-anonymize the bank: real dates everywhere. Migration in E.0.
   - ☑ Q3 — un-gitignore `private_material/`; raw older-archive PDFs to be uploaded by user and tracked.
-- ☐ **E.0 — Bank de-anonymization migration** (single self-contained turn; see § 4.5 below)
+- ☑ **E.0 — Bank de-anonymization migration** (done 2026-05-24 — 141 entries migrated `paperLabel` → dated `source`; titles rewritten; `paperLabel` field removed from `Exercise` type; `ExerciseCard`/`SoseProblemCard` Flame chip fires for #1–#7; `ExerciseLibrary` sort switched to `source`; see [[phase-e0-bank-dedeanonymization]])
 - ☐ **E.1 — Inline `<ExamProblem>` citations** (17 per-lecture sub-tasks):
   - ☐ L01 ☐ L02 ☐ L03 ☐ L04 ☐ L05 ☐ L06 ☐ L07 ☐ L08 ☐ L09
   - ☐ L10 ☐ L11 ☐ L12 ☐ L13 ☐ L14 ☐ L15 ☐ L16 ☐ L17

@@ -79,12 +79,7 @@ export function ExerciseCard({ exercise }: Props) {
             )}
             {ORIGIN_LABELS[exercise.origin]}
           </span>
-          {exercise.paperLabel && (
-            <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
-              {exercise.paperLabel}
-            </span>
-          )}
-          {!exercise.paperLabel && exercise.source && (
+          {exercise.source && (
             <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
               {SOURCE_LABELS[exercise.source]}
             </span>
