@@ -15,6 +15,18 @@ The site is **in Greek** because its audience is. This README is in English for 
 - **Formula sheet** as an interactive page rather than a PDF.
 - **Gamification** — an "orchard" with trees that produce apples for engagement, plus per-section collectible skins. The most recent commits in the repo's history are working through Phase 5 of the collectibles roll-out.
 
+## Sibling project — algorithms class
+
+This repo also hosts an **algorithms-class** version of the site on the `algorithms-class-version` branch, deployed in parallel to the signal-processing build. Same Next.js + MDX + Supabase stack, same `/comments-review` loop, same pedagogical structure — different course content (BFS/DFS, sorting, graph algorithms, etc.).
+
+**Live: [algorithms-club-hub.vercel.app](https://algorithms-club-hub.vercel.app/)** — this branch, this repo, maintained by me.
+
+### The story
+
+[Stelios](https://github.com/steliosrotas) forked this repo and started building out an algorithms-class version at [`algorithms-with-steliosrotas`](https://github.com/steliosrotas/algorithms-with-steliosrotas/) for one of our other classes. I started contributing improvements back to his repo via pull requests, but as those PRs have been slow to merge, I now also keep my own parallel deploy on the `algorithms-class-version` branch in this repo — so the site at the link above always reflects my latest contributions, even while the upstream PRs are still pending review.
+
+If you want the canonical upstream version, see [Stelios's repo](https://github.com/steliosrotas/algorithms-with-steliosrotas/). If you want my latest additions live, use the link above.
+
 ## Stack
 
 - **Next.js 15** (App Router) · **TypeScript** · **React 19**
