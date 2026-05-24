@@ -116,6 +116,10 @@ import { PmInstantaneousFrequencyViz } from '@/components/viz/PmInstantaneousFre
 import { NbfmAmPhasorDecompositionViz } from '@/components/viz/NbfmAmPhasorDecompositionViz'
 import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
 import { BesselTable } from '@/components/viz/BesselTable'
+import { TaylorToBesselDerivationViz } from '@/components/viz/TaylorToBesselDerivationViz'
+import { JacobiAngerDecompositionViz } from '@/components/viz/JacobiAngerDecompositionViz'
+import { CarrierVanishViz } from '@/components/viz/CarrierVanishViz'
+import { AskisiThreeFilteredFmPowerViz } from '@/components/viz/AskisiThreeFilteredFmPowerViz'
 import { CarsonRuleViz } from '@/components/viz/CarsonRuleViz'
 import { FMNoiseTriangleViz } from '@/components/viz/FMNoiseTriangleViz'
 import { RandomPhaseCosineViz } from '@/components/viz/RandomPhaseCosineViz'
@@ -305,6 +309,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — fm / bessel
     BesselSpectrumViz,
     BesselTable,
+    TaylorToBesselDerivationViz,
+    JacobiAngerDecompositionViz,
+    CarrierVanishViz,
+    AskisiThreeFilteredFmPowerViz,
 
     // Visualizations — fm / carson
     CarsonRuleViz,

@@ -91,6 +91,7 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'fm-snr-out': () => <FMNoiseTriangleViz />,
   'fm-gain-am': () => <FMNoiseTriangleViz />,
   'bessel-table': () => <BesselTable />,
+  'fm-significant-harmonics': () => <BesselSpectrumViz />,
 
   // Random
   'random-phase-cosine': () => <RandomPhaseCosineViz />,

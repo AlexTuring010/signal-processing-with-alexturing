@@ -636,6 +636,25 @@ export const FORMULA_SHEET: FormulaSection[] = [
           </>
         ),
       },
+      {
+        id: 'fm-significant-harmonics',
+        title: 'Αριθμός σημαντικών αρμονικών (FM/PM)',
+        topic: 'fm',
+        inTypology: false,
+        derivedIn: 'fm/bessel',
+        content: (
+          <>
+            <BlockMath>{'N = \\begin{cases} 2\\lfloor K_p \\alpha\\rfloor + 3, & \\text{PM} \\\\ 2\\lfloor K_f \\alpha / f_m\\rfloor + 3, & \\text{FM} \\end{cases}'}</BlockMath>
+            <p className="mt-2 text-xs leading-relaxed text-fg-muted">
+              Ο prof στο slide 46 δίνει αυτόν τον <em>ακριβή</em> αριθμό συνιστωσών{' '}
+              <InlineMath>{'A_c J_n(\\beta)\\,\\delta(f - f_c - n f_m)'}</InlineMath>{' '}
+              που εμπίπτουν στο ενεργό εύρος ζώνης Carson. Ισοδύναμα{' '}
+              <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath>{' '}
+              (συμπεριλαμβανομένου του carrier).
+            </p>
+          </>
+        ),
+      },
     ],
   },
 

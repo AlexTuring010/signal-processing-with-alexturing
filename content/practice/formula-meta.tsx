@@ -1098,6 +1098,29 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'fm-significant-harmonics': {
+    intuition: (
+      <>
+        Ο prof στο slide 46 δίνει τον ΑΚΡΙΒΗ αριθμό σημαντικών αρμονικών:{' '}
+        <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath>. Παράδειγμα{' '}
+        <InlineMath>{'\\beta = 10'}</InlineMath> ⇒{' '}
+        <InlineMath>{'N = 23'}</InlineMath> συνιστώσες (carrier + 11 ζεύγη sidebands).
+        Συνδέεται στενά με το Carson{' '}
+        <InlineMath>{'B = 2(\\beta+1)W'}</InlineMath>: αν χωρίσεις το{' '}
+        <InlineMath>B</InlineMath> σε διαστήματα{' '}
+        <InlineMath>{'f_m = W'}</InlineMath>, παίρνεις περίπου{' '}
+        <InlineMath>{'2(\\beta+1)+1 = 2\\beta+3'}</InlineMath> γραμμές, που είναι το ίδιο
+        με το <InlineMath>{'2\\lfloor\\beta\\rfloor+3'}</InlineMath> για ακέραιο β.
+      </>
+    ),
+    derivation: (
+      <>
+        Bessel αμελητέο για <InlineMath>{'|n| > \\beta'}</InlineMath>. Εμπειρικά,
+        κρατάς <InlineMath>{'|n| \\le \\lfloor\\beta\\rfloor + 1'}</InlineMath>, οπότε
+        αριθμός θετικά+αρνητικά+carrier = <InlineMath>{'2(\\lfloor\\beta\\rfloor+1)+1 = 2\\lfloor\\beta\\rfloor+3'}</InlineMath>.
+      </>
+    ),
+  },
 
   // ── Random ───────────────────────────────────────────────────
   'random-mean': {
