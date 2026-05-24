@@ -280,3 +280,59 @@ function bezierPath(
 function fmt(n: number): string {
   return Number.isInteger(n) ? n.toString() : n.toFixed(2)
 }
+
+/**
+ * Trim an `EdgeGeom` so both endpoints sit on the borders of circles of radius
+ * `rA` / `rB` centered at the original (untrimmed) endpoints `(ax, ay)` and
+ * `(bx, by)`. Used by directed-graph vizzes whose arrowheads must land on the
+ * node boundary, not inside it.
+ *
+ * For lines, this is a standard linear trim along the segment direction.
+ * For quadratic Beziers, the trim runs along the tangent at each endpoint —
+ * tangent(0) = Q − P0, tangent(1) = P1 − Q — so the returned curve keeps the
+ * SAME control point and the tangent direction at each endpoint is preserved
+ * (arrowheads still point correctly). This is not a mathematically exact
+ * Bezier re-parametrisation, but for the small bulges this utility produces
+ * the visual difference is sub-pixel.
+ */
+export function trimEdgeGeom(
+  geom: EdgeGeom,
+  ax: number,
+  ay: number,
+  rA: number,
+  bx: number,
+  by: number,
+  rB: number,
+): EdgeGeom {
+  if (geom.kind === 'line') {
+    const dx = bx - ax
+    const dy = by - ay
+    const len = Math.hypot(dx, dy) || 1
+    const ux = dx / len
+    const uy = dy / len
+    return {
+      kind: 'line',
+      x1: ax + ux * rA,
+      y1: ay + uy * rA,
+      x2: bx - ux * rB,
+      y2: by - uy * rB,
+    }
+  }
+  const { cx, cy } = geom
+  const tsx = cx - ax
+  const tsy = cy - ay
+  const tsl = Math.hypot(tsx, tsy) || 1
+  const ttx = bx - cx
+  const tty = by - cy
+  const ttl = Math.hypot(ttx, tty) || 1
+  const x1 = ax + (tsx / tsl) * rA
+  const y1 = ay + (tsy / tsl) * rA
+  const x2 = bx - (ttx / ttl) * rB
+  const y2 = by - (tty / ttl) * rB
+  return {
+    kind: 'curve',
+    d: bezierPath(x1, y1, cx, cy, x2, y2),
+    cx,
+    cy,
+  }
+}

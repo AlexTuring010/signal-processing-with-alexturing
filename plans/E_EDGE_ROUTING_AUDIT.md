@@ -30,7 +30,7 @@ positioned «nodes» per se), and overlay annotations.
 
 Group by shared layout / node-rect convention. Each chunk = one turn.
 
-### Chunk B1 — L09 MST family (shared `mst-graph.ts`)
+### Chunk B1 — L09 MST family (shared `mst-graph.ts`) ✅ DONE 2026-05-25
 
 7 circular nodes (`MST_NODE_R = 21`), 12 weighted edges, planar wheel
 layout. Edges are drawn with `trimmedEdge()` (boundary-to-boundary) as
@@ -39,18 +39,32 @@ today, so the retrofit will be a no-op in steady state — but locks the
 class of bug out structurally for any future edit that re-positions a
 node or adds an edge.
 
-- `components/viz/PrimAnimator.tsx`
-- `components/viz/KruskalAnimator.tsx`
-- `components/viz/ReverseDeleteAnimator.tsx`
-- `components/viz/CutExplorer.tsx`
-- `components/viz/ExchangeArgumentViz.tsx`
-- `components/viz/CycleCutLemmaViz.tsx`
-- `components/viz/PrimVsDijkstraViz.tsx`
-- `components/viz/DijkstraProofViz.tsx`
-- `components/viz/DijkstraAnimator.tsx` (uses `mst-graph.ts`? — verify in chunk)
-- `components/viz/DijkstraInvariantBreak.tsx` (custom 4-node layout — fold in here for symmetry)
+- `components/viz/PrimAnimator.tsx` ✅
+- `components/viz/KruskalAnimator.tsx` ✅
+- `components/viz/ReverseDeleteAnimator.tsx` ✅
+- `components/viz/CutExplorer.tsx` ✅
+- `components/viz/ExchangeArgumentViz.tsx` ✅
+- `components/viz/CycleCutLemmaViz.tsx` ✅
+- `components/viz/PrimVsDijkstraViz.tsx` ✅
+- `components/viz/DijkstraProofViz.tsx` ✅ (custom 4-node directed layout — folded in)
+- `components/viz/DijkstraAnimator.tsx` ✅ (custom 6-node directed layout, NOT mst-graph — folded in)
+- `components/viz/DijkstraInvariantBreak.tsx` ✅ (custom 4-node layout — folded in for symmetry)
 
-**Retrofit shape.** Replace `MST_NODES.map(... <circle>)` + `MST_EDGES.map(... trimmedEdge ... <line>)` with: build `NodeRect[]` from `MST_NODES` (bounding squares: `{x: n.x-r, y: n.y-r, w: 2r, h: 2r}`); call `routeEdge(a, b, rects)` per edge; render `<line>` for `kind: 'line'`, `<path>` for `kind: 'curve'`. Keep `trimmedEdge`'s boundary-trim for the visual endpoint refinement (route between centers, then optionally trim the rendered segment to the circle border in the consumer).
+**Retrofit shape (as executed).** For the 7 mst-graph consumers: a new
+`routeMstEdge(a, b)` helper in `mst-graph.ts` pre-computes `MST_RECTS` at
+module scope and dispatches to `routeEdge()`; the line case returns
+fields byte-identical to `trimmedEdge()` so consumers see no visual
+delta in steady state, while the curve case carries the Bezier d-string
+plus a label-anchor at the Bezier midpoint `(P0 + 2Q + P2) / 4`. Each
+consumer's edge map (and any halo/glow underlay map) gained a
+`g.kind === 'line' ? <line> : <path d={g.d} fill="none">` branch —
+styling/coloring/animation logic untouched. For the 3 directed-graph
+vizzes a new `trimEdgeGeom()` helper in `edge-routing.ts` trims both
+endpoints to circle borders for line AND curve cases (tangent-direction
+trim on curves, so arrowheads still land on the boundary). 5 new tests
+in `edge-routing.test.ts` lock both the byte-identical contract (over
+all 12 MST_EDGES) and the perturbed-collision case. See
+[[phase-e46-chunk-b1]].
 
 ### Chunk B2 — L08 directed / undirected base graphs
 

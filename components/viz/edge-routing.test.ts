@@ -4,8 +4,17 @@ import {
   perpDistance,
   routeEdge,
   segmentIntersectsRect,
+  trimEdgeGeom,
   type NodeRect,
 } from './edge-routing'
+import {
+  MST_EDGES,
+  MST_NODES,
+  MST_NODE_R,
+  MST_POS,
+  routeMstEdge,
+  trimmedEdge,
+} from './mst-graph'
 
 // Two 64×28 rectangles at column-2 (x=200) and column-3 (x=340), centred
 // rows. Mirrors the RiverCrossingStateGraph layout shape so the regression
@@ -159,5 +168,90 @@ describe('perpDistance', () => {
 
   it('falls back to point-to-point distance for a degenerate segment', () => {
     expect(perpDistance(5, 5, 5, 5, 8, 9)).toBeCloseTo(5)
+  })
+})
+
+describe('trimEdgeGeom', () => {
+  it('trims a line to circles of radius rA / rB along the segment direction', () => {
+    const geom = { kind: 'line' as const, x1: 0, y1: 0, x2: 100, y2: 0 }
+    const trimmed = trimEdgeGeom(geom, 0, 0, 10, 100, 0, 20)
+    expect(trimmed.kind).toBe('line')
+    if (trimmed.kind === 'line') {
+      expect(trimmed.x1).toBeCloseTo(10)
+      expect(trimmed.y1).toBeCloseTo(0)
+      expect(trimmed.x2).toBeCloseTo(80)
+      expect(trimmed.y2).toBeCloseTo(0)
+    }
+  })
+
+  it('trims a curve along tangent directions and keeps the control point', () => {
+    // Quadratic Bezier from (0,0) via (50, -40) to (100, 0).
+    // Tangent at source = (50, -40); at target = (50, 40). Both have length
+    // sqrt(50² + 40²) ≈ 64.03; trimming by 10 moves the endpoints 10/64.03 of
+    // the way along each tangent.
+    const geom = { kind: 'curve' as const, d: '', cx: 50, cy: -40 }
+    const trimmed = trimEdgeGeom(geom, 0, 0, 10, 100, 0, 10)
+    expect(trimmed.kind).toBe('curve')
+    if (trimmed.kind === 'curve') {
+      expect(trimmed.cx).toBe(50)
+      expect(trimmed.cy).toBe(-40)
+      // d-string should contain the new endpoints and the original Q.
+      expect(trimmed.d).toMatch(/^M [\d.-]+ [\d.-]+ Q 50 -40 [\d.-]+ [\d.-]+$/)
+    }
+  })
+
+  it('does not divide by zero on a zero-length tangent', () => {
+    const geom = { kind: 'curve' as const, d: '', cx: 0, cy: 0 }
+    expect(() => trimEdgeGeom(geom, 0, 0, 10, 100, 0, 10)).not.toThrow()
+  })
+})
+
+describe('routeMstEdge — MST layout', () => {
+  it('every MST_EDGES entry routes as a straight line on the current planar layout', () => {
+    // The shared L09 wheel is planar by construction — no edge passes through
+    // an unrelated node. A regression here means someone has moved a node or
+    // added an edge that introduces a collision, which the line/curve split
+    // is supposed to catch.
+    for (const e of MST_EDGES) {
+      const A = MST_POS.get(e.a)!
+      const B = MST_POS.get(e.b)!
+      const geom = routeMstEdge(A, B)
+      expect(geom.kind, `edge ${e.id} unexpectedly bent`).toBe('line')
+      if (geom.kind === 'line') {
+        const ref = trimmedEdge(A, B)
+        // Line case must be byte-identical to the legacy trimmedEdge output —
+        // that's the contract that lets every consumer migrate without any
+        // visual change in steady state.
+        expect(geom.x1).toBeCloseTo(ref.x1)
+        expect(geom.y1).toBeCloseTo(ref.y1)
+        expect(geom.x2).toBeCloseTo(ref.x2)
+        expect(geom.y2).toBeCloseTo(ref.y2)
+        expect(geom.mx).toBeCloseTo(ref.mx)
+        expect(geom.my).toBeCloseTo(ref.my)
+      }
+    }
+  })
+
+  it('curves an MST edge when an unrelated node is moved onto its centerline', () => {
+    // Simulate the kind of edit a future layout change could introduce: take
+    // the A–B edge (the top of the wheel) and confirm that if a node were
+    // sitting on its centerline, routeEdge would return a curve. We do this
+    // by re-routing through edge-routing.routeEdge directly with a perturbed
+    // rect list, since routeMstEdge reads the module-scope MST_RECTS.
+    const A = MST_POS.get('A')!
+    const B = MST_POS.get('B')!
+    const midX = (A.x + B.x) / 2
+    const midY = (A.y + B.y) / 2
+    const perturbedRects: NodeRect[] = MST_NODES.map((n) => ({
+      id: n.id,
+      x: (n.id === 'D' ? midX : n.x) - MST_NODE_R,
+      y: (n.id === 'D' ? midY : n.y) - MST_NODE_R,
+      w: MST_NODE_R * 2,
+      h: MST_NODE_R * 2,
+    }))
+    const rectA = perturbedRects.find((r) => r.id === 'A')!
+    const rectB = perturbedRects.find((r) => r.id === 'B')!
+    const geom = routeEdge(rectA, rectB, perturbedRects)
+    expect(geom.kind).toBe('curve')
   })
 })
