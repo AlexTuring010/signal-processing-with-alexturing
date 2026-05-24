@@ -34,6 +34,9 @@ import { ImpulseConstruction } from '@/components/viz/ImpulseConstruction'
 import { PeriodicityChecker } from '@/components/viz/PeriodicityChecker'
 import { EvenOddDecomposer } from '@/components/viz/EvenOddDecomposer'
 import { EnergyPowerCalculator } from '@/components/viz/EnergyPowerCalculator'
+import { IqFoundationsViz } from '@/components/viz/IqFoundationsViz'
+import { SignalClassificationPlayground } from '@/components/viz/SignalClassificationPlayground'
+import { DiscretePeriodicityChecker } from '@/components/viz/DiscretePeriodicityChecker'
 import {
   UnitStepPlot,
   RectPulsePlot,
@@ -199,6 +202,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PeriodicityChecker,
     EvenOddDecomposer,
     EnergyPowerCalculator,
+    IqFoundationsViz,
+    SignalClassificationPlayground,
+    DiscretePeriodicityChecker,
     UnitStepPlot,
     RectPulsePlot,
     TriPulsePlot,

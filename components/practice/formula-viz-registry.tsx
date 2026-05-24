@@ -13,6 +13,12 @@
 
 import type { ReactNode } from 'react'
 
+import { EnergyPowerCalculator } from '@/components/viz/EnergyPowerCalculator'
+import { EvenOddDecomposer } from '@/components/viz/EvenOddDecomposer'
+import { IqFoundationsViz } from '@/components/viz/IqFoundationsViz'
+import { ImpulseConstruction } from '@/components/viz/ImpulseConstruction'
+import { PeriodicityChecker } from '@/components/viz/PeriodicityChecker'
+import { DiscretePeriodicityChecker } from '@/components/viz/DiscretePeriodicityChecker'
 import { RectToSincViz } from '@/components/viz/RectToSincViz'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
@@ -50,6 +56,18 @@ import { NoiseFilterShapingViz } from '@/components/viz/NoiseFilterShapingViz'
 import { SNRPlaygroundViz } from '@/components/viz/SNRPlaygroundViz'
 
 const REGISTRY: Record<string, () => ReactNode> = {
+  // Foundations · Signal definitions + properties
+  'signal-energy': () => <EnergyPowerCalculator />,
+  'signal-power': () => <EnergyPowerCalculator />,
+  'cos-power-half': () => <EnergyPowerCalculator />,
+  'iq-decomposition': () => <IqFoundationsViz />,
+  'even-odd-decomposition': () => <EvenOddDecomposer />,
+  'delta-sifting': () => <ImpulseConstruction />,
+  'delta-properties': () => <ImpulseConstruction />,
+  'discrete-periodic-condition': () => <DiscretePeriodicityChecker />,
+  'continuous-periodic-condition': () => <PeriodicityChecker />,
+  'dc-rms': () => <EnergyPowerCalculator />,
+
   // Foundations · Fourier pairs / properties
   'fourier-pair-rect': () => <RectToSincViz />,
   'fourier-pair-tri': () => <TriToSincSquaredViz />,

@@ -23,6 +23,135 @@ export type FormulaMeta = {
 }
 
 export const FORMULA_META: Record<string, FormulaMeta> = {
+  // ── Foundations · Signal definitions + properties ────────────
+  'signal-energy': {
+    intuition: (
+      <>
+        Φαντάσου το σήμα σαν τάση πάνω σε αντίσταση 1 Ω: στιγμιαία ισχύς είναι <InlineMath>{'|x(t)|^2'}</InlineMath>,
+        και η <strong>συνολική ενέργεια</strong> είναι το ολοκλήρωμά της σε όλο τον χρόνο. Όταν αυτή είναι
+        πεπερασμένη και θετική, το σήμα ονομάζεται <em>energy signal</em> (π.χ. ορθογώνιος παλμός,
+        φθίνον εκθετικό). Cosine, sin, σταθερά — όλα έχουν άπειρη ενέργεια.
+      </>
+    ),
+    derivation: <>Άμεσος ορισμός από τη φυσική (Joules), πρωτότυπο στο slide 21 του deck.</>,
+  },
+  'signal-power': {
+    intuition: (
+      <>
+        Όταν η ενέργεια αποκλίνει (cosine, σταθερά, οτιδήποτε δεν φθίνει), ρωτάμε «πόση ενέργεια ανά
+        δευτερόλεπτο κατά μέσο όρο;» Αυτή η μέση ισχύς είναι πεπερασμένη όταν το σήμα είναι περιοδικό ή
+        στατιστικά «σταθερής έντασης». Power signal αν <InlineMath>{'0 < \\mathcal{P}_x < \\infty'}</InlineMath>.
+      </>
+    ),
+    derivation: (
+      <>
+        Πρόσεξε τη σύμβαση του prof: <InlineMath>{'\\frac{1}{2T}\\int_{-T}^{T}'}</InlineMath> (συμμετρικό
+        ±T) — όχι <InlineMath>{'\\frac{1}{T}\\int_{0}^{T}'}</InlineMath>. Αποτέλεσμα το ίδιο για κάθε
+        σταθερό σήμα, αλλά οι τύποι «κουμπώνουν» μόνο με τη συμμετρική.
+      </>
+    ),
+  },
+  'cos-power-half': {
+    intuition: (
+      <>
+        Το πιο εξεταζόμενο fact για περιοδικά σήματα ισχύος. Επειδή{' '}
+        <InlineMath>{'\\cos^2\\theta = \\tfrac{1+\\cos(2\\theta)}{2}'}</InlineMath>, ο δεύτερος όρος
+        έχει μέσο 0 και μένει το <InlineMath>{'A^2/2'}</InlineMath>. Ισχύει ανεξάρτητα από φάση{' '}
+        <InlineMath>{'\\phi'}</InlineMath>. Στις εξετάσεις εμφανίζεται απλώς ως «το cosine έχει P = A²/2».
+      </>
+    ),
+    derivation: (
+      <>
+        Δες την παραγωγή στο{' '}
+        <a href="/foundations/signals#energy-power" className="text-accent hover:underline">
+          /foundations/signals · §Ενέργεια και Ισχύς
+        </a>
+        .
+      </>
+    ),
+  },
+  'iq-decomposition': {
+    intuition: (
+      <>
+        Η «canonical form» κάθε real bandpass σήματος. Από την τριγωνομετρική{' '}
+        <InlineMath>{'\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta'}</InlineMath>{' '}
+        το <InlineMath>{'A(t)\\cos(2\\pi f_c t + \\theta(t))'}</InlineMath> γράφεται σαν προβολή
+        in-phase / quadrature. Όλα τα modulation schemes (AM, DSB, SSB, FM, PM) είναι απλά
+        διαφορετική επιλογή των <InlineMath>{'x_I, x_Q'}</InlineMath>.
+      </>
+    ),
+    derivation: (
+      <>
+        Slide 16 του deck. Παραγωγή στο{' '}
+        <a href="/foundations/signals#iq" className="text-accent hover:underline">
+          /foundations/signals · §I/Q
+        </a>
+        .
+      </>
+    ),
+  },
+  'even-odd-decomposition': {
+    intuition: (
+      <>
+        Κάθε σήμα σπάει μοναδικά σε ένα άρτιο και ένα περιττό μέρος. Δεν είναι μαθηματικό κόλπο —
+        στους Fourier συντελεστές το άρτιο μέρος δίνει cosines (πραγματικό spectrum) και το περιττό
+        δίνει sines (φανταστικό), οπότε η διάσπαση απλοποιεί δεκάδες ολοκληρώματα.
+      </>
+    ),
+    derivation: <>Slide 18 του deck. Άμεσος έλεγχος: αντικατάσταση t → −t.</>,
+  },
+  'delta-sifting': {
+    intuition: (
+      <>
+        Η δ «σαρώνει» το x(t) και επιστρέφει την τιμή του στο σημείο όπου είναι μη μηδενική η δ. Αυτή
+        η μία ιδιότητα είναι η ραχοκοκαλιά της <strong>convolution</strong> και της{' '}
+        <strong>impulse response</strong> των LTI συστημάτων — γι' αυτό η δ αξίζει χρόνο τώρα.
+      </>
+    ),
+    derivation: <>Slide 34 του deck.</>,
+  },
+  'delta-properties': {
+    intuition: (
+      <>
+        Η δ είναι <strong>άρτια</strong> (συμμετρική γύρω από το t=0) και «κλιμακώνεται» με το{' '}
+        <InlineMath>{'1/|a|'}</InlineMath>: συμπίεση χρόνου διπλασιάζει το «ύψος» της — λογικό
+        αφού το εμβαδό πρέπει να μένει 1.
+      </>
+    ),
+    derivation: <>Slide 33-34. Συνέπεια του ορίσματος ως όριο rect(t/ε)/ε.</>,
+  },
+  'discrete-periodic-condition': {
+    intuition: (
+      <>
+        Στο διακριτό χρόνο το <InlineMath>{'\\cos(\\omega n)'}</InlineMath> κλείνει κύκλο όχι κάθε{' '}
+        <InlineMath>{'2\\pi/\\omega'}</InlineMath> «χρόνου» αλλά κάθε{' '}
+        <strong>ακέραιο</strong> πλήθος δειγμάτων N. Άρα <InlineMath>{'2\\pi/\\omega'}</InlineMath>{' '}
+        πρέπει να γράφεται σαν N/m, αλλιώς δεν υπάρχει N. Η παγίδα: cos(n/4) ΔΕΝ είναι περιοδικό.
+      </>
+    ),
+    derivation: <>Slide 11-12. Συνθήκη ωN = 2π m.</>,
+  },
+  'continuous-periodic-condition': {
+    intuition: (
+      <>
+        Για να επανέλθουν δύο cosines ταυτόχρονα στην αρχική τους τιμή, χρειάζονται ακέραιες πολλαπλά
+        των περιόδων τους που να συμπίπτουν. Αυτό συμβαίνει μόνο αν ο λόγος T₁/T₂ γράφεται σαν p/q.
+        Άρρητος λόγος → ποτέ δεν αλληλο-καλύπτονται ακριβώς.
+      </>
+    ),
+    derivation: <>Slide 10. k₁T₁ = k₂T₂ = T ⇒ T₁/T₂ = k₂/k₁ ∈ ℚ.</>,
+  },
+  'dc-rms': {
+    intuition: (
+      <>
+        Το <strong>DC</strong> είναι ο μέσος όρος του σήματος (η «σταθερή συνιστώσα»). Το{' '}
+        <strong>RMS</strong> είναι το ισοδύναμο DC επίπεδο που θα έδινε την ίδια ισχύ — δηλαδή
+        <InlineMath>{'\\sqrt{\\mathcal{P}_x}'}</InlineMath>. Για cosine: DC = 0, RMS = A/√2.
+      </>
+    ),
+    derivation: <>Slide 26.</>,
+  },
+
   // ── Foundations · Fourier pairs ──────────────────────────────
   'fourier-pair-rect': {
     intuition: (

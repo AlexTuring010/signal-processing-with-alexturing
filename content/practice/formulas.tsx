@@ -47,6 +47,116 @@ export const FORMULA_SHEET: FormulaSection[] = [
     topic: 'foundations',
     label: 'Foundations',
     entries: [
+      // Signal definitions + properties (derived in /foundations/signals)
+      {
+        id: 'signal-energy',
+        title: 'Ενέργεια σήματος',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <BlockMath>{'\\mathcal{E}_x \\;=\\; \\lim_{T\\to\\infty} \\int_{-T}^{T} |x(t)|^2\\,dt \\;=\\; \\int_{-\\infty}^{\\infty} |x(t)|^2\\,dt'}</BlockMath>
+        ),
+      },
+      {
+        id: 'signal-power',
+        title: 'Ισχύς σήματος',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <>
+            <BlockMath>{'\\mathcal{P}_x \\;=\\; \\lim_{T\\to\\infty}\\frac{1}{2T}\\int_{-T}^{T} |x(t)|^2\\,dt'}</BlockMath>
+            <BlockMath>{'\\text{περιοδικό με } T_0:\\quad \\mathcal{P}_x \\;=\\; \\frac{1}{2T_0}\\int_{-T_0}^{T_0} |x(t)|^2\\,dt'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'cos-power-half',
+        title: 'Ισχύς cosine: P = A²/2',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <BlockMath>{'x(t) = A\\cos(2\\pi f_c t + \\phi) \\;\\Longrightarrow\\; \\mathcal{P}_x = \\tfrac{A^2}{2},\\; R_x^{\\mathrm{RMS}} = \\tfrac{A}{\\sqrt{2}}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'iq-decomposition',
+        title: 'I/Q decomposition (slide 16)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <>
+            <BlockMath>{'x(t) = A(t)\\cos(2\\pi f_c t + \\theta(t)) \\;=\\; x_I(t)\\cos(2\\pi f_c t) \\;-\\; x_Q(t)\\sin(2\\pi f_c t)'}</BlockMath>
+            <BlockMath>{'x_I(t) = A(t)\\cos\\theta(t)\\,,\\quad x_Q(t) = A(t)\\sin\\theta(t)'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'even-odd-decomposition',
+        title: 'Άρτιο + Περιττό μέρος',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <BlockMath>{'x(t) = \\underbrace{\\tfrac{x(t)+x(-t)}{2}}_{x_e(t)} + \\underbrace{\\tfrac{x(t)-x(-t)}{2}}_{x_o(t)}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'delta-sifting',
+        title: 'δ(t) — sifting property',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <BlockMath>{'\\int_{-\\infty}^{\\infty} x(t)\\,\\delta(t - t_0)\\,dt = x(t_0)'}</BlockMath>
+        ),
+      },
+      {
+        id: 'delta-properties',
+        title: 'δ(t) — βασικές ιδιότητες',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <BlockMath>{'\\delta(-t) = \\delta(t) \\,,\\quad \\delta(at) = \\tfrac{1}{|a|}\\,\\delta(t) \\,,\\quad \\int_{-\\infty}^{\\infty}\\delta(t)\\,dt = 1'}</BlockMath>
+        ),
+      },
+      {
+        id: 'discrete-periodic-condition',
+        title: 'Διακριτή περιοδικότητα cos(ω n)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <BlockMath>{'\\cos(\\omega n) \\text{ περιοδικό} \\;\\Longleftrightarrow\\; \\tfrac{2\\pi}{\\omega} = \\tfrac{N}{m} \\in \\mathbb{Q},\\; N,m\\in\\mathbb{Z}^{+}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'continuous-periodic-condition',
+        title: 'Άθροισμα cosines — ρητός λόγος',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <BlockMath>{'\\cos(2\\pi t/T_1) + \\cos(2\\pi t/T_2) \\text{ περιοδικό} \\;\\Longleftrightarrow\\; \\tfrac{T_1}{T_2} \\in \\mathbb{Q}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'dc-rms',
+        title: 'Τιμές DC και RMS',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/signals',
+        content: (
+          <>
+            <BlockMath>{'R_x^{\\mathrm{DC}} \\;\\triangleq\\; \\lim_{T\\to\\infty}\\frac{1}{2T}\\int_{-T}^{T} x(t)\\,dt'}</BlockMath>
+            <BlockMath>{'R_x^{\\mathrm{RMS}} \\;=\\; \\sqrt{\\mathcal{P}_x}'}</BlockMath>
+          </>
+        ),
+      },
       {
         id: 'fourier-pair-rect',
         title: 'Rect ↔ sinc',
