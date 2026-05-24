@@ -26,6 +26,11 @@ const FUNCTIONS: GrowthFn[] = [
 ]
 
 const PLOT = { x0: 64, x1: 686, yTop: 44, yBot: 348 }
+// Number of polyline samples per curve. At low slider values (nMax = 5)
+// sampling only at integer n leaves the chart with ≤ 5 segments per curve
+// — visibly corner-y for n², n·log n, 2ⁿ. 200 samples puts each segment
+// below ~1 px regardless of the slider position.
+const SAMPLES = 200
 
 function fmt(v: number): string {
   if (v >= 1e7) return v.toExponential(1).replace('e+', '·10^')
@@ -58,7 +63,9 @@ export function BigOPlayground() {
     // upward arrow there instead.
     const pts: string[] = []
     let overflowX: number | null = null
-    for (let n = 1; n <= nMax; n++) {
+    for (let i = 0; i < SAMPLES; i++) {
+      const t = i / (SAMPLES - 1)
+      const n = 1 + t * (nMax - 1)
       const v = fn.f(n)
       const x = xFor(n)
       pts.push(`${x.toFixed(1)},${yFor(v).toFixed(1)}`)
