@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'PM — Phase Modulation + δυϊκότητα με FM',
   description:
-    'Phase Modulation. Phase sensitivity K_p, modulation index β_p, εξίσωση PM, σύνδεση με FM μέσω δυϊκότητας (integrate ↔ differentiate), NBFM γραμμικοποίηση που δείχνει ότι μοιάζει με quadrature-AM, σύγκριση φασμάτων NBFM vs AM.',
+    'Phase Modulation. Phase sensitivity K_p, modulation index β_p, εξίσωση PM, στιγμιαία συχνότητα PM ως f_c + (K_p/2π)·dm/dt, σύνδεση με FM μέσω δυϊκότητας (integrate ↔ differentiate), NBFM/NBPM γραμμικοποίηση + το διπλό πρόσημο που κάνει το NBFM ίδιο σε μέτρο αλλά κάθετο σε γεωμετρία από το AM, slide-18 4-panel σύγκριση AM/PM/FM.',
 }
 
 export const frontmatter = {
@@ -10,18 +10,19 @@ export const frontmatter = {
   order: 2,
   prerequisites: ['fm/idea'],
   examWeight: 2,
-  estimatedReadTime: 22,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 30,
+  lastUpdated: '2026-05-24',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
 import { Bookmark } from '@/components/layout/Bookmark'
 import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+import Link from 'next/link'
 
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · FM</span>
   <span>·</span>
-  <span>~22 min read</span>
+  <span>~30 min read</span>
   <span>·</span>
   <span className="font-semibold text-emerald-700 dark:text-emerald-400">🟢 Light exam — completeness</span>
 </div>
@@ -37,332 +38,683 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <SourceDoc
   sources={[
-    { pdf: 'SE_session15_16_16_FM.pdf', label: 'PM, διαμόρφωση γωνίας, NBFM' },
-    { pdf: 'SE_session15_FM.pdf', label: 'σύντομη έκδοση' },
+    {
+      pdf: 'SE_session15_16_16_FM.pdf',
+      slides: '4-13, 18, 26, 29-34',
+      label: 'PM ορισμός + K_p + β_p, PM/FM δυϊκότητα, slide-18 4-panel AM/PM/FM, Carson εφαρμόζεται και στα δύο, NBFM/NBPM γραμμικοποίηση + φάσμα + single-tone',
+    },
+    {
+      pdf: 'SE_session15_FM.pdf',
+      slides: '4-13, 18',
+      label: 'σύντομη έκδοση (ταυτόσημες με τις πρώτες 18 σελίδες του extended)',
+    },
   ]}
 />
 
-Στο [προηγούμενο κεφάλαιο](/fm/idea) είδαμε ότι η FM κωδικοποιεί την πληροφορία στη **στιγμιαία συχνότητα**. Υπάρχει όμως και μια συγγενής διαμόρφωση που κωδικοποιεί την πληροφορία **απευθείας στη φάση**: η **Phase Modulation (PM)**.
+Στο <Link href="/fm/idea">/fm/idea</Link> ξεκινήσαμε από τη **FM** και είδαμε ότι ο καθηγητής τοποθετεί FM και PM **μαζί** ως οικογένεια «**Διαμόρφωση Γωνίας**» (slide 4). Σε αυτό το κεφάλαιο διαλέγουμε την **PM** ως κύριο πρωταγωνιστή και βλέπουμε:
 
-Στις διαλέξεις του K21, οι FM και PM παρουσιάζονται μαζί ως **«Διαμόρφωση Γωνίας» (Angle Modulation)**. Σε αυτό το κεφάλαιο:
+1. Πώς ορίζει την PM ο καθηγητής, με την ευαισθησία **K<sub>p</sub>** και τον δείκτη **β<sub>p</sub>** (slide 7).
+2. Γιατί η **στιγμιαία συχνότητα της PM ακολουθεί το `dm/dt`**, όχι το ίδιο το `m(t)` — και τι σημαίνει αυτό πρακτικά.
+3. Πώς συγκρίνονται PM, FM, και AM **στον χρόνο για το ίδιο message** (slide 14-18 του καθηγητή).
+4. Πώς η **PM↔FM δυϊκότητα** με τις σταθερές `K_p = 2π K_f` και `K_f = K_p/(2π)` σημαίνει ότι όλα τα αποτελέσματα της FM μεταφέρονται αμέσως στην PM.
+5. Πώς η **NBFM/NBPM προσέγγιση** δίνει σήμα με ίδιο **μέτρο** φάσματος όπως AM, αλλά εντελώς **διαφορετική γεωμετρία στο complex plane** — γι' αυτό είναι ανθεκτικότερη στον amplitude θόρυβο.
 
-1. Ορίζουμε την PM και τα δικά της β/K.
-2. Αποδεικνύουμε τη **δυϊκότητα PM ↔ FM** (integrator/differentiator).
-3. Παράγουμε τη **NBFM προσέγγιση** που δείχνει η FM στενής ζώνης μοιάζει με quadrature-AM.
-4. Συγκρίνουμε τα φάσματα **NBFM vs AM** — ίδιο μέτρο, διαφορετική φάση.
+## 1. Πώς ορίζει την PM ο καθηγητής (slide 7)
 
-## 1. Ορισμός PM
+Από το slide 4 ξέρουμε ήδη τη γενική μορφή `x(t) = A_c cos(θ(t))` με `θ(t) = 2π f_c t + φ(t)`. Στο **slide 7** ο καθηγητής διαλέγει την πιο απλή δυνατή σχέση μεταξύ `φ(t)` και `m(t)`:
 
-Ένα PM σήμα έχει σταθερό πλάτος και συνολική φάση:
+<Callout type="key" title="Ορισμός PM (slide 7)">
 
-$$
-\boxed{\,x_{PM}(t) = A_c\cos[2\pi f_c t + \phi(t)], \qquad \phi(t) = K_p\, m(t)\,}
-$$
-
-όπου:
-
-- $K_p$ — **phase sensitivity** της PM (μονάδες: rad/V)
-- $m(t)$ — το message
-- $\phi(t)$ — η φάση στιγμιαία ανάλογη με το $m$
-
-**Σύγκριση με FM:** στην FM η φάση είναι το **ολοκλήρωμα** του message ($\phi_{FM}(t) = 2\pi K_f \int m\, d\tau$). Στην PM είναι **απευθείας** ανάλογη ($\phi_{PM}(t) = K_p m(t)$).
-
-## 2. Modulation index για PM
-
-Για ένα γενικό message, η μέγιστη απόκλιση φάσης από τον carrier ορίζει το modulation index:
+<p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+«Στη διαμόρφωση PM το <InlineMath>{'\\phi(t)'}</InlineMath> σχετίζεται
+<strong> γραμμικά </strong> με το <InlineMath>{'m(t)'}</InlineMath> μέσω μίας
+σταθεράς <InlineMath>{'K_p'}</InlineMath> που ονομάζεται
+<em> ευαισθησία φάσης (phase sensitivity)</em> της διαμόρφωσης με μονάδα μέτρησης το
+<strong> radians/Volt</strong>.»
+</p>
 
 $$
-\boxed{\,\beta_p \triangleq \Delta\phi_{max} = K_p\, \max|m(t)|\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,x_{PM}(t) = A_c\cos[2\pi f_c t + K_p\, m(t)], \qquad \phi(t) = K_p\, m(t)\,}
 $$
-
-Σύγκρινε με τη FM: $\beta_f = \Delta f_{max}/W = K_f\, \max|m(t)| / W$ (όπου $W$ το bandwidth του message).
-
-**Σημαντικό:** το $\beta_p$ είναι αδιάστατο, μετριέται σε **radians**, ενώ το $K_p$ μετριέται σε **rad/V**.
-
-## 3. Στιγμιαία συχνότητα στην PM
-
-Από τον γενικό τύπο $f_i(t) = f_c + (1/2\pi) \cdot d\phi/dt$:
-
-$$
-f_i^{PM}(t) = f_c + \frac{K_p}{2\pi}\, \frac{dm(t)}{dt}
-$$
-
-Δηλαδή στην PM **η στιγμιαία συχνότητα είναι ανάλογη με το παράγωγο του message**, όχι με το ίδιο το message. Αυτό είναι το αντίστροφο της FM ($f_i^{FM} = f_c + K_f\, m$).
-
-<Collectible id="phasor-skin" />
-
-## 4. PM ↔ FM δυϊκότητα
-
-Η σχέση των δύο διαμορφώσεων είναι ένα από τα πιο κομψά αποτελέσματα του κεφαλαίου:
-
-<Callout type="key" title="PM/FM duality">
-
-- Αν στον είσοδο ενός **PM modulator** βάλεις το **ολοκλήρωμα** του message $\int m(\tau)d\tau$, τότε η έξοδος είναι **FM-modulated**.
-- Αν στον είσοδο ενός **FM modulator** βάλεις το **παράγωγο** του message $dm/dt$, τότε η έξοδος είναι **PM-modulated**.
-
-Με τον σωστό συντελεστή σύνδεσης ($K_p = 2\pi K_f$ ή $K_f = K_p/(2\pi)$), τα δύο σήματα είναι **πανομοιότυπα**.
 
 </Callout>
 
-**Απόδειξη.** Ξεκινάμε με PM:
+Δύο πράγματα να κρατήσεις:
+
+- Η **σταθερά K<sub>p</sub>** μετριέται σε **rad/V** — μας λέει πόσα radians μετατοπίζεται η φάση ανά Volt του message.
+- Δεν υπάρχει ολοκλήρωμα. Το <InlineMath>{'m(t)'}</InlineMath> «πηγαίνει απευθείας» στη φάση — αυτό είναι το βασικό που ξεχωρίζει τη PM από τη FM.
+
+**Σύγκριση με τη FM (slide 8):** στη FM ο καθηγητής γράφει `dφ/dt = 2π K_f m(t)`, οπότε `φ_FM(t) = 2π K_f ∫m(τ)dτ`. Στη PM: `φ_PM(t) = K_p m(t)`. Η μία δουλεύει με **ολοκλήρωμα**, η άλλη με **τιμή**.
+
+## 2. Modulation index β<sub>p</sub> (slide 7)
+
+Στη FM ο δείκτης **κανονικοποιείται** ως προς το bandwidth `W` του message (γιατί η FM «νοιάζεται» για συχνότητες). Στην PM η αντίστοιχη ποσότητα είναι απλώς η **μέγιστη μετατόπιση φάσης**:
+
 $$
-x_{PM}(t) = A_c\cos[2\pi f_c t + K_p\, m'(t)]
+\boxed{\,\beta_p \triangleq \Delta\phi_{max} = K_p\, \max|m(t)|\,} \quad \text{✓ Στο τυπολόγιο (μαζί με } \beta_f\text{)}
 $$
 
-Αν στη θέση του $m'(t)$ βάλουμε $\int m\, d\tau$:
+Παρατηρήσεις:
+
+- Το <InlineMath>{'\\beta_p'}</InlineMath> μετριέται σε **radians** (αδιάστατο).
+- Δεν εμφανίζεται το `W` στον ορισμό — η φάση δεν έχει «bandwidth» dimension. Για να μετρήσεις τον δείκτη ΡΜ απλά παίρνεις τη μέγιστη απόλυτη τιμή του message και πολλαπλασιάζεις με <InlineMath>{'K_p'}</InlineMath>.
+- Σε εξετάσεις, η συνηθισμένη πρώτη ερώτηση «βρες το β» ικανοποιείται με ΜΙΑ γραμμή για PM, ενώ για FM χρειάζεσαι **και** το `Δf_max` **και** το `W`.
+
+<Callout type="note" title="Γιατί το β_p δεν έχει W στον παρονομαστή — η μηχανική διαίσθηση">
+Στην PM **η ίδια η φάση** καθορίζεται από το <InlineMath>{'m(t)'}</InlineMath>. Άρα η μέγιστη απόκλιση της φάσης από τον carrier εξαρτάται μόνο από το <InlineMath>{'\\max|m(t)|'}</InlineMath> και τον συντελεστή σύνδεσης <InlineMath>{'K_p'}</InlineMath>. Δεν χρειάζεται «κανονικοποίηση ως προς το bandwidth».
+
+Στη FM όμως, **το ολοκλήρωμα** του <InlineMath>{'m(t)'}</InlineMath> καθορίζει τη φάση. Σήματα με μεγάλο bandwidth έχουν συστατικά υψηλής συχνότητας — που το ολοκλήρωμα τα <strong>μειώνει</strong> κατά παράγοντα <InlineMath>{'1/f'}</InlineMath>. Γι' αυτό το <InlineMath>{'\\beta_f'}</InlineMath> κανονικοποιείται ως προς το <InlineMath>{'W'}</InlineMath> — για να αποτυπώσει σωστά «πόσο σπρώχνει η συνολική ισχύς του message τη φάση».
+</Callout>
+
+## 3. Στιγμιαία συχνότητα της PM — ακολουθεί το `dm/dt`
+
+Από τον γενικό ορισμό του καθηγητή (slide 6) <InlineMath>{'f_i(t) \\triangleq f_c + (1/2\\pi)\\, d\\phi/dt'}</InlineMath>:
+
 $$
-x_{PM}(t)\big|_{m' = \int m d\tau} = A_c\cos\!\left[2\pi f_c t + K_p\int m\, d\tau\right]
+\boxed{\,f_i^{PM}(t) = f_c + \frac{K_p}{2\pi}\, \frac{dm(t)}{dt}\,}
 $$
 
-Συγκρίνοντας με την FM:
+Σύγκρινε με τη FM:
+
+| Σχήμα | <InlineMath>{'f_i(t)'}</InlineMath> | Συμπεριφορά |
+| --- | --- | --- |
+| **FM** | <InlineMath>{'f_c + K_f\\, m(t)'}</InlineMath> | συχνότητα **= τιμή του message** |
+| **PM** | <InlineMath>{'f_c + (K_p/2\\pi)\\, dm/dt'}</InlineMath> | συχνότητα **= ρυθμός αλλαγής του message** |
+
+Δηλαδή: ίδιο `m(t)`, εντελώς διαφορετική στιγμιαία συχνότητα.
+
+<PmInstantaneousFrequencyViz />
+
+**Πρακτική συνέπεια:** για ομαλά αναλογικά σήματα (ομιλία, μουσική) όπου το <InlineMath>{'dm/dt'}</InlineMath> είναι συνεχές, και τα δύο σχήματα δουλεύουν. Για σήματα με απότομες ακμές (π.χ. τετράγωνες κυματομορφές, ψηφιακά δεδομένα), η PM **σπάει**: η `dm/dt` έχει spikes ή ασυνέχειες, και η στιγμιαία συχνότητα κάνει «πηδήματα». Γι' αυτό η FM είναι σχεδόν πάντα η σωστή επιλογή για αναλογικό audio, ενώ μορφές της PM (π.χ. PSK) χρησιμοποιούνται κυρίως σε ψηφιακά σχήματα όπου τα πηδήματα είναι το **ζητούμενο**.
+
+## 4. PM, FM, και AM στον χρόνο — slide 18 του καθηγητή
+
+Ο καθηγητής στα **slides 14-18** δίνει την κορυφαία πεδαγωγική σύγκριση: ένα single-tone message <InlineMath>{'m(t) = \\cos(2\\pi \\cdot 0.5 t)'}</InlineMath>, ένας carrier <InlineMath>{'f_c = 8'}</InlineMath> Hz, και τρία διαμορφωμένα σήματα δίπλα-δίπλα. Δείτε το ίδιο σχήμα:
+
+<AngleModulationTimeDomainViz />
+
+Παρατηρήσεις που έχουν εξεταστική αξία:
+
+- **Envelope:** το AM σήμα ταλαντώνεται σε πλάτος — η πληροφορία είναι **στο envelope**. Τα PM και FM σήματα έχουν **σταθερό envelope** — η πληροφορία είναι **στη φάση** (PM) ή **στη συχνότητα** (FM).
+- **Πότε «επιταχύνεται» το PM:** εκεί που το <InlineMath>{'dm/dt'}</InlineMath> είναι μέγιστο. Για cosine, αυτό είναι στα **μηδενίσματα του m** (καθώς το m κατεβαίνει με μέγιστη ταχύτητα).
+- **Πότε «επιταχύνεται» το FM:** εκεί που το <InlineMath>{'m(t)'}</InlineMath> είναι μέγιστο. Για cosine, αυτό είναι στις **κορυφές του m**.
+- Άρα PM και FM δίνουν συμπυκνώσεις/απλωμένες περιοχές σε **διαφορετικά σημεία του χρόνου** — αυτή είναι η ορατή 90° μετατόπιση (single-tone) που θα γράψουμε αναλυτικά στην §10.
+
+<Callout type="note" title="Άσκηση 1 του καθηγητή (slides 14-18) → εξειδικευμένη στις εξετάσεις">
+Η <strong>Άσκηση 1</strong> από το slide 14 ζητάει ακριβώς «βρες τα διαμορφωμένα κατά PM και FM σήματα για <InlineMath>{'m(t) = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>». Η απάντηση:
+
 $$
-x_{FM}(t) = A_c\cos\!\left[2\pi f_c t + 2\pi K_f \int m\, d\tau\right]
+x_{PM}(t) = A_c\cos[2\pi f_c t + \beta_p\cos(2\pi f_m t)], \qquad \beta_p = K_p\alpha
+$$
+$$
+x_{FM}(t) = A_c\cos[2\pi f_c t + \beta_f\sin(2\pi f_m t)], \qquad \beta_f = K_f\alpha/f_m
 $$
 
-Τα δύο ταυτίζονται όταν $K_p = 2\pi K_f$. ✓
+Σημείωσε ότι **PM παίρνει cos** μέσα στη φάση (γιατί <InlineMath>{'\\phi_{PM} = K_p m(t) = K_p\\alpha\\cos'}</InlineMath>) ενώ **FM παίρνει sin** (γιατί ολοκλήρωμα cos = sin). Αυτή η 90° μετατόπιση είναι η ορατή διαφορά στα slides 16 vs 17.
+</Callout>
 
-**Πρακτικό συμπέρασμα:** οποιοδήποτε αποτέλεσμα ισχύει για FM (φάσμα Bessel, Carson's rule, in-noise) **ισχύει και για PM** μετά από αναπροσαρμογή της σύνδεσης μεταξύ $\beta$ και $K$.
+## 5. PM ↔ FM δυϊκότητα (slides 12-13)
 
-## 5. PM σε I/Q canonical form
+Στο <Link href="/fm/idea#4-δυϊκότητα-pm-fm-με-τις-σταθερές-του-καθηγητή">/fm/idea §4</Link> κάναμε τη δυϊκότητα σε βάθος, μαζί με block diagrams και time-domain overlay. Εδώ συμπυκνώνουμε τις δύο σταθερές:
 
-Όπως κάθε διαμόρφωση γωνίας, η PM γράφεται στην canonical bandpass form:
+<Callout type="key" title="Οι δύο σταθερές μετατροπής (slides 12-13)">
+
+- **PM → FM** (integrator στην είσοδο): <InlineMath>{'K_p = 2\\pi K_f'}</InlineMath>
+- **FM → PM** (differentiator στην είσοδο): <InlineMath>{'K_f = K_p / (2\\pi)'}</InlineMath>
+
+</Callout>
+
+**Γιατί έχει σημασία:** οποιοδήποτε αποτέλεσμα παρουσιάζεται για FM **ισχύει αυτόματα και για PM** — με αναπροσαρμογή του δείκτη <InlineMath>{'\\beta'}</InlineMath>. Συγκεκριμένα:
+
+- **Φάσμα μέσω Bessel** (επόμενο κεφάλαιο `/fm/bessel`): ίδιοι τύποι, ίδιο <InlineMath>{'J_n(\\beta)'}</InlineMath>, απλώς αντικαθιστάς <InlineMath>{'\\beta = \\beta_p'}</InlineMath> ή <InlineMath>{'\\beta_f'}</InlineMath>.
+- **Carson's rule** (`/fm/carson`): <InlineMath>{'B = 2(\\beta + 1)W'}</InlineMath> ισχύει **και για PM** — δες §7.
+- **In-noise SNR** (`/fm/in-noise`): η ίδια κλίμακα <InlineMath>{'3\\beta^2'}</InlineMath> προσφορά.
+
+<Callout type="intuition" title="Πρακτική ιστορική σύνδεση">
+Πολλοί παλιοί FM transmitter γεννούσαν πραγματικά PM σήματα και μετά τα μετέτρεπαν σε FM με έναν integrator στο message. Αυτή η τεχνική («Armstrong indirect FM», 1936) ήταν η πρώτη λύση για NBFM σε εμπορική κλίμακα — δείχνει ότι η δυϊκότητα δεν είναι θεωρητικό curiosity αλλά **πραγματικό υλικό σύστημα**.
+</Callout>
+
+## 6. PM σε I/Q canonical form (slide 10-11)
+
+Όπως κάθε διαμόρφωση γωνίας, η PM γράφεται στην **canonical bandpass form** που εισήγαγε ο καθηγητής στο slide 10:
 
 $$
 x_{PM}(t) = \underbrace{A_c\cos\phi(t)}_{x_I(t)}\cos(2\pi f_c t) - \underbrace{A_c\sin\phi(t)}_{x_Q(t)}\sin(2\pi f_c t)
 $$
 
-με $\phi(t) = K_p m(t)$.
+με <InlineMath>{'\\phi(t) = K_p m(t)'}</InlineMath>. Δύο άμεσες συνέπειες:
 
-**Envelope:** $V(t) = \sqrt{x_I^2 + x_Q^2} = A_c\sqrt{\cos^2\phi + \sin^2\phi} = A_c$. **Σταθερό!** — όπως στην FM.
-
-**Power:** $P_{PM} = A_c^2/2$ — ανεξάρτητο του message, ταυτόσημο με FM. Δες [I/Q decomposition viz](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή) με preset «PM».
-
-## 6. NBFM γραμμικοποίηση — η FM στενής ζώνης μοιάζει με AM
-
-Όταν $\beta \ll 1$ (NBFM ή NBPM), μπορούμε να **γραμμικοποιήσουμε** τις τριγωνομετρικές συναρτήσεις. Παίρνουμε Taylor:
+**Σταθερό envelope.**
 
 $$
-\cos\phi(t) \approx 1 - \frac{\phi^2}{2} + \ldots \approx 1
+V(t) = \sqrt{x_I^2 + x_Q^2} = A_c\sqrt{\cos^2\phi + \sin^2\phi} = A_c \quad \text{(ανεξάρτητα του message)}
 $$
 
-$$
-\sin\phi(t) \approx \phi(t) - \frac{\phi^3}{6} + \ldots \approx \phi(t)
-$$
-
-(αφού $\phi \ll 1$).
-
-Αντικαθιστώντας στην canonical form:
+**Ισχύς ανεξάρτητη του β.** Από το slide 11 ο καθηγητής το γράφει ρητά:
 
 $$
-\boxed{\,x_{NB}(t) \approx A_c\cos(2\pi f_c t) - A_c\,\phi(t)\sin(2\pi f_c t)\,}
+\mathcal{P}_x^{PM} = \mathcal{P}_x^{FM} = \lim_{T\to\infty} \frac{1}{T}\int_{-T/2}^{T/2} |A_c\cos(2\pi f_c t + \phi(t))|^2\, dt = \boxed{\,\frac{A_c^2}{2}\,}
 $$
 
-**Διαβάζεται:** το NB σήμα γράφεται ως **άθροισμα ενός pure carrier** (πρώτος όρος) και ενός **DSB-SC σήματος** που πολλαπλασιάζει το $\phi(t)$ με $\sin(2\pi f_c t)$.
+Η ισχύς είναι η **ίδια για PM και FM**, και **ίδια ανεξάρτητα του β** (ή του message). Όλη η πληροφορία ζει στη φάση — χωρίς ενεργειακό κόστος. Σύγκρινε με Συμβατικό AM (<InlineMath>{'\\mathcal{P}_{AM} = A_c^2/2 + A_c^2 \\mu^2/4'}</InlineMath>): η AM ξοδεύει σημαντική ενέργεια στο carrier ΚΑΙ επιπλέον για το modulation, ενώ η PM/FM «δεν χρειάζονται extra ενέργεια για modulation».
 
-## 7. Φάσμα NBFM vs AM
+→ Δες το complex envelope στον κύκλο στο <Link href="/fm/idea#6-iq-canonical-form-γιατί-η-ισχύς-είναι-a_c-2">/fm/idea §6</Link> (ConstantEnvelopeCircleViz).
 
-Παίρνοντας FT (με $\Phi(f) = \mathcal{F}\{\phi(t)\}$):
+## 7. Carson's rule ισχύει **και** για PM (slide 26)
+
+Στο **slide 26** ο καθηγητής γράφει ρητά:
+
+<Callout type="key" title="Πώς διατυπώνει τον κανόνα Carson ο καθηγητής (slide 26)">
+
+<p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+«Σε πρακτικά συστήματα επικοινωνιών το εύρος ζώνης των σημάτων περιορίζεται σε ένα
+πεπερασμένο διάστημα <InlineMath>{'B'}</InlineMath>, το οποίο περιέχει σχεδόν ολόκληρη
+την ισχύ του διαμορφωμένου σήματος. Πρόκειται για το <em>ενεργό εύρος ζώνης</em>:»
+</p>
 
 $$
-X_{NB}(f) \approx \frac{A_c}{2}\delta(f - f_c) + \frac{A_c}{2}\delta(f + f_c) - \frac{jA_c}{2}\Phi(f - f_c) + \frac{jA_c}{2}\Phi(f + f_c)
+\boxed{\,B \cong 2W(\beta + 1)\,} \quad \text{όπου } \beta = \beta_p \text{ ή } \beta_f \quad \text{✓ Στο τυπολόγιο (στο /fm/carson)}
 $$
 
-Για **σύγκριση**, η AM γράφεται:
+<p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+«Το παραπάνω ισχύει <strong>τόσο για τη διαμόρφωση PM όσο και για την FM</strong>.»
+</p>
+
+</Callout>
+
+Δηλαδή ο ίδιος τύπος, μόνο που για PM βάζεις <InlineMath>{'\\beta_p = K_p\\max|m|'}</InlineMath> στη θέση του <InlineMath>{'\\beta'}</InlineMath>. Η πλήρης τεκμηρίωση του Carson (γιατί η κατάλληλη απαλοιφή ισχύος δίνει αυτή τη μορφή) ζει στο <Link href="/fm/carson">/fm/carson</Link>.
+
+## 8. NBFM / NBPM γραμμικοποίηση (slide 29)
+
+Όταν <InlineMath>{'\\beta \\ll 1'}</InlineMath> (που σύμφωνα με το slide 29 του καθηγητή ορίζει τη **στενή ζώνη** για ΚΑΙ τα δύο σχήματα), μπορούμε να γραμμικοποιήσουμε. Από την I/Q canonical form και Taylor:
+
+$$
+\cos\phi(t) \cong 1 - \frac{\phi^2}{2} + \ldots \cong 1, \qquad \sin\phi(t) \cong \phi(t) - \frac{\phi^3}{6} + \ldots \cong \phi(t)
+$$
+
+αφού <InlineMath>{'\\phi \\ll 1'}</InlineMath>. Αντικαθιστώντας:
+
+$$
+\boxed{\,x_{NB}(t) \cong A_c\cos(2\pi f_c t) - A_c\, \phi(t)\, \sin(2\pi f_c t)\,}
+$$
+
+**Πώς διαβάζεται:** το NB σήμα είναι **carrier + ένα DSB-AM-SC σήμα** που πολλαπλασιάζει το <InlineMath>{'\\phi(t)'}</InlineMath> με <InlineMath>{'\\sin(2\\pi f_c t)'}</InlineMath>. Για **NBPM** το <InlineMath>{'\\phi(t) = K_p m(t)'}</InlineMath>, οπότε:
+
+$$
+x_{NBPM}(t) \cong A_c\cos(2\pi f_c t) - A_c K_p\, m(t)\, \sin(2\pi f_c t)
+$$
+
+Για **NBFM** το <InlineMath>{'\\phi(t) = 2\\pi K_f \\int m'}</InlineMath>, οπότε:
+
+$$
+x_{NBFM}(t) \cong A_c\cos(2\pi f_c t) - 2\pi A_c K_f \left[\int^t m(\tau)d\tau\right]\, \sin(2\pi f_c t)
+$$
+
+Δηλαδή και τα δύο σχήματα παράγουν την **ίδια αλγεβρική σκελετική μορφή** — μόνο ότι «μπαίνει στη θέση του <InlineMath>{'\\phi(t)'}</InlineMath>» αλλάζει.
+
+## 9. NBFM/NBPM φάσμα — μέτρο σαν AM, γεωμετρία αντίθετη (slide 30-31)
+
+Παίρνοντας Fourier transform του γραμμικοποιημένου σήματος (με <InlineMath>{'\\Phi(f) = \\mathcal{F}\\{\\phi(t)\\}'}</InlineMath>) και θυμίζοντας ότι <InlineMath>{'\\mathcal{F}\\{\\sin(2\\pi f_c t)\\} = (1/2j)[\\delta(f-f_c) - \\delta(f+f_c)]'}</InlineMath> (slide 20):
+
+$$
+\boxed{\,X_{NB}(f) \cong \frac{A_c}{2}\delta(f - f_c) + \frac{A_c}{2}\delta(f + f_c) + \frac{jA_c}{2}\Phi(f - f_c) - \frac{jA_c}{2}\Phi(f + f_c)\,}
+$$
+
+<Callout type="warning" title="Το πρόσημο στο sideband — η παγίδα που σπάει εξετάσεις">
+Πρόσεξε: η εφαρμογή <InlineMath>{'-A_c\\phi \\sin(2\\pi f_c t) \\xrightarrow{\\mathcal{F}}'}</InlineMath> δίνει
+<InlineMath>{'+(jA_c/2)\\Phi(f-f_c) - (jA_c/2)\\Phi(f+f_c)'}</InlineMath> γιατί <InlineMath>{'-1/(2j) = +j/2'}</InlineMath>. Είναι εύκολο να κάνεις σφάλμα στο πρόσημο — γι' αυτό ο καθηγητής στο slide 31 δίνει αμέσως μετά τη γεωμετρική ερμηνεία:
+
+<p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+«Οι πλευρικές φασματικές ζώνες <InlineMath>{'\\Phi(f - f_c)'}</InlineMath> και <InlineMath>{'\\Phi(f + f_c)'}</InlineMath> του σήματος πληροφορίας έχουν <strong>διαφορά φάσης π/2</strong> σε σχέση με τη συνιστώσα του φέροντος. Το <InlineMath>{'\\Phi(f-f_c)'}</InlineMath> <strong>προηγείται κατά π/2</strong> ενώ το <InlineMath>{'\\Phi(f+f_c)'}</InlineMath> <strong>έπεται</strong>.»
+</p>
+
+Με άλλα λόγια: το coefficient στο USB είναι <InlineMath>{'+jA_c/2'}</InlineMath> (= μήκος <InlineMath>{'A_c/2'}</InlineMath> στη φάση <InlineMath>{'+\\pi/2'}</InlineMath>), ενώ στο LSB είναι <InlineMath>{'-jA_c/2'}</InlineMath> (= φάση <InlineMath>{'-\\pi/2'}</InlineMath>). Αυτό είναι η ορατή γεωμετρία της παρακάτω viz.
+</Callout>
+
+Συγκρίνοντας με τη Συμβατική AM:
 
 $$
 X_{AM}(f) = \frac{A_c}{2}\delta(f - f_c) + \frac{A_c}{2}\delta(f + f_c) + \frac{A_c\mu}{2}M(f - f_c) + \frac{A_c\mu}{2}M(f + f_c)
 $$
 
-| | NBFM | AM |
+τα **μέτρα** των sidebands ταυτίζονται αν <InlineMath>{'\\mu = \\beta_f'}</InlineMath> (και <InlineMath>{'M = \\Phi'}</InlineMath>, που ισχύει αν το PM message έχει το ίδιο shape), αλλά οι **φάσεις διαφέρουν κατά π/2** στο USB και κατά **-π/2** στο LSB — εξ ου και η «κρυφή» γεωμετρία:
+
+<NbfmAmPhasorDecompositionViz />
+
+| Φάση | NBFM (κάθετη γεωμετρία) | AM (οριζόντια γεωμετρία) |
 | --- | --- | --- |
-| Carrier impulses | $\frac{A_c}{2}\delta(f \pm f_c)$ | ίδιο |
-| Sideband multiplier | $\mp \frac{jA_c}{2}\Phi$ | $\frac{A_c \mu}{2} M$ |
-| Φάση sidebands | $\pm \pi/2$ από carrier | **σε φάση** με carrier |
-| Bandwidth | $\approx 2W$ | $2W$ |
+| Carrier coefficient στο +f<sub>c</sub> | <InlineMath>{'+A_c/2'}</InlineMath> | <InlineMath>{'+A_c/2'}</InlineMath> |
+| USB coefficient στο +f<sub>c</sub>+f<sub>m</sub> | <InlineMath>{'+jA_c\\beta_f/2'}</InlineMath> | <InlineMath>{'+A_c\\mu/2'}</InlineMath> |
+| LSB coefficient στο +f<sub>c</sub>−f<sub>m</sub> | <InlineMath>{'-jA_c\\beta_f/2'}</InlineMath> | <InlineMath>{'+A_c\\mu/2'}</InlineMath> |
+| Bandwidth | <InlineMath>{'\\approx 2W'}</InlineMath> | <InlineMath>{'2W'}</InlineMath> |
+| Envelope | (σχεδόν) σταθερό | <InlineMath>{'A_c[1 + \\mu\\cos]'}</InlineMath> |
 
-**Συμπέρασμα:** το NBFM/NBPM σήμα έχει **ίδιο μέτρο φάσματος** με AM (carrier + δύο sidebands), αλλά **διαφορετική φάση**: στην NBFM οι sidebands είναι σε **quadrature** με τον carrier (90° διαφορά), ενώ στην AM είναι **σε φάση**.
+**Πρακτικό συμπέρασμα:** ένα **μέτρο** φάσματος **δεν αρκεί** για να ξεχωρίσεις NBFM από AM. Χρειάζεσαι **και τη φάση**.
 
-<Callout type="key" title="Γιατί η FM είναι πιο ανθεκτική στο amplitude noise">
-Η quadrature φύση των sidebands στην NBFM είναι ο λόγος που το envelope μένει σταθερό. Όταν προσθέσεις amplitude θόρυβο στον carrier, **δεν αλλάζει η φάση** — μόνο το envelope. Αλλά η FM δεν ζει στο envelope, ζει στη φάση. Άρα ο limiter στον δέκτη μπορεί να αφαιρέσει τον amplitude θόρυβο **πριν** τη demodulation, και η πληροφορία να επιβιώσει άθικτη. Στην AM, ο θόρυβος είναι **μέρος της πληροφορίας** (και τα δύο ζουν στο envelope), οπότε δεν μπορεί να αφαιρεθεί.
+<Callout type="key" title="Γιατί η FM/PM είναι ανθεκτική στο amplitude θόρυβο">
+Όταν προσθέσεις amplitude noise στον carrier, ο θόρυβος αλλάζει το envelope όχι τη φάση. Αλλά η PM/FM ζει στη **φάση** — όχι στο envelope. Άρα ο limiter στον δέκτη μπορεί να **κόψει** το envelope (αφαιρώντας τον θόρυβο) **χωρίς να χάσει** την πληροφορία της φάσης.
+
+Στην AM δεν μπορείς να το κάνεις αυτό γιατί το envelope **είναι** η πληροφορία. Γι' αυτό η FM υπερτερεί της AM σε θόρυβο (<Link href="/fm/in-noise">/fm/in-noise</Link>).
 </Callout>
 
-## 8. NBFM single-tone παράδειγμα
+## 10. NBFM single-tone — η canonical Σ/Λ με το AM (slide 32-33)
 
-<Example title="Ex. — single-tone NBFM linearization">
-
-Έστω $m(t) = \alpha\cos(2\pi f_m t)$, FM modulator με $K_f$. Υποθέτουμε $\beta_f = K_f \alpha / f_m \ll 1$.
-
-**Ζητείται:** το NBFM σήμα στο πεδίο του χρόνου.
-
----
-
-**Λύση.**
-
-Φάση:
-$$
-\phi(t) = 2\pi K_f \int^t \alpha\cos(2\pi f_m\tau)\, d\tau = \frac{K_f \alpha}{f_m}\sin(2\pi f_m t) = \beta_f\sin(2\pi f_m t)
-$$
-
-Με NBFM γραμμικοποίηση:
-$$
-x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) - A_c \beta_f\sin(2\pi f_m t)\sin(2\pi f_c t)
-$$
-
-Χρησιμοποιώντας $2\sin a\, \sin b = \cos(a-b) - \cos(a+b)$:
+Για το «παράδειγμα-θεμέλιο» <InlineMath>{'m(t) = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>, το <InlineMath>{'\\phi(t) = 2\\pi K_f \\int m = \\beta_f \\sin(2\\pi f_m t)'}</InlineMath>. Με NBFM γραμμικοποίηση:
 
 $$
-\sin(2\pi f_m t)\sin(2\pi f_c t) = \frac{1}{2}[\cos(2\pi(f_c - f_m)t) - \cos(2\pi(f_c + f_m)t)]
+x_{NBFM}(t) \cong A_c\cos(2\pi f_c t) - A_c\beta_f \sin(2\pi f_m t)\sin(2\pi f_c t)
 $$
 
-Τελικά:
+Χρησιμοποιώντας την ταυτότητα <InlineMath>{'2\\sin a \\sin b = \\cos(a-b) - \\cos(a+b)'}</InlineMath> (slide 33):
 
 $$
-\boxed{\,x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) + \frac{A_c\beta_f}{2}\cos[2\pi(f_c + f_m)t] - \frac{A_c\beta_f}{2}\cos[2\pi(f_c - f_m)t]\,}
+\boxed{\,x_{NBFM}(t) \cong A_c\cos(2\pi f_c t) + \frac{A_c\beta_f}{2}\cos[2\pi(f_c + f_m)t] \, \mathbf{-} \, \frac{A_c\beta_f}{2}\cos[2\pi(f_c - f_m)t]\,}
 $$
 
-**Σύγκρινε με single-tone AM** (μ = β_f):
+**Σύγκρινε με single-tone AM (μ = β<sub>f</sub>):**
+
 $$
-x_{AM}(t) = A_c\cos(2\pi f_c t) + \frac{A_c\mu}{2}\cos[2\pi(f_c + f_m)t] + \frac{A_c\mu}{2}\cos[2\pi(f_c - f_m)t]
+x_{AM}(t) = A_c\cos(2\pi f_c t) + \frac{A_c\mu}{2}\cos[2\pi(f_c + f_m)t] \, \mathbf{+} \, \frac{A_c\mu}{2}\cos[2\pi(f_c - f_m)t]
 $$
 
-**Διαφορά:** το **πρόσημο** της κάτω sideband. Στην NBFM είναι **−**· στην AM είναι **+**. Αυτό αντιστοιχεί ακριβώς στη διαφορά φάσης 180° μεταξύ των sidebands στην NBFM (που είδαμε στην §7).
+**Η ΜΟΝΑΔΙΚΗ αλγεβρική διαφορά:** το πρόσημο του LSB. NBFM έχει **«−»**, AM έχει **«+»**. Σε μέτρο φάσματος ίδιο. Σε γεωμετρία complex envelope εντελώς αντίθετο.
 
-</Example>
+<NbfmVsAmSpectrumViz />
 
-## 9. Worked example — PM σε εκπεμπόμενη ισχύ
+Παρακολούθησε στην παραπάνω viz πώς αλλάζει το **πρόσημο** του LSB όταν συγκρίνεις NBFM (κάτω βέλος) με AM (πάνω βέλος) — αυτή είναι η ΜΟΝΗ ορατή διαφορά στο 4-panel σύγκρισης του καθηγητή στο slide 34.
 
-<Example title="Ex. — PM modulator output">
+## 11. Worked example — PM transmitter
 
-Δίνεται PM modulator με $A_c = 5$ V, $K_p = 0.5$ rad/V, $f_c = 1$ MHz, $m(t) = 4\cos(2\pi \cdot 2000\,t)$ V.
+<Example title="Ex. — PM modulator output (slide-style worked problem)">
+
+Δίνεται PM modulator με <InlineMath>{'A_c = 5'}</InlineMath> V, <InlineMath>{'K_p = 0.5'}</InlineMath> rad/V, <InlineMath>{'f_c = 1'}</InlineMath> MHz, <InlineMath>{'m(t) = 4\\cos(2\\pi \\cdot 2000\\,t)'}</InlineMath> V.
 
 **Ζητούνται:**
 1. Το PM σήμα.
-2. Το $\beta_p$.
-3. Το ισοδύναμο FM σήμα (αν θέλαμε να φτιάξουμε το ίδιο μέσω FM modulator) — βρες το $K_f$.
-4. Το φάσμα bandwidth κατά Carson.
+2. Το <InlineMath>{'\\beta_p'}</InlineMath>.
+3. Το ισοδύναμο FM σήμα (αν θέλαμε να φτιάξουμε το ίδιο μέσω FM modulator) — βρες το <InlineMath>{'K_f'}</InlineMath>.
+4. Το ενεργό εύρος ζώνης κατά Carson.
+5. Η εκπεμπόμενη ισχύς.
 
 ---
 
 **Λύση.**
 
-**(1)** PM equation με $\phi(t) = K_p m(t) = 0.5 \cdot 4\cos(4000\pi t) = 2\cos(4000\pi t)$:
+**(1)** PM equation με <InlineMath>{'\\phi(t) = K_p m(t) = 0.5 \\cdot 4\\cos(4000\\pi t) = 2\\cos(4000\\pi t)'}</InlineMath>:
 
 $$
 x_{PM}(t) = 5\cos[2\pi\cdot 10^6\, t + 2\cos(2\pi\cdot 2000\, t)] \text{ V}
 $$
 
-**(2)** $\beta_p = K_p \max|m| = 0.5 \cdot 4 = 2$.
+**(2)** <InlineMath>{'\\beta_p = K_p \\max|m| = 0.5 \\cdot 4 = 2'}</InlineMath> rad.
 
-**(3)** Από τη δυϊκότητα: για PM με $\phi(t) = K_p m(t)$, ισοδυναμεί με FM όταν $K_p m_{PM} = 2\pi K_f \int m_{FM} d\tau$. Αν θέλαμε το ίδιο σήμα, χρειαζόμαστε FM modulator στον οποίο εισάγουμε το **παράγωγο** του ίδιου $m(t)$. Δηλαδή:
+**(3)** Από τη δυϊκότητα (slide 13): για να παράγει FM modulator την ίδια έξοδο όπως ο PM modulator, χρειαζόμαστε <InlineMath>{'K_f = K_p/(2\\pi)'}</InlineMath> ΚΑΙ τροφοδότηση του διαφορικού <InlineMath>{'dm/dt'}</InlineMath> στην είσοδο. Άρα:
+
 $$
-x_{FM}|_{m \to dm/dt}(t) = A_c\cos\!\left[2\pi f_c t + 2\pi K_f \int (dm/d\tau) d\tau\right] = A_c\cos[2\pi f_c t + 2\pi K_f m(t)]
+K_f = \frac{K_p}{2\pi} = \frac{0.5}{2\pi} \approx 0.0796 \text{ Hz/V}
 $$
 
-Για να ισούται με το PM, χρειαζόμαστε $2\pi K_f = K_p \Rightarrow K_f = K_p/(2\pi) = 0.0796$ Hz/V.
+**(4)** Carson (slide 26) με <InlineMath>{'W = f_m = 2'}</InlineMath> kHz και <InlineMath>{'\\beta = \\beta_p = 2'}</InlineMath>:
 
-**(4)** Carson bandwidth:
 $$
-B = 2(\beta_p + 1) f_m = 2 \cdot 3 \cdot 2000 = 12 \text{ kHz}
+B = 2(\beta_p + 1)f_m = 2 \cdot 3 \cdot 2000 = 12 \text{ kHz}
 $$
+
+**(5)** Από το slide 11:
+
+$$
+\mathcal{P}_x = \frac{A_c^2}{2} = \frac{25}{2} = 12.5 \text{ W}
+$$
+
+ανεξάρτητα του <InlineMath>{'\\beta_p'}</InlineMath> και του message.
 
 </Example>
 
-## 10. Σύνοψη formulas
+## 12. Worked example — single-tone PM vs FM στον χρόνο
 
-| Ποσότητα | PM | FM |
-| --- | --- | --- |
-| Φάση | $\phi(t) = K_p m(t)$ | $\phi(t) = 2\pi K_f \int m\, d\tau$ |
-| Phase sensitivity | $K_p$ (rad/V) | — |
-| Frequency sensitivity | — | $K_f$ (Hz/V) |
-| Modulation index | $\beta_p = K_p \max\|m\|$ | $\beta_f = K_f \max\|m\|/W$ |
-| Στιγμιαία συχνότητα | $f_c + (K_p/2\pi)\, dm/dt$ | $f_c + K_f m(t)$ |
-| Envelope | $A_c$ | $A_c$ |
-| Power | $A_c^2/2$ | $A_c^2/2$ |
-| Carson BW | $2(\beta_p + 1)f_m$ | $2(\beta_f + 1)W$ |
-| Δυϊκότητα | $K_p = 2\pi K_f$ + integrator στην είσοδο | + differentiator στην είσοδο για PM |
-| NB linearization | $x \approx A_c\cos(2\pi f_c t) - A_c\phi(t)\sin(2\pi f_c t)$ | ίδιο |
-| NB vs AM | sidebands σε quadrature με carrier | — |
+<Example title="Ex. — η 90° μετατόπιση μεταξύ PM και FM (Άσκηση 1 slide 14-18)">
+
+Δίνεται <InlineMath>{'m(t) = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>, carrier <InlineMath>{'f_c'}</InlineMath>, ευαισθησίες <InlineMath>{'K_p, K_f'}</InlineMath>.
+
+**Ζητούνται:** τα διαμορφωμένα PM και FM σήματα στον χρόνο.
+
+---
+
+**Λύση.**
+
+**PM:** <InlineMath>{'\\phi_{PM}(t) = K_p m(t) = K_p\\alpha\\cos(2\\pi f_m t) = \\beta_p\\cos(2\\pi f_m t)'}</InlineMath>.
+
+$$
+\boxed{\,x_{PM}(t) = A_c\cos[2\pi f_c t + \beta_p\cos(2\pi f_m t)]\,}
+$$
+
+**FM:** <InlineMath>{'\\phi_{FM}(t) = 2\\pi K_f \\int_{-\\infty}^t \\alpha\\cos(2\\pi f_m\\tau)d\\tau = (K_f\\alpha/f_m)\\sin(2\\pi f_m t) = \\beta_f\\sin(2\\pi f_m t)'}</InlineMath>.
+
+$$
+\boxed{\,x_{FM}(t) = A_c\cos[2\pi f_c t + \beta_f\sin(2\pi f_m t)]\,}
+$$
+
+**Σημείωση κλειδί:** PM παίρνει **cos** μέσα στη φάση, FM παίρνει **sin**. Αυτή είναι η ορατή 90° μετατόπιση: <InlineMath>{'\\cos = \\sin(\\cdot + \\pi/2)'}</InlineMath>. Ισοδύναμα: αν τροφοδοτήσεις PM modulator με <InlineMath>{'\\sin(2\\pi f_m t)'}</InlineMath> αντί για <InlineMath>{'\\cos'}</InlineMath>, παίρνεις την ίδια έξοδο με το FM (η δυϊκότητα συναρμολογείται).
+
+</Example>
+
+## 13. Worked example — instantaneous frequency response
+
+<Example title="Ex. — γιατί στην PM η Δf εξαρτάται από το f_m">
+
+Δίνεται PM σήμα με <InlineMath>{'\\phi(t) = K_p m(t)'}</InlineMath> και <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath>.
+
+**Ζητείται:** η στιγμιαία συχνότητα <InlineMath>{'f_i(t)'}</InlineMath> και το <InlineMath>{'\\Delta f'}</InlineMath>.
+
+---
+
+**Λύση.**
+
+$$
+f_i(t) = f_c + \frac{1}{2\pi}\frac{d\phi}{dt} = f_c + \frac{K_p}{2\pi} \cdot (-A_m \cdot 2\pi f_m \sin(2\pi f_m t))
+$$
+
+$$
+\boxed{\,f_i(t) = f_c - K_p A_m f_m \sin(2\pi f_m t)\,}
+$$
+
+Η μέγιστη απόκλιση συχνότητας: <InlineMath>{'\\Delta f = K_p A_m f_m'}</InlineMath>.
+
+**Παρατήρηση κρίσιμη για εξετάσεις:** στην PM, η <InlineMath>{'\\Delta f'}</InlineMath> είναι **ανάλογη του <InlineMath>{'f_m'}</InlineMath>**. Στην FM είναι **ανεξάρτητη** του <InlineMath>{'f_m'}</InlineMath> (<InlineMath>{'\\Delta f = K_f A_m'}</InlineMath>). Αυτή η συμπεριφορά είναι η βασική διαφορά των δύο σχημάτων όταν αλλάζει η συχνότητα του message.
+
+</Example>
+
+<Collectible id="phasor-skin" />
 
 ## Εξάσκηση
 
-<ExerciseProgress slug="fm/pm" total={5} />
-
-Πέντε ερωτήσεις πάνω στη δυϊκότητα PM/FM και τη NBFM ↔ AM σύγκριση.
+<ExerciseProgress slug="fm/pm" total={6} />
 
 <ExamProblem id="pm-fm-duality" year="Duality" weight="κλασικό">
 **Ερώτηση:** Δείξε ότι ένας FM modulator + integrator στην είσοδο = PM modulator (με κατάλληλη επιλογή σταθερών).
 
 <Example title="Λύση" defaultOpen={true}>
-**FM:** $\phi(t) = 2\pi K_f \int_{-\infty}^t m(\tau)\,d\tau$.
+**FM:** <InlineMath>{'\\phi(t) = 2\\pi K_f \\int_{-\\infty}^t m(\\tau)\\,d\\tau'}</InlineMath>.
 
-Αν αντί για $m(t)$ τροφοδοτήσουμε στον FM modulator το $m'(t) = dm/dt$, τότε:
+Αν αντί για <InlineMath>{'m(t)'}</InlineMath> τροφοδοτήσουμε στον FM modulator το <InlineMath>{"m'(t) = dm/dt"}</InlineMath>, τότε:
+
 $$\phi(t) = 2\pi K_f \int_{-\infty}^t \frac{dm}{d\tau}\,d\tau = 2\pi K_f\, m(t)$$
 
-Αυτή είναι η εξίσωση **PM** με $K_p = 2\pi K_f$. Δηλαδή: differentiator πριν FM = PM.
+Αυτή είναι η εξίσωση **PM** με <InlineMath>{'K_p = 2\\pi K_f'}</InlineMath>. Δηλαδή: differentiator πριν FM = PM.
 
 **Αντίστροφα:** integrator πριν PM = FM. Οι δύο μπορούν να κατασκευαστούν ο ένας από τον άλλον — γι' αυτό λέμε ότι είναι **δυϊκές**.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="nbfm-am-similarity" year="NBFM ≈ AM?" weight="παγίδα">
-**Ερώτηση:** Ένα NBFM σήμα και ένα AM σήμα έχουν το ίδιο **φάσμα πλάτους** (carrier + 2 sidebands ίδιου ύψους). Είναι λοιπόν τα ίδια σήματα;
+**Ερώτηση:** Ένα NBFM σήμα και ένα AM σήμα έχουν το ίδιο **μέτρο φάσματος** (carrier + 2 sidebands ίδιου ύψους). Είναι λοιπόν τα ίδια σήματα;
 
 <Example title="Λύση" defaultOpen={true}>
 **Όχι.** Τα μέτρα είναι ίδια αλλά οι **φάσεις διαφέρουν**:
-- **AM:** οι sidebands είναι **σε φάση** με τον carrier (το $\cos(\omega_c t)\cos(\omega_m t)$ δίνει cosines στο $f_c \pm f_m$).
-- **NBFM:** οι sidebands είναι **σε quadrature** με τον carrier (από τον όρο $-\phi(t)\sin\omega_c t$).
+- **AM:** οι sidebands είναι **σε φάση** με τον carrier (το <InlineMath>{'\\cos(\\omega_c t)\\cos(\\omega_m t)'}</InlineMath> δίνει cosines στο <InlineMath>{'f_c \\pm f_m'}</InlineMath>).
+- **NBFM:** οι sidebands είναι **σε quadrature** με τον carrier (από τον όρο <InlineMath>{'-\\phi(t)\\sin\\omega_c t'}</InlineMath>), με τον LSB να έχει **αντίθετο πρόσημο** ως προς τον USB.
 
-Η διαφορά φάσης κάνει την NBFM **αναγνωρίσιμη** ως FM παρά ότι το spectrum magnitude φαίνεται ίδιο. Στο complex plane, το complex envelope της NBFM κινείται σε μικρό arc (φάση μεταβάλλεται), ενώ της AM κινείται κατά μήκος του real axis (envelope μεταβάλλεται).
+Η διαφορά φάσης κάνει την NBFM **αναγνωρίσιμη** ως FM παρά ότι το spectrum magnitude φαίνεται ίδιο. Στο complex plane, το complex envelope της NBFM κινείται σε **μικρή κάθετη ευθεία** (φάση μεταβάλλεται), ενώ της AM κινείται κατά **μήκος του πραγματικού άξονα** (envelope μεταβάλλεται).
 
-**Αυτή η διαφορά φάσης** είναι η ρίζα του γιατί η FM είναι ανθεκτική στον amplitude noise — ο limiter αφαιρεί τον amplitude noise αλλά κρατάει την phase information.
+**Αυτή η διαφορά φάσης** είναι η ρίζα του γιατί η FM είναι ανθεκτική στον amplitude noise — ο limiter αφαιρεί τον amplitude noise αλλά κρατάει την phase information ανέπαφη.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="pm-power" year="Power" weight="γρήγορο">
-**Ερώτηση:** PM σήμα $x(t) = 5\cos(2\pi f_c t + \phi(t))$. Ποια είναι η συνολική ισχύς, ανεξάρτητα από το $\phi(t)$;
+**Ερώτηση:** PM σήμα <InlineMath>{'x(t) = 5\\cos(2\\pi f_c t + \\phi(t))'}</InlineMath>. Ποια είναι η συνολική ισχύς, ανεξάρτητα από το <InlineMath>{'\\phi(t)'}</InlineMath>;
 
 <Example title="Λύση" defaultOpen={true}>
-**Σταθερό envelope** $V = 5$ (το $\phi(t)$ είναι μέσα στο cosine). Ισχύς:
-$$P = \frac{V^2}{2} = \frac{25}{2} = 12.5 \text{ W}$$
+**Σταθερό envelope** <InlineMath>{'V = 5'}</InlineMath> (το <InlineMath>{'\\phi(t)'}</InlineMath> είναι μέσα στο cosine, δεν επηρεάζει το πλάτος). Ισχύς:
 
-Σημαντικό: η ισχύς **δεν εξαρτάται** από το $\phi(t)$ — άρα ούτε από το $\beta$ ή το $m(t)$. Σε FM/PM, το modulation **δεν αλλάζει** την εκπεμπόμενη ισχύ. Όλη η πληροφορία ζει στη φάση, χωρίς ενεργειακό κόστος. Σύγκριση με Conventional AM, όπου modulation **αυξάνει** την ισχύ ($P_{AM} = P_c(1 + \mu^2/2)$).
+$$\mathcal{P} = \frac{V^2}{2} = \frac{25}{2} = 12.5 \text{ W}$$
+
+Σημαντικό: η ισχύς **δεν εξαρτάται** από το <InlineMath>{'\\phi(t)'}</InlineMath> — άρα ούτε από το <InlineMath>{'\\beta'}</InlineMath> ή το <InlineMath>{'m(t)'}</InlineMath>. Σε FM/PM, το modulation **δεν αλλάζει** την εκπεμπόμενη ισχύ. Όλη η πληροφορία ζει στη φάση, χωρίς ενεργειακό κόστος. Σύγκριση με Συμβατικό AM, όπου modulation **αυξάνει** την ισχύ (<InlineMath>{'\\mathcal{P}_{AM} = \\mathcal{P}_c(1 + \\mu^2/2)'}</InlineMath> για single-tone).
 </Example>
 </ExamProblem>
 
 <ExamProblem id="kp-from-beta" year="Computation" weight="K_p από β">
-**Ερώτηση:** PM σήμα με message $m(t) = 4\cos(2\pi f_m t)$ V και phase sensitivity $K_p = 0.5$ rad/V. Βρες το $\beta_p$ και το peak phase deviation σε μοίρες.
+**Ερώτηση:** PM σήμα με message <InlineMath>{'m(t) = 4\\cos(2\\pi f_m t)'}</InlineMath> V και phase sensitivity <InlineMath>{'K_p = 0.5'}</InlineMath> rad/V. Βρες το <InlineMath>{'\\beta_p'}</InlineMath> και το peak phase deviation σε μοίρες.
 
 <Example title="Λύση">
 $$\beta_p = K_p \cdot \max|m(t)| = 0.5 \cdot 4 = 2 \text{ rad}$$
 
-Σε μοίρες: $2 \cdot \frac{180°}{\pi} \approx 114.6°$. Δηλαδή η φάση ταλαντώνεται από $-114.6°$ μέχρι $+114.6°$ γύρω από τον carrier.
+Σε μοίρες: <InlineMath>{'2 \\cdot \\frac{180°}{\\pi} \\approx 114.6°'}</InlineMath>. Δηλαδή η φάση ταλαντώνεται από <InlineMath>{'-114.6°'}</InlineMath> μέχρι <InlineMath>{'+114.6°'}</InlineMath> γύρω από τον carrier.
 
-Με $\beta_p = 2 > 1$ είναι **wideband PM**. Το φάσμα έχει σημαντικές sidebands πέρα από τις πρώτες — Carson's rule δίνει BW ≈ $2(\beta+1) f_m = 6 f_m$.
+Με <InlineMath>{'\\beta_p = 2 > 1'}</InlineMath> είναι **wideband PM**. Το φάσμα έχει σημαντικές sidebands πέρα από τις πρώτες — Carson's rule δίνει <InlineMath>{'B \\approx 2(\\beta+1) f_m = 6 f_m'}</InlineMath>.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="instantaneous-freq-pm" year="Inst freq" weight="δυϊκότητα">
-**Ερώτηση:** PM σήμα με $\phi(t) = K_p m(t)$ και $m(t) = A_m\cos(2\pi f_m t)$. Βρες τη στιγμιαία συχνότητα $f_i(t)$.
+**Ερώτηση:** PM σήμα με <InlineMath>{'\\phi(t) = K_p m(t)'}</InlineMath> και <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath>. Βρες τη στιγμιαία συχνότητα <InlineMath>{'f_i(t)'}</InlineMath>.
 
 <Example title="Λύση">
-$f_i(t) = f_c + \frac{1}{2\pi}\frac{d\phi}{dt}$.
+<InlineMath>{'f_i(t) = f_c + \\frac{1}{2\\pi}\\frac{d\\phi}{dt}'}</InlineMath>.
 
 $$\frac{d\phi}{dt} = K_p \frac{dm}{dt} = K_p \cdot (-A_m \cdot 2\pi f_m \sin(2\pi f_m t)) = -2\pi K_p A_m f_m \sin(2\pi f_m t)$$
 
 $$f_i(t) = f_c - K_p A_m f_m \sin(2\pi f_m t)$$
 
-Η max frequency deviation: $\Delta f = K_p A_m f_m$.
+Η max frequency deviation: <InlineMath>{'\\Delta f = K_p A_m f_m'}</InlineMath>.
 
-**Παρατήρηση:** στην PM, η $\Delta f$ είναι **ανάλογη του $f_m$**. Στην FM είναι **ανεξάρτητη** του $f_m$ ($\Delta f = K_f A_m$). Αυτή είναι η βασική διαφορά των δύο σχημάτων στη συμπεριφορά της δsstuff frequency για διαφορετικά baseband frequencies.
+**Παρατήρηση:** στην PM, η <InlineMath>{'\\Delta f'}</InlineMath> είναι **ανάλογη του <InlineMath>{'f_m'}</InlineMath>**. Στην FM είναι **ανεξάρτητη** του <InlineMath>{'f_m'}</InlineMath> (<InlineMath>{'\\Delta f = K_f A_m'}</InlineMath>). Αυτή είναι η βασική διαφορά των δύο σχημάτων στη συμπεριφορά της Δf για διαφορετικά baseband frequencies.
 </Example>
 </ExamProblem>
 
+<ExamProblem id="nbpm-sign-flip" year="LSB sign" weight="canonical Σ/Λ">
+**Ερώτηση:** Για single-tone <InlineMath>{'m(t) = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>, γράψε το NBPM σήμα <InlineMath>{'x_{NBPM}(t)'}</InlineMath> με την NB γραμμικοποίηση και σύγκρινε φάσμα με AM (μ = β_p). Τι ξεχωρίζει NBPM από AM;
+
+<Example title="Λύση" defaultOpen={true}>
+Για NBPM, <InlineMath>{'\\phi(t) = K_p m(t) = \\beta_p \\cos(2\\pi f_m t)'}</InlineMath>. Γραμμικοποίηση:
+
+$$
+x_{NBPM}(t) \cong A_c\cos(2\pi f_c t) - A_c\, \beta_p\cos(2\pi f_m t)\, \sin(2\pi f_c t)
+$$
+
+Χρησιμοποιώντας <InlineMath>{'2\\cos a \\sin b = \\sin(a+b) - \\sin(a-b)'}</InlineMath>:
+
+$$\cos(2\pi f_m t)\sin(2\pi f_c t) = \frac{1}{2}[\sin(2\pi(f_c+f_m)t) + \sin(2\pi(f_c-f_m)t)]$$
+
+Άρα:
+
+$$
+x_{NBPM}(t) \cong A_c\cos(2\pi f_c t) - \frac{A_c\beta_p}{2}\sin[2\pi(f_c+f_m)t] - \frac{A_c\beta_p}{2}\sin[2\pi(f_c-f_m)t]
+$$
+
+**Σύγκριση με AM:** μέτρα ίδια, αλλά **οι sidebands είναι sines αντί για cosines** — δηλαδή **σε quadrature** (π/2 από τον cos carrier). Σε σχέση με NBFM (που έχει το LSB **με αντίθετο πρόσημο**), η NBPM έχει **ΚΑΙ** τα δύο sideband sines με το **ίδιο πρόσημο** — μια διαφορά γεωμετρίας 90° από το AM cosine + cosine.
+
+Πάλι, **το μέτρο φάσματος δεν αρκεί** να ξεχωρίσεις NBPM από AM. Σε όλες τις περιπτώσεις, η `phase information` είναι ο διαχωριστής.
+</Example>
+</ExamProblem>
+
+## Συμπύκνωσε — το κεφάλαιο σε 8 keywords
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε ολόκληρο το /fm/pm"
+  keywords={[
+    'PM: φ(t) = K_p m(t), K_p σε rad/V',
+    'β_p = K_p max|m|, ΧΩΡΙΣ W κανονικοποίηση',
+    'f_i^PM = f_c + (K_p/2π) dm/dt',
+    'PM παίρνει cos, FM παίρνει sin',
+    'Δυϊκότητα: K_p = 2π K_f',
+    'P_x^PM = P_x^FM = A_c²/2',
+    'Carson B = 2(β+1)W για ΚΑΙ τα δύο',
+    'NBFM ≈ AM σε μέτρο, αντίθετο πρόσημο LSB',
+  ]}
+  skeleton={[
+    'Από K_p, m(t) → γράψε x_PM(t) απευθείας.',
+    'Υπολόγισε β_p = K_p · max|m(t)|.',
+    'Στιγμιαία συχνότητα: f_c + (K_p/2π)·dm/dt.',
+    'Δυϊκότητα: αν χρειάζεσαι ισοδύναμη FM, βάλε K_f = K_p/(2π) και τροφοδότησε dm/dt.',
+    'Carson για bandwidth: B = 2(β_p + 1)W. ΓΙΑ ΣΗΜΕΡΑ ΦΟΡΑ μην ξεχάσεις ότι ισχύει και για PM.',
+    'NBPM γραμμικοποίηση: x ≅ A_c cos − A_c φ sin. Spectrum: carrier + 2 sidebands σε quadrature.',
+  ]}
+  trap={
+    <>
+      Η πιο κοινή παγίδα: <strong>NBFM/NBPM και AM δείχνουν ίδιο φάσμα σε μέτρο</strong>.
+      Σε σχήμα ναι, αλλά οι <strong>φάσεις είναι διαφορετικές κατά π/2</strong>.
+      Στο complex plane: AM ζει στον πραγματικό άξονα (envelope κουνιέται),
+      NBFM/NBPM ζει σε κάθετη ευθεία (φάση κουνιέται). Σε εξετάσεις:
+      «δες την ταυτότητα 2sin·sin → cos − cos» VS «2cos·sin → sin + sin» — αυτό
+      είναι το αλγεβρικό κλειδί που διαχωρίζει τα τρία σχήματα.
+    </>
+  }
+/>
+
+## Ανακάλεσε — δοκίμασε από μνήμη
+
+<RecallDrill
+  id="pm-from-scratch"
+  prompt={
+    <>
+      <p className="mb-2">Γράψε από μνήμη:</p>
+      <ol className="ml-4 list-decimal text-sm">
+        <li>Την εξίσωση του PM σήματος.</li>
+        <li>Τον ορισμό του β_p.</li>
+        <li>Τη στιγμιαία συχνότητα <InlineMath>{'f_i^{PM}(t)'}</InlineMath>.</li>
+        <li>Τις δύο σταθερές της PM↔FM δυϊκότητας.</li>
+        <li>Την ισχύ του PM σήματος.</li>
+      </ol>
+    </>
+  }
+  answer={
+    <ul className="ml-4 list-disc text-sm">
+      <li><InlineMath>{'x_{PM}(t) = A_c\\cos[2\\pi f_c t + K_p m(t)]'}</InlineMath></li>
+      <li><InlineMath>{'\\beta_p = K_p \\max|m(t)|'}</InlineMath> (σε radians, ΧΩΡΙΣ W)</li>
+      <li><InlineMath>{'f_i^{PM}(t) = f_c + (K_p/2\\pi)\\, dm/dt'}</InlineMath></li>
+      <li><InlineMath>{'K_p = 2\\pi K_f'}</InlineMath> (PM→FM με integrator); <InlineMath>{'K_f = K_p/(2\\pi)'}</InlineMath> (FM→PM με differentiator)</li>
+      <li><InlineMath>{'\\mathcal{P}_x = A_c^2/2'}</InlineMath> ανεξάρτητα του β και του message</li>
+    </ul>
+  }
+/>
+
+<ClozeDrill
+  id="pm-fm-single-tone-fill"
+  prompt={
+    <>
+      Συμπλήρωσε την Άσκηση 1 του καθηγητή για <InlineMath>{'m(t) = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>:
+    </>
+  }
+  parts={[
+    <>
+      PM σήμα:{' '}
+      <InlineMath>{'x_{PM}(t) = A_c\\cos[2\\pi f_c t + \\beta_p\\, '}</InlineMath>
+    </>,
+    { blank: 'pm-fn', accept: ['cos', 'cos(2πf_m t)', 'cos(2π f_m t)'], size: 14, hint: 'cos ή sin;' },
+    <>
+      <InlineMath>{'(2\\pi f_m t)]'}</InlineMath>
+      <br />
+      FM σήμα:{' '}
+      <InlineMath>{'x_{FM}(t) = A_c\\cos[2\\pi f_c t + \\beta_f\\, '}</InlineMath>
+    </>,
+    { blank: 'fm-fn', accept: ['sin', 'sin(2πf_m t)', 'sin(2π f_m t)'], size: 14, hint: 'cos ή sin;' },
+    <>
+      <InlineMath>{'(2\\pi f_m t)]'}</InlineMath>
+      <br />
+      Λόγος: η FM ολοκληρώνει το <InlineMath>{'m(t)'}</InlineMath>, και{' '}
+      <InlineMath>{'\\int\\cos = '}</InlineMath>
+    </>,
+    { blank: 'integ', accept: ['sin', '(1/2πf_m) sin', 'sin/(2πf_m)'], size: 18, hint: 'πρωτογόνος του cos;' },
+    <>
+      . Άρα η 90° μετατόπιση που βλέπεις στο 4-panel slide-18.
+      <br />
+      Δείκτες: <InlineMath>{'\\beta_p = '}</InlineMath>
+    </>,
+    { blank: 'bp', accept: ['K_p α', 'K_p · α', 'K_pα', 'K_p alpha'], size: 8 },
+    <>
+      , <InlineMath>{'\\beta_f = '}</InlineMath>
+    </>,
+    { blank: 'bf', accept: ['K_f α / f_m', 'K_f·α/f_m', 'K_f alpha / f_m', '(K_f α)/f_m'], size: 14 },
+    <>
+      .
+    </>,
+  ]}
+  solution={
+    <p>
+      PM: <strong>cos</strong>. FM: <strong>sin</strong>. <InlineMath>{'\\int\\cos = (1/2\\pi f_m)\\sin'}</InlineMath>.
+      Δείκτες: <InlineMath>{'\\beta_p = K_p \\alpha'}</InlineMath>, <InlineMath>{'\\beta_f = K_f\\alpha/f_m'}</InlineMath>.
+    </p>
+  }
+/>
+
+<ReorderDrill
+  id="nbpm-spectrum-derivation"
+  prompt="Βάλε τα βήματα στη σωστή σειρά για να βρεις το NBPM φάσμα από την εξίσωση PM."
+  steps={[
+    'Γράψε το PM σήμα: x = A_c cos(2π f_c t + K_p m(t)) και την I/Q μορφή.',
+    'Πάρε β_p = K_p max|m| και έλεγξε ότι β_p ≪ 1 (στενή ζώνη).',
+    'Γραμμικοποίηση: cos φ ≅ 1, sin φ ≅ φ → x ≅ A_c cos(2π f_c t) − A_c φ(t) sin(2π f_c t).',
+    'Αντικατάστησε φ(t) = K_p m(t).',
+    'Πάρε Fourier: F{cos} = δ-impulses, F{φ sin} = (1/2j)[Φ(f−f_c) − Φ(f+f_c)].',
+    'Μάζεψε σε X(f) = (A_c/2)δ(f∓f_c) + (jA_c/2)Φ(f−f_c) − (jA_c/2)Φ(f+f_c).',
+    'Συμπέρανε: ίδιο μέτρο με AM, αλλά οι sidebands έχουν φάση ±π/2 από carrier.',
+  ]}
+/>
+
+## Αναγνώρισε — πώς να καταλάβεις πότε χρησιμοποιείται
+
+<ThinkingPattern
+  signals={[
+    'phase modulation',
+    'PM σήμα',
+    'K_p',
+    'rad/V',
+    'φ(t) = K_p m(t)',
+    'β_p',
+    'phase sensitivity',
+    'ευαισθησία φάσης',
+    'NBFM',
+    'NBPM',
+    'narrowband',
+    'γραμμικοποίηση',
+    'σταθερό envelope',
+    'phase deviation',
+    'PM ↔ FM δυϊκότητα',
+    'integrator + PM = FM',
+  ]}
+>
+  <p>
+    Όταν στην εκφώνηση δεις «<strong>phase modulation</strong>», «<strong>K_p</strong>», ή
+    «<strong>ευαισθησία φάσης</strong>», η πρώτη ενέργεια είναι: γράψε την εξίσωση{' '}
+    <InlineMath>{'x_{PM}(t) = A_c\\cos[2\\pi f_c t + K_p m(t)]'}</InlineMath>. Από αυτή{' '}
+    <strong>όλα</strong> βγαίνουν: β_p από το max|m|, f_i^PM παίρνοντας dm/dt, ισχύς από το σταθερό envelope.
+  </p>
+
+  <p>
+    Όταν δεις «<strong>NBFM</strong>» ή «<strong>NBPM</strong>» ή την συνθήκη
+    <InlineMath>{'\\beta \\ll 1'}</InlineMath>, η αμέσως επόμενη ενέργεια είναι:
+    γραμμικοποίηση. <InlineMath>{'\\cos\\phi \\cong 1, \\sin\\phi \\cong \\phi'}</InlineMath>.
+    Αντικαθιστάς και βγάζεις τον «carrier + DSB-AM-SC» τύπο. Από εκεί όλα ταυτίζονται
+    με την AM ΣΕ ΜΕΤΡΟ μόνο.
+  </p>
+
+  <p>
+    Όταν η εκφώνηση συγκρίνει NBFM/NBPM <strong>με AM</strong>, η παγίδα είναι το
+    πρόσημο του LSB. Σε αμφιβολία, γράψε τις δύο φόρμουλες δίπλα-δίπλα και κοίτα το
+    coefficient του <InlineMath>{'\\cos[2\\pi(f_c-f_m)t]'}</InlineMath>: «+» για AM,
+    «−» για NBFM. Στο NBPM (αν το message είναι cos), τα δύο sidebands είναι **sines**
+    αντί για cosines — quadrature γεωμετρία αντί για in-phase.
+  </p>
+
+  <p>
+    Όταν η εκφώνηση αναφέρει <strong>FM modulator που τροφοδοτείται με dm/dt</strong>{' '}
+    ή <strong>PM modulator με ∫m dτ</strong>, αυτό είναι η δυϊκότητα. Θυμήσου τις
+    σταθερές: <InlineMath>{'K_p = 2\\pi K_f'}</InlineMath> και{' '}
+    <InlineMath>{'K_f = K_p/(2\\pi)'}</InlineMath>. Αν χάσεις το 2π κάπου, η απάντηση
+    σου θα έχει επί ή διά 6.28 σφάλμα.
+  </p>
+</ThinkingPattern>
+
+<ExamRadar slug="fm/pm" />
+
 <Recap>
-- Η **PM** κωδικοποιεί την πληροφορία **απευθείας στη φάση** του carrier, σε αντίθεση με την FM που την κωδικοποιεί στη συχνότητα.
-- **β_p = K_p max|m|** σε rad. **K_p** σε rad/V είναι η phase sensitivity.
-- **PM ↔ FM δυϊκότητα:** integrator πριν τον PM modulator δίνει FM. Differentiator πριν τον FM modulator δίνει PM. Με $K_p = 2\pi K_f$ τα δύο ταυτίζονται.
-- **NB linearization:** όταν $\beta \ll 1$, $x_{NB}(t) \approx A_c\cos(2\pi f_c t) - A_c\phi(t)\sin(2\pi f_c t)$ — ένα carrier συν ένα DSB-SC σε quadrature.
-- **NBFM vs AM:** ίδιο μέτρο φάσματος (carrier + 2 sidebands), αλλά οι sidebands είναι σε **quadrature** στην FM, **σε φάση** στην AM. Αυτή η διαφορά φάσης είναι η ρίζα της ανθεκτικότητας της FM στον amplitude noise.
+- Η **PM** κωδικοποιεί την πληροφορία **απευθείας στη φάση** του carrier μέσω <InlineMath>{'\\phi(t) = K_p m(t)'}</InlineMath>, σε αντίθεση με τη FM που χρησιμοποιεί το **ολοκλήρωμα** του message.
+- **β<sub>p</sub> = K<sub>p</sub> max|m|** σε rad, **χωρίς W κανονικοποίηση** (η φάση δεν έχει bandwidth dimension).
+- **Στιγμιαία συχνότητα PM:** <InlineMath>{'f_i^{PM} = f_c + (K_p/2\\pi)\\,dm/dt'}</InlineMath> — ακολουθεί την παράγωγο, όχι το message απευθείας.
+- **PM↔FM δυϊκότητα** με <InlineMath>{'K_p = 2\\pi K_f'}</InlineMath>: ολοκληρωτής πριν τον PM modulator δίνει FM· διαφοριστής πριν τον FM modulator δίνει PM. Όλα τα FM αποτελέσματα μεταφέρονται.
+- **Ισχύς σταθερή** <InlineMath>{'A_c^2/2'}</InlineMath> ανεξάρτητα β/message (constant envelope από I/Q ταυτότητα slide 11).
+- **Carson** <InlineMath>{'B = 2(\\beta+1)W'}</InlineMath> ισχύει **και** για PM (slide 26 verbatim).
+- **NBFM/NBPM ≈ AM σε μέτρο** (carrier + 2 sidebands), αλλά **κάθετη γεωμετρία** στο complex plane: sidebands σε quadrature, LSB αντίθετου προσήμου σε σχέση με AM. Αυτή η διαφορά φάσης είναι η ρίζα της ανθεκτικότητας στον amplitude noise.
 - **Όλα τα μετέπειτα αποτελέσματα** (Bessel φάσμα, Carson, FM-in-noise) ισχύουν και για PM μετά από αναπροσαρμογή του β.
 </Recap>
 

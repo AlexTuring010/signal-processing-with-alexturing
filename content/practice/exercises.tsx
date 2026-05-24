@@ -1418,7 +1418,7 @@ export const EXERCISES: Exercise[] = [
     title: 'Σ/Λ — β=0.3 είναι WBFM',
     topic: 'fm',
     difficulty: 'easy',
-    prerequisites: ['fm/idea', 'fm/carson'],
+    prerequisites: ['fm/idea', 'fm/pm', 'fm/carson'],
     formulaIds: ['fm-beta', 'carson'],
     statement: (
       <p>

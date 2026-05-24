@@ -111,6 +111,9 @@ import { FMSignalViz } from '@/components/viz/FMSignalViz'
 import { NbfmVsAmSpectrumViz } from '@/components/viz/NbfmVsAmSpectrumViz'
 import { PmVsFmDualityViz } from '@/components/viz/PmVsFmDualityViz'
 import { ConstantEnvelopeCircleViz } from '@/components/viz/ConstantEnvelopeCircleViz'
+import { AngleModulationTimeDomainViz } from '@/components/viz/AngleModulationTimeDomainViz'
+import { PmInstantaneousFrequencyViz } from '@/components/viz/PmInstantaneousFrequencyViz'
+import { NbfmAmPhasorDecompositionViz } from '@/components/viz/NbfmAmPhasorDecompositionViz'
 import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
 import { BesselTable } from '@/components/viz/BesselTable'
 import { CarsonRuleViz } from '@/components/viz/CarsonRuleViz'
@@ -293,6 +296,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     NbfmVsAmSpectrumViz,
     PmVsFmDualityViz,
     ConstantEnvelopeCircleViz,
+
+    // Visualizations — fm / pm
+    AngleModulationTimeDomainViz,
+    PmInstantaneousFrequencyViz,
+    NbfmAmPhasorDecompositionViz,
 
     // Visualizations — fm / bessel
     BesselSpectrumViz,
