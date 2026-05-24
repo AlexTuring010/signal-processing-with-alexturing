@@ -28,6 +28,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { routeEdge, type NodeRect } from './edge-routing'
+
+const NODE_W = 64
+const NODE_H = 28
 
 // We encode a state as a 4-bit mask: B=1, C=2, G=4, W=8. The bit being SET
 // means the character is on the FAR bank.
@@ -191,6 +195,23 @@ export function RiverCrossingStateGraph() {
     return s
   }, [mode, k])
 
+  const NODE_RECTS: NodeRect[] = useMemo(
+    () =>
+      SAFE_STATES.map((s) => ({
+        id: s,
+        x: POS[s].x - NODE_W / 2,
+        y: POS[s].y - NODE_H / 2,
+        w: NODE_W,
+        h: NODE_H,
+      })),
+    [],
+  )
+
+  const EDGE_GEOM = useMemo(() => {
+    const byId = new Map<StateId, NodeRect>(NODE_RECTS.map((r) => [r.id as StateId, r]))
+    return EDGES.map((e) => routeEdge(byId.get(e.a)!, byId.get(e.b)!, NODE_RECTS))
+  }, [NODE_RECTS])
+
   return (
     <div className="not-prose my-6 overflow-hidden rounded-2xl border border-border bg-bg-soft/30">
       <div className="border-b border-border bg-bg-soft/50 px-4 py-3">
@@ -239,8 +260,6 @@ export function RiverCrossingStateGraph() {
         <div className="rounded-xl border border-border bg-bg-elevated p-3">
           <svg viewBox="0 0 680 360" className="w-full">
             {EDGES.map((e, i) => {
-              const pa = POS[e.a]
-              const pb = POS[e.b]
               const hi =
                 activeEdge &&
                 ((activeEdge.a === e.a && activeEdge.b === e.b) ||
@@ -249,26 +268,12 @@ export function RiverCrossingStateGraph() {
               const stroke = hi ? '#dc2626' : isVisited ? '#0ea5a2' : '#cbb3b8'
               const strokeWidth = hi ? 4 : isVisited ? 2.4 : 1.4
               const opacity = hi || isVisited ? 1 : 0.7
-              // ⚠️ TEMPORARY POINT-FIX — to be retired by E.4.6.0.
-              // This block hand-curves two specific edges that pass through a
-              // col-2 node's box ({C}↔{B,C,G} through {B,G}; {W}↔{B,G,W}
-              // through {C,W}). The rule below — «span ≥ 2 cols + dy < 20» —
-              // catches *only* near-horizontal long edges in *this* layout;
-              // diagonals grazing a node, or any other graph viz with a
-              // different layout, are not covered. The real fix is a generic
-              // collision-aware `routeEdge()` utility shared by every graph
-              // viz — task E.4.6 in `plans/PHASE_E_PLAN.md`. Delete this whole
-              // block (lines below through the `<path>` return) once E.4.6.0
-              // lands and `routeEdge()` is in use here.
-              const spanCols = Math.abs(farBank(e.a).length - farBank(e.b).length)
-              const dy = Math.abs(pa.y - pb.y)
-              if (spanCols >= 2 && dy < 20) {
-                const mx = (pa.x + pb.x) / 2
-                const cy = pa.y < 175 ? pa.y - 60 : pa.y + 60
+              const geom = EDGE_GEOM[i]
+              if (geom.kind === 'curve') {
                 return (
                   <path
                     key={i}
-                    d={`M ${pa.x} ${pa.y} Q ${mx} ${cy} ${pb.x} ${pb.y}`}
+                    d={geom.d}
                     fill="none"
                     stroke={stroke}
                     strokeWidth={strokeWidth}
@@ -279,10 +284,10 @@ export function RiverCrossingStateGraph() {
               return (
                 <line
                   key={i}
-                  x1={pa.x}
-                  y1={pa.y}
-                  x2={pb.x}
-                  y2={pb.y}
+                  x1={geom.x1}
+                  y1={geom.y1}
+                  x2={geom.x2}
+                  y2={geom.y2}
                   stroke={stroke}
                   strokeWidth={strokeWidth}
                   opacity={opacity}
