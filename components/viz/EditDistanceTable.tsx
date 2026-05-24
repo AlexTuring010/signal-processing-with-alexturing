@@ -7,41 +7,25 @@
  * substitution), up (gap in X), left (gap in Y). Each step reveals a row,
  * spotlights cell M[i][n] with its three source cells, and shows the
  * min{…}. The final step backtracks the optimal alignment path. Built for
- * L16, on the lecture's own GAC / AGC instance.
+ * L16, on the shared GCTA / CTAG instance (alignment-instance.ts).
  */
 
 import { useMemo, useState } from 'react'
 import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { EDIT_X, EDIT_Y, GAP, mismatch, buildEditTable } from './alignment-instance'
 
-const X = 'GAC'
-const Y = 'AGC'
+const X = EDIT_X
+const Y = EDIT_Y
 const M_LEN = X.length
 const N_LEN = Y.length
-const GAP = 1 // δ
-const mism = (a: string, b: string) => (a === b ? 0 : 1) // α
+const mism = mismatch
 
 export function EditDistanceTable() {
   const [step, setStep] = useState(0) // 0 = base cases; 1..m = reveal row; m+1 = traceback
   const last = M_LEN + 1
 
-  const M = useMemo(() => {
-    const t: number[][] = []
-    for (let i = 0; i <= M_LEN; i++) {
-      t.push([])
-      for (let j = 0; j <= N_LEN; j++) {
-        if (i === 0) t[i][j] = j * GAP
-        else if (j === 0) t[i][j] = i * GAP
-        else
-          t[i][j] = Math.min(
-            mism(X[i - 1], Y[j - 1]) + t[i - 1][j - 1],
-            GAP + t[i - 1][j],
-            GAP + t[i][j - 1],
-          )
-      }
-    }
-    return t
-  }, [])
+  const M = useMemo(() => buildEditTable(X, Y), [])
 
   /** backtrack the optimal alignment path, preferring the diagonal */
   const path = useMemo(() => {

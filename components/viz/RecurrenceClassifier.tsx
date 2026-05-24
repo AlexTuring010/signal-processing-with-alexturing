@@ -20,7 +20,23 @@ const PRESETS: Preset[] = [
   { id: 'karatsuba', label: 'Karatsuba', a: 3, b: 2, d: 1 },
   { id: 'select', label: 'Γραμμική επιλογή', a: 1, b: 2, d: 1 },
   { id: 'strassen', label: 'Strassen', a: 7, b: 2, d: 2 },
+  // Phase D — problem-driven presets. The `b` slider caps at 6, so for
+  // problems whose b > 6 (the 9-subproblems-of-size-n/3 family etc.) the
+  // sliders won't reach this preset, but the initial state still shows it.
+  { id: 'pt1-th1-q5', label: 'pt1-th1-q5: 2T(n/2)+n', a: 2, b: 2, d: 1 },
+  { id: 'pt2-th1-q3', label: 'pt2-th1-q3: 2T(n/2)+n³', a: 2, b: 2, d: 3 },
+  { id: 'pt5-th2-b-A1', label: 'pt5-th2-b A₁: 9T(n/3)+n', a: 9, b: 3, d: 1 },
+  { id: 'pt5-th2-b-A2', label: 'pt5-th2-b A₂: 2T(n/2)+n', a: 2, b: 2, d: 1 },
+  { id: 'front-set-3-ask7-A1', label: 'ask7 A₁: 4T(n/4)+12n', a: 4, b: 4, d: 1 },
+  { id: 'front-set-3-ask7-A2', label: 'ask7 A₂: 3T(n/9)+n^{7/6}', a: 3, b: 9, d: 7 / 6 },
+  { id: 'front-set-3-ask7-A4', label: 'ask7 A₄: 27T(n/9)+n^{11/12}', a: 27, b: 9, d: 11 / 12 },
+  { id: 'front-set-4-ask3', label: 'ask3: 8T(n/2)+n²', a: 8, b: 2, d: 2 },
 ]
+
+type Props = {
+  /** Optional preset id; pre-fills a/b/d. The sliders stay live. */
+  preset?: string
+}
 
 const EPS = 1e-9
 const LEVELS = [0, 1, 2, 3, 4, 5]
@@ -42,10 +58,11 @@ function Pow({ exp }: { exp: number }) {
   )
 }
 
-export function RecurrenceClassifier() {
-  const [a, setA] = useState(2)
-  const [b, setB] = useState(2)
-  const [d, setD] = useState(1)
+export function RecurrenceClassifier({ preset }: Props = {}) {
+  const initial = (preset && PRESETS.find((p) => p.id === preset)) || PRESETS[0]
+  const [a, setA] = useState(initial.a)
+  const [b, setB] = useState(initial.b)
+  const [d, setD] = useState(initial.d)
 
   const logba = Math.log(a) / Math.log(b)
   const caseNo: 1 | 2 | 3 = d > logba + EPS ? 1 : d < logba - EPS ? 3 : 2
@@ -131,14 +148,14 @@ export function RecurrenceClassifier() {
 
       {/* sliders */}
       <div className="grid gap-2.5 sm:grid-cols-3">
-        <Slider label="a — πλήθος υποπροβλημάτων" value={a} min={1} max={8} step={1} onChange={setA} />
-        <Slider label="b — παράγοντας σμίκρυνσης" value={b} min={2} max={6} step={1} onChange={setB} />
+        <Slider label="a — πλήθος υποπροβλημάτων" value={a} min={1} max={30} step={1} onChange={setA} />
+        <Slider label="b — παράγοντας σμίκρυνσης" value={b} min={2} max={10} step={1} onChange={setB} />
         <Slider
           label="d — εκθέτης συνδυασμού"
           value={d}
           min={0}
           max={3}
-          step={0.25}
+          step={1 / 12}
           onChange={setD}
           display={fmt(d)}
         />

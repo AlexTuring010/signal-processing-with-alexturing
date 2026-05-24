@@ -7,25 +7,62 @@
  * cells of the row above — M[i−1][w] (item i out) and M[i−1][w−wᵢ]
  * (item i in). Each step reveals a row and spotlights cell M[i][W],
  * lighting its two source cells and showing the max{…} decision. The
- * last step backtracks to the chosen items. Built for L15, on the
- * lecture's own 4-item instance.
+ * last step backtracks to the chosen items.
+ *
+ * Two instances:
+ *   - 'lecture' (default) — the L15 4-item instance from knapsack-instance.ts.
+ *   - 'pt7-th3' — the exam problem's 6-item instance (b = 12, OPT = 23).
  */
 
 import { useMemo, useState } from 'react'
 import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  KNAPSACK_ITEMS as LECTURE_ITEMS,
+  KNAPSACK_CAP as LECTURE_CAP,
+} from './knapsack-instance'
 
-type Item = { w: number; v: number }
-const ITEMS: Item[] = [
-  { w: 2, v: 3 },
-  { w: 3, v: 4 },
-  { w: 4, v: 5 },
-  { w: 5, v: 6 },
-]
-const CAP = 8
-const N = ITEMS.length
+type KItem = { w: number; v: number }
+type KInstance = {
+  items: readonly KItem[]
+  cap: number
+  /** label shown in the «αντικείμενα» tagline; default «αντικείμενα» */
+  itemLabel?: string
+  /** label shown for the capacity in the verdict chip; default «W» */
+  capSymbol?: string
+}
 
-export function KnapsackTable() {
+const INSTANCES: Record<string, KInstance> = {
+  lecture: {
+    items: LECTURE_ITEMS,
+    cap: LECTURE_CAP,
+  },
+  'pt7-th3': {
+    items: [
+      { w: 8, v: 16 },
+      { w: 5, v: 9 },
+      { w: 4, v: 7 },
+      { w: 9, v: 15 },
+      { w: 6, v: 10 },
+      { w: 1, v: 1 },
+    ],
+    cap: 12,
+    itemLabel: 'αντικείμενα (αᵢ, cᵢ)',
+    capSymbol: 'b',
+  },
+}
+
+interface Props {
+  instance?: keyof typeof INSTANCES
+}
+
+export function KnapsackTable({ instance = 'lecture' }: Props) {
+  const inst = INSTANCES[instance] ?? INSTANCES.lecture
+  const ITEMS = inst.items
+  const CAP = inst.cap
+  const N = ITEMS.length
+  const CAP_SYMBOL = inst.capSymbol ?? 'W'
+
   const [step, setStep] = useState(0) // 0 = row 0 only, i = rows 0..i revealed
   const last = N
 
@@ -44,7 +81,7 @@ export function KnapsackTable() {
       t.push(row)
     }
     return t
-  }, [])
+  }, [ITEMS, CAP, N])
 
   /** which items the optimum uses (backtrack from M[N][CAP]) */
   const solution = useMemo(() => {
@@ -57,7 +94,7 @@ export function KnapsackTable() {
       }
     }
     return chosen
-  }, [M])
+  }, [M, ITEMS, CAP, N])
 
   const done = step === last
   const focusRow = step // the row revealed this step (0 = none meaningful)
@@ -92,11 +129,13 @@ export function KnapsackTable() {
           Σακίδιο — γέμισμα του πίνακα M, γραμμή-γραμμή
         </div>
         <span className="shrink-0 rounded-md bg-accent/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-accent">
-          {done ? `Βέλτιστο: ${M[N][CAP]}` : `Χωρητικότητα W = ${CAP}`}
+          {done
+            ? `Βέλτιστο: ${M[N][CAP]}`
+            : `Χωρητικότητα ${CAP_SYMBOL} = ${CAP}`}
         </span>
       </div>
       <p className="mb-3 text-xs text-fg-subtle">
-        Αντικείμενα (βάρος, αξία):{' '}
+        {inst.itemLabel ?? 'Αντικείμενα (βάρος, αξία)'}:{' '}
         {ITEMS.map((x, i) => `${i + 1}:(${x.w},${x.v})`).join('  ·  ')}
       </p>
 
