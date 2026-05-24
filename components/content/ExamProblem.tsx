@@ -87,6 +87,16 @@ type ChipImplProps = {
   title?: string
 }
 
+/** Drop the leading `'<Date> · Θέμα X — '` (or `'… · Άσκηση N — '`) prefix
+ * the bank convention puts on every transcribed `title`. The chip header
+ * already renders that prefix from `source` + `problemNumber`; without
+ * stripping, the chip's title line would echo it. */
+function stripBankTitlePrefix(title: string): string {
+  const sep = ' — '
+  const idx = title.indexOf(sep)
+  return idx >= 0 ? title.slice(idx + sep.length) : title
+}
+
 function ExamProblemChip({ relatedExerciseId, pattern, title }: ChipImplProps) {
   const ex = EXERCISES.find((e) => e.id === relatedExerciseId)
 
@@ -116,7 +126,10 @@ function ExamProblemChip({ relatedExerciseId, pattern, title }: ChipImplProps) {
   const isRecent = ex.source ? RECENT_SOURCES.has(ex.source) : false
   const recentYear =
     ex.source && ex.source.endsWith('-2025') ? '2025' : '2024'
-  const displayTitle = title ?? ex.title
+  // The chip header already shows sourceLabel · problemNumber, but bank
+  // titles by convention include that same prefix (`'Σεπτέμβριος 2025 · Θέμα 2.1 — <real title>'`).
+  // Strip the prefix so we don't render it twice.
+  const displayTitle = title ?? stripBankTitlePrefix(ex.title)
 
   return (
     <aside className="not-prose my-5 overflow-hidden rounded-lg border border-l-4 border-l-rose-500 border-rose-300/60 bg-rose-50/70 shadow-sm dark:border-rose-400/30 dark:bg-rose-400/10">
