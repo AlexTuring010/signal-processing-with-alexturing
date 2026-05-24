@@ -60,8 +60,9 @@ const TOPIC_TEXT: Record<Topic, string> = {
 
 export function Cheatsheet() {
   // Toggle: include the τυπολόγιο mirror page or just the must-memorize page.
-  // Defaults to "include everything" — recommended for the bring-your-own
-  // case where a student wants ONE sheet covering both.
+  // Defaults to "include everything" — pre-exam study mode wants one sheet
+  // covering both surfaces (the τυπολόγιο so the student internalizes what
+  // the exam will hand them, plus the must-memorize tier).
   const [includeTypology, setIncludeTypology] = useState(true)
 
   const pages = useMemo(() => {
@@ -104,16 +105,17 @@ function Header({
         <Sigma className="h-5 w-5" aria-hidden />
       </div>
       <h1 className="text-3xl font-bold tracking-tight">
-        Συνιστώμενη πινακίδα εξέτασης
+        Συνιστώμενη πινακίδα μελέτης
       </h1>
       <p className="mt-3 max-w-3xl text-fg-muted">
-        Ένα χαρτί που μπαίνει στην τσάντα σου: το επίσημο{' '}
+        Ένα φύλλο που διαβάζεις <strong>πριν την εξέταση</strong> και αφήνεις
+        στο σπίτι: το επίσημο{' '}
         <Link href="/formulas" className="font-medium text-accent hover:underline">
           τυπολόγιο
         </Link>{' '}
-        + τα formulas που <em>πρέπει</em> να ξέρεις (AM, FM, θόρυβος).
-        Δομημένο για να βρίσκεις τον σωστό τύπο σε λίγα δευτερόλεπτα, όχι
-        για διάβασμα.
+        + όλα τα formulas που <em>πρέπει</em> να θυμάσαι (AM, FM, θόρυβος).
+        Δομημένο για στιγμιαία αναζήτηση — όχι για να σκαλίζεις σελίδες
+        σημειώσεων το πρωί της εξέτασης.
       </p>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -144,21 +146,27 @@ function Header({
         </div>
       </div>
 
-      {/* Honest banner — bring-your-own permission is hearsay. */}
+      {/* Honest banner — only the official τυπολόγιο is allowed in 2026. */}
       <div className="mt-5 flex max-w-3xl gap-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-700 dark:text-amber-300" aria-hidden />
         <div className="space-y-1.5 text-fg">
           <p>
-            <strong>Σημείωση:</strong> σύμφωνα με συζητήσεις φοιτητών στο Δήλος
-            (περασμένα έτη), ο καθηγητής επιτρέπει να φέρεις και{' '}
-            <em>δικό σου</em> τυπολόγιο επιπλέον του επίσημου.{' '}
-            <strong>Επιβεβαίωσε με τον καθηγητή πριν την εξέταση</strong> —
-            δεν είναι 100% επιβεβαιωμένο για φέτος.
+            <strong>Ενημέρωση 2026:</strong> από τις τελευταίες συζητήσεις
+            με συμφοιτητές, στην εξέταση φέτος επιτρέπεται{' '}
+            <strong>μόνο το επίσημο τυπολόγιο</strong> του{' '}
+            <Link href="/formulas" className="font-medium text-accent underline hover:opacity-80">
+              /formulas
+            </Link>
+            . Αυτή η πινακίδα είναι φύλλο μελέτης πριν την εξέταση — όχι κάτι
+            που σηκώνεις μαζί σου στο γραπτό. Διάβασέ τη, εμπέδωσε, άφησέ τη
+            στο σπίτι.
           </p>
           <p className="text-xs text-fg-muted">
-            Σε κάθε περίπτωση, αυτή η πινακίδα είναι χρήσιμη σαν study sheet —
-            όλο το υλικό σε ένα μέρος, οργανωμένο σε γκρουπ που ταιριάζουν με
-            τα συνηθισμένα themes της εξέτασης.
+            Σε μελλοντικές περιόδους ο καθηγητής μπορεί να γίνει πιο ευέλικτος
+            (παλιά υπήρχαν συζητήσεις για bring-your-own) — επιβεβαίωσε πριν
+            την εξέταση. Στο μεταξύ: τα formulas εκτός τυπολογίου είναι «πρέπει
+            να θυμάσαι», και προτεραιότητα μνήμης ανάλογα με τη συχνότητα στις
+            παλιές εξετάσεις.
           </p>
         </div>
       </div>

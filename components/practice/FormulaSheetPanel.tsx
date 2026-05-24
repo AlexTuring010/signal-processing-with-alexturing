@@ -92,10 +92,10 @@ export function FormulaSheetPanel() {
             href="/cheatsheet"
             onClick={closeSheet}
             className="inline-flex items-center gap-1.5 self-start rounded-md border border-accent/40 bg-accent-soft/40 px-2.5 py-1 text-[11px] font-semibold text-accent transition hover:bg-accent-soft/70"
-            title="Print-ready πινακίδα που συνδυάζει τυπολόγιο + must-memorize"
+            title="Print-ready πινακίδα μελέτης πριν την εξέταση (μόνο το επίσημο τυπολόγιο επιτρέπεται στο γραπτό)"
           >
             <Printer className="h-3 w-3" aria-hidden />
-            Συνιστώμενη πινακίδα εξέτασης (print-ready)
+            Συνιστώμενη πινακίδα μελέτης (print-ready)
           </Link>
         </header>
 

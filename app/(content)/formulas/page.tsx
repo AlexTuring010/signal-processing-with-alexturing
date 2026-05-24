@@ -43,30 +43,32 @@ export default function FormulasPage() {
           </span>
         </div>
 
-        {/* Bring-your-own cheatsheet — pointer to the recommended one. */}
+        {/* Cheatsheet now framed as a pre-exam study aid — per classmate */}
+        {/* update 2026-05-24, only the official τυπολόγιο is allowed in   */}
+        {/* the exam this year (the earlier «bring-your-own» hearsay does  */}
+        {/* not appear to hold for 2026).                                  */}
         <aside className="mt-5 flex max-w-3xl gap-3 rounded-lg border border-accent/40 bg-accent-soft/40 px-4 py-3">
           <Printer className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden />
           <div className="space-y-1.5 text-sm">
             <p className="text-fg">
-              Από συζητήσεις φοιτητών (Δήλος, περασμένα έτη), ο καθηγητής
-              επιτρέπει να φέρεις και <em>δικό σου</em> τυπολόγιο επιπλέον του
-              επίσημου.{' '}
-              <strong>
-                Αν ισχύει, η{' '}
-                <Link
-                  href="/cheatsheet"
-                  className="text-accent underline hover:opacity-80"
-                >
-                  Συνιστώμενη πινακίδα
-                </Link>{' '}
-                είναι αυτό που σου προτείνουμε
-              </strong>{' '}
-              — το επίσημο τυπολόγιο + όλα τα must-memorize σε δύο A4 σελίδες,
-              δομημένα για στιγμιαία αναζήτηση κάτω από πίεση.
+              <strong>Ενημέρωση 2026:</strong> σύμφωνα με τις πιο πρόσφατες
+              συζητήσεις φοιτητών, στην εξέταση φέτος επιτρέπεται{' '}
+              <strong>μόνο το επίσημο τυπολόγιο</strong> παραπάνω. Η{' '}
+              <Link
+                href="/cheatsheet"
+                className="font-medium text-accent underline hover:opacity-80"
+              >
+                Συνιστώμενη πινακίδα μελέτης
+              </Link>{' '}
+              παραμένει χρήσιμη ως <em>φύλλο μελέτης πριν την εξέταση</em> —
+              διαβάζεις, εμπεδώνεις, μετά το αφήνεις στο σπίτι. Όλα τα
+              formulas εκτός τυπολογίου είναι «πρέπει να θυμάσαι», και το
+              πόσο επείγον είναι το κάθε ένα εξαρτάται από το πόσο συχνά
+              εμφανίζεται σε παλιά θέματα.
             </p>
             <p className="text-xs text-fg-muted">
-              Δεν είναι 100% επιβεβαιωμένο για φέτος — ρώτα τον καθηγητή πριν
-              την εξέταση.
+              Σε μελλοντικές περιόδους ο καθηγητής μπορεί να γίνει πιο
+              ευέλικτος — επιβεβαίωσε πριν την εξέταση.
             </p>
           </div>
         </aside>
