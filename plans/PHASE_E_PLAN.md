@@ -481,19 +481,41 @@ the quality bar.
 whose statement describes a **concrete scenario** — a physical setup, a
 real-world process, a labeled graph with a narrative, a multi-character
 puzzle, a geographic or spatial arrangement — must open its solution
-with a small illustrative visual **anchor** (static SVG or short
-interactive) that depicts the scenario **as described**, before any
-abstract modeling. This is the «Νιώσε» stage of the 5-stage learning
-loop, applied to problem solutions. The visual:
+with a **good-quality illustrative anchor** that depicts the scenario
+**as described**, before any abstract modeling. This is the «Νιώσε»
+stage of the 5-stage learning loop, applied to problem solutions. The
+visual:
 
+- Is **good quality, not minimum-viable**. The polish bar is the same
+  as the lecture pages per [[lecture-rework-standard]]: «cost is not a
+  consideration; the goal is the concept clicking in a struggling
+  student's brain, not just having the image on the page». No shortcuts.
+- **Static SVG when** the scenario is fully captured in one snapshot —
+  e.g. a starting configuration the student needs to visualise once
+  (the `front-set-7-ask2` river-crossing initial state is this kind).
+- **Interactive when** the scenario itself carries motion, state
+  changes, or invites exploration — a steppable transition, a slider
+  over a parameter, a configurable variable that the reader operates
+  to feel the concept. The static-vs-interactive choice is made
+  **per-problem** during retrofit; default-static is **wrong** when the
+  concept clicks better in motion. Build a fresh interactive component
+  in `components/viz/` when needed; don't downgrade to a static SVG
+  just because it's smaller. Cutting an interactive into a static
+  snapshot when motion is the teaching surface is the exact corner-cut
+  this task exists to prevent.
 - Sits at the **top of the solution fragment**, preceded by a one-line
   Greek bridge (e.g. «Πριν τη μοντελοποίηση, δες την εικόνα του γρίφου …»).
 - Uses **semantic color tokens** (`rgb(var(--fg))`, `rgb(var(--bg-elevated))`,
   etc.) so dark mode is safe by construction.
-- Carries a minimal caption that ties the picture back to the conflict
-  rules / context cues the prose will then formalise.
-- Reuses the `front-set-7-ask2` precedent (commit `fb91716`) as the
-  reference shape.
+- Carries a caption that ties the picture back to the conflict rules /
+  context cues the prose will then formalise.
+- For **static SVGs**, reuses the `front-set-7-ask2` precedent (commit
+  `fb91716`) as the reference shape. For **interactives**, follows the
+  bespoke-viz precedents in `components/viz/` (`RiverCrossingStateGraph`,
+  `WeightedIntervalDP`, `BipartiteChecker`, etc.) — single-purpose
+  component, step/slider controls where the algorithm has phases or
+  parameters, accessible affordances (`<button>` not `<div onClick>`),
+  dark-mode-safe by construction via semantic tokens, mobile-tested.
 
 Applies to new transcriptions (E.5) and any future problem-bank work.
 
@@ -533,16 +555,39 @@ Commit message for the audit: `docs(phase-e): Νιώσε-visual audit across the
 
 - Read each entry's statement carefully and verify the gap (the audit
   identifies candidates, but the executor confirms).
-- Author a minimal **static SVG** illustration matching the scenario,
-  following the `front-set-7-ask2` precedent: inline SVG inside a
-  `<div className="not-prose my-4 flex justify-center">` wrapper, with
-  `viewBox`, `max-w-xl rounded-lg border border-border bg-bg-elevated`,
-  fills via `rgb(var(--token))`, ARIA-labeled.
+- **Decide static vs interactive per-problem** (per the binding
+  standard above). Ask: «does this scenario click better as one
+  snapshot, or in motion/state?» — and *answer honestly*. If the
+  scenario is dynamic, build the interactive; do not justify a static
+  SVG by «it's faster». The audit's «suggested visual» field is a
+  starting hint, not a binding decision — the chunk executor can
+  upgrade a suggested static to an interactive when the concept
+  warrants it.
+- **Author the visual at the lecture-page quality bar.**
+  - **Static SVG path** (when one snapshot suffices): follow the
+    `front-set-7-ask2` precedent (commit `fb91716`) — inline SVG inside
+    a `<div className="not-prose my-4 flex justify-center">` wrapper,
+    with `viewBox`, `max-w-xl rounded-lg border border-border
+    bg-bg-elevated`, fills via `rgb(var(--token))`, ARIA-labeled.
+    Polish: clear labels, conflict-rule caption, spatial composition
+    that *teaches* (not just decorates).
+  - **Interactive viz path** (when the scenario carries motion / state
+    / exploration): build a fresh single-purpose component in
+    `components/viz/`, following the existing bespoke-viz precedents
+    (e.g. `RiverCrossingStateGraph`, `WeightedIntervalDP`,
+    `BipartiteChecker`). Step/slider controls where the algorithm has
+    phases or parameters; accessible affordances (`<button>` not
+    `<div onClick>`); dark-mode-safe by construction via semantic
+    tokens; mobile-tested. Register in `mdx-components.tsx` (or import
+    directly into `exercises.tsx` if scoped to one entry) and mount
+    via JSX in the solution. Adopt `routeEdge()` from E.4.6 the moment
+    it lands.
 - Place at the **top of the solution fragment**, preceded by a one-line
   Greek bridge.
 - Keep the rest of the solution unchanged unless the visual makes a
   prose paragraph redundant (in which case trim, don't expand).
-- `npm run typecheck` + `lint` + `build` per chunk.
+- `npm run typecheck` + `lint` + `build` per chunk; spot-test the new
+  viz in light + dark + mobile widths.
 
 **Cadence.** Same stop-and-show rhythm as Phases A/B/C/D. One audit
 turn + N chunk-fix turns.
