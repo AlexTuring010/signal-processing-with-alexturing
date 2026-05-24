@@ -66,20 +66,58 @@ in `edge-routing.test.ts` lock both the byte-identical contract (over
 all 12 MST_EDGES) and the perturbed-collision case. See
 [[phase-e46-chunk-b1]].
 
-### Chunk B2 — L08 directed / undirected base graphs
+### Chunk B2 — L08 directed / undirected base graphs ✅ DONE 2026-05-25
 
 Bespoke layouts per viz, mix of `<rect>` and `<circle>` nodes. Most are
 hand-positioned 5–10 node graphs.
 
-- `components/viz/StrongConnectivityViz.tsx`
-- `components/viz/DirectedDegreeViz.tsx`
-- `components/viz/DirectedReachExplorer.tsx`
-- `components/viz/MutualReachabilityExplorer.tsx`
-- `components/viz/OddCycleProof.tsx`
-- `components/viz/OddCycleColoring.tsx`
-- `components/viz/ComponentSweep.tsx`
-- `components/viz/WhyBFSFailsWeighted.tsx`
-- `components/viz/BipartiteChecker.tsx`
+- `components/viz/StrongConnectivityViz.tsx` ✅ (directed, 6 nodes R=21)
+- `components/viz/DirectedDegreeViz.tsx` ✅ (directed, 6 nodes R=24; mx/my label anchor)
+- `components/viz/DirectedReachExplorer.tsx` ✅ (directed, 6 nodes R=22; fwd trimPad=R+2, ghost reverse trimPad=R+8)
+- `components/viz/MutualReachabilityExplorer.tsx` ✅ (directed, 5 nodes R=22)
+- `components/viz/OddCycleProof.tsx` ✅ (undirected level-banded, 9 nodes r=20; tree edges + same-level "bad" edge)
+- `components/viz/OddCycleColoring.tsx` ✅ (undirected ring, dynamic k ∈ {3..8} r=22; useMemo rects; closing-edge label anchored at Bezier midpoint)
+- `components/viz/ComponentSweep.tsx` ✅ (undirected 3-component, 13 nodes r=18, 14 edges)
+- `components/viz/WhyBFSFailsWeighted.tsx` ✅ (4 nodes R=22; 3 detour edges retrofitted, the s-t arc stays hand-crafted by design — explicit comment)
+- `components/viz/BipartiteChecker.tsx` ✅ (undirected level-banded, dynamic between two layouts; useMemo rects)
+
+**Retrofit shape (as executed).** Mirror of Chunk B1's patterns, applied
+per viz with no new shared helper:
+
+- For the 4 directed graphs: build module-scope `NODE_RECTS` +
+  `NODE_RECT_BY_ID` from each viz's NODES, plus a per-file `routedEdge(a,
+  b)` that calls `routeEdge() → trimEdgeGeom()` with trim radius `R + 2`
+  (preserves the pre-retrofit border gap byte-identical for the line
+  case). `DirectedReachExplorer` takes a `trimPad` parameter so the
+  ghost reverse edges keep their `R + 8` wider gap.
+  `DirectedDegreeViz`'s `routedEdge` additionally returns `mx, my` so the
+  "next edge" label anchors at the Bezier midpoint when a curve fires.
+- For the 4 static-layout undirected graphs (OddCycleProof,
+  ComponentSweep) and the dynamic-layout ones (OddCycleColoring,
+  BipartiteChecker): same shape minus the `trimEdgeGeom` step (these
+  vizzes draw center-to-center). The dynamic vizzes build `nodeRects`
+  via `useMemo` so the routing recomputes when `k`/`which` changes.
+- WhyBFSFailsWeighted is hybrid: the 3 detour edges adopt the standard
+  pattern; the s-t arc is a deliberate visual-separation design choice
+  (over-the-top curve) and intentionally bypasses `routeEdge`. The
+  exception is documented inline in the `routedEdge` JSDoc.
+- Every consumer that previously used a local `endpoints()` / `trim()`
+  helper now branches on `g.kind === 'line' ? <line …> : <path d={g.d}
+  fill="none" …>`. Styling, marker arrows, strokeDasharray, opacity all
+  carry over unchanged.
+
+**Steady-state visual contract:** every edge in every B2 viz routes as
+a line on the current layout — verified by inspection (none of the
+layouts have an unrelated node sitting on any edge centerline). The line
+case is byte-identical to the pre-retrofit output (same as B1). No
+user-visible change today; the value is structural lockout per the
+audit's standing thesis.
+
+**No new tests required.** B2 introduces no new helper (the building
+blocks `routeEdge` and `trimEdgeGeom` were both tested in B1's 20-test
+suite, which still passes 20/20). A future layout edit that breaks
+collision-freeness would surface as a visible curve in the viz — that's
+the regression channel.
 
 ### Chunk B3 — L06 / L07 base-graph vizzes
 
