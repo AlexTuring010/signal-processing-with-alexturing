@@ -231,6 +231,91 @@ export const FORMULA_SHEET: FormulaSection[] = [
           <BlockMath>{'\\text{LTI BIBO-ευσταθές} \\;\\Longleftrightarrow\\; \\int_{-\\infty}^{\\infty} |h(t)|\\,dt < \\infty'}</BlockMath>
         ),
       },
+      // ── Σειρές Fourier (derived in /foundations/fourier-series) ──
+      {
+        id: 'fourier-series-synthesis',
+        title: 'Σειρά Fourier — εξίσωση σύνθεσης',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-series',
+        content: (
+          <BlockMath>{'x(t) \\;=\\; \\sum_{k=-\\infty}^{\\infty} a_k\\, e^{j 2\\pi k f_0 t} \\qquad\\text{(}T_0 = 1/f_0,\\ \\omega_0 = 2\\pi f_0\\text{)}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'fourier-series-analysis',
+        title: 'Σειρά Fourier — εξίσωση ανάλυσης',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-series',
+        content: (
+          <BlockMath>{'a_k \\;=\\; \\frac{1}{T_0}\\int_{t_0}^{t_0+T_0} x(t)\\, e^{-j 2\\pi k f_0 t}\\, dt \\qquad\\text{(οποιοδήποτε διάστημα μήκους }T_0\\text{)}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'fourier-series-dual-form',
+        title: 'Σειρά Fourier — πραγματική (cosine) μορφή',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-series',
+        content: (
+          <>
+            <BlockMath>{'x(t) \\;=\\; A_0 \\;+\\; \\sum_{k=1}^{\\infty} A_k\\, \\cos(2\\pi k f_0 t + \\varphi_k)'}</BlockMath>
+            <BlockMath>{'A_0 = a_0\\ (\\text{DC}),\\ \\ A_k = 2\\,|a_k|\\ (k\\!\\ge\\!1),\\ \\ \\varphi_k = \\angle a_k'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'fourier-orthogonality',
+        title: 'Ορθογωνιότητα αρμονικών εκθετικών',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-series',
+        content: (
+          <BlockMath>{'\\int_{T_0} e^{j 2\\pi k f_0 t}\\, e^{-j 2\\pi m f_0 t}\\, dt \\;=\\; T_0\\cdot\\delta_{k,m} \\qquad(\\delta_{k,m}\\text{: Kronecker, όχι Dirac})'}</BlockMath>
+        ),
+      },
+      {
+        id: 'fourier-series-conjugate-symmetry',
+        title: 'Συζυγής συμμετρία (real signal)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-series',
+        content: (
+          <>
+            <BlockMath>{'x(t) \\in \\mathbb{R} \\;\\Longrightarrow\\; a_{-k} \\;=\\; a_k^{*}'}</BlockMath>
+            <BlockMath>{'\\Longrightarrow\\; |a_{-k}| = |a_k|\\ (\\text{άρτιο πλάτος}),\\quad \\angle a_{-k} = -\\angle a_k\\ (\\text{περιττή φάση})'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'fourier-series-rect-pulse',
+        title: 'Τετραγωνικός παλμός 50% — συντελεστές sinc',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-series',
+        content: (
+          <>
+            <BlockMath>{'a_k \\;=\\; \\tfrac{1}{2}\\,\\mathrm{sinc}(k/2) \\qquad\\mathrm{sinc}(x) = \\frac{\\sin(\\pi x)}{\\pi x}'}</BlockMath>
+            <BlockMath>{'a_0 = \\tfrac{1}{2}\\ (\\text{DC}),\\quad a_{2n} = 0\\ \\text{για }n\\neq 0,\\quad |a_k| \\sim 1/k\\ \\text{για περιττά }k'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'lti-output-fourier-series',
+        title: 'LTI απόκριση σε periodic signal',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-series',
+        content: (
+          <>
+            <BlockMath>{'x(t) = \\sum_{k} a_k\\, e^{j 2\\pi k f_0 t} \\;\\xrightarrow{\\ h(t)\\ }\\; y(t) = \\sum_{k} a_k\\, H(k f_0)\\, e^{j 2\\pi k f_0 t}'}</BlockMath>
+            <BlockMath>{'\\text{δηλαδή}\\quad b_k = a_k\\cdot H(k f_0)\\quad (\\text{ξεχωριστή απόκριση ανά αρμονική})'}</BlockMath>
+          </>
+        ),
+      },
+
+      // ── Fourier transform pairs + properties (τυπολόγιο) ──
       {
         id: 'fourier-pair-rect',
         title: 'Rect ↔ sinc',

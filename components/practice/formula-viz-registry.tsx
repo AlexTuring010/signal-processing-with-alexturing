@@ -59,6 +59,12 @@ import { AskisiFourConvolutionViz } from '@/components/viz/AskisiFourConvolution
 import { ComplexExpThroughLtiViz } from '@/components/viz/ComplexExpThroughLtiViz'
 import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
 import { ImpulseResponseDemo } from '@/components/viz/ImpulseResponseDemo'
+import { SpectrumViewer } from '@/components/viz/SpectrumViewer'
+import { HarmonicOrthogonalityCheck } from '@/components/viz/HarmonicOrthogonalityCheck'
+import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourier'
+import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlowViz'
+import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
+import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSeriesViz'
 
 const REGISTRY: Record<string, () => ReactNode> = {
   // Foundations · Signal definitions + properties
@@ -80,6 +86,16 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'lti-frequency-response': () => <EigenfunctionDemo />,
   'lti-cosine-response': () => <EigenfunctionDemo />,
   'bibo-stability': () => <ImpulseResponseDemo />,
+
+  // Foundations · Σειρές Fourier
+  'fourier-series-synthesis': () => <AnalysisSynthesisFlowViz />,
+  'fourier-series-analysis': () => <SpectrumViewer />,
+  'fourier-series-dual-form': () => <DualFormExplorerViz />,
+  'fourier-orthogonality': () => <HarmonicOrthogonalityCheck />,
+  'fourier-series-conjugate-symmetry': () => <SpectrumViewer />,
+  'fourier-series-rect-pulse': () => <RectangularPulseFourier />,
+  'lti-output-fourier-series': () => <LtiThroughFourierSeriesViz />,
+  'parseval-power': () => <SpectrumViewer />,
 
   // Foundations · Fourier pairs / properties
   'fourier-pair-rect': () => <RectToSincViz />,

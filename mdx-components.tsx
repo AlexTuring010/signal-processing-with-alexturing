@@ -67,6 +67,9 @@ import { SpectrumViewer } from '@/components/viz/SpectrumViewer'
 import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourier'
 import { SquareWaveBuilder } from '@/components/viz/SquareWaveBuilder'
 import { PeriodToInfinity } from '@/components/viz/PeriodToInfinity'
+import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlowViz'
+import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
+import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSeriesViz'
 import { RectToSincViz } from '@/components/viz/RectToSincViz'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
@@ -237,6 +240,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RectangularPulseFourier,
     SquareWaveBuilder,
     PeriodToInfinity,
+    AnalysisSynthesisFlowViz,
+    DualFormExplorerViz,
+    LtiThroughFourierSeriesViz,
 
     // Visualizations — foundations / fourier-transform
     RectToSincViz,

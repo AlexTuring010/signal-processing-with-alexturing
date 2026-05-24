@@ -15,6 +15,7 @@
  */
 
 import type { ReactNode } from 'react'
+import Link from 'next/link'
 import { InlineMath } from '@/components/math'
 
 export type FormulaMeta = {
@@ -232,6 +233,143 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
     derivation: <>Άμεση συνέπεια της τριγωνικής ανισότητας στο ολοκλήρωμα της συνέλιξης.</>,
+  },
+
+  // ── Foundations · Σειρές Fourier ─────────────────────────────
+  'fourier-series-synthesis': {
+    intuition: (
+      <>
+        Η <strong>εξίσωση σύνθεσης</strong>: ένα periodic σήμα είναι, εξ ορισμού, ένας
+        γραμμικός συνδυασμός <strong>αρμονικά συσχετισμένων</strong> εκθετικών — ένα
+        για κάθε ακέραιο <InlineMath>k</InlineMath>. Οι μιγαδικοί συντελεστές{' '}
+        <InlineMath>a_k</InlineMath> κουβαλάνε «πόσο» και «σε ποια φάση» μπαίνει κάθε
+        αρμονική. Είναι η συνεχής εκδοχή του «<em>κάθε διάνυσμα = γραμμικός συνδυασμός
+        unit vectors</em>».
+      </>
+    ),
+    derivation: (
+      <>
+        Προκύπτει σαν συνέπεια του ότι το σύνολο{' '}
+        <InlineMath>{'\\{e^{j2\\pi k f_0 t}\\}_{k\\in\\mathbb{Z}}'}</InlineMath> είναι{' '}
+        <em>πλήρες</em> για periodic συναρτήσεις περιόδου <InlineMath>T_0</InlineMath>{' '}
+        (Dirichlet, slide 28 του deck).
+      </>
+    ),
+  },
+  'fourier-series-analysis': {
+    intuition: (
+      <>
+        Η <strong>εξίσωση ανάλυσης</strong>: μας δίνει τον τρόπο να{' '}
+        <em>εξάγουμε</em> κάθε <InlineMath>a_k</InlineMath> από το σήμα μέσω ενός
+        ολοκληρώματος — ακριβώς όπως το εσωτερικό γινόμενο{' '}
+        <InlineMath>{'\\vec v\\cdot\\hat i'}</InlineMath> εξάγει την x-συντεταγμένη
+        ενός διανύσματος. Το «κλειδί» που κάνει το ολοκλήρωμα να δουλεύει είναι η{' '}
+        ορθογωνιότητα των αρμονικών (όλοι οι άλλοι όροι μηδενίζονται).
+      </>
+    ),
+    derivation: (
+      <>
+        Πολλαπλασιάζεις τη σύνθεση με <InlineMath>{'e^{-j2\\pi m f_0 t}'}</InlineMath>{' '}
+        και ολοκληρώνεις σε μία περίοδο — όλοι οι όροι εκτός από{' '}
+        <InlineMath>k = m</InlineMath> εξαφανίζονται λόγω ορθογωνιότητας, μένει{' '}
+        <InlineMath>a_m\cdot T_0</InlineMath>. Slides 29-30 του deck.
+      </>
+    ),
+  },
+  'fourier-series-dual-form': {
+    intuition: (
+      <>
+        Η <strong>πραγματική</strong> ή <em>cosine</em> μορφή της σειράς. Για κάθε
+        real σήμα η συζυγής συμμετρία{' '}
+        <InlineMath>{'a_{-k} = a_k^{*}'}</InlineMath> ζευγαρώνει το{' '}
+        <InlineMath>+k</InlineMath> με το <InlineMath>-k</InlineMath> σε ένα μόνο
+        cosine αρμονικής <InlineMath>k</InlineMath>. Πιο ανθρώπινη γραφή για
+        υπολογισμούς ισχύος και για να «βλέπεις» το σήμα — αλλά τα ολοκληρώματα της
+        ανάλυσης είναι πιο καθαρά στη μιγαδική μορφή.
+      </>
+    ),
+    derivation: (
+      <>
+        Από Euler:{' '}
+        <InlineMath>{'a_k e^{j\\theta} + a_{-k} e^{-j\\theta} = 2|a_k|\\cos(\\theta + \\angle a_k)'}</InlineMath>{' '}
+        όταν <InlineMath>{'a_{-k} = a_k^*'}</InlineMath>. Άρα{' '}
+        <InlineMath>{'A_k = 2|a_k|'}</InlineMath>, <InlineMath>{'\\varphi_k = \\angle a_k'}</InlineMath>.
+      </>
+    ),
+  },
+  'fourier-orthogonality': {
+    intuition: (
+      <>
+        Ο λόγος που η σειρά Fourier «δουλεύει». Όπως{' '}
+        <InlineMath>{'\\hat i \\cdot \\hat j = 0'}</InlineMath> στο 3D, έτσι και δύο
+        διαφορετικές αρμονικές <strong>μηδενίζουν</strong> το ολοκλήρωμα του
+        γινομένου τους σε μία περίοδο. Αυτό μας επιτρέπει να «πιάνουμε» έναν
+        συντελεστή τη φορά, χωρίς αλληλεπίδραση με τους υπόλοιπους.
+      </>
+    ),
+    derivation: (
+      <>
+        <InlineMath>{'\\int_0^{T_0} e^{j(k-m)\\omega_0 t}\\, dt'}</InlineMath>: όταν{' '}
+        <InlineMath>k=m</InlineMath> ο integrand είναι 1, ολοκλήρωμα <InlineMath>T_0</InlineMath>;{' '}
+        αλλιώς <InlineMath>|k-m|</InlineMath> ακέραιοι κύκλοι, ολοκλήρωμα <InlineMath>0</InlineMath>.
+        Slides 25-27.
+      </>
+    ),
+  },
+  'fourier-series-conjugate-symmetry': {
+    intuition: (
+      <>
+        Δεν είναι «νέα ιδιότητα» — προκύπτει ευθεία από το ότι το σήμα είναι real
+        (παίρνεις τον συζυγή και των δύο πλευρών της ανάλυσης). Η συνέπεια είναι
+        πρακτική: το φάσμα στο <InlineMath>-f</InlineMath> δεν κουβαλάει νέα
+        πληροφορία, οπότε σχεδιάζουμε <strong>μόνο το θετικό μισό</strong> χωρίς
+        απώλεια.
+      </>
+    ),
+    derivation: (
+      <>
+        Στην ανάλυση{' '}
+        <InlineMath>{'a_{-k} = \\frac{1}{T_0}\\int x(t) e^{j2\\pi k f_0 t}\\, dt = \\left[\\frac{1}{T_0}\\int x(t) e^{-j2\\pi k f_0 t}\\, dt\\right]^{*} = a_k^{*}'}</InlineMath>{' '}
+        όταν το <InlineMath>x</InlineMath> είναι real (slide 4 του session 5&amp;6).
+      </>
+    ),
+  },
+  'fourier-series-rect-pulse': {
+    intuition: (
+      <>
+        Το πιο εξεταζόμενο worked example για σειρά Fourier. Δείχνει τρία πράγματα
+        μαζί: (α) η DC συνιστώσα είναι ο μέσος όρος, (β) η half-wave συμμετρία του
+        50%-duty παλμού σβήνει όλες τις άρτιες αρμονικές, (γ) η περιβάλλουσα είναι
+        sinc και οι αρμονικές φθίνουν σαν <InlineMath>1/k</InlineMath> — η «σιγά
+        σιγά» σύγκλιση που αργότερα γεννά το <em>Gibbs</em>.
+      </>
+    ),
+    derivation: (
+      <>
+        Το integrand εξαφανίζεται έξω από <InlineMath>{'|t| < T_0/4'}</InlineMath>; η
+        περιττή <InlineMath>\sin</InlineMath>-συνεισφορά μηδενίζεται από συμμετρία; μένει{' '}
+        <InlineMath>{'\\sin(k\\pi/2)/(k\\pi) = \\tfrac{1}{2}\\,\\mathrm{sinc}(k/2)'}</InlineMath>.
+        Slide 9 του session 5&amp;6 («Παράδειγμα 1, 2.10 του βιβλίου»).
+      </>
+    ),
+  },
+  'lti-output-fourier-series': {
+    intuition: (
+      <>
+        Όλη η μεταφορά της eigenfunction property σε <em>periodic</em> σήματα. Αντί
+        για συνέλιξη με <InlineMath>h(t)</InlineMath> στον χρόνο, δουλεύεις στη
+        συχνότητα: κάθε <InlineMath>a_k</InlineMath> πολλαπλασιάζεται ξεχωριστά με{' '}
+        <InlineMath>H(k f_0)</InlineMath>. Στρώση-στρώση — αυτό είναι το πραγματικό
+        νόημα του «βλέπω το σήμα στο πεδίο της συχνότητας».
+      </>
+    ),
+    derivation: (
+      <>
+        Συνέπεια του LTI eigenfunction (<InlineMath>{'e^{j2\\pi f_0 t}\\to H(f_0)\\,e^{j2\\pi f_0 t}'}</InlineMath>){' '}
+        + γραμμικότητας. Slide 5 του session 5&amp;6 (recap), αναπτύσσεται στο{' '}
+        <Link href="/foundations/fourier-series">/foundations/fourier-series</Link> §11.
+      </>
+    ),
   },
 
   // ── Foundations · Fourier pairs ──────────────────────────────
