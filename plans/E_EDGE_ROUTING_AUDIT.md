@@ -274,18 +274,113 @@ Tree-shaped layouts with parent-child arrows or undirected tree edges.
 - **Stacked-forest pattern.** When a single SVG stacks multiple sub-graphs with per-sub-graph offsets (here `UnionBySizeRace`'s top + bottom forests at `oy=20` / `oy=264`), build a separate rect set per sub-graph in the offset coordinate frame. The `(ox, oy)` parameter on `forestNodeRects` makes this trivial. Don't share a single rect set across sub-graphs — collision testing across sub-graphs is generally not the intended semantics, and the offsets would have to be applied per-sub-graph anyway.
 - **Per-node varying radius.** When a viz has multiple node-radius classes (root, internal, leaf), define an explicit per-node rect rather than a single radius — `NodeRect` carries its own `(w, h)` so this is natively supported. Don't oversize all rects to the largest radius unless the layout has plenty of margin to absorb the over-conservatism (well-spaced trees in B5 absorb it fine; tighter layouts wouldn't).
 
-### Chunk B6 — L12 topo / DAG family
+### Chunk B6 — L12 topo / DAG family ✅ DONE 2026-05-25
 
-Layered DAG layouts, source-walk visualisations.
+L12's topological-sort and DAG-shortest-path catalogue plus the L17
+negative-cycle detector. Mostly static directed layouts with weight
+labels; two with per-tab layouts; one hybrid (some edges hand-crafted);
+one carve-out where the arc IS the visual identity.
 
-- `components/viz/TopologicalSortViz.tsx`
-- `components/viz/TopoOrderBuilder.tsx`
-- `components/viz/DagSourceWalk.tsx`
-- `components/viz/LayeredSubsetsDAG.tsx`
-- `components/viz/LayeredTripPlanner.tsx`
-- `components/viz/DAGUnreliableTwoWays.tsx`
-- `components/viz/DagAveragePathCost.tsx`
-- `components/viz/NegativeCycleDetector.tsx`
+- `components/viz/TopologicalSortViz.tsx` ✅ (directed, 7 nodes R=22, 8 edges; module-scope rects; symmetric trim by R)
+- `components/viz/TopoOrderBuilder.tsx` ✅ **out-of-scope carve-out** (single-row slot layout with hand-tuned quadratic arcs encoding forward/backward direction; routing would either flatten arcs to lines [destroying the visual] or return direction-inconsistent bulges; mirrors `WhyBFSFailsWeighted` and `DfsTreeBuilder` precedents; inline comment documents the carve-out)
+- `components/viz/DagSourceWalk.tsx` ✅ (directed, 2 presets with DIFFERENT layouts: dag has 6 nodes / source-free has 5 nodes; R=24; per-preset rects via `useMemo` keyed on `cfg`; symmetric trim by R)
+- `components/viz/LayeredSubsetsDAG.tsx` ✅ (TWO tabs with DIFFERENT layouts: tab `complete` uses NODES_COMPLETE with s/t hidden at (0,0) — module-scope `COMPLETE_RECTS` includes only the 7 visible {a..g} nodes, undirected center-to-center routing; tab `dag` uses NODES_LAYERED with all 9 nodes — module-scope `LAYERED_RECTS` + directed routing with trim by R=18 for arrowhead gap; weight labels anchor at Bezier midpoint when curved)
+- `components/viz/LayeredTripPlanner.tsx` ✅ (TWO tabs with DIFFERENT layouts: tab `map` is 4-city K₄ with MAP_R=22 [NR+4 matches the visible circle stroke], undirected center-to-center routing — module-scope `MAP_RECTS`; tab `dag` is the 16-slot layered DAG = 4 cities × 4 days at `(DAY_X[p], DAY_Y[c])`, NR=18, directed with trim — module-scope `DAG_RECTS` keyed by `${city}-${day}`)
+- `components/viz/DAGUnreliableTwoWays.tsx` ✅ (directed, 8 nodes R=19, 12 edges; module-scope rects from the `NODES` Record; symmetric trim by R; mode toggle [max/min relaxation] does NOT change the layout — same rects across both modes)
+- `components/viz/DagAveragePathCost.tsx` ✅ (directed, 6 nodes R=22, 8 edges; module-scope rects from `NODES` array; symmetric trim by R; weight-label anchor at segment midpoint or Bezier midpoint when curved)
+- `components/viz/NegativeCycleDetector.tsx` ✅ **hybrid** (mirrors `WhyBFSFailsWeighted` from B2: 2 scenarios with R=23; straight edges go through `routedStraightEdge → routeEdge → trimEdgeGeom`, but edges with the `curve` prop set keep their hand-tuned `curvedPath()` because the curve IS a deliberate visual signal — the anti-parallel a↔b cycle pair at curve=18 must bulge in opposite directions to not overlap, and the long s→t shortcut at curve=70 needs a wide swoop above the row to read as a single direct edge; per-scenario rects via `useMemo` keyed on `scn`; inline comment in `routedStraightEdge` JSDoc documents the carve-out reasoning)
+
+**Retrofit shape (as executed).** Three patterns applied per file, all
+mirrors of B2/B4 precedents — no new shared helper:
+
+- **Single static layout (4 files):** `TopologicalSortViz`,
+  `DAGUnreliableTwoWays`, `DagAveragePathCost` (no `TopoOrderBuilder`,
+  see carve-out). Module-scope `NODE_RECTS` + `NODE_RECT_BY_ID`,
+  per-file `routedEdge(from, to)` calling `routeEdge() → trimEdgeGeom()`
+  with symmetric trim radius R. Weight-label anchor branches on
+  `g.kind` for line vs Bezier midpoint.
+- **Multi-preset / multi-tab dynamic layout (3 files):** `DagSourceWalk`
+  (2 presets), `LayeredSubsetsDAG` (2 tabs with different node sets),
+  `LayeredTripPlanner` (2 tabs with different node sets). Either
+  per-render `useMemo` keyed on the preset/scenario, OR module-scope
+  rect sets per tab (LayeredSubsetsDAG / LayeredTripPlanner — both
+  layouts are constant, just used in different tabs). `LayeredSubsetsDAG`
+  introduces TWO routing functions per file (`routedCompleteEdge` /
+  `routedLayeredEdge`) because the two tabs have different
+  directed/undirected semantics — standing pattern for B7's
+  per-problem vizzes with multiple scenarios.
+- **Hybrid (1 file):** `NegativeCycleDetector`. Straight edges retrofit;
+  edges with the `curve` prop set keep their hand-tuned curve. The
+  per-render `routedStraightEdge` is only called when `e.curve` is unset.
+  An explicit `let edgeNode: ReactNode` (with `type ReactNode` imported
+  from react) holds either `<line>`, the routed `<path>`, or the
+  hand-tuned `<path>` to unify the downstream label-and-rect rendering.
+
+**Carve-out (1 file): `TopoOrderBuilder`.** All edges intentionally
+rendered as quadratic Bezier arcs over a SINGLE-ROW slot layout. The
+arc bulge `26 + span * 30` is direction-encoding (forward edges curve
+up-right, backward edges curve up-left — color + arc-direction
+together make the green/red verdict readable at a glance). The slot
+row puts every non-endpoint node ON the segment between any two
+endpoints, so `routeEdge`'s collider-mass tie-break would degenerate
+and return either straight lines (destroying the visual) or
+direction-inconsistent bulges. The carve-out is documented inline in
+JSDoc, mirroring the `WhyBFSFailsWeighted` (B2) and `DfsTreeBuilder`
+back-edge (B3) precedents.
+
+**Per-node uniform radius across the chunk.** Every B6 viz uses a
+single radius for every node — no per-node varying radii like
+`HuffmanSwapViz` from B5 — so the rect-build is a one-line
+`map → NodeRect`.
+
+**Weight-label anchor pattern (recurrence from B1/B2/B4/B5).** Every
+B6 viz that draws a weight label on the segment midpoint uses the same
+branch:
+
+```ts
+const mx = g.kind === 'line'
+  ? (A.x + B.x) / 2
+  : (A.x + B.x + 2 * g.cx) / 4   // Bezier midpoint (P0 + 2Q + P2) / 4
+const my = g.kind === 'line'
+  ? (A.y + B.y) / 2
+  : (A.y + B.y + 2 * g.cy) / 4
+```
+
+`A`, `B` are the untrimmed node centers — the label stays anchored to
+the actual edge whether routed straight or curved.
+
+**Steady-state visual contract:** every retrofitted edge in every B6
+viz routes as a line on the current layouts — verified by inspection.
+No B6 layout has an unrelated node sitting on any edge centerline. The
+line case is byte-identical to the pre-retrofit `trim()` output. No
+user-visible change today; the value is structural lockout per the
+audit's standing thesis.
+
+**No new tests required.** `routeEdge` / `trimEdgeGeom` were both
+locked by B1's 20-test suite (still 20/20 pass). The hybrid carve-out
+pattern (`NegativeCycleDetector`) is documented inline; a future
+layout edit that flips a previously-straight edge to a curve will
+surface as a visible bend in the viz — that's the regression channel.
+
+**Standing lessons for B7:**
+- **Per-tab routing functions.** When a viz has multiple tabs with
+  different directed/undirected semantics (LayeredSubsetsDAG `complete`
+  is undirected, `dag` is directed), define a separate `routedXEdge`
+  per tab rather than a unified helper. The trim/no-trim choice is
+  per-tab, and unifying them via a flag makes the call sites uglier.
+- **Hand-tuned curve = visual signal, not collision routing.** When a
+  viz already curves an edge by hand for a non-collision reason
+  (anti-parallel disambiguation, long-shortcut signalling,
+  direction-encoding bulge), keep that curve as a documented carve-out.
+  The `routeEdge` adoption rule does not apply when the curve itself is
+  the teaching surface. So far: `WhyBFSFailsWeighted` s-t arc (B2),
+  `DfsTreeBuilder` back-edge arcs (B3), `TopoOrderBuilder` direction
+  arcs (B6), `NegativeCycleDetector` a↔b cycle pair + s→t shortcut (B6).
+- **Multi-layout via per-tab module-scope rect sets.** When two
+  layouts are constant but used in different tabs (LayeredSubsetsDAG,
+  LayeredTripPlanner), define both rect sets at module scope and pick
+  the right `routed*Edge` per tab — cleaner than `useMemo` keyed on
+  tab when the layouts don't depend on render state.
 
 ### Chunk B7 — Problem-bank scenario graphs
 
