@@ -1,7 +1,7 @@
 export const metadata = {
   title: "Carson's rule — FM/PM ενεργό εύρος ζώνης",
   description:
-    "Η εξίσωση Carson B ≅ 2W(β+1) ως «ενεργό εύρος ζώνης» — η ζώνη που περιέχει ~98% της ισχύος. Διπλή παρακίνηση: Taylor side (slides 22-26) δείχνει ότι φ^n έχει bandwidth nW με πλάτη β^n/n! που εξασθενούν· Bessel side (slide 45) δείχνει ότι |J_n(β)| ≈ 0 για n > β. NBFM/WBFM ως δύο όρια του ίδιου τύπου. Slide 26 + 46: ισχύει αυτούσιος και για PM (β_p = K_p α) και για FM (β_f = K_f α/W). Άσκηση 2 του prof (slides 27-28) ως canonical worked example.",
+    "Η εξίσωση Carson B ≅ 2W(β+1) ως «ενεργό εύρος ζώνης» — η ζώνη που περιέχει ~98% της ισχύος. Διπλή παρακίνηση: Taylor side (slides 22-26) δείχνει ότι φ^n έχει bandwidth nW με πλάτη β^n/n! που εξασθενούν· Bessel side (slide 45) δείχνει ότι |J_n(β)| ≈ 0 για n > β. NBFM/WBFM ως δύο όρια του ίδιου τύπου. Slide 26 + 46: ισχύει αυτούσιος και για PM (β_p = K_p α) και για FM (β_f = K_f α/W). Άσκηση 2 (slides 27-28) ως canonical worked example.",
 }
 
 export const frontmatter = {
@@ -50,7 +50,7 @@ import Link from 'next/link'
   ]}
 />
 
-Στο <Link href="/fm/bessel">/fm/bessel</Link> είδαμε ότι το single-tone FM φάσμα έχει **άπειρες** αρμονικές στα `f_c ± n f_m`. Αλλά τα <InlineMath>{'|J_n(\\beta_f)|'}</InlineMath> πέφτουν γρήγορα για <InlineMath>{'|n| > \\beta_f'}</InlineMath> (slide 45 του prof το γράφει ρητά). Το πρακτικό συμπέρασμα: **κάποια στιγμή σταματάς να κρατάς sidebands — και ο Carson σου λέει πού**.
+Στο <Link href="/fm/bessel">/fm/bessel</Link> είδαμε ότι το single-tone FM φάσμα έχει **άπειρες** αρμονικές στα `f_c ± n f_m`. Αλλά τα <InlineMath>{'|J_n(\\beta_f)|'}</InlineMath> πέφτουν γρήγορα για <InlineMath>{'|n| > \\beta_f'}</InlineMath> (slide 45 το γράφει ρητά). Το πρακτικό συμπέρασμα: **κάποια στιγμή σταματάς να κρατάς sidebands — και ο Carson σου λέει πού**.
 
 Αυτό το κεφάλαιο δίνει:
 
@@ -60,7 +60,7 @@ import Link from 'next/link'
 4. **PM/FM ισοδυναμία**: ο Carson είναι αυτούσιος και για PM (slide 26 + 46). Διαφορά είναι το β.
 5. **Η canonical Άσκηση 2** (slides 27-28): FM σήμα με sinc message. Σου διδάσκει την κρίσιμη «W-extraction» κίνηση που χρειάζεσαι για κάθε non-single-tone σήμα στις εξετάσεις.
 
-## 1. Carson — η εξίσωση + ο ορισμός του prof
+## 1. Carson — η εξίσωση + ο ορισμός από τις διαφάνειες
 
 Από όλα τα <InlineMath>{'A_c J_n(\\beta_f)\\cos[2\\pi(f_c + n f_m)t]'}</InlineMath> στο Bessel φάσμα του /fm/bessel, κρατάμε ένα **πεπερασμένο** παράθυρο γύρω από τον carrier:
 
@@ -80,7 +80,7 @@ $$
 2(\Delta f + W) = 2(\beta_f W + W) = 2W(\beta_f + 1).
 $$
 
-<Callout type="key" title="Slide 26 — ο prof γράφει αυτολεξεί">
+<Callout type="key" title="Slide 26 — αυτολεξεί">
 
 «Σε πρακτικά συστήματα επικοινωνιών το εύρος ζώνης των σημάτων **περιορίζεται σε ένα πεπερασμένο διάστημα <InlineMath>{'B'}</InlineMath>**, το οποίο περιέχει σχεδόν ολόκληρη την ισχύ του διαμορφωμένου σήματος. Πρόκειται για το **ενεργό εύρος ζώνης**:
 
@@ -101,7 +101,7 @@ Carson είναι από τους πιο **κερδοφόρους** τύπους
 
 ## 2. Πώς προκύπτει — η διπλή διαίσθηση
 
-Δεν είναι «μαγικός εμπειρικός κανόνας από το πουθενά». Ο prof στο deck του δίνει **δύο** ανεξάρτητες διαδρομές που και οι δύο καταλήγουν στο ίδιο cutoff:
+Δεν είναι «μαγικός εμπειρικός κανόνας από το πουθενά». Οι διαφάνειες δίνουν **δύο** ανεξάρτητες διαδρομές που και οι δύο καταλήγουν στο ίδιο cutoff:
 
 - **Διαδρομή Α (Taylor side, slides 22-26)** — το φάσμα είναι θεωρητικά άπειρο, αλλά τα πλάτη φθίνουν φακτοριακά.
 - **Διαδρομή Β (Bessel side, slide 45)** — η περιβάλλουσα <InlineMath>{'|J_n(\\beta)|'}</InlineMath> πέφτει σχεδόν στο μηδέν για <InlineMath>{'n > \\beta'}</InlineMath>.
@@ -110,7 +110,7 @@ Carson είναι από τους πιο **κερδοφόρους** τύπους
 
 ### 2α. Taylor side — slides 22-26
 
-Από τη Taylor ανάπτυξη στο /fm/bessel §2 ξέρουμε ότι το <InlineMath>{'x(t)'}</InlineMath> γράφεται ως άπειρη σειρά όρων <InlineMath>{'\\phi^n(t)\\,\\cos/\\sin(2\\pi f_c t)'}</InlineMath>. Ο prof στο **slide 24** προσθέτει την κρίσιμη παρατήρηση:
+Από τη Taylor ανάπτυξη στο /fm/bessel §2 ξέρουμε ότι το <InlineMath>{'x(t)'}</InlineMath> γράφεται ως άπειρη σειρά όρων <InlineMath>{'\\phi^n(t)\\,\\cos/\\sin(2\\pi f_c t)'}</InlineMath>. Στο **slide 24** οι διαφάνειες προσθέτουν την κρίσιμη παρατήρηση:
 
 <Callout type="note" title="Slide 24 — η συνέλιξη μεγαλώνει το bandwidth">
 
@@ -151,7 +151,7 @@ $$
 x_{FM}(t) = A_c\sum_{n=-\infty}^{\infty} J_n(\beta_f)\,\cos[2\pi(f_c + n f_m)t].
 $$
 
-Άπειρο άθροισμα. Πότε σταματάς; Ο prof στο slide 45 το γράφει ρητά:
+Άπειρο άθροισμα. Πότε σταματάς; Στο slide 45 διαβάζουμε ρητά:
 
 <Callout type="key" title="Slide 45 — η συμπεριφορά Bessel γεννά το Carson">
 
@@ -184,7 +184,7 @@ $$
 B \cong 2W(\beta_f + 1) \xrightarrow{\beta_f \to 0} 2W.
 $$
 
-Δηλαδή το ενεργό εύρος ζώνης NBFM είναι **σχεδόν ίδιο** με εκείνο του AM (όπου <InlineMath>{'B_{AM} = 2W'}</InlineMath> ακριβώς). Αυτό συμφωνεί απόλυτα με το **slide 31** του prof:
+Δηλαδή το ενεργό εύρος ζώνης NBFM είναι **σχεδόν ίδιο** με εκείνο του AM (όπου <InlineMath>{'B_{AM} = 2W'}</InlineMath> ακριβώς). Αυτό συμφωνεί απόλυτα με το **slide 31**:
 
 > «Το εύρος ζώνης του διαμορφωμένου σήματος είναι περίπου ίσο με <InlineMath>{'2W'}</InlineMath>, **όσο δηλαδή και στην διαμόρφωση AM**.»
 
@@ -192,7 +192,7 @@ $$
 
 <Callout type="warning" title="Παγίδα — Σ/Λ «β = 0.3 είναι WBFM»">
 
-Στις εξετάσεις (π.χ. <Link href="/practice#exercise:jan26-th1-5">Jan 2026 ΘΕΜΑ 1.5</Link>) εμφανίζονται Σ/Λ τύπου «FM με β = 0.3 είναι WBFM». **ΛΑΘΟΣ** — αυτό είναι NBFM (<InlineMath>{'\\beta \\ll 1'}</InlineMath>). Ο πρακτικός κανόνας του prof: NBFM όταν <InlineMath>{'\\beta_f \\ll 1'}</InlineMath>· WBFM όταν <InlineMath>{'\\beta_f \\gg 1'}</InlineMath>. Στο boundary (<InlineMath>{'\\beta \\approx 1'}</InlineMath>) είσαι σε μετάβαση — δεν υπάρχει σταθερό threshold όπως «β < 0.3».
+Στις εξετάσεις (π.χ. <Link href="/practice#exercise:jan26-th1-5">Jan 2026 ΘΕΜΑ 1.5</Link>) εμφανίζονται Σ/Λ τύπου «FM με β = 0.3 είναι WBFM». **ΛΑΘΟΣ** — αυτό είναι NBFM (<InlineMath>{'\\beta \\ll 1'}</InlineMath>). Ο πρακτικός κανόνας από τις διαφάνειες: NBFM όταν <InlineMath>{'\\beta_f \\ll 1'}</InlineMath>· WBFM όταν <InlineMath>{'\\beta_f \\gg 1'}</InlineMath>. Στο boundary (<InlineMath>{'\\beta \\approx 1'}</InlineMath>) είσαι σε μετάβαση — δεν υπάρχει σταθερό threshold όπως «β < 0.3».
 
 Πανικός signal για τη Σ/Λ: αν δεις τιμή <InlineMath>{'\\beta'}</InlineMath> κάτω από 1, είναι NBFM-friendly. Αν είναι αρκετά πάνω από 1 (συνήθως ≥ 3), είναι WBFM. Στο boundary χρησιμοποίησε Carson κανονικά — η εξίσωση δουλεύει σε κάθε περίπτωση.
 
@@ -222,7 +222,7 @@ $$
 
 ## 5. Carson για PM και FM — slides 26 + 46
 
-Μέχρι τώρα μιλήσαμε για FM (β = β_f). Αλλά ο Carson — και ο prof επιμένει στο slide 26 — εφαρμόζεται **αυτούσιος** και στο PM, με το αντίστοιχο β. Δεν χρειάζεται καινούργιος τύπος. Slide 46 δίνει τις ρητές μορφές:
+Μέχρι τώρα μιλήσαμε για FM (β = β_f). Αλλά ο Carson — και οι διαφάνειες επιμένουν στο slide 26 — εφαρμόζεται **αυτούσιος** και στο PM, με το αντίστοιχο β. Δεν χρειάζεται καινούργιος τύπος. Slide 46 δίνει τις ρητές μορφές:
 
 $$
 B = 2 f_m(\beta + 1) = \begin{cases} 2 f_m(K_p\,\alpha + 1), & \text{PM} \\ 2 f_m\!\left(\dfrac{K_f\,\alpha}{f_m} + 1\right), & \text{FM} \end{cases}
@@ -259,7 +259,7 @@ $$
 
 ## 6. Σύνδεση με τις σημαντικές αρμονικές (slide 46)
 
-Στο <Link href="/fm/bessel">/fm/bessel §9</Link> είδαμε τον τύπο του prof:
+Στο <Link href="/fm/bessel">/fm/bessel §9</Link> είδαμε τον τύπο:
 
 $$
 N = 2\lfloor\beta\rfloor + 3 = \text{αριθμός σημαντικών αρμονικών}.
@@ -282,9 +282,9 @@ $$
 
 ## 7. Άσκηση 2 — η canonical Carson εξάσκηση (slides 27-28)
 
-Το <Link href="/fm/idea">/fm/idea §8</Link> ήδη ανέφερε αυτή την άσκηση. Εδώ τη δουλεύουμε **βήμα-βήμα** ως κανονική «Carson application» — γιατί η Άσκηση 2 του prof διδάσκει το πιο κρίσιμο βήμα: **πώς εκτείνεις τον τύπο σε non-single-tone σήμα**.
+Το <Link href="/fm/idea">/fm/idea §8</Link> ήδη ανέφερε αυτή την άσκηση. Εδώ τη δουλεύουμε **βήμα-βήμα** ως κανονική «Carson application» — γιατί η Άσκηση 2 διδάσκει το πιο κρίσιμο βήμα: **πώς εκτείνεις τον τύπο σε non-single-tone σήμα**.
 
-<Example title="Άσκηση 2 — slides 27-28 του prof">
+<Example title="Άσκηση 2 — slides 27-28">
 
 Έστω το ακόλουθο σήμα πληροφορίας:
 
@@ -300,7 +300,7 @@ $$
 
 **(1) Βρες το <InlineMath>{'W'}</InlineMath> — εύρος ζώνης του message** (το κρίσιμο βήμα).
 
-Ο prof στο slide 28 γράφει: «Ο μετασχηματισμός Fourier του m(t):»
+Στο slide 28 διαβάζουμε: «Ο μετασχηματισμός Fourier του m(t):»
 
 $$
 \mathcal{F}\{m(t)\} = \frac{10}{10^4}\,\Pi\!\left(\frac{f}{10^4}\right).
@@ -407,7 +407,7 @@ $$
 B = 2(\beta_f + 1) f_m = 2 \cdot 11 \cdot 5 = 110\,\text{kHz}.
 $$
 
-**Σχόλιο για τον φοιτητή:** η εκφώνηση δίνει <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'f_m'}</InlineMath> ξεχωριστά αντί να σου δίνει <InlineMath>{'K_f'}</InlineMath> και <InlineMath>{'\\alpha'}</InlineMath>. Αυτό είναι **απλούστερο** από την Άσκηση 2 του prof — δεν χρειάζεται η «W-extraction» κίνηση. Όταν δίνεται <InlineMath>{'\\Delta f'}</InlineMath> κατευθείαν, πας γραμμή σε <InlineMath>{'\\beta = \\Delta f/f_m'}</InlineMath> και έπειτα σε Carson.
+**Σχόλιο για τον φοιτητή:** η εκφώνηση δίνει <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'f_m'}</InlineMath> ξεχωριστά αντί να σου δίνει <InlineMath>{'K_f'}</InlineMath> και <InlineMath>{'\\alpha'}</InlineMath>. Αυτό είναι **απλούστερο** από την Άσκηση 2 — δεν χρειάζεται η «W-extraction» κίνηση. Όταν δίνεται <InlineMath>{'\\Delta f'}</InlineMath> κατευθείαν, πας γραμμή σε <InlineMath>{'\\beta = \\Delta f/f_m'}</InlineMath> και έπειτα σε Carson.
 
 **Πανικός signal:** η φέρουσα συχνότητα <InlineMath>{'f_c = 100'}</InlineMath> MHz είναι **παραπλανητική** — δεν εμφανίζεται πουθενά στον Carson τύπο. Carson εξαρτάται ΜΟΝΟ από <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'W'}</InlineMath>. Αν δεις φέρον αναφερόμενο, **αγνόησέ το** για το bandwidth calculation.
 
@@ -429,7 +429,7 @@ $$
 - WBFM ⇔ <InlineMath>{'\\beta \\gg 1'}</InlineMath> ⇔ Carson δίνει <InlineMath>{'B \\approx 2\\Delta f'}</InlineMath>
 - Boundary <InlineMath>{'\\beta \\approx 1'}</InlineMath> ⇔ πλήρης Carson δίνει <InlineMath>{'B = 4W = 2\\Delta f + 2W'}</InlineMath>
 
-**Παγίδα Νο1:** μερικά βιβλία δίνουν threshold «<InlineMath>{'\\beta < 0.3 \\Rightarrow'}</InlineMath> NBFM» — αλλά ο **prof στο slide 29** δίνει το γενικό «<InlineMath>{'\\beta \\ll 1'}</InlineMath>», όχι σταθερό αριθμό. **Στις εξετάσεις του Καλεντέρη**, χρησιμοποίησε το <InlineMath>{'\\beta \\ll 1'}</InlineMath> κριτήριο — όχι το «<InlineMath>{'\\beta < 0.3'}</InlineMath>».
+**Παγίδα Νο1:** μερικά βιβλία δίνουν threshold «<InlineMath>{'\\beta < 0.3 \\Rightarrow'}</InlineMath> NBFM» — αλλά το **slide 29** δίνει το γενικό «<InlineMath>{'\\beta \\ll 1'}</InlineMath>», όχι σταθερό αριθμό. **Στις εξετάσεις του μαθήματος**, χρησιμοποίησε το <InlineMath>{'\\beta \\ll 1'}</InlineMath> κριτήριο — όχι το «<InlineMath>{'\\beta < 0.3'}</InlineMath>».
 
 **Παγίδα Νο2:** στο NBFM, εφαρμόζεις τη γραμμικοποίηση <InlineMath>{'\\cos\\phi \\approx 1, \\sin\\phi \\approx \\phi'}</InlineMath> και παίρνεις φάσμα 3 γραμμών (carrier + 2 sidebands) — όπως AM. Στο WBFM, χρησιμοποιείς την Bessel ανάπτυξη και παίρνεις πολλές αρμονικές. **Στο boundary <InlineMath>{'\\beta = 1'}</InlineMath> καμία από τις δύο προσεγγίσεις δεν είναι σωστή** — μόνο η πλήρης Bessel form δίνει το ακριβές αποτέλεσμα.
 
@@ -595,7 +595,7 @@ $$
   id="askisi-2-carson-walkthrough"
   prompt={
     <>
-      Συμπλήρωσε την Άσκηση 2 του prof (slides 27-28): <InlineMath>{'m(t) = 10\\,\\text{sinc}(10^4 t)'}</InlineMath>, FM με <InlineMath>{'K_f = 4'}</InlineMath> kHz/V.
+      Συμπλήρωσε την Άσκηση 2 (slides 27-28): <InlineMath>{'m(t) = 10\\,\\text{sinc}(10^4 t)'}</InlineMath>, FM με <InlineMath>{'K_f = 4'}</InlineMath> kHz/V.
     </>
   }
   parts={[
@@ -692,8 +692,7 @@ $$
     είναι να πάρεις <InlineMath>{'M(f)'}</InlineMath> και να εξάγεις το <strong>one-sided</strong>{' '}
     <InlineMath>{'W'}</InlineMath>. Συνηθισμένα λάθη: παίρνεις full support αντί half, ή ξεχνάς
     ότι <InlineMath>{'\\text{sinc}(2Wt) \\leftrightarrow (1/2W)\\Pi(f/2W)'}</InlineMath>{' '}
-    (το <InlineMath>{'2W'}</InlineMath> είναι το argument). Δες την Άσκηση 2 του prof
-    στο §7.
+    (το <InlineMath>{'2W'}</InlineMath> είναι το argument). Δες την Άσκηση 2 στο §7.
   </p>
 
   <p>
@@ -707,12 +706,12 @@ $$
 </ThinkingPattern>
 
 <Recap>
-- **Carson's rule**: <InlineMath>{'B \\cong 2W(\\beta+1) = 2(\\Delta f + W)'}</InlineMath>. Δίνει το «ενεργό εύρος ζώνης» (~98% ενέργειας). Slide 26 του prof — **και για PM και για FM**.
+- **Carson's rule**: <InlineMath>{'B \\cong 2W(\\beta+1) = 2(\\Delta f + W)'}</InlineMath>. Δίνει το «ενεργό εύρος ζώνης» (~98% ενέργειας). Slide 26 — **και για PM και για FM**.
 - **Δύο διαδρομές παρακίνησης**: (α) Taylor (slides 22-26) — <InlineMath>{'\\phi^n'}</InlineMath> έχει bandwidth <InlineMath>{'nW'}</InlineMath> με πλάτος <InlineMath>{'\\beta^n/n!'}</InlineMath>· cutoff στο <InlineMath>{'n = \\beta+1'}</InlineMath>· (β) Bessel (slide 45) — <InlineMath>{'|J_n(\\beta)| \\to 0'}</InlineMath> για <InlineMath>{'n > \\beta'}</InlineMath>· cutoff στο ίδιο μέρος.
 - **Δύο όρια, μία εξίσωση**: NBFM (<InlineMath>{'\\beta \\ll 1'}</InlineMath>) → <InlineMath>{'B \\approx 2W'}</InlineMath> (όπως AM)· WBFM (<InlineMath>{'\\beta \\gg 1'}</InlineMath>) → <InlineMath>{'B \\approx 2\\Delta f'}</InlineMath> (deviation-dominated).
 - **PM/FM δίδυμο**: ίδιος τύπος, διαφορετικό β. FM: <InlineMath>{'\\beta_f = K_f\\max|m|/W'}</InlineMath>· PM: <InlineMath>{'\\beta_p = K_p\\max|m|'}</InlineMath>. Slide 46 δίνει τις ρητές μορφές.
 - **Σύνδεση με slide 46**: <InlineMath>{'N = 2\\lfloor\\beta\\rfloor+3'}</InlineMath> σημαντικές αρμονικές = ίδια ποσοτικοποίηση με Carson, απλά σε «discrete» αντί «continuous» γλώσσα.
-- **Άσκηση 2 του prof** (slides 27-28): canonical Carson για non-single-tone (sinc message). Διδάσκει την κρίσιμη «W-extraction» κίνηση.
+- **Άσκηση 2** (slides 27-28): canonical Carson για non-single-tone (sinc message). Διδάσκει την κρίσιμη «W-extraction» κίνηση.
 - **Πραγματικές εφαρμογές**: FM ραδιόφωνο (β=5, B=180 kHz, 200 kHz spacing) · NBFM walkie-talkie (β≈1, B=11 kHz, 12.5 kHz spacing). Trade-off bandwidth ↔ SNR ↔ channel density.
 </Recap>
 
