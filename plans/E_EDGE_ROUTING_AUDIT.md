@@ -119,25 +119,66 @@ suite, which still passes 20/20). A future layout edit that breaks
 collision-freeness would surface as a visible curve in the viz — that's
 the regression channel.
 
-### Chunk B3 — L06 / L07 base-graph vizzes
+### Chunk B3 — L06 / L07 base-graph vizzes ✅ DONE 2026-05-25
 
 The «graphs from first principles» catalogue. Most are 6–12 node hand-
 positioned graphs.
 
-- `components/viz/GraphRepresentations.tsx`
-- `components/viz/HandshakeLemmaViz.tsx`
-- `components/viz/PathBuilder.tsx`
-- `components/viz/ConnectivityExplorer.tsx`
-- `components/viz/CycleExplorer.tsx`
-- `components/viz/TreeThreeProperties.tsx`
-- `components/viz/RootedTreeReroot.tsx`
-- `components/viz/MetroModelingViz.tsx`
-- `components/viz/DfsTreeBuilder.tsx`
-- `components/viz/GenericSearchExplorer.tsx`
-- `components/viz/BfsLayerTheorem.tsx`
-- `components/viz/BfsEdgeProperty.tsx`
-- `components/viz/ComplexityTightVsLoose.tsx`
-- `components/viz/GraphCanvas.tsx` (reusable base — confirm if drawn here or per-consumer)
+- `components/viz/GraphRepresentations.tsx` ✅ (L06_GRAPH, r=23; shared helper)
+- `components/viz/HandshakeLemmaViz.tsx` ✅ (L06_GRAPH, r=22; shared helper; «+1 +1» label anchor via Bezier midpoint)
+- `components/viz/PathBuilder.tsx` ✅ (L06_GRAPH, r=22; shared helper)
+- `components/viz/ConnectivityExplorer.tsx` ✅ (TWO graphs: TRI 11 nodes / BR 8 nodes, both r=16; per-file rects; dual-line click target now `<path>` when curved)
+- `components/viz/CycleExplorer.tsx` ✅ (L06_GRAPH, r=22; shared helper)
+- `components/viz/TreeThreeProperties.tsx` ✅ (6 nodes r=22; per-file `TT_RECTS`; dual-line click target now `<path>` when curved)
+- `components/viz/RootedTreeReroot.tsx` ✅ (7-node dynamic tree, r=17; per-file `nodeRects` via `useMemo` since layout recomputes per root)
+- `components/viz/MetroModelingViz.tsx` ✅ (TWO graphs: 12-station map r=11 / 3-node R-B-G mini line-graph r=18; per-file rects; «μέσω X» label anchor via Bezier midpoint)
+- `components/viz/DfsTreeBuilder.tsx` ✅ (G half uses shared helper; T half uses per-file `TREE_RECTS` r=22 for tree edges; dashed-orange back-edge arcs KEEP their hand-tuned 36 px perpendicular offset by design — visual signal not collision routing, mirrors `WhyBFSFailsWeighted` carve-out)
+- `components/viz/GenericSearchExplorer.tsx` ✅ (covered transitively via `GraphCanvas` retrofit)
+- `components/viz/BfsLayerTheorem.tsx` ✅ (L06_BFS_TREE, r=22; shared helper)
+- `components/viz/BfsEdgeProperty.tsx` ✅ (L06_BFS_TREE, r=22; shared helper; hypothetical-edge red overlay in adv tab also routed)
+- `components/viz/ComplexityTightVsLoose.tsx` ✅ **out-of-scope, documented-skipped** (bar chart with `<rect>` heights; no inter-node edges between positioned nodes)
+- `components/viz/GraphCanvas.tsx` ✅ (parametrised renderer — builds `nodeRects` from `graph.nodes` per render with `nodeRadius + 1`; no `useMemo`, no `'use client'` so it stays server-renderable for direct MDX usage; transitively covers `GenericSearchExplorer`, `TraversalGame`, and L07's two direct `<GraphCanvas>` instances)
+
+**Retrofit shape (as executed).** Two new shared helpers in
+`components/viz/graph-types.ts`: `routeL06GraphEdge(a, b)` over module-scope
+`L06_GRAPH_RECTS` (r=24) and `routeL06BfsTreeEdge(a, b)` over
+`L06_BFS_TREE_RECTS` (r=23) — each one px above the largest visible radius
+across the consumer family, so a single helper covers vizzes drawing at
+r=22 and r=23 without per-file rect tuning. Each consumer branches on
+`g.kind === 'line' ? <line> : <path d={g.d} fill="none">`. The 4 bespoke
+layouts (`ConnectivityExplorer`, `TreeThreeProperties`, `RootedTreeReroot`,
+`MetroModelingViz`) build module-scope `NODE_RECTS` per the B2 pattern;
+`RootedTreeReroot` uses `useMemo` because its layout recomputes per root.
+
+**The dual-line click-target pattern needed an upgrade.** Two B3 vizzes
+(`ConnectivityExplorer` BR graph, `TreeThreeProperties`) render each
+toggle-able edge as a visible thin line + a fat invisible 18-20 px stroke
+for `onClick`. Pre-retrofit, both were `<line>`s with identical coords —
+fine. Post-retrofit, when the visible edge curves, the hit target also
+needs to be `<path d={g.d}>` with `stroke-width=20`, so the click area
+follows the arc instead of running along the straight chord. Standing
+lesson for B4..B7: any «dual-render for hit area» pattern needs the same
+treatment on curves.
+
+**Label-anchor formula for curve cases.** Two B3 vizzes
+(`HandshakeLemmaViz`'s «+1 +1» tag, `MetroModelingViz`'s «μέσω X» label
+on the mini line-graph) place a text label at the midpoint of each
+visible edge. For lines that's `(A.x + B.x) / 2, (A.y + B.y) / 2`. For a
+quadratic Bezier with control point `Q`, the t=0.5 midpoint is `(P0 + 2Q +
+P2) / 4 = (M + Q) / 2`. Both vizzes adopt this formula; the label
+shorthand `(ax + bx + 2*g.cx) / 4` is the same calculation written
+inline.
+
+**Steady-state visual contract:** every edge in every B3 viz routes as a
+line on the current layouts (verified by inspection — none have an
+unrelated node sitting on any edge centreline). The line case is
+byte-identical to the pre-retrofit output. No user-visible change today;
+the value is structural lockout per the audit's standing thesis.
+
+**No new tests required.** B3 introduces no new helper at the
+`edge-routing.ts` level (the two new helpers in `graph-types.ts` are
+trivial wrappers over `routeEdge`). The building blocks `routeEdge` /
+`trimEdgeGeom` were both locked by B1's 20-test suite (still 20/20).
 
 ### Chunk B4 — L17 Bellman-Ford family
 
