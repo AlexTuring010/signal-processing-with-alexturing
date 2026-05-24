@@ -63,6 +63,7 @@ import { LayeredSubsetsDAG } from '@/components/viz/LayeredSubsetsDAG'
 import { DAGUnreliableTwoWays } from '@/components/viz/DAGUnreliableTwoWays'
 import { MultVsAddPaths } from '@/components/viz/MultVsAddPaths'
 import { LayeredTripPlanner } from '@/components/viz/LayeredTripPlanner'
+import { CyclingTripScene } from '@/components/viz/CyclingTripScene'
 import { ConstantShiftFail } from '@/components/viz/ConstantShiftFail'
 import { MstCountingExplorer } from '@/components/viz/MstCountingExplorer'
 import { DijkstraHandTrace } from '@/components/viz/DijkstraHandTrace'
@@ -95,6 +96,7 @@ import { GoldbarMerges } from '@/components/viz/GoldbarMerges'
 import { FractionalVsZeroOneKnapsack } from '@/components/viz/FractionalVsZeroOneKnapsack'
 import { DPTableLowerBound } from '@/components/viz/DPTableLowerBound'
 import { SightseeingDP } from '@/components/viz/SightseeingDP'
+import { SightseeingScene } from '@/components/viz/SightseeingScene'
 import { LamppostsMISViz } from '@/components/viz/LamppostsMISViz'
 import { RecursionExplosion } from '@/components/viz/RecursionExplosion'
 import { WeightedIntervalDP } from '@/components/viz/WeightedIntervalDP'
@@ -1186,6 +1188,20 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <p>
+          Πριν τον τύπο, δες την ίδια σκηνή από τρεις γωνίες. n = 5 αξιοθέατα,
+          σταθερό κόμιστρο <InlineMath>{'c_i = 4'}</InlineMath>, μίσθωση πατινιού{' '}
+          <InlineMath>{'S = 10'}</InlineMath>. Πάτα τα τρία κουμπιά:
+        </p>
+        <SightseeingScene />
+        <p>
+          Η «μόνο ταξί» και η «μόνο πατίνι» καταλήγουν τυχαία στο ίδιο σύνολο
+          κόστος (20), αλλά για εντελώς διαφορετικό λόγο: η ταξί πληρώνει ομοιόμορφα,
+          η πατίνι σπαταλά την τελευταία μίσθωση. Η <em>μικτή</em> κερδίζει επειδή
+          αναγνωρίζει ποια διαδρομή είναι «οικονομικότερη ως ταξί» και ποια «ως
+          τμήμα μιας μίσθωσης». Η αναδρομή που έπεται απλά αυτοματοποιεί αυτή την
+          απόφαση σε κάθε βήμα.
+        </p>
         <p>
           <strong>(i)</strong> Θέλουμε να έχουμε επισκεφθεί <em>όλα</em> τα
           αξιοθέατα, δηλαδή μέχρι το <InlineMath>{'\\alpha_n'}</InlineMath>. Άρα
@@ -3146,6 +3162,84 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
+          Πριν την αφαίρεση σε ΕΕΔ, δες το δίκτυο όπως θα του δώσουμε μήκη — οι
+          τρεις ίσες ακμές του τριγώνου A-B-C είναι ο μηχανισμός της
+          μη-μοναδικότητας:
+        </p>
+        <div className="not-prose my-4 flex justify-center">
+          <svg
+            viewBox="0 0 540 360"
+            className="w-full max-w-2xl rounded-lg border border-border bg-bg-elevated"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="Δίκτυο 5 επαρχιακών πόλεων A, B, C, D, E με 8 αυτοκινητόδρομους και χειμερινό φόντο. Το τρίγωνο A-B-C φέρει ίδιες ακμές βάρους 1· τα υπόλοιπα βάρη είναι 2 έως 6."
+          >
+            {/* Triangle ABC backing — soft tint to mark «κύκλος ίδιων βαρών» */}
+            <polygon points="130,80 330,80 230,220" fill="rgb(16 185 129 / 0.10)" stroke="none" />
+
+            {/* Snowflakes (decorative, χειμώνας motif) */}
+            <text x="460" y="32" fontSize="18" fill="rgb(var(--fg-muted))" opacity="0.55">❄</text>
+            <text x="500" y="52" fontSize="13" fill="rgb(var(--fg-muted))" opacity="0.5">❄</text>
+            <text x="478" y="66" fontSize="11" fill="rgb(var(--fg-muted))" opacity="0.4">❄</text>
+            <text x="505" y="28" fontSize="10" fill="rgb(var(--fg-muted))" opacity="0.45">❄</text>
+
+            {/* Outer edges (weights 2..6) — drawn first so the triangle sits on top */}
+            <line x1="130" y1="80" x2="90" y2="290" stroke="rgb(var(--fg-muted))" strokeWidth="2.5" />
+            <line x1="330" y1="80" x2="470" y2="210" stroke="rgb(var(--fg-muted))" strokeWidth="2.5" />
+            <path d="M 330 80 Q 220 380 90 290" fill="none" stroke="rgb(var(--fg-muted))" strokeWidth="2.5" />
+            <line x1="230" y1="220" x2="470" y2="210" stroke="rgb(var(--fg-muted))" strokeWidth="2.5" />
+            <line x1="470" y1="210" x2="90" y2="290" stroke="rgb(var(--fg-muted))" strokeWidth="2.5" />
+
+            {/* Triangle edges (weight 1) — emerald, thicker, on top */}
+            <line x1="130" y1="80" x2="330" y2="80" stroke="#10b981" strokeWidth="3.5" />
+            <line x1="130" y1="80" x2="230" y2="220" stroke="#10b981" strokeWidth="3.5" />
+            <line x1="330" y1="80" x2="230" y2="220" stroke="#10b981" strokeWidth="3.5" />
+
+            {/* Weight labels (with bg rects so they read against the lines) */}
+            {/* A-B mid: (230, 80) */}
+            <rect x="222" y="60" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="#10b981" strokeWidth="1.5" />
+            <text x="231" y="73" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#10b981">1</text>
+            {/* A-C mid: (180, 150) */}
+            <rect x="156" y="138" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="#10b981" strokeWidth="1.5" />
+            <text x="165" y="151" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#10b981">1</text>
+            {/* B-C mid: (280, 150) */}
+            <rect x="289" y="138" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="#10b981" strokeWidth="1.5" />
+            <text x="298" y="151" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#10b981">1</text>
+            {/* A-E mid: (110, 185) */}
+            <rect x="58" y="178" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="rgb(var(--fg-muted))" strokeWidth="1" />
+            <text x="67" y="191" textAnchor="middle" fontSize="11" fontWeight="700" fill="rgb(var(--fg))">2</text>
+            {/* B-D mid: (400, 145) */}
+            <rect x="396" y="135" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="rgb(var(--fg-muted))" strokeWidth="1" />
+            <text x="405" y="148" textAnchor="middle" fontSize="11" fontWeight="700" fill="rgb(var(--fg))">3</text>
+            {/* B-E curve mid: (215, 283) */}
+            <rect x="206" y="274" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="rgb(var(--fg-muted))" strokeWidth="1" />
+            <text x="215" y="287" textAnchor="middle" fontSize="11" fontWeight="700" fill="rgb(var(--fg))">4</text>
+            {/* C-D mid: (350, 215) */}
+            <rect x="342" y="205" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="rgb(var(--fg-muted))" strokeWidth="1" />
+            <text x="351" y="218" textAnchor="middle" fontSize="11" fontWeight="700" fill="rgb(var(--fg))">5</text>
+            {/* D-E mid: (280, 250) */}
+            <rect x="280" y="242" width="18" height="18" rx="3" fill="rgb(var(--bg-elevated))" stroke="rgb(var(--fg-muted))" strokeWidth="1" />
+            <text x="289" y="255" textAnchor="middle" fontSize="11" fontWeight="700" fill="rgb(var(--fg))">6</text>
+
+            {/* City nodes — drawn last so they sit on top of all edges */}
+            <circle cx="130" cy="80" r="22" fill="rgb(var(--bg))" stroke="rgb(var(--fg))" strokeWidth="2.5" />
+            <text x="130" y="81" textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="700" fill="rgb(var(--fg))">A</text>
+            <circle cx="330" cy="80" r="22" fill="rgb(var(--bg))" stroke="rgb(var(--fg))" strokeWidth="2.5" />
+            <text x="330" y="81" textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="700" fill="rgb(var(--fg))">B</text>
+            <circle cx="230" cy="220" r="22" fill="rgb(var(--bg))" stroke="rgb(var(--fg))" strokeWidth="2.5" />
+            <text x="230" y="221" textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="700" fill="rgb(var(--fg))">C</text>
+            <circle cx="470" cy="210" r="22" fill="rgb(var(--bg))" stroke="rgb(var(--fg))" strokeWidth="2.5" />
+            <text x="470" y="211" textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="700" fill="rgb(var(--fg))">D</text>
+            <circle cx="90" cy="290" r="22" fill="rgb(var(--bg))" stroke="rgb(var(--fg))" strokeWidth="2.5" />
+            <text x="90" y="291" textAnchor="middle" dominantBaseline="central" fontSize="15" fontWeight="700" fill="rgb(var(--fg))">E</text>
+
+            {/* Caption */}
+            <text x="270" y="342" textAnchor="middle" fontSize="11.5" fontStyle="italic" fill="rgb(var(--fg-muted))">
+              5 πόλεις · 8 δρόμοι · στο ίδιο υψόμετρο επιτρέπονται ισοβαθμίες — εδώ στο τρίγωνο A-B-C.
+            </text>
+          </svg>
+        </div>
+        <p>
           Το πρόβλημα είναι ένα <strong>Ελάχιστο Επικαλύπτον Δέντρο (ΕΕΔ)</strong>:
           ζητάμε ένα δέντρο που κρατά όλες τις πόλεις συνδεδεμένες με{' '}
           <em>ελάχιστο συνολικό μήκος</em>.
@@ -3359,6 +3453,83 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <p>
+          Πριν την αναγνώριση «αυτό είναι σακίδιο», δες τη σκηνή όπως τη γράφει η
+          εκφώνηση — δύο συναυλίες, ένα κενό{' '}
+          <InlineMath>{'T'}</InlineMath> λεπτών στη μέση, και ένας κατάλογος
+          διαφημίσεων που πρέπει να χωρέσουν εκεί:
+        </p>
+        <div className="not-prose my-4 flex justify-center">
+          <svg
+            viewBox="0 0 620 320"
+            className="w-full max-w-2xl rounded-lg border border-border bg-bg-elevated"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="Πρώτη ημέρα φεστιβάλ. Μεταξύ του τέλους της πρώτης συναυλίας και της έναρξης της δεύτερης μεσολαβούν T=10 λεπτά. Ο κατάλογος έχει 5 διαφημίσεις με διαρκείες 3, 5, 4, 2, 6 και κέρδη 6, 8, 5, 4, 9. Πρέπει να επιλεγεί υποσύνολο που χωράει σε T λεπτά με μέγιστο συνολικό κέρδος."
+          >
+            {/* Left concert ending */}
+            <text x="50" y="55" textAnchor="middle" fontSize="30" fill="#7c3aed" opacity="0.85">♪</text>
+            <text x="50" y="85" textAnchor="middle" fontSize="11" fontWeight="600" fill="rgb(var(--fg))">Συναυλία 1</text>
+            <text x="50" y="98" textAnchor="middle" fontSize="9.5" fill="rgb(var(--fg-subtle))">τέλος</text>
+
+            {/* Right concert starting */}
+            <text x="570" y="55" textAnchor="middle" fontSize="30" fill="#7c3aed" opacity="0.85">♫</text>
+            <text x="570" y="85" textAnchor="middle" fontSize="11" fontWeight="600" fill="rgb(var(--fg))">Συναυλία 2</text>
+            <text x="570" y="98" textAnchor="middle" fontSize="9.5" fill="rgb(var(--fg-subtle))">έναρξη</text>
+
+            {/* Time bracket showing T λεπτά */}
+            <line x1="100" y1="58" x2="100" y2="78" stroke="rgb(var(--fg))" strokeWidth="2" />
+            <line x1="100" y1="68" x2="520" y2="68" stroke="rgb(var(--fg))" strokeWidth="2" strokeDasharray="6,3" />
+            <line x1="520" y1="58" x2="520" y2="78" stroke="rgb(var(--fg))" strokeWidth="2" />
+            <text x="310" y="42" textAnchor="middle" fontSize="13" fontWeight="700" fill="rgb(var(--fg))">T = 10 λεπτά διαθέσιμα</text>
+
+            {/* Tick mark labels */}
+            <text x="100" y="98" textAnchor="middle" fontSize="10" fill="rgb(var(--fg-subtle))">0 min</text>
+            <text x="520" y="98" textAnchor="middle" fontSize="10" fill="rgb(var(--fg-subtle))">T min</text>
+
+            {/* Divider */}
+            <line x1="40" y1="130" x2="580" y2="130" stroke="rgb(var(--border))" strokeWidth="1" />
+
+            {/* Catalog header */}
+            <text x="310" y="155" textAnchor="middle" fontSize="12" fontWeight="600" fill="rgb(var(--fg))">Κατάλογος: 5 διαφημίσεις χορηγών (πλάτος ∝ διάρκεια)</text>
+
+            {/* Ad cards */}
+            {/* Ad 1: t=3, p=6 */}
+            <rect x="90" y="180" width="66" height="64" rx="4" fill="rgb(245 158 11 / 0.15)" stroke="#d97706" strokeWidth="1.5" />
+            <text x="123" y="198" textAnchor="middle" fontSize="10" fontWeight="600" fill="rgb(var(--fg))">Διαφ. 1</text>
+            <text x="123" y="217" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">⏱ t = 3</text>
+            <text x="123" y="235" textAnchor="middle" fontSize="12" fontWeight="700" fill="#d97706">€ 6</text>
+            {/* Ad 2: t=5, p=8 */}
+            <rect x="168" y="180" width="90" height="64" rx="4" fill="rgb(245 158 11 / 0.15)" stroke="#d97706" strokeWidth="1.5" />
+            <text x="213" y="198" textAnchor="middle" fontSize="10" fontWeight="600" fill="rgb(var(--fg))">Διαφ. 2</text>
+            <text x="213" y="217" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">⏱ t = 5</text>
+            <text x="213" y="235" textAnchor="middle" fontSize="12" fontWeight="700" fill="#d97706">€ 8</text>
+            {/* Ad 3: t=4, p=5 */}
+            <rect x="270" y="180" width="78" height="64" rx="4" fill="rgb(245 158 11 / 0.15)" stroke="#d97706" strokeWidth="1.5" />
+            <text x="309" y="198" textAnchor="middle" fontSize="10" fontWeight="600" fill="rgb(var(--fg))">Διαφ. 3</text>
+            <text x="309" y="217" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">⏱ t = 4</text>
+            <text x="309" y="235" textAnchor="middle" fontSize="12" fontWeight="700" fill="#d97706">€ 5</text>
+            {/* Ad 4: t=2, p=4 */}
+            <rect x="360" y="180" width="54" height="64" rx="4" fill="rgb(245 158 11 / 0.15)" stroke="#d97706" strokeWidth="1.5" />
+            <text x="387" y="198" textAnchor="middle" fontSize="10" fontWeight="600" fill="rgb(var(--fg))">Διαφ. 4</text>
+            <text x="387" y="217" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">⏱ t = 2</text>
+            <text x="387" y="235" textAnchor="middle" fontSize="12" fontWeight="700" fill="#d97706">€ 4</text>
+            {/* Ad 5: t=6, p=9 */}
+            <rect x="426" y="180" width="102" height="64" rx="4" fill="rgb(245 158 11 / 0.15)" stroke="#d97706" strokeWidth="1.5" />
+            <text x="477" y="198" textAnchor="middle" fontSize="10" fontWeight="600" fill="rgb(var(--fg))">Διαφ. 5</text>
+            <text x="477" y="217" textAnchor="middle" fontSize="11" fill="rgb(var(--fg))">⏱ t = 6</text>
+            <text x="477" y="235" textAnchor="middle" fontSize="12" fontWeight="700" fill="#d97706">€ 9</text>
+
+            {/* Sum hints */}
+            <text x="310" y="275" textAnchor="middle" fontSize="11" fontStyle="italic" fill="rgb(var(--fg-muted))">
+              Σύνολο διαρκειών αν τις πάρεις όλες: 3+5+4+2+6 = 20 min — υπερβαίνει T κατά 10.
+            </text>
+            <text x="310" y="296" textAnchor="middle" fontSize="11.5" fontWeight="600" fill="rgb(var(--fg))">
+              Επίλεξε υποσύνολο: <tspan fill="rgb(var(--fg-subtle))" fontWeight="400">Σ διαρκειών ≤ T,</tspan>{' '}
+              <tspan fill="#d97706">max Σ κερδών</tspan>.
+            </text>
+          </svg>
+        </div>
         <p>
           <strong>Πρώτα η αναγνώριση — αυτό είναι Σακίδιο.</strong> Άλλαξε
           ονόματα και η ταυτότητα είναι η ίδια: «διάρκεια»{' '}
@@ -8134,6 +8305,12 @@ procedure CALC(m)
     ),
     solution: (
       <>
+        <p>
+          Πριν τη μοντελοποίηση, νιώσε γιατί η ημέρα ΔΕΝ είναι αμελητέα. Στο
+          συγκεκριμένο δίκτυο 4 πόλεων, σύρε τη μπάρα και δες ποιες ποδηλατικές
+          διαδρομές «χωράνε» στα όρια κάθε ημέρας:
+        </p>
+        <CyclingTripScene />
         <p>
           <strong>Γιατί δεν είναι «απλό» shortest path.</strong> Η εκδρομή έχει
           <em>τρεις συγχρόνους περιορισμούς</em>: «ακριβώς m ημέρες», «όχι δύο

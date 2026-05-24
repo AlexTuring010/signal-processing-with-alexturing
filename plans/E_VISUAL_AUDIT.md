@@ -301,6 +301,10 @@ Per `plans/PHASE_E_PLAN.md` § E.4.5:
 ## 7. Progress
 
 - ☑ E.4.5.0 — audit pass (this file)
-- ☐ E.4.5.A — Chunk A: 4 definite-gap visuals (one turn)
+- ☑ E.4.5.A — Chunk A: 4 definite-gap visuals (done 2026-05-24)
+  - `pt1-th3` → interactive `<SightseeingScene />` (3 strategies on n=5/c=4/S=10)
+  - `pt4-th2-a` → static inline SVG (pentagonal 5-city layout, emerald A-B-C triangle, ❄ snowflakes)
+  - `pt4-th4` → static inline SVG (♪ ♫ concert pictograms, T-bracket, width-proportional ad-card tray)
+  - `front-set-6-ask1` → interactive `<CyclingTripScene />` (day-slider flips edge legality)
 - ☐ E.4.5.B — Chunk B re-audit (optional turn; skip if both
   borderlines stay skipped)
