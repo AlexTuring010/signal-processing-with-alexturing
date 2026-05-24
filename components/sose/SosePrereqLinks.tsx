@@ -18,28 +18,18 @@ type Props = {
  * IS the just-in-time learning loop — students need it to be unmissable.
  */
 export function SosePrereqLinks({ prerequisites, position }: Props) {
-  if (prerequisites.length === 0) {
-    return (
-      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-        <p className="flex items-start gap-2 text-sm text-emerald-700 dark:text-emerald-300">
-          <BookOpen className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-          <span>
-            <strong>Δεν χρειάζεται προαπαιτούμενη θεωρία.</strong> Αυτή η
-            άσκηση λύνεται με ό,τι ξέρεις ήδη από Λύκειο / κοινή λογική.
-            Δοκίμασέ την.
-          </span>
-        </p>
-      </div>
-    )
-  }
+  const isFallback = prerequisites.length === 0
+  const effectivePrereqs = isFallback ? ['intro'] : prerequisites
   return (
     <div className="rounded-xl border border-amber-500/40 bg-amber-500/5 p-4">
       <p className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-amber-700 dark:text-amber-300">
         <BookOpen className="h-4 w-4" aria-hidden />
-        Δεν τα ξέρεις; Διάβασε πρώτα:
+        {isFallback
+          ? 'Δεν είσαι σίγουρος από πού να ξεκινήσεις; Ξεκίνα από:'
+          : 'Δεν τα ξέρεις; Διάβασε πρώτα:'}
       </p>
       <div className="flex flex-wrap gap-2">
-        {prerequisites.map((slug) => (
+        {effectivePrereqs.map((slug) => (
           <Link
             key={slug}
             href={`/${slug}?from=sose&n=${position}`}

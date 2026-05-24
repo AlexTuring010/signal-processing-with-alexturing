@@ -184,6 +184,7 @@ export type QuizQuestion =
  * chips so we render "Conventional AM" instead of "am/conventional".
  */
 export const SECTION_TITLES: Record<string, string> = {
+  intro: 'Εισαγωγή στις επικοινωνίες',
   'foundations/signals': 'Σήματα',
   'foundations/systems': 'Συστήματα & convolution',
   'foundations/fourier-series': 'Fourier series',

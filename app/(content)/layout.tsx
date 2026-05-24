@@ -34,9 +34,7 @@ export default function ContentLayout({
 
       <article className="prose-content min-w-0 max-w-prose">
         <Suspense fallback={null}>
-          <div className="print:hidden">
-            <SoseReturnBanner />
-          </div>
+          <SoseReturnBanner />
         </Suspense>
         <SectionCommentsProvider>{children}</SectionCommentsProvider>
         <div className="print:hidden">
