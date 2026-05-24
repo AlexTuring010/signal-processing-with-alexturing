@@ -786,17 +786,27 @@ html {
     page-break-inside: avoid;
   }
 
-  /* Aggressive density for print — every mm counts to hit the 2-page target. */
+  /* Aggressive density for print — every mm counts to hit the 2-page target.
+     Print font is a touch smaller than screen (0.65 vs 0.7em) because A4
+     columns are physically narrower than the on-screen 820/3 px columns
+     once the @page margin is applied. */
   body:has(.cheatsheet-paper) .cheatsheet-paper .katex {
-    font-size: 0.7em;
+    font-size: 0.65em;
+    max-width: 100%;
   }
   body:has(.cheatsheet-paper) .cheatsheet-paper .katex-display {
     margin: 0 !important;
     padding: 0 !important;
+    /* In print: clip silently rather than auto-scroll (scrollbars don't
+       exist in PDF; without this, KaTeX's `overflow-x: auto` produces
+       invisible clipped right-hand-side content in the printed sheet). */
+    overflow: hidden !important;
+    max-width: 100% !important;
   }
   body:has(.cheatsheet-paper) .cheatsheet-paper .katex-display > .katex {
     text-align: left !important;
     padding-left: 0 !important;
+    white-space: normal !important;
   }
   body:has(.cheatsheet-paper) .cheatsheet-grid {
     column-gap: 2.5mm !important;
@@ -842,25 +852,58 @@ html {
   color-scheme: light;
 }
 .cheatsheet-paper .katex {
-  font-size: 0.78em;
+  /* Smaller base so a column-width formula has headroom. */
+  font-size: 0.7em;
+  /* Cap any individual KaTeX block to its column — combined with the
+     ancestor `overflow: hidden` below this prevents horizontal scrollbars
+     on screen (which would not survive print-to-PDF anyway). */
+  max-width: 100%;
 }
 .cheatsheet-paper .katex-display {
   margin: 0 !important;
   padding: 0 !important;
-  overflow: visible !important;
+  /* KaTeX's own default is `overflow-x: auto`, which produces a per-formula
+     scrollbar whenever the rendered math is wider than the column. On a
+     printable sheet that scrollbar both looks bad on screen AND silently
+     clips content in the printed PDF (no scrollbar in print = the right
+     half of the formula just vanishes). Force overflow hidden so screen
+     and print agree: anything wider than the column is the spec's fault,
+     not surfaced as a fake "you can scroll to see it". */
+  overflow: hidden !important;
+  max-width: 100% !important;
 }
 .cheatsheet-paper .katex-display > .katex {
   text-align: left;
   padding-left: 0;
-  white-space: nowrap;
+  /* Was `white-space: nowrap` — that combined with KaTeX's `overflow-x: auto`
+     produced wide formulas with scrollbars. `normal` lets text portions
+     wrap; pure math still stays on one line (KaTeX doesn't auto-break
+     internally), but with the smaller font + max-width above, the
+     overwhelming majority fit in one column-width line. */
+  white-space: normal;
 }
 .cheatsheet-paper .cheatsheet-math {
   font-size: 0.95em;
   line-height: 1.05;
   margin: 0;
+  /* Same belt-and-suspenders on the slot's outer wrapper: never let a
+     single formula push the column wider than the paper. */
+  max-width: 100%;
+  overflow: hidden;
 }
 .cheatsheet-paper .cheatsheet-formula {
   margin-bottom: 0.5mm;
+  /* Clip at the slot boundary too — if a formula somehow still overflows,
+     the clip lands at the slot, not the whole paper. */
+  max-width: 100%;
+  overflow: hidden;
+}
+/* Paper-level overflow guard. Each formula slot already clips, but if
+   any descendant escapes (e.g. a wide note), the paper itself must never
+   show a horizontal scrollbar — what you see on screen has to match what
+   the printer will lay down. */
+.cheatsheet-paper {
+  overflow: hidden;
 }
 /* Beat the global `.prose-content ul` list-style rule (the cheatsheet sits
    inside a .prose-content article but should NEVER have list bullets — it's

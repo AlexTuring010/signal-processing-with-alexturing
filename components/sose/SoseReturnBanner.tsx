@@ -29,7 +29,7 @@ export function SoseReturnBanner() {
         </span>
         <Link
           href={`/practice/sose-to-eksamino?n=${Math.floor(n)}`}
-          className="inline-flex items-center gap-1.5 rounded-full bg-rose-700 px-3 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-rose-800"
+          className="inline-flex items-center gap-1.5 rounded-full bg-rose-700 px-3 py-1 text-xs font-semibold !text-white !no-underline shadow-sm transition hover:bg-rose-800"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
           Επιστροφή στην άσκηση {Math.floor(n)}
