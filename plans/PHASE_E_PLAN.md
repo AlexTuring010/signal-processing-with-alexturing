@@ -69,6 +69,12 @@ a sub-list. Update this section in the same commit that finishes the task.
 - ☐ **E.4 — Algorithm prose + `keywords` + `nutshell` audit** (17 per-lecture sub-tasks):
   - ☐ L01 ☐ L02 ☐ L03 ☐ L04 ☐ L05 ☐ L06 ☐ L07 ☐ L08 ☐ L09
   - ☐ L10 ☐ L11 ☐ L12 ☐ L13 ☐ L14 ☐ L15 ☐ L16 ☐ L17
+- ☐ **E.4.5 — «Νιώσε»-visual audit & retrofit across the problem bank** (one audit pass → produces chunked checklist → one chunk per turn):
+  - ☐ E.4.5.0 — audit pass (single turn) → produces `plans/E_VISUAL_AUDIT.md` with the chunked queue
+  - chunks filled in by the audit pass; one chunk per turn thereafter
+- ☐ **E.4.6 — Generic edge-routing utility across all graph vizzes** (utility + per-viz retrofit; one chunk per turn):
+  - ☐ E.4.6.0 — implement `components/viz/edge-routing.ts` with collision-aware `routeEdge(a, b, nodes)` API; swap the temporary point-fix in `RiverCrossingStateGraph.tsx` (commit `e75b4cb`); produce the per-viz retrofit chunked queue (single turn)
+  - chunks (groups of 3–5 vizzes sharing layout shape) filled in by E.4.6.0; one chunk per turn thereafter
 - ☐ **E.5 — Transcription completion** (~21 entries; per-paper turns):
   - filled in by pre-flight's enumeration
 - ☐ **E.6 — Wire the SOSE flow** (2024/2025 priority, pattern pairs, keyword strips, «πρότυπα σκέψης» tab)
@@ -454,6 +460,219 @@ just the prose + keywords + nutshell should be enough to reconstruct the
 algorithm in natural language.
 
 **Commit message template**: `feat(L{NN}-algo-prose): keywords + nutshell + natural-language description audit`.
+
+---
+
+### Task E.4.5 — «Νιώσε»-visual audit & retrofit across the problem bank
+
+**Why this task exists.** Comment `422258f8` (2026-05-24, on
+`front-set-7-ask2`) caught a systemic gap: a problem describing a
+concrete physical scenario (the river-crossing puzzle with wolf / goat /
+cabbage) jumped straight from prose to abstract state-graph modeling
+without first establishing the «Νιώσε» picture per
+[[lecture-rework-standard]]. The fix on `front-set-7-ask2` (commit
+`fb91716`) was a one-off; this task ensures every analogous entry in
+the bank gets the same treatment, and that we **never repeat the
+mistake** — corner-cutting on the «Νιώσε» surface is a regression of
+the quality bar.
+
+**The binding standard going forward.** Every transcribed problem
+whose statement describes a **concrete scenario** — a physical setup, a
+real-world process, a labeled graph with a narrative, a multi-character
+puzzle, a geographic or spatial arrangement — must open its solution
+with a small illustrative visual **anchor** (static SVG or short
+interactive) that depicts the scenario **as described**, before any
+abstract modeling. This is the «Νιώσε» stage of the 5-stage learning
+loop, applied to problem solutions. The visual:
+
+- Sits at the **top of the solution fragment**, preceded by a one-line
+  Greek bridge (e.g. «Πριν τη μοντελοποίηση, δες την εικόνα του γρίφου …»).
+- Uses **semantic color tokens** (`rgb(var(--fg))`, `rgb(var(--bg-elevated))`,
+  etc.) so dark mode is safe by construction.
+- Carries a minimal caption that ties the picture back to the conflict
+  rules / context cues the prose will then formalise.
+- Reuses the `front-set-7-ask2` precedent (commit `fb91716`) as the
+  reference shape.
+
+Applies to new transcriptions (E.5) and any future problem-bank work.
+
+**E.4.5.0 — Audit pass (one turn).** Walk every `Exercise` entry in
+`content/practice/exercises.tsx`. For each, ask:
+
+1. Does the **statement** describe a concrete scenario (physical
+   setup, real-world process, labeled narrative graph, multi-character
+   puzzle, geographic/spatial arrangement)?
+2. If yes-to-1: does the **solution** open with a visual that depicts
+   the scenario **as described**, before abstract modeling?
+3. If yes-to-1 and no-to-2 → the entry is a **gap**.
+
+**Don't flag:** abstract / formal problems (e.g. «δείξε ότι
+$T(n) = 2T(n/2) + n$ είναι $O(n \log n)$»), problems whose existing
+viz already depicts the scenario before the abstraction, or problems
+whose statement is already self-illustrative because it provides
+its own diagram.
+
+**Output**: `plans/E_VISUAL_AUDIT.md` — one row per gap:
+- `id`
+- one-line scenario type (e.g. «state-graph puzzle», «weighted graph
+  with named cities», «layered DAG with phases»)
+- suggested visual sketch (e.g. «two banks + 4 characters + boat», «5
+  cities with edges + weights», «3 phases × 4 cities layered»)
+- chunk assignment
+
+**Chunk design.** Group gaps into **chunks of 3–5 entries** that share
+context — same lecture, similar visual shape (e.g. all state-graph
+puzzles together, all weighted-narrative-graphs together). Each chunk
+= one turn. Realistic estimate: the bank has 141 transcribed entries;
+expect 8–20 gaps total, i.e. 2–5 chunks.
+
+Commit message for the audit: `docs(phase-e): Νιώσε-visual audit across the problem bank`.
+
+**E.4.5.N — Per-chunk retrofit (one turn each).** For each chunk:
+
+- Read each entry's statement carefully and verify the gap (the audit
+  identifies candidates, but the executor confirms).
+- Author a minimal **static SVG** illustration matching the scenario,
+  following the `front-set-7-ask2` precedent: inline SVG inside a
+  `<div className="not-prose my-4 flex justify-center">` wrapper, with
+  `viewBox`, `max-w-xl rounded-lg border border-border bg-bg-elevated`,
+  fills via `rgb(var(--token))`, ARIA-labeled.
+- Place at the **top of the solution fragment**, preceded by a one-line
+  Greek bridge.
+- Keep the rest of the solution unchanged unless the visual makes a
+  prose paragraph redundant (in which case trim, don't expand).
+- `npm run typecheck` + `lint` + `build` per chunk.
+
+**Cadence.** Same stop-and-show rhythm as Phases A/B/C/D. One audit
+turn + N chunk-fix turns.
+
+**Acceptance.** Every flagged entry has its «Νιώσε» visual landed.
+After the last chunk, re-run the audit method on a random sample of 5
+entries to confirm zero false negatives. Update [[lecture-rework-standard]]
+or write a dedicated memory file recording the standard as part of the
+final chunk's commit.
+
+**Commit message template (per chunk)**:
+`feat(visuals-{chunk-label}): Νιώσε-visual retrofit for {N} bank entries`.
+
+---
+
+### Task E.4.6 — Generic edge-routing utility across all graph vizzes
+
+**Why this task exists.** Commit `e75b4cb` fixed a real visual bug in
+`RiverCrossingStateGraph`: the long horizontal edge `{C} ↔ {B,C,G}` ran
+through the middle of the `{B,G}` rectangle (and the mirrored case
+`{W} ↔ {B,G,W}` through `{C,W}`); because nodes render after edges,
+the rect occluded the middle of the line and the visual read as «two
+edges meeting at `{B,G}`», misleading the reader into seeing an edge
+that doesn't exist in the actual state graph. The fix was a hand-
+targeted point-fix for those two specific edges — a **hack**. The
+codebase has 20+ graph-drawing vizzes in `components/viz/`; the same
+class of bug can exist in any of them, in subtly different shapes
+(near-horizontal edges, diagonals that graze a node, edges that span
+many columns). Per the «never repeat the same mistake» quality bar,
+ship a structural fix that removes the entire class of bug across the
+whole site — and retire the `RCSG` point-fix in the same step.
+
+**The standard going forward.** Every graph viz that renders edges
+between rectangular nodes uses a shared `routeEdge()` utility that
+runs a collision test against non-endpoint nodes and returns a curved
+Bezier when an edge would otherwise pass through (or graze) an
+unrelated node. The «edge passes through unrelated node» bug becomes
+**structurally impossible** — the check runs by construction on every
+edge of every viz. New vizzes adopt the utility from the start.
+
+**Honest limits.** The utility addresses the *geometric* edge-through-
+node case only. It does NOT catch overlapping edges, ambiguous
+arrowheads, label collisions, or other visual ambiguities. For
+defence-in-depth against arbitrary visual regressions, the longer-term
+follow-up is Playwright snapshot tests of every viz — out of scope for
+Phase E, but recorded here as a future consideration once `routeEdge`
+is in place and the cost of snapshot infrastructure becomes justified
+by a second class of visual bug surfacing.
+
+**E.4.6.0 — Build the utility + retire the point-fix + scope the
+retrofit (one turn).**
+
+Implement `components/viz/edge-routing.ts` exposing:
+
+```ts
+type NodeRect = { x: number; y: number; w: number; h: number; id: string | number }
+type EdgeGeom =
+  | { kind: 'line'; x1: number; y1: number; x2: number; y2: number }
+  | { kind: 'curve'; d: string }
+
+function routeEdge(
+  a: NodeRect,
+  b: NodeRect,
+  allNodes: ReadonlyArray<NodeRect>,
+  options?: { padding?: number; minBulge?: number },
+): EdgeGeom
+```
+
+Algorithm:
+1. Compute the straight segment between the endpoints (centre-to-centre,
+   or boundary-to-boundary if the endpoints are circles — option flag).
+2. For each `n ∈ allNodes` with `n.id !== a.id && n.id !== b.id`, run a
+   standard segment-vs-AABB test with `padding` margin (default 4 px).
+3. If no node intersects, return `{ kind: 'line', ... }`.
+4. If at least one node intersects, compute the quadratic-Bezier control
+   point that curves the path away from the *nearest* colliding rect.
+   Direction: perpendicular to the segment, on the opposite side of the
+   colliding centre from the segment midpoint. Offset magnitude: enough
+   to clear the colliding rect's bounding circle plus padding (typically
+   `r + 24` px), or `options.minBulge` if larger.
+5. Verify post-curve that the Bezier does not itself collide; if it
+   does (extreme cases), increase the bulge magnitude and retry. Hard
+   cap retries at 3 to avoid runaway in degenerate inputs.
+6. Return `{ kind: 'curve', d: 'M ax ay Q cx cy bx by' }`.
+
+Swap the temporary point-fix in `RiverCrossingStateGraph.tsx` (commit
+`e75b4cb`) for a call to `routeEdge`. Add at least two co-located
+sanity tests in `components/viz/edge-routing.test.ts` — one straight,
+one collision — driven by `vitest` or the existing test harness (check
+which is configured; add it if neither is). Run `typecheck` + `lint`
++ `build`. The point-fix block in `RCSG.tsx` is **gone** at the end
+of this turn — not refactored, deleted.
+
+Produce a per-viz audit table in this commit's message body (or in a
+fresh `plans/E_EDGE_ROUTING_AUDIT.md` if longer than ~20 lines):
+which vizzes draw edges between rect-or-circle nodes, what edge
+primitive each uses today (`<line>`, `<path>`, custom), and which
+retrofit chunk each belongs to.
+
+Commit message: `feat(viz/edge-routing): collision-aware edge routing utility; retire RCSG point-fix`.
+
+**E.4.6.N — Per-chunk viz retrofit (one turn each).**
+
+Group the audited vizzes into chunks of 3–5 that share layout shape —
+e.g. all MST-graph-based vizzes (`PrimAnimator`, `KruskalAnimator`,
+`ReverseDeleteAnimator`, `CycleCutLemmaViz`, etc.) in one chunk; all
+BFS/DFS-tree-based in another; standalone custom layouts in their own
+chunks. Each chunk = one turn.
+
+For each chunk:
+- For each viz, replace the hand-rolled edge `<line>` / `<path>`
+  rendering with a call to `routeEdge()`. Adopt the `NodeRect` shape
+  locally if the viz has a different internal type.
+- Run the viz in light + dark + mobile; confirm that the «curve only
+  when collision» rule means most existing layouts produce **unchanged**
+  rendering. Any straight line that becomes a curve is either fixing a
+  latent bug (good) or a false positive (rare — file a follow-up).
+- `typecheck` + `lint` + `build` per chunk.
+
+**Cadence.** Same stop-and-show rhythm as Phases A/B/C/D. E.4.6.0 +
+N chunk-fix turns.
+
+**Acceptance.** Every graph viz uses `routeEdge()`. The two formerly
+hand-curved edges in `RiverCrossingStateGraph` still render as
+visibly bent arcs, but now produced by the same generic utility that
+also covers every other viz. Spot-check 3 random vizzes by adding a
+synthetic «edge through an unrelated node» case in a local test
+fixture and confirming the utility curves it.
+
+**Commit message template (per chunk)**:
+`refactor(viz-{chunk-label}): adopt routeEdge() in {N} graph vizzes`.
 
 ---
 

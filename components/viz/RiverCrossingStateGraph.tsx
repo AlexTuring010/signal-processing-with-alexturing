@@ -249,13 +249,17 @@ export function RiverCrossingStateGraph() {
               const stroke = hi ? '#dc2626' : isVisited ? '#0ea5a2' : '#cbb3b8'
               const strokeWidth = hi ? 4 : isVisited ? 2.4 : 1.4
               const opacity = hi || isVisited ? 1 : 0.7
-              // Long-horizontal edges that span 2+ columns at nearly the same y
-              // would pass straight through an intermediate col-2 node's box —
-              // the rect then occludes the middle of the line and creates the
-              // false visual cue of «two edges meeting at the col-2 node». Curve
-              // those edges away (up for the top row, down for the bottom row)
-              // so they read as one continuous arc that clearly avoids the
-              // intermediate node.
+              // ⚠️ TEMPORARY POINT-FIX — to be retired by E.4.6.0.
+              // This block hand-curves two specific edges that pass through a
+              // col-2 node's box ({C}↔{B,C,G} through {B,G}; {W}↔{B,G,W}
+              // through {C,W}). The rule below — «span ≥ 2 cols + dy < 20» —
+              // catches *only* near-horizontal long edges in *this* layout;
+              // diagonals grazing a node, or any other graph viz with a
+              // different layout, are not covered. The real fix is a generic
+              // collision-aware `routeEdge()` utility shared by every graph
+              // viz — task E.4.6 in `plans/PHASE_E_PLAN.md`. Delete this whole
+              // block (lines below through the `<path>` return) once E.4.6.0
+              // lands and `routeEdge()` is in use here.
               const spanCols = Math.abs(farBank(e.a).length - farBank(e.b).length)
               const dy = Math.abs(pa.y - pb.y)
               if (spanCols >= 2 && dy < 20) {
