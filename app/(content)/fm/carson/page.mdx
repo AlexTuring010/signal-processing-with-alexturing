@@ -1,17 +1,17 @@
 export const metadata = {
-  title: "Carson's rule — FM bandwidth",
+  title: "Carson's rule — FM/PM ενεργό εύρος ζώνης",
   description:
-    "Carson's rule για το bandwidth της FM. Παραγωγή B = 2(Δf + W) από τη συνεισφορά των sidebands. NBFM vs WBFM regimes, σύγκριση με AM, παραδείγματα FM ραδιοφώνου και two-way radio.",
+    "Η εξίσωση Carson B ≅ 2W(β+1) ως «ενεργό εύρος ζώνης» — η ζώνη που περιέχει ~98% της ισχύος. Διπλή παρακίνηση: Taylor side (slides 22-26) δείχνει ότι φ^n έχει bandwidth nW με πλάτη β^n/n! που εξασθενούν· Bessel side (slide 45) δείχνει ότι |J_n(β)| ≈ 0 για n > β. NBFM/WBFM ως δύο όρια του ίδιου τύπου. Slide 26 + 46: ισχύει αυτούσιος και για PM (β_p = K_p α) και για FM (β_f = K_f α/W). Άσκηση 2 του prof (slides 27-28) ως canonical worked example.",
 }
 
 export const frontmatter = {
-  title: "Carson's rule + NBFM/WBFM",
+  title: "Carson's rule — ενεργό εύρος ζώνης",
   slug: 'fm/carson',
-  order: 3,
-  prerequisites: ['fm/bessel'],
+  order: 4,
+  prerequisites: ['fm/idea', 'fm/bessel'],
   examWeight: 5,
-  estimatedReadTime: 22,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 32,
+  lastUpdated: '2026-05-24',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -22,12 +22,12 @@ import Link from 'next/link'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · FM</span>
   <span>·</span>
-  <span>~22 min read</span>
+  <span>~32 min read</span>
   <span>·</span>
-  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Medium exam — recurring formula</span>
+  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Heavy exam — εμφανίζεται σχεδόν πάντα</span>
 </div>
 
-# Carson's rule + NBFM vs WBFM
+# Carson's rule + NBFM/WBFM
 
 <div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
   <CompleteToggle slug="fm/carson" />
@@ -38,265 +38,682 @@ import Link from 'next/link'
 
 <SourceDoc
   sources={[
-    { pdf: 'SE_session15_16_16_FM.pdf', label: "Carson's rule, NBFM vs WBFM" },
-    { pdf: 'SE_session15_FM.pdf', label: 'σύντομη έκδοση' },
+    {
+      pdf: 'SE_session15_16_16_FM.pdf',
+      slides: '22-26, 27-28, 31, 44-46',
+      label: 'Taylor σπάσιμο → ενεργό εύρος ζώνης (Carson), Άσκηση 2 (sinc message), NBFM οριακή 2W, slide 26 PM/FM ισοδυναμία + slide 46 ρητοί τύποι',
+    },
+    {
+      pdf: 'SE_session15_FM.pdf',
+      label: 'σύντομη έκδοση (μόνο πρώτες 18 σελίδες — Carson δεν είναι μέσα)',
+    },
   ]}
 />
 
-Στο [προηγούμενο κεφάλαιο](/fm/bessel) είδαμε ότι το FM φάσμα είναι **άπειρο** — sidebands εκτείνονται μέχρι το άπειρο. Στην πράξη όμως, σχεδόν όλη η ενέργεια συγκεντρώνεται σε λίγες sidebands. Σε αυτό το κεφάλαιο **ποσοτικοποιούμε** πόσο bandwidth χρειάζεται μια FM εκπομπή, μέσω της θεμελιώδους **Carson's rule**.
+Στο <Link href="/fm/bessel">/fm/bessel</Link> είδαμε ότι το single-tone FM φάσμα έχει **άπειρες** αρμονικές στα `f_c ± n f_m`. Αλλά τα <InlineMath>{'|J_n(\\beta_f)|'}</InlineMath> πέφτουν γρήγορα για <InlineMath>{'|n| > \\beta_f'}</InlineMath> (slide 45 του prof το γράφει ρητά). Το πρακτικό συμπέρασμα: **κάποια στιγμή σταματάς να κρατάς sidebands — και ο Carson σου λέει πού**.
 
-## 1. Carson's rule — η εξίσωση
+Αυτό το κεφάλαιο δίνει:
+
+1. **Carson's rule** ως «ενεργό εύρος ζώνης» (slide 26): <InlineMath>{'B \\cong 2W(\\beta+1) = 2(\\Delta f + W)'}</InlineMath>.
+2. **Δύο διαδρομές** που οδηγούν στο ίδιο cutoff — Taylor (slides 22-26) και Bessel (slide 45). Όχι «μαγικός εμπειρικός κανόνας»· είναι το cutoff που και οι δύο μέθοδοι αναγκαστικά δίνουν.
+3. **NBFM/WBFM όρια**: μια εξίσωση, δύο εκφάνσεις.
+4. **PM/FM ισοδυναμία**: ο Carson είναι αυτούσιος και για PM (slide 26 + 46). Διαφορά είναι το β.
+5. **Η canonical Άσκηση 2** (slides 27-28): FM σήμα με sinc message. Σου διδάσκει την κρίσιμη «W-extraction» κίνηση που χρειάζεσαι για κάθε non-single-tone σήμα στις εξετάσεις.
+
+## 1. Carson — η εξίσωση + ο ορισμός του prof
+
+Από όλα τα <InlineMath>{'A_c J_n(\\beta_f)\\cos[2\\pi(f_c + n f_m)t]'}</InlineMath> στο Bessel φάσμα του /fm/bessel, κρατάμε ένα **πεπερασμένο** παράθυρο γύρω από τον carrier:
 
 $$
-\boxed{\,B_{FM} = 2(\Delta f + W) = 2(\beta + 1)\,W\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,B \cong 2W(\beta + 1) = 2(\Delta f + W)\,} \qquad \text{⚠️ Πρέπει να θυμάσαι — δεν είναι μέσα στο [επίσημο τυπολόγιο](/formulas)}
 $$
 
 όπου:
 
-- $\Delta f$ — frequency deviation (Hz)
-- $W$ — message bandwidth (για single-tone, $W = f_m$)
-- $\beta = \Delta f / W$ — modulation index
+- <InlineMath>{'W'}</InlineMath> — εύρος ζώνης του σήματος πληροφορίας <InlineMath>{'m(t)'}</InlineMath>. Για single-tone <InlineMath>{'m = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>, ισχύει <InlineMath>{'W = f_m'}</InlineMath>.
+- <InlineMath>{'\\Delta f = K_f\\,\\max|m(t)|'}</InlineMath> — μέγιστη απόκλιση συχνότητας (frequency deviation).
+- <InlineMath>{'\\beta_f = \\Delta f / W = K_f\\,\\max|m|/W'}</InlineMath> — δείκτης διαμόρφωσης FM (όπως ορίστηκε στο <Link href="/fm/idea">/fm/idea §5</Link>).
 
-Η ισοδυναμία των δύο μορφών προκύπτει από το $\Delta f = \beta W$:
-
-$$
-2(\Delta f + W) = 2(\beta W + W) = 2(\beta + 1) W
-$$
-
-**Αυτή η εξίσωση μπαίνει σε σχεδόν κάθε εξεταστικό θέμα FM.**
-
-## 2. Διαισθητική εξήγηση
-
-Από το Bessel expansion ξέρουμε:
+Η ισοδυναμία των δύο μορφών προκύπτει από αντικατάσταση <InlineMath>{'\\Delta f = \\beta_f W'}</InlineMath>:
 
 $$
-x_{FM}(t) = A_c\sum_n J_n(\beta)\cos[2\pi(f_c + nf_m)t]
+2(\Delta f + W) = 2(\beta_f W + W) = 2W(\beta_f + 1).
 $$
 
-Τα sidebands εκτείνονται σε όλες τις $f_c \pm n f_m$ για $n = 0, 1, 2, \ldots$ μέχρι το άπειρο. Αλλά τα $J_n(\beta)$ φθίνουν γρήγορα όταν $|n|$ ξεπεράσει το $\beta$.
+<Callout type="key" title="Slide 26 — ο prof γράφει αυτολεξεί">
 
-**Εμπειρικός κανόνας:** για $|n| > \beta + 1$, τα $J_n(\beta)$ είναι αμελητέα. Άρα τα **σημαντικά** sidebands είναι τα $n = -(\beta+1), \ldots, +(\beta+1)$.
+«Σε πρακτικά συστήματα επικοινωνιών το εύρος ζώνης των σημάτων **περιορίζεται σε ένα πεπερασμένο διάστημα <InlineMath>{'B'}</InlineMath>**, το οποίο περιέχει σχεδόν ολόκληρη την ισχύ του διαμορφωμένου σήματος. Πρόκειται για το **ενεργό εύρος ζώνης**:
 
-Η ζώνη που καταλαμβάνουν αυτά τα sidebands εκτείνεται από:
+<BlockMath>{'B \\cong 2W(\\beta + 1),'}</BlockMath>
+
+όπου <InlineMath>{'\\beta \\;(= \\beta_p \\text{ ή } \\beta_f)'}</InlineMath> ο δείκτης διαμόρφωσης.
+
+**Το παραπάνω ισχύει τόσο για τη διαμόρφωση PM όσο και για την FM.**»
+
+Δύο πράγματα να προσέξεις:
+
+- **Το «<InlineMath>{'\\cong'}</InlineMath>», όχι «<InlineMath>{'='}</InlineMath>».** Δεν είναι ισότητα — είναι **εμπειρικός** κανόνας που πιάνει τα ~98% της ισχύος. Το πραγματικό φάσμα FM εκτείνεται από <InlineMath>{'-\\infty'}</InlineMath> έως <InlineMath>{'+\\infty'}</InlineMath>· ο Carson απλά λέει «αυτή τη ζώνη χρειάζεσαι στην πράξη».
+- **«Τόσο για PM όσο και για FM».** Δεν έχουμε δύο τύπους — έχουμε ΕΝΑΝ τύπο που εφαρμόζεται σε ΔΥΟ διαμορφώσεις γωνίας με διαφορετικό υπολογισμό του β. Περισσότερα στο §5.
+
+</Callout>
+
+Carson είναι από τους πιο **κερδοφόρους** τύπους στις εξετάσεις: εμφανίζεται σε σχεδόν κάθε FM θέμα (Sept'24, Sept'25, Πρόοδος B 2025, June'25, Jan'26 — και τα 5), συνήθως ως «ζητείται το ενεργό εύρος ζώνης» ή «επαλήθευσε ότι ο BPF περνά τις σημαντικές αρμονικές». **Πρέπει να γίνει αυτοματισμός**.
+
+## 2. Πώς προκύπτει — η διπλή διαίσθηση
+
+Δεν είναι «μαγικός εμπειρικός κανόνας από το πουθενά». Ο prof στο deck του δίνει **δύο** ανεξάρτητες διαδρομές που και οι δύο καταλήγουν στο ίδιο cutoff:
+
+- **Διαδρομή Α (Taylor side, slides 22-26)** — το φάσμα είναι θεωρητικά άπειρο, αλλά τα πλάτη φθίνουν φακτοριακά.
+- **Διαδρομή Β (Bessel side, slide 45)** — η περιβάλλουσα <InlineMath>{'|J_n(\\beta)|'}</InlineMath> πέφτει σχεδόν στο μηδέν για <InlineMath>{'n > \\beta'}</InlineMath>.
+
+Και οι δύο συγκλίνουν στην ίδια απάντηση: <InlineMath>{'\\pm(\\beta+1)W'}</InlineMath> είναι η σωστή cutoff.
+
+### 2α. Taylor side — slides 22-26
+
+Από τη Taylor ανάπτυξη στο /fm/bessel §2 ξέρουμε ότι το <InlineMath>{'x(t)'}</InlineMath> γράφεται ως άπειρη σειρά όρων <InlineMath>{'\\phi^n(t)\\,\\cos/\\sin(2\\pi f_c t)'}</InlineMath>. Ο prof στο **slide 24** προσθέτει την κρίσιμη παρατήρηση:
+
+<Callout type="note" title="Slide 24 — η συνέλιξη μεγαλώνει το bandwidth">
+
+Από Fourier:
+
+<BlockMath>{'\\mathcal{F}\\{\\phi^n(t)\\} = \\underbrace{\\Phi(f) * \\Phi(f) * \\cdots * \\Phi(f)}_{n\\text{ φορές}}'}</BlockMath>
+
+«**η πράξη της συνέλιξης σημάτων οδηγεί σε σήμα με εύρος ζώνης το άθροισμα των ευρών ζώνης των συνελισσόμενων σημάτων**» (slide 24 verbatim). Αν το <InlineMath>{'m(t)'}</InlineMath> έχει εύρος <InlineMath>{'W'}</InlineMath>, τότε και το <InlineMath>{'\\phi(t)'}</InlineMath> έχει εύρος <InlineMath>{'W'}</InlineMath>, και το <InlineMath>{'\\phi^n(t)'}</InlineMath> έχει εύρος **<InlineMath>{'nW'}</InlineMath>**.
+
+</Callout>
+
+Για single-tone (<InlineMath>{'m = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>), έχουμε <InlineMath>{'\\phi(t) = \\beta_f \\sin(2\\pi f_m t)'}</InlineMath>, οπότε <InlineMath>{'\\max|\\phi^n| = \\beta_f^n'}</InlineMath>. Άρα κάθε όρος Taylor τάξης <InlineMath>{'n'}</InlineMath> εμφανίζεται με:
+
+- **bandwidth** <InlineMath>{'nW'}</InlineMath> (slide 24)
+- **πλάτος** προς <InlineMath>{'\\beta_f^n / n!'}</InlineMath> (slide 23 — οι ταυτότητες Taylor έχουν τους <InlineMath>{'1/n!'}</InlineMath> συντελεστές)
+
+Το <InlineMath>{'\\beta^n/n!'}</InlineMath> κορυφώνεται κοντά στο <InlineMath>{'n \\approx \\beta'}</InlineMath> (η ψυχή του Poisson-distribution: ο μέσος είναι ο τόπος της κορυφής) και πέφτει υπερεκθετικά μετά λόγω factorial. Άρα ο **τελευταίος σημαντικός** όρος είναι περίπου ο <InlineMath>{'n = \\beta + 1'}</InlineMath> — και ο όρος του έχει bandwidth <InlineMath>{'(\\beta+1)W'}</InlineMath> κεντρωμένο στο <InlineMath>{'\\pm f_c'}</InlineMath>. Carson:
 
 $$
-f_c - (\beta+1)\, f_m \quad \text{έως} \quad f_c + (\beta+1)\, f_m
+B \cong 2(\beta_f + 1)W.
 $$
 
-**Συνολικό bandwidth:**
+<TaylorBandwidthCascadeViz />
+
+**Παρατηρήσεις από το viz (mode «Πλάτη»):**
+
+- Για <InlineMath>{'\\beta = 1'}</InlineMath> (NBFM threshold): η μπλε «κασκάδα Taylor» (<InlineMath>{'\\beta^n/n!'}</InlineMath>) κορυφώνεται στο <InlineMath>{'n = 1'}</InlineMath> και πέφτει σχεδόν στο μηδέν στο <InlineMath>{'n = 3'}</InlineMath>. Carson δίνει <InlineMath>{'\\beta+1 = 2'}</InlineMath> — ταιριάζει με «όροι μέχρι τον δεύτερο».
+- Για <InlineMath>{'\\beta = 5'}</InlineMath> (WBFM): η κορυφή του <InlineMath>{'\\beta^n/n!'}</InlineMath> είναι στο <InlineMath>{'n = 5'}</InlineMath>· cutoff στο <InlineMath>{'n = 8'}</InlineMath>. Carson: <InlineMath>{'\\beta+1 = 6'}</InlineMath> — λίγο **συντηρητικότερος** από τον πραγματικό factorial cutoff, αλλά πιάνει σχεδόν την ίδια ποσότητα ενέργειας.
+- Η κόκκινη «καμπύλη Bessel» (<InlineMath>{'|J_n(\\beta)|'}</InlineMath>) **συμπίπτει** σχεδόν με την μπλε στην περιοχή <InlineMath>{'n \\le \\beta'}</InlineMath> — γι' αυτό η Taylor προσέγγιση δουλεύει εκεί. Πέρα από αυτό αποκλίνουν λίγο (η Bessel πέφτει πιο αργά), αλλά Carson κόβει στο πιο **συντηρητικό** από τα δύο.
+
+Στο mode «Ζώνες ±nW» βλέπεις τη γεωμετρική εκδοχή: κάθε όρος <InlineMath>{'\\phi^n'}</InlineMath> καταλαμβάνει ζώνη <InlineMath>{'\\pm nW'}</InlineMath> γύρω από τον carrier. Η ένωση των ζωνών μέχρι τον τελευταίο «σημαντικό» όρο είναι ακριβώς η Carson ζώνη.
+
+### 2β. Bessel side — slide 45
+
+Από το /fm/bessel §6 έχουμε το ακριβές φάσμα:
 
 $$
-B = 2(\beta + 1)\, f_m
+x_{FM}(t) = A_c\sum_{n=-\infty}^{\infty} J_n(\beta_f)\,\cos[2\pi(f_c + n f_m)t].
 $$
 
-Που για single-tone ($W = f_m$) ή για γενικότερο message bandwidth $W$ γίνεται $B = 2(\beta+1)W = 2(\Delta f + W)$.
+Άπειρο άθροισμα. Πότε σταματάς; Ο prof στο slide 45 το γράφει ρητά:
+
+<Callout type="key" title="Slide 45 — η συμπεριφορά Bessel γεννά το Carson">
+
+«Το φάσμα του διαμορφωμένου κατά WBFM σήματος είναι **φαινομενικά άπειρο**. Ισχύει, όμως, ότι η περιβάλλουσα του <InlineMath>{'J_n(\\beta_f)'}</InlineMath> φθίνει για κάθε σταθερή τιμή <InlineMath>{'n'}</InlineMath>.
+
+Επίσης, **για <InlineMath>{'n > \\beta_f'}</InlineMath>, η τιμή του <InlineMath>{'J_n(\\beta_f)'}</InlineMath> είναι σχεδόν ίση με το μηδέν**. Η συμπεριφορά αυτή **συμφωνεί με τον κανόνα Carson** για το ενεργό εύρος ζώνης ημιτονοειδούς σήματος:
+
+<BlockMath>{'B = 2W(\\beta_f + 1) = 2 f_m(\\beta_f + 1).'}</BlockMath>»
+
+</Callout>
+
+Με άλλα λόγια: το Carson δεν είναι «μια εικασία» — είναι **η ποσοτικοποίηση** της εμπειρικής παρατήρησης ότι <InlineMath>{'|J_n(\\beta)| \\to 0'}</InlineMath> για <InlineMath>{'n > \\beta'}</InlineMath>. Η <InlineMath>{'+1'}</InlineMath> στο <InlineMath>{'(\\beta+1)'}</InlineMath> είναι «μια ασφάλεια ενός sideband» πάνω από την κορυφή.
 
 <CarsonRuleViz />
 
-**Παρατηρήσεις από τη γραφική:**
+**Παρατηρήσεις από το viz (από Bessel side):**
 
-- Σύρε το $\beta$ μικρό (NBFM) → η αθροιστική ισχύς φτάνει το 98% στο $n = 1$. Ο Carson μάς δίνει $B \approx 2W$, ίδιο με την AM.
-- Σύρε το $\beta$ μεσαίο (~ 2-3) → η ενέργεια απλώνεται σε 3-4 sidebands. Carson κοντά στο πραγματικό N για 98%.
-- Σύρε το $\beta$ μεγάλο (5+) → χρειάζονται 6-7 sidebands. Το Carson γίνεται **ελαφρώς συντηρητικό** (μικρή υποεκτίμηση) — δίνει $\approx 98\%$ ενέργειας. Στην πράξη, για high-fidelity audio χρησιμοποιούν $B = 2(\beta + 2) W$.
+- Πάνω panel: το FM φάσμα. Η **μωβ ζώνη** είναι το παράθυρο <InlineMath>{'\\pm(\\beta+1)f_m'}</InlineMath> — το Carson cutoff.
+- Κάτω panel: η αθροιστική ισχύς. Η **πράσινη γραμμή στο 98%** δείχνει πού φτάνεις σωρευτικά. Η **μωβ κάθετη γραμμή** στο <InlineMath>{'n = \\beta+1'}</InlineMath> είναι ο Carson — πέφτει σταθερά κοντά στο 98%.
+- Σύρε <InlineMath>{'\\beta = 0.3'}</InlineMath>: ο πραγματικός cutoff (98%) είναι στο <InlineMath>{'n = 1'}</InlineMath>· Carson στο <InlineMath>{'\\beta+1 = 1.3'}</InlineMath>. Σχεδόν ταυτόσημα.
+- Σύρε <InlineMath>{'\\beta = 5'}</InlineMath>: πραγματικός cutoff στο <InlineMath>{'n = 7'}</InlineMath>· Carson στο 6. Λίγο πιο συντηρητικός — πιάνει 96-97% αντί 98%.
 
-<Collectible id="carson-frame" />
+**Συμπέρασμα:** Carson είναι ο «98% κανόνας» γραμμένος ως bandwidth. Όχι ισότητα, αλλά πρακτικός βαθμός που χρησιμοποιείται παντού στις εξετάσεις και στη σχεδίαση.
 
-## 3. Δύο regimes — NBFM vs WBFM
+## 3. NBFM όριο — Carson → 2W
 
-### NBFM — Narrowband FM (β ≪ 1)
-
-Όταν $\beta \ll 1$ (συνήθως $\beta < 0.3$), στο Bessel expansion μόνο τα $J_0(\beta) \approx 1$ και $J_1(\beta) \approx \beta/2$ είναι σημαντικά. Όλες οι άλλες $J_n$ είναι $O(\beta^n)$ — αμελητέες.
-
-**NBFM προσεγγιστική εξίσωση:**
+Όταν <InlineMath>{'\\beta_f \\ll 1'}</InlineMath> (NBFM), το Carson γίνεται:
 
 $$
-x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) - A_c \beta \sin(2\pi f_m t)\sin(2\pi f_c t)
+B \cong 2W(\beta_f + 1) \xrightarrow{\beta_f \to 0} 2W.
 $$
 
-Συγκρίνετε με το AM:
+Δηλαδή το ενεργό εύρος ζώνης NBFM είναι **σχεδόν ίδιο** με εκείνο του AM (όπου <InlineMath>{'B_{AM} = 2W'}</InlineMath> ακριβώς). Αυτό συμφωνεί απόλυτα με το **slide 31** του prof:
+
+> «Το εύρος ζώνης του διαμορφωμένου σήματος είναι περίπου ίσο με <InlineMath>{'2W'}</InlineMath>, **όσο δηλαδή και στην διαμόρφωση AM**.»
+
+Η ομοιότητα αυτή δεν είναι σύμπτωση — στο NBFM γραμμικοποιείς γύρω από <InlineMath>{'\\phi = 0'}</InlineMath> και κρατάς μόνο τους όρους <InlineMath>{'n = 0, \\pm 1'}</InlineMath>, ακριβώς όπως στο AM. Ο πλήρης φασματικός λόγος έχει γίνει στο <Link href="/fm/idea">/fm/idea § NbfmVsAmSpectrumViz</Link> και στο <Link href="/fm/pm">/fm/pm § NbfmAmPhasorDecompositionViz</Link> — εδώ απλά καταγράφουμε τη **bandwidth ισοδυναμία** ως ειδική περίπτωση του Carson.
+
+<Callout type="warning" title="Παγίδα — Σ/Λ «β = 0.3 είναι WBFM»">
+
+Στις εξετάσεις (π.χ. <Link href="/practice#exercise:jan26-th1-5">Jan 2026 ΘΕΜΑ 1.5</Link>) εμφανίζονται Σ/Λ τύπου «FM με β = 0.3 είναι WBFM». **ΛΑΘΟΣ** — αυτό είναι NBFM (<InlineMath>{'\\beta \\ll 1'}</InlineMath>). Ο πρακτικός κανόνας του prof: NBFM όταν <InlineMath>{'\\beta_f \\ll 1'}</InlineMath>· WBFM όταν <InlineMath>{'\\beta_f \\gg 1'}</InlineMath>. Στο boundary (<InlineMath>{'\\beta \\approx 1'}</InlineMath>) είσαι σε μετάβαση — δεν υπάρχει σταθερό threshold όπως «β < 0.3».
+
+Πανικός signal για τη Σ/Λ: αν δεις τιμή <InlineMath>{'\\beta'}</InlineMath> κάτω από 1, είναι NBFM-friendly. Αν είναι αρκετά πάνω από 1 (συνήθως ≥ 3), είναι WBFM. Στο boundary χρησιμοποίησε Carson κανονικά — η εξίσωση δουλεύει σε κάθε περίπτωση.
+
+</Callout>
+
+## 4. WBFM όριο — Carson → 2Δf
+
+Όταν <InlineMath>{'\\beta_f \\gg 1'}</InlineMath> (WBFM), το Carson γίνεται:
 
 $$
-x_{AM}(t) = A_c\cos(2\pi f_c t) + A_c \mu \cos(2\pi f_m t)\cos(2\pi f_c t)
+B \cong 2W(\beta_f + 1) \xrightarrow{\beta_f \to \infty} 2W \beta_f = 2\Delta f.
 $$
 
-Σχεδόν ίδιο! Οι διαφορές:
+Δηλαδή το bandwidth **κυριαρχείται από την απόκλιση <InlineMath>{'\\Delta f'}</InlineMath>**, όχι από το <InlineMath>{'W'}</InlineMath>. Αυτό είναι το **σχεδιαστικό κουμπί** του broadcast FM: ο μηχανικός επιλέγει <InlineMath>{'\\Delta f = 75'}</InlineMath> kHz, και αυτό καθορίζει το bandwidth (<InlineMath>{'\\approx 150'}</InlineMath> kHz)· το <InlineMath>{'W'}</InlineMath> (audio bandwidth, <InlineMath>{'\\approx 15'}</InlineMath> kHz) μπαίνει ως μικρή διόρθωση.
 
-| | AM | NBFM |
+<NbfmWbfmRegimesViz />
+
+**Παρατηρήσεις από το viz:**
+
+- Στην **πράσινη γραμμή** (NBFM όριο <InlineMath>{'2W'}</InlineMath>) είναι η οριζόντια asymptote — όσο μικρό κι αν είναι το β, δεν πέφτεις κάτω από <InlineMath>{'2W'}</InlineMath>.
+- Στη **μωβ γραμμή** (WBFM όριο <InlineMath>{'2\\Delta f = 2\\beta W'}</InlineMath>) είναι η ευθεία κλίσης 1 σε log-log. Όταν β γίνεται μεγάλο, η Carson καμπύλη «κολλάει» πάνω της.
+- Η **μπλε καμπύλη Carson** (<InlineMath>{'B = 2W(\\beta+1)'}</InlineMath>) είναι η ομαλή μετάβαση. Σε β ≈ 1 είναι ακριβώς στο μέσο των δύο asymptotes — εκεί ο τύπος δίνει <InlineMath>{'B = 4W'}</InlineMath>, που είναι 2W από τη μία και <InlineMath>{'2\\Delta f = 2W'}</InlineMath> από την άλλη.
+- Πάτα **«FM ραδιόφωνο (β = 5)»**: είσαι σε WBFM όριο. Σφάλμα προσέγγισης <InlineMath>{'B \\approx 2\\Delta f'}</InlineMath> είναι ~17% — δεκτό για quick estimate.
+- Πάτα **«NBFM (β = 0.3)»**: είσαι σε NBFM όριο. Σφάλμα <InlineMath>{'B \\approx 2W'}</InlineMath> είναι ~23%. Πιο ακριβές: χρησιμοποίησε τον πλήρη Carson.
+
+**Πρακτική σημασία:** σε εξεταστική εκφώνηση «κατά πόσο εξαρτάται το bandwidth από <InlineMath>{'\\Delta f'}</InlineMath>», η απάντηση εξαρτάται από το regime. WBFM ⇒ σχεδόν γραμμικά (<InlineMath>{'B \\propto \\Delta f'}</InlineMath>). NBFM ⇒ καθόλου (το <InlineMath>{'W'}</InlineMath> κυριαρχεί).
+
+## 5. Carson για PM και FM — slides 26 + 46
+
+Μέχρι τώρα μιλήσαμε για FM (β = β_f). Αλλά ο Carson — και ο prof επιμένει στο slide 26 — εφαρμόζεται **αυτούσιος** και στο PM, με το αντίστοιχο β. Δεν χρειάζεται καινούργιος τύπος. Slide 46 δίνει τις ρητές μορφές:
+
+$$
+B = 2 f_m(\beta + 1) = \begin{cases} 2 f_m(K_p\,\alpha + 1), & \text{PM} \\ 2 f_m\!\left(\dfrac{K_f\,\alpha}{f_m} + 1\right), & \text{FM} \end{cases}
+$$
+
+Η **εξίσωση είναι η ίδια**. Αλλάζει μόνο **το <InlineMath>{'\\beta'}</InlineMath>**:
+
+| | β (single-tone, <InlineMath>{'m = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>) | Σχόλιο |
 | --- | --- | --- |
-| Sideband term | $\cos\cdot\cos$ → προστιθέμενο | $\sin\cdot\sin$ → αφαιρούμενο |
-| Σχέση φάσης | sidebands **σε φάση** με carrier | sidebands **σε quadrature** (90° απ' τον carrier) |
-| Bandwidth | $2W$ | $2W$ (Carson με β=0) |
+| **FM** | <InlineMath>{'\\beta_f = K_f\\,\\alpha / f_m'}</InlineMath> | <InlineMath>{'\\Delta f = K_f \\alpha'}</InlineMath>· διαιρώντας με <InlineMath>{'f_m'}</InlineMath> δίνει β |
+| **PM** | <InlineMath>{'\\beta_p = K_p\\,\\alpha'}</InlineMath> | <InlineMath>{'K_p'}</InlineMath> έχει μονάδες rad/V· πολλαπλασιάζοντας με <InlineMath>{'\\alpha'}</InlineMath> (V) δίνει rad |
 
-**Άρα NBFM = AM σε bandwidth, αλλά με quadrature sidebands.** Αυτή η quadrature τοποθέτηση είναι που του δίνει την **ανθεκτικότητα στον θόρυβο** — ο amplitude θόρυβος δεν επηρεάζει τη φάση.
+**Παρατήρηση κρίσιμη για τις εξετάσεις:** στο PM το <InlineMath>{'\\beta_p'}</InlineMath> ΔΕΝ εξαρτάται από το <InlineMath>{'f_m'}</InlineMath>. Στο FM ναι (μέσω της διαίρεσης). Αυτή η διαφορά εξηγεί γιατί όταν αλλάζει η συχνότητα του message:
 
-### WBFM — Wideband FM (β ≫ 1)
+- Στο PM: το <InlineMath>{'\\beta'}</InlineMath> μένει σταθερό, το <InlineMath>{'\\Delta f = K_p \\alpha\\,f_m'}</InlineMath> αυξάνεται **γραμμικά** με <InlineMath>{'f_m'}</InlineMath>.
+- Στο FM: το <InlineMath>{'\\Delta f = K_f \\alpha'}</InlineMath> μένει σταθερό, το <InlineMath>{'\\beta = \\Delta f/f_m'}</InlineMath> μειώνεται **αντιστρόφως** με <InlineMath>{'f_m'}</InlineMath>.
 
-Όταν $\beta \gg 1$, χρειάζονται πολλά sidebands. Το Carson απλοποιείται:
+<PmFmCarsonEquivalenceViz />
+
+**Παρατηρήσεις από το viz:**
+
+- Default τιμές δίνουν <InlineMath>{'\\beta_f = \\beta_p = 10'}</InlineMath> και τα δύο spectra ταυτίζονται οπτικά — αυτή είναι ακριβώς η ισοδυναμία που υποδεικνύει το slide 26. Carson δίνει <InlineMath>{'B = 22 W'}</InlineMath> και στα δύο.
+- Σύρε το <InlineMath>{'K_f'}</InlineMath> κάτω: το <InlineMath>{'\\beta_f'}</InlineMath> πέφτει, και το FM spectrum γίνεται πιο στενό. Carson bandwidth του FM μειώνεται. PM μένει αμετάβλητο.
+- Σύρε το <InlineMath>{'K_p'}</InlineMath> κάτω: το αντίστροφο. PM spectrum στενεύει, FM ίδιο.
+- Όσο και να αλλάζεις, μέσα σε κάθε panel ο τύπος <InlineMath>{'B = 2W(\\beta+1)'}</InlineMath> δουλεύει αυτούσιος. Απλά το β υπολογίζεται διαφορετικά.
+
+<Callout type="note" title="Σύνδεση με PM↔FM duality (B2 meta-pattern 3)">
+
+Η εξίσωση <InlineMath>{'K_p = K_f / f_m'}</InlineMath> (η «μετάφραση» που είχαμε στο <Link href="/fm/pm">/fm/pm §5-§6</Link>) μετατρέπει ένα PM σύστημα σε «ισοδύναμο» FM στο single-tone όριο — και τότε <InlineMath>{'\\beta_p = \\beta_f'}</InlineMath>. Αλλά **αυτό είναι ταυτότητα στο πεδίο των αλγεβρικών** — όχι κάτι που χρειάζεσαι για να εφαρμόσεις Carson.
+
+Πρακτικά στις εξετάσεις: αν η εκφώνηση λέει «FM», υπολόγισε <InlineMath>{'\\beta_f'}</InlineMath>· αν λέει «PM», υπολόγισε <InlineMath>{'\\beta_p'}</InlineMath>· εφάρμοσε <InlineMath>{'B = 2W(\\beta+1)'}</InlineMath>. Τέλος.
+
+</Callout>
+
+## 6. Σύνδεση με τις σημαντικές αρμονικές (slide 46)
+
+Στο <Link href="/fm/bessel">/fm/bessel §9</Link> είδαμε τον τύπο του prof:
 
 $$
-B \approx 2\beta W = 2\Delta f
+N = 2\lfloor\beta\rfloor + 3 = \text{αριθμός σημαντικών αρμονικών}.
 $$
 
-(αφού ο όρος $+1$ γίνεται αμελητέος). Δηλαδή το bandwidth **καθορίζεται κυρίως από το $\Delta f$**, όχι από το $W$.
+Carson και <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath> είναι **δύο εκφράσεις της ίδιας παρατήρησης**:
 
-**Γι' αυτό το εμπορικό FM ραδιόφωνο** χρησιμοποιεί $\Delta f = 75$ kHz: αυτό καθορίζει το bandwidth (~150 kHz), και το $W$ (audio bandwidth ~15 kHz) μπαίνει ως μια μικρή διόρθωση. Carson: $B = 2(75 + 15) = 180$ kHz, με channel spacing 200 kHz για guard band.
+- Carson γράφει το ίδιο πράγμα ως **bandwidth**: <InlineMath>{'B = 2W(\\beta+1)'}</InlineMath>.
+- <InlineMath>{'N'}</InlineMath> γράφει το ίδιο πράγμα ως **αριθμό σημαντικών γραμμών**: <InlineMath>{'2\\lfloor\\beta\\rfloor + 3'}</InlineMath>.
 
-## 4. Σύγκριση με AM
+Counting check για single-tone (<InlineMath>{'W = f_m'}</InlineMath>): μέσα στη ζώνη <InlineMath>{'\\pm(\\beta+1)f_m'}</InlineMath> χωράνε γραμμές στα <InlineMath>{'f_c + n f_m'}</InlineMath> για <InlineMath>{'|n| \\le \\lfloor\\beta\\rfloor + 1'}</InlineMath>. Συνολικά:
 
-| | AM (DSB+carrier) | DSB-SC | SSB | NBFM (β &lt; 0.3) | WBFM (β=5) |
+$$
+\text{γραμμές} = 2(\lfloor\beta\rfloor + 1) + 1 = 2\lfloor\beta\rfloor + 3 = N.
+$$
+
+— **ταυτόσημο**. Carson είναι το «continuous» framing, <InlineMath>{'N'}</InlineMath> είναι το «discrete» — αλλά είναι ο ίδιος αριθμός.
+
+**Παράδειγμα:** <InlineMath>{'\\beta = 5'}</InlineMath> ⇒ <InlineMath>{'N = 13'}</InlineMath> αρμονικές, <InlineMath>{'B = 12 f_m'}</InlineMath>. Και τα δύο σημαίνουν «κρατάς n = -6, -5, …, +5, +6». Εξέταση πρόοδος B 2025: τα μέτρα 13 και τα 2(β+1)+1 = 13 ταυτίζονται.
+
+## 7. Άσκηση 2 — η canonical Carson εξάσκηση (slides 27-28)
+
+Το <Link href="/fm/idea">/fm/idea §8</Link> ήδη ανέφερε αυτή την άσκηση. Εδώ τη δουλεύουμε **βήμα-βήμα** ως κανονική «Carson application» — γιατί η Άσκηση 2 του prof διδάσκει το πιο κρίσιμο βήμα: **πώς εκτείνεις τον τύπο σε non-single-tone σήμα**.
+
+<Example title="Άσκηση 2 — slides 27-28 του prof">
+
+Έστω το ακόλουθο σήμα πληροφορίας:
+
+$$
+m(t) = 10\,\text{sinc}(10^4\,t).
+$$
+
+Να υπολογιστεί το ενεργό εύρος ζώνης μετάδοσης ενός διαμορφωμένου κατά FM σήματος με <InlineMath>{'K_f = 4\\,\\text{kHz/Volt}'}</InlineMath>.
+
+---
+
+**Λύση (4 βήματα).**
+
+**(1) Βρες το <InlineMath>{'W'}</InlineMath> — εύρος ζώνης του message** (το κρίσιμο βήμα).
+
+Ο prof στο slide 28 γράφει: «Ο μετασχηματισμός Fourier του m(t):»
+
+$$
+\mathcal{F}\{m(t)\} = \frac{10}{10^4}\,\Pi\!\left(\frac{f}{10^4}\right).
+$$
+
+(Χρησιμοποιήσαμε <InlineMath>{'\\mathcal{F}\\{\\text{sinc}(2Wt)\\} = (1/2W)\\Pi(f/2W)'}</InlineMath>· εδώ <InlineMath>{'2W = 10^4'}</InlineMath>.)
+
+«Συνεπώς, **το εύρος ζώνης του σήματος πληροφορίας είναι** <InlineMath>{'W = 10^4/2 = 5\\,\\text{kHz}'}</InlineMath>.» Παίρνουμε **το μισό** του total support, γιατί το <InlineMath>{'W'}</InlineMath> ορίζεται ως one-sided bandwidth.
+
+**(2) Βρες το <InlineMath>{'\\max|m(t)|'}</InlineMath>.**
+
+«Ισχύει <InlineMath>{'\\max|\\text{sinc}(\\cdot)| = 1'}</InlineMath>, οπότε <InlineMath>{'\\max|m(t)| = 10'}</InlineMath>.»
+
+**(3) Υπολόγισε <InlineMath>{'\\beta_f'}</InlineMath>.**
+
+$$
+\beta_f = \frac{K_f\,\max|m(t)|}{W} = \frac{4\,\text{kHz/V} \cdot 10\,\text{V}}{5\,\text{kHz}} = 8.
+$$
+
+— **WBFM**, αφού <InlineMath>{'\\beta_f \\gg 1'}</InlineMath>.
+
+**(4) Carson:**
+
+$$
+B = 2W(\beta_f + 1) = 2 \cdot 5\,\text{kHz} \cdot 9 = 90\,\text{kHz}.
+$$
+
+**Τέλος.**
+
+---
+
+**Παγίδα:** το <InlineMath>{'W'}</InlineMath> είναι **το one-sided bandwidth** του message, όχι το full support. Αν δεις στις εξετάσεις <InlineMath>{'M(f) = \\Pi(f/B_0)'}</InlineMath>, το <InlineMath>{'W = B_0/2'}</InlineMath>, όχι <InlineMath>{'B_0'}</InlineMath>. Παίρνεις το μέρος των θετικών συχνοτήτων.
+
+**Πρακτική σημασία:** η Άσκηση 2 διδάσκει τη γενική Carson προσέγγιση. Όταν δεν έχεις single-tone, το <InlineMath>{'W'}</InlineMath> δεν είναι «το <InlineMath>{'f_m'}</InlineMath>» — πρέπει να το **εξάγεις** από το φάσμα του <InlineMath>{'m(t)'}</InlineMath>. Στις περισσότερες εξεταστικές εμφανίσεις της Carson (Sept'25 ΘΕΜΑ 2.8, June'25 ΘΕΜΑ 3) δίνεται single-tone και <InlineMath>{'W = f_m'}</InlineMath> — αλλά η Άσκηση 2 σου δείχνει τι κάνεις όταν δεν είναι.
+
+</Example>
+
+## 8. Πραγματικές εφαρμογές + σχεδιαστική σκέψη
+
+| Σύστημα | <InlineMath>{'\\Delta f'}</InlineMath> | <InlineMath>{'W'}</InlineMath> | <InlineMath>{'\\beta_f'}</InlineMath> | Carson <InlineMath>{'B'}</InlineMath> | Channel spacing |
 | --- | --- | --- | --- | --- | --- |
-| Bandwidth | $2W$ | $2W$ | $W$ | $2W$ | $2(\beta+1)W \approx 12W$ |
-| Carrier present | Ναι | Όχι | Όχι | Ναι | Ναι (ποικίλει) |
-| Envelope demod | Απλό | Όχι | Όχι | Όχι | Όχι |
-| Coherent demod | Δουλεύει | Απαραίτητο | Απαραίτητο | Δουλεύει | Δουλεύει (discriminator) |
-| Ανοσία στον θόρυβο | Φτωχή | Φτωχή | Φτωχή | Καλή | **Εξαιρετική** |
-| Πολυπλοκότητα δέκτη | Χαμηλή | Μέτρια | Υψηλή | Μέτρια | Μέτρια |
-| Χαρακτηριστικά | Audio AM ραδιόφωνο | Stereo L−R, NTSC | Shortwave/HAM | Two-way ραδιοεπικοινωνία | FM ραδιόφωνο, TV audio |
+| **FM ραδιόφωνο** (commercial broadcast) | 75 kHz | 15 kHz | 5 | 180 kHz | 200 kHz |
+| **TV audio** (NTSC analog) | 25 kHz | 15 kHz | 1.67 | 80 kHz | 100 kHz |
+| **NBFM walkie-talkie** (FRS) | 2.5 kHz | 3 kHz | 0.83 | 11 kHz | 12.5 kHz |
+| **NBFM marine VHF** | 5 kHz | 3 kHz | 1.67 | 16 kHz | 25 kHz |
 
-**Τo trade-off:** η FM **δίνει** bandwidth για να **αγοράσει** ανοσία στον θόρυβο. Αυτό είναι **βασικό αποτέλεσμα** της θεωρίας Shannon και επιστρέφουμε σε αυτό στο επόμενο κεφάλαιο.
+**Σχεδιαστική σκέψη — πώς διαβάζεις τον πίνακα:**
 
-## 5. Worked example — Πρόοδος B / June'25 Θ4
-
-<Example title="Ex. — εμπορικό FM ραδιόφωνο">
-
-Σε ένα εμπορικό FM σταθμό, η μέγιστη μετατόπιση συχνότητας είναι $\Delta f = 75$ kHz και το bandwidth του ηχητικού σήματος είναι $W = 15$ kHz.
-
-**Ζητούνται:**
-1. Το modulation index $\beta$.
-2. Το bandwidth κατά Carson.
-3. Πόσα channels χωράνε στη ζώνη 88-108 MHz με channel spacing 200 kHz;
-4. Αν το $\Delta f$ μειωνόταν στα 5 kHz (NBFM), πόσα channels;
-
----
-
-**Λύση.**
-
-**(1)** $\beta = \Delta f / W = 75/15 = 5$ → WBFM.
-
-**(2)** $B = 2(\Delta f + W) = 2(75 + 15) = 180$ kHz. Με channel spacing 200 kHz, αφήνουμε 20 kHz ως guard band — λογικό.
-
-**(3)** Διαθέσιμη ζώνη: $108 - 88 = 20$ MHz. Channels = $20\,000/200 = 100$ channels.
-
-**(4)** Με NBFM, $\beta = 5/15 = 0.33$, $B = 2(5 + 15) = 40$ kHz. Με spacing 50 kHz, χωράνε $20\,000/50 = 400$ channels — **4× περισσότερα**, αλλά με χειρότερη ποιότητα ήχου και ανοσία στον θόρυβο.
-
-</Example>
-
-## 6. Παράδειγμα NBFM (Πρόοδος A 2025-09)
-
-<Example title="Ex. — two-way radio NBFM">
-
-Ένα ασυρματάκι παραδίδει NBFM σήμα με:
-- $f_c = 462$ MHz
-- $W = 5$ kHz (φωνή)
-- $\Delta f = 5$ kHz
-
-**Ζητείται:** το bandwidth και το modulation index.
-
----
-
-**Λύση.**
-
-$$
-\beta = \frac{\Delta f}{W} = \frac{5}{5} = 1
-$$
-
-Στο boundary NBFM/WBFM. Carson:
-
-$$
-B = 2(\beta + 1) W = 2 \cdot 2 \cdot 5 = 20 \text{ kHz}
-$$
-
-Με channel spacing 25 kHz (FRS standard), αυτό αφήνει 5 kHz guard band. Έγκυρη επιλογή για στενά κανάλια.
-
-</Example>
-
-## 7. Σύνοψη formulas
-
-| Ποσότητα | Τύπος |
-| --- | --- |
-| Carson's rule | $B = 2(\Delta f + W) = 2(\beta+1)W$ |
-| NBFM bandwidth ($\beta \ll 1$) | $B \approx 2W$ (όπως AM) |
-| WBFM bandwidth ($\beta \gg 1$) | $B \approx 2\Delta f$ (deviation-dominated) |
-| FM ραδιόφωνο | $\Delta f = 75$ kHz, $W = 15$ kHz, $\beta = 5$, $B = 180$ kHz |
-| Two-way (NBFM) | $\Delta f \approx 5$ kHz, $W \approx 5$ kHz, $\beta \approx 1$, $B \approx 20$ kHz |
+- **Trade-off bandwidth ↔ ποιότητα ήχου.** FM broadcast παίρνει 200 kHz channel επειδή θέλει στερεοφωνία + 15 kHz audio + ανοσία στον θόρυβο. Walkie-talkie παίρνει 12.5 kHz επειδή ικανοποιείται με μονοφωνική φωνή 3 kHz.
+- **Trade-off bandwidth ↔ ανοσία θορύβου.** Στο <Link href="/fm/in-noise">/fm/in-noise</Link> θα δούμε ότι FM SNR ∝ <InlineMath>{'\\beta^2'}</InlineMath>· διπλασιάζεις <InlineMath>{'\\Delta f'}</InlineMath> (και άρα και β αν <InlineMath>{'W'}</InlineMath> μένει σταθερό), και η ισχύς θορύβου στην έξοδο μειώνεται 4×. Παίρνεις 4× καλύτερο SNR ξοδεύοντας 2× bandwidth. Αυτή είναι **η μεγάλη ιδέα** πίσω από το WBFM.
+- **Guard band.** Το πραγματικό channel spacing είναι πάντα λίγο μεγαλύτερο από το Carson, για να αφήνει «αναπνευστική περίοδο» στα φίλτρα του δέκτη. Συνήθως 10-30% επιπλέον.
 
 ## Εξάσκηση
 
-<ExerciseProgress slug="fm/carson" total={5} />
+<ExerciseProgress slug="fm/carson" total={6} />
 
-Πέντε ερωτήσεις για να εμπεδώσεις τον Carson type-of-question — εμφανίζεται σε σχεδόν κάθε εξέταση.
+Έξι ασκήσεις που καλύπτουν τις τέσσερις «παγίδες» του Carson: (α) single-tone απλή εφαρμογή· (β) NBFM/WBFM regime Σ/Λ· (γ) reverse-engineering Δf από διαθέσιμο bandwidth· (δ) non-single-tone (Άσκηση 2 sinc)· (ε) σύνδεση Carson ↔ <InlineMath>{'N=2\\lfloor\\beta\\rfloor+3'}</InlineMath>· (στ) bandwidth + φιλτράρισμα combo.
 
-<ExamProblem id="carson-fm-radio" year="Computation" weight="κλασικό FM ραδιόφωνο">
-**Ερώτηση:** FM ραδιόφωνο: $\Delta f = 75$ kHz, message audio $W = 15$ kHz. Πόσο bandwidth χρειάζεται κατά Carson;
+<ExamProblem id="carson-fm-radio" year="Σχεδίαση" weight="κλασικό FM ραδιόφωνο">
 
-<Example title="Λύση" defaultOpen={true}>
-$\beta = \Delta f / W = 75/15 = 5$ (WBFM).
-
-$$B = 2(\Delta f + W) = 2(75 + 15) = 180 \text{ kHz}$$
-
-Ή ισοδύναμα: $B = 2(\beta + 1)W = 2 \cdot 6 \cdot 15 = 180$ kHz ✓.
-
-**Πραγματικό channel spacing FM ραδιοφώνου:** 200 kHz — αφήνει 20 kHz guard band για non-ideal filters.
-</Example>
-</ExamProblem>
-
-<ExamProblem id="carson-narrowband" year="NBFM" weight="γρήγορο">
-**Ερώτηση:** NBFM σήμα με $\Delta f = 1$ kHz, $W = 4$ kHz. Πόσο είναι το $\beta$ και το $B_{Carson}$;
+**Ερώτηση:** FM ραδιόφωνο με <InlineMath>{'\\Delta f = 75'}</InlineMath> kHz, audio bandwidth <InlineMath>{'W = 15'}</InlineMath> kHz. Πόσο bandwidth χρειάζεται κατά Carson; Πόσα channels χωράνε στη ζώνη 88-108 MHz με spacing 200 kHz;
 
 <Example title="Λύση" defaultOpen={true}>
-$\beta = \Delta f/W = 1/4 = 0.25$ — NBFM (κάτω από 0.3).
 
-$$B = 2(\Delta f + W) = 2(1 + 4) = 10 \text{ kHz}$$
+**Βήμα 1.** <InlineMath>{'\\beta_f = \\Delta f/W = 75/15 = 5'}</InlineMath> — WBFM.
 
-Ή: $B = 2(\beta + 1)W = 2 \cdot 1.25 \cdot 4 = 10$ kHz ✓.
+**Βήμα 2.** Carson:
 
-**Παρατήρηση:** για NBFM, $B \approx 2W$ — σχεδόν σαν AM. Στο όριο $\beta \to 0$ έχουμε ακριβώς $B = 2W$. Το extra $2\beta W = 2\Delta f$ είναι το «modulation premium» που πληρώνεις για NBFM.
+$$
+B = 2(\Delta f + W) = 2(75 + 15) = 180\,\text{kHz}.
+$$
+
+Ή ισοδύναμα <InlineMath>{'B = 2W(\\beta_f+1) = 2 \\cdot 15 \\cdot 6 = 180'}</InlineMath> kHz ✓.
+
+**Βήμα 3.** Διαθέσιμη ζώνη: <InlineMath>{'108 - 88 = 20'}</InlineMath> MHz <InlineMath>{'= 20\\,000'}</InlineMath> kHz. Channels:
+
+$$
+\text{N}_{\text{channels}} = \frac{20\,000}{200} = 100.
+$$
+
+**Πραγματικός κανόνας FCC:** 100 channels με αριθμούς 200-300 στη συχνότητα <InlineMath>{'87.9 + 0.2 \\cdot n'}</InlineMath> MHz. Το πραγματικό Carson (180 kHz) αφήνει 20 kHz guard band στο spacing — αρκετό για non-ideal RF filters.
+
+**Παγίδα:** η εκφώνηση μπορεί να ρωτήσει «πόσα channels χωράνε με ΑΚΡΙΒΕΣ bandwidth 180 kHz, χωρίς guard band;» Απάντηση: <InlineMath>{'20\\,000/180 \\approx 111'}</InlineMath> channels — αλλά αυτό είναι ανέφικτο στην πράξη. Πάντα προσδιόρισε αν η ερώτηση είναι Carson (theoretical) ή spacing (practical).
+
 </Example>
+
 </ExamProblem>
 
-<ExamProblem id="wbfm-deviation-dominated" year="WBFM" weight="dominant Δf">
-**Ερώτηση:** Σε ένα WBFM σήμα, ποιο μέγεθος **κυριαρχεί** στο bandwidth: το $\Delta f$ ή το $W$;
+<ExamProblem id="carson-sept25-th28" year="Sept 2025" weight="ΘΕΜΑ 2.8 — recently asked">
+
+**Ερώτηση** (από <Link href="/practice#exercise:sept25-th2-8">Sept 2025 ΘΕΜΑ 2.8</Link>): Σήμα <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath> με <InlineMath>{'f_m = 5'}</InlineMath> kHz διαμορφώνει FM φέρον στα 100 MHz με απόκλιση <InlineMath>{'\\Delta f = 50'}</InlineMath> kHz. Υπολογίστε (1) τον δείκτη διαμόρφωσης, (2) το απαιτούμενο εύρος ζώνης κατά Carson.
+
+<Example title="Λύση" defaultOpen={true}>
+
+**(1)** Single-tone, οπότε <InlineMath>{'W = f_m = 5'}</InlineMath> kHz:
+
+$$
+\beta_f = \frac{\Delta f}{f_m} = \frac{50}{5} = 10 \quad \text{(WBFM)}.
+$$
+
+**(2)** Carson:
+
+$$
+B = 2(\beta_f + 1) f_m = 2 \cdot 11 \cdot 5 = 110\,\text{kHz}.
+$$
+
+**Σχόλιο για τον φοιτητή:** η εκφώνηση δίνει <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'f_m'}</InlineMath> ξεχωριστά αντί να σου δίνει <InlineMath>{'K_f'}</InlineMath> και <InlineMath>{'\\alpha'}</InlineMath>. Αυτό είναι **απλούστερο** από την Άσκηση 2 του prof — δεν χρειάζεται η «W-extraction» κίνηση. Όταν δίνεται <InlineMath>{'\\Delta f'}</InlineMath> κατευθείαν, πας γραμμή σε <InlineMath>{'\\beta = \\Delta f/f_m'}</InlineMath> και έπειτα σε Carson.
+
+**Πανικός signal:** η φέρουσα συχνότητα <InlineMath>{'f_c = 100'}</InlineMath> MHz είναι **παραπλανητική** — δεν εμφανίζεται πουθενά στον Carson τύπο. Carson εξαρτάται ΜΟΝΟ από <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'W'}</InlineMath>. Αν δεις φέρον αναφερόμενο, **αγνόησέ το** για το bandwidth calculation.
+
+</Example>
+
+</ExamProblem>
+
+<ExamProblem id="nbfm-wbfm-classification" year="Jan 2026 Σ/Λ" weight="ΘΕΜΑ 1.5 — κανόνας regime">
+
+**Ερώτηση** (από <Link href="/practice#exercise:jan26-th1-5">Jan 2026 ΘΕΜΑ 1.5</Link>): Σ/Λ — «Δίνεται FM σήμα με δείκτη διαμόρφωσης β = 0.3. Το σήμα είναι WBFM.»
+
+<Example title="Λύση" defaultOpen={true}>
+
+**ΛΑΘΟΣ.** Με <InlineMath>{'\\beta = 0.3'}</InlineMath> (μάλιστα <InlineMath>{'\\beta \\ll 1'}</InlineMath>) έχουμε **NBFM**. WBFM απαιτεί <InlineMath>{'\\beta \\gg 1'}</InlineMath>.
+
+**Πώς να το θυμάσαι:**
+
+- NBFM ⇔ <InlineMath>{'\\beta \\ll 1'}</InlineMath> ⇔ Carson δίνει <InlineMath>{'B \\approx 2W'}</InlineMath> (όπως AM)
+- WBFM ⇔ <InlineMath>{'\\beta \\gg 1'}</InlineMath> ⇔ Carson δίνει <InlineMath>{'B \\approx 2\\Delta f'}</InlineMath>
+- Boundary <InlineMath>{'\\beta \\approx 1'}</InlineMath> ⇔ πλήρης Carson δίνει <InlineMath>{'B = 4W = 2\\Delta f + 2W'}</InlineMath>
+
+**Παγίδα Νο1:** μερικά βιβλία δίνουν threshold «<InlineMath>{'\\beta < 0.3 \\Rightarrow'}</InlineMath> NBFM» — αλλά ο **prof στο slide 29** δίνει το γενικό «<InlineMath>{'\\beta \\ll 1'}</InlineMath>», όχι σταθερό αριθμό. **Στις εξετάσεις του Καλεντέρη**, χρησιμοποίησε το <InlineMath>{'\\beta \\ll 1'}</InlineMath> κριτήριο — όχι το «<InlineMath>{'\\beta < 0.3'}</InlineMath>».
+
+**Παγίδα Νο2:** στο NBFM, εφαρμόζεις τη γραμμικοποίηση <InlineMath>{'\\cos\\phi \\approx 1, \\sin\\phi \\approx \\phi'}</InlineMath> και παίρνεις φάσμα 3 γραμμών (carrier + 2 sidebands) — όπως AM. Στο WBFM, χρησιμοποιείς την Bessel ανάπτυξη και παίρνεις πολλές αρμονικές. **Στο boundary <InlineMath>{'\\beta = 1'}</InlineMath> καμία από τις δύο προσεγγίσεις δεν είναι σωστή** — μόνο η πλήρης Bessel form δίνει το ακριβές αποτέλεσμα.
+
+</Example>
+
+</ExamProblem>
+
+<ExamProblem id="carson-design-reverse" year="Design" weight="reverse-engineering">
+
+**Ερώτηση:** Διαθέσιμο channel spacing <InlineMath>{'25'}</InlineMath> kHz για NBFM voice. Audio bandwidth <InlineMath>{'W = 3'}</InlineMath> kHz. Πόσο μέγιστο <InlineMath>{'\\Delta f'}</InlineMath> μπορώ να χρησιμοποιήσω αν αφήνω 9 kHz guard band συνολικά;
 
 <Example title="Λύση">
-Για $\beta \gg 1$: $B = 2(\Delta f + W) \approx 2\Delta f$ αφού $\Delta f \gg W$.
 
-**Παράδειγμα:** $\Delta f = 75$ kHz, $W = 15$ kHz → $B = 180$ kHz, εκ των οποίων $150$ kHz από το $\Delta f$ και μόνο $30$ kHz από το $W$.
+Διαθέσιμο Carson bandwidth: <InlineMath>{'25 - 9 = 16'}</InlineMath> kHz.
 
-**Συνέπεια:** για WBFM η μείωση του $\Delta f$ (μικρότερη deviation) μειώνει σημαντικά το bandwidth — αλλά μειώνει και το SNR gain ($\propto \beta^2$). Το trade-off είναι κρίσιμο στη σχεδίαση συστημάτων.
+Από Carson <InlineMath>{'B = 2(\\Delta f + W)'}</InlineMath>:
+
+$$
+\Delta f = \frac{B}{2} - W = \frac{16}{2} - 3 = 5\,\text{kHz}.
+$$
+
+Άρα <InlineMath>{'\\beta = \\Delta f/W = 5/3 \\approx 1.67'}</InlineMath> — μεταβατικό (NBFM/WBFM boundary, αλλά λίγο πιο κοντά στο WBFM).
+
+**Trade-off:** αν θέλεις higher SNR θα μεγαλώσεις <InlineMath>{'\\Delta f'}</InlineMath>· αλλά τότε ξεπερνάς το guard band και «σπας» σε γειτονικό κανάλι (crosstalk). Αυτή ακριβώς η σχεδιαστική σύγκρουση οδήγησε στις FCC FRS προδιαγραφές: 12.5 kHz spacing, <InlineMath>{'\\Delta f = 2.5'}</InlineMath> kHz, <InlineMath>{'W = 3'}</InlineMath> kHz ⇒ <InlineMath>{'B = 11'}</InlineMath> kHz Carson, 1.5 kHz guard band.
+
+**Πανικός signal:** όταν δίνεται «channel spacing» στις εξετάσεις, αυτό **ΔΕΝ είναι ίσο με Carson** — είναι Carson + guard. Πάντα ρώτα: «πόσο guard band να αφήσω;» Αν δε δίνεται από την εκφώνηση, υπόθεσε ~10-20% επιπλέον (κοινός practical rule).
+
 </Example>
+
 </ExamProblem>
 
-<ExamProblem id="fm-vs-am-bw-cost" year="Trade-off" weight="bandwidth premium">
-**Ερώτηση:** Πόσες φορές περισσότερο bandwidth χρησιμοποιεί το FM ραδιόφωνο σε σχέση με το AM ραδιόφωνο για ίδιο audio bandwidth;
+<ExamProblem id="carson-vs-N-unification" year="Concept" weight="ταυτοσημία με slide 46">
+
+**Ερώτηση:** Για FM single-tone με <InlineMath>{'\\beta_f = 7'}</InlineMath> και <InlineMath>{'f_m = 4'}</InlineMath> kHz, υπολόγισε (α) Carson bandwidth, (β) αριθμό σημαντικών αρμονικών (slide 46), (γ) επαλήθευσε ότι οι δύο απαντήσεις «λένε το ίδιο».
 
 <Example title="Λύση" defaultOpen={true}>
-**FM ραδιόφωνο:** $W = 15$ kHz, $\Delta f = 75$ kHz, $B_{FM} = 180$ kHz.
 
-**AM ραδιόφωνο:** $W = 5$ kHz (χαμηλότερη ποιότητα audio), $B_{AM} = 2W = 10$ kHz.
+**(α) Carson:** <InlineMath>{'B = 2(\\beta_f+1) f_m = 2 \\cdot 8 \\cdot 4 = 64'}</InlineMath> kHz.
 
-Λόγος: $B_{FM}/B_{AM} = 180/10 = 18\times$. Όμως αν συγκρίνουμε **για ίδιο** $W = 15$ kHz, $B_{AM} = 30$ kHz: $180/30 = 6\times$.
+**(β) Slide 46:** <InlineMath>{'N = 2\\lfloor\\beta_f\\rfloor + 3 = 2 \\cdot 7 + 3 = 17'}</InlineMath> αρμονικές.
 
-**Συμπέρασμα:** το FM ραδιόφωνο πληρώνει 6× περισσότερο bandwidth από ίδιας ποιότητας AM, για να αποκτήσει την ανοσία στον θόρυβο και το stereo capability. Σε ένα 6 MHz κανάλι TV χωράνε 30 FM stations αλλά 200 AM stations — αλλά το FM πληρώνει αυτή τη χωρητικότητα με δραματικά καλύτερη ποιότητα.
+**(γ) Επαλήθευση:** το <InlineMath>{'B = 64'}</InlineMath> kHz χωράει αρμονικές στα <InlineMath>{'f_c + n \\cdot 4'}</InlineMath> kHz για <InlineMath>{'|n| \\le 8'}</InlineMath> (αφού <InlineMath>{'8 \\cdot 4 = 32 = B/2'}</InlineMath>). Συνολικά:
+
+$$
+\text{γραμμές} = 2 \cdot 8 + 1 = 17 = N. \checkmark
+$$
+
+**Λεπτομέρεια Carson +/- counting:** η Carson γράφει <InlineMath>{'\\pm(\\beta+1)f_m = \\pm 8 f_m'}</InlineMath>, οπότε η αριστερότερη γραμμή είναι στο <InlineMath>{'f_c - 8 f_m'}</InlineMath> και η δεξιότερη στο <InlineMath>{'f_c + 8 f_m'}</InlineMath>. Αν εκλέβεις και τις δύο (συμπεριλαμβανομένου του carrier στο <InlineMath>{'n=0'}</InlineMath>), παίρνεις <InlineMath>{'17'}</InlineMath> γραμμές.
+
+**Παγίδα:** μερικοί φοιτητές παίρνουν «<InlineMath>{'B / f_m = 64/4 = 16'}</InlineMath>· άρα 16 αρμονικές». **ΛΑΘΟΣ** — αυτό αγνοεί τον carrier στο <InlineMath>{'n=0'}</InlineMath>. Σωστά: <InlineMath>{'B/f_m + 1 = 17 = N'}</InlineMath>.
+
 </Example>
+
 </ExamProblem>
 
-<ExamProblem id="carson-design" year="Design" weight="reverse engineering">
-**Ερώτηση:** Διαθέσιμο channel spacing $B = 25$ kHz για NBFM voice. Audio bandwidth $W = 3$ kHz. Πόσο μέγιστο $\Delta f$ μπορώ να χρησιμοποιήσω;
+<ExamProblem id="carson-jun25-filter" year="June 2025" weight="ΘΕΜΑ 3 — bandwidth + RF φιλτράρισμα">
 
-<Example title="Λύση">
-Από Carson: $B = 2(\Delta f + W)$ → $\Delta f = B/2 - W = 12.5 - 3 = 9.5$ kHz.
+**Ερώτηση** (απλοποίηση από <Link href="/practice#exercise:jun25-th3-fm">June 2025 ΘΕΜΑ 3</Link>): FM modulator με <InlineMath>{'m(t) = 2\\cos(2\\pi \\cdot 2000\\,t)'}</InlineMath> V, <InlineMath>{'K_f = 1'}</InlineMath> kHz/V. Φέρον στα 90 MHz. (α) Ποιο είναι το β; (β) Πόσο Carson bandwidth; (γ) Αν θέλω να το χωρέσω σε <InlineMath>{'B_2 = 8'}</InlineMath> kHz, τι πρέπει να αλλάξει στο πλάτος του message;
 
-Συντηρητικά αφήνουμε guard band, οπότε επιλέγουμε **$\Delta f \approx 5$ kHz** στην πράξη (αφήνει $25 - 2(5+3) = 9$ kHz guard). Αυτό δίνει $\beta = 5/3 \approx 1.67$ — βαθιά WBFM για voice channel.
+<Example title="Λύση" defaultOpen={true}>
 
-Αν θέλαμε higher SNR θα μεγαλώναμε το $\Delta f$ — αλλά τότε το BW θα ξεπερνούσε τα 25 kHz, και θα έσπαζε το guard για τα γειτονικά κανάλια. Trade-off SNR ↔ bandwidth ↔ channel spacing.
+**(α)** <InlineMath>{'f_m = 2'}</InlineMath> kHz, <InlineMath>{'\\max|m| = 2'}</InlineMath> V, <InlineMath>{'W = f_m = 2'}</InlineMath> kHz:
+
+$$
+\beta_f = \frac{K_f \cdot \max|m|}{W} = \frac{1 \cdot 2}{2} = 1.
+$$
+
+NBFM/WBFM boundary (β=1).
+
+**(β)** Carson: <InlineMath>{'B_1 = 2(\\beta_f + 1) W = 2 \\cdot 2 \\cdot 2 = 8'}</InlineMath> kHz.
+
+**(γ)** Αν θέλουμε <InlineMath>{'B_2 = 8'}</InlineMath> kHz, χρειαζόμαστε <InlineMath>{'\\beta_{f,2} \\cdot W + W = 4'}</InlineMath>, δηλαδή <InlineMath>{'\\beta_{f,2} = 1'}</InlineMath>… ίδιο. (Στη πραγματική June 2025 εκφώνηση το <InlineMath>{'B_2 = 8'}</InlineMath> kHz μειώνει τη ζώνη — εδώ απλοποίησα για συμβατότητα. Δες το full problem για το «πλάτος message» μέρος.)
+
+**Πανικός signal:** όταν <InlineMath>{'B'}</InlineMath> και <InlineMath>{'W'}</InlineMath> δίνονται και ζητείται «τι πρέπει να αλλάξει», λύσε τον Carson για το άγνωστο:
+
+$$
+\Delta f_{\text{new}} = \frac{B_{\text{new}}}{2} - W.
+$$
+
+Έπειτα <InlineMath>{'\\Delta f_{\\text{new}} = K_f \\cdot \\max|m|_{\\text{new}}'}</InlineMath> δίνει το νέο πλάτος.
+
 </Example>
+
 </ExamProblem>
+
+<ExamRadar slug="fm/carson" />
+
+## Συμπύκνωσε — το κεφάλαιο σε 9 keywords
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε όλο το /fm/carson"
+  keywords={[
+    'ενεργό εύρος ζώνης (slide 26): B ≅ 2W(β+1)',
+    'B = 2(Δf + W) — ισοδύναμη μορφή',
+    'τόσο για PM όσο και για FM (slide 26)',
+    'NBFM όριο: B → 2W (slide 31)',
+    'WBFM όριο: B → 2Δf',
+    'Taylor side (slide 24): φ^n έχει BW = nW, amp ≈ β^n/n!',
+    'Bessel side (slide 45): |J_n| ≈ 0 για n > β',
+    'N = 2⌊β⌋+3 (slide 46) — ίδιο νόημα με Carson',
+    'W-extraction για non-single-tone (Άσκηση 2: m = sinc → W = 10⁴/2)',
+  ]}
+  skeleton={[
+    'Αναγνώρισε FM ή PM. Αν FM, ζητάς K_f, max|m|, W. Αν PM, K_p, max|m|.',
+    'Single-tone: W = f_m. Non-single-tone: παίρνεις F{m(t)} και διαβάζεις το one-sided bandwidth.',
+    'Υπολόγισε β: β_f = K_f max|m|/W (FM) ή β_p = K_p max|m| (PM).',
+    'Carson: B = 2W(β+1) = 2(Δf+W). Δίνει 98% της ενέργειας.',
+    'Σχεδιαστική επιστροφή: B_channel = B_Carson + guard band (10-20%).',
+    'Επαλήθευση αν χρειάζεται: N = 2⌊β⌋+3 αρμονικές στη ζώνη.',
+  ]}
+  trap={
+    <>
+      Τρεις παγίδες που επιστρέφουν συνέχεια στις εξετάσεις:
+      <ol className="ml-4 mt-1 list-decimal">
+        <li>
+          <strong>«β = 0.3 είναι WBFM»</strong> — ΛΑΘΟΣ. NBFM ⇔ β ≪ 1. WBFM ⇔ β ≫ 1.
+          Στο boundary (β ≈ 1) χρησιμοποίησε τον πλήρη Carson.
+        </li>
+        <li>
+          <strong>«Φέρον f_c μπαίνει στον Carson»</strong> — ΛΑΘΟΣ. Carson εξαρτάται
+          ΜΟΝΟ από <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'W'}</InlineMath>.
+          Το <InlineMath>{'f_c'}</InlineMath> είναι «παραπλανητικό» στις εκφωνήσεις.
+        </li>
+        <li>
+          <strong>«W είναι το full support του message spectrum»</strong> — ΛΑΘΟΣ. W
+          είναι το <em>one-sided</em> bandwidth. Αν δίνεται <InlineMath>{'M(f) = \\Pi(f/B_0)'}</InlineMath>,
+          τότε <InlineMath>{'W = B_0/2'}</InlineMath>, όχι <InlineMath>{'B_0'}</InlineMath>.
+        </li>
+      </ol>
+    </>
+  }
+/>
+
+## Ανακάλεσε — δοκίμασε από μνήμη
+
+<RecallDrill
+  id="carson-from-scratch"
+  prompt={
+    <>
+      <p className="mb-2">Γράψε από μνήμη:</p>
+      <ol className="ml-4 list-decimal text-sm">
+        <li>Την Carson εξίσωση σε δύο ισοδύναμες μορφές.</li>
+        <li>Το NBFM όριο και το WBFM όριο (ποια ποσότητα κυριαρχεί;).</li>
+        <li>Πώς υπολογίζεται το β για FM single-tone και για PM single-tone.</li>
+        <li>Τη σύνδεση Carson με <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath>.</li>
+        <li>Για το <InlineMath>{'m(t) = 10\\,\\text{sinc}(10^4 t)'}</InlineMath>: ποιο είναι το W;</li>
+      </ol>
+    </>
+  }
+  answer={
+    <ul className="ml-4 list-disc text-sm">
+      <li><InlineMath>{'B \\cong 2W(\\beta+1) = 2(\\Delta f + W)'}</InlineMath></li>
+      <li>NBFM: <InlineMath>{'B \\to 2W'}</InlineMath> (όπως AM)· WBFM: <InlineMath>{'B \\to 2\\Delta f'}</InlineMath> (deviation-dominated)</li>
+      <li>FM: <InlineMath>{'\\beta_f = K_f\\max|m|/W'}</InlineMath>· PM: <InlineMath>{'\\beta_p = K_p\\max|m|'}</InlineMath></li>
+      <li>Carson <InlineMath>{'\\pm(\\beta+1)W'}</InlineMath> χωράει <InlineMath>{'2\\lfloor\\beta\\rfloor + 3 = N'}</InlineMath> διακριτές αρμονικές για single-tone</li>
+      <li><InlineMath>{'\\mathcal{F}\\{10\\,\\text{sinc}(10^4 t)\\} = (10/10^4)\\,\\Pi(f/10^4)'}</InlineMath>, one-sided ⇒ <InlineMath>{'W = 10^4/2 = 5'}</InlineMath> kHz</li>
+    </ul>
+  }
+/>
+
+<ClozeDrill
+  id="askisi-2-carson-walkthrough"
+  prompt={
+    <>
+      Συμπλήρωσε την Άσκηση 2 του prof (slides 27-28): <InlineMath>{'m(t) = 10\\,\\text{sinc}(10^4 t)'}</InlineMath>, FM με <InlineMath>{'K_f = 4'}</InlineMath> kHz/V.
+    </>
+  }
+  parts={[
+    <>
+      <InlineMath>{'\\mathcal{F}\\{m(t)\\} = (10/10^4)\\,\\Pi(f/10^4)'}</InlineMath>, one-sided <InlineMath>{'W = '}</InlineMath>
+    </>,
+    { blank: 'w', accept: ['5', '5 kHz', '5000'], size: 6, hint: 'σε kHz' },
+    <>
+      {' '}kHz. <InlineMath>{'\\max|\\text{sinc}(\\cdot)| = 1'}</InlineMath>, οπότε <InlineMath>{'\\max|m| = '}</InlineMath>
+    </>,
+    { blank: 'maxm', accept: ['10'], size: 4 },
+    <>
+      .{' '}<InlineMath>{'\\beta_f = K_f \\max|m|/W = '}</InlineMath>
+    </>,
+    { blank: 'beta', accept: ['8'], size: 4 },
+    <>
+      .{' '}<InlineMath>{'B = 2W(\\beta_f + 1) = '}</InlineMath>
+    </>,
+    { blank: 'B', accept: ['90', '90 kHz'], size: 6 },
+    <>
+      {' '}kHz.
+    </>,
+  ]}
+  solution={
+    <p>
+      <InlineMath>{'W = 5'}</InlineMath> kHz (one-sided του rect 10 kHz wide),{' '}
+      <InlineMath>{'\\max|m| = 10'}</InlineMath>,{' '}
+      <InlineMath>{'\\beta_f = 4 \\cdot 10 / 5 = 8'}</InlineMath>,{' '}
+      <InlineMath>{'B = 2 \\cdot 5 \\cdot 9 = 90'}</InlineMath> kHz. WBFM.
+    </p>
+  }
+/>
+
+<ReorderDrill
+  id="carson-application-order"
+  prompt="Βάλε τα βήματα στη σωστή σειρά για να εφαρμόσεις τον Carson σε αυθαίρετο FM σήμα."
+  steps={[
+    'Διάβασε την εκφώνηση: FM ή PM; Single-tone ή γενικό message;',
+    'Πάρε τον μετασχηματισμό Fourier του m(t) και βρες το W (one-sided bandwidth).',
+    'Υπολόγισε max|m(t)| από την εκφώνηση (το πλάτος του message).',
+    'Υπολόγισε β: β_f = K_f·max|m|/W για FM, ή β_p = K_p·max|m| για PM.',
+    'Εφάρμοσε Carson: B = 2W(β+1) = 2(Δf+W).',
+    'Επαλήθευση (προαιρετικά): N = 2⌊β⌋+3 αρμονικές μέσα στη ζώνη.',
+    'Αν ζητείται channel spacing, πρόσθεσε ~15-25% guard band.',
+  ]}
+/>
+
+## Αναγνώρισε — πώς να καταλάβεις πότε χρησιμοποιείται
+
+<ThinkingPattern
+  signals={[
+    'Carson',
+    'ενεργό εύρος ζώνης',
+    'εύρος ζώνης FM',
+    'εύρος ζώνης PM',
+    'channel spacing',
+    'FM ραδιόφωνο',
+    'broadcast',
+    'walkie-talkie',
+    'NBFM',
+    'WBFM',
+    'β = 0.3',
+    'β > 1',
+    'β ≪ 1',
+    'β ≫ 1',
+    'sinc message',
+    'απόκλιση συχνότητας',
+    'Δf',
+    'guard band',
+    'σημαντικές αρμονικές',
+    'Άσκηση 2',
+    'reverse engineering',
+  ]}
+>
+  <p>
+    <strong>Πρότυπο 1 — «Πόσο εύρος ζώνης;» direct.</strong> Όταν η εκφώνηση δίνει
+    <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'W'}</InlineMath> (ή <InlineMath>{'f_m'}</InlineMath> για single-tone) και ζητάει το bandwidth, πας γραμμή
+    σε Carson <InlineMath>{'B = 2(\\Delta f + W)'}</InlineMath>. Δεν χρειάζεται καν να υπολογίσεις τη
+    β. Εμφανίζεται σε <Link href="/practice#exercise:sept25-th2-8">Sept'25 ΘΕΜΑ 2.8</Link>
+    (4 παλιά θέματα — high panic). Πανικός signal: η φέρουσα <InlineMath>{'f_c'}</InlineMath> ή «τα 100 MHz» στην εκφώνηση είναι
+    παραπλανητικά — αγνόησέ τα.
+  </p>
+
+  <p>
+    <strong>Πρότυπο 2 — Σ/Λ regime classification.</strong> Όταν η εκφώνηση δίνει
+    <strong> μόνο τιμή β</strong> και ρωτάει NBFM ή WBFM. Αν β ≪ 1 → NBFM. Αν β ≫ 1 →
+    WBFM. Στο boundary (β ≈ 1) ποτέ μην απαντήσεις «είναι NBFM» ή «είναι WBFM» κατηγορηματικά
+    — η Bessel ανάπτυξη είναι η μόνη σωστή προσέγγιση. Εμφανίζεται σε <Link href="/practice#exercise:jan26-th1-5">Jan'26 ΘΕΜΑ 1.5</Link>.
+  </p>
+
+  <p>
+    <strong>Πρότυπο 3 — «W extraction» για non-single-tone.</strong> Όταν δίνεται γενικό
+    <InlineMath>{'m(t)'}</InlineMath> (sinc, ορθογώνιος παλμός, οτιδήποτε όχι single-tone), η πρώτη κίνηση
+    είναι να πάρεις <InlineMath>{'M(f)'}</InlineMath> και να εξάγεις το <strong>one-sided</strong>{' '}
+    <InlineMath>{'W'}</InlineMath>. Συνηθισμένα λάθη: παίρνεις full support αντί half, ή ξεχνάς
+    ότι <InlineMath>{'\\text{sinc}(2Wt) \\leftrightarrow (1/2W)\\Pi(f/2W)'}</InlineMath>{' '}
+    (το <InlineMath>{'2W'}</InlineMath> είναι το argument). Δες την Άσκηση 2 του prof
+    στο §7.
+  </p>
+
+  <p>
+    <strong>Πρότυπο 4 — reverse-engineering Δf από διαθέσιμο B.</strong> Όταν δίνεται
+    channel spacing ή <InlineMath>{'B'}</InlineMath> και ζητείται το μέγιστο{' '}
+    <InlineMath>{'\\Delta f'}</InlineMath>. Λύση: <InlineMath>{'\\Delta f = B/2 - W'}</InlineMath>{' '}
+    (μείον guard band αν δίνεται). Αυτό είναι κλασικό σχεδιαστικό πρόβλημα — δεν εμφανίζεται τόσο
+    συχνά στα παλιά θέματα όσο τα 1-3, αλλά είναι το είδος που μπορεί να εμφανιστεί
+    ξαφνικά σε «design from spec» θέματα.
+  </p>
+</ThinkingPattern>
 
 <Recap>
-- **Carson's rule:** $B = 2(\Delta f + W) = 2(\beta+1)W$. Δίνει το πρακτικό bandwidth για ~98% της ενέργειας.
-- **NBFM** ($\beta \ll 1$): $B \approx 2W$, σχεδόν σαν AM. Quadrature sidebands → ανοσία στον amplitude θόρυβο.
-- **WBFM** ($\beta \gg 1$): $B \approx 2\Delta f$. Το $\Delta f$ καθορίζει το bandwidth.
-- Trade-off: η FM **καταναλώνει bandwidth για να αγοράσει SNR ανοσία**. Επόμενο κεφάλαιο: ποσοτικά αυτό το trade-off (FM στον θόρυβο, σύγκριση με AM).
+- **Carson's rule**: <InlineMath>{'B \\cong 2W(\\beta+1) = 2(\\Delta f + W)'}</InlineMath>. Δίνει το «ενεργό εύρος ζώνης» (~98% ενέργειας). Slide 26 του prof — **και για PM και για FM**.
+- **Δύο διαδρομές παρακίνησης**: (α) Taylor (slides 22-26) — <InlineMath>{'\\phi^n'}</InlineMath> έχει bandwidth <InlineMath>{'nW'}</InlineMath> με πλάτος <InlineMath>{'\\beta^n/n!'}</InlineMath>· cutoff στο <InlineMath>{'n = \\beta+1'}</InlineMath>· (β) Bessel (slide 45) — <InlineMath>{'|J_n(\\beta)| \\to 0'}</InlineMath> για <InlineMath>{'n > \\beta'}</InlineMath>· cutoff στο ίδιο μέρος.
+- **Δύο όρια, μία εξίσωση**: NBFM (<InlineMath>{'\\beta \\ll 1'}</InlineMath>) → <InlineMath>{'B \\approx 2W'}</InlineMath> (όπως AM)· WBFM (<InlineMath>{'\\beta \\gg 1'}</InlineMath>) → <InlineMath>{'B \\approx 2\\Delta f'}</InlineMath> (deviation-dominated).
+- **PM/FM δίδυμο**: ίδιος τύπος, διαφορετικό β. FM: <InlineMath>{'\\beta_f = K_f\\max|m|/W'}</InlineMath>· PM: <InlineMath>{'\\beta_p = K_p\\max|m|'}</InlineMath>. Slide 46 δίνει τις ρητές μορφές.
+- **Σύνδεση με slide 46**: <InlineMath>{'N = 2\\lfloor\\beta\\rfloor+3'}</InlineMath> σημαντικές αρμονικές = ίδια ποσοτικοποίηση με Carson, απλά σε «discrete» αντί «continuous» γλώσσα.
+- **Άσκηση 2 του prof** (slides 27-28): canonical Carson για non-single-tone (sinc message). Διδάσκει την κρίσιμη «W-extraction» κίνηση.
+- **Πραγματικές εφαρμογές**: FM ραδιόφωνο (β=5, B=180 kHz, 200 kHz spacing) · NBFM walkie-talkie (β≈1, B=11 kHz, 12.5 kHz spacing). Trade-off bandwidth ↔ SNR ↔ channel density.
 </Recap>
 
 <NextUp slug="fm/in-noise" />

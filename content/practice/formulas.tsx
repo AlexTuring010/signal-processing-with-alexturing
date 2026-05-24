@@ -593,7 +593,21 @@ export const FORMULA_SHEET: FormulaSection[] = [
         topic: 'fm',
         inTypology: false,
         derivedIn: 'fm/carson',
-        content: <BlockMath>{'B_{FM} = 2(\\Delta f + W) = 2(\\beta + 1)W'}</BlockMath>,
+        content: (
+          <>
+            <BlockMath>{'B \\cong 2W(\\beta + 1) = 2(\\Delta f + W)'}</BlockMath>
+            <p className="mt-2 text-xs leading-relaxed text-fg-muted">
+              Ο prof στο slide 26 γράφει την ίδια έκφραση{' '}
+              <strong>τόσο για PM όσο και για FM</strong>, με{' '}
+              <InlineMath>{'\\beta = \\beta_p'}</InlineMath> ή{' '}
+              <InlineMath>{'\\beta_f'}</InlineMath> ανάλογα. Δίνει το «ενεργό εύρος
+              ζώνης» — τη ζώνη που περιέχει σχεδόν όλη την ισχύ του σήματος
+              (~98%). Slide 46 δίνει τις ρητές μορφές:{' '}
+              <InlineMath>{'B_{PM} = 2W(K_p\\alpha + 1)'}</InlineMath>,{' '}
+              <InlineMath>{'B_{FM} = 2W(K_f\\alpha/W + 1)'}</InlineMath>.
+            </p>
+          </>
+        ),
       },
       {
         id: 'fm-power',

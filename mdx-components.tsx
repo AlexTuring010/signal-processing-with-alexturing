@@ -121,6 +121,9 @@ import { JacobiAngerDecompositionViz } from '@/components/viz/JacobiAngerDecompo
 import { CarrierVanishViz } from '@/components/viz/CarrierVanishViz'
 import { AskisiThreeFilteredFmPowerViz } from '@/components/viz/AskisiThreeFilteredFmPowerViz'
 import { CarsonRuleViz } from '@/components/viz/CarsonRuleViz'
+import { TaylorBandwidthCascadeViz } from '@/components/viz/TaylorBandwidthCascadeViz'
+import { NbfmWbfmRegimesViz } from '@/components/viz/NbfmWbfmRegimesViz'
+import { PmFmCarsonEquivalenceViz } from '@/components/viz/PmFmCarsonEquivalenceViz'
 import { FMNoiseTriangleViz } from '@/components/viz/FMNoiseTriangleViz'
 import { RandomPhaseCosineViz } from '@/components/viz/RandomPhaseCosineViz'
 import { RandomProcessRealizationsViz } from '@/components/viz/RandomProcessRealizationsViz'
@@ -316,6 +319,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — fm / carson
     CarsonRuleViz,
+    TaylorBandwidthCascadeViz,
+    NbfmWbfmRegimesViz,
+    PmFmCarsonEquivalenceViz,
 
     // Visualizations — fm / in-noise
     FMNoiseTriangleViz,
