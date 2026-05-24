@@ -49,9 +49,11 @@ a sub-list. Update this section in the same commit that finishes the task.
   - ☑ Q2 — de-anonymize the bank: real dates everywhere. Migration in E.0.
   - ☑ Q3 — un-gitignore `private_material/`; raw older-archive PDFs to be uploaded by user and tracked.
 - ☑ **E.0 — Bank de-anonymization migration** (done 2026-05-24 — 141 entries migrated `paperLabel` → dated `source`; titles rewritten; `paperLabel` field removed from `Exercise` type; `ExerciseCard`/`SoseProblemCard` Flame chip fires for #1–#7; `ExerciseLibrary` sort switched to `source`; see [[phase-e0-bank-dedeanonymization]])
-- ☐ **E.1 — Inline `<ExamProblem>` citations** (17 per-lecture sub-tasks):
-  - ☐ L01 ☐ L02 ☐ L03 ☐ L04 ☐ L05 ☐ L06 ☐ L07 ☐ L08 ☐ L09
-  - ☐ L10 ☐ L11 ☐ L12 ☐ L13 ☐ L14 ☐ L15 ☐ L16 ☐ L17
+- ☐ **E.1 — Inline `<ExamProblem>` citations**:
+  - ☑ **E.1.0 — `<ExamProblem>` component extension** (done 2026-05-24 — dual-mode dispatcher: chip mode when `relatedExerciseId` is set (server component, rose-tinted citation with date · problem number · title, Flame chip for 2024/2025, weight chip, optional `pattern` ReactNode cue, deep-link to `/practice#exercise:<id>` via Next.js `Link`); legacy `year+children` card mode kept for back-compat via delegated `ExamProblemCard` client component. EXERCISES lookup with graceful dev-only warn fallback for bad ids. typecheck+lint+build all pass. See [[phase-e1-component-extension]])
+  - 17 per-lecture sub-tasks (rich-pool first per pre-flight recommendation):
+    - ☐ L09 ☐ L14 ☐ L02 ☐ L03 ☐ L15 ☐ L01 ☐ L04 ☐ L06 ☐ L08 ☐ L10 ☐ L11 ☐ L12 ☐ L13 ☐ L17
+    - ☐ L05 ☐ L07 ☐ L16 — documented-and-skipped per Phase D precedent (sparse/empty pool)
 - ☐ **E.2 — Pattern-pair catalogue** → `plans/E_PATTERN_PAIRS.md`
 - ☐ **E.3 — `<RelatedPair>` + bidirectional surfacing** (per-lecture, depends on E.2):
   - filled in by E.2's output
