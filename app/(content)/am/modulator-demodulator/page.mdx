@@ -195,7 +195,7 @@ $$
 Το RC time constant πρέπει να είναι σε **σωστό εύρος**:
 
 $$
-\boxed{\,\frac{1}{f_c} \ll RC \ll \frac{1}{W}\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,\frac{1}{f_c} \ll RC \ll \frac{1}{W}\,} \quad \text{⚠️ Πρέπει να θυμάσαι}
 $$
 
 όπου $W$ είναι το message bandwidth.
@@ -397,19 +397,21 @@ $$
   }
 />
 
-## 5. AM SNR formulas — γενικό μήνυμα
+## 5. Σύνοψη τύπων ισχύος + SNR — γρήγορη αναφορά
 
-### 5a. Γενικός ορισμός efficiency (η μορφή που χρησιμοποιεί ο καθηγητής)
+Στο §4 παραπάνω και στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency) είδαμε όλους τους τύπους efficiency και output SNR για AM/DSB-SC/SSB κομματιαστά. Τους συγκεντρώνουμε εδώ σε ένα σημείο για γρήγορη αναφορά στις εξετάσεις — **καμία νέα παραγωγή**, όλα έχουν τεκμηριωθεί στα προηγούμενα.
 
-Στις ασκήσεις του μαθήματος (Άσκηση 4.1, διαφάνεια 19) η efficiency γράφεται σε **γενική μορφή** που δεν εξαρτάται από single-tone υπόθεση:
+### 5a. Efficiency η — γενική μορφή
+
+Η γενική μορφή που παρήγαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency):
 
 $$
 \boxed{\,\eta = \frac{P_m}{A_c^2 + P_m}\,}
 $$
 
-όπου $P_m = \langle m^2(t)\rangle$ είναι η μέση ισχύς του message σήματος. Η ολική ισχύς του AM σήματος είναι $P_x = (A_c^2 + P_m)/2$, η useful (sideband) ισχύς είναι $P_m/2$, και ο λόγος δίνει τον τύπο πάνω. **Αν η άσκηση δίνει $P_m$ άμεσα (π.χ. ως άθροισμα τετραγώνων δύο πλατών), αυτή είναι η μορφή που χρησιμοποιείς.**
+όπου $P_m = \langle m^2(t)\rangle$. Ο καθηγητής τη γράφει σε **δύο σημεία της ύλης**: στη διαφάνεια 31 του κύριου deck (όπου την παρήγαμε γενικά μέσω της περιβάλλουσας) και στην **Άσκηση 4.1, διαφάνεια 19** των ασκήσεων (η μορφή που θα δεις σε εξεταστικές λύσεις). **Αν η άσκηση δίνει $P_m$ άμεσα (π.χ. ως άθροισμα τετραγώνων δύο πλατών), αυτή είναι η μορφή που χρησιμοποιείς.**
 
-### 5b. Single-tone ειδική περίπτωση
+### 5b. Single-tone ειδική περίπτωση — η μορφή του §4a
 
 Για **single-tone** $m(t) = A_m\cos(2\pi f_m t)$: $P_m = A_m^2/2$. Με $\mu = A_m/A_c$:
 
@@ -417,21 +419,17 @@ $$
 \eta = \frac{A_m^2/2}{A_c^2 + A_m^2/2} = \frac{\mu^2/2}{1 + \mu^2/2} = \frac{\mu^2}{2 + \mu^2}
 $$
 
-Όλες οι μορφές είναι ισοδύναμες — διαφορετικές γραφές της ίδιας ποσότητας.
+Αυτή είναι η μορφή που χρησιμοποιήσαμε στο §4a — και οι τρεις αλγεβρικά ισοδύναμες γραφές εμφανίζονται σε λύσεις παλαιότερων εξετάσεων.
 
-### 5c. Συνολικός τύπος output SNR
+### 5c. Output SNR — πίνακας αναφοράς
 
-Για Conventional AM στο high-SNR regime:
+Συνοψίζοντας τους τύπους output SNR του §4 για τα τρία AM σχήματα στο high-SNR regime:
 
-$$
-(\text{SNR})_{\text{out, AM}} = \eta \cdot (\text{SNR})_{\text{in}}
-$$
-
-Για **DSB-SC** και **SSB** (coherent demodulation, κανένας carrier να πετάξει):
-
-$$
-(\text{SNR})_{\text{out, DSB-SC}} = (\text{SNR})_{\text{in}}, \qquad (\text{SNR})_{\text{out, SSB}} = (\text{SNR})_{\text{in}}
-$$
+| Σχήμα | Output SNR (high-SNR) |
+| --- | --- |
+| **Conventional AM** (envelope ή coherent) | $(\mathrm{SNR})_{\text{out}} = \eta \cdot (\mathrm{SNR})_{\text{in}}$ |
+| **DSB-SC** (coherent) | $(\mathrm{SNR})_{\text{out}} = (\mathrm{SNR})_{\text{in}}$ |
+| **SSB** (coherent) | $(\mathrm{SNR})_{\text{out}} = (\mathrm{SNR})_{\text{in}}$ |
 
 Άρα η DSB-SC κερδίζει 4.8 dB σε output SNR έναντι του AM με $\mu = 1$, και ακόμη περισσότερα για μικρότερο $\mu$. Σε χαμηλά SNR (< 10 dB) η AM χάνει επιπλέον λόγω threshold effect — δες §4b.
 
@@ -533,7 +531,7 @@ $$
 **Ερώτηση:** AM σήμα με $f_c = 1$ MHz και message bandwidth $W = 5$ kHz. Σε ποιο εύρος πρέπει να βρίσκεται το $RC$ του envelope detector;
 
 <Example title="Λύση" defaultOpen={true}>
-**Σκέψη:** η ερώτηση είναι κανονικοποιημένη — απλώς εφαρμόζουμε ευθεία τη συνθήκη τυπολογίου $1/f_c \ll RC \ll 1/W$.
+**Σκέψη:** η ερώτηση είναι κανονικοποιημένη — απλώς εφαρμόζουμε ευθεία τη συνθήκη $1/f_c \ll RC \ll 1/W$ (πρέπει να τη θυμάσαι — δεν είναι μέσα στο επίσημο τυπολόγιο).
 
 - $1/f_c = 1\,\mu\text{s} = 10^{-6}$ s
 - $1/W = 1/5000 = 200\,\mu\text{s} = 2\cdot 10^{-4}$ s
@@ -591,7 +589,7 @@ $$i(t) \supset A_c[a_1 + 2 a_2 m(t)]\cos\omega_c t = \text{conventional AM}$$
 </Example>
 </ExamProblem>
 
-<ExamProblem id="output-snr-am" year="SNR" weight="τυπολόγιο">
+<ExamProblem id="output-snr-am" year="SNR" weight="πρέπει να θυμάσαι">
 **Ερώτηση:** Conventional AM με $\mu = 1$ και ίδιο noise environment όπως το DSB-SC. Πόσο dB είναι η απώλεια output SNR της AM σε σχέση με DSB-SC;
 
 <Example title="Λύση">
