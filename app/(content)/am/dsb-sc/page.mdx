@@ -157,7 +157,7 @@ $$
     «Δεν αρκεί η χρήση <strong>ασύμφωνης αποδιαμόρφωσης</strong> αφού <InlineMath>{'V(t) = |A_c m(t)|'}</InlineMath>. Για να αρκούσε θα έπρεπε <InlineMath>{'m(t) \\geq 0\\ \\forall t'}</InlineMath>, το οποίο σπάνια συμβαίνει στα σήματα πληροφορίας στα συστήματα επικοινωνιών.»
   </p>
 
-  Η μαθηματική συνθήκη είναι ακριβής: αν <InlineMath>{'m(t) \\geq 0'}</InlineMath> για κάθε <InlineMath>{'t'}</InlineMath>, τότε <InlineMath>{'|m(t)| = m(t)'}</InlineMath> και η rectification δεν αλλάζει τίποτα — ο envelope detector βγάζει ακριβώς το <InlineMath>{'m(t)'}</InlineMath>. Αλλά τα πραγματικά σήματα πληροφορίας (audio, video, μετρήσεις) **έχουν αρνητικές τιμές** και συνήθως μέση τιμή <InlineMath>{'\\bar m = 0'}</InlineMath> (αλλιώς σπαταλάς ισχύ στο DC). Επομένως η συνθήκη παραβιάζεται **σχεδόν πάντα** — γι' αυτό το DSB-AM-SC υποχρεωτικά απαιτεί coherent demod.
+  Μόλις είπαμε ότι ο envelope detector σπάει επειδή ο envelope είναι <InlineMath>{'|m(t)|'}</InlineMath>, όχι <InlineMath>{'m(t)'}</InlineMath>. Πριν περάσουμε στον coherent στο §4, αξίζει να ρωτήσουμε το αντίστροφο: **πότε ΘΑ ταυτίζονταν τα δύο;** Η συνθήκη που ξεκλειδώνει ο καθηγητής (παραπάνω) είναι ακριβής — αν <InlineMath>{'m(t) \\geq 0'}</InlineMath> για κάθε <InlineMath>{'t'}</InlineMath>, τότε <InlineMath>{'|m(t)| = m(t)'}</InlineMath> και η rectification δεν αλλάζει τίποτα: ο envelope detector βγάζει ακριβώς το <InlineMath>{'m(t)'}</InlineMath>. Αλλά τα πραγματικά σήματα πληροφορίας (audio, video, μετρήσεις) **έχουν αρνητικές τιμές** και συνήθως μέση τιμή <InlineMath>{'\\bar m = 0'}</InlineMath> (αλλιώς σπαταλάς ισχύ στο DC). Επομένως η συνθήκη παραβιάζεται **σχεδόν πάντα** — γι' αυτό το DSB-AM-SC υποχρεωτικά απαιτεί coherent demod.
 
   **Βαθύτερη σύνδεση με το Conventional AM:** ο όρος <InlineMath>{'A_c'}</InlineMath> που η Conventional AM προσθέτει στο message είναι ακριβώς ο όρος που εξασφαλίζει <InlineMath>{'A_c + m(t) \\geq 0\\ \\forall t'}</InlineMath> (για <InlineMath>{'\\mu \\leq 1'}</InlineMath>). Άρα η Conventional AM είναι κυριολεκτικά **DSB-AM-SC + DC offset που γυρίζει τη συνθήκη <InlineMath>{'m \\geq 0'}</InlineMath> πάντα αληθή**. Πληρώνεις σε ισχύ (carrier δαπανά <InlineMath>{'A_c^2/2'}</InlineMath>), κερδίζεις απλούστερο δέκτη.
 </Callout>
@@ -229,7 +229,7 @@ $$
 **Bandwidth μένει ίδιο** — δεν κερδίζουμε φάσμα. Η μόνη βελτίωση είναι η ισχύς. (Αν θέλουμε να κόψουμε το bandwidth στο μισό, πάμε σε **SSB** στο επόμενο κεφάλαιο.)
 
 <Callout type="connection" title="Πώς γεννιέται πρακτικά το DSB-AM-SC — ο ισοσταθμισμένος διαμορφωτής (slide 66)">
-Η μορφή <InlineMath>{'x = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath> γράφεται εύκολα στο χαρτί — αλλά στην πράξη ο **πολλαπλασιαστής** δεν είναι τετριμμένο κύκλωμα: αναλογικοί πολλαπλασιαστές κοστίζουν και έχουν περιορισμένο dynamic range. Ο καθηγητής στο slide 66 παρουσιάζει την κανονική πρακτική λύση — τον **ισοσταθμισμένο διαμορφωτή** (*balanced modulator*) που χρησιμοποιεί δύο πανομοιότυπα μη γραμμικά στοιχεία σε αντισυμμετρική διάταξη ώστε:
+**Παρένθεση για τον πομπό — πριν περάσουμε στον δέκτη στο §4.** Η μορφή <InlineMath>{'x = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath> γράφεται εύκολα στο χαρτί, αλλά στην πράξη ο **πολλαπλασιαστής** δεν είναι τετριμμένο κύκλωμα: αναλογικοί πολλαπλασιαστές κοστίζουν και έχουν περιορισμένο dynamic range. Ο καθηγητής στο slide 66 παρουσιάζει την κανονική πρακτική λύση — τον **ισοσταθμισμένο διαμορφωτή** (*balanced modulator*) που χρησιμοποιεί δύο πανομοιότυπα μη γραμμικά στοιχεία σε αντισυμμετρική διάταξη ώστε:
 
 - **Ο carrier ακυρώνεται** στην έξοδο μέσω αλγεβρικής διαφοράς (δεν χρειάζεται BPF τόσο επιλεκτικό όσο στο Conventional AM).
 - **Οι κοινοί όροι** <InlineMath>{'\\cos^2'}</InlineMath> και <InlineMath>{'m^2'}</InlineMath> ακυρώνονται από την ίδια αντισυμμετρία.
@@ -351,13 +351,13 @@ $$
 \boxed{\;P_{DSB\text{-}AM\text{-}SC} \;=\; \frac{A_c^2\, P_m}{2}\;}
 $$
 
-**Αυτή είναι η master μορφή** που χρησιμοποιεί ο καθηγητής στις εξεταστικές — δουλεύει για οποιοδήποτε <InlineMath>{'m(t)'}</InlineMath> (single-tone, multi-tone, sinc, οτιδήποτε). Δες την [αντίστοιχη entry στο τυπολόγιο](/formulas#formula:dsb-sc-power).
+**Αυτή είναι η master μορφή** που χρησιμοποιεί ο καθηγητής στις εξεταστικές — δουλεύει για οποιοδήποτε <InlineMath>{'m(t)'}</InlineMath> (single-tone, multi-tone, sinc, οτιδήποτε). Δες την [αντίστοιχη entry στη σελίδα formulas](/formulas#formula:dsb-sc-power) (⚠️ «πρέπει να θυμάσαι» — δεν είναι μέσα στο επίσημο τυπολόγιο).
 
 **Sanity check single-tone.** Με <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath>, η message power είναι <InlineMath>{'P_m = A_m^2/2'}</InlineMath>. Άρα <InlineMath>{'P_{DSB} = A_c^2 \\cdot (A_m^2/2)/2 = A_c^2 A_m^2 / 4'}</InlineMath>. Για <InlineMath>{'A_c = 1'}</InlineMath> (έτσι όπως γράφτηκε το <InlineMath>{'x_{DSB} = m(t)\\cos'}</InlineMath> στην αρχή της §5), παίρνουμε <InlineMath>{'P_{DSB} = A_m^2/4'}</InlineMath> — ταυτίζεται με την κατευθείαν παραγωγή «δύο cosines πλάτους <InlineMath>{'A_m/2'}</InlineMath>» παραπάνω. ✓
 
 ### 5b. Power efficiency
 
-**Όλη η ισχύς είναι «χρήσιμη»** — είναι όλη στις sidebands που κουβαλάνε πληροφορία:
+Έχοντας τη γενική μορφή <InlineMath>{'P_x = A_c^2\\, P_m / 2'}</InlineMath>, η efficiency υπολογίζεται αμέσως — δεν υπάρχει carrier component να αφαιρέσουμε από τον αριθμητή. **Όλη η ισχύς είναι «χρήσιμη»**, είναι όλη στις sidebands που κουβαλάνε πληροφορία:
 
 $$
 \boxed{\,\eta_{DSB} = \frac{P_{\text{useful}}}{P_{\text{total}}} = \frac{P_{DSB}}{P_{DSB}} = 100\%\,}
