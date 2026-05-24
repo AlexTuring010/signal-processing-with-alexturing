@@ -495,6 +495,16 @@ export const FORMULA_SHEET: FormulaSection[] = [
         derivedIn: 'am/modulator-demodulator',
         content: <BlockMath>{'f_c > 3W'}</BlockMath>,
       },
+      {
+        id: 'fdm-spacing',
+        title: 'FDM minimum carrier spacing',
+        topic: 'am',
+        inTypology: false,
+        derivedIn: 'am/multiplexing',
+        content: (
+          <BlockMath>{'\\Delta f = |f_2 - f_1| \\geq \\begin{cases} 2W & \\text{Συμβατικό AM / DSB-AM-SC} \\\\ W & \\text{SSB-AM} \\\\ W + W_{\\text{vestige}} & \\text{VSB-AM} \\end{cases}'}</BlockMath>
+        ),
+      },
     ],
   },
 

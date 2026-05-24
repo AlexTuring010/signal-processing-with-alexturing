@@ -34,6 +34,7 @@ import { VsbNyquistSymmetryViz } from '@/components/viz/VsbNyquistSymmetryViz'
 import { EnvelopeDetectorViz } from '@/components/viz/EnvelopeDetectorViz'
 import { AMSNRCurveViz } from '@/components/viz/AMSNRCurveViz'
 import { NonlinearModulatorSpectrumViz } from '@/components/viz/NonlinearModulatorSpectrumViz'
+import { FDMSpectrumViz } from '@/components/viz/FDMSpectrumViz'
 import { FMSignalViz } from '@/components/viz/FMSignalViz'
 import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
 import { BesselTable } from '@/components/viz/BesselTable'
@@ -75,6 +76,7 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'envelope-detector-rc': () => <EnvelopeDetectorViz />,
   'am-output-snr': () => <AMSNRCurveViz />,
   'nonlinear-modulator-fc': () => <NonlinearModulatorSpectrumViz />,
+  'fdm-spacing': () => <FDMSpectrumViz />,
 
   // FM / PM
   'fm-signal': () => <FMSignalViz />,

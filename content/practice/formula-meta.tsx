@@ -851,6 +851,29 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'fdm-spacing': {
+    intuition: (
+      <>
+        Στο FDM δύο κανάλια συνυπάρχουν στο ίδιο φάσμα γύρω από{' '}
+        <InlineMath>{'f_1'}</InlineMath> και <InlineMath>{'f_2'}</InlineMath>. Για να
+        ξεχωρίσει ο δέκτης το ένα από το άλλο με ένα BPF, τα δύο spectral supports δεν
+        πρέπει να τέμνονται. Το <strong>SSB</strong> κερδίζει διπλάσια χωρητικότητα γιατί
+        κάθε κανάλι έχει εύρος ζώνης <InlineMath>{'W'}</InlineMath> αντί για{' '}
+        <InlineMath>{'2W'}</InlineMath>.
+      </>
+    ),
+    derivation: (
+      <>
+        DSB-SC / Συμβατικό AM: κάθε κανάλι από <InlineMath>{'f_c - W'}</InlineMath> έως{' '}
+        <InlineMath>{'f_c + W'}</InlineMath> ⇒ ελάχιστη μη-επικάλυψη όταν{' '}
+        <InlineMath>{'f_2 - W \\geq f_1 + W \\Leftrightarrow \\Delta f \\geq 2W'}</InlineMath>.
+        SSB: κάθε κανάλι έχει μόνο μία πλευρική ζώνη (πλάτους W) ⇒{' '}
+        <InlineMath>{'\\Delta f \\geq W'}</InlineMath>. VSB: μία πλευρική + vestige ⇒{' '}
+        <InlineMath>{'\\Delta f \\geq W + W_{\\text{vestige}}'}</InlineMath>. Στην πράξη
+        προστίθεται guard band για μη-ιδανικά φίλτρα.
+      </>
+    ),
+  },
 
   // ── FM / PM ──────────────────────────────────────────────────
   'fm-signal': {

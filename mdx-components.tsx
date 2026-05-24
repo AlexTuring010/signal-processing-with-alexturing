@@ -104,6 +104,9 @@ import { BalancedModulatorCancellationViz } from '@/components/viz/BalancedModul
 import { CoherentReceiverChainViz } from '@/components/viz/CoherentReceiverChainViz'
 import { AMSNRCurveViz } from '@/components/viz/AMSNRCurveViz'
 import { FDMSpectrumViz } from '@/components/viz/FDMSpectrumViz'
+import { FdmCanonicalProblemViz } from '@/components/viz/FdmCanonicalProblemViz'
+import { FdmCrossTalkViz } from '@/components/viz/FdmCrossTalkViz'
+import { SuperheterodyneReceiverViz } from '@/components/viz/SuperheterodyneReceiverViz'
 import { FMSignalViz } from '@/components/viz/FMSignalViz'
 import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
 import { BesselTable } from '@/components/viz/BesselTable'
@@ -278,6 +281,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — am / multiplexing
     FDMSpectrumViz,
+    FdmCanonicalProblemViz,
+    FdmCrossTalkViz,
+    SuperheterodyneReceiverViz,
 
     // Visualizations — fm / idea
     FMSignalViz,

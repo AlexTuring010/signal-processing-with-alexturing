@@ -1,7 +1,7 @@
 export const metadata = {
-  title: 'AM Multiplexing (FDM) — η εξεταστική «sinc + Π σε δύο carriers»',
+  title: 'AM Multiplexing (FDM) — Πολυπλεξία Διαίρεσης Συχνότητας, η εξεταστική «sinc + Π σε δύο carriers»',
   description:
-    'Frequency Division Multiplexing: στοιβάζουμε πολλά κανάλια στο φάσμα γύρω από διαφορετικούς carriers. Συνθήκη μη-επικάλυψης για DSB και SSB, η canonical εξεταστική άσκηση «m=sinc, k=Π στα f_1, f_2», sketching G(f), real-world (broadcast spectrum, mobile carriers).',
+    'Frequency Division Multiplexing: πολλοί χρήστες μοιράζονται έναν δίαυλο, ο καθένας σε διαφορετική ζώνη συχνοτήτων. Verbatim ορισμός του καθηγητή (slide 5), συνθήκη μη-επικάλυψης για AM/DSB/SSB/VSB, η canonical εξεταστική άσκηση «m=sinc, k=Π στα f_1, f_2», guard bands και crosstalk, superheterodyne receiver.',
 }
 
 export const frontmatter = {
@@ -16,8 +16,8 @@ export const frontmatter = {
     'am/ssb',
   ],
   examWeight: 5,
-  estimatedReadTime: 22,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 32,
+  lastUpdated: '2026-05-24',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -28,7 +28,7 @@ import Link from 'next/link'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Modulation · AM</span>
   <span>·</span>
-  <span>~22 min read</span>
+  <span>~32 min read</span>
   <span>·</span>
   <span className="font-semibold text-red-600 dark:text-red-400">🔴 Heavy exam — recurring problem</span>
 </div>
@@ -44,19 +44,44 @@ import Link from 'next/link'
 
 <SourceDoc
   sources={[
-    { pdf: 'SE_session11&12&13.pdf', label: 'πολυπλεξία (FDM) — slide 5 και ενότητες SSB/DSB-SC' },
-    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις FDM' },
+    { pdf: 'SE_session11&12&13.pdf', label: 'slide 5 — ορισμός Πολυπλεξίας· slide 80 — αναλογική τηλεφωνία ως historical SSB-FDM εφαρμογή' },
+    { pdf: 'SE_session14_AM.pdf', label: 'ασκήσεις AM (καμία dedicated σε FDM, βλ. παρακάτω)' },
   ]}
-  note="Το multiplexing συμπυκνώνεται ως πρόβλημα εξετάσεων — η μορφή που ζητείται (m(t)=sinc, k(t)=Π) έρχεται απευθείας από τα past exams Πρόοδος A/B, Jan'26, June'25."
+  note="Στο φετινό deck (81 σλάιντς) η Πολυπλεξία εμφανίζεται ΜΟΝΟ ως ένα bullet στο slide 5 — δεν υπάρχει ξεχωριστή ενότητα FDM. Το ίδιο και στο askisis deck (22 σελίδες, καμία FDM άσκηση). Η εμβάθυνση εδώ συμπληρώνει από Haykin/Lathi/Proakis, ενώ ολόκληρη η «Heavy exam — recurring problem» πινακίδα δικαιολογείται από τα past exams: η canonical «m=sinc, k=Π σε δύο carriers» έχει εμφανιστεί σε Πρόοδος A Θ3, Πρόοδος B Θ3, Πρόοδος April'26 Θ3, Jan'26 Θ3, June'25 Θ2 — δηλαδή 5+ εμφανίσεις."
 />
 
 <Collectible id="fdm-rug" />
 
-**Αυτή η ύλη εμφανίζεται σχεδόν αυτολεξεί σε 4+ από τα τελευταία θέματα** — το πιο επαναλαμβανόμενο πρόβλημα στο corpus εξετάσεων. Αν μάθεις σωστά τι κάνει η FDM και γιατί, παίρνεις δωρεάν μεγάλο μέρος της εξεταστικής σου AM ενότητας.
+**Αυτή η ύλη εμφανίζεται σχεδόν αυτολεξεί σε 5+ από τα τελευταία εξεταστικά θέματα** — η πιο επαναλαμβανόμενη πρόβλημα-υπογραφή στο corpus εξετάσεων. Αν μάθεις σωστά τι κάνει η FDM και γιατί, παίρνεις δωρεάν μεγάλο μέρος της εξεταστικής σου AM ενότητας — παρόλο που στις σλάιντς του καθηγητή υπάρχει **ένα μόνο bullet** για το θέμα.
 
-**FDM = Frequency Division Multiplexing.** Πολλοί χρήστες μοιράζονται τον ίδιο αναλογικό δίαυλο (αέρας, καλώδιο), ο καθένας σε διαφορετική **ζώνη συχνοτήτων**. Στο AM ραδιόφωνο, π.χ., κάθε σταθμός έχει το δικό του $f_c$ (540, 550, 560 kHz, …) και ο δέκτης διαλέγει ποιον ν' ακούσει με ένα στενό bandpass filter.
+**FDM = Frequency Division Multiplexing (Πολυπλεξία Διαίρεσης Συχνότητας).** Πολλοί χρήστες μοιράζονται τον ίδιο αναλογικό δίαυλο (αέρας, καλώδιο), ο καθένας σε διαφορετική **ζώνη συχνοτήτων**. Στο AM ραδιόφωνο, π.χ., κάθε σταθμός έχει το δικό του $f_c$ (540, 720, 1000 kHz, …) και ο δέκτης διαλέγει ποιον ν' ακούσει με ένα στενό bandpass filter.
 
-## 1. Η ιδέα — διαφορετικοί carriers, διαφορετικές ζώνες
+## 1. Πώς ορίζει την Πολυπλεξία ο καθηγητής (slide 5)
+
+Στις σλάιντς του μαθήματος (slide 5, «Ανάγκη για Διαμόρφωση») η Πολυπλεξία εμφανίζεται ως ένας από τους **δύο λόγους** που χρειαζόμαστε διαμόρφωση εξ αρχής — μαζί με το πρόβλημα μεγέθους κεραίας ($\lambda/2 \approx 7.5$ km για 20 kHz, βλ. [/am/overview](/am/overview)).
+
+<Callout type="key" title="Πώς ορίζει την Πολυπλεξία ο καθηγητής (slide 5)">
+
+<p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
+«<strong>Πολυπλεξία (Multiplexing)</strong>: ταυτόχρονη πρόσβαση σε κοινό δίαυλο επικοινωνίας από πολλούς χρήστες, χρησιμοποιώντας <strong>διαφορετική διαμόρφωση</strong> για τον καθένα.»
+</p>
+
+Πρόσεξε: ο καθηγητής γράφει «διαφορετική **διαμόρφωση**», όχι «διαφορετική **συχνότητα**». Ο όρος Πολυπλεξία είναι γενικός — καλύπτει:
+
+- **FDM (Frequency Division)** — διαφορετικός carrier για τον καθένα → διαφορετική ζώνη συχνοτήτων. Αυτό είναι το θέμα του παρόντος μαθήματος και της εξεταστικής.
+- **TDM (Time Division)** — ο κάθε χρήστης χρησιμοποιεί τον ίδιο carrier σε **διαφορετικά time slots**.
+- **CDM (Code Division)** — διαφορετικοί ορθογώνιοι κώδικες (3G/4G CDMA).
+
+Στο K21 και στα past exams ο όρος «πολυπλεξία» χρησιμοποιείται **πάντα** για FDM — αλλά να ξέρεις ότι η γενικότερη έννοια είναι πιο πλατιά.
+
+</Callout>
+
+**Γιατί FDM (και όχι TDM ή CDM) είναι ο φυσικός τρόπος για analog AM ραδιόφωνο;** Δύο λόγοι:
+
+1. **Παραλληλία στο φυσικό μέσο.** Οι ηλεκτρομαγνητικές ζώνες συχνοτήτων είναι «ορθογώνιες» — δύο σήματα σε διαφορετικά $f_c$ δεν αλληλεπιδρούν στο αέρα. Άρα μπορούν να εκπέμπονται **ταυτόχρονα** χωρίς συνεννόηση μεταξύ των σταθμών.
+2. **Απλή λήψη.** Ένας στενός bandpass filter γύρω από τον επιθυμητό $f_c$ απομονώνει το κανάλι. Δεν χρειάζεται συγχρονισμός χρόνου (όπως το TDM) ούτε συσχέτιση με κώδικα (όπως το CDM).
+
+## 2. Η ιδέα — δύο messages, δύο carriers
 
 Έστω **δύο messages** $m(t)$ και $k(t)$ με bandwidth $W$ καθένα. Τα διαμορφώνουμε σε **διαφορετικούς carriers**:
 
@@ -64,9 +89,9 @@ $$
 g(t) = m(t)\cos(2\pi f_1 t) + k(t)\cos(2\pi f_2 t)
 $$
 
-(εδώ DSB-SC για απλότητα — μπορεί να είναι και Conventional AM ή SSB).
+(εδώ DSB-SC για απλότητα — μπορεί να είναι και Conventional AM ή SSB.)
 
-Στο φάσμα:
+Στο πεδίο συχνότητας, με βάση το **modulation theorem** ($x(t)\cos(2\pi f_c t) \leftrightarrow \tfrac{1}{2}[X(f-f_c)+X(f+f_c)]$):
 
 $$
 G(f) = \frac{1}{2}[M(f - f_1) + M(f + f_1)] + \frac{1}{2}[K(f - f_2) + K(f + f_2)]
@@ -74,167 +99,377 @@ $$
 
 Δύο sets από sidebands, ένα γύρω από κάθε carrier.
 
-**Όρος καθαρής αποπολυπλεξίας:** οι δύο sets sidebands δεν πρέπει να **αλληλοκαλύπτονται**. Διαφορετικά, στον δέκτη, όταν θέλεις το $m$, θα πιάσεις και κομμάτια του $k$ — crosstalk.
+**Όρος καθαρής αποπολυπλεξίας:** οι δύο sets sidebands δεν πρέπει να **αλληλοκαλύπτονται**. Διαφορετικά, στον δέκτη, όταν θέλεις το $m$, θα πιάσεις και κομμάτια του $k$ — *crosstalk*, ή κανάλι-στο-κανάλι παρεμβολή.
 
-## 2. Συνθήκη μη-επικάλυψης
+<Callout type="intuition" title="Γιατί η μη-επικάλυψη είναι ισοδύναμη με «μπορώ να βγάλω πίσω και τα δύο»">
+Το $G(f)$ είναι **γραμμικός συνδυασμός** δύο όρων. Όταν οι υποστηρίξεις τους (τα φασματικά τους «κουτιά») είναι **ξένες**, ένας BPF γύρω από τον $f_1$ απομονώνει τέλεια το $\frac{1}{2}[M(f-f_1)+M(f+f_1)]$ — δηλαδή μόνο το $m$-κανάλι. Από εκεί και κάτω, ο δέκτης κάνει συνηθισμένη αποδιαμόρφωση (envelope ή coherent) όπως αν το σήμα ήταν μόνο του στον αέρα.
 
-Η συνθήκη εξαρτάται από τον τύπο της modulation:
+Αν οι υποστηρίξεις τέμνονται, ΚΑΝΕΝΑ BPF δεν μπορεί να ξεχωρίσει τις δύο σύνθεσεις — έχει χαθεί η πληροφορία σαν να είχαμε διπλασιάσει δύο σήματα στο ίδιο pixel μιας εικόνας.
+</Callout>
 
-| Τύπος modulation | Bandwidth ανά κανάλι | Ελάχιστη απόσταση carriers |
+## 3. Συνθήκη μη-επικάλυψης ανά σχήμα διαμόρφωσης
+
+Η συνθήκη εξαρτάται από το **εύρος ζώνης ανά κανάλι**, που με τη σειρά του εξαρτάται από τον τύπο της AM διαμόρφωσης:
+
+| Τύπος modulation | Bandwidth ανά κανάλι | Ελάχιστη απόσταση φερόντων |
 | --- | --- | --- |
-| Conventional AM | $2W$ | $\lvert f_2 - f_1\rvert \geq 2W$ |
-| DSB-SC | $2W$ | $\lvert f_2 - f_1\rvert \geq 2W$ |
-| **SSB (USB ή LSB)** | $W$ | **$\lvert f_2 - f_1\rvert \geq W$** |
-| VSB | $\sim W + W_{\text{vestige}}$ | $\sim W + W_{\text{vestige}}$ |
+| Συμβατικό AM (DSB-AM-TC) | $2W$ | $\lvert f_2 - f_1\rvert \geq 2W$ |
+| DSB-AM-SC | $2W$ | $\lvert f_2 - f_1\rvert \geq 2W$ |
+| **SSB-AM (USB ή LSB)** | $W$ | **$\lvert f_2 - f_1\rvert \geq W$** |
+| VSB-AM | $W + W_{\text{vestige}}$ | $\sim W + W_{\text{vestige}}$ |
 
-Η **SSB είναι 2x πιο φασματικά αποδοτική** — γι' αυτό χρησιμοποιείται σε εφαρμογές όπου το φάσμα είναι πολύτιμο (ραδιοερασιτεχνικά HF, στρατιωτικά).
+Η **SSB είναι 2× πιο φασματικά αποδοτική** — γι' αυτό χρησιμοποιείται σε εφαρμογές όπου το φάσμα είναι πολύτιμο (αναλογική τηλεφωνία, ραδιοερασιτεχνικά HF, στρατιωτικά). Δες την κανονική σύγκριση παρακάτω.
 
 <FDMSpectrumViz />
 
-## 3. Worked example — η canonical εξεταστική άσκηση
+<Callout type="key" title="Σύνδεση με slide 80 — γιατί η αναλογική τηλεφωνία επέλεξε SSB">
+Στις σλάιντς SSB-AM (slide 80) ο καθηγητής αναφέρει ως πρακτικές εφαρμογές: «αναλογική τηλεφωνία, στρατιωτικές επικοινωνίες, επικοινωνίες μεταξύ πλοίων, επικοινωνίες ραδιοερασιτεχνών». **Όλες αυτές είναι FDM εφαρμογές.** Συγκεκριμένα η αναλογική τηλεφωνία είναι το ιστορικό σύστημα AT&T «Type C carrier» (1918): 12 voice channels (κάθε ένα ~4 kHz USSB) στοιβαγμένα σε ένα 48 kHz coaxial cable. Αν αυτό γινόταν με DSB θα χρειαζόταν 96 kHz — διπλάσιο copper στις γραμμές, διπλάσιο κόστος.
 
-Αυτό το πρόβλημα (ή πολύ κοντινή παραλλαγή) εμφανίζεται **σχεδόν αυτολεξεί** στις εξετάσεις:
+Στις σλάιντς αυτή η σύνδεση **δεν αναπτύσσεται** — εξ ου και τα past exams ζητάνε ευθέως να εφαρμόσεις το SSB-vs-DSB tradeoff σε FDM σενάρια.
+</Callout>
 
-<Example title="Ex. — m=sinc, k=Π στα f_1, f_2 (Πρόοδος A Θ3 / Jan'26 Θ3 / June'25 Θ2)">
+<RecallCard
+  variant="concept"
+  title="Η κεντρική ιδέα — όλα μαζί σε ένα κάδρο"
+  keywords={[
+    <>FDM = διαφορετικός <InlineMath>{'f_c'}</InlineMath> ανά κανάλι</>,
+    <>Modulation theorem · κάθε κανάλι μετατοπίζεται στο <InlineMath>{'\\pm f_c'}</InlineMath></>,
+    <>Non-overlap ⇔ μη-επικάλυψη υποστηρίξεων</>,
+    <>SSB → 2× χωρητικότητα</>,
+    <>Demux = BPF γύρω από <InlineMath>{'f_c'}</InlineMath> + demodulator</>,
+  ]}
+  skeleton={[
+    <>Bandwidth ανά κανάλι: AM/DSB → <InlineMath>{'2W'}</InlineMath>, SSB → <InlineMath>{'W'}</InlineMath>, VSB → <InlineMath>{'W + W_{\\text{vestige}}'}</InlineMath>.</>,
+    <>Ελάχιστο carrier spacing = bandwidth ανά κανάλι.</>,
+    <>Στα ιδανικά: <InlineMath>{'\\Delta f_{\\min}'}</InlineMath> ίσο με το bandwidth. Στην πράξη: <InlineMath>{'\\Delta f_{\\min}'}</InlineMath> + guard band (~10–20% επιπλέον).</>,
+    <>SSB διπλασιάζει τη χωρητικότητα: <InlineMath>{'N_{\\text{SSB}} = 2 N_{\\text{DSB}}'}</InlineMath> για ίδιο διαθέσιμο φάσμα.</>,
+  ]}
+  trap={
+    <>
+      <strong>Συχνό λάθος Σ/Λ:</strong> «Το SSB-FDM χρειάζεται μικρότερο carrier spacing
+      γιατί το SSB έχει μικρότερο bandwidth.» Σωστό — αλλά πρόσεχε την κατεύθυνση: ΔΕΝ
+      είναι ότι ο carrier «πιο κοντινός» — είναι ότι το κανάλι «πιο στενό»,
+      άρα οι carriers χωράνε <em>πιο πυκνά</em>. Στις εξετάσεις η ερώτηση συχνά γυρίζει
+      σε «πόσα κανάλια χωράω σε X MHz» — εκεί φαίνεται καθαρά ο διπλασιασμός.
+    </>
+  }
+/>
+
+## 4. Η canonical εξεταστική άσκηση
+
+Αυτό το πρόβλημα (ή πολύ κοντινή παραλλαγή) εμφανίζεται **σχεδόν αυτολεξεί** σε **5+** από τις τελευταίες εξετάσεις (Πρόοδος A 2025, Πρόοδος B 2025, Jan 2026, June 2025, Πρόοδος Απρίλιος 2026):
+
+> Δίνεται $m(t) = \mathrm{sinc}(2Wt)$ και $k(t) = \Pi(4Wt)$, διαμορφωμένα κατά [SSB ή DSB-SC] σε φέροντα $f_1$ και $f_2$. (1) Σχεδίασε τα baseband φάσματα. (2) Σχεδίασε τα διαμορφωμένα. (3) Σχέση μεταξύ $f_1, f_2, W$ για μη-επικάλυψη. (4) Σχεδίασε το $G(f)$.
+
+Αξίζει να δεις τη λύση **βήμα-βήμα ως ζωντανή viz**, αντί να την πάρεις σαν στατική εικόνα:
+
+<FdmCanonicalProblemViz />
+
+### 4a. Worked example — το exam template αναλυτικά
+
+<Example title="m = sinc(2Wt), k = Π(4Wt) σε USSB στους f_1, f_2">
 
 **Δίνονται:**
-- $m(t) = \mathrm{sinc}(2Wt)$ (τριγωνικό φάσμα $M(f)$ στο $[-W, W]$)
-- $k(t) = \Pi(4Wt)$ (rectangular παλμός που έχει sinc-shaped φάσμα $K(f)$ ευρύ — αλλά για το πρόβλημα συνήθως υπολογίζουμε με «effective bandwidth» $W$)
-- Δύο carriers $f_1$ και $f_2$, AM-USSB ή DSB-SC
+- $m(t) = \mathrm{sinc}(2Wt)$ — bandwidth (στενό φάσμα)
+- $k(t) = \Pi(4Wt)$ — πλατύ φάσμα (sinc στη συχνότητα)
+- Δύο carriers $f_1 < f_2$, USSB διαμόρφωση
 
-**Ζητούνται:**
-1. Σχεδίασε τα baseband φάσματα $M(f)$ και $K(f)$.
-2. Σχεδίασε τα διαμορφωμένα φάσματα.
-3. Συνθήκη στους $f_1, f_2$ ώστε **να μην επικαλύπτονται**.
-4. Σχεδίασε το multiplexed φάσμα $G(f)$.
+**Ζητούνται:** (1) baseband φάσματα, (2) διαμορφωμένα, (3) συνθήκη στους $f_1, f_2$, (4) $G(f)$.
 
 ---
 
-**Λύση.**
-
 **Βήμα 1 — Baseband φάσματα.**
 
-Το $m(t) = \mathrm{sinc}(2Wt)$ έχει FT $M(f) = \frac{1}{2W}\Pi(f/(2W))$ — ένα **rectangle** πλάτους $1/(2W)$ από $-W$ έως $+W$.
+Το $m(t) = \mathrm{sinc}(2Wt)$ έχει FT $M(f) = \frac{1}{2W}\Pi(f/(2W))$ — ένα **rectangle** πλάτους $1/(2W)$ από $-W$ έως $+W$. (Από τη scaling property: $\mathrm{sinc}(at) \leftrightarrow \frac{1}{|a|}\Pi(f/a)$.)
 
-Το $k(t) = \Pi(4Wt)$ έχει FT $K(f) = \frac{1}{4W}\mathrm{sinc}(f/(4W))$ — ένα **sinc** με πρώτο μηδενισμό στις $\pm 4W$. Effective bandwidth (πρώτος null) $= 4W$, αλλά αν περιορίσουμε τη βασική ζώνη που μας ενδιαφέρει στο πρώτο lobe, λέμε $W_k = 4W$.
+Το $k(t) = \Pi(4Wt)$ έχει FT $K(f) = \frac{1}{4W}\mathrm{sinc}(f/(4W))$ — ένα **sinc** με πρώτο μηδενισμό στο $\pm 4W$. Αν δουλεύουμε με «πρώτο null» ως πρακτικό bandwidth, $W_k = 4W$ μονόπλευρα (στο πλαίσιο αυτής της άσκησης συνήθως θεωρούμε ότι το «εύρος ενδιαφέροντος» είναι $4W$ — η ακριβής τιμή εξαρτάται από το πώς ορίζεται).
 
-(Σε εξεταστικές, συνήθως δίνουν «message» και «pilot» όπου το ένα έχει σκόπιμα στενό φάσμα και το άλλο πιο πλατύ. Εδώ το $k$ είναι **πιο πλατύ** από το $m$.)
+**Παρατήρηση εξεταστικής γραμμής:** οι περισσότερες εκδοχές του παστ θέτουν και τα δύο μηνύματα με ίδιο bandwidth $W$ (π.χ. $m = \mathrm{sinc}(2Wt)$ και $k = \mathrm{sinc}^2(Wt)$, όπου και τα δύο έχουν one-sided bandwidth $W$). Όταν τα bandwidth είναι ίδια, οι αριθμοί απλοποιούνται και η συνθήκη παίρνει την καθαρή μορφή «$\Delta f \geq W$ για SSB, $\geq 2W$ για DSB».
 
 **Βήμα 2 — Διαμορφωμένα φάσματα.**
 
-USSB modulation στο $f_1$:
-$$
-\mathcal{F}\{m(t)\cos(2\pi f_1 t) + \text{Hilbert term}\}
-$$
-δίνει ένα μετατοπισμένο rectangle στις $[f_1, f_1 + W]$ και mirror στο $[-f_1 - W, -f_1]$.
+Modulation theorem για USSB: $m(t)\cos(2\pi f_1 t) - \hat{m}(t)\sin(2\pi f_1 t)$ έχει φάσμα **μόνο** στις θέσεις $[f_1, f_1 + W]$ και (κατοπτρικά) $[-f_1 - W, -f_1]$ — δηλαδή μόνο η **άνω πλευρική** του κάθε μηνύματος επιβιώνει.
 
-USSB modulation στο $f_2$:
-δίνει sinc-shaped peaks στο $[f_2, f_2 + 4W]$ (αν χρησιμοποιούμε first-null bandwidth).
+Άρα:
+- Για το $m$: rectangle στο $[f_1, f_1 + W]$ + κατοπτρικό στο $[-f_1 - W, -f_1]$.
+- Για το $k$: sinc-shape στο $[f_2, f_2 + W_k]$ + κατοπτρικό.
 
-**Βήμα 3 — Συνθήκη μη-επικάλυψης.**
+**Βήμα 3 — Συνθήκη μη-επικάλυψης (USSB).**
 
-Για USSB, η πάνω άκρη του πρώτου καναλιού είναι $f_1 + W$. Η κάτω άκρη του δεύτερου καναλιού είναι $f_2$. Για να μην αλληλοκαλύπτονται:
+Στο positive half: το $m$-κανάλι τελειώνει στο $f_1 + W$, το $k$-κανάλι ξεκινά στο $f_2$. Για να μην επικαλύπτονται:
 
 $$
-f_2 \geq f_1 + W
+f_2 \geq f_1 + W \quad\Longleftrightarrow\quad \boxed{\,\Delta f = f_2 - f_1 \geq W\,}
 $$
 
-Δηλαδή:
-$$
-\boxed{\,f_2 - f_1 \geq W\,}
-$$
+(Παρατήρηση: η συνθήκη εξαρτάται από το bandwidth του **αριστερότερου** καναλιού, γιατί από αυτό «προεξέχει» το κανάλι προς τα δεξιά. Αν είχαμε ανταλλάξει τις θέσεις των δύο μηνυμάτων, η συνθήκη θα ήταν $\Delta f \geq W_k$.)
 
-(Για DSB-SC θα ήταν $f_2 - f_1 \geq W + W_k = 5W$.)
-
-Ισοδύναμα: αν τα κανάλια έχουν διαφορετικά bandwidth, η ελάχιστη απόσταση είναι **το άθροισμα των μισών bandwidth** για USSB, ή **το άθροισμα των πλήρων bandwidth** για DSB.
+**Για DSB-SC** η ίδια ανάλυση δίνει $\Delta f \geq W + W_k$ (κάθε κανάλι έχει LSB **και** USB → η συνθήκη απαιτεί το άθροισμα των ημι-bandwidths του δεξιού άκρου του αριστερού καναλιού και του αριστερού άκρου του δεξιού καναλιού). Αν και τα δύο μηνύματα έχουν $W$, αυτό γίνεται $\Delta f \geq 2W$.
 
 **Βήμα 4 — Multiplexed φάσμα G(f).**
 
 $G(f)$ έχει:
 - Rectangle ($M$ shifted) στο $[f_1, f_1 + W]$ + mirror στο $[-f_1 - W, -f_1]$
-- Sinc-shape ($K$ shifted) στο $[f_2, f_2 + 4W]$ + mirror στο $[-f_2 - 4W, -f_2]$
-- Καμία επικάλυψη όταν $f_2 - f_1 \geq W$
+- Sinc-shape ($K$ shifted) στο $[f_2, f_2 + W_k]$ + mirror
+- Καμία επικάλυψη όταν ισχύει η συνθήκη του Βήματος 3
 
-(Στις εξετάσεις, σχεδιάζεις τα δύο σχήματα στις σωστές θέσεις.)
+Στη σχεδίαση: άξονας $f$ οριζόντιος, τέσσερα «κουτιά» γύρω από τις τέσσερις θέσεις $\pm f_1, \pm f_2$, με το σωστό σχήμα (rect ή sinc) και ύψος.
 
 </Example>
 
-## 4. Μερικά πραγματικά παραδείγματα
+### 4b. Γιατί αυτή η άσκηση είναι το «exam template» — recognition pattern
 
-### 4a. AM ραδιόφωνο (medium wave)
+Όποτε δεις σε εκφώνηση:
 
-- Φασματική ζώνη: 540 kHz – 1700 kHz
-- Carrier spacing: **10 kHz** (στις ΗΠΑ), **9 kHz** (Ευρώπη)
-- Message bandwidth ανά σταθμό: ~5 kHz (περιορίζεται για mono ομιλία/μουσική)
-- Total channels: ~120
+- **Δύο μηνύματα** $m_1(t), m_2(t)$ δοσμένα σε αναλυτική μορφή (sinc, rect, sinc², tri, ...)
+- **Δύο carriers** $f_1, f_2$ — συνήθως όχι αριθμητικές τιμές, παρά γραμματικά
+- Ερώτηση «**σχέση** μεταξύ $f_1, f_2, W$ για να μην επικαλύπτονται»
 
-Επειδή AM = $2W$ bandwidth, και $W = 5$ kHz, $2W = 10$ kHz → carrier spacing **οριακό**. Στην πράξη υπάρχει minor crosstalk με γειτονικούς σταθμούς (το ξέρεις αν σου έτυχε ποτέ να ακούς δύο σταθμούς ταυτόχρονα).
+...είσαι σε FDM canonical pattern. Η λύση είναι **πάντα οι ίδιοι 4 ίδιοι βήματες** που είδες στο `<FdmCanonicalProblemViz />` παραπάνω.
 
-### 4b. FM ραδιόφωνο (VHF)
+## 5. Παγίδα της πρακτικής — guard bands και crosstalk
 
-- Φασματική ζώνη: 88 MHz – 108 MHz
-- Carrier spacing: **200 kHz**
-- FM bandwidth ανά σταθμό: ~150 kHz (Carson's rule, βλ. [/fm/carson](/fm/carson))
+Η θεωρητική συνθήκη «$\Delta f \geq W$» υποθέτει **ιδανικά φίλτρα** στον δέκτη — brick-wall BPF που κάνει στιγμιαία μετάβαση από passband σε stopband. Στην πραγματική ηλεκτρονική κανένα φίλτρο δεν είναι ιδανικό. Όλα έχουν **transition band** όπου το gain πέφτει σταδιακά από 1 σε 0.
 
-### 4c. Mobile cellular
+Αυτό σημαίνει ότι αν στοιβάξεις τα κανάλια **ακριβώς στο όριο** της θεωρητικής μη-επικάλυψης, ο BPF του δέκτη θα μαζεύει ενέργεια από τα γειτονικά κανάλια στις «σκόλες» του transition. Αυτή η ενέργεια γίνεται **crosstalk** — ο χαρακτηριστικός θόρυβος «γειτονικού σταθμού» που ακούγεται στο AM ραδιόφωνο όταν είναι νύχτα και μακρινοί σταθμοί διαπερνούν τα τοπικά.
 
-- 4G LTE channel widths: 1.4, 3, 5, 10, 15, 20 MHz (ευέλικτο)
-- Carriers στις ζώνες 700 MHz – 2.6 GHz
-- Πολυπλεκτικά πολλοί χρήστες σε κάθε channel μέσω OFDMA (advanced FDM)
+<FdmCrossTalkViz />
 
-### 4d. Cable TV (αναλογικό, ιστορικό)
+**Λύση: guard band.** Αφήνουμε ένα μικρό κενό (typically 10–20% του bandwidth ανά κανάλι) ανάμεσα στα κανάλια ώστε η transition band του BPF να «κατοικεί» μέσα στο κενό αυτό αντί να μπει μέσα στα γειτονικά. Παράδειγμα από το AM ραδιόφωνο: ωφέλιμο audio bandwidth ~5 kHz, channel spacing 10 kHz, guard band ~5 kHz — αρκετά για ένα όχι-υπερβολικά-στενό filter να κρατάει την επιθυμητή σταθερότητα.
 
-- 6 MHz spacing για NTSC, 8 MHz για PAL
-- VSB modulation για να χωρά video bandwidth στο spacing
+<Callout type="warning" title="Trade-off που οι εξετάσεις αγαπούν">
+Ο **σχεδιαστής συστήματος FDM** πρέπει να ισορροπήσει:
 
-## 5. Demultiplexing — πώς ο δέκτης διαλέγει ένα κανάλι
+- **Στενός guard band** → πιο πολλά κανάλια χωράνε, αλλά απαιτεί ακριβά απότομα φίλτρα.
+- **Πλατύς guard band** → φθηνά «μαλακά» φίλτρα, αλλά λιγότερα κανάλια.
+- **SSB αντί για DSB** → μισό bandwidth ανά κανάλι, διπλάσιος αριθμός χρηστών στο ίδιο φάσμα. Αλλά: χρειάζεται PLL/coherent demod στον δέκτη, ακριβότερη υλοποίηση — γι' αυτό το AM broadcast παραμένει DSB-style, ενώ η HF επαγγελματική επικοινωνία είναι όλη SSB.
+</Callout>
+
+## 6. Demultiplexing — το superheterodyne receiver
 
 Ο δέκτης **δεν** ακούει ολόκληρο το multiplexed σήμα — διαλέγει ένα κανάλι:
 
 1. **Στενός bandpass filter** γύρω από τον carrier του ζητούμενου καναλιού. Διώχνει όλα τα άλλα κανάλια.
-2. **Demodulator** για το επιλεγμένο σήμα (envelope detector ή coherent, ανάλογα τη modulation).
+2. **Demodulator** για το επιλεγμένο σήμα (envelope detector για AM, coherent για DSB-SC/SSB, βλ. [/am/modulator-demodulator](/am/modulator-demodulator)).
 3. **Τελικό LPF** για να καθαρίσει το recovered message.
 
-Σε ένα superheterodyne receiver (το κλασικό AM/FM ραδιόφωνο):
-- Ο **local oscillator** μετατοπίζει την επιλεγμένη συχνότητα σε σταθερή «**intermediate frequency**» (IF — π.χ. 455 kHz για AM ή 10.7 MHz για FM).
-- Ο **IF filter** είναι σταθερός και πολύ στενός (πιο εύκολο να φτιαχτεί απότομο φίλτρο σε σταθερή συχνότητα).
-- Ο demodulator λειτουργεί στο IF.
+Αλλά εδώ υπάρχει ένα πρακτικό πρόβλημα: ένα AM ραδιόφωνο που πιάνει από 540 έως 1700 kHz θα έπρεπε να έχει έναν **tunable** BPF που να γίνεται ταυτόχρονα **στενός** (για να ξεχωρίζει διπλανά κανάλια) **και** **μετακινούμενος** σε όλο αυτό το range. Αυτό είναι **εξαιρετικά δύσκολο** να φτιαχτεί ηλεκτρονικά — οι υψηλής ποιότητας στενοί φίλτρα είναι ακριβοί ακόμα και σε σταθερή συχνότητα, και η ευελιξία επιδεινώνει το πρόβλημα.
 
-Όλη η «**επιλογή σταθμού**» γίνεται μέσω αλλαγής του local oscillator — όχι μέσω αλλαγής του φίλτρου.
+**Η λύση — superheterodyne architecture** (Edwin Armstrong, 1918, ακόμα ο de facto τρόπος που λειτουργούν τα ραδιόφωνα):
 
-## 6. Σύνοψη formulas (στο τυπολόγιο)
+<SuperheterodyneReceiverViz />
 
-| Σχήμα | Bandwidth ανά κανάλι | Ελάχιστη carrier spacing για 2 κανάλια |
+Στρατηγική: αντί να φτιάξουμε tunable BPF, **μετακινούμε το ζητούμενο κανάλι** σε σταθερή συχνότητα (**Intermediate Frequency, IF**) και βάζουμε ένα **σταθερό** στενό BPF εκεί. Η μετακίνηση γίνεται με ένα **mixer** + ένα **τοπικό ταλαντωτή (Local Oscillator, LO)** που είναι αυτός που γίνεται tunable:
+
+$$
+\text{tuning ένα σταθμό} \;\Longleftrightarrow\; \text{μετακίνηση του } f_{LO}
+$$
+
+Mathematics: αν το input σήμα έχει συνιστώσα στο $f_{\text{target}}$, και πολλαπλασιαστεί με $\cos(2\pi f_{LO} t)$, παράγει συνιστώσες στο $|f_{\text{target}} - f_{LO}|$ και $f_{\text{target}} + f_{LO}$. Επιλέγουμε $f_{LO} = f_{\text{target}} + f_{IF}$ ώστε η χαμηλότερη συνιστώσα να βρεθεί ακριβώς στην IF. Το IF φίλτρο (σταθερά στενό γύρω από $f_{IF}$) απομονώνει το ζητούμενο.
+
+**Τυπικές τιμές:** $f_{IF} = 455$ kHz για AM ραδιόφωνα, $f_{IF} = 10.7$ MHz για FM. Αυτά είναι παγκόσμια standards — όλος ο κόσμος συμφώνησε.
+
+<Callout type="key" title="Same topology, three names (A3 connection)">
+Το «mixer + filter» που βλέπεις εδώ έχει εμφανιστεί ήδη **τρεις φορές** στην ύλη με διαφορετικά ονόματα:
+
+- **Διαμόρφωση**: mixer + BPF γύρω από $f_c$ → ανεβάζει το baseband στο RF.
+- **Σύμφωνη Αποδιαμόρφωση**: mixer + LPF → κατεβάζει το RF στο baseband (= ειδική περίπτωση όπου το «BPF» έχει $f_2 = 0$).
+- **Frequency Conversion** (βλ. [/am/dsb-sc §5b](/am/dsb-sc#5b-canonical-frequency-conversion---περιγραφή-του-πομπού)): mixer + BPF γύρω από $f_2$ → μετακινεί από το ένα RF στο άλλο.
+
+Το **superheterodyne** είναι ακριβώς η τρίτη περίπτωση: frequency conversion από το $f_{\text{target}}$ (RF) στο $f_{IF}$ (πιο εύκολο). Η «επιλογή σταθμού» γίνεται από τη μεταβολή του $f_{LO}$, όχι από την αλλαγή του τελικού demodulator — που τρέχει πάντα στην ίδια IF.
+</Callout>
+
+## 7. Παραδείγματα από την πραγματική ζωή
+
+### 7a. AM ραδιόφωνο (medium wave)
+
+- Φασματική ζώνη: **540–1700 kHz**
+- Carrier spacing: **10 kHz** (ΗΠΑ), **9 kHz** (Ευρώπη)
+- Bandwidth ανά σταθμό: ~5 kHz (περιορίζεται για mono ομιλία/μουσική)
+- Total channels: **~120**
+
+Επειδή AM = $2W$ bandwidth, και $W = 5$ kHz, $2W = 10$ kHz → carrier spacing **οριακό**. Στην πράξη ο guard band έχει ενσωματωθεί στο γεγονός ότι το audio bandwidth κόβεται κάτω από 5 kHz (γι' αυτό το AM ακούγεται «θαμπό»).
+
+### 7b. FM ραδιόφωνο (VHF)
+
+- Φασματική ζώνη: **88–108 MHz**
+- Carrier spacing: **200 kHz**
+- FM bandwidth ανά σταθμό: ~150 kHz (Carson's rule, βλ. [/fm/carson](/fm/carson))
+
+### 7c. Αναλογική τηλεφωνία (AT&T Type C carrier, ιστορικό)
+
+Το πρώτο μεγάλο εμπορικό FDM σύστημα, **όλο SSB**:
+- 12 voice channels × 4 kHz USSB = **48 kHz** συνολικά
+- Πάνω σε κάθε ζεύγος coaxial cable καλωδίων χιλιόμετρων
+- Έδωσε την πρώτη ευκαιρία για **πολλαπλές παράλληλες συνομιλίες** χωρίς να ανέβαζε γραμμικά το copper στο edaph
+
+Σε ένα DSB σύστημα θα χρειαζόταν 96 kHz — διπλάσιο επένδυση σε κάθε γραμμή. Αυτό είναι το πραγματικό value statement του SSB.
+
+### 7d. Mobile cellular (modern FDM-derived)
+
+- 4G LTE channel widths: 1.4, 3, 5, 10, 15, 20 MHz (ευέλικτο)
+- Carriers στις ζώνες 700 MHz – 2.6 GHz
+- Πολυπλεκτικά πολλοί χρήστες σε κάθε channel μέσω **OFDMA** (Orthogonal FDM-A) — εξέλιξη του FDM όπου κάθε χρήστης παίρνει ένα *υποσύνολο* από πολλούς πιο στενούς subcarriers (τεχνικά κοντά στην ιδέα του FDM αλλά με ψηφιακή μορφή).
+
+### 7e. Cable TV (αναλογικό, ιστορικό)
+
+- **6 MHz spacing** για NTSC, **8 MHz** για PAL
+- **VSB-AM** modulation (βλ. [/am/vsb](/am/vsb)) — εδώ το VSB πέρα από SSB αντί για DSB σώζει σχεδόν τη μισή bandwidth ανά κανάλι, διπλάσιοι σταθμοί στο ίδιο coaxial.
+
+## 8. Σύνοψη formulas
+
+| Σχήμα | Bandwidth ανά κανάλι | Ελάχιστη carrier spacing |
 | --- | --- | --- |
-| Conventional AM | $2W$ | $\Delta f \geq 2W$ |
-| DSB-SC | $2W$ | $\Delta f \geq 2W$ |
-| SSB | $W$ | $\Delta f \geq W$ |
-| VSB | $\sim W + W_{\text{vestige}}$ | $\sim W + W_{\text{vestige}}$ |
+| Συμβατικό AM | $2W$ | $\Delta f \geq 2W$ |
+| DSB-AM-SC | $2W$ | $\Delta f \geq 2W$ |
+| SSB-AM | $W$ | $\Delta f \geq W$ |
+| VSB-AM | $W + W_{\text{vestige}}$ | $\Delta f \geq W + W_{\text{vestige}}$ |
 
 Για **N κανάλια** στοιβαγμένα:
-- Total spectrum used = $N \cdot \text{BW}_{\text{per channel}}$ + guard bands
+$$
+\text{Total spectrum used} = N \cdot (\text{BW ανά κανάλι} + \text{guard band})
+$$
 
-Πρακτικά αφήνουμε **guard bands** (μικρά κενά) ανάμεσα σε κανάλια ώστε real (μη-ιδανικά) φίλτρα να μπορούν να ξεχωρίσουν τα κανάλια χωρίς απαιτήσεις απείρως απότομου cutoff.
+Συνιστώμενο guard band: **10–20%** του bandwidth ανά κανάλι, για να φωλιάσει η transition band ενός πρακτικού φίλτρου χωρίς leakage.
+
+<RecallCard
+  variant="summary"
+  title="FDM — recall card για την εξεταστική"
+  keywords={[
+    <>FDM = different <InlineMath>{'f_c'}</InlineMath> per user</>,
+    <>Non-overlap: <InlineMath>{'\\Delta f \\geq B_\\text{channel}'}</InlineMath></>,
+    <>SSB = 2× capacity vs DSB</>,
+    <>Canonical exam: m=sinc, k=Π, find <InlineMath>{'\\Delta f_{\\min}'}</InlineMath></>,
+    <>Superheterodyne: tuning = move <InlineMath>{'f_{LO}'}</InlineMath></>,
+    <>Same topology three names: modulation / demod / freq conversion</>,
+  ]}
+  skeleton={[
+    <><strong>Συνθήκη μη-επικάλυψης</strong>: $\Delta f \geq$ bandwidth ανά κανάλι. AM/DSB → <InlineMath>{'2W'}</InlineMath>, SSB → <InlineMath>{'W'}</InlineMath>, VSB → <InlineMath>{'W + W_\\text{vest}'}</InlineMath>.</>,
+    <><strong>Εξεταστικό template</strong>: (1) baseband <InlineMath>{'M(f), K(f)'}</InlineMath>, (2) shift κάθε ένα στα <InlineMath>{'\\pm f_c'}</InlineMath> με modulation theorem, (3) απαίτηση μη-επικάλυψης για την συνθήκη, (4) σχεδιασμός <InlineMath>{'G(f)'}</InlineMath>.</>,
+    <><strong>Πρακτικά</strong>: guard band 10–20% για να χωρέσει η transition του πραγματικού BPF. Χωρίς αυτό, crosstalk.</>,
+    <><strong>Demux</strong>: superheterodyne — μίκτης + LO που μετακινεί τον ζητούμενο σταθμό στην IF, σταθερό στενό IF φίλτρο επιλέγει, demodulator τρέχει σε σταθερή IF.</>,
+  ]}
+  trap={
+    <>
+      Η αλλαγή σταθμού γίνεται με αλλαγή του <strong>τοπικού ταλαντωτή</strong>, ΟΧΙ
+      με αλλαγή του φίλτρου επιλογής. Αν στην εξέταση γράψεις «tuning το BPF του
+      δέκτη», χάνεις τη βασική σύλληψη του superheterodyne. Το BPF (στο IF) είναι
+      <strong>σταθερό</strong>· ο LO είναι αυτός που γίνεται tunable.
+    </>
+  }
+/>
 
 ## Εξάσκηση
 
 <ExerciseProgress slug="am/multiplexing" total={5} />
 
-Πέντε ερωτήσεις πάνω στη συνθήκη μη-επικάλυψης και τη σχεδίαση φάσματος FDM — από τις πιο εξεταζόμενες ασκήσεις.
+Πέντε ερωτήσεις πάνω στη συνθήκη μη-επικάλυψης και τη σχεδίαση φάσματος FDM — από τις πιο εξεταζόμενες ασκήσεις. Πριν τις δεις, **κάνε μια προσπάθεια από μνήμη** στα drills παρακάτω.
+
+<RecallDrill
+  id="fdm-canonical-from-memory"
+  prompt={
+    <p>
+      Χωρίς να γυρίσεις πάνω: <strong>γράψε τα 4 βήματα</strong> της canonical FDM
+      εξεταστικής άσκησης («δίνονται δύο μηνύματα σε δύο carriers, βρες τη συνθήκη
+      και σχεδίασε το <InlineMath>{'G(f)'}</InlineMath>»). Για κάθε βήμα, δώσε
+      σε μία πρόταση τι κάνεις και ποιο εργαλείο χρησιμοποιείς.
+    </p>
+  }
+  answer={
+    <ol className="ml-5 list-decimal space-y-1">
+      <li>
+        <strong>Baseband φάσματα.</strong> Υπολογίζω <InlineMath>{'M(f), K(f)'}</InlineMath>{' '}
+        με Fourier transform (συνήθως scaling/duality στο τυπολόγιο).
+      </li>
+      <li>
+        <strong>Modulation theorem.</strong> Για κάθε μήνυμα, εφαρμόζω{' '}
+        <InlineMath>{'x\\cos(2\\pi f_c t) \\leftrightarrow \\tfrac12[X(f-f_c)+X(f+f_c)]'}</InlineMath>.
+        Για SSB κρατάω μόνο την μία πλευρική.
+      </li>
+      <li>
+        <strong>Συνθήκη μη-επικάλυψης.</strong> Απαιτώ η δεξιά άκρη του αριστερού
+        καναλιού να μην ξεπερνά την αριστερή άκρη του δεξιού. Αυτό δίνει τη ζητούμενη
+        ανισότητα στους <InlineMath>{'f_1, f_2, W'}</InlineMath>.
+      </li>
+      <li>
+        <strong>Σχέδιο G(f).</strong> Στον άξονα f, βάζω τα 4 «κουτιά» (positive και
+        negative side κάθε καναλιού) στις σωστές θέσεις, με το σωστό σχήμα (rect, sinc,
+        tri κλπ).
+      </li>
+    </ol>
+  }
+/>
+
+<ClozeDrill
+  id="fdm-bandwidth-table"
+  prompt={
+    <p>
+      Συμπλήρωσε τις συνθήκες ελάχιστης απόστασης φερόντων για κάθε σχήμα διαμόρφωσης.
+      Χρησιμοποίησε <InlineMath>{'W'}</InlineMath> και — όπου χρειάζεται —{' '}
+      <InlineMath>{'W_v'}</InlineMath> για το vestige bandwidth.
+    </p>
+  }
+  parts={[
+    'Συμβατικό AM: Δf ≥ ',
+    { blank: 'am', accept: ['2W', '2*W', '2·W'], hint: '... W', size: 5 },
+    '. DSB-AM-SC: Δf ≥ ',
+    { blank: 'dsb', accept: ['2W', '2*W', '2·W'], hint: '... W', size: 5 },
+    '. SSB-AM: Δf ≥ ',
+    { blank: 'ssb', accept: ['W'], hint: '... W', size: 3 },
+    '. VSB-AM: Δf ≥ ',
+    { blank: 'vsb', accept: ['W+Wv', 'W + Wv', 'W+W_v', 'W + W_v', 'W+W_vest', 'W+W_vestige'], hint: 'W + ...', size: 8 },
+    '. Δηλαδή το SSB δίνει ',
+    { blank: 'ssb-factor', accept: ['2', '2x', '2X', '×2', 'x2', 'διπλά', '2 φορές'], hint: '×N πιο πολλά κανάλια', size: 4 },
+    '× πιο πολλά κανάλια από το DSB στο ίδιο φάσμα.',
+  ]}
+  solution={
+    <p>
+      Conventional AM και DSB-AM-SC έχουν και τα δύο bandwidth <InlineMath>{'2W'}</InlineMath>{' '}
+      (USB + LSB). SSB-AM έχει μόνο τη μία πλευρική (<InlineMath>{'W'}</InlineMath>). VSB-AM
+      πέφτει ενδιάμεσα. Άρα <InlineMath>{'N_\\text{SSB} = 2 N_\\text{DSB}'}</InlineMath>{' '}
+      για ίδιο διαθέσιμο φάσμα — αυτό είναι το «2× capacity» του SSB στο FDM.
+    </p>
+  }
+/>
+
+<ReorderDrill
+  id="superheterodyne-chain"
+  prompt={
+    <p>
+      Βάλε σε σωστή σειρά τα βήματα ενός <strong>superheterodyne receiver</strong>{' '}
+      (όπως φαίνεται στον <code>SuperheterodyneReceiverViz</code> παραπάνω) για AM
+      ραδιόφωνο. Στοχεύεις σε σταθμό στους <InlineMath>{'f_\\text{target} = 1000'}</InlineMath>{' '}
+      kHz και έχεις <InlineMath>{'f_{IF} = 455'}</InlineMath> kHz.
+    </p>
+  }
+  steps={[
+    <>① Λαμβανόμενο σήμα στην κεραία: όλοι οι σταθμοί 540, 720, 1000, 1400 kHz μαζί στο φάσμα.</>,
+    <>② Ρυθμίζω τον <strong>τοπικό ταλαντωτή</strong> στα <InlineMath>{'f_{LO} = f_\\text{target} + f_{IF} = 1000 + 455 = 1455'}</InlineMath> kHz.</>,
+    <>③ Mixer: πολλαπλασιάζω input × <InlineMath>{'\\cos(2\\pi f_{LO} t)'}</InlineMath>. Κάθε σταθμός παράγει copies στα <InlineMath>{'|f_c - f_{LO}|'}</InlineMath> και <InlineMath>{'f_c + f_{LO}'}</InlineMath>.</>,
+    <>④ <strong>IF φίλτρο</strong>: σταθερό στενό BPF γύρω από 455 kHz. Επιβιώνει ΜΟΝΟ ο σταθμός που μετατοπίστηκε στο IF (= ο 1000 kHz).</>,
+    <>⑤ IF amplifier: ενίσχυση στο IF (πιο εύκολη από ενίσχυση σε υψηλή RF).</>,
+    <>⑥ <strong>Demodulator</strong>: envelope detector (για AM) στο IF — εξαγωγή του message <InlineMath>{'m(t)'}</InlineMath>.</>,
+    <>⑦ Audio amplifier → ηχείο.</>,
+  ]}
+/>
 
 <ExamProblem id="fdm-min-spacing" year="Spacing" weight="βασικό">
-**Ερώτηση:** Δύο voice κανάλια με $W = 4$ kHz εκπέμπονται με DSB-SC. Πόσο ελάχιστο carrier spacing $\Delta f = f_2 - f_1$ χρειάζεται;
+**Ερώτηση:** Δύο voice κανάλια με $W = 4$ kHz εκπέμπονται με DSB-SC. Πόσο ελάχιστο carrier spacing $\Delta f = f_2 - f_1$ χρειάζεται; Πόσα κανάλια χωράς σε 100 kHz με DSB-SC vs με SSB;
 
 <Example title="Λύση" defaultOpen={true}>
 Κάθε DSB-SC κανάλι έχει bandwidth $2W = 8$ kHz (USB + LSB). Για να μην επικαλύπτονται, ο carrier του δεύτερου πρέπει να είναι τουλάχιστον $2W$ μακριά:
 $$\Delta f \geq 2W = 8 \text{ kHz}$$
 
-Αν χρησιμοποιούσαμε **SSB** αντί για DSB-SC, θα αρκούσε $\Delta f \geq W = 4$ kHz — διπλάσια χωρητικότητα στο ίδιο φάσμα. Γι' αυτό τα HF κανάλια στοιβάζονται 3 kHz μακριά (USSB voice 3 kHz).
+Σε 100 kHz με **DSB-SC** χωράνε $\lfloor 100/8 \rfloor = 12$ κανάλια.
+
+Με **SSB** κάθε κανάλι παίρνει μόνο $W = 4$ kHz, άρα $\lfloor 100/4 \rfloor = 25$ κανάλια. **Διπλάσια χωρητικότητα** — εξ ου και τα HF επαγγελματικά κανάλια στοιβάζονται 3 kHz μακριά (USSB voice 3 kHz, ακόμη πιο σφιχτά).
+
+Στην πράξη βάζουμε ~10–20% guard band, οπότε οι αριθμοί είναι λίγο μικρότεροι από τους θεωρητικούς.
 </Example>
 </ExamProblem>
 
-<ExamProblem id="fdm-canonical-sinc-rect" year="Spectrum sketch" weight="canonical">
-**Ερώτηση:** $m_1(t) = \mathrm{sinc}(2Wt)$ διαμορφώνει με DSB-SC σε $f_1$, $m_2(t) = \mathrm{sinc}^2(Wt)$ διαμορφώνει με DSB-SC σε $f_2$. Ποιες οι ελάχιστες $f_1, f_2$ ώστε τα κανάλια να μην επικαλύπτονται και η αρνητική πλευρά κάθε σήματος να μη μπει στις θετικές συχνότητες;
+<ExamProblem id="fdm-canonical-sinc-rect" year="Canonical FDM" weight="canonical past-exam">
+**Ερώτηση** (παραλλαγή Πρόοδος A 2025 Θ3): $m_1(t) = \mathrm{sinc}(2Wt)$ διαμορφώνει με DSB-SC σε $f_1$, $m_2(t) = \mathrm{sinc}^2(Wt)$ διαμορφώνει με DSB-SC σε $f_2$. Ποιες οι ελάχιστες $f_1, f_2$ ώστε τα κανάλια να μην επικαλύπτονται και η αρνητική πλευρά κάθε σήματος να μη μπει στις θετικές συχνότητες;
 
 <Example title="Λύση">
 **Baseband bandwidths:**
@@ -249,51 +484,117 @@ $$\Delta f \geq 2W = 8 \text{ kHz}$$
 - Μη-επικάλυψη μεταξύ τους: $|f_2 - f_1| \geq 2W$.
 
 **Ελάχιστη επιλογή:** $f_1 = W$, $f_2 = 3W$. (Με $f_1 < f_2$ WLOG.)
+
+**Σχέδιο G(f):** στις $\pm W$ ένα DSB-shaped «κουτί» με rect-shape (από το $m_1$), στις $\pm 3W$ ένα DSB-shaped «κουτί» με tri-shape (από το $m_2$). Κάθε ένα έχει εύρος $\pm W$ γύρω από τον carrier, και τα διπλανά άκρα μόλις φιλιούνται χωρίς να επικαλύπτονται.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="fdm-ssb-vs-dsb" year="Trade-off" weight="capacity">
-**Ερώτηση:** Σε ένα κανάλι 60 kHz πόσα voice signals με $W = 3$ kHz μπορώ να στοιβάξω χρησιμοποιώντας: (a) DSB-SC, (b) SSB;
+**Ερώτηση:** Σε ένα κανάλι 60 kHz πόσα voice signals με $W = 3$ kHz μπορώ να στοιβάξω χρησιμοποιώντας: (a) DSB-SC, (b) SSB; Συζήτησε τους πρακτικούς παράγοντες που οδηγούν στην επιλογή.
 
 <Example title="Λύση" defaultOpen={true}>
-- **(a) DSB-SC:** κάθε κανάλι παίρνει $2W = 6$ kHz. Στο 60 kHz total: $60/6 = 10$ κανάλια.
-- **(b) SSB:** κάθε κανάλι παίρνει $W = 3$ kHz. Στο 60 kHz total: $60/3 = 20$ κανάλια.
+- **(a) DSB-SC:** κάθε κανάλι παίρνει $2W = 6$ kHz. Στο 60 kHz total: $60/6 = \boxed{10}$ κανάλια.
+- **(b) SSB:** κάθε κανάλι παίρνει $W = 3$ kHz. Στο 60 kHz total: $60/3 = \boxed{20}$ κανάλια.
 
 **SSB διπλασιάζει τη χωρητικότητα.** Στην πράξη βάζουμε guard bands (~10–20% παραπάνω space) για non-ideal filters, οπότε οι αριθμοί είναι λίγο μικρότεροι.
+
+**Γιατί όχι πάντα SSB;** Τέσσερις παράγοντες:
+1. **SSB απαιτεί coherent demodulation** (PLL ή σύμφωνη ανίχνευση) — ακριβότερος δέκτης.
+2. **Generation πιο δύσκολη** — φασματικά απότομα φίλτρα ή phase-shift method με Hilbert.
+3. **Καμία ανθεκτικότητα σε frequency-error**: αν ο LO του δέκτη έχει μικρή απόκλιση, το SSB output ολισθαίνει ολόκληρο σε φασματική θέση — ακούγεται «Donald Duck».
+4. **DSB έχει envelope** (αν είναι Conventional AM) → απλός envelope detector, $1.50.
+
+Στην επαγγελματική HF το SSB νικά λόγω του 2× capacity gain. Στο broadcast AM το DSB-with-carrier νικά λόγω των φθηνών δεκτών.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="demux-bpf" year="Demultiplexing" weight="receiver">
-**Ερώτηση:** Πώς διαλέγει ο δέκτης ένα συγκεκριμένο κανάλι από ένα FDM σήμα;
+**Ερώτηση:** Πώς διαλέγει ο δέκτης ένα συγκεκριμένο κανάλι από ένα FDM σήμα; Δώσε και την ιδανική (απλή) και την πρακτική (superheterodyne) εκδοχή.
 
 <Example title="Λύση">
-1. **Bandpass φιλτράρισμα** γύρω από τον carrier του ζητούμενου καναλιού (κανονικά αρκετά απότομο για να κόψει τα γειτονικά).
+**Ιδανική προσέγγιση:**
+1. **Bandpass φιλτράρισμα** γύρω από τον carrier του ζητούμενου καναλιού (αρκετά απότομο για να κόψει τα γειτονικά).
 2. **Demodulation** — ίδια διαδικασία με το ένα-κανάλι case (envelope detector για AM, coherent για DSB/SSB).
 
-**Πρακτικό πρόβλημα:** ένα ραδιόφωνο που πιάνει 540 kHz – 1700 kHz θα χρειαζόταν να tunáρει το κεντρικό του BPF σε όλα αυτά τα κανάλια — δύσκολο. Λύση: **superheterodyne** receiver — μικτής (mixer) μετατοπίζει το ζητούμενο κανάλι σε σταθερή **intermediate frequency (IF)**, όπου ένα fixed BPF (πιο εύκολο να χτιστεί) απομονώνει το σήμα. Τότε η demodulation γίνεται στην IF.
+**Πρόβλημα στην πράξη:** ένα ραδιόφωνο που πιάνει 540–1700 kHz θα χρειαζόταν tunable στενό BPF που να δουλεύει σε όλο αυτό το range. Δύσκολο.
+
+**Λύση — superheterodyne:**
+
+1. **Τοπικός ταλαντωτής (LO)** σε συχνότητα $f_{LO} = f_\text{target} + f_{IF}$. Ο LO είναι αυτός που γίνεται tunable — όχι το BPF.
+2. **Mixer** πολλαπλασιάζει $\text{input} \times \cos(2\pi f_{LO} t)$. Ο επιλεγμένος σταθμός μετατοπίζεται στο $f_{IF}$.
+3. **Σταθερός στενός BPF** στο $f_{IF}$ (π.χ. 455 kHz για AM, 10.7 MHz για FM). Φιλτράρει όλα τα άλλα. Δουλεύει εύκολα γιατί η συχνότητα είναι σταθερή.
+4. **IF amplifier** + **demodulator** σε σταθερή IF.
+
+Όλη η «**επιλογή σταθμού**» γίνεται μέσω αλλαγής του LO — όχι μέσω αλλαγής του φίλτρου.
 </Example>
 </ExamProblem>
 
 <ExamProblem id="guard-band" year="Guard band" weight="real-world">
-**Ερώτηση:** Γιατί στην πράξη βάζουμε guard bands μεταξύ FDM καναλιών;
+**Ερώτηση:** Γιατί στην πράξη βάζουμε guard bands μεταξύ FDM καναλιών; Πόσο guard band θα έβαζες αν το BPF του δέκτη έχει transition band $s = 0.3W$ στην κάθε πλευρά;
 
 <Example title="Λύση" defaultOpen={true}>
 Τα ιδανικά BPF (απότομος cutoff στο edge κάθε καναλιού) δεν υπάρχουν. Real filters έχουν transition bands — gradual roll-off από passband σε stopband. Αν στοιβάξουμε τα κανάλια ακριβώς στο όριο της ελάχιστης μη-επικάλυψης, τα γειτονικά κανάλια θα «ματώνουν» μέσα στο pass band του BPF μας → cross-channel interference.
 
-**Λύση:** αφήνουμε ένα κενό ~10–20% του bandwidth ανάμεσα σε κανάλια (το **guard band**). Δίνει room στους filters να κάνουν το roll-off τους χωρίς να αφήσει το γειτονικό σήμα. Παράδειγμα: AM ραδιόφωνο, $W \approx 5$ kHz audio, channel spacing 10 kHz — αρκετός χώρος για roll-off + bandwidth-overlap.
+**Πρακτικός κανόνας:** αφήνουμε guard band τουλάχιστον **2s** (μία transition στην κάθε πλευρά του φίλτρου), δηλαδή για $s = 0.3W$:
+
+$$
+\text{guard band} \geq 2s = 0.6W
+$$
+
+Άρα το πραγματικό spacing γίνεται $\Delta f \geq W + 0.6W = 1.6W$ (για SSB) ή $\Delta f \geq 2W + 0.6W = 2.6W$ (για DSB) — δηλαδή ~30% παραπάνω από τη θεωρητική ελάχιστη.
+
+Παράδειγμα: AM ραδιόφωνο με $W \approx 5$ kHz audio, $s \approx 2.5$ kHz transition, channel spacing 10 kHz — αρκετός χώρος για roll-off + bandwidth-overlap (δες <code>FdmCrossTalkViz</code> παραπάνω).
 </Example>
 </ExamProblem>
 
+<ThinkingPattern
+  signals={[
+    'FDM',
+    'frequency division multiplexing',
+    'πολυπλεξία',
+    'δύο messages',
+    'δύο carriers',
+    'σχέση f_1, f_2, W',
+    'συνθήκη μη-επικάλυψης',
+    'multiplexed φάσμα G(f)',
+    'crosstalk',
+    'guard band',
+    'πόσα κανάλια χωράς',
+    'superheterodyne',
+    'τοπικός ταλαντωτής',
+    'intermediate frequency (IF)',
+    'tuning ραδιόφωνου',
+    'sinc + Π',
+  ]}
+>
+
+Τέσσερα question-shapes που εμφανίζονται εδώ:
+
+**(α) «Δύο μηνύματα, δύο carriers — βρες τη συνθήκη».** Αυτό είναι η FDM canonical εξεταστική άσκηση. Recognition cue: η εκφώνηση δίνει **δύο** σήματα σε αναλυτική μορφή (sinc, rect, sinc², tri, ...) και ζητάει σχέση μεταξύ τριών συμβόλων ($f_1, f_2, W$). Άμεση αντίδραση: τα **4 βήματα** του Worked Example στο §4 — baseband FT, modulation theorem, μη-επικάλυψη, σχέδιο G(f). Μην κολλήσεις στους **αριθμητικούς υπολογισμούς** — η άσκηση συνήθως ζητάει την ανισότητα γραμματικά. Cross-link προς τα past exams: Πρόοδος A/B 2025 Θ3, Jan'26 Θ3, June'25 Θ2, Πρόοδος Απρίλιος 2026 Θ3.
+
+**(β) «Πόσα κανάλια χωράς σε X kHz / MHz».** Recognition cue: η εκφώνηση δίνει συνολικό διαθέσιμο spectrum + bandwidth ανά κανάλι + τύπο modulation. Άμεση αντίδραση: total spectrum ÷ bandwidth ανά κανάλι (DSB → 2W, SSB → W, VSB → W + W_v). Αν η εκφώνηση ζητάει **σύγκριση** DSB vs SSB, υπολόγισε και τα δύο και ανέφερε ρητά τον παράγοντα 2× — η σύγκριση είναι το πραγματικό σημείο της ερώτησης.
+
+**(γ) «Πώς διαλέγει ο δέκτης ένα συγκεκριμένο κανάλι».** Recognition cue: η εκφώνηση ρωτάει «receiver», «tuning», «επιλογή σταθμού», «superheterodyne». Άμεση αντίδραση: αναφορά στο **superheterodyne architecture** — LO tunable, IF φίλτρο σταθερό, demodulator σε σταθερή IF. Καίριο σημείο: tuning = αλλαγή LO, **ΟΧΙ** αλλαγή φίλτρου. Τυπικές τιμές: $f_{IF} = 455$ kHz για AM, 10.7 MHz για FM. Cross-link προς [/am/dsb-sc](/am/dsb-sc) για τη «same topology three names» σύνδεση.
+
+**(δ) «Γιατί guard bands στην πράξη».** Recognition cue: η εκφώνηση αναφέρει «πρακτικός», «πραγματικός», «μη ιδανικός», ή ζητάει σύγκριση θεωρητικού-vs-πρακτικού spacing. Άμεση αντίδραση: ιδανικά φίλτρα δεν υπάρχουν → transition band → leakage → χρειάζεται guard band ~10–20% του bandwidth ανά κανάλι (ή ~2× η transition width του διαθέσιμου φίλτρου). Crosstalk = το αποτέλεσμα αν το παραλείψεις.
+
+</ThinkingPattern>
+
+<ExamRadar slug="am/multiplexing" />
+
 <Recap>
-- **FDM** = πολλά κανάλια στοιβαγμένα στο φάσμα γύρω από διαφορετικούς carriers, διαχωρίζονται με bandpass φιλτράρισμα στον δέκτη.
+- **FDM** = πολλά κανάλια στοιβαγμένα στο φάσμα γύρω από διαφορετικούς carriers, διαχωρίζονται με bandpass φιλτράρισμα στον δέκτη. Ο καθηγητής το ορίζει γενικότερα ως «ταυτόχρονη πρόσβαση σε κοινό δίαυλο από πολλούς χρήστες χρησιμοποιώντας διαφορετική διαμόρφωση για τον καθένα» (slide 5).
 - **Συνθήκη μη-επικάλυψης:** carrier spacing ≥ bandwidth ανά κανάλι.
-  - DSB/AM: $\Delta f \geq 2W$
-  - SSB: $\Delta f \geq W$ (δίνει 2× πιο πολλά κανάλια στο ίδιο φάσμα)
-- **Η canonical εξεταστική άσκηση** (4+ εμφανίσεις στο corpus): δίνεται $m = \mathrm{sinc}$ και $k = \Pi$ σε δύο carriers, ζητείται η συνθήκη μη-επικάλυψης + σχέδιο του $G(f)$. Ξεκίνα σχεδιάζοντας τα baseband φάσματα, μετά εφάρμοσε το modulation theorem για κάθε signal, μετά απαίτησε την απαραίτητη minimum spacing.
-- **Πρακτικές εφαρμογές:** AM ραδιόφωνο (10 kHz spacing), FM ραδιόφωνο (200 kHz spacing), TV channels (6/8 MHz), cellular networks.
-- **Demultiplexing**: στενό BPF στον carrier του ζητούμενου καναλιού + demodulator. Σε πραγματικά receiver, γίνεται μέσω **superheterodyne** mixing σε σταθερή IF.
+  - Conventional AM / DSB-AM-SC: $\Delta f \geq 2W$
+  - SSB-AM: $\Delta f \geq W$ (δίνει 2× πιο πολλά κανάλια στο ίδιο φάσμα)
+  - VSB-AM: $\Delta f \geq W + W_{\text{vestige}}$
+- **Η canonical εξεταστική άσκηση** (5+ εμφανίσεις στο corpus): δίνεται $m = \mathrm{sinc}$ και $k = \Pi$ (ή παρόμοιο ζευγάρι) σε δύο carriers, ζητείται η συνθήκη μη-επικάλυψης + σχέδιο του $G(f)$. Το πρότυπο λύσης είναι **4 βήματα**: baseband FT → modulation theorem → απαίτηση non-overlap → σχέδιο G(f).
+- **Πρακτικά:** η θεωρητική συνθήκη υποθέτει ιδανικά φίλτρα. Ένα πραγματικό BPF έχει transition band — χρειάζεται **guard band ~10–20%** του bandwidth ανά κανάλι, αλλιώς cross-talk από γείτονες.
+- **Demultiplexing — superheterodyne**: αντί για tunable στενό BPF, χρησιμοποιείται **mixer + tunable τοπικός ταλαντωτής (LO)** που μετακινεί τον επιλεγμένο σταθμό σε σταθερή **Intermediate Frequency (IF)**. Στο IF ένα σταθερό στενό φίλτρο επιλέγει, και ο demodulator τρέχει σε σταθερή συχνότητα. Tuning = αλλαγή LO, όχι αλλαγή φίλτρου.
+- **Πραγματικές εφαρμογές:** AM ραδιόφωνο (10 kHz spacing, ~120 κανάλια), FM ραδιόφωνο (200 kHz spacing), αναλογική τηλεφωνία (AT&T Type C: 12 voice × 4 kHz USSB στα 48 kHz), TV channels (NTSC 6 MHz με VSB), cellular networks (4G LTE OFDMA).
+- **Same topology, three names** (A3 connection): «mixer + filter» = διαμόρφωση (BPF στο $f_c$) = σύμφωνη αποδιαμόρφωση (LPF, ειδική περίπτωση $f_2=0$) = frequency conversion (BPF στο $f_2$). Superheterodyne είναι ακριβώς η τρίτη περίπτωση.
 </Recap>
 
-**Αυτό κλείνει την AM ομάδα.** Επόμενη στάση: **FM**, όπου η πληροφορία ζει στη φάση/συχνότητα αντί στο πλάτος. Η μαθηματική σύνδεση: η FM είναι η γραμμή «$V = A_c$ σταθερό, $\theta(t) = \phi(t)$» του [πίνακα στο /modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή).
+**Με αυτό κλείνει η AM ομάδα.** Επόμενη στάση: **FM**, όπου η πληροφορία ζει στη φάση/συχνότητα αντί στο πλάτος. Η μαθηματική σύνδεση: η FM είναι η γραμμή «$V = A_c$ σταθερό, $\theta(t) = \phi(t)$» του [πίνακα στο /modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή). Διαφορά κουλτούρας: όπου το AM ζει από envelope detection, το FM ζει από constant-envelope ανθεκτικότητα στον θόρυβο — το ίδιο πεδίο εφαρμογών (broadcast), αλλά οικογένεια εργαλείων εντελώς διαφορετική.
 
 <NextUp slug="fm/idea" />
