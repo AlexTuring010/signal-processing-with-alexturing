@@ -238,21 +238,41 @@ suite, which still passes 20/20). A future layout edit that breaks
 collision-freeness would surface as a visible curve in the viz — that's
 the regression channel.
 
-### Chunk B5 — L10 Union-Find / heap forest layouts
+### Chunk B5 — L10 Union-Find / heap forest layouts ✅ DONE 2026-05-25
 
-Tree-shaped layouts with parent-child arrows. Shared `uf-layout.ts`
-already centralises positions for the union-find family.
+Tree-shaped layouts with parent-child arrows or undirected tree edges.
 
-- `components/viz/UnionFindForest.tsx`
-- `components/viz/UnionBySizeRace.tsx`
-- `components/viz/PathCompressionViz.tsx`
-- `components/viz/BinaryHeapAnimator.tsx`
-- `components/viz/HeapArrayMap.tsx`
-- `components/viz/HeapsortAnimator.tsx`
-- `components/viz/HuffmanTreeBuilder.tsx`
-- `components/viz/HuffmanSwapViz.tsx`
-- `components/viz/HuffmanOptimalityViz.tsx`
-- `components/viz/TreeMatchingPeel.tsx`
+- `components/viz/UnionFindForest.tsx` ✅ (forest, 7 nodes r=17, directed; dynamic per-step layout via `useMemo`; asymmetric trim NODE_R / NODE_R+7)
+- `components/viz/UnionBySizeRace.tsx` ✅ (TWO forests stacked, 5 nodes r=15 each, directed; per-render rects with per-side offsets `(ox, oy)` via the new `forestNodeRects` helper; asymmetric trim NODE_R / NODE_R+6)
+- `components/viz/PathCompressionViz.tsx` ✅ (forest, 7 nodes r=16, directed; dynamic per-step layout via `useMemo`; asymmetric trim NODE_R / NODE_R+7)
+- `components/viz/BinaryHeapAnimator.tsx` ✅ (binary tree, 7..8 nodes r=19, undirected; per-render rects via `useMemo` keyed on `n`)
+- `components/viz/HeapArrayMap.tsx` ✅ (binary tree, 10 nodes r=21, undirected; module-scope rects since `HEAP` is constant)
+- `components/viz/HeapsortAnimator.tsx` ✅ (binary tree, 0..6 nodes r=18, undirected; per-render rects via `useMemo` keyed on `n`)
+- `components/viz/HuffmanTreeBuilder.tsx` ✅ (Huffman tree, 2 instances `lecture` + `kastanas`, dynamic visibility through step-based merges; per-node radius 23 leaf / 20 internal; per-render rects via `useMemo` keyed on `(data, mergeIndex, step)`; bit-label anchor at segment midpoint or Bezier midpoint when curved)
+- `components/viz/HuffmanSwapViz.tsx` ✅ (static Huffman tree, 7 nodes — root r=13, internals r=11, leaves r=23, undirected; module-scope per-node rects; bit-label with perpendicular offset)
+- `components/viz/HuffmanOptimalityViz.tsx` ✅ (Huffman tree with collapse step; per-node radius 22 leaf / 19 internal; per-render rects via `useMemo` keyed on `collapsed`; hidden {e,f} excluded post-collapse; bit-label with perpendicular offset)
+- `components/viz/TreeMatchingPeel.tsx` ✅ (2 tree instances `ok` + `fail`, 6 nodes r=14 each, undirected; per-instance rects via `useMemo` keyed on `tree`)
+
+**Retrofit shape (as executed).** One new shared helper `forestNodeRects(layout, nodeR, ox, oy)` added to `uf-layout.ts`: walks `layout.pos`, returns `{rects, rectById}` with per-node bounding squares sized to the node radius and optionally translated by `(ox, oy)` for vizzes that stack multiple forests on the same SVG. Used by all 3 union-find consumers. Each consumer (uf, heap, Huffman, TreeMatchingPeel) defines a per-file `routedEdge(...)` that calls `routeEdge() → trimEdgeGeom()` (uf family, directed) or `routeEdge()` alone (heap / Huffman / TreeMatchingPeel, undirected center-to-center). The uf family preserves asymmetric trim radii (child = NODE_R, parent = NODE_R + 6 or +7) to keep the arrowhead's pre-existing gap byte-identical for the line case. Every consumer branches on `g.kind === 'line' ? <line> : <path d={g.d} fill="none">`.
+
+**Per-node radii where they vary.** `HuffmanSwapViz` has three distinct node-radius classes (root=13, internal=11, leaf=23) and uses an explicit `NODE_RECTS` array with per-node sizing. `HuffmanTreeBuilder` and `HuffmanOptimalityViz` use `isLeaf(id)` to branch between leaf (23 / 22) and internal (20 / 19) radii when building rects.
+
+**Dynamic layouts handled per file.**
+- uf family: layout depends on the step (parent map changes). `useMemo` keyed on `layout`.
+- heaps: layout depends on heap size `n`. `useMemo` keyed on `n`.
+- HuffmanTreeBuilder: visibility set depends on step (and instance). `useMemo` keyed on `(data, mergeIndex, step)`.
+- HuffmanOptimalityViz: visibility set depends on `collapsed` (post-step-1 hides {e,f}). `useMemo` keyed on `collapsed`.
+- TreeMatchingPeel: per-instance, switches on tab. `useMemo` keyed on `tree`.
+
+**Edge-label anchor formula for curve cases.** Two Huffman vizzes (`HuffmanSwapViz`, `HuffmanOptimalityViz`) and `HuffmanTreeBuilder` draw bit labels (0/1) on each edge. The line-case anchor is the segment midpoint `((p.x + c.x) / 2, (p.y + c.y) / 2)`. The curve-case anchor uses the Bezier midpoint `((p.x + c.x + 2·cx) / 4, (p.y + c.y + 2·cy) / 4)` — the t=0.5 point of `P0-Q-P2`. `HuffmanSwap` / `HuffmanOptimality` additionally apply a perpendicular offset `(±(-dy/L)·11, ±(dx/L)·11)` using the segment direction; the perp direction may be slightly off-tangent in a curve case, but trees in this family don't curve in steady state.
+
+**Steady-state visual contract:** every edge in every B5 viz routes as a line on the current layouts — verified by inspection (tree layouts are by construction collision-free: each level sits in its own horizontal row, children fan out, no unrelated node sits on any parent→child centerline). The line case is byte-identical to the pre-retrofit output for every consumer; the union-find family also preserves the asymmetric arrowhead gap byte-identical. No user-visible change today; the value is structural lockout per the audit's standing thesis.
+
+**No new tests required.** B5 introduces one new helper at the layout level (`forestNodeRects` in `uf-layout.ts` — trivial coordinate translation, not collision logic). The collision building blocks `routeEdge` / `trimEdgeGeom` were both locked by B1's 20-test suite (still 20/20 pass). A future layout edit that breaks collision-freeness would surface as a visible curve in the viz — that's the regression channel.
+
+**Standing lessons for B6..B7:**
+- **Stacked-forest pattern.** When a single SVG stacks multiple sub-graphs with per-sub-graph offsets (here `UnionBySizeRace`'s top + bottom forests at `oy=20` / `oy=264`), build a separate rect set per sub-graph in the offset coordinate frame. The `(ox, oy)` parameter on `forestNodeRects` makes this trivial. Don't share a single rect set across sub-graphs — collision testing across sub-graphs is generally not the intended semantics, and the offsets would have to be applied per-sub-graph anyway.
+- **Per-node varying radius.** When a viz has multiple node-radius classes (root, internal, leaf), define an explicit per-node rect rather than a single radius — `NodeRect` carries its own `(w, h)` so this is natively supported. Don't oversize all rects to the largest radius unless the layout has plenty of margin to absorb the over-conservatism (well-spaced trees in B5 absorb it fine; tighter layouts wouldn't).
 
 ### Chunk B6 — L12 topo / DAG family
 
