@@ -40,6 +40,9 @@ import { BesselSpectrumViz } from '@/components/viz/BesselSpectrumViz'
 import { BesselTable } from '@/components/viz/BesselTable'
 import { CarsonRuleViz } from '@/components/viz/CarsonRuleViz'
 import { FMNoiseTriangleViz } from '@/components/viz/FMNoiseTriangleViz'
+import { TriangularNoiseDerivationViz } from '@/components/viz/TriangularNoiseDerivationViz'
+import { FmSnrGainViz } from '@/components/viz/FmSnrGainViz'
+import { FmThresholdEffectViz } from '@/components/viz/FmThresholdEffectViz'
 import { RandomPhaseCosineViz } from '@/components/viz/RandomPhaseCosineViz'
 import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
 import { WhiteNoiseSimulationViz } from '@/components/viz/WhiteNoiseSimulationViz'
@@ -88,8 +91,12 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'fm-bessel-sidebands': () => <BesselSpectrumViz />,
   'fm-bessel-property': () => <BesselTable />,
   carson: () => <CarsonRuleViz />,
+  'fm-snr-ref': () => <FmSnrGainViz />,
+  'fm-noise-output-psd': () => <TriangularNoiseDerivationViz />,
   'fm-snr-out': () => <FMNoiseTriangleViz />,
-  'fm-gain-am': () => <FMNoiseTriangleViz />,
+  'fm-gain-am': () => <FmSnrGainViz />,
+  'fm-threshold': () => <FmThresholdEffectViz />,
+  'fm-pre-emphasis': () => <FMNoiseTriangleViz />,
   'bessel-table': () => <BesselTable />,
   'fm-significant-harmonics': () => <BesselSpectrumViz />,
 

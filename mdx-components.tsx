@@ -125,6 +125,10 @@ import { TaylorBandwidthCascadeViz } from '@/components/viz/TaylorBandwidthCasca
 import { NbfmWbfmRegimesViz } from '@/components/viz/NbfmWbfmRegimesViz'
 import { PmFmCarsonEquivalenceViz } from '@/components/viz/PmFmCarsonEquivalenceViz'
 import { FMNoiseTriangleViz } from '@/components/viz/FMNoiseTriangleViz'
+import { TriangularNoiseDerivationViz } from '@/components/viz/TriangularNoiseDerivationViz'
+import { FmSnrGainViz } from '@/components/viz/FmSnrGainViz'
+import { FmThresholdEffectViz } from '@/components/viz/FmThresholdEffectViz'
+import { CaptureEffectViz } from '@/components/viz/CaptureEffectViz'
 import { RandomPhaseCosineViz } from '@/components/viz/RandomPhaseCosineViz'
 import { RandomProcessRealizationsViz } from '@/components/viz/RandomProcessRealizationsViz'
 import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
@@ -325,6 +329,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — fm / in-noise
     FMNoiseTriangleViz,
+    TriangularNoiseDerivationViz,
+    FmSnrGainViz,
+    FmThresholdEffectViz,
+    CaptureEffectViz,
 
     // Visualizations — randomness
     RandomPhaseCosineViz,

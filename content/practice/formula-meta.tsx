@@ -1046,6 +1046,42 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'fm-snr-ref': {
+    intuition: (
+      <>
+        Η universal «αναφορά» κάτω από την οποία συγκρίνουμε AM και FM στο ίδιο{' '}
+        <InlineMath>{'P_T'}</InlineMath> και ίδιο message bandwidth{' '}
+        <InlineMath>W</InlineMath>. Δεν είναι κανένα φυσικό SNR του δέκτη — είναι το
+        SNR που θα είχες <em>αν</em> ολόκληρη η ισχύς <InlineMath>{'A_c^2/2'}</InlineMath>{' '}
+        έφτανε σε baseband εύρους <InlineMath>W</InlineMath> χωρίς bandpass overhead.
+      </>
+    ),
+    derivation: (
+      <>
+        <InlineMath>{'\\text{SNR}_{ref} \\triangleq P_{signal} / (N_0 W) = (A_c^2/2)/(N_0 W)'}</InlineMath>.
+        Όλοι οι «output SNR» τύποι AM/FM γράφονται σαν πολλαπλάσιο του
+        <InlineMath>{'\\text{SNR}_{ref}'}</InlineMath>.
+      </>
+    ),
+  },
+  'fm-noise-output-psd': {
+    intuition: (
+      <>
+        Ο discriminator διαφορίζει τη φάση. Στο φάσμα, διαφόριση =
+        πολλαπλασιασμός με <InlineMath>{'j2\\pi f'}</InlineMath> ⇒ η PSD γίνεται
+        <InlineMath>{'\\propto f^2'}</InlineMath>. Από επίπεδος θόρυβος μέσα στο
+        message band γίνεται <strong>παραβολικός</strong> — γνωστό ως
+        «triangular noise spectrum».
+      </>
+    ),
+    derivation: (
+      <>
+        Phase noise <InlineMath>{'\\theta_n \\approx n_Q/A_c'}</InlineMath> (small-noise){' '}
+        ⇒ <InlineMath>{'S_\\theta = N_0/A_c^2'}</InlineMath>· διαφόριση ⇒{' '}
+        <InlineMath>{'S_{v_n}(f) = f^2 \\cdot S_\\theta(f) = N_0 f^2/A_c^2'}</InlineMath>.
+      </>
+    ),
+  },
   'fm-snr-out': {
     intuition: (
       <>
@@ -1059,9 +1095,47 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       <>
         Output noise PSD μετά τον discriminator πέφτει σαν{' '}
         <InlineMath>{'f^2 N_0 / A_c^2'}</InlineMath>· ολοκληρώνεις σε{' '}
-        <InlineMath>{'[-W, W]'}</InlineMath>· σχήμα ισχύος σήματος{' '}
-        <InlineMath>{'(\\Delta f)^2 P_m / 2'}</InlineMath> ⇒ ratio{' '}
+        <InlineMath>{'[-W, W]'}</InlineMath> για να πάρεις{' '}
+        <InlineMath>{'P_n = 2 N_0 W^3 / (3 A_c^2)'}</InlineMath>· σχήμα ισχύος σήματος{' '}
+        <InlineMath>{'P_s = (\\Delta f)^2 / 2'}</InlineMath> για single-tone ⇒ ratio{' '}
         <InlineMath>{'3\\beta^2 \\cdot \\text{SNR}_{ref}'}</InlineMath>.
+      </>
+    ),
+  },
+  'fm-threshold': {
+    intuition: (
+      <>
+        Πάνω από <InlineMath>{'\\sim 10'}</InlineMath> dB SNR_in, ο γραμμικός τύπος
+        ισχύει. Κάτω από αυτό, το resultant phasor (carrier + noise) <em>κοντοζυγώνει
+        το μηδέν</em> και ο discriminator κάνει <strong>«clicks»</strong> — false
+        zero crossings που εμφανίζονται ως κρότοι στην έξοδο. Το SNR_out πέφτει
+        πολύ πιο γρήγορα από ότι προβλέπει ο γραμμικός τύπος.
+      </>
+    ),
+    derivation: (
+      <>
+        «<InlineMath>{'\\sim 10'}</InlineMath> dB» είναι loose qualifier του prof
+        — το ακριβές threshold εξαρτάται από τον δέκτη και αυξάνεται με{' '}
+        <InlineMath>{'\\beta'}</InlineMath> (περισσότερο BW = περισσότερος θόρυβος που μπαίνει).
+      </>
+    ),
+  },
+  'fm-pre-emphasis': {
+    intuition: (
+      <>
+        Triangular noise σημαίνει ότι οι υψηλές συχνότητες του message πληρώνουν
+        περισσότερο. Στο μουσικό σήμα όμως οι υψηλές έχουν ήδη μικρότερη ισχύ —
+        άρα διπλή ζημιά. <strong>Pre-emphasis</strong> στον πομπό ενισχύει τις
+        υψηλές πριν τη μετάδοση· <strong>de-emphasis</strong> στον δέκτη τις
+        ξανακόβει. Ο θόρυβος που μπήκε <em>μετά</em> το pre-emphasis κόβεται μαζί
+        με τη de-emphasis πτώση.
+      </>
+    ),
+    derivation: (
+      <>
+        High-shelf με σταθερά χρόνου <InlineMath>{'\\tau = 50\\,\\mu s'}</InlineMath>{' '}
+        (Europe) ή <InlineMath>{'75\\,\\mu s'}</InlineMath> (US/Japan). SNR
+        βελτίωση ~12-13 dB στο εμπορικό FM ραδιόφωνο.
       </>
     ),
   },

@@ -618,20 +618,66 @@ export const FORMULA_SHEET: FormulaSection[] = [
         content: <BlockMath>{'P_{FM} = \\frac{A_c^2}{2} \\quad \\text{(ανεξάρτητο του } \\beta\\text{)}'}</BlockMath>,
       },
       {
+        id: 'fm-snr-ref',
+        title: 'Reference SNR — baseline για AM/FM σύγκριση',
+        topic: 'fm',
+        inTypology: false,
+        derivedIn: 'fm/in-noise',
+        content: <BlockMath>{'\\text{SNR}_{ref} \\triangleq \\frac{A_c^2}{2 N_0 W}'}</BlockMath>,
+      },
+      {
+        id: 'fm-noise-output-psd',
+        title: 'FM output noise PSD — triangular',
+        topic: 'fm',
+        inTypology: false,
+        derivedIn: 'fm/in-noise',
+        content: <BlockMath>{'S_{v_n}(f) = \\frac{N_0\\, f^2}{A_c^2}, \\quad |f| \\le W'}</BlockMath>,
+      },
+      {
         id: 'fm-snr-out',
         title: 'FM output SNR',
         topic: 'fm',
         inTypology: false,
         derivedIn: 'fm/in-noise',
-        content: <BlockMath>{'\\text{SNR}_{out,FM} = 3\\beta^2\\, \\text{SNR}_{ref} = 3\\beta^2 \\cdot \\tfrac{A_c^2}{2 N_0 W}'}</BlockMath>,
+        content: <BlockMath>{'\\text{SNR}_{out,FM} = 3\\beta^2\\, \\text{SNR}_{ref} = \\frac{3\\beta^2 A_c^2}{2 N_0 W}'}</BlockMath>,
       },
       {
         id: 'fm-gain-am',
-        title: 'FM gain over AM (μ=1)',
+        title: 'FM gain over AM (μ=1, ίδιο P_T)',
         topic: 'fm',
         inTypology: false,
         derivedIn: 'fm/in-noise',
-        content: <BlockMath>{'G_{FM/AM} = 9\\beta^2'}</BlockMath>,
+        content: <BlockMath>{'G_{FM/AM} = 9\\beta^2 \\quad (\\mu=1, \\text{ ίδιο } P_T)'}</BlockMath>,
+      },
+      {
+        id: 'fm-threshold',
+        title: 'FM threshold',
+        topic: 'fm',
+        inTypology: false,
+        derivedIn: 'fm/in-noise',
+        content: (
+          <>
+            <BlockMath>{'\\text{SNR}_{in,\\text{threshold}} \\sim 10\\text{ dB}\\quad (\\text{loose, αυξάνεται με }\\beta)'}</BlockMath>
+            <p className="mt-2 text-xs leading-relaxed text-fg-muted">
+              Κάτω από το threshold ο τύπος SNR_out = 3β² · SNR_ref καταρρέει — η output γεμίζει με «clicks» (false zero crossings) και πέφτει με slope &gt;&gt; 1.
+            </p>
+          </>
+        ),
+      },
+      {
+        id: 'fm-pre-emphasis',
+        title: 'Pre-emphasis / de-emphasis (FM ραδιόφωνο)',
+        topic: 'fm',
+        inTypology: false,
+        derivedIn: 'fm/in-noise',
+        content: (
+          <>
+            <BlockMath>{'\\tau = 50\\,\\mu s\\ (\\text{Europe}) \\text{ ή } 75\\,\\mu s\\ (\\text{US})'}</BlockMath>
+            <p className="mt-2 text-xs leading-relaxed text-fg-muted">
+              High-shelf filter στον πομπό (pre-emphasis) + αντίστοιχο lowpass στον δέκτη (de-emphasis) — αντισταθμίζει το triangular noise. SNR βελτίωση ~12-13 dB στο εμπορικό FM.
+            </p>
+          </>
+        ),
       },
       {
         id: 'bessel-table',
