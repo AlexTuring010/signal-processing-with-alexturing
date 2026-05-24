@@ -123,7 +123,7 @@ export function NeighborhoodCostViz() {
 
         <div className="grid gap-3 md:grid-cols-2">
           {/* List view */}
-          <div className="rounded-xl border border-border bg-white p-3">
+          <div className="rounded-xl border border-border bg-bg-elevated p-3">
             <div className="flex items-baseline justify-between">
               <p className="text-sm font-semibold">Λίστα γειτνίασης</p>
               <p className="text-xs text-fg-subtle">διάβασε μέχρι το τέλος της λίστας</p>
@@ -145,7 +145,7 @@ export function NeighborhoodCostViz() {
                           ? 'bg-rose-200 ring-1 ring-rose-500'
                           : reached
                             ? 'bg-emerald-100 ring-1 ring-emerald-400'
-                            : 'bg-white ring-1 ring-border',
+                            : 'bg-bg-elevated ring-1 ring-border',
                       )}
                     >
                       {u}
@@ -171,7 +171,7 @@ export function NeighborhoodCostViz() {
           </div>
 
           {/* Matrix view */}
-          <div className="rounded-xl border border-border bg-white p-3">
+          <div className="rounded-xl border border-border bg-bg-elevated p-3">
             <div className="flex items-baseline justify-between">
               <p className="text-sm font-semibold">Πίνακας γειτνίασης</p>
               <p className="text-xs text-fg-subtle">σάρωσε ΟΛΗ τη γραμμή v</p>
@@ -213,7 +213,7 @@ export function NeighborhoodCostViz() {
                                 ? cell === 1
                                   ? 'bg-emerald-100 ring-emerald-400'
                                   : 'bg-bg-soft ring-border'
-                                : 'bg-white ring-border',
+                                : 'bg-bg-elevated ring-border',
                           )}
                         >
                           {cell}
@@ -282,7 +282,7 @@ export function NeighborhoodCostViz() {
         </div>
 
         {/* Scaling bar chart */}
-        <div className="rounded-xl border border-border bg-white p-3">
+        <div className="rounded-xl border border-border bg-bg-elevated p-3">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p className="text-sm font-semibold">
               Σε μεγαλύτερο γράφημα — το χάσμα μεγαλώνει
@@ -301,7 +301,7 @@ export function NeighborhoodCostViz() {
                   'rounded-md border px-2 py-1 text-xs tabular-nums',
                   s === scale
                     ? 'border-rose-700 bg-rose-50 font-semibold text-rose-900'
-                    : 'border-border bg-bg-soft hover:bg-white',
+                    : 'border-border bg-bg-soft hover:bg-bg-elevated',
                 )}
               >
                 |V| = {s}

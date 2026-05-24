@@ -236,7 +236,7 @@ export function RiverCrossingStateGraph() {
 
       <div className="grid gap-4 p-4 lg:grid-cols-[1.4fr_1fr]">
         {/* Graph */}
-        <div className="rounded-xl border border-border bg-white p-3">
+        <div className="rounded-xl border border-border bg-bg-elevated p-3">
           <svg viewBox="0 0 680 360" className="w-full">
             {EDGES.map((e, i) => {
               const pa = POS[e.a]
@@ -348,7 +348,7 @@ export function RiverCrossingStateGraph() {
         {/* Side panel */}
         <div className="space-y-3">
           {mode === 'solve' && (
-            <div className="rounded-xl border border-border bg-white p-3">
+            <div className="rounded-xl border border-border bg-bg-elevated p-3">
               <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
                 Λύση BFS — 7 βήματα
               </p>
@@ -375,7 +375,7 @@ export function RiverCrossingStateGraph() {
               </ol>
             </div>
           )}
-          <div className="rounded-xl border border-border bg-white p-3">
+          <div className="rounded-xl border border-border bg-bg-elevated p-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
               6 καταστάσεις αποκλείονται (απαγορευμένες)
             </p>
@@ -482,7 +482,7 @@ function BankSide({
           members.map((x) => (
             <span
               key={x}
-              className="rounded bg-white px-1.5 py-0.5 text-[11px] font-medium ring-1 ring-border"
+              className="rounded bg-bg-elevated px-1.5 py-0.5 text-[11px] font-medium ring-1 ring-border"
               title={LABEL_EL[x]}
             >
               {NAMES[x]}{' '}

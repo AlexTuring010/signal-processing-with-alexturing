@@ -227,7 +227,7 @@ export function PartyDegreeFilter() {
 
       <div className="grid gap-4 p-4 md:grid-cols-[1.5fr_1fr]">
         {/* Graph */}
-        <div className="rounded-xl border border-border bg-white p-3">
+        <div className="rounded-xl border border-border bg-bg-elevated p-3">
           <svg viewBox="0 0 540 380" className="w-full">
             {EDGES.map((e, i) => {
               const isPresent = present.has(e.a) && present.has(e.b)
@@ -312,7 +312,7 @@ export function PartyDegreeFilter() {
 
         {/* Side panel: degree table + constraints */}
         <div className="space-y-3">
-          <div className="rounded-xl border border-border bg-white p-3">
+          <div className="rounded-xl border border-border bg-bg-elevated p-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
               Κατάσταση συνόλου
             </p>
@@ -324,7 +324,7 @@ export function PartyDegreeFilter() {
               <span className="text-fg-subtle">(αρκετοί φίλοι, αρκετοί άγνωστοι)</span>
             </p>
           </div>
-          <div className="rounded-xl border border-border bg-white p-3">
+          <div className="rounded-xl border border-border bg-bg-elevated p-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle">
               Βαθμοί
             </p>
