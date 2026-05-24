@@ -180,16 +180,63 @@ the value is structural lockout per the audit's standing thesis.
 trivial wrappers over `routeEdge`). The building blocks `routeEdge` /
 `trimEdgeGeom` were both locked by B1's 20-test suite (still 20/20).
 
-### Chunk B4 — L17 Bellman-Ford family
+### Chunk B4 — L17 Bellman-Ford family ✅ DONE 2026-05-25
 
-4–6 node weighted directed graphs, edges with weight labels.
+L17's flagship DP/shortest-path graph set: 4 weighted directed graphs (Bellman-
+Ford trace, negative-cycle plunge, Dijkstra-on-negative-edge counterexample,
+constant-shift counterexample with 2 presets) and 2 undirected tree-DP graphs.
 
-- `components/viz/BellmanFordAnimator.tsx`
-- `components/viz/NegativeCycleWalk.tsx`
-- `components/viz/DijkstraNegFail.tsx`
-- `components/viz/ConstantShiftFail.tsx`
-- `components/viz/TreeIndependentSet.tsx`
-- `components/viz/WhyTwoTreeValues.tsx`
+- `components/viz/BellmanFordAnimator.tsx` ✅ (directed, 5 nodes R=23, 7 edges)
+- `components/viz/NegativeCycleWalk.tsx` ✅ (directed, 5 nodes R=24, 5 edges incl. the a→b→c→a negative cycle)
+- `components/viz/DijkstraNegFail.tsx` ✅ (directed, 3 nodes R=25, 3 edges)
+- `components/viz/ConstantShiftFail.tsx` ✅ (directed, per-preset rects: l17 has 6 nodes R=22 + 2 paths, ask10 has 3 nodes R=22 + 2 paths; `Preset` type extended with `nodeRects` + `nodeRectById` fields built by a `buildRects()` helper)
+- `components/viz/TreeIndependentSet.tsx` ✅ (undirected tree, 6 nodes r=26, 5 tree edges; center-to-center, no trim)
+- `components/viz/WhyTwoTreeValues.tsx` ✅ (undirected tree, 4 nodes R=27, 3 tree edges; center-to-center, no trim; dashed-edge `strokeDasharray` carries through to `<path>` for the illegal {p,c} case)
+
+**Retrofit shape (as executed).** Mirror of Chunk B2's patterns, applied
+per viz with no new shared helper:
+
+- For the 4 directed graphs: build module-scope `NODE_RECTS` +
+  `NODE_RECT_BY_ID` from each viz's NODES, plus a per-file `routedEdge(a,
+  b)` that calls `routeEdge() → trimEdgeGeom()` with trim radius `R`
+  (preserves the pre-retrofit border gap byte-identical for the line
+  case — every L17 directed viz's prior local `trim()` used `r = R`, not
+  `R + 2`). Each returns `mx, my` for the weight-label anchor at the
+  centerline midpoint for lines and at the Bezier midpoint
+  `(P0 + 2Q + P2) / 4` for curves.
+- `ConstantShiftFail` is the only file in chunk B4 that needed a non-
+  trivial structural change: the `Preset` type gained `nodeRects` +
+  `nodeRectById` fields and a `buildRects(paths)` helper scans both pathA
+  + pathB to collect every distinct node. The `routedEdge` signature
+  takes `(a, b, rects, rectById)` so it works with whichever preset is
+  active at render time. The l17 preset has 6 nodes (s,a,t,b,c,d), the
+  ask10 preset has 3 (u,v,w).
+- For the 2 undirected tree graphs: same shape minus the `trimEdgeGeom`
+  step (tree edges have no arrowheads — draw center-to-center). Their
+  `routedEdge` returns the raw `EdgeGeom` (`{kind: 'line', x1,…} |
+  {kind: 'curve', d, cx, cy}`) — no `mx, my` since neither viz has
+  edge labels.
+- `WhyTwoTreeValues`'s dashed-edge styling for the illegal {p,c}
+  scenario passes `strokeDasharray` through the line/path branch
+  unchanged.
+- Every consumer branches on `g.kind === 'line' ? <line …> : <path
+  d={g.d} fill="none" …>`. Styling, marker arrows, strokeDasharray,
+  opacity all carry over unchanged.
+
+**Steady-state visual contract:** every edge in every B4 viz routes as
+a line on the current layout — verified by hand against each viz's
+node coordinates that no unrelated node sits on any edge centerline
+(closest candidate was the b→t edge in `BellmanFordAnimator`, which
+clears c by ~41 px against an inflated padding of R+padding ≈ 27 px).
+The line case is byte-identical to the pre-retrofit output. No
+user-visible change today; the value is structural lockout per the
+audit's standing thesis.
+
+**No new tests required.** B4 introduces no new helper (the building
+blocks `routeEdge` and `trimEdgeGeom` were both tested in B1's 20-test
+suite, which still passes 20/20). A future layout edit that breaks
+collision-freeness would surface as a visible curve in the viz — that's
+the regression channel.
 
 ### Chunk B5 — L10 Union-Find / heap forest layouts
 
