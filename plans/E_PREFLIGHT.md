@@ -382,74 +382,53 @@ contribute to E.5's backlog.
 
 ---
 
-## 6. Open questions for the user (decide before E.1)
+## 6. Open questions for the user — ANSWERED 2026-05-24
 
 ### Q1 — `material/past_exams/` tracking policy
 
+> **ANSWER: (a) Commit them.** Done in commit `f516ec3` («chore(past-exams):
+> commit the public 2024/2025 papers»). The 4 PDFs are now tracked.
+
 The 4 PDFs are publicly downloadable from the K17 course site and would
 make the lecture-page inline citations resolvable without the user having
-to ship them out-of-band. They are NOT in `.gitignore`. Three options:
+to ship them out-of-band.
 
-- **(a) Commit them.** Pro: a fresh clone has the full E.1 reference
-  material. Con: ~6 MB of binary in git.
-- **(b) Ignore them like `private_material/`.** Pro: keeps the repo lean.
-  Con: anyone reproducing the build needs to download them manually from
-  the course site.
-- **(c) Leave as-is, untracked.** Status quo. The 4 PDFs are on the user's
-  machine but invisible to git.
-
-E.1's per-lecture work doesn't strictly require these PDFs to be
-checked in — the inline-citation chip text is derived from the bank
-entry's `paperLabel` + `problemNumber`, both already authored.
+- **(a) Commit them.** ← chosen
+- (b) Ignore them like `private_material/`.
+- (c) Leave as-is, untracked.
 
 ### Q2 — Inline-citation chip text: anonymized vs dated
+
+> **ANSWER: De-anonymize site-wide, not just for inline citations.**
+> User: «it should not be anonymous it should tell them exactly from where
+> it is, no need to keep anything private from students». The chip text
+> will read «Ιούνιος 2024 · Θ.3» (or equivalent for each date). The bank
+> migrates from `paperLabel: 'Παλαιό Θέμα #N'` to `source: 'june-2024'`
+> etc. — task **E.0** below. `RECENT_SOURCES.has(ex.source)` (currently
+> dead code) starts firing for the #1–#7 entries automatically.
 
 CLAUDE.md says «2024 / 2025 past-exam problems are tagged with a
 prominent badge (`Θέμα Εξετάσεων 2024`, `Θέμα Εξετάσεων 2025`)». The plan
 mock-up suggests «Θέμα Εξετάσεων Ιουνίου 2024 — Θ.3 [Δες την άσκηση →]».
-BUT the bank uses anonymized labels — every transcribed 2024/2025
-problem is `paperLabel: 'Παλαιό Θέμα #1'` through `'Παλαιό Θέμα #7'`. No
-entry currently sets `source: 'june-2024' | …` — so `RECENT_SOURCES.has`
-(referenced in `ExerciseCard.tsx:92` and `LectureExercises.tsx:31`) is
-dead code in production today.
+The previous bank used anonymized labels; that policy is now dropped.
 
-Three options:
+- **(a) De-anonymize.** ← chosen, extended bank-wide
+- (b) Stay fully anonymized.
+- (c) Anonymized label + a non-dated «recent» flame badge.
 
-- **(a) De-anonymize for lecture inline citations only** — chip reads
-  «Θέμα Εξετάσεων Ιουνίου 2024 · Θ.3». Pro: matches CLAUDE.md and the
-  plan's mock. Con: contradicts the EXAM_TRANSCRIPTION.md anonymization
-  rule the bank already enforces. Requires backfilling `source: 'june-2024'`
-  etc. on the 56 transcribed entries currently labeled #1–#7.
-- **(b) Stay fully anonymized** — chip reads «Πρόσφατο · Παλαιό Θέμα #1 ·
-  Θ.3». Pro: consistent with bank; no migration. Con: students don't see
-  «2024» / «2025», which is the very signal CLAUDE.md says is the
-  exam-prep value.
-- **(c) Anonymized label + a non-dated «recent» flame badge** — chip
-  reads «🔥 Πρόσφατο εξεταστικό · Παλαιό Θέμα #1 · Θ.3», and the
-  «Recent» set is defined by paperLabel-numeric (#1–#7), not by `source`.
-  Pro: keeps anonymization, surfaces recency. Con: students still don't
-  see the year — but they DO see "this is from the recent papers".
+### Q3 — E.5 transcription scope (and `private_material/` policy)
 
-(c) seems the natural reconciliation; (a) is what the plan defaulted to.
-The user should pick before E.1's component-extension commit.
+> **ANSWER: Un-gitignore `private_material/` entirely.** User: «Un-gitignore
+> everything». The `.gitignore` rule that hid `/private_material` was
+> removed. The raw older Ζησιμόπουλος archive PDFs will be tracked once
+> the user uploads them to this work tree. E.5 (transcription completion)
+> can then proceed without local-only constraints.
 
-### Q3 — E.5 transcription scope
-
-`private_material/` is not on this machine. Three options for E.5:
-
-- **(a) Upload all 21 raw entries** — full E.5 backlog cleared.
-- **(b) Upload a priority subset** — e.g. only the past-exam entries that
-  are ALL_LECTURES (most-cited in E.1's L17 anchor), or only the medium-
-  difficulty entries (smaller, faster).
-- **(c) Defer E.5 to a follow-up phase.** Phase E.7's «zero
-  `statement: null` entries remain» acceptance criterion would soften
-  to «21 entries explicitly documented-and-skipped».
-
-(b) is the pragmatic recommendation — bring in the 2 medium-difficulty
-midterms (`exam-midterm-2012`, `exam-midterm-2008`) plus the 5
-frontistiria first, since the hard past-exam entries are the lowest-yield
-per transcription hour (one-of-many at the bottom of every lecture
-they target).
+- (a) Upload all 21 raw entries.
+- (b) Upload a priority subset.
+- (c) Defer E.5 to a follow-up phase.
+- **(b/extension) Un-gitignore everything; user uploads PDFs at their
+  cadence.** ← chosen — E.5 scope still depends on what gets uploaded.
 
 ---
 
@@ -488,9 +467,23 @@ None. This document is research + documentation; no behaviour change.
 
 ---
 
-## 9. Next task (E.1.0 — component extension, before per-lecture passes)
+## 9. Next task — E.0 (bank de-anonymization), then E.1.0 (component extension)
 
-Before the first per-lecture E.1 turn, one component-shape turn lands:
+With Q1+Q2+Q3 answered, two preparatory tasks precede the per-lecture E.1
+passes. **They land in this order:**
+
+### Step 1 — Task E.0 — Bank de-anonymization migration
+
+Full spec in `PHASE_E_PLAN.md` § 4.5 (added in the policy-update commit).
+TL;DR: refactor `content/practice/exercises.tsx` to drop
+`paperLabel: 'Παλαιό Θέμα #N'` in favor of dated `source: 'june-2024'`
+etc.; update the ~4 components that read `paperLabel`; verify the
+`RECENT_SOURCES`-based Flame chip fires for #1–#7 entries; surface the
+same Flame chip on `SoseProblemCard`. Single self-contained turn.
+
+### Step 2 — Task E.1.0 — `<ExamProblem>` component extension
+
+Once E.0 lands and the bank is dated:
 
 1. Extend `<ExamProblem>` (`components/content/ExamProblem.tsx`) with:
    - `relatedExerciseId?: string` — the bank id the chip deep-links to.
@@ -500,10 +493,15 @@ Before the first per-lecture E.1 turn, one component-shape turn lands:
      `relatedExerciseId` to switch).
 2. Wire the chip to `/practice#exercise:<relatedExerciseId>` (the anchor
    `ExerciseCard` already sets — see `ExerciseCard.tsx:61`).
-3. Decide the chip's recency rendering based on Q2's answer.
+3. Chip text uses the date from `SOURCE_LABELS[ex.source]` (now reliable
+   after E.0).
 4. Add to mdx-components.tsx as needed (already registered).
 5. typecheck + lint + build (the user's [[local-build-env]] rule applies:
    no `npm run build` while `npm run dev` runs).
 6. Commit as `feat(exam-problem): add inline citation chip mode for E.1`.
-7. THEN start L09 (rich pool, highest-tested algorithms) as the first
-   per-lecture inline-citations pass.
+
+### Step 3 onwards — Per-lecture E.1 passes
+
+L09 (rich pool, highest-tested algorithms) → L14 → L02 → L03 → L15 → L01
+→ L04 → L06 → L08 → L10 → L11 → L12 → L13 → L17. L05, L07, L16 documented-
+and-skipped per the Phase D precedent.

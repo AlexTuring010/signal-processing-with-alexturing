@@ -45,6 +45,10 @@ a sub-list. Update this section in the same commit that finishes the task.
 
 - ☑ **Pre-flight audit** → `plans/E_PREFLIGHT.md` (done 2026-05-24 — branch + bank state captured, 3 user-decision questions surfaced, E.1 sequencing recommended; see [[phase-e-preflight]])
   - ☑ Per-card takedown notice removed (out-of-band on 2026-05-24, commit forthcoming). Future executor: skip this sub-step.
+  - ☑ Q1 — commit the 4 `material/past_exams/` PDFs (done 2026-05-24, commit `f516ec3`).
+  - ☑ Q2 — de-anonymize the bank: real dates everywhere. Migration in E.0.
+  - ☑ Q3 — un-gitignore `private_material/`; raw older-archive PDFs to be uploaded by user and tracked.
+- ☐ **E.0 — Bank de-anonymization migration** (single self-contained turn; see § 4.5 below)
 - ☐ **E.1 — Inline `<ExamProblem>` citations** (17 per-lecture sub-tasks):
   - ☐ L01 ☐ L02 ☐ L03 ☐ L04 ☐ L05 ☐ L06 ☐ L07 ☐ L08 ☐ L09
   - ☐ L10 ☐ L11 ☐ L12 ☐ L13 ☐ L14 ☐ L15 ☐ L16 ☐ L17
@@ -186,6 +190,98 @@ state and decide whether to (a) leave it as-is, (b) mount a single discreet
 notice on the practice hub, or (c) delete the component file entirely.
 
 **Commit message for pre-flight**: `docs(phase-e): preflight audit`.
+
+---
+
+## 4.5 Task E.0 — Bank de-anonymization migration
+
+> **Lands before E.1.0** (the `<ExamProblem>` component extension). Surfaced
+> by the pre-flight audit: the user authorised dropping the anonymization
+> rule («no need to keep anything private from students», 2026-05-24).
+> Single self-contained turn.
+
+### Goal
+
+Make `content/practice/exercises.tsx` (and every component that renders it)
+display the real exam date for every transcribed problem. Drop the
+`paperLabel: 'Παλαιό Θέμα #N'` pattern. Wire the existing
+`RECENT_SOURCES`-based 2024/2025 «Θέμα Εξετάσεων» Flame chip — currently
+dead code in production — to actually fire.
+
+### Inputs
+
+- The 141-entry transcribed bank in `content/practice/exercises.tsx`.
+- The paperLabel-to-date mapping table in `plans/EXAM_TRANSCRIPTION.md`
+  (lines 23-44 of the updated convention block):
+  Παλαιό Θέμα #1 → `'june-2025'`, #2 → `'sept-2025'`, …, #23 → `'midterm-2008'`.
+- The `ExamSource` enum in `content/practice/types.ts` — every needed
+  source value is already defined.
+
+### What to change
+
+1. **`content/practice/exercises.tsx`** (141 entries; ~10 416 lines):
+   - Replace `paperLabel: 'Παλαιό Θέμα #N'` with `source: '<dated source>'`
+     per the mapping table.
+   - Replace `paperLabel: 'Φροντιστηριακό Σετ #N'` with
+     `source: 'frontistirio-2023-24'` (sets #1–#10) or
+     `source: 'frontistirio-misc'` (sets #11–#13).
+   - Update the section comment at line 217 («2024 / 2025 ΕΞΕΤΑΣΤΙΚΕΣ»)
+     to remove the anonymized framing.
+   - Update the title strings: `'Παλαιό Θέμα #N · Θέμα X — <τίτλος>'`
+     becomes `'<Date> · Θέμα X — <τίτλος>'` (e.g.
+     `'Ιούνιος 2024 · Θέμα 1.1 — Σύγκριση σταθερών συναρτήσεων'`).
+     Use `SOURCE_LABELS[source]` from `types.ts` as the date prefix —
+     authored values are «Ιούνιος 2024», «Σεπτέμβριος 2025», etc.
+   - For the 21 still-untranscribed entries (`statement: null`): same
+     migration. The title goes from `'Παλαιό Θέμα #N — υπό μεταγραφή'`
+     to `'<Date> — υπό μεταγραφή'`.
+
+2. **`content/practice/types.ts`**:
+   - Mark `paperLabel?: string` on `Exercise` as deprecated (kept for back-
+     compat but documented as «do not use»). OR drop it entirely — the
+     E.0 turn confirms by checking that no component still reads it after
+     the migration.
+   - Audit `SOURCE_LABELS` for completeness — every value referenced by
+     the new bank must have a label.
+
+3. **`components/practice/ExerciseCard.tsx`**:
+   - Currently renders `paperLabel` chip OR `source` chip (lines 82–91)
+     — collapse to just the `source` chip + the existing `RECENT_SOURCES`
+     Flame chip (lines 92–101), which now fires for #1–#7 entries
+     automatically.
+
+4. **`components/sose/SoseProblemCard.tsx`**:
+   - Add the `RECENT_SOURCES`-based Flame chip (does not exist there yet
+     — see pre-flight § 4). Will surface 2024/2025 problems with the
+     same prominence the practice library has.
+
+5. **`components/content/LectureExercises.tsx`**:
+   - `RECENT_SOURCES.has(ex.source)` branch (line 31) is no longer dead
+     code post-migration. No code change needed — the sort just starts
+     working.
+   - Optionally update the sub-header «Οι πρόσφατες εξεταστικές (2024/2025)
+     φέρουν badge προτεραιότητας» to confirm it's accurate (it now is).
+
+6. **`plans/EXAM_TRANSCRIPTION.md`**:
+   - Already updated by the pre-flight commit (anonymization policy
+     marked DROPPED, dated-source convention recorded). The per-paper
+     checklist still uses the «Παλαιό Θέμα #N» labels for tracking —
+     keep them as the checklist's internal numbering, but new
+     transcriptions per the new convention.
+
+### Acceptance
+
+- `Grep('paperLabel:', content/practice/)` returns 0 hits.
+- Every `Exercise` entry has a non-undefined `source`.
+- The practice library shows the Flame «Θέμα Εξετάσεων 2024/2025» chip
+  on entries #1–#7.
+- `npm run typecheck` + `lint` + `build` all pass.
+- `npm run dev` renders the practice library and SOSE without regressions
+  (visual check on one rich-pool lecture's `LectureExercises` block).
+
+### Commit message
+
+`refactor(bank): drop anonymization; surface real exam dates everywhere`.
 
 ---
 

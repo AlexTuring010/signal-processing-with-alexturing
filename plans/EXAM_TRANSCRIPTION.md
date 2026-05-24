@@ -4,33 +4,58 @@
 > next `☐` paper from the checklist, follow the per-session protocol, mark it
 > `☑`. Repeat. Nothing here depends on chat history.
 
+> **POLICY UPDATE 2026-05-24 — anonymization DROPPED.** The user authorised
+> de-anonymizing the bank in Phase E pre-flight (Q2: «no need to keep
+> anything private from students»). New transcriptions and all existing
+> entries now use real dated `source: 'june-2024' | 'sept-2024' | …`
+> instead of `paperLabel: 'Παλαιό Θέμα #N'`. The `private_material/`
+> directory has been un-gitignored. The original anonymization conventions
+> (struck through below) are kept for historical context only — see
+> `plans/PHASE_E_PLAN.md § E.0` for the bank de-anonymization migration
+> task that converts them.
+
 ## Goal
 
 Transcribe **every** past-exam paper (`private_material/oldtests/`) and every
 frontistirio set (`private_material/inclass/`) from PDF/image into the app's
 exercise bank — split into per-lecture sub-exercises, each with a
-beginner-friendly Greek solution — then **anonymise** in the UI.
+beginner-friendly Greek solution — with dated source attribution in the UI.
 
-> **Privacy architecture (since 2026-05-22).** All raw university materials live
-> in `/private_material`, which is **git-ignored** — never committed, never
-> published. The old public copy under `public/material/exercises/` has been
-> removed. Source files therefore no longer need to be *deleted* after
-> transcription: they simply stay local-only in `private_material`. Earlier
-> papers that were already deleted remain recoverable via `git show`.
+> **~~Privacy architecture (since 2026-05-22).~~ DROPPED 2026-05-24.** All raw
+> university materials live in `/private_material`. The `.gitignore` rule
+> that hid this directory was removed; raw source PDFs/images are now tracked
+> and shipped. After E.0 (bank de-anonymization migration) lands, every entry
+> in `content/practice/exercises.tsx` carries a dated `source` field and the
+> `paperLabel: 'Παλαιό Θέμα #N'` pattern is gone.
 
 ## Conventions
 
-### Anonymisation
-- Never display the real exam date/session anywhere in the app.
-- Each source paper gets a fixed label: old exams → **`Παλαιό Θέμα #N`**;
-  frontistirio → **`Φροντιστηριακό Σετ #N`** (numbers fixed by the checklist
-  below — do not renumber).
-- Every transcribed exercise carries `paperLabel: 'Παλαιό Θέμα #N'`, **omits**
-  `source` (the dated `ExamSource`), and **omits** `sourceFile`.
+### ~~Anonymisation~~ Dated source attribution (NEW POLICY)
+- Display the real exam date/session in every UI surface that cites a problem.
+- Each source paper carries a dated `source: ExamSource` value (defined in
+  `content/practice/types.ts` — e.g. `'june-2024'`, `'sept-2025'`,
+  `'frontistirio-2023-24'`, `'frontistirio-misc'`).
+- Every transcribed exercise carries `source: '...'` and a `sourceFile`
+  pointer (PDF/image path under `material/past_exams/` for the 2024/2025
+  papers, or under `private_material/` for the older archive). The
+  `paperLabel: 'Παλαιό Θέμα #N'` field is removed during E.0; new entries
+  authored after E.0 must not introduce it.
 - The per-card takedown notice was **removed** 2026-05-24 (user flagged the
   per-card repetition as noise). The `ExamTranscriptionNotice` component is
   still in `components/content/` for a future single-banner mount on
   `/practice`; nothing renders it right now.
+
+> **Mapping (set by E.0).** `Παλαιό Θέμα #1` → `'june-2025'`; #2 →
+> `'sept-2025'`; #3 → `'june-2024'`; #4 → `'sept-2024'`; #5 → `'june-2023'`;
+> #6 → `'sept-2023'`; #7 → `'june-2022'`; #8 → `'sept-2022'`; #9 →
+> `'june-2021'`; #10 → `'sept-2020'`; #11 → `'distance-2020'`; #12 →
+> `'feb-2019'`; #13 → `'june-2018'`; #14 → `'sept-2017'`; #15 →
+> `'feb-2017'`; #16 → `'june-2016'`; #17 → `'feb-2016'`; #18 →
+> `'june-2015'`; #19 → `'midterm-2012'`; #20 → `'sept-2011'`; #21 →
+> `'june-2011'`; #22 → `'june-2010'`; #23 → `'midterm-2008'`. (Cross-checked
+> against the checklist below + `ExamSource` enum in `content/practice/
+> types.ts`.) Frontistiria #1–#10 → `'frontistirio-2023-24'`; #11–#13 →
+> `'frontistirio-misc'`.
 
 ### Splitting & routing
 - One `Exercise` object **per sub-exercise** (Q1, Q2a, Q2b…), never per paper.
@@ -59,9 +84,11 @@ beginner-friendly Greek solution — then **anonymise** in the UI.
   the new sub-exercise objects.
 
 ### Source files
-- Raw source files live in `/private_material` (git-ignored). They do **not**
-  need to be deleted after transcription — the git-ignore already keeps them off
-  GitHub. Just leave them in place.
+- Raw source files live in `material/past_exams/` (the 4 publicly-available
+  2024/2025 papers — TRACKED) and `private_material/` (the older
+  Ζησιμόπουλος archive + frontistirio decks — TRACKED after 2026-05-24).
+  Every transcribed entry sets `sourceFile` to point at the relevant file
+  so the «Δες το πρωτότυπο» link in the bank works.
 
 ## Exercise object template
 
