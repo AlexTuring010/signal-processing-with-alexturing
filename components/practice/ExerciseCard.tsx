@@ -23,7 +23,6 @@ import {
 } from '@/content/practice/types'
 import type { Exercise } from '@/content/practice/types'
 import { PrereqChips } from './PrereqChips'
-import { ExamTranscriptionNotice } from '@/components/content/ExamTranscriptionNotice'
 import { useFormulaSheet } from './formula-sheet-store'
 import { SectionComments } from '@/components/layout/SectionComments'
 import { useAppStore } from '@/lib/store'
@@ -176,9 +175,6 @@ export function ExerciseCard({ exercise }: Props) {
           Εκφώνηση δεν έχει ακόμα μεταγραφεί.
         </p>
       )}
-
-      {/* Takedown notice for transcribed past-exam / frontistirio problems */}
-      {exercise.paperLabel && <ExamTranscriptionNotice />}
 
       {/* Prerequisite chips */}
       <div className="mt-3">

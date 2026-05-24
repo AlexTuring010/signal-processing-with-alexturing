@@ -27,8 +27,10 @@ beginner-friendly Greek solution — then **anonymise** in the UI.
   below — do not renumber).
 - Every transcribed exercise carries `paperLabel: 'Παλαιό Θέμα #N'`, **omits**
   `source` (the dated `ExamSource`), and **omits** `sourceFile`.
-- `ExerciseCard` auto-renders `<ExamTranscriptionNotice/>` (the takedown notice)
-  whenever `paperLabel` is set.
+- The per-card takedown notice was **removed** 2026-05-24 (user flagged the
+  per-card repetition as noise). The `ExamTranscriptionNotice` component is
+  still in `components/content/` for a future single-banner mount on
+  `/practice`; nothing renders it right now.
 
 ### Splitting & routing
 - One `Exercise` object **per sub-exercise** (Q1, Q2a, Q2b…), never per paper.
