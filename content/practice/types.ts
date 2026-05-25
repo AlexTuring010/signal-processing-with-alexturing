@@ -181,6 +181,16 @@ export type Exercise = {
    */
   sourceFile?: string
   /**
+   * Page in the source PDF where the problem statement starts. 1-indexed.
+   * When both `sourceFile` and `sourcePage` are set, the UI renders a
+   * deep-link «Δες το πρωτότυπο PDF (σελ. N)» that opens the PDF at the
+   * right page via `href={`${sourceFile}#page=${sourcePage}`}`. The
+   * `#page=N` anchor is the de-facto standard supported by Chrome, Firefox,
+   * Edge and Safari in-browser PDF viewers. Falls back to the page-less
+   * link when only `sourceFile` is set.
+   */
+  sourcePage?: number
+  /**
    * The problem statement. `null` when not yet transcribed (the UI then
    * falls back to the sourceFile link).
    */

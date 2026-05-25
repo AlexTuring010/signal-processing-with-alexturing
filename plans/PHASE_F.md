@@ -48,30 +48,46 @@ file when you finish.
 treatment: two passes (transcription correctness + quality bar) plus a
 theory-content audit and PDF-page-link wiring. **One PDF per turn.**
 
-| Task | Source PDF | Bank set (per current tracker) | Bank entries today | Status |
+| Task | Source PDF | Bank set (CONFIRMED 2026-05-25 in F.1.0) | Bank entries today | Status |
 |---|---|---|---|---|
-| F.1.0 | *(all 10 PDFs, first-page inspection + UI wiring)* | *(see § 4)* | — | ☐ |
+| F.1.0 | *(all 10 PDFs, first-page inspection + UI wiring)* | *(see § 4)* | — | ☑ |
 | F.1.1 | `material/frontistiria/F1__2023_24__eclass.pdf` | Φροντιστηριακό Σετ #1 | 3 (Ασκ 0, 1, 3) | ☐ |
 | F.1.2 | `material/frontistiria/F2__2023_24.pdf` | Φροντιστηριακό Σετ #2 | 8 (Ασκ 0–7) | ☐ |
 | F.1.3 | `material/frontistiria/F3__eclass.pdf` | Φροντιστηριακό Σετ #3 | 7 (Ασκ 1, 2, 4, 7, 8, 9, 10) | ☐ |
 | F.1.4 | `material/frontistiria/F4__2023_24__eclass.pdf` | Φροντιστηριακό Σετ #4 | 12 (Ασκ 1–10 + E0 + Θέμα 4) | ☐ |
-| F.1.5 | `material/frontistiria/F5_6__eclass.pdf` | Σετ #5 AND/OR #6 (verify in F.1.0) | Set #5: 10, Set #6: 8 | ☐ |
-| F.1.6 | `material/frontistiria/F7__eclass.pdf` | Φροντιστηριακό Σετ #6 (per existing tracker — F7 ≠ Set #7) | 8 (Ασκ 1–8) | ☐ |
+| F.1.5 | `material/frontistiria/F5_6__eclass.pdf` | **Φροντιστηριακό Σετ #5 ONLY** (combined deck — see § 1 notes) | 10 (Ασκ 1, 2, 3, 5, 6, 7, 8, 9, 10, 11) | ☐ |
+| F.1.6 | `material/frontistiria/F7__eclass.pdf` | Φροντιστηριακό Σετ #6 (F7 ≠ Set #7 — offset starts here) | 8 (Ασκ 1–8) | ☐ |
 | F.1.7 | `material/frontistiria/F8__eclass.pdf` | Φροντιστηριακό Σετ #7 | 12 (Ασκ 1–12) | ☐ |
 | F.1.8 | `material/frontistiria/F9__eclass.pdf` | Φροντιστηριακό Σετ #8 | 4 (Ασκ 1–4) | ☐ |
 | F.1.9 | `material/frontistiria/F10__eclass.pdf` | Φροντιστηριακό Σετ #9 | 4/5 absorbed (Ασκ 1, 3, 5, 8) | ☐ |
 | F.1.10 | `material/frontistiria/F11__eclass.pdf` | Φροντιστηριακό Σετ #10 | 13/14 absorbed (Ασκ 1–14 minus 6) | ☐ |
 
-**File ↔ set mapping is NOT 1:1.** The current `EXAM_TRANSCRIPTION.md`
-tracker has `F7 → Set #6`, `F8 → Set #7`, `F9 → Set #8`, `F10 → Set #9`,
-`F11 → Set #10`. The first transcription pass for each PDF must CONFIRM
-the mapping by reading the PDF's first page (set number, year, frontistirio
-teacher) and checking against bank entries with that set's id prefix.
+**File ↔ set mapping is NOT 1:1 — confirmed in F.1.0 (2026-05-25).** The
+existing `EXAM_TRANSCRIPTION.md` mapping (`F7→Set #6`, `F8→Set #7`,
+`F9→Set #8`, `F10→Set #9`, `F11→Set #10`) is CORRECT. Each PDF's first
+page was inspected; all 10 carry teacher **Έφη Μαλέσιου (Διδακτορική
+φοιτήτρια)** in the 2023–24 academic year.
 
-**`F5_6__eclass.pdf` is special.** It may contain Set #5 only, Set #5 + #6
-combined, or a renamed Set #5. F.1.0 resolves which. If F5_6 turns out
-to cover both sets, F.1.5 may need to split into F.1.5a + F.1.5b (one
-turn each).
+**Two non-obvious findings from F.1.0:**
+
+1. **PDF session labels ≠ file-name indices.** The PDF cover pages
+   carry `(N)` session numbers per the teacher's chronology: F1→(1),
+   F2→(2), F3→**(5)**, F4→**(4)**, F5_6→**(5,6)**, F7→(7), F8→(8),
+   F9→(9), F10→(10), F11→(11). Note F3 is labeled (5) and dated
+   16/4/2024 while F4 is labeled (4) and dated **9/4/2024** — F4 is
+   chronologically BEFORE F3 despite the file index. The PDF labeled (3)
+   never reached this archive. **Bank Set #N matches the FILE index Fn
+   for F1..F4, then offsets by −1 starting at F7** — this is the
+   convention to follow throughout F.1.1..F.1.10.
+
+2. **F5_6 maps to bank Set #5 ONLY**, not Set #5 + #6. The PDF deck IS
+   a combined session labeled "(5,6)" with two topic hashtags
+   ("# Αναζήτηση και ταξινόμηση" + "# Γραφήματα"), but the team
+   transcribed the combined 10 problems under a single bank set
+   (`front-set-5-ask1..ask11`, gap at ask4). Bank Set #5 is intentionally
+   mixed: 3 D&C entries (ask1/2/3) + 5 graphs entries (ask5/6/7/8/9) +
+   2 data-structures entries (ask10/11). **F.1.5 is one turn**, not
+   F.1.5a + F.1.5b.
 
 **Sets #11–#13 are NOT in `material/frontistiria/`.** Their source PDFs
 (`1ο Φροντ.pdf`, `2ο Φροντ.pdf`, `3ο Φροντ.pdf`) live elsewhere or are

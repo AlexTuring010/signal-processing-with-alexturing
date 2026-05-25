@@ -10,6 +10,7 @@ import {
   Target,
   Radar,
   Flame,
+  ExternalLink,
 } from 'lucide-react'
 import {
   TOPIC_COLORS,
@@ -68,6 +69,12 @@ export function SoseProblemCard({
   const hasRadar = coaching.examRadar != null
   const hasAuthoredCoaching = hasTakeaway || hasRadar
   const hasAnyCoaching = hasAuthoredCoaching || related.length > 0
+
+  const sourceHref = exercise.sourceFile
+    ? exercise.sourcePage
+      ? `${exercise.sourceFile}#page=${exercise.sourcePage}`
+      : exercise.sourceFile
+    : undefined
 
   return (
     <SectionCommentsProvider slugOverride="practice" pageTitleOverride="Practice hub">
@@ -192,6 +199,19 @@ export function SoseProblemCard({
             />
             {solutionOpen ? 'Απόκρυψη λύσης' : 'Δες τη λύση'}
           </button>
+          {sourceHref && (
+            <a
+              href={sourceHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-accent/50 hover:text-fg"
+            >
+              <ExternalLink className="h-4 w-4" aria-hidden />
+              {exercise.sourcePage
+                ? `Δες το πρωτότυπο PDF (σελ. ${exercise.sourcePage})`
+                : 'Πρωτότυπο'}
+            </a>
+          )}
           {hasFormulaIds && (
             <button
               type="button"

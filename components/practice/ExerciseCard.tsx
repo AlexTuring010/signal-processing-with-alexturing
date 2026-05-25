@@ -56,6 +56,12 @@ export function ExerciseCard({ exercise }: Props) {
   const toggleSolved = useAppStore((s) => s.toggleSolvedExercise)
   const solved = hydrated && isExerciseSolved(storageKey)
 
+  const sourceHref = exercise.sourceFile
+    ? exercise.sourcePage
+      ? `${exercise.sourceFile}#page=${exercise.sourcePage}`
+      : exercise.sourceFile
+    : undefined
+
   return (
     <article
       id={`exercise:${exercise.id}`}
@@ -149,20 +155,22 @@ export function ExerciseCard({ exercise }: Props) {
         <div className="prose-content max-w-none text-[15px] leading-relaxed text-fg">
           {exercise.statement}
         </div>
-      ) : exercise.sourceFile ? (
+      ) : sourceHref ? (
         <div className="rounded-lg border border-dashed border-border bg-bg-soft/60 p-4 text-sm">
           <p className="mb-3 flex items-center gap-2 text-fg-muted">
             <FileText className="h-4 w-4 shrink-0" aria-hidden />
             Η εκφώνηση δεν έχει ακόμα μεταγραφεί — άνοιξε το πρωτότυπο PDF/εικόνα.
           </p>
           <a
-            href={exercise.sourceFile}
+            href={sourceHref}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-accent/50 hover:text-fg"
           >
             <ExternalLink className="h-4 w-4" aria-hidden />
-            Άνοιξε το πρωτότυπο
+            {exercise.sourcePage
+              ? `Άνοιξε το πρωτότυπο PDF (σελ. ${exercise.sourcePage})`
+              : 'Άνοιξε το πρωτότυπο'}
           </a>
         </div>
       ) : (
@@ -192,15 +200,17 @@ export function ExerciseCard({ exercise }: Props) {
             {open ? 'Απόκρυψη λύσης' : 'Δες τη λύση'}
           </button>
         )}
-        {exercise.sourceFile && exercise.statement !== null && (
+        {sourceHref && exercise.statement !== null && (
           <a
-            href={exercise.sourceFile}
+            href={sourceHref}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm font-medium text-fg-muted transition hover:border-accent/50 hover:text-fg"
           >
             <ExternalLink className="h-4 w-4" aria-hidden />
-            Πρωτότυπο
+            {exercise.sourcePage
+              ? `Δες το πρωτότυπο PDF (σελ. ${exercise.sourcePage})`
+              : 'Πρωτότυπο'}
           </a>
         )}
         {hasFormulaIds && (
