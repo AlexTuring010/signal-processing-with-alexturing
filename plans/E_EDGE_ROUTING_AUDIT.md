@@ -412,17 +412,73 @@ module-scope rects.
 - `components/viz/MaxEdgeAsBridge.tsx` ✅ (4 nodes R=22, 4 undirected weighted edges incl. dangling x via bridge)
 - `components/viz/DijkstraTreeVsMstTriangle.tsx` ✅ (3-node triangle R=22, 3 undirected weighted edges, rendered twice via `Panel` component — module-scope rects shared across both panels)
 
-#### B7.2 — Directed weighted path graphs
+#### B7.2 — Directed weighted path graphs ✅ DONE 2026-05-25
 
 4 directed weighted graphs with arrowhead markers and weight labels.
 `DijkstraHandTrace` is a hybrid: 2 instances (one undirected, one directed
 with a hand-tuned `c→a` curve carve-out, mirror of `WhyBFSFailsWeighted`
 B2 + `NegativeCycleDetector` B6).
 
-- `components/viz/MultVsAddPaths.tsx` (5 nodes R=21 shared across 2 panels, 5 directed weighted edges per panel)
-- `components/viz/ReliabilityLogTransform.tsx` (4 nodes R=22, 5 directed weighted edges, focused-edge highlight)
-- `components/viz/GreedyVsDpRelaxation.tsx` (4 nodes R=21, 5 directed weighted edges)
-- `components/viz/DijkstraHandTrace.tsx` (hybrid: instance `pt2-th2-1` is 6-node undirected with 8 weighted edges; instance `pt3-th1` is 5-node directed with 5 edges including a hand-tuned `c→a` cycle curve that stays as a documented carve-out)
+- `components/viz/MultVsAddPaths.tsx` ✅ (5 nodes R=21 shared across 2 panels, 5 directed weighted edges per panel; module-scope rects shared by both Panel renders)
+- `components/viz/ReliabilityLogTransform.tsx` ✅ (4 nodes R=22, 5 directed weighted edges, focused-edge highlight via `activeEdges` Set)
+- `components/viz/GreedyVsDpRelaxation.tsx` ✅ (4 nodes R=21, 5 directed weighted edges; MiniGraph rendered twice with module-scope rects shared; `POS` dropped as redundant)
+- `components/viz/DijkstraHandTrace.tsx` ✅ **hybrid** (instance `pt2-th2-1` is 6-node undirected R=21 with 8 weighted edges; instance `pt3-th1` is 5-node directed R=21 with 5 edges including a hand-tuned `c→a` cycle curve at `curve=60` that stays as a documented carve-out — back-edge bulge below the row disambiguates from the forward chain; per-instance `routedStraight` closure via `useMemo` keyed on `inst`; only straight edges retrofit)
+
+**Retrofit shape (as executed).** Three patterns applied per file, all
+mirrors of B7.1 / B4 / B6 precedents — no new shared helper:
+
+- **Module-scope rects, single layout (3 files):** `MultVsAddPaths`,
+  `ReliabilityLogTransform`, `GreedyVsDpRelaxation`. Build module-scope
+  `NODE_RECTS` + `NODE_RECT_BY_ID`, per-file `routedEdge(a, b)` calling
+  `routeEdge() → trimEdgeGeom()` with symmetric trim R. Weight-label
+  anchor branches on `g.kind` for line midpoint vs Bezier midpoint
+  `(A + B + 2·Q) / 4`. Sub-components (`Panel` in `MultVsAddPaths`,
+  `MiniGraph` in `GreedyVsDpRelaxation`) close over the module-scope
+  rects — no per-render rect rebuild, no per-panel rect duplication.
+- **Per-instance `useMemo` (1 file):** `DijkstraHandTrace`. The two
+  instances have DIFFERENT node sets (6 vs 5 nodes, different ids and
+  positions), so the routing closure rebuilds per instance. Mirror of
+  B6's `DagSourceWalk` per-preset `useMemo` and B4's `ConstantShiftFail`
+  per-preset `buildRects()`. The closure captures `rects` and the
+  `rectById` map, returns `{...geom, mx, my}` with the standard
+  Bezier-midpoint label anchor branch.
+- **Hybrid carve-out (1 file):** `DijkstraHandTrace`. Edges with
+  `e.curve !== undefined` keep their hand-tuned Bezier (`M ${a.x+18}
+  ${a.y+5} Q ${mx} ${my} ${b.x+18} ${b.y+5}`); only `e.curve === undefined`
+  edges call `routedStraight`. Joins the carve-out collection:
+  `WhyBFSFailsWeighted` s-t (B2), `DfsTreeBuilder` back-edges (B3),
+  `TopoOrderBuilder` direction arcs (B6), `NegativeCycleDetector`
+  a↔b + s→t (B6), `MstPreorderTSP` tour overlay (B7.1).
+
+**Side cleanup.** Dropped 4 local `trim(a, b, r)` helpers + the `POS`
+map in `GreedyVsDpRelaxation` (`routedEdge` indexes via `NODE_RECT_BY_ID`
+directly).
+
+**Steady-state visual contract:** every retrofitted edge in every B7.2
+viz routes as a line on the current layouts — verified by inspection
+(path graphs s→…→t are by construction collision-free; the only
+would-be collision is the `c→a` back-edge in `pt3-th1` of
+`DijkstraHandTrace`, which uses the documented hand-tuned carve-out).
+The line case is byte-identical to the pre-retrofit `trim()` output.
+No user-visible change today; the value is structural lockout per the
+audit's standing thesis.
+
+**No new tests required.** `routeEdge` / `trimEdgeGeom` were both
+locked by B1's 20-test suite (still 20/20 pass). The hybrid carve-out
+pattern (`DijkstraHandTrace`) is documented inline in the `routedStraight`
+useMemo's JSDoc.
+
+**Standing lessons for B7.3..B7.5:**
+- **Multi-instance via per-instance `useMemo`.** When a viz has multiple
+  instances/presets with different node sets, build the `routedEdge`
+  closure via `useMemo` keyed on the active instance — mirror of B6's
+  `DagSourceWalk` and B4's `ConstantShiftFail`. The closure captures
+  the per-instance `rects` array and `rectById` map.
+- **Hybrid carve-outs use the `WhyBFSFailsWeighted` precedent verbatim.**
+  When some edges carry a `curve` (or equivalent visual-signal) field,
+  branch on it at the call site and call the routed helper only on the
+  straight branch. Don't try to unify them through `routeEdge` — the
+  hand-tuned curve IS the teaching surface.
 
 #### B7.3 — Tree-shape vizzes (B5 mirror)
 
