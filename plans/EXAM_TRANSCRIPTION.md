@@ -140,15 +140,15 @@ beginner-friendly Greek solution — with dated source attribution in the UI.
 | 5 | Παλαιό Θέμα #5 | `Ζησιμόπουλος/2023-June-VZ/Algo-June-2023.pdf` *(deleted)* | ☑ |
 | 6 | Παλαιό Θέμα #6 | `Ζησιμόπουλος/2023-Sept-VZ/*.jpg` (2) | ☑ 4/4 |
 | 7 | Παλαιό Θέμα #7 | `Ζησιμόπουλος/2022-June-VZ/Algo_june_2022.pdf` | ☑ 4/4 |
-| 8 | Παλαιό Θέμα #8 | `Ζησιμόπουλος/2022-Sept-VZ/*.jpg` (3) | ☐ (3/3 σε PR #4 → [[phase-f0-absorb]]) |
-| 9 | Παλαιό Θέμα #9 | `Ζησιμόπουλος/2021-June-VZ/` (Θ1.pdf, Θ2.pdf, 1–15.png) | ☐ (17/17 σε PR #4 → Phase F.0) |
-| 10 | Παλαιό Θέμα #10 | `Αλγο-2020-Σεπτ-1(Slot2).jpg`, `Αλγο-2020-Σεπτ-2(Slot2).jpg` | ☐ (4/4 σε PR #4 → Phase F.0) |
-| 11 | Παλαιό Θέμα #11 | `αλγοριθμοι-και-πολυπλοκοτιτα-εξ-αποστασεως-2020.pdf` | ☑ 1/4 (Θ.1 absorbed· 3 σε PR #4 → Phase F.0) |
+| 8 | Παλαιό Θέμα #8 | `Ζησιμόπουλος/2022-Sept-VZ/*.jpg` (3) | ☐ (3/3 σε PR #4 → [[phase-f]]) |
+| 9 | Παλαιό Θέμα #9 | `Ζησιμόπουλος/2021-June-VZ/` (Θ1.pdf, Θ2.pdf, 1–15.png) | ☐ (17/17 σε PR #4 → Phase F.2) |
+| 10 | Παλαιό Θέμα #10 | `Αλγο-2020-Σεπτ-1(Slot2).jpg`, `Αλγο-2020-Σεπτ-2(Slot2).jpg` | ☐ (4/4 σε PR #4 → Phase F.2) |
+| 11 | Παλαιό Θέμα #11 | `αλγοριθμοι-και-πολυπλοκοτιτα-εξ-αποστασεως-2020.pdf` | ☑ 1/4 (Θ.1 absorbed· 3 σε PR #4 → Phase F.2) |
 | 12 | Παλαιό Θέμα #12 | `Ζησιμόπουλος/2019-Feb-VZ/2019.pdf` | ⊘ κενό |
-| 13 | Παλαιό Θέμα #13 | `Ζησιμόπουλος/2018-June-VZ/*.jpg` (2) | ☐ (14/15 σε PR #4 → Phase F.0) |
-| 14 | Παλαιό Θέμα #14 | `Ζησιμόπουλος/2017-Sept-VZ/*.jpg` (2) | ☐ (13/16 σε PR #4 → Phase F.0) |
-| 15 | Παλαιό Θέμα #15 | `Ζησιμόπουλος/2017-Feb-VZ/algo-fevr-2017-zisimopoulos.pdf` | ☐ (9/15 σε PR #4 → Phase F.0) |
-| 16 | Παλαιό Θέμα #16 | `Ζησιμόπουλος/2016-June-VZ/*.jpg` (2) | ☑ 3/10 (Θ.3.2-3.3, Θ.4, Θ.5 absorbed· 7 σε PR #4 → Phase F.0) |
+| 13 | Παλαιό Θέμα #13 | `Ζησιμόπουλος/2018-June-VZ/*.jpg` (2) | ☐ (14/15 σε PR #4 → Phase F.2) |
+| 14 | Παλαιό Θέμα #14 | `Ζησιμόπουλος/2017-Sept-VZ/*.jpg` (2) | ☐ (13/16 σε PR #4 → Phase F.2) |
+| 15 | Παλαιό Θέμα #15 | `Ζησιμόπουλος/2017-Feb-VZ/algo-fevr-2017-zisimopoulos.pdf` | ☐ (9/15 σε PR #4 → Phase F.2) |
+| 16 | Παλαιό Θέμα #16 | `Ζησιμόπουλος/2016-June-VZ/*.jpg` (2) | ☑ 3/10 (Θ.3.2-3.3, Θ.4, Θ.5 absorbed· 7 σε PR #4 → Phase F.2) |
 | 17 | Παλαιό Θέμα #17 | `Ζησιμόπουλος/2016-Feb-VZ/*.jpg` (5) | ☐ |
 | 18 | Παλαιό Θέμα #18 | `Ζησιμόπουλος/2015-June-VZ/` (2 pdf, 2 jpg) | ☐ |
 | 19 | Παλαιό Θέμα #19 | `Ζησιμόπουλος/2012-Midterm/2012-p.pdf` | ☐ |
@@ -169,9 +169,9 @@ beginner-friendly Greek solution — with dated source attribution in the UI.
 | 6 | Φροντιστηριακό Σετ #6 | `F7__eclass.pdf` | ☑ 8/8 (Ασκ 1–8) |
 | 7 | Φροντιστηριακό Σετ #7 | `F8__eclass.pdf` | ☑ 12/12 (Ασκ 1–12) |
 | 8 | Φροντιστηριακό Σετ #8 | `F9__eclass.pdf` | ☑ 4/4 (Ασκ 1–4) |
-| 9 | Φροντιστηριακό Σετ #9 | `F10__eclass.pdf` | ☑ 4/5 (Ασκ 1,3,5,8 absorbed· Ασκ 2 σε PR #4 → Phase F.0) |
-| 10 | Φροντιστηριακό Σετ #10 | `F11__eclass.pdf` | ☑ 13/14 (Ασκ 6 σε PR #4 → Phase F.0) |
-| 11 | Φροντιστηριακό Σετ #11 | `1ο Φροντ.pdf` | ☑ 2/3 (Ασκ 1 σε PR #4 → Phase F.0) |
+| 9 | Φροντιστηριακό Σετ #9 | `F10__eclass.pdf` | ☑ 4/5 (Ασκ 1,3,5,8 absorbed· Ασκ 2 σε PR #4 → Phase F.2) |
+| 10 | Φροντιστηριακό Σετ #10 | `F11__eclass.pdf` | ☑ 13/14 (Ασκ 6 σε PR #4 → Phase F.2) |
+| 11 | Φροντιστηριακό Σετ #11 | `1ο Φροντ.pdf` | ☑ 2/3 (Ασκ 1 σε PR #4 → Phase F.2) |
 | 12 | Φροντιστηριακό Σετ #12 | `2ο Φροντ.pdf` | ☑ 2/2 |
 | 13 | Φροντιστηριακό Σετ #13 | `3ο Φροντ.pdf` | ☑ 3/3 |
 
@@ -180,24 +180,32 @@ beginner-friendly Greek solution — with dated source attribution in the UI.
 **Old exams — fully done: 7 / 23** (#1–#7). Partial: #11 (1/4 absorbed), #16
 (3/10). Fully pending or partial: 16 (#8–#23 minus #12 κενό). PR #4 (Stelios)
 transcribed papers #8–#11, #13–#16 in full — those entries are queued for
-absorption in **Phase F.0**, see `plans/PHASE_F0_ABSORB.md`.
+absorption in **Phase F.2**, see `plans/PHASE_F.md`.
 
 **Frontistiria — fully done: 10 / 13** (#1–#8 from prior sessions; #12 + #13
 from PR #4 in this merge). Partial: #9 (4/5), #10 (13/14), #11 (2/3) — one
-entry per set is queued for Phase F.0.
+entry per set is queued for Phase F.2.
+
+**All 13 frontistirio sets re-queued for a deep quality audit pass in
+Phase F.1** (2026-05-25 — user added `material/frontistiria/` with the
+10 source PDFs for Sets #1–#10 and asked for a transcription-correctness
+pass + quality-bar uplift, per the binding [[lecture-rework-standard]]).
+See `plans/PHASE_F.md` §1 F.1 for the per-PDF schedule. F.1 also adds
+`sourcePage`-anchored PDF links and a theory-content audit against the
+lecture pages.
 
 Total modular exercises in the merged bank: **151** (123 από προηγούμενες
 συνεδρίες ως [[phase-d-problem-rework]] + 28 absorbed από το PR #4 του Stelios
 στη συγχώνευση 2026-05-25: 24 frontistirio + 4 παλαιά θέματα). Verified by
 `grep -cE "id: '(pt|front-set-)" content/practice/exercises.tsx` → 151.
 
-> **PR #4 absorption — Phase F.0 queue (2026-05-25).** When PR #4 from
+> **PR #4 absorption — Phase F.2 queue (2026-05-25).** When PR #4 from
 > Stelios was merged into our `algorithms-class-version` branch, **~70
 > additional transcribed entries** from his commits landed in conflict
 > regions and were not absorbed in the merge (the resolution preferred
 > our de-anonymized format to protect [[phase-e0-bank-dedeanonymization]]
 > + the Phase D quality pass). Those entries are recoverable from
-> `origin/main` at any time. See `plans/PHASE_F0_ABSORB.md` for the
+> `origin/main` at any time. See `plans/PHASE_F.md` for the
 > per-entry list + the reformatting recipe. Stelios's transcriptions
 > are functional but predate the [[lecture-rework-standard]] bar —
 > they need a Phase D-equivalent quality pass once absorbed.
