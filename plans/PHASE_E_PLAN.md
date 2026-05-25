@@ -93,6 +93,32 @@ a sub-list. Update this section in the same commit that finishes the task.
 - ☐ **E.6 — Wire the SOSE flow** (2024/2025 priority, pattern pairs, keyword strips, «πρότυπα σκέψης» tab)
 - ☐ **E.7 — Final integration sweep + PR description update**
 
+### Phase F.0 — Absorb Stelios's PR #4 transcriptions (queued 2026-05-25)
+
+When `origin/main` was merged into `algorithms-class-version` on 2026-05-25,
+28 of Stelios's transcribed entries from PR #4 auto-resolved into our bank
+(format-translated to our type). **~70 more entries** sat in conflict
+regions and were deferred — the resolver preferred our format to protect
+[[phase-e0-bank-dedeanonymization]] and the [[phase-d-problem-rework]]
+quality bar.
+
+Full per-entry list, recovery recipe, and proposed cadence are in
+**`plans/PHASE_F0_ABSORB.md`**. Suggested sequencing (one paper per turn,
+mirror of Phase D):
+
+- ☐ F.0.1 — pt8 (3 entries, sept-2022)
+- ☐ F.0.2 — pt9 part 1 (q1–q10, 10 entries, june-2021)
+- ☐ F.0.3 — pt9 part 2 (q11–q15 + th1 + th2, 7 entries)
+- ☐ F.0.4 — pt10 (4 entries, sept-2020)
+- ☐ F.0.5 — pt11 remainder + 3 frontistirio entries (6 total)
+- ☐ F.0.6 — pt13 (14 entries, june-2018)
+- ☐ F.0.7 — pt14 (13 entries, sept-2017)
+- ☐ F.0.8 — pt15 (9 entries, feb-2017)
+- ☐ F.0.9 — pt16 remainder (7 entries, june-2016)
+
+Not blocking on any open Phase E task — F.0 can interleave whenever the
+user wants to expand bank coverage.
+
 ---
 
 ## 2. The big picture
