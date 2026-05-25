@@ -577,11 +577,40 @@ $$
 **Γιατί χρειαζόμαστε αυτή τη «βαρετή» απόδειξη;** Γιατί μόνο αυτή δίνει εγγύηση για **κάθε** $n$, όχι μόνο για δυνάμεις του 2. Στην εξέταση, αν δεν ζητείται ρητά η γενική περίπτωση, χρησιμοποίησε την απλούστερη απόδειξη ($n = 2^k$) — είναι αποδεκτή για άνω/κάτω φράγμα.
 </Callout>
 
+<RelatedPair
+  patternName="«Δείξε με επαγωγή / μέθοδο αντικατάστασης ότι T(n) = Θ(n log n)» — η ίδια απόδειξη σε 5 παραλλαγές"
+  pairs={[
+    { id: 'front-set-3-ask8' },
+    { id: 'front-set-11-ask2' },
+    { id: 'front-set-4-ask2' },
+    { id: 'front-set-4-ask3' },
+    { id: 'front-set-4-ask4' },
+  ]}
+  cue={
+    <>
+      <strong>«Δείξε με τη βοήθεια της μαθηματικής επαγωγής ότι <InlineMath>{'T(n) = n\\log n'}</InlineMath>»</strong> ή <strong>«βρες με τη μέθοδο της αντικατάστασης άνω φράγμα για την <InlineMath>{'T(n)'}</InlineMath>»</strong> — η απόδειξη που μόλις είδες ζητούμενη ως εξεταστικό θέμα, σε <strong>5 διαφορετικές αναδρομές</strong>. Η συνταγή είναι σταθερή: <em>(1)</em> γράψε ρητά την <strong>εικασία</strong> (συνήθως <InlineMath>{'T(n) \\le c\\,n\\log n'}</InlineMath>, ή <InlineMath>{'cn^k'}</InlineMath> κατά Master)· <em>(2)</em> <strong>βάση</strong>: επαλήθευσε στο μικρότερο <InlineMath>{'n'}</InlineMath> (π.χ. <InlineMath>{'n=2'}</InlineMath> ώστε <InlineMath>{'\\log_2 n = 1'}</InlineMath>) — διάλεξε <InlineMath>{'c'}</InlineMath> αρκετά μεγάλο ώστε να κλείνει· <em>(3)</em> <strong>επαγωγικό βήμα</strong>: ξεκίνα από τη γραμμή της αναδρομής, αντικατέστησε την επαγωγική υπόθεση στις αναδρομικές κλήσεις (που έχουν μέγεθος <InlineMath>{'< n'}</InlineMath>), και απλοποίησε με τις ταυτότητες του log (<InlineMath>{'\\log\\tfrac{n}{2} = \\log n - 1'}</InlineMath>, <InlineMath>{'\\log a + \\log b = \\log(ab)'}</InlineMath>) για να καταλήξεις στον τύπο που υπόσχεσαι. Σήμα στην εκφώνηση: «δείξτε / αποδείξτε / επιβεβαιώστε με επαγωγή / με τη μέθοδο της αντικατάστασης». Παγίδα-σήμα — <strong>η ενίσχυση της εικασίας</strong>: αν η επαγωγή αφήνει «παράδικο» θετικό όρο τάξης <InlineMath>{'n^{k-1}'}</InlineMath> που δεν κλείνει, ενίσχυσε την εικασία σε <InlineMath>{"T(n) \\le cn^k - c'n^{k-1}"}</InlineMath> — αντιδιαισθητικά, η <em>σφιχτότερη</em> υπόθεση αφήνει στο επαγωγικό βήμα έναν επιπλέον <em>αρνητικό</em> όρο που απορροφά τον παράδικο θετικό (όπως στο <code>front-set-4-ask3</code> με <InlineMath>{'T(n) = 8T(n/2) + \\Theta(n^2)'}</InlineMath>). Δεύτερη παγίδα — <strong>η άνιση αναδρομή</strong>: αν η αναδρομή είναι <InlineMath>{'\\sum_i T(c_i n) + f(n)'}</InlineMath> με <InlineMath>{'\\sum_i c_i < 1'}</InlineMath>, η σωστή εικασία είναι <em>γραμμική</em> (<InlineMath>{'T(n) \\le cn'}</InlineMath>), όχι <InlineMath>{'n\\log n'}</InlineMath> — η γεωμετρικά φθίνουσα σειρά σπρώχνει τη ρίζα να κυριαρχήσει (όπως στο <code>front-set-4-ask4</code>: <InlineMath>{'1/2+1/4+1/8 = 7/8 < 1'}</InlineMath>).
+    </>
+  }
+/>
+
 <ExamProblem
   relatedExerciseId="pt1-th1-q5"
   pattern={
     <>
       <strong>Αν δεις την αναδρομή <InlineMath>{'T(n) = 2T(n/2) + n'}</InlineMath> οπουδήποτε (Σ/Λ, «κύκλωσε ποια ισχύουν», «βρες την πολυπλοκότητα»)</strong> — είναι ακριβώς η αναδρομή που μόλις λύσαμε με 4 τρόπους: η απάντηση είναι <em>πάντα</em> <InlineMath>{'\\Theta(n \\log n)'}</InlineMath>. Master Theorem με <InlineMath>{'a = 2,\\ b = 2,\\ d = 1'}</InlineMath> δίνει <InlineMath>{'d = \\log_b a'}</InlineMath> → περίπτωση 2 σε δύο γραμμές. Στις «κύκλωσε» ερωτήσεις: ναι στα φράγματα που περιέχουν τη σωστή τάξη (<InlineMath>{'O(n \\log n)'}</InlineMath> ✓, <InlineMath>{'o(n^3)'}</InlineMath> ✓), όχι στα στενότερα (<InlineMath>{'o(n)'}</InlineMath> ✗, <InlineMath>{'O(n)'}</InlineMath> ✗).
+    </>
+  }
+/>
+
+<RelatedPair
+  patternName="Master Theorem — η ίδια μηχανή σε 3 εξεταστικές παραλλαγές, μία περίπτωση κάθε φορά"
+  pairs={[
+    { id: 'pt2-th1-q3' },
+    { id: 'front-set-13-ask3' },
+  ]}
+  cue={
+    <>
+      <strong>«Λύσε με Master Theorem»</strong> ή <strong>«κύκλωσε ποια ισχύουν για <InlineMath>{'T(n) = a\\,T(n/b) + f(n)'}</InlineMath>»</strong> — η ίδια μηχανή σε <strong>3 εξεταστικές παραλλαγές</strong>, κάθε φορά με διαφορετική περίπτωση: <em>(i) εδώ</em> (Ιούνιος 2025 · Θ.1.5 · Flame) — κανονικό <strong>case 2</strong> της mergesort, <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>· <em>(ii) <code>pt2-th1-q3</code></em> (Σεπτ 2025 · Θ.1.3 · Flame) — <InlineMath>{'2T(n/2) + n^3'}</InlineMath> με <InlineMath>{'d = 3 > 1 = \\log_b a'}</InlineMath>, <strong>case 3</strong> (η ρίζα κυριαρχεί), <InlineMath>{'\\Theta(n^3)'}</InlineMath>· <em>(iii) <code>front-set-13-ask3</code></em> — τρεις αναδρομές πακέτο, μία ανά περίπτωση 1 / 2 / 3, <strong>ολόκληρο το Master Theorem σε ένα θέμα</strong>. Συνταγή σε κάθε εκδοχή: γράψε <InlineMath>{'a, b, d'}</InlineMath>· υπολόγισε <InlineMath>{'\\log_b a'}</InlineMath>· σύγκρινε με <InlineMath>{'d'}</InlineMath>· διάλεξε περίπτωση. Σήμα στην εκφώνηση: «κύκλωσε ποια ισχύουν» (Σ/Λ φραγμάτων με <InlineMath>{'O, o, \\Omega, \\omega, \\Theta'}</InlineMath>) ή «λύσε με το Θεώρημα Κυριαρχίας». Παγίδα-σήμα: όταν η εκφώνηση γράφει «κύκλωσε», η σωστή απάντηση συνήθως είναι <strong>πολλαπλά</strong> φράγματα — αν η σφιχτή τάξη είναι <InlineMath>{'\\Theta(n\\log n)'}</InlineMath>, τότε <em>όλα</em> τα <InlineMath>{'O'}</InlineMath> που το περιέχουν είναι σωστά (<InlineMath>{'O(n\\log n)'}</InlineMath>, <InlineMath>{'O(n^2)'}</InlineMath>, <InlineMath>{'o(n^3)'}</InlineMath>, …), αλλά τα <InlineMath>{'o'}</InlineMath> με μικρότερη τάξη <strong>ΟΧΙ</strong> (<InlineMath>{'o(n)'}</InlineMath> λάθος). Δεύτερη παγίδα: αν το <InlineMath>{'f(n)'}</InlineMath> έχει <strong>λογάριθμο</strong> ως πολλαπλασιαστή (π.χ. <InlineMath>{'2T(n/2) + n\\log n'}</InlineMath>), δεν είσαι σε καμία από τις 3 κλασικές περιπτώσεις — βλ. την <em>επεκτεταμένη</em> περίπτωση παρακάτω.
     </>
   }
 />
@@ -660,6 +689,18 @@ $$
   pattern={
     <>
       <strong>Αν δεις <InlineMath>{'aT(n - c) + \\Theta(n)'}</InlineMath> για <InlineMath>{'a > 1'}</InlineMath> (π.χ. <InlineMath>{'2T(n-1) + \\Theta(n)'}</InlineMath>) και σου προτείνουν <em>πολυωνυμικό</em> φράγμα</strong> — είναι <strong>η ίδια ακριβώς παγίδα του Hanoi</strong>: η σωστή απάντηση είναι <em>εκθετική</em>, όχι πολυωνυμική. Το πρόβλημα μικραίνει κατά <strong>σταθερά</strong> (όχι στο μισό), οπότε το βάθος του δέντρου είναι <InlineMath>{'n'}</InlineMath> (όχι <InlineMath>{'\\log n'}</InlineMath>) και τα φύλλα <InlineMath>{'a^n'}</InlineMath>. Ξεδιπλώνοντας: <InlineMath>{'2T(n-1) + cn = 2^n\\,T(0) + (\\text{πολυωνυμικοί όροι}) = \\Theta(2^n)'}</InlineMath>. <em>Διαχωριστής μοτίβου</em>: «μικραίνει κατά <InlineMath>{'c'}</InlineMath>» → εκθετικό· «μικραίνει στο <InlineMath>{'n/c'}</InlineMath>» → πολυωνυμικό. Το <InlineMath>{'O(n^2)'}</InlineMath> εδώ είναι παγίδα γιατί ηχεί σαν την mergesort — αλλά η mergesort έχει <InlineMath>{'2T(n/2)'}</InlineMath>, όχι <InlineMath>{'2T(n-1)'}</InlineMath>.
+    </>
+  }
+/>
+
+<RelatedPair
+  patternName="Εκθετική παγίδα — η σταθερή υποστελοχή T(n−c), ή το εκθετικό f(n) στο τηλεσκόπιο"
+  pairs={[
+    { id: 'front-set-3-ask4' },
+  ]}
+  cue={
+    <>
+      <strong>«Λύσε την αναδρομή <InlineMath>{'T(n) = T(n-1) + 2^n'}</InlineMath>»</strong> — η ίδια οικογένεια εκθετικών αναδρομών, διαφορετική γωνία. Εδώ η «έκρηξη» έρχεται από το <em>εκθετικό</em> <InlineMath>{'f(n)'}</InlineMath>, όχι από τον fanout <InlineMath>{'a > 1'}</InlineMath> του Hanoi· συνταγή για «μικραίνει κατά σταθερά»: <strong>τηλεσκόπησε</strong> γραμμή-γραμμή, αναγνώρισε το άθροισμα <InlineMath>{'T(n) - T(0) = \\sum_{i=1}^{n} g(i)'}</InlineMath>, και η ασυμπτωτική του <InlineMath>{'T(n)'}</InlineMath> ταυτίζεται με αυτή του αθροίσματος: <em><InlineMath>{'g = c'}</InlineMath> → <InlineMath>{'\\Theta(n)'}</InlineMath>· <InlineMath>{'g = i'}</InlineMath> → <InlineMath>{'\\Theta(n^2)'}</InlineMath>· <InlineMath>{'g = 2^i'}</InlineMath> → <InlineMath>{'\\Theta(2^n)'}</InlineMath></em> (η γεωμετρική σειρά κυριαρχείται από τον τελευταίο όρο). Σήμα-διαχωριστής που σώζει: <strong><InlineMath>{'T(n-c)'}</InlineMath> με <InlineMath>{'a > 1'}</InlineMath></strong> ή <strong><InlineMath>{'T(n-c)'}</InlineMath> με εκθετικό <InlineMath>{'f'}</InlineMath></strong> → η απάντηση είναι <strong>εκθετική</strong>, ενώ <InlineMath>{'T(n/b)'}</InlineMath> με πολυωνυμικό <InlineMath>{'f'}</InlineMath> δίνει πολυωνυμικό. Παγίδα-σήμα: <InlineMath>{'O(n^2)'}</InlineMath> ηχεί «σαν mergesort», αλλά κάθε φορά που βλέπεις <InlineMath>{'aT(n-c)'}</InlineMath> για <InlineMath>{'a > 1'}</InlineMath> ή <InlineMath>{'T(n-c) + (\\text{εκθετικό})'}</InlineMath>, η σωστή τάξη είναι εκθετική και κάθε πολυωνυμικό φράγμα είναι λάθος.
     </>
   }
 />
@@ -830,7 +871,79 @@ $$
 2. **Μη πολυωνυμικό $f(n)$** — π.χ. $T(n) = 2T(n/2) + n \log n$. Το $n \log n$ δεν είναι της μορφής $n^d$. → Χρειάζεται γενικευμένη εκδοχή.
 3. **$a < 1$ ή $b \le 1$** — δεν έχει νόημα στο μοντέλο (δεν υπάρχει «μισό υποπρόβλημα», το πρόβλημα πρέπει να μικραίνει).
 
-Σε αυτές τις περιπτώσεις **επιστρέφουμε στις τεχνικές #1–#4** — γι' αυτό αξίζει να τις ξέρεις, παρά την ύπαρξη του Master Theorem.
+Σε αυτές τις περιπτώσεις **επιστρέφουμε στις τεχνικές #1–#4** — γι' αυτό αξίζει να τις ξέρεις, παρά την ύπαρξη του Master Theorem. Και επειδή τρεις από αυτές τις «εκτός Master» οικογένειες εμφανίζονται **πολύ συχνά** στις εξετάσεις, αξίζει να τις χτυπήσουμε χωριστά.
+
+### Επεκτεταμένη περίπτωση — όταν το $f(n)$ έχει λογάριθμο
+
+Η περίπτωση 2 του Master Theorem γενικεύεται σε μια εκδοχή που εμφανίζεται κάθε χρόνο στο εξεταστικό: αναδρομές της μορφής $T(n) = a\,T(n/b) + n^{\log_b a} \cdot \log^k n$ — δηλαδή «**ακριβώς πάνω στο κατώφλι, επί ένα log**». Όταν η `f` ταυτίζεται με το κατώφλι επί $\log^k n$ για κάποιο $k \ge 0$, η απάντηση είναι το ίδιο κατώφλι επί $\log^{k+1} n$ — **μία log δύναμη παραπάνω**:
+
+$$
+f(n) = \Theta\bigl(n^{\log_b a}\,\log^k n\bigr) \quad \Longrightarrow \quad T(n) = \Theta\bigl(n^{\log_b a}\,\log^{k+1} n\bigr)
+$$
+
+Σήμα στην εκφώνηση: η `f(n)` περιέχει `log n` ως πολλαπλασιαστή. Συμβουλή που σώζει: **γράψε ρητά το $k$** ξεχωριστά από το κατώφλι, για να μη μετρήσεις λάθος το «+1».
+
+<RelatedPair
+  patternName="Επεκτεταμένο Master Theorem — f(n) = n^(log_b a) · log^k n ⇒ n^(log_b a) · log^(k+1) n"
+  pairs={[
+    { id: 'front-set-3-ask9' },
+    { id: 'front-set-4-ask10' },
+    { id: 'pt5-th2-b' },
+    { id: 'front-set-13-ask3' },
+  ]}
+  cue={
+    <>
+      <strong>«Λύσε την αναδρομή <InlineMath>{'T(n) = 2T(n/2) + n\\log n'}</InlineMath>»</strong> ή <strong>«<InlineMath>{'27T(n/9) + (\\sqrt n)^3 \\lg n'}</InlineMath>»</strong> — ίδια συνταγή, διαφορετικά κατώφλια. <em>(i) <code>front-set-3-ask9</code></em>: <InlineMath>{'2T(n/2)+n\\log n'}</InlineMath>, κατώφλι <InlineMath>{'n'}</InlineMath>, <InlineMath>{'k=1'}</InlineMath> → <InlineMath>{'\\Theta(n\\log^2 n)'}</InlineMath>· <em>(ii) <code>front-set-4-ask10</code></em>: απλοποίησε πρώτα <InlineMath>{'(\\sqrt n)^3 = n^{3/2}'}</InlineMath>, κατώφλι <InlineMath>{'n^{3/2}'}</InlineMath>, <InlineMath>{'k=1'}</InlineMath> → <InlineMath>{'\\Theta(n^{3/2}\\log^2 n)'}</InlineMath>· <em>(iii) <code>pt5-th2-b</code></em> (Ιουν 2023): δύο αλγόριθμοι σε αντιπαράθεση, εμπίπτουν σε <em>κανονικές</em> περιπτώσεις 1 και 2 — αλλά η ίδια λογική «πάνω στο κατώφλι;» καθορίζει ποια· <em>(iv) <code>front-set-13-ask3</code></em>: η τρίτη αναδρομή του πακέτου (<InlineMath>{'3T(n/4)+n\\log n'}</InlineMath>) είναι case 3 γιατί <InlineMath>{'n\\log n'}</InlineMath> είναι <em>πολυωνυμικά</em> μεγαλύτερο από το κατώφλι <InlineMath>{'n^{0.79}'}</InlineMath> — η επεκτεταμένη περίπτωση δεν χρειάζεται εδώ· βλ. πώς ξεχωρίζει η «πολυωνυμικά μεγαλύτερη» από την «log πάνω στο κατώφλι». Σήμα-διαχωριστής: το <InlineMath>{'\\log n'}</InlineMath> στο <InlineMath>{'f'}</InlineMath> είναι «<strong>ωφέλιμο μόνο όταν είναι πάνω στο κατώφλι</strong>» — διαφορετικά κρίνει την περίπτωση το πολυωνυμικό κομμάτι μόνο. Παγίδα-σήμα: «<InlineMath>{'n\\log n'}</InlineMath> vs <InlineMath>{'n^{0.79}'}</InlineMath>» είναι case 3 (πολυωνυμικά μεγαλύτερο)· «<InlineMath>{'n\\log n'}</InlineMath> vs <InlineMath>{'n'}</InlineMath>» είναι επεκτεταμένο case 2 (ίδιος εκθέτης, log πάνω).
+    </>
+  }
+/>
+
+### Αναδρομές με ρίζα — όταν το όρισμα είναι $\sqrt n$
+
+Αναδρομές της μορφής $T(n) = a\,T(\sqrt n) + f(n)$ πέφτουν εκτός της εμβέλειας του Master Theorem γιατί το όρισμα δεν είναι $n/b$. Η σωτηρία είναι μια κανονική **αλλαγή μεταβλητής**: θέσε $n = 2^m$ (δηλαδή $m = \log_2 n$), και όρισε $S(m) = T(2^m)$. Τότε $T(\sqrt n) = T(2^{m/2}) = S(m/2)$, και η αναδρομή γίνεται $S(m) = a\,S(m/2) + g(m)$ — **κανονική μορφή Master**. Λύσε για το $S(m)$, μετά **επέστρεψε** $m = \log_2 n$.
+
+Το χαρακτηριστικό «αποτύπωμα» στην απάντηση είναι ένα **διπλό log** ($\log \log n$) όταν $a = 1$ — γιατί το $S(m) = S(m/2) + 1$ δίνει $\Theta(\log m)$, και $\log m = \log \log n$. Όταν $a > 1$, το «διπλό log» χάνεται και μένει απλό $\log n$ ή πολυωνυμικό στο $\log n$.
+
+<RelatedPair
+  patternName="Αλλαγή μεταβλητής n = 2^m για T(√n) — η απάντηση κρύβει συχνά διπλό log"
+  pairs={[
+    { id: 'pt1-th1-q4' },
+    { id: 'pt2-th1-q4' },
+    { id: 'front-set-3-ask10' },
+    { id: 'front-set-4-ask1' },
+  ]}
+  cue={
+    <>
+      <strong>«Λύσε την αναδρομή <InlineMath>{'T(n) = T(\\sqrt n) + 1'}</InlineMath>»</strong> ή <strong>«<InlineMath>{'2T(\\sqrt n) + 1'}</InlineMath>»</strong> ή <strong>«<InlineMath>{'\\sqrt n \\cdot T(\\sqrt n) + n'}</InlineMath>»</strong> — η ίδια αντικατάσταση <InlineMath>{'n = 2^m'}</InlineMath> ξανά και ξανά, αλλά η <em>κατάληξη</em> αλλάζει με βάση το <InlineMath>{'a'}</InlineMath>. <em>(i) <code>pt1-th1-q4</code></em> (Ιουν 2025 · Flame): <InlineMath>{'a = 1'}</InlineMath> → <InlineMath>{'S(m) = S(m/2)+1'}</InlineMath> → case 2 → <InlineMath>{'\\Theta(\\log m) = \\Theta(\\log \\log n)'}</InlineMath> (<strong>διπλό log</strong>)· <em>(ii) <code>pt2-th1-q4</code></em> (Σεπτ 2025 · Flame): <InlineMath>{'a = 2'}</InlineMath> → <InlineMath>{'S(m) = 2S(m/2)+1'}</InlineMath> → case 1 → <InlineMath>{'\\Theta(m) = \\Theta(\\log n)'}</InlineMath> (<strong>απλό log, ΟΧΙ διπλό</strong>)· <em>(iii) <code>front-set-3-ask10</code></em>: ταυτόσημη με το (i) — διπλό log· <em>(iv) <code>front-set-4-ask1</code></em>: ο συντελεστής <InlineMath>{'\\sqrt n'}</InlineMath> μπροστά χρειάζεται πρώτα <em>διαίρεση με <InlineMath>{'n'}</InlineMath></em> ώστε <InlineMath>{'S(n) = T(n)/n'}</InlineMath> να ικανοποιεί <InlineMath>{'S(n) = S(\\sqrt n) + 1'}</InlineMath> — μετά case 2 σαν το (i), συνολικά <InlineMath>{'\\Theta(n\\log \\log n)'}</InlineMath>. Σήμα στην εκφώνηση: <strong>ρητή εμφάνιση <InlineMath>{'\\sqrt n'}</InlineMath></strong> (ή <InlineMath>{'n^{1/k}'}</InlineMath>) στο αναδρομικό μέρος. Παγίδα-σήμα: μη μπερδέψεις <InlineMath>{'T(\\sqrt n) + 1'}</InlineMath> με <InlineMath>{'2T(\\sqrt n) + 1'}</InlineMath> — η μία δίνει <em>διπλό</em> log, η άλλη <em>απλό</em>. Διαχωριστής: ο συντελεστής <InlineMath>{'a'}</InlineMath> καθορίζει την περίπτωση Master στη μεταβλητή <InlineMath>{'m'}</InlineMath>, και μόνο case 2 αφήνει το «αποτύπωμα» του διπλού log.
+    </>
+  }
+/>
+
+### Γραμμικές ομογενείς αναδρομές — όταν δεν υπάρχει $T(n/b)$
+
+Η τελευταία οικογένεια εκτός Master είναι οι **γραμμικές ομογενείς αναδρομές**: $a_n = c_1\,a_{n-1} + c_2\,a_{n-2} + \dots + c_k\,a_{n-k}$, χωρίς εξωτερικό προσθετέο $f(n)$. Εδώ δεν υπάρχει «διαίρεση» — το Master Theorem δεν έχει νόημα. Η μέθοδος-εργαλείο είναι το **χαρακτηριστικό πολυώνυμο**:
+
+1. Μάντεψε λύση $a_n = r^n$, αντικατέστησε στην αναδρομή και διαίρεσε με $r^{n-k}$.
+2. Λύσε την πολυωνυμική εξίσωση $r^k - c_1\,r^{k-1} - \dots - c_k = 0$ — βρες τις ρίζες.
+3. Αν οι ρίζες είναι **διακριτές**, η γενική λύση είναι $a_n = \sum_i A_i\,r_i^n$.
+4. Αν μια ρίζα $r$ έχει **πολλαπλότητα $m$**, η συνεισφορά της γίνεται $\lambda_0\,r^n + \lambda_1\,n\,r^n + \dots + \lambda_{m-1}\,n^{m-1}\,r^n$ — το **×n κόλπο** (γιατί δύο πανομοιότυποι όροι $\lambda_1\,r^n + \lambda_2\,r^n$ συνθλίβονται σε έναν, χάνοντας βαθμό ελευθερίας).
+5. Βρες τις σταθερές $A_i$ από τις αρχικές συνθήκες.
+
+Η ασυμπτωτική κυριαρχείται από τη ρίζα με μεγαλύτερο μέτρο. Σήμα στην εκφώνηση: γραμμική αναδρομή που εκφράζεται με $a_{n-k}$ — όχι $T(n/b)$.
+
+<RelatedPair
+  patternName="Χαρακτηριστικό πολυώνυμο — η κανονική συνταγή για a_n = c_1 a_(n−1) + ··· + c_k a_(n−k)"
+  pairs={[
+    { id: 'front-set-3-ask1' },
+    { id: 'front-set-3-ask2' },
+    { id: 'front-set-13-ask2' },
+  ]}
+  cue={
+    <>
+      <strong>«Βρες κλειστό τύπο για την <InlineMath>{'T(n) = c_1\\,T(n-1) + c_2\\,T(n-2) + \\dots'}</InlineMath>»</strong> — η ίδια συνταγή σε <strong>τρεις διαφορετικές πολλαπλότητες ρίζας</strong>. <em>(i) <code>front-set-3-ask1</code></em> — Fibonacci, <InlineMath>{'x^2 - x - 1 = 0'}</InlineMath>, <strong>διακριτές ρίζες</strong> <InlineMath>{'\\varphi, \\psi'}</InlineMath> (αρχέτυπη περίπτωση 3 του βήματος, καμία πολλαπλότητα), τύπος Binet, <InlineMath>{'\\Theta(\\varphi^n) \\approx \\Theta(1{,}618^n)'}</InlineMath>· <em>(ii) <code>front-set-3-ask2</code></em> — <InlineMath>{'x^2 - 4x + 4 = (x-2)^2 = 0'}</InlineMath>, <strong>διπλή ρίζα</strong>, χρειάζεσαι το <InlineMath>{'\\lambda_2 \\cdot n \\cdot 2^n'}</InlineMath> κόλπο, λύση <InlineMath>{'(n+3)\\,2^n = \\Theta(n\\,2^n)'}</InlineMath>· <em>(iii) <code>front-set-13-ask2</code></em> — <InlineMath>{'(r+1)^3 = 0'}</InlineMath>, <strong>τριπλή ρίζα</strong> <InlineMath>{'r = -1'}</InlineMath>, χρειάζεσαι ΔΥΟ επιπλέον όρους <InlineMath>{'n \\cdot r^n'}</InlineMath> ΚΑΙ <InlineMath>{'n^2 \\cdot r^n'}</InlineMath> ώστε να φτιάξεις τρεις γραμμικά ανεξάρτητες λύσεις, κλειστή μορφή <InlineMath>{'(1+3n-2n^2)(-1)^n'}</InlineMath>. Σήμα στην εκφώνηση: η αναδρομή χρησιμοποιεί <InlineMath>{'a_{n-k}'}</InlineMath> (όχι <InlineMath>{'T(n/b)'}</InlineMath>), και είναι <em>ομογενής</em> (δεν υπάρχει εξωτερικός όρος <InlineMath>{'f(n)'}</InlineMath>). Παγίδα-σήμα: <strong>πολλαπλότητα <InlineMath>{'m'}</InlineMath> ⇒ <InlineMath>{'m'}</InlineMath> γραμμικά ανεξάρτητοι όροι</strong> <InlineMath>{'r^n, n\\,r^n, n^2\\,r^n, \\dots, n^{m-1}\\,r^n'}</InlineMath> — αν γράψεις «<InlineMath>{'\\lambda_1\\,r^n + \\lambda_2\\,r^n'}</InlineMath>» τα δύο <InlineMath>{'\\lambda'}</InlineMath> συγχωνεύονται σε ένα και το γραμμικό σύστημα για τις σταθερές γίνεται αντιφατικό. Δεύτερη παγίδα: αν υπάρχει εξωτερικός όρος <InlineMath>{'f(n)'}</InlineMath> (μη-ομογενής), η συνταγή χρειάζεται και «<em>μερική λύση</em>» μαζί με τη γενική — αλλά αυτό σπάνια ζητείται.
+    </>
+  }
+/>
 
 ## Είναι τελικά η mergesort η καλύτερη δυνατή;
 
