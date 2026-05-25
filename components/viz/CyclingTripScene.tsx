@@ -16,6 +16,7 @@
  */
 
 import { useState } from 'react'
+import { routeEdge, type NodeRect } from './edge-routing'
 
 type City = 'A' | 'B' | 'C' | 'D'
 const CITIES: City[] = ['A', 'B', 'C', 'D']
@@ -37,6 +38,28 @@ const NR = 24
 const VB_W = 540
 const VB_H = 380
 
+const NODE_RECTS: NodeRect[] = CITIES.map((c) => ({
+  id: c,
+  x: POS[c].x - NR,
+  y: POS[c].y - NR,
+  w: 2 * NR,
+  h: 2 * NR,
+}))
+const NODE_RECT_BY_ID = new Map(NODE_RECTS.map((r) => [r.id, r]))
+
+function routedEdge(aId: City, bId: City) {
+  const aRect = NODE_RECT_BY_ID.get(aId)!
+  const bRect = NODE_RECT_BY_ID.get(bId)!
+  const ax = aRect.x + aRect.w / 2
+  const ay = aRect.y + aRect.h / 2
+  const bx = bRect.x + bRect.w / 2
+  const by = bRect.y + bRect.h / 2
+  const g = routeEdge(aRect, bRect, NODE_RECTS)
+  const mx = g.kind === 'line' ? (ax + bx) / 2 : (ax + bx + 2 * g.cx) / 4
+  const my = g.kind === 'line' ? (ay + by) / 2 : (ay + by + 2 * g.cy) / 4
+  return { g, mx, my }
+}
+
 const EDGES: { a: City; b: City; d: number }[] = []
 for (let i = 0; i < CITIES.length; i++) {
   for (let j = i + 1; j < CITIES.length; j++) {
@@ -44,10 +67,6 @@ for (let i = 0; i < CITIES.length; i++) {
     const b = CITIES[j]
     EDGES.push({ a, b, d: DIST[a][b] })
   }
-}
-
-function midpoint(a: City, b: City) {
-  return { x: (POS[a].x + POS[b].x) / 2, y: (POS[a].y + POS[b].y) / 2 }
 }
 
 export function CyclingTripScene() {
@@ -108,23 +127,34 @@ export function CyclingTripScene() {
           {EDGES.map(({ a, b, d }) => {
             const legal = d <= u
             const stroke = legal ? '#10b981' : '#f43f5e'
-            const m = midpoint(a, b)
+            const { g, mx, my } = routedEdge(a, b)
             return (
               <g key={`${a}-${b}`}>
-                <line
-                  x1={POS[a].x}
-                  y1={POS[a].y}
-                  x2={POS[b].x}
-                  y2={POS[b].y}
-                  stroke={stroke}
-                  strokeWidth={legal ? 3 : 2}
-                  strokeDasharray={legal ? '0' : '6,4'}
-                  opacity={legal ? 1 : 0.7}
-                />
+                {g.kind === 'line' ? (
+                  <line
+                    x1={g.x1}
+                    y1={g.y1}
+                    x2={g.x2}
+                    y2={g.y2}
+                    stroke={stroke}
+                    strokeWidth={legal ? 3 : 2}
+                    strokeDasharray={legal ? '0' : '6,4'}
+                    opacity={legal ? 1 : 0.7}
+                  />
+                ) : (
+                  <path
+                    d={g.d}
+                    fill="none"
+                    stroke={stroke}
+                    strokeWidth={legal ? 3 : 2}
+                    strokeDasharray={legal ? '0' : '6,4'}
+                    opacity={legal ? 1 : 0.7}
+                  />
+                )}
                 {/* label background for legibility */}
                 <rect
-                  x={m.x - 26}
-                  y={m.y - 11}
+                  x={mx - 26}
+                  y={my - 11}
                   width={52}
                   height={22}
                   rx={4}
@@ -133,8 +163,8 @@ export function CyclingTripScene() {
                   strokeWidth={1}
                 />
                 <text
-                  x={m.x}
-                  y={m.y + 1}
+                  x={mx}
+                  y={my + 1}
                   textAnchor="middle"
                   dominantBaseline="central"
                   fontSize={11}

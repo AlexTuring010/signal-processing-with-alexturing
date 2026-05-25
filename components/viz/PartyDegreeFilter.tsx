@@ -23,6 +23,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { routeEdge, type NodeRect } from './edge-routing'
 
 const K_FRIENDS = 2
 const K_STRANGERS = 2
@@ -44,6 +45,24 @@ const VERTICES: V[] = [
   { id: 9, x: 250, y: 30 },
   { id: 10, x: 250, y: 340 },
 ]
+
+const NODE_R = 18
+
+const NODE_RECTS: NodeRect[] = VERTICES.map((v) => ({
+  id: v.id,
+  x: v.x - NODE_R,
+  y: v.y - NODE_R,
+  w: 2 * NODE_R,
+  h: 2 * NODE_R,
+}))
+const NODE_RECT_BY_ID = new Map(NODE_RECTS.map((r) => [r.id, r]))
+
+function routedEdge(aId: number, bId: number) {
+  const a = NODE_RECT_BY_ID.get(aId)!
+  const b = NODE_RECT_BY_ID.get(bId)!
+  return routeEdge(a, b, NODE_RECTS)
+}
+
 const EDGES: E[] = [
   // C_6 cycle:
   { a: 1, b: 2 },
@@ -231,20 +250,32 @@ export function PartyDegreeFilter() {
           <svg viewBox="0 0 540 380" className="w-full">
             {EDGES.map((e, i) => {
               const isPresent = present.has(e.a) && present.has(e.b)
-              const pa = VERTICES.find((v) => v.id === e.a)
-              const pb = VERTICES.find((v) => v.id === e.b)
-              if (!pa || !pb) return null
-              return (
+              const g = routedEdge(e.a, e.b)
+              const stroke = isPresent ? '#9b8a8d' : '#e7e3e4'
+              const sw = isPresent ? 1.8 : 1
+              const opacity = isPresent ? 1 : 0.5
+              const dash = isPresent ? undefined : '3 3'
+              return g.kind === 'line' ? (
                 <line
                   key={i}
-                  x1={pa.x}
-                  y1={pa.y}
-                  x2={pb.x}
-                  y2={pb.y}
-                  stroke={isPresent ? '#9b8a8d' : '#e7e3e4'}
-                  strokeWidth={isPresent ? 1.8 : 1}
-                  opacity={isPresent ? 1 : 0.5}
-                  strokeDasharray={isPresent ? undefined : '3 3'}
+                  x1={g.x1}
+                  y1={g.y1}
+                  x2={g.x2}
+                  y2={g.y2}
+                  stroke={stroke}
+                  strokeWidth={sw}
+                  opacity={opacity}
+                  strokeDasharray={dash}
+                />
+              ) : (
+                <path
+                  key={i}
+                  d={g.d}
+                  fill="none"
+                  stroke={stroke}
+                  strokeWidth={sw}
+                  opacity={opacity}
+                  strokeDasharray={dash}
                 />
               )
             })}

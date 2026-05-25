@@ -639,13 +639,80 @@ helpers are trivial coordinate translations from constant data.
   visual for the line case by passing the SAME asymmetric `rA`/`rB` pair
   that the pre-retrofit code used.
 
-#### B7.5 — Bespoke graph scenarios
+#### B7.5 — Bespoke graph scenarios ✅ DONE 2026-05-25
 
-3 standalone scenario graphs that don't fit any other sub-chunk.
+3 standalone undirected scenario graphs retrofitted with no new shared helper.
+Mirror of B7.4's `ComponentsBfsSweep` undirected-center-to-center pattern
+(no `trimEdgeGeom` call; routing returns center-to-center geometry directly).
 
-- `components/viz/PartyDegreeFilter.tsx` (10-node static graph, undirected, no weights, no trim. Dynamic edge visibility based on the `present` set.)
-- `components/viz/GreedyColoringOrders.tsx` (6-node hexagon + 2 diagonals, undirected, no weights, no trim. Static layout.)
-- `components/viz/CyclingTripScene.tsx` (4-city K₄ from E.4.5.A, 6 undirected weighted edges. Edge color/dasharray switches based on day-slider — `useMemo` not needed since layout doesn't depend on state.)
+- `components/viz/PartyDegreeFilter.tsx` ✅ (10-node static graph, R=18, 19
+  undirected edges, no weights, no trim, dynamic edge visibility via `present`
+  set. Module-scope `NODE_RECTS` from VERTICES + module-scope `NODE_RECT_BY_ID`
+  Map keyed by numeric id. `routedEdge(aId, bId)` returns raw `EdgeGeom`
+  (no `mx, my` since edges have no labels). The viz had **multiple latent
+  collision bugs pre-retrofit**: the worst was edge 7→3 passing 1.4 px from
+  vertex 6's center (clipping clean through its 18-px disk), plus 8 other
+  edges from vertex 8's social-butterfly fan-out and vertex 7's friend-set
+  passing within < 22 px of unrelated interior C_6 vertices. Post-retrofit
+  these 9 edges auto-curve around their interior colliders. Visual change is
+  real but intended per the audit's standing thesis on latent-bug fixes.)
+- `components/viz/GreedyColoringOrders.tsx` ✅ (6-node hexagon + 2 long
+  diagonals A-D + B-E, R=22, undirected, no weights, no trim, static layout.
+  Module-scope `NODE_RECTS` from POS Record. `routedEdge(u, v)` returns raw
+  `EdgeGeom`. Visual no-op in steady state — verified: vertex B is 31.3 px
+  from line A-D, all other diagonal/non-endpoint pairs are clear of the
+  R+padding=26 inflation.)
+- `components/viz/CyclingTripScene.tsx` ✅ (4-city K₄ from E.4.5.A, R=NR=24,
+  6 undirected weighted edges with day-slider-driven legality toggle. Module-
+  scope `NODE_RECTS` from CITIES + POS. `routedEdge(aId, bId)` returns
+  `{g, mx, my}` with the standard line-or-Bezier-midpoint formula for the
+  weight-label rect/text anchor. Dropped the now-unused local `midpoint`
+  helper. Visual no-op in steady state — K₄ rectangle layout: each diagonal
+  A-D / B-C clears B and C by 160.5 px, all horizontal/vertical edges clear
+  the other pair by 190-300 px.)
+
+**Retrofit shape (as executed).** All three vizzes use the B7.4
+`ComponentsBfsSweep` shape: module-scope rect array + Map + per-file
+`routedEdge` helper. Two patterns split on whether the viz draws weight
+labels:
+
+- **Undirected, no labels (2 files):** `PartyDegreeFilter`,
+  `GreedyColoringOrders`. `routedEdge` returns the raw `EdgeGeom`. JSX
+  branches on `g.kind === 'line' ? <line …> : <path d={g.d} fill="none" …>`.
+  All edge styling (stroke, strokeWidth, strokeDasharray, opacity) carries
+  through both branches unchanged.
+- **Undirected, with labels (1 file):** `CyclingTripScene`. `routedEdge`
+  returns `{g, mx, my}` with the standard line-or-Bezier-midpoint formula
+  (mirror of B5/B6/B7.1/B7.2). JSX branches on `g.kind` for the visible
+  edge AND uses `mx, my` for the weight label rect+text anchor.
+
+**Steady-state visual contract:** `GreedyColoringOrders` and
+`CyclingTripScene` are **visual no-ops** (verified by inspection per above).
+`PartyDegreeFilter` has **9 of 19 edges curving** post-retrofit because the
+pre-retrofit layout had real edge-through-node visual artifacts — the
+auto-curve is fixing them. Per the audit's adoption rule §6: «any straight
+line that comes back curved is either fixing a latent bug (good, ship it)
+or a false positive on a near-miss (rare — file a follow-up to widen the
+rect's padding or shrink the node)» — these are bona-fide collisions
+(< 15 px from a 22-px inflated rect for 5 of the 9), not near-misses.
+
+**No new tests required.** `routeEdge` was locked by B1's 20-test suite
+(still 20/20 pass). No new helper introduced. The collision-free vizzes
+follow the existing test contract; the collision-fix in `PartyDegreeFilter`
+is a regression-channel-by-design — if a future layout edit changes which
+edges collide, the auto-curve placement will visibly shift.
+
+**Standing observation — final routeEdge retrofit chunk.** B7.5 closes the
+per-viz retrofit. Every in-scope graph viz on the site (B1..B7.5) now
+renders edges via `routeEdge() (→ trimEdgeGeom())`, with a documented
+collection of 7 carve-outs where a hand-tuned curve IS the visual signal:
+`WhyBFSFailsWeighted` (B2), `DfsTreeBuilder` back-edges (B3),
+`TopoOrderBuilder` (B6), `NegativeCycleDetector` (B6), `MstPreorderTSP`
+tour overlay (B7.1 — separate asymmetric-trim helper, not strictly a
+carve-out), `DijkstraHandTrace` c→a back-edge (B7.2), plus the 4 scene-
+illustration out-of-scope vizzes from B7's «carve-outs in B7» block
+(`SegmentCrossingsToInversions`, `SightseeingScene`, `SightseeingDP`,
+`EditGraphViz`).
 
 #### Out of scope — confirmed no-inter-node-edges in B7
 

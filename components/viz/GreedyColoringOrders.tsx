@@ -14,6 +14,7 @@
 import { useMemo, useState } from 'react'
 import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { routeEdge, type NodeRect } from './edge-routing'
 
 type V = 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
 
@@ -24,6 +25,23 @@ const POS: Record<V, [number, number]> = {
   D: [370, 200],
   E: [240, 230],
   F: [110, 200],
+}
+
+const NODE_R = 22
+
+const NODE_RECTS: NodeRect[] = (Object.keys(POS) as V[]).map((v) => ({
+  id: v,
+  x: POS[v][0] - NODE_R,
+  y: POS[v][1] - NODE_R,
+  w: 2 * NODE_R,
+  h: 2 * NODE_R,
+}))
+const NODE_RECT_BY_ID = new Map(NODE_RECTS.map((r) => [r.id, r]))
+
+function routedEdge(u: V, v: V) {
+  const a = NODE_RECT_BY_ID.get(u)!
+  const b = NODE_RECT_BY_ID.get(v)!
+  return routeEdge(a, b, NODE_RECTS)
 }
 
 const EDGES: [V, V][] = [
@@ -171,17 +189,28 @@ export function GreedyColoringOrders() {
           xmlns="http://www.w3.org/2000/svg"
         >
           {/* edges */}
-          {EDGES.map(([u, v], i) => (
-            <line
-              key={i}
-              x1={POS[u][0]}
-              y1={POS[u][1]}
-              x2={POS[v][0]}
-              y2={POS[v][1]}
-              stroke="#cbd5e1"
-              strokeWidth={2}
-            />
-          ))}
+          {EDGES.map(([u, v], i) => {
+            const g = routedEdge(u, v)
+            return g.kind === 'line' ? (
+              <line
+                key={i}
+                x1={g.x1}
+                y1={g.y1}
+                x2={g.x2}
+                y2={g.y2}
+                stroke="#cbd5e1"
+                strokeWidth={2}
+              />
+            ) : (
+              <path
+                key={i}
+                d={g.d}
+                fill="none"
+                stroke="#cbd5e1"
+                strokeWidth={2}
+              />
+            )
+          })}
           {/* vertices */}
           {(Object.keys(POS) as V[]).map((v) => {
             const c = assigned[v]
