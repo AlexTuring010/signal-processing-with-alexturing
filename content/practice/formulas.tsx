@@ -1125,7 +1125,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         topic: 'random',
         inTypology: false,
         derivedIn: 'randomness/random-processes',
-        content: <BlockMath>{'\\mu_X(t) = E[X(t)]'}</BlockMath>,
+        content: <BlockMath>{'m_X(t) \\triangleq E[X(t)] = \\int_{-\\infty}^{\\infty} a\\, f_{X(t)}(a)\\, da'}</BlockMath>,
       },
       {
         id: 'random-autocorr',
@@ -1142,7 +1142,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         inTypology: false,
         derivedIn: 'randomness/random-processes',
         content: (
-          <BlockMath>{'R_{XY}(t_1, t_2) = E[X(t_1)Y(t_2)],\\;\\; C_{XY} = R_{XY} - \\mu_X\\mu_Y'}</BlockMath>
+          <BlockMath>{'R_{X,Y}(t_1, t_2) \\triangleq E[X(t_1)Y(t_2)],\\;\\; C_{X,Y}(t_1,t_2) \\triangleq R_{X,Y}(t_1,t_2) - m_X(t_1)\\, m_Y(t_2)'}</BlockMath>
         ),
       },
       {
@@ -1151,7 +1151,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         topic: 'random',
         inTypology: false,
         derivedIn: 'randomness/stationarity',
-        content: <BlockMath>{'\\mu_X(t) = \\mu_X = \\text{const} \\quad,\\quad R_X(t_1,t_2) = R_X(\\tau)'}</BlockMath>,
+        content: <BlockMath>{'m_X(t) = m_X = \\text{const} \\quad,\\quad R_X(t_1,t_2) = R_X(\\tau)'}</BlockMath>,
       },
       {
         id: 'wiener-khinchin',
@@ -1168,7 +1168,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         inTypology: false,
         derivedIn: 'randomness/random-processes',
         content: (
-          <BlockMath>{'X = A\\cos(2\\pi f_0 t + \\Theta), \\Theta \\sim U[0,2\\pi] \\Rightarrow \\mu_X = 0,\\; R_X(\\tau) = \\tfrac{A^2}{2}\\cos(2\\pi f_0 \\tau)'}</BlockMath>
+          <BlockMath>{'X = A\\cos(2\\pi f_0 t + \\Theta), \\Theta \\sim U[0,2\\pi] \\Rightarrow m_X = 0,\\; R_X(\\tau) = \\tfrac{A^2}{2}\\cos(2\\pi f_0 \\tau)'}</BlockMath>
         ),
       },
     ],
