@@ -1154,6 +1154,26 @@ export const FORMULA_SHEET: FormulaSection[] = [
         content: <BlockMath>{'m_X(t) = m_X = \\text{const} \\quad,\\quad R_X(t_1,t_2) = R_X(\\tau)'}</BlockMath>,
       },
       {
+        id: 'wss-rx-properties',
+        title: 'R_X(τ) properties (WSS)',
+        topic: 'random',
+        inTypology: false,
+        derivedIn: 'randomness/stationarity',
+        content: (
+          <BlockMath>{'R_X(0) = E[X^2] = P_X,\\;\\; R_X(-\\tau) = R_X(\\tau),\\;\\; |R_X(\\tau)| \\le R_X(0),\\;\\; C_X(\\tau) = R_X(\\tau) - m_X^2'}</BlockMath>
+        ),
+      },
+      {
+        id: 'ergodicity',
+        title: 'Ergodicity (time = ensemble)',
+        topic: 'random',
+        inTypology: false,
+        derivedIn: 'randomness/stationarity',
+        content: (
+          <BlockMath>{'\\lim_{T\\to\\infty}\\tfrac{1}{T}\\!\\int_{-T/2}^{T/2}\\! x_i(t)\\,dt = m_X,\\quad \\lim_{T\\to\\infty}\\tfrac{1}{T}\\!\\int_{-T/2}^{T/2}\\! x_i(t)\\,x_i(t+\\tau)\\,dt = R_X(\\tau)'}</BlockMath>
+        ),
+      },
+      {
         id: 'wiener-khinchin',
         title: 'Wiener-Khinchin (PSD)',
         topic: 'random',
