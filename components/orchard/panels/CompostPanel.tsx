@@ -52,6 +52,7 @@ export function CompostPanel() {
       0,
       COMPOST_THRESHOLD - state.lifetime.coinsEarned,
     )
+    const heldSeeds = state.resources.seeds
     return (
       <section className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center text-fg-subtle">
         <Lock className="h-6 w-6" aria-hidden="true" />
@@ -62,6 +63,16 @@ export function CompostPanel() {
         </p>
         <p className="text-[10px] tabular-nums">
           Λείπουν {remaining.toLocaleString('el-GR')} 🪙
+        </p>
+        <p className="mt-1 max-w-[220px] text-[10px] leading-snug text-fg-muted">
+          Εδώ μέσα θα βρεις το <strong>Κατάστημα σπόρων</strong> 🌱 για να
+          ξοδέψεις τους σπόρους σου σε μόνιμα οφέλη.
+          {heldSeeds > 0 && (
+            <>
+              {' '}Έχεις ήδη <strong className="tabular-nums">{heldSeeds} 🌱</strong>{' '}
+              σε αναμονή.
+            </>
+          )}
         </p>
       </section>
     )

@@ -7,11 +7,13 @@ import {
   FlaskConical,
   Recycle,
   Target,
+  Lock,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { playOrchardSound } from '@/lib/orchard/audio'
 import { useOrchardStore } from '@/lib/orchard/store'
 import { compostUnlocked } from '@/lib/orchard/prestige'
+import { COMPOST_THRESHOLD } from '@/lib/orchard/defaults'
 
 export type OrchardTab =
   | 'trees'
@@ -27,6 +29,9 @@ type TabSpec = {
   icon: React.ReactNode
   /** When true, the tab is shown but disabled — a visible promise of more to come. */
   comingSoon?: boolean
+  /** When true, the tab is visible and clickable but dimmed; the panel itself
+   *  shows the unlock requirement so users discover what's behind it. */
+  locked?: boolean
 }
 
 const STATIC_TABS: TabSpec[] = [
@@ -43,17 +48,20 @@ type Props = {
 }
 
 export function TabBar({ active, onChange }: Props) {
-  const showCompost = useOrchardStore((s) => compostUnlocked(s.state))
-  const tabs: TabSpec[] = showCompost
-    ? [
-        ...STATIC_TABS,
-        {
-          id: 'compost',
-          label: 'Compost',
-          icon: <Recycle className="h-3.5 w-3.5" />,
-        },
-      ]
-    : STATIC_TABS
+  const isCompostUnlocked = useOrchardStore((s) => compostUnlocked(s.state))
+  const tabs: TabSpec[] = [
+    ...STATIC_TABS,
+    {
+      id: 'compost',
+      label: 'Compost',
+      icon: isCompostUnlocked ? (
+        <Recycle className="h-3.5 w-3.5" />
+      ) : (
+        <Lock className="h-3.5 w-3.5" />
+      ),
+      locked: !isCompostUnlocked,
+    },
+  ]
 
   return (
     <nav
@@ -62,6 +70,9 @@ export function TabBar({ active, onChange }: Props) {
     >
       {tabs.map((t) => {
         const isActive = !t.comingSoon && active === (t.id as OrchardTab)
+        const lockedTitle = t.locked
+          ? `Κλειδωμένο · ξεκλειδώνει στα ${COMPOST_THRESHOLD.toLocaleString('el-GR')} 🪙 lifetime`
+          : null
         return (
           <button
             key={t.id}
@@ -73,14 +84,16 @@ export function TabBar({ active, onChange }: Props) {
               if (next !== active) playOrchardSound('click')
               onChange(next)
             }}
-            title={t.comingSoon ? 'Έρχεται' : t.label}
+            title={t.comingSoon ? 'Έρχεται' : (lockedTitle ?? t.label)}
             className={cn(
               'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors',
               isActive
                 ? 'bg-accent text-accent-fg shadow-sm'
                 : t.comingSoon
                   ? 'cursor-not-allowed text-fg-subtle/70'
-                  : 'text-fg-muted hover:bg-bg-soft hover:text-fg',
+                  : t.locked
+                    ? 'text-fg-subtle/80 hover:bg-bg-soft hover:text-fg-muted'
+                    : 'text-fg-muted hover:bg-bg-soft hover:text-fg',
             )}
           >
             {t.icon}
