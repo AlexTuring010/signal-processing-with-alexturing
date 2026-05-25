@@ -480,15 +480,69 @@ useMemo's JSDoc.
   straight branch. Don't try to unify them through `routeEdge` — the
   hand-tuned curve IS the teaching surface.
 
-#### B7.3 — Tree-shape vizzes (B5 mirror)
+#### B7.3 — Tree-shape vizzes (B5 mirror) ✅ DONE 2026-05-25
 
-3 tree-shaped vizzes: binary tree, Huffman tree, recursion tree. Mirror of
-B5's `MaxHeapKeyDecrease`-class pattern. Per-render `nodeRects` via `useMemo`
-when layout depends on state (`n`, `mode`, `instance`).
+3 tree-shaped vizzes retrofitted: binary tree, Huffman tree, recursion tree.
+Mirror of B5's three sub-groups (heap, Huffman, problem-bank tree). No new
+shared helper.
 
-- `components/viz/MaxHeapKeyDecrease.tsx` (7-node binary tree with module-scope COORDS, undirected center-to-center)
-- `components/viz/HuffmanEncodeDecode.tsx` (9-node Huffman tree with module-scope NODES, undirected with bit labels)
-- `components/viz/RecursionExplosion.tsx` (recursion tree, dynamic per-render nodes via `useMemo` keyed on `(instance, n, mode)`)
+- `components/viz/MaxHeapKeyDecrease.tsx` ✅ (7 named positions with module-scope COORDS — `Pos` enum keys; `NODE_R = 22`; undirected center-to-center; module-scope `NODE_RECTS` + `NODE_RECT_BY_ID<Pos, NodeRect>`; stroke-dasharray carries through to `<path>` for the swapped-edge styling)
+- `components/viz/HuffmanEncodeDecode.tsx` ✅ (9-node static Huffman tree on the ΚΑΣΤΑΝΑΣ instance; per-node varying radii leaf=22 / internal=19 with explicit per-node `NodeRect.{w,h}`; module-scope `NODE_RECTS` + `NODE_RECT_BY_ID<string, NodeRect>`; `routedEdge(parent, child)` returns `{g, mx, my}` with line-midpoint OR Bezier-midpoint `(A + B + 2·Q) / 4` for the bit label anchor — mirror of `HuffmanTreeBuilder` from B5)
+- `components/viz/RecursionExplosion.tsx` ✅ (dynamic recursion tree, layout depends on `(n, mode, cfg)` transitively via `nodes`; per-render `nodeRects`/`nodeRectById` via `useMemo([nodes])`; **rects are built in the rendered, post-MARGIN coordinate frame** so `routeEdge` operates on the same geometry the SVG actually draws — standing lesson for any viz that adds a render-time offset to its node positions; dropped now-unused `posByUid` map; mirror of `BinaryHeapAnimator` from B5)
+
+**Retrofit shape (as executed).** Three patterns applied per file, all
+mirrors of B5 precedents — no new shared helper:
+
+- **Module-scope rects, single static layout (1 file):** `MaxHeapKeyDecrease`.
+  Mirror of `HeapArrayMap` (B5). One radius, uniform `NODE_R`, rects built
+  at module load by iterating the COORDS record.
+- **Module-scope rects with per-node varying radii (1 file):**
+  `HuffmanEncodeDecode`. Mirror of `HuffmanSwapViz` (B5). Per-node radius
+  set via `n.char ? LEAF_R : INTERNAL_R`, explicit per-node `NodeRect.{w,h}`
+  (the standing lesson from B5: don't oversize all rects to the largest
+  radius when the layout has limited margin; the leaf/internal split here
+  is 22 / 19 over a ~70 px row gap so the size delta matters for the
+  collision test).
+- **Per-render `useMemo` rects, dynamic layout (1 file):**
+  `RecursionExplosion`. Mirror of `BinaryHeapAnimator` (B5). The layout
+  itself is already memoized over `(n, mode, cfg)` upstream; the rect set
+  re-memos keyed on the resulting `nodes` array. **Rendered positions
+  include a `+MARGIN` offset** that the pre-retrofit code applied at edge
+  draw time. The rects bake this offset in so `routeEdge` sees the same
+  pixel-space geometry the user does — without this, collision testing
+  would be misaligned by `MARGIN` in both axes. Standing lesson for any
+  future viz that translates node positions at render time: build rects in
+  the post-translation frame, not the layout's native frame.
+
+Every consumer branches on `g.kind === 'line' ? <line> : <path d={g.d}
+fill="none">`. The Huffman bit label uses the standard line-or-Bezier
+midpoint formula (mirror of B5/B6/B7.1/B7.2). The `MaxHeapKeyDecrease`
+swapped-edge `stroke-dasharray` carries through to both the line and path
+branches unchanged. The `RecursionExplosion` edges are plain (no
+labels/dasharray/markers) so the branch is a clean line/path swap.
+
+**Steady-state visual contract:** every retrofitted edge in every B7.3
+viz routes as a line on the current layouts — verified by inspection. The
+tree shapes (binary heap, Huffman, recursion tree) are by construction
+collision-free: each level sits in its own horizontal row, children fan
+out below their parent, no unrelated node sits on any parent→child
+centerline. The line case is byte-identical to the pre-retrofit `<line
+x1=parent.x …>` output. No user-visible change today; the value is
+structural lockout per the audit's standing thesis.
+
+**No new tests required.** `routeEdge` / `trimEdgeGeom` were both locked
+by B1's 20-test suite (still 20/20 pass). The collision-free tree
+construction means the retry loop never fires; a future layout edit that
+breaks collision-freeness would surface as a visible curve in the viz —
+that's the regression channel.
+
+**Standing lessons for B7.4..B7.5:**
+- **Post-translation rect frame.** When a viz renders nodes at a
+  translated position (e.g. `<circle cx={nd.x + MARGIN} cy={nd.y + MARGIN}
+  />`), build the `NodeRect[]` in that same translated frame
+  (`x: nd.x + MARGIN - R`) so `routeEdge` works on the geometry the SVG
+  actually draws. Native-frame rects would silently misalign collision
+  testing by the offset.
 
 #### B7.4 — Multi-instance / multi-tab graphs (B6 mirror)
 
