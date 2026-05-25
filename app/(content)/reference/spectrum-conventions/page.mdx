@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Συμβάσεις Φάσματος — μιγαδικές τιμές, αρνητικές συχνότητες, two-sided vs one-sided',
   description:
-    'Τι επιστρέφει το X(f) (μιγαδικοί αριθμοί ως τιμές, real ως input), τι σημαίνει αρνητική συχνότητα, γιατί το πλάτος ενός real cosine μοιράζεται στις ±f₀, και πότε χρησιμοποιούμε two-sided vs one-sided σύμβαση σχεδίασης.',
+    'Τι επιστρέφει το X(f) (μιγαδικοί αριθμοί ως τιμές, real ως input), τι σημαίνει αρνητική συχνότητα, γιατί το πλάτος ενός real cosine μοιράζεται στις ±f₀, και πότε χρησιμοποιούμε two-sided vs one-sided σύμβαση σχεδίασης — με 5-stage loop (νιώσε / δες / συμπύκνωσε / ανακάλεσε / αναγνώρισε) και προεπισκόπηση των downstream εφαρμογών σε AM, DSB-SC, Hilbert/SSB, Bessel-FM και random PSD.',
 }
 
 export const frontmatter = {
@@ -10,8 +10,8 @@ export const frontmatter = {
   order: 97,
   prerequisites: ['foundations/fourier-transform', 'reference/complex-numbers'],
   examWeight: 3,
-  estimatedReadTime: 7,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 20,
+  lastUpdated: '2026-05-25',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -21,7 +21,7 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Foundations · Reference</span>
   <span>·</span>
-  <span>~7 min read</span>
+  <span>~20 min read</span>
 </div>
 
 # Συμβάσεις Φάσματος
@@ -34,10 +34,30 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 <PrerequisitesBar prerequisites={frontmatter.prerequisites} />
 
 <Callout type="note">
-  Σελίδα **αναφοράς** — όχι μέρος της κύριας ροής. Απαντά τέσσερις ερωτήσεις που ξανακάνουν φοιτητές μόλις δουν για πρώτη φορά φάσμα: **τι ακριβώς επιστρέφει το $X(f)$** (μιγαδικοί αριθμοί), **τι σημαίνει αρνητική συχνότητα**, **γιατί το πλάτος μοιράζεται στα ±f₀** ενός cosine, και **ποια σύμβαση σχεδίασης χρησιμοποιείς πότε** (two-sided vs one-sided). Όλα προκύπτουν από ένα μαθηματικό γεγονός: τα complex exponentials.
+  Σελίδα **αναφοράς** — όχι μέρος της κύριας ροής. Απαντά τέσσερις ερωτήσεις που ξανακάνουν φοιτητές μόλις δουν για πρώτη φορά φάσμα: **τι ακριβώς επιστρέφει το $X(f)$** (μιγαδικοί αριθμοί), **τι σημαίνει αρνητική συχνότητα**, **γιατί το πλάτος μοιράζεται στα ±f₀** ενός cosine, και **ποια σύμβαση σχεδίασης χρησιμοποιείς πότε** (two-sided vs one-sided). Όλα προκύπτουν από ένα μαθηματικό γεγονός: τα complex exponentials. Στο τέλος υπάρχει drill (`Ανακάλεσε`), αναγνώριση παγίδων (`Αναγνώρισε`), και 7 παραδείγματα/ασκήσεις για να δοκιμάσεις ότι τα έχεις κουμπώσει.
 </Callout>
 
-## 1. Τι επιστρέφει το X(f) — μιγαδική συνάρτηση
+## 1. Νιώσε — γιατί χρειάζεσαι αυτές τις συμβάσεις
+
+Όλο το frequency-domain μέρος του μαθήματος — από AM, σε DSB-SC, σε FM, σε random-process PSDs — βασίζεται στο να **κοιτάς ένα σχήμα και να το διαβάζεις σωστά**. Όταν ο καθηγητής γράφει «σχεδίασε το φάσμα» στις εξετάσεις, παίρνεις στο γραπτό σου πέντε με δέκα κρουστικές με συγκεκριμένα ύψη, σε συγκεκριμένες θέσεις, με συγκεκριμένη φάση. Αν δεν έχεις στο μυαλό σου τους τρεις κανόνες αυτής της σελίδας, οι κρουστικές μοιάζουν με τυχαία σύννεφα.
+
+Τέσσερα συγκεκριμένα σημεία του υπόλοιπου μαθήματος όπου χρειάζεσαι ΑΚΡΙΒΩΣ αυτή τη σύμβαση για να μην χάσεις βαθμούς:
+
+- **Φάσμα Συμβατικού AM.** Όταν δεις στις διαφάνειες ένα AM σήμα με single-tone message να εμφανίζεται ως **έξι** κρουστικές στο φάσμα (δύο carrier στα ±f_c, δύο upper sidebands στα ±(f_c+f_m), δύο lower sidebands στα ±(f_c-f_m)), δεν θα μπερδευτείς γιατί κάθε «πλευρά» έχει duplicate στην αντίθετη συχνότητα — αυτό είναι **η two-sided σύμβαση** σε δράση: κάθε real cosine γεννά **πάντα** ζεύγος κρουστικών στα ±f_0. Έξι κρουστικές = τρία cos-pairs.
+- **«Σχεδίασε το φάσμα πλάτους και φάσης».** Όταν εμφανιστεί σε ένα exam (π.χ. Ιούνιος 2025 Θέμα 1.4 — 2cos(1000πt+π/4)), η λύση είναι **τέσσερα** πράγματα: δύο impulses στις ±500 Hz με ύψος 1, και δύο τιμές φάσης ±π/4. Χωρίς να ξέρεις ότι η φάση «αναποδογυρίζει» πρόσημο στις αρνητικές συχνότητες, χάνεις το μισό βαθμό. Αυτό το «αντίθετο πρόσημο» είναι το **conjugate symmetry** της σελίδας.
+- **Hilbert + SSB.** Όταν ο πομπός Hilbert απαλείφει το ένα sideband, αυτό που πραγματικά κάνει είναι «πολλαπλασιάζω το φάσμα με $-j\,\mathrm{sgn}(f)$» — δηλαδή στρίβω την μία πλευρά κατά $-90°$ και την άλλη κατά $+90°$. Αυτή η εικόνα δεν βγαίνει αν δεν έχεις πάρει στα σοβαρά ότι το φάσμα έχει «δύο πλευρές» που είναι μιγαδικοί συζυγείς.
+- **Bessel sidebands του FM + random-process PSD.** Στο Bessel ανάπτυγμα του $\cos(2\pi f_c t + \beta\sin 2\pi f_m t)$ εμφανίζονται sidebands σε **όλες** τις αρμονικές $\pm n f_m$ — και η two-sided σύμβαση είναι η μόνη που τα κρατά συμμετρικά (αλλιώς πρέπει να διπλασιάσεις τα μη-DC ύψη και χάνεις το track των $J_{-n} = (-1)^n J_n$ σχέσεων). Όλα τα random-process PSD στο μάθημα γράφονται two-sided.
+
+<Callout type="key" title="Τι θέλει να σου περάσει αυτή η σελίδα">
+  Τέσσερα vocabulary skills:
+
+  1. **Διάβασε** το $X(f)$ σαν **μιγαδική συνάρτηση** — μέτρο και φάση ταυτόχρονα, όχι ένας απλός πραγματικός αριθμός. Πλάτος και φάση εμφανίζονται **πάντα** σε δύο ξεχωριστά plots.
+  2. **Διάβασε** την «αρνητική συχνότητα» ως **μαθηματικό ζευγάρι** του θετικού — όχι ως φυσικό φαινόμενο. Κάθε real cosine «σπάει» σε δύο counter-rotating phasors που μαζί δίνουν πραγματικό σήμα.
+  3. **Σκέψου** το $\frac{1}{2}$ στα ±f_0 σαν **μαθηματικό γεγονός της Euler** — όχι σαν ιδιότητα του ίδιου του Fourier. Ο FT απλώς το εμφανίζει.
+  4. **Διάλεξε** σύμβαση σχεδίασης (two-sided vs one-sided) με γνώση: two-sided σε θεωρία και exam (είναι αυτή του τυπολογίου), one-sided σε signal analyzers ή ειδικές εκφωνήσεις.
+</Callout>
+
+## 2. Τι επιστρέφει το X(f) — μιγαδική συνάρτηση
 
 Πριν συζητήσουμε αρνητικές συχνότητες και one-sided/two-sided συμβάσεις, ένα πρώτο πράγμα που χρειάζεται να καταλάβεις: **τι ακριβώς επιστρέφει η συνάρτηση $X(f)$.**
 
@@ -61,15 +81,43 @@ $$
 | Imaginary ($\pm j \cdot$ κάτι) | $\pm\pi/2$ | sine συνιστώσα |
 | Μιγαδικός (real + imaginary) | ενδιάμεση | cosine με phase shift |
 
-**Παράδειγμα.** Ένα cosine συχνότητας $f_0$ έχει real spectrum (κρούσεις πλάτους $\tfrac{1}{2}$ στις $\pm f_0$). Ένα sine συχνότητας $f_0$ έχει imaginary spectrum (κρούσεις πλάτους $\pm j/2$ στις $\pm f_0$). Διαφέρουν μόνο σε φάση στον χρόνο — αυτή η διαφορά εμφανίζεται στο φάσμα ως **real vs imaginary τιμές**.
+**Παράδειγμα.** Ένα cosine συχνότητας $f_0$ έχει **real spectrum** (κρούσεις πλάτους $\tfrac{1}{2}$ στις $\pm f_0$). Ένα sine συχνότητας $f_0$ έχει **imaginary spectrum** (κρούσεις πλάτους $\pm j/2$ στις $\pm f_0$). Διαφέρουν μόνο σε φάση στον χρόνο — αυτή η διαφορά εμφανίζεται στο φάσμα ως **real vs imaginary τιμές**.
+
+<CosineFrequencyPairViz />
+
+<SineFrequencyPairViz />
+
+Παρατήρησε: στα δύο vizzes παραπάνω σχεδιάζονται **δύο διαφορετικά πράγματα**. Στο cosine βλέπεις το $|X(f)|$ απευθείας — δύο θετικά καρφάκια ύψους $\tfrac{1}{2}$ στις $\pm f_0$. Στο sine βλέπεις το $\mathrm{Im}\{X(f)\}$ — ένα **θετικό** καρφάκι $+\tfrac{1}{2}$ στη $-f_0$ και ένα **αρνητικό** $-\tfrac{1}{2}$ στη $+f_0$ (αντισυμμετρικό). Το $|X(f)|$ του sine θα έδειχνε δύο ίσα καρφάκια $\tfrac{1}{2}$ — και τα δύο σήματα έχουν **ίσο μέτρο φάσματος**. Η διαφορά κρύβεται στη φάση: cosine ⇒ φάση 0· sine ⇒ φάση $-\pi/2$ στη $+f_0$ και $+\pi/2$ στη $-f_0$ (αυτό ακριβώς λέει το $\pm j/2$).
 
 <Callout type="warning" title="«Imaginary spectrum» ≠ «imaginary frequencies»">
 Δεν υπάρχει «imaginary 100 Hz». Σημαίνει ότι **οι τιμές** του $X(f)$ είναι imaginary αριθμοί — οι **θέσεις** στον άξονα συχνοτήτων παραμένουν πάντα real. Είναι κρίσιμο να μην τα μπερδεύεις: το input axis είναι real, ένας απλός αριθμός Hz· το output value είναι μιγαδικός που κωδικοποιεί μέτρο + φάση.
 </Callout>
 
-**Στην πράξη**, σχεδόν πάντα ζωγραφίζουμε το μιγαδικό $X(f)$ σε **δύο πραγματικά plots**: φάσμα πλάτους $|X(f)|$ και φάσμα φάσης $\angle X(f)$. Αυτή η αναπαράσταση κωδικοποιεί όλη τη μιγαδικότητα του $X(f)$ χωρίς να χρειάζεται 2D σχεδίαση — ίδια πρακτική και στους συντελεστές της σειράς Fourier και στο $H(f)$ ενός LTI.
+**Στην πράξη**, σχεδόν πάντα ζωγραφίζουμε το μιγαδικό $X(f)$ σε **δύο πραγματικά plots**: φάσμα πλάτους $|X(f)|$ και φάσμα φάσης $\angle X(f)$. Αυτή η αναπαράσταση κωδικοποιεί όλη τη μιγαδικότητα του $X(f)$ χωρίς να χρειάζεται 2D σχεδίαση — ίδια πρακτική και στους συντελεστές της σειράς Fourier και στο $H(f)$ ενός LTI. Ο λόγος για αυτή την επιλογή: το μέτρο σου λέει «πόσο» και η φάση σου λέει «σε ποια χρονική σχέση» — αυτές οι δύο πληροφορίες είναι αυτές που έχει νόημα να συγκρίνεις σήμα-με-σήμα ή στο input-output ενός LTI.
 
-## 2. Τι σημαίνει «αρνητική συχνότητα»;
+<RecallCard
+  title="Συμπύκνωσε — πώς διαβάζεις το X(f) ως μιγαδικό"
+  variant="concept"
+  keywords={[
+    <>input <InlineMath>{'f'}</InlineMath> πραγματικό, output <InlineMath>{'X(f)'}</InlineMath> μιγαδικό</>,
+    <>cos → real spectrum, sin → imaginary spectrum</>,
+    <>πάντα σχεδιάζουμε <InlineMath>{'|X(f)|'}</InlineMath> + <InlineMath>{'\\angle X(f)'}</InlineMath></>,
+    <>«imaginary spectrum» αναφέρεται στις τιμές, όχι στις θέσεις</>,
+  ]}
+  skeleton={[
+    <>**Output type:** για κάθε <InlineMath>{'f'}</InlineMath>, το <InlineMath>{'X(f)'}</InlineMath> είναι **ένας μιγαδικός αριθμός**. Όχι μια πραγματική τιμή — ένα ζεύγος (μέτρο + φάση), συσκευασμένο στη Cartesian μορφή <InlineMath>{'a + jb'}</InlineMath>.</>,
+    <>**Real spectrum ⇒ cosine συνιστώσα.** Φάση 0 (αν θετικό) ή <InlineMath>{'\\pi'}</InlineMath> (αν αρνητικό). Εμφανίζεται όταν το σήμα έχει **even** συμμετρία στον χρόνο.</>,
+    <>**Imaginary spectrum ⇒ sine συνιστώσα.** Φάση <InlineMath>{'-\\pi/2'}</InlineMath> για το θετικό μέρος και <InlineMath>{'+\\pi/2'}</InlineMath> για το αρνητικό. Εμφανίζεται όταν το σήμα έχει **odd** συμμετρία στον χρόνο.</>,
+    <>**Πρακτική:** σχεδίαζε πάντα δύο plots — magnitude <InlineMath>{'|X(f)|'}</InlineMath> και phase <InlineMath>{'\\angle X(f)'}</InlineMath>. Όχι real + imaginary — η πιο χρήσιμη αναπαράσταση είναι η πολική.</>,
+  ]}
+  trap={
+    <>
+      Η μεγαλύτερη παγίδα είναι να **μπερδέψεις «imaginary spectrum» με «imaginary frequency»**. Αρνητικές συχνότητες υπάρχουν (είναι θέσεις στον άξονα <InlineMath>{'f < 0'}</InlineMath>)· imaginary συχνότητες **δεν** υπάρχουν. Όταν λέμε «το <InlineMath>{'X(f)'}</InlineMath> είναι imaginary» εννοούμε ότι **οι τιμές** του είναι imaginary αριθμοί — οι θέσεις στον άξονα <InlineMath>{'f'}</InlineMath> παραμένουν πάντα πραγματικές.
+    </>
+  }
+/>
+
+## 3. Τι σημαίνει «αρνητική συχνότητα»;
 
 Όταν βλέπεις στο φάσμα ένα peak στη συχνότητα $-100$ Hz, **δεν** είναι κάποιο σήμα που «πάει ανάποδα στον χρόνο» ή έχει «αρνητική ταλάντωση». Δεν αντιστοιχεί σε κάτι φυσικά μετρήσιμο.
 
@@ -86,7 +134,9 @@ $$
 
 <CounterRotatingPhasors />
 
-## 3. Γιατί το πλάτος «μοιράζεται» στα ±f₀
+Σύρε τον σύρτη για να αλλάξεις τη συχνότητα $f_0$ και παρατήρησε: (α) τα δύο διανύσματα μένουν **πάντα** συζυγή σε κάθε στιγμή, (β) το άθροισμά τους είναι **πάντα** πραγματικός αριθμός (μένει στον real άξονα), και (γ) μόλις βάλεις $f_0 = 0$, τα δύο σταματούν στο $+1$ και το άθροισμά τους δίνει $\cos(0) = 1$. Η αρνητική συχνότητα είναι ο «αόρατος εταίρος» που εξασφαλίζει το πραγματικό άθροισμα — όχι ένα δεύτερο σήμα.
+
+## 4. Γιατί το πλάτος «μοιράζεται» στα ±f₀
 
 Από Euler:
 
@@ -98,9 +148,28 @@ $$
 
 Άρα το «πλάτος μοιράστηκε στα δύο» **δεν είναι κάτι που έκανε ο FT** — είναι μαθηματικό γεγονός που υπήρχε ήδη στην Euler αναπαράσταση του cosine. Ο FT απλώς μάς εμφανίζει αυτή τη δομή.
 
-Πιο γενικά για **κάθε real σήμα**, ισχύει η ιδιότητα της conjugate symmetry: $X(-f) = X^*(f)$. Συνεπώς το $|X(f)|$ είναι **άρτια** συνάρτηση — αυτό που εμφανίζεται στο $+f$ καθρεφτίζεται και στο $-f$. Δες σχετική απόδειξη στη [Section 8 του FT chapter](/foundations/fourier-transform#8-conjugate-symmetry-γιατί-τα-φάσματα-real-signals-είναι-συμμετρικά).
+**Πιο γενικά** — για κάθε real σήμα ισχύει η ιδιότητα της conjugate symmetry:
 
-## 4. Two-sided vs one-sided spectrum
+$$
+x(t) \text{ real} \quad\Longleftrightarrow\quad X(-f) = X^*(f)
+$$
+
+Συνέπειες της σχέσης:
+
+- $|X(-f)| = |X(f)|$ — το **φάσμα πλάτους είναι άρτια** συνάρτηση. Ό,τι φαίνεται στο $+f$ καθρεφτίζεται και στο $-f$.
+- $\angle X(-f) = -\angle X(f)$ — η **φάση είναι περιττή**. Ό,τι φαίνεται στο $+f$ έχει αντίθετο πρόσημο στο $-f$.
+
+Δες σχετική απόδειξη στη [Section 8 του FT chapter](/foundations/fourier-transform#8-conjugate-symmetry-γιατί-τα-φάσματα-real-signals-είναι-συμμετρικά).
+
+**Παράδειγμα με phase shift.** Πάρε $x(t) = A\cos(2\pi f_0 t + \phi)$. Με Euler:
+
+$$
+x(t) = \tfrac{A}{2}\,e^{j\phi}\,e^{j 2\pi f_0 t} + \tfrac{A}{2}\,e^{-j\phi}\,e^{-j 2\pi f_0 t}
+$$
+
+Άρα στο φάσμα έχεις δύο κρούσεις στις $\pm f_0$, μέτρο $A/2$ η καθεμία, φάση $+\phi$ στη $+f_0$ και $-\phi$ στη $-f_0$. Αυτή ακριβώς η ανάγνωση είναι κανονικότατο εξεταστικό θέμα (π.χ. Ιούνιος 2025 ΘΕΜΑ 1.4).
+
+## 5. Two-sided vs one-sided spectrum
 
 Επειδή για real signals η αρνητική πλευρά του φάσματος είναι απλώς ο μιγαδικός συζυγής της θετικής, δεν περιέχει νέα πληροφορία. Αυτό ανοίγει δύο **ισοδύναμες** συμβάσεις σχεδίασης:
 
@@ -123,40 +192,240 @@ $$
 
 <TwoSidedVsOneSidedCosine />
 
-Παρότι μοιάζουν διαφορετικά, η ολική ενέργεια (ή ισχύς) που μετράς είναι **ίδια** σε κάθε σύμβαση — απλώς πακετάρεται διαφορετικά.
+Παρότι μοιάζουν διαφορετικά, η ολική ενέργεια (ή ισχύς) που μετράς είναι **ίδια** σε κάθε σύμβαση — απλώς πακετάρεται διαφορετικά. Στο two-sided η ενέργεια ενός tone μοιράζεται σε δύο impulses ύψους $A/2$· στο one-sided συσσωρεύεται σε ένα impulse ύψους $A$ — μέσα στον τύπο της ισχύος, το πρώτο δίνει $2 \cdot (A/2)^2 = A^2/2$, το δεύτερο δίνει επίσης $A^2/2$. Συμφωνούν.
 
 <Collectible id="two-sided-skin" />
 
-## 5. Πότε ποια σύμβαση
+<Callout type="warning" title="DC ΔΕΝ διπλασιάζεται στο one-sided">
+Το συνηθέστερο λάθος στη μετατροπή είναι να πολλαπλασιάσεις και το DC με 2. Όχι — το DC δεν έχει «αρνητικό mirror», οπότε δεν διπλασιάζεται όταν μεταφέρεται από two-sided σε one-sided. Μόνο τα **μη-DC** components διπλασιάζονται.
+</Callout>
 
-- **Two-sided** είναι η default σύμβαση όταν δουλεύουμε με τον FT μαθηματικά. Όλες οι ιδιότητες του FT (συνέλιξη, modulation theorem, Parseval, conjugate symmetry) γράφονται φυσικά σε two-sided. Σε αυτό το site χρησιμοποιούμε two-sided **παντού** στις θεωρητικές ενότητες.
+## 6. Πότε ποια σύμβαση
 
-- **One-sided** συναντιέται σε εφαρμοσμένα contexts: signal analyzers, audio engineering — τα περισσότερα φυσικά μετρητικά όργανα δείχνουν μόνο $f \geq 0$. Σε εξετάσεις μπορεί να συναντήσεις προβλήματα όπου η εκφώνηση δίνει το one-sided.
+- **Two-sided** είναι η default σύμβαση όταν δουλεύουμε με τον FT μαθηματικά. Όλες οι ιδιότητες του FT (συνέλιξη, modulation theorem, Parseval, conjugate symmetry) γράφονται φυσικά σε two-sided. Σε αυτό το site χρησιμοποιούμε two-sided **παντού** στις θεωρητικές ενότητες. Το επίσημο τυπολόγιο του μαθήματος (`slides/formulas.pdf`) επίσης δίνει όλα τα Fourier pairs σε two-sided.
+
+- **One-sided** συναντιέται σε εφαρμοσμένα contexts: signal analyzers, audio engineering — τα περισσότερα φυσικά μετρητικά όργανα δείχνουν μόνο $f \geq 0$, και διπλασιάζουν το ύψος αυτόματα ώστε να διαβάζεις απευθείας το πλάτος του tone. Σε εξετάσεις είναι σπάνιο, αλλά μπορεί να συναντήσεις προβλήματα όπου η εκφώνηση δίνει το one-sided και ζητάει μετατροπή σε two-sided (ή το αντίστροφο) — δες το Worked #3 παρακάτω.
 
 <Callout type="key" title="Πρακτικός κανόνας">
 Αν σου ζητηθεί να σχεδιάσεις φάσμα σε άσκηση, διάλεξε την **two-sided** σύμβαση εκτός αν λέει διαφορετικά — είναι αυτή που χρησιμοποιεί η θεωρία και το τυπολόγιο. Αν δοθεί one-sided, μπορείς να μετατρέψεις σε two-sided **διαιρώντας τα πλάτη των μη-DC συχνοτήτων με 2** και αντιγράφοντας στις αρνητικές συχνότητες ως μιγαδικά συζυγή.
 </Callout>
 
-## Εξάσκηση
+## 7. Quick reference
 
-<ExerciseProgress slug="reference/spectrum-conventions" total={5} />
+<Callout type="note" title="Όλοι οι κανόνες μαζεμένοι">
+  ```
+  Τι επιστρέφει το X(f):
+    • input  f είναι real (Hz)
+    • output X(f) είναι μιγαδικός
+    • σχεδιάζεις πάντα |X(f)| + ∠X(f) (όχι Re + Im)
 
-Πέντε ερωτήσεις πάνω στις δύο συμβάσεις και τους ψεύτικους «αρνητικούς» τόνους.
+  Conjugate symmetry (για x(t) real):
+    X(-f) = X*(f)
+    |X(-f)| = |X(f)|           ⇒ magnitude EVEN
+    ∠X(-f) = -∠X(f)            ⇒ phase    ODD
 
-<ExamProblem id="cosine-spectrum-twosided" year="Two-sided" weight="κλασικό">
+  Cosine ↔ impulse pair:
+    A cos(2π f₀ t + φ)
+       → impulses (A/2) at ±f₀
+       → phase +φ  at +f₀
+       → phase -φ  at -f₀
+
+  Sine ↔ imaginary impulse pair:
+    A sin(2π f₀ t)
+       → impulse  +jA/2 at -f₀
+       → impulse  -jA/2 at +f₀
+       → |X(f)| ίδιο με cos, phase ±π/2
+
+  Two-sided ↔ One-sided (για real signals):
+    Two-sided    One-sided
+    DC: X(0)     X(0)          (δεν διπλασιάζεται)
+    +f: |X(f)|   2 · |X(f)|
+    -f: |X(-f)|  (δεν εμφανίζεται)
+
+  Three rules to live by:
+    1. Πάντα σχεδίαζε δύο plots (magnitude + phase)
+    2. Πάντα ξεκίνα από two-sided (εκτός αν λέει αλλιώς)
+    3. DC ΠΟΤΕ δεν διπλασιάζεται
+  ```
+</Callout>
+
+## 8. Ανακάλεσε — δοκίμασε από μνήμης
+
+<ReorderDrill
+  id="phase-shifted-cosine-spectrum"
+  prompt={
+    <>
+      Σου ζητούν να σχεδιάσεις το **two-sided** φάσμα πλάτους και φάσης του <InlineMath>{'x(t) = 3\\cos(2\\pi \\cdot 50\\,t + \\pi/6)'}</InlineMath>. Βάλε τα 4 βήματα στη σωστή σειρά.
+    </>
+  }
+  steps={[
+    'Απλή ανάλυση Euler: 3 cos(θ + π/6) = (3/2) e^(j(θ+π/6)) + (3/2) e^(-j(θ+π/6)).',
+    'Ομαδοποίηση κατά complex-exponential: (3/2) e^(jπ/6) · e^(j2π·50·t) + (3/2) e^(-jπ/6) · e^(-j2π·50·t).',
+    'Φάσμα πλάτους: δύο impulses ύψους 3/2 στις ±50 Hz (συμμετρικό, even).',
+    'Φάσμα φάσης: +π/6 στα +50 Hz, −π/6 στα −50 Hz (αντισυμμετρικό, odd).',
+  ]}
+/>
+
+<ClozeDrill
+  id="cosine-amplitude-two-sided"
+  prompt={
+    <>
+      Συμπλήρωσε τα τρία ύψη impulses για το cosine <InlineMath>{'A\\cos(2\\pi f_0 t)'}</InlineMath>. Πρόσεξε το **DC**: ΔΕΝ διπλασιάζεται όταν μεταβαίνεις από two-sided σε one-sided.
+    </>
+  }
+  parts={[
+    <InlineMath key="lhs1">{'\\text{Two-sided ύψος στις } \\pm f_0 = '}</InlineMath>,
+    { blank: 'two-sided', accept: ['A/2', 'A / 2', '(A/2)', 'a/2'], hint: 'half-amplitude (το cosine «σπάει» σε δύο)' },
+    <InlineMath key="sep1">{', \\quad \\text{One-sided ύψος στο } f_0 = '}</InlineMath>,
+    { blank: 'one-sided', accept: ['A', 'a'], hint: 'full amplitude (η μισή ενέργεια από τα αρνητικά f «τυλίγεται» στη θετική)' },
+    <InlineMath key="sep2">{', \\quad \\text{One-sided ύψος στο } f = 0 \\text{ (DC συνιστώσα ίση με } c\\text{)} = '}</InlineMath>,
+    { blank: 'dc', accept: ['c', 'C'], hint: 'το DC ΔΕΝ διπλασιάζεται' },
+  ]}
+  solution={
+    <>
+      <p>
+        Two-sided: <InlineMath>{'A/2'}</InlineMath> και στις δύο κρούσεις (Euler). One-sided: <InlineMath>{'A'}</InlineMath> στο <InlineMath>{'+f_0'}</InlineMath> (διπλασιασμός γιατί τυλίγεται η αρνητική πλευρά). DC: <InlineMath>{'c'}</InlineMath> και στις δύο συμβάσεις — δεν διπλασιάζεται γιατί <InlineMath>{'f = 0'}</InlineMath> δεν έχει «αρνητικό mirror».
+      </p>
+      <p>
+        Παγίδα: αν διπλασιάσεις λάθος και το DC, χάνεις παράγοντα <InlineMath>{'2'}</InlineMath> στην ισχύ.
+      </p>
+    </>
+  }
+/>
+
+<RecallDrill
+  id="negative-frequency-meaning"
+  prompt={
+    <>
+      Χωρίς να ξαναδιαβάσεις το §3, εξήγησε με δικά σου λόγια **τι είναι η αρνητική συχνότητα** και **γιατί κάθε real cosine έχει δύο κρούσεις στις ±f₀** — όχι ένα στη +f₀ και «τίποτα» αρνητικό.
+    </>
+  }
+  answer={
+    <>
+      <p>
+        Η αρνητική συχνότητα είναι **μαθηματικό αντικείμενο**, όχι φυσικό. Κάθε complex exponential <InlineMath>{'e^{j 2\\pi f t}'}</InlineMath> είναι ένας περιστρεφόμενος phasor: <InlineMath>{'f > 0'}</InlineMath> ⇒ αριστερόστροφα, <InlineMath>{'f < 0'}</InlineMath> ⇒ δεξιόστροφα.
+      </p>
+      <p>
+        Κάθε real cosine γράφεται ως άθροισμα **δύο τέτοιων phasors** — ενός που στρίβει αριστερόστροφα στη <InlineMath>{'+f_0'}</InlineMath> και ενός που στρίβει δεξιόστροφα στη <InlineMath>{'-f_0'}</InlineMath>, καθένας με βάρος <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>. Τα imaginary parts των δύο ακυρώνονται σε κάθε στιγμή· τα real parts προστίθενται. Το άθροισμα είναι ένα πραγματικό cosine.
+      </p>
+      <p>
+        Άρα η «αρνητική κρούση» **δεν** είναι ένα δεύτερο σήμα στη μη-φυσική συχνότητα <InlineMath>{'-f_0'}</InlineMath> — είναι ο **counter-rotating partner** που χρειάζεται κάθε πραγματικό cosine για να μη βγει μιγαδικό. Δεν μπορείς να το αφαιρέσεις χωρίς να καταστρέψεις την «πραγματικότητα» του σήματος.
+      </p>
+      <p className="text-fg-muted text-[0.9rem]">
+        Συνέπεια: η συμμετρία <InlineMath>{'X(-f) = X^*(f)'}</InlineMath> δεν είναι σύμπτωση — είναι **αναγκαία** για να είναι το <InlineMath>{'x(t)'}</InlineMath> πραγματικό. Σε ένα μιγαδικό σήμα, η συμμετρία αυτή σπάει.
+      </p>
+    </>
+  }
+/>
+
+## 9. Αναγνώρισε — πού θα δεις τα παραπάνω σε εξέταση
+
+<ThinkingPattern
+  signals={[
+    'σχεδιάστε το φάσμα πλάτους και φάσης του A cos(2πf₀t + φ)',
+    'πόσες φασματικές συνιστώσες έχει το X(f);',
+    'δείξτε ότι |X(f)| άρτιο για x(t) πραγματικό',
+    'μετατροπή από one-sided σε two-sided',
+    'σχεδιάστε το φάσμα ενός AM σήματος (μετράς impulses)',
+    'αν x(t) είναι real and even, τι ξέρετε για το X(f);',
+    'το X(f) είναι μιγαδικός ή πραγματικός;',
+  ]}
+>
+  Όταν εμφανιστεί κάποιο από τα σινιάλα, διάλεξε από αυτές τις πέντε «πατέντες»:
+
+  1. **«Σχεδιάστε το φάσμα πλάτους και φάσης»** ⇒ Euler decomposition + ξεχωριστά plots. Για <InlineMath>{'A\\cos(2\\pi f_0 t + \\phi)'}</InlineMath>: magnitude δύο impulses ύψους <InlineMath>{'A/2'}</InlineMath> στις <InlineMath>{'\\pm f_0'}</InlineMath>· phase <InlineMath>{'+\\phi'}</InlineMath> στο <InlineMath>{'+f_0'}</InlineMath> και <InlineMath>{'-\\phi'}</InlineMath> στο <InlineMath>{'-f_0'}</InlineMath>. Είναι το θέμα 1.4 του Ιουνίου 2025.
+
+  2. **«Πόσες φασματικές συνιστώσες»** ⇒ μέτρα τα impulses στο φάσμα. Ένα tone real δίνει **δύο** (στα ±f_0). Ένα AM single-tone signal δίνει **έξι** (carrier στα ±f_c + sidebands στα ±(f_c ± f_m)). Μια κρουστική στον χρόνο (<InlineMath>{'\\delta(t-T_1)'}</InlineMath>) δίνει **άπειρες** (ομοιόμορφο φάσμα).
+
+  3. **«Δείξε conjugate symmetry»** ⇒ από τον ορισμό του Fourier για πραγματικό <InlineMath>{'x(t)'}</InlineMath>. Παίρνεις συζυγή και των δύο πλευρών, χρησιμοποιείς ότι <InlineMath>{'\\bar{x} = x'}</InlineMath>, καταλήγεις σε <InlineMath>{'X^*(f) = X(-f)'}</InlineMath>. Συνέπειες: <InlineMath>{'|X(f)|'}</InlineMath> άρτιο, <InlineMath>{'\\angle X(f)'}</InlineMath> περιττό.
+
+  4. **«One-sided ↔ two-sided μετατροπή»** ⇒ θυμήσου τους δύο κανόνες: (α) μη-DC συχνότητες, διπλασίασε το ύψος όταν πας two-sided → one-sided, και αντίστροφα όταν πας one-sided → two-sided· (β) DC ΠΟΤΕ δεν διπλασιάζεται. Αν αμελήσεις τον δεύτερο κανόνα, χάνεις παράγοντα 2 στην ισχύ ή στο DC.
+
+  5. **«Φάσμα AM σήματος»** ⇒ κάθε cosine στον τύπο γεννά ζεύγος ±. Το <InlineMath>{'[A_c + A_m\\cos(2\\pi f_m t)]\\cos(2\\pi f_c t)'}</InlineMath> δίνει τρεις cos-pairs ⇒ 6 impulses ⇒ 2 carrier στα <InlineMath>{'\\pm f_c'}</InlineMath> + 2 upper sidebands στα <InlineMath>{'\\pm (f_c + f_m)'}</InlineMath> + 2 lower sidebands στα <InlineMath>{'\\pm (f_c - f_m)'}</InlineMath>. Πάντα **έξι**, ποτέ τέσσερις.
+</ThinkingPattern>
+
+<ExamRadar
+  ids={[
+    { id: 'jun25-th1-4', likelihood: 'high', note: 'Φάσμα πλάτους + φάσης 2cos(1000πt+π/4) — το κανονικότατο «δύο impulses ύψους 1, φάσεις ±π/4» case.' },
+    { id: 'jun25-th1-7', likelihood: 'high', note: 'Φάσμα πλάτους & φάσης γενικού αθροίσματος Σ A_k cos(2πk f_c t + φ_k) — μέτρημα ζευγών impulses ανά αρμονική.' },
+    { id: 'jun25-th1-3', likelihood: 'high', note: 'Φασματικές συνιστώσες δ(t-T₁) — άπειρες, με linear-phase συνάρτηση e^(-j2πfT₁). Διαβάζεις απευθείας two-sided.' },
+    { id: 'proodos26-9', likelihood: 'high', note: 'AM tone — βλέπεις 6 impulses στο φάσμα (2 carrier + 4 sidebands), συμμετρικά γύρω από το 0.' },
+    { id: 'jan26-th2-7', likelihood: 'high', note: 'AM χρόνου + φάσματος — απαιτείται two-sided σχεδίαση με conjugate symmetry σαφή.' },
+    { id: 'pa25-th2-2', likelihood: 'high', note: 'AM cos(8πt) + 2sin(2πt) — οι sin και cos συνεισφέρουν διαφορετικά (real vs imaginary spectrum), δες τα ξεχωριστά.' },
+  ]}
+/>
+
+## 10. Πού θα χρειαστείς τα παραπάνω αργότερα
+
+- **[/foundations/fourier-transform](/foundations/fourier-transform)** — ο ίδιος ο ορισμός του FT παράγει two-sided φάσμα. Η ιδιότητα **conjugate symmetry** ($X^*(f) = X(-f)$ για real $x(t)$), η **modulation theorem** ($x(t)\cos(2\pi f_c t) \leftrightarrow \tfrac{1}{2}[X(f-f_c) + X(f+f_c)]$ — δύο μετατοπίσεις, όχι μία), και το **time-shift theorem** (γίνεται φάση $e^{-j 2\pi f T}$ που είναι περιττή σε $f$) στηρίζονται όλες στις συμβάσεις αυτής της σελίδας.
+- **[/am/conventional](/am/conventional), [/am/dsb-sc](/am/dsb-sc)** — η ανάλυση «2 carrier + 4 sidebands = 6 impulses» έρχεται απευθείας από τους κανόνες εδώ. Κάθε cosine στον AM τύπο γεννά ζεύγος ±, και κάθε γινόμενο δύο cosines γίνεται **δύο** ζεύγη (από product-to-sum).
+- **[/am/ssb](/am/ssb)** — ο μετασχηματισμός Hilbert είναι πολλαπλασιασμός φάσματος με $-j\,\mathrm{sgn}(f)$· δηλαδή στρέφει τη μία πλευρά του φάσματος κατά $-90°$ και την άλλη κατά $+90°$. Όλη η phasing-method παραγωγή του SSB βασίζεται στο ότι το two-sided φάσμα έχει δύο πλευρές που μπορούμε να χειριστούμε ανεξάρτητα.
+- **[/fm/bessel](/fm/bessel)** — το Bessel ανάπτυγμα $\cos(2\pi f_c t + \beta\sin 2\pi f_m t) = \sum_n J_n(\beta)\cos(2\pi(f_c + n f_m)t)$ δίνει sidebands σε όλες τις αρμονικές $\pm n f_m$ γύρω από το $f_c$. Η συμμετρία $J_{-n} = (-1)^n J_n$ είναι κανονικότατη conjugate-symmetry της σελίδας — το one-sided σχήμα θα έσπαζε αυτή τη συμμετρία.
+- **[/randomness/psd](/randomness/psd)** — όλα τα **PSD** ορίζονται ως FT της autocorrelation, που είναι **πραγματική και άρτια** για WSS process — άρα το PSD είναι **πραγματικό και άρτιο** στη συχνότητα. Δηλαδή το PSD γράφεται φυσικά two-sided, με μηδενική φάση παντού. Εξαίρεση: αν δεις PSD της μορφής $N_0/2$, αυτό είναι το two-sided level του λευκού θορύβου (one-sided level θα ήταν $N_0$).
+- **[/noise/white-noise](/noise/white-noise), [/noise/through-filters](/noise/through-filters)** — οι θόρυβοι σε επικοινωνιακά συστήματα γράφονται *πάντα* two-sided στο μάθημα, με level $N_0/2$ W/Hz. Όταν διαβάζεις πίνακα από datasheet που δίνει $N_0$ W/Hz, αυτό είναι one-sided — χρειάζεται διαίρεση με 2 για να μπει στους τύπους.
+
+## 11. Συμπύκνωσε όλο το κεφάλαιο
+
+<RecallCard
+  variant="summary"
+  keywords={[
+    <>input <InlineMath>{'f'}</InlineMath> πραγματικό, output <InlineMath>{'X(f)'}</InlineMath> μιγαδικό</>,
+    <>cos → real spectrum, sin → imaginary spectrum</>,
+    <>αρνητική <InlineMath>{'f'}</InlineMath> = counter-rotating phasor partner</>,
+    <><InlineMath>{'\\cos = \\tfrac{1}{2}(e^{j\\theta} + e^{-j\\theta})'}</InlineMath> ⇒ impulses στα <InlineMath>{'\\pm f_0'}</InlineMath></>,
+    <><InlineMath>{'X(-f) = X^*(f)'}</InlineMath> για real <InlineMath>{'x(t)'}</InlineMath></>,
+    <><InlineMath>{'|X|'}</InlineMath> άρτιο, <InlineMath>{'\\angle X'}</InlineMath> περιττό</>,
+    <>two-sided default, one-sided διπλασιάζει μη-DC</>,
+    <>DC δεν διπλασιάζεται ΠΟΤΕ</>,
+  ]}
+  skeleton={[
+    <>**X(f) είναι μιγαδικός.** Σε κάθε real <InlineMath>{'f'}</InlineMath> δίνει ένα ζεύγος (μέτρο + φάση). Σχεδιάζεις πάντα **δύο** plots: <InlineMath>{'|X(f)|'}</InlineMath> και <InlineMath>{'\\angle X(f)'}</InlineMath>.</>,
+    <>**Αρνητική συχνότητα είναι μαθηματική.** Ένα real cosine = άθροισμα δύο counter-rotating phasors στα <InlineMath>{'\\pm f_0'}</InlineMath>, καθένας με βάρος <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>. Το «-f_0» είναι το συζυγές αντίγραφο, όχι αυτόνομο σήμα.</>,
+    <>**Conjugate symmetry για real signals.** <InlineMath>{'X(-f) = X^*(f)'}</InlineMath>. Συνέπειες: magnitude άρτιο, phase περιττό. Επιτρέπει να σχεδιάζεις one-sided χωρίς απώλεια πληροφορίας.</>,
+    <>**Two-sided ↔ one-sided.** Two-sided: μη-DC impulses ύψους <InlineMath>{'A/2'}</InlineMath> στα <InlineMath>{'\\pm f_0'}</InlineMath>. One-sided: ύψος <InlineMath>{'A'}</InlineMath> στο <InlineMath>{'+f_0'}</InlineMath>. **DC ποτέ δεν διπλασιάζεται.** Η ολική ενέργεια συμφωνεί.</>,
+    <>**Πρακτική:** πάντα ξεκίνα από two-sided. Είναι αυτό που δίνει το τυπολόγιο, αυτό που χρησιμοποιεί όλη η θεωρία (Parseval, modulation theorem, conjugate symmetry), και αυτό στο οποίο εξετάζεσαι.</>,
+  ]}
+  trap={
+    <>
+      Τρεις παγίδες κατά συχνότητα: (α) **διπλασιάζεις και το DC** όταν περνάς από two-sided σε one-sided — όχι, μόνο τα μη-DC components διπλασιάζονται· (β) **σχεδιάζεις μόνο magnitude και ξεχνάς phase** — το φάσμα μιγαδικού σήματος είναι **δύο** plots, όχι ένα· (γ) **νομίζεις ότι «imaginary spectrum» σημαίνει imaginary frequency** — όχι, οι θέσεις στον άξονα <InlineMath>{'f'}</InlineMath> είναι πάντα real· τα _imaginary_ είναι τα _output values_ του <InlineMath>{'X(f)'}</InlineMath>.
+    </>
+  }
+/>
+
+<Recap>
+- Το $X(f)$ είναι **μιγαδική συνάρτηση**: input real, output μιγαδικός. Σχεδιάζουμε πάντα δύο plots — μέτρο και φάση. Cos ⇒ real spectrum, sin ⇒ imaginary spectrum.
+- Η **αρνητική συχνότητα** δεν είναι φυσικό φαινόμενο. Είναι ο counter-rotating phasor partner που χρειάζεται κάθε real cosine για να μην βγει μιγαδικό. Από εδώ προέρχεται η ύπαρξη δύο κρούσεων στα ±f₀.
+- Η **conjugate symmetry** ($X(-f) = X^*(f)$) ισχύει για κάθε real σήμα. Συνέπειες: $|X|$ άρτιο, $\angle X$ περιττό. Επιτρέπει την one-sided σύμβαση χωρίς απώλεια πληροφορίας.
+- Στις δύο **συμβάσεις σχεδίασης**: two-sided είναι η default σε θεωρία και exam· one-sided διπλασιάζει τα μη-DC ύψη και αποκρύπτει την αρνητική πλευρά. **Το DC δεν διπλασιάζεται ποτέ.**
+- Όλη η AM, DSB-SC, SSB, FM ανάγνωση φάσματος δουλεύει πάνω σε αυτές τις τρεις συμβάσεις. Κράτα τη σελίδα ανοιχτή όποτε διαβάζεις downstream κεφάλαιο.
+</Recap>
+
+## Παραδείγματα και ασκήσεις
+
+<ExerciseProgress slug="reference/spectrum-conventions" total={7} />
+
+Επτά ερωτήσεις. Οι πρώτες δύο ζητάν την κανονικότατη σχεδίαση two-sided φάσματος και την ερμηνεία της αρνητικής συχνότητας. Η τρίτη δοκιμάζει τη μετατροπή one-sided → two-sided με τη DC παγίδα. Η τέταρτη ζητάει απόδειξη conjugate symmetry — βασικό «δείξτε ότι» exam pattern. Η πέμπτη συνδυάζει conjugate symmetry με even συμμετρία. **Δύο νέες ασκήσεις** δοκιμάζουν: μικτό cos+sin (real + imaginary spectrum) και AM impulse-counting.
+
+<ExamProblem id="cosine-spectrum-twosided" year="Worked #1" weight="κλασικό">
+**Πριν τη λύση:** η σχεδίαση two-sided φάσματος για ένα tone είναι η ΠΙΟ ΣΥΧΝΗ άσκηση Φάσματος στο μάθημα. Το pattern: Euler decomposition → δύο impulses ίσου ύψους στα ±f₀ → αν υπάρχει phase, αυτή είναι περιττή.
+
 **Ερώτηση:** Σχεδίασε το two-sided φάσμα του $x(t) = \cos(2\pi\cdot 100\,t)$.
 
 <Example title="Λύση" defaultOpen={true}>
 Από Euler: $\cos\omega_0 t = (e^{j\omega_0 t} + e^{-j\omega_0 t})/2$. Στη συχνότητα:
 $$X(f) = \tfrac{1}{2}[\delta(f - 100) + \delta(f + 100)]$$
 
-**Δύο impulses ύψους 1/2** στις $f = +100$ και $f = -100$ Hz. Συμμετρικά, real, even — όπως αναμένουμε για real-and-even signal.
+**Δύο impulses ύψους 1/2** στις $f = +100$ και $f = -100$ Hz. Συμμετρικά, real, even — όπως αναμένουμε για real-and-even signal. Φάση παντού 0 (real spectrum).
 
 Στο **one-sided** σχήμα (ίδιο σήμα): ένα impulse ύψους 1 στα +100 Hz. Πληροφορία ίδια, διαφορετική σύμβαση.
+
+**Pattern recognition:** όποτε σου ζητούν φάσμα tone, η πρώτη κίνηση είναι **πάντα** η Euler decomposition. Από εκεί διαβάζεις απευθείας τα δύο impulses στο φάσμα. Αν το tone έχει phase φ, η phase εμφανίζεται με αντίθετα πρόσημα στις δύο κρούσεις (περιττή).
 </Example>
 </ExamProblem>
 
-<ExamProblem id="negative-frequency-meaning" year="Conceptual" weight="δυσκολο">
+<ExamProblem id="negative-frequency-meaning" year="Worked #2" weight="conceptual">
+**Πριν τη λύση:** η «αρνητική συχνότητα» είναι από τα πιο μπερδεμένα concepts όταν τα βλέπεις πρώτη φορά. Σε true/false ερωτήσεις, η σωστή απάντηση συχνά είναι «λάθος γιατί είναι μαθηματική συνέπεια, όχι φυσικό φαινόμενο».
+
 **Δήλωση:** Οι αρνητικές συχνότητες είναι φυσικές πραγματικότητες — μπορείς να μετρήσεις ένα cosine στα $-100$ Hz.
 
 <Example title="Λύση" defaultOpen={true}>
@@ -165,24 +434,32 @@ $$X(f) = \tfrac{1}{2}[\delta(f - 100) + \delta(f + 100)]$$
 **Από πού προέρχονται:** το $\cos\omega_0 t$ γράφεται ως άθροισμα δύο complex exponentials, ένα στα $+\omega_0$ και ένα στα $-\omega_0$. Τα δύο μαζί ακυρώνουν τα imaginary parts και δίνουν το real cosine. Στη συχνότητα φαίνονται σαν δύο impulses — ένα από αυτά «ζει» στις αρνητικές συχνότητες αμιγώς από αυτή τη μαθηματική κατασκευή.
 
 **One-sided convention** αποφεύγει αυτή την αφηρημένη ιδέα διπλασιάζοντας το ύψος των μη-DC συχνοτήτων και ξεχνώντας το αρνητικό μισό.
+
+**Pattern recognition:** όποτε εμφανιστεί true/false με «-100 Hz είναι φυσικό» ή «μπορώ να αφαιρέσω την αρνητική κρούση», η απάντηση είναι «λάθος, γιατί η αρνητική κρούση είναι ο conjugate partner της θετικής — αν την αφαιρέσεις, το σήμα γίνεται **μιγαδικό** στον χρόνο». Δες π.χ. το Hilbert pre-envelope στο [/modulation/bridge](/modulation/bridge): αφαιρώντας τη αρνητική πλευρά παράγεις *αναλυτικό σήμα*, που ΕΙΝΑΙ μιγαδικό.
 </Example>
 </ExamProblem>
 
-<ExamProblem id="conversion-onesided" year="Conversion" weight="practical">
+<ExamProblem id="conversion-onesided" year="Worked #3" weight="practical">
+**Πριν τη λύση:** η μετατροπή one-sided → two-sided είναι μια από τις πιο «τυπολογικές» πράξεις — αρκεί να θυμάσαι τους **δύο** κανόνες: (1) διαίρεσε τα μη-DC ύψη με 2, και (2) αντίγραψε στη συμμετρική αρνητική θέση. **Το DC δεν διαιρείται.**
+
 **Ερώτηση:** Δίνεται **one-sided** φάσμα: impulse ύψους 4 στα 50 Hz. Μετάτρεψε σε two-sided.
 
-<Example title="Λύση">
+<Example title="Λύση" defaultOpen={true}>
 Κανόνας: για κάθε non-DC component, **διαιρείς το ύψος με 2** και αντιγράφεις στην αντίστοιχη αρνητική συχνότητα.
 
 **Two-sided φάσμα:** impulse ύψους 2 στα +50 Hz και ύψους 2 στα −50 Hz.
 
-**Έλεγχος:** το one-sided ύψος 4 στα 50 Hz σημαίνει cosine πλάτους 4: $4\cos(2\pi\cdot 50\,t)$. Two-sided: $4\cdot[(e^{j\omega t} + e^{-j\omega t})/2] = 2 e^{j\omega t} + 2 e^{-j\omega t}$ → impulses ύψους 2 σε κάθε πλευρά. ✓
+**Έλεγχος (γιατί δουλεύει):** το one-sided ύψος 4 στα 50 Hz σημαίνει cosine πλάτους 4: $4\cos(2\pi\cdot 50\,t)$. Two-sided ανάλυση: $4\cdot[(e^{j\omega t} + e^{-j\omega t})/2] = 2 e^{j\omega t} + 2 e^{-j\omega t}$ → impulses ύψους 2 σε κάθε πλευρά. ✓
 
-**Για DC:** δεν διαιρείς (το DC δεν έχει «αρνητικό» mirror).
+**Για DC:** δεν διαιρείς — το DC δεν έχει «αρνητικό» mirror, ο φόρτος ενέργειας του δεν μοιράζεται.
+
+**Pattern recognition:** όποτε σου δίνουν one-sided σχήμα με ύψη <InlineMath>{'h_1, h_2, ...'}</InlineMath>, η two-sided έκδοση έχει ύψη <InlineMath>{'h_1/2, h_2/2, ...'}</InlineMath> σε **κάθε** πλευρά, εκτός από το DC που μένει ίδιο. Έλεγχος ισχύος: <InlineMath>{'\\sum (h_k)^2 / 2 = 2 \\cdot \\sum (h_k/2)^2'}</InlineMath> — οι δύο συμβάσεις δίνουν την ίδια συνολική ισχύ.
 </Example>
 </ExamProblem>
 
-<ExamProblem id="conjugate-sym-real-signal" year="Conjugate symmetry" weight="κλασικό">
+<ExamProblem id="conjugate-sym-real-signal" year="Worked #4" weight="«δείξτε ότι»">
+**Πριν τη λύση:** η απόδειξη της conjugate symmetry για real signals είναι από τα πιο τυπικά «δείξτε ότι» themes — αρκεί να πάρεις τον ορισμό του Fourier και να αλλάξεις σύμβολο σωστά. Καμιά καινούργια ιδέα — μόνο προσοχή στο conjugation.
+
 **Δήλωση:** Real σήμα στον χρόνο ⇒ $X(-f) = X^*(f)$ στη συχνότητα.
 
 <Example title="Λύση" defaultOpen={true}>
@@ -195,10 +472,14 @@ $$X^*(f) = \overline{\int x(t)e^{-j 2\pi f t}dt} = \int \bar{x}(t)e^{j 2\pi f t}
 Αν το $x(t)$ είναι **real** ($\bar{x} = x$), τα δύο ταυτίζονται: $X(-f) = X^*(f)$.
 
 **Συνέπειες:** $|X(-f)| = |X(f)|$ (πλάτος άρτιο), $\angle X(-f) = -\angle X(f)$ (φάση περιττή). Γι' αυτό σχεδιάζουμε μόνο το θετικό μισό σε one-sided σχήμα — κανείς πληροφορία δεν χάνεται.
+
+**Pattern recognition:** όποτε εμφανιστεί «δείξε ότι $|H(f)|$ άρτιο» ή «δείξε ότι $\angle H(f)$ περιττό», η πρώτη γραμμή είναι **πάντα** «αφού το $h(t)$ είναι πραγματικό, έχουμε $H^*(f) = H(-f)$· παίρνοντας μέτρο και γωνία αντίστοιχα...». Είναι από τις πιο συχνές 3-4 βαθμού true/false ερωτήσεις.
 </Example>
 </ExamProblem>
 
-<ExamProblem id="even-signal-real-spectrum" year="Even signal" weight="symmetry">
+<ExamProblem id="even-signal-real-spectrum" year="Worked #5" weight="συμμετρία">
+**Πριν τη λύση:** όταν έχεις real-and-even σήμα, μπορείς να βγάλεις απευθείας ότι το X(f) είναι real-and-even — χωρίς ολοκλήρωμα. Συνδυάζεις απλά τις δύο ιδιότητες: real ⇒ conjugate symmetry, even ⇒ X(-f) = X(f).
+
 **Δήλωση:** Real-and-even σήμα στον χρόνο έχει real-and-even φάσμα στη συχνότητα.
 
 <Example title="Λύση" defaultOpen={true}>
@@ -211,7 +492,64 @@ $$X^*(f) = \overline{\int x(t)e^{-j 2\pi f t}dt} = \int \bar{x}(t)e^{j 2\pi f t}
 **Παραδείγματα:**
 - $\mathrm{rect}(t) \leftrightarrow \mathrm{sinc}(f)$: real-and-even ↔ real-and-even ✓
 - $\cos(2\pi f_0 t) \leftrightarrow \tfrac{1}{2}[\delta(f-f_0) + \delta(f+f_0)]$: real-and-even ↔ real-and-even ✓
+- $\Lambda(t)$ τρίγωνο ↔ $\mathrm{sinc}^2(f)$: real-and-even ↔ real-and-even ✓
 
-Στις εξετάσεις, αν ένα σήμα είναι σαφώς real-and-even, μπορείς να αναμένεις ότι το spectrum θα είναι real και να χρησιμοποιήσεις αυτό ως sanity check.
+**Pattern recognition:** στις εξετάσεις, αν ένα σήμα είναι σαφώς real-and-even, μπορείς να αναμένεις ότι το spectrum θα είναι real και άρτιο και να χρησιμοποιήσεις αυτό ως sanity check. Το ίδιο για real-and-odd ⇒ imaginary-and-odd spectrum (όπως sin ↔ purely imaginary). Αν μια λύση σου παράγει μιγαδικό spectrum για real-and-even σήμα, κάπου είναι λάθος.
+</Example>
+</ExamProblem>
+
+<ExamProblem id="cos-plus-sin-mixed" year="Self-check #1" weight="real + imaginary">
+**Πριν τη λύση:** όταν συναντάς σήμα της μορφής $A\cos(\omega_1 t) + B\sin(\omega_2 t)$, οι δύο συνεισφέρουν διαφορετικά στο φάσμα: το cos δίνει **real** impulses και το sin δίνει **imaginary** impulses. Δεν αλληλεπικαλύπτουν επειδή είναι σε διαφορετικές συχνότητες (αν ήταν στην ίδια συχνότητα, θα συνδυαζόντουσαν σε ένα phase-shifted cosine).
+
+**Ερώτηση:** Σχεδίασε το two-sided φάσμα (μέτρο και φάση) του $x(t) = 3\cos(2\pi\cdot 100\,t) + 2\sin(2\pi\cdot 200\,t)$.
+
+<Example title="Λύση">
+Από Euler:
+- $3\cos(2\pi\cdot 100\,t) = \tfrac{3}{2}[e^{j 2\pi\cdot 100\,t} + e^{-j 2\pi\cdot 100\,t}]$ — real spectrum.
+- $2\sin(2\pi\cdot 200\,t) = \tfrac{2}{2j}[e^{j 2\pi\cdot 200\,t} - e^{-j 2\pi\cdot 200\,t}] = -j\,e^{j 2\pi\cdot 200\,t} + j\,e^{-j 2\pi\cdot 200\,t}$ — imaginary spectrum.
+
+Συνολικά:
+$$X(f) = \tfrac{3}{2}\delta(f-100) + \tfrac{3}{2}\delta(f+100) - j\,\delta(f-200) + j\,\delta(f+200)$$
+
+**Φάσμα πλάτους:** τέσσερα impulses στις $\pm 100, \pm 200$ Hz, με ύψη $\tfrac{3}{2}, \tfrac{3}{2}, 1, 1$ αντίστοιχα.
+
+**Φάσμα φάσης:**
+- Στα $\pm 100$ Hz (από cos): φάση 0 παντού (real spectrum).
+- Στα $+200$ Hz (από sin): φάση $-\pi/2$ (αφού $-j = e^{-j\pi/2}$).
+- Στα $-200$ Hz (από sin): φάση $+\pi/2$ (αφού $+j = e^{+j\pi/2}$).
+
+**Έλεγχος conjugate symmetry:** φάση 0 στα $\pm 100$ ⇒ συμμετρικά γύρω από το 0 (περιττή ⇒ 0 = -0 ✓). Φάσεις $\mp\pi/2$ στα $\pm 200$ ⇒ αντίθετα πρόσημα (περιττή ✓). Το $x(t)$ είναι πραγματικό σήμα ⇒ αναμενόμενη η conjugate symmetry.
+
+**Pattern recognition:** όποτε σου δίνουν άθροισμα cos + sin σε διαφορετικές συχνότητες, χειρίσου τα ξεχωριστά. Cos → real, sin → imaginary, και τα δύο μαζί κάνουν conjugate symmetry. Αν είχαν τις ίδιες συχνότητες (π.χ. cos + sin στη f₀), θα συνδυάζονταν σε ένα cosine με phase shift — δες την τεχνική στο [/reference/complex-numbers](/reference/complex-numbers).
+</Example>
+</ExamProblem>
+
+<ExamProblem id="am-impulse-counting" year="Self-check #2" weight="AM impulse-counting">
+**Πριν τη λύση:** ένα AM σήμα με single-tone message δεν είναι «εξωτικό» — είναι **τρεις cosines** συνδυασμένοι. Κάθε cosine γεννά ζεύγος impulses στα ±f. Άρα ο αριθμός των impulses ενός AM signal είναι **πάντα** πολλαπλάσιο του 2.
+
+**Ερώτηση:** Πόσα impulses έχει το two-sided φάσμα του $x(t) = [4 + 2\cos(2\pi\cdot 10\,t)]\cos(2\pi\cdot 100\,t)$; Βρες όλες τις θέσεις και τα ύψη.
+
+<Example title="Λύση">
+Ξεκίνα από την Euler ανάλυση:
+$$x(t) = 4\cos(2\pi\cdot 100\,t) + 2\cos(2\pi\cdot 10\,t)\cos(2\pi\cdot 100\,t)$$
+
+Ο πρώτος όρος είναι carrier — γεννά 2 impulses στα $\pm 100$ Hz ύψους $4/2 = 2$ καθένα.
+
+Ο δεύτερος όρος, με product-to-sum:
+$$2\cos(2\pi\cdot 10\,t)\cos(2\pi\cdot 100\,t) = \cos(2\pi\cdot 110\,t) + \cos(2\pi\cdot 90\,t)$$
+
+Άρα γεννά 4 impulses: 2 στα $\pm 110$ Hz (upper sideband) και 2 στα $\pm 90$ Hz (lower sideband), όλα ύψους $1/2$.
+
+**Συνολικά: 6 impulses**, με θέσεις και ύψη:
+
+| f (Hz) | ύψος | τι είναι |
+| --- | --- | --- |
+| $\pm 100$ | $2$ | carrier |
+| $\pm 110$ | $1/2$ | upper sideband |
+| $\pm 90$ | $1/2$ | lower sideband |
+
+**Έλεγχος συμμετρίας:** όλα τα ύψη είναι real και θετικά (φάση 0), και είναι συμμετρικά γύρω από το $f = 0$ (στις 3 θετικές + 3 αρνητικές). Αυτό είναι αναμενόμενο γιατί $x(t)$ είναι real-and-even σήμα. ✓
+
+**Pattern recognition:** για κάθε AM single-tone signal, το **πλήθος** impulses στο two-sided σχήμα είναι **6** (2 carrier + 4 sidebands). Αν δεις 4 ή 8, κάπου έκανες λάθος. Αν δεις multi-tone message με $M$ συχνότητες, οι sidebands γίνονται $4M$ και το σύνολο γίνεται $2 + 4M$.
 </Example>
 </ExamProblem>
