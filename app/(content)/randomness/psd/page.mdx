@@ -1,7 +1,7 @@
 export const metadata = {
-  title: 'PSD — Power Spectral Density (Wiener-Khinchin)',
+  title: 'PSD — Φασματική Πυκνότητα Ισχύος (Wiener-Khinchin)',
   description:
-    "Η Power Spectral Density S_X(f) ενός random process. Wiener-Khinchin theorem: S_X(f) = ℱ{R_X(τ)}. Ιδιότητες της PSD (πραγματική, άρτια, μη-αρνητική). Σύνδεση με τη ντετερμινιστική ESD που είδαμε στην ενότητα FT.",
+    'Slides 36–39 session-9 + slide-36 session-10 verbatim: PSD ορισμός $S_X(f) \\triangleq \\mathcal{F}\\{R_X(\\tau)\\}$, Wiener-Khinchin για WSS ΤΔ, η γέφυρα από ντετερμινιστική ESD σε PSD, ιδιότητες (real / άρτια / non-negative), $R_X(0) = P_X = \\int S_X\\,df$, και η πλήρης ΓΧΑ-output αλυσίδα $R_Y = R_X * h * h(-\\tau) \\Rightarrow S_Y = |H|^2 S_X$. AutocorrelationViz + NoiseFilterShapingViz cross-mounts, full 5-stage loop, ExamRadar 6 manual ids.',
 }
 
 export const frontmatter = {
@@ -9,9 +9,9 @@ export const frontmatter = {
   slug: 'randomness/psd',
   order: 5,
   prerequisites: ['randomness/stationarity', 'foundations/fourier-transform'],
-  examWeight: 3,
-  estimatedReadTime: 22,
-  lastUpdated: '2026-05-05',
+  examWeight: 4,
+  estimatedReadTime: 32,
+  lastUpdated: '2026-05-25',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -21,12 +21,12 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Randomness · 5</span>
   <span>·</span>
-  <span>~22 min read</span>
+  <span>~32 min read</span>
   <span>·</span>
-  <span className="font-semibold text-emerald-700 dark:text-emerald-400">🟢 Light direct — load-bearing for noise</span>
+  <span className="font-semibold text-emerald-700 dark:text-emerald-400">🟢 Wiener-Khinchin — η γλώσσα όλου του θορύβου</span>
 </div>
 
-# PSD — Power Spectral Density
+# PSD — Φασματική Πυκνότητα Ισχύος
 
 <div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
   <CompleteToggle slug="randomness/psd" />
@@ -37,312 +37,779 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 
 <SourceDoc
   sources={[
-    { pdf: 'SE_session9_random1_upload.pdf', label: 'PSD ορισμός, Wiener–Khinchin για random processes' },
-    { pdf: 'SE_session10_noise.pdf', label: 'συνέχεια PSD και εφαρμογή στον θόρυβο' },
+    { pdf: 'SE_session9_random1_upload.pdf', slides: '36–39', label: 'PSD ορισμός, Wiener-Khinchin για WSS ΤΔ, ΓΧΑ-output αλυσίδα' },
+    { pdf: 'SE_session10_noise.pdf', slides: '36, 37–40', label: 'ESD→PSD γέφυρα (slide 36) + επανάληψη slides 37–40' },
   ]}
 />
 
-Στο [FT chapter §10](/foundations/fourier-transform) είδαμε ότι για **ντετερμινιστικά energy signals**, η **autocorrelation** $R_x(\tau) = \int x(t)x(t+\tau)dt$ έχει FT ίση με την **Energy Spectral Density** $|X(f)|^2$:
+## 1. Νιώσε — γιατί χρειαζόμαστε νέο εργαλείο μετά την WSS
+
+Στην [`/randomness/stationarity`](/randomness/stationarity) βγήκαμε από την σελίδα έχοντας μάθει ότι, για WSS ΤΔ, **όλη η πληροφορία για τη χρονική δομή πέφτει σε δύο αριθμούς και μια συνάρτηση**:
 
 $$
-R_x(\tau) \stackrel{\mathcal{F}}{\longleftrightarrow} |X(f)|^2 \quad (\text{deterministic ESD})
+m_X = \text{const}\,,\quad R_X(\tau) = E[X(t)\,X(t+\tau)]
 $$
 
-Αλλά για **random processes** (ή genericά power signals), το $X(f) = \mathcal{F}\{x(t)\}$ **δεν είναι καλά ορισμένο** — γιατί το $x(t)$ είναι μια συγκεκριμένη realization, και διαφορετικές realizations δίνουν διαφορετικά $X(f)$.
+Η $R_X(\tau)$ μας λέει **πόσο γρήγορα ξεχνάει** το process — αν η $R_X$ είναι πλατιά, η ΤΔ έχει «μνήμη»· αν είναι στενή, η ΤΔ είναι «γρήγορη». Αλλά αυτό είναι μια **time-domain** περιγραφή. Όταν θέλεις να απαντήσεις ερωτήσεις τύπου:
 
-Σε αυτό το κεφάλαιο **γενικεύουμε** την Wiener-Khinchin για WSS random processes:
+- «Σε ποιες συχνότητες κάθεται η ισχύς του θορύβου;»
+- «Αν περάσω το $X(t)$ μέσα από LPF με cutoff $B$, πόση ισχύς θα μου μείνει;»
+- «Ο θερμικός θόρυβος έχει την ίδια ένταση στα 100 Hz και στα 100 GHz;»
 
-1. Ορίζουμε την **Power Spectral Density (PSD)** $S_X(f)$.
-2. **Wiener-Khinchin theorem** — $S_X(f) = \mathcal{F}\{R_X(\tau)\}$.
-3. Ιδιότητες της PSD.
-4. Παραδείγματα — λευκός θόρυβος, sinusoid, lowpass, bandpass.
-5. Πώς διαβάζουμε ισχύ από την PSD.
-
-## 1. Από ESD σε PSD — γιατί χρειαζόμαστε νέο εργαλείο
-
-Για ντετερμινιστικό σήμα έχουμε **ενέργεια**:
-$$
-E_x = \int |x(t)|^2 dt = \int |X(f)|^2 df
-$$
-
-Αλλά για ένα random process WSS με σταθερή ισχύ, η συνολική ενέργεια είναι **άπειρη** ($\int |X|^2 dt = \infty$) — άρα δεν μπορούμε να ορίσουμε ESD.
-
-Αντί για ενέργεια χρησιμοποιούμε **μέση ισχύ**:
-$$
-P_X = E[X^2(t)] = R_X(0)
-$$
-
-(Από WSS, σταθερή σε όλα τα t.)
-
-Η **PSD** $S_X(f)$ είναι η **κατανομή αυτής της ισχύος στις συχνότητες**:
+… η $R_X(\tau)$ **δεν σου απαντάει κατευθείαν**. Χρειάζεσαι μια **frequency-domain** περιγραφή. Αυτή είναι η Φασματική Πυκνότητα Ισχύος ($\Phi\Pi\text{Ι}$, στα αγγλικά: **Power Spectral Density / PSD**):
 
 $$
-\boxed{\,P_X = \int_{-\infty}^{\infty} S_X(f)\, df\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,S_X(f) \;\triangleq\; \mathcal{F}\{R_X(\tau)\}\,}
 $$
 
-## 2. Wiener-Khinchin theorem — η σύνδεση R_X ↔ S_X
+και το θεώρημα που κλείνει αυτή τη γέφυρα — από $R_X(\tau)$ σε $S_X(f)$ και αντίστροφα — είναι το **Wiener-Khinchin θεώρημα**. Ολόκληρη αυτή η σελίδα δίνει συγκεκριμένη υλική μορφή σε αυτή τη μία γραμμή.
 
-Το θεμελιώδες αποτέλεσμα:
+<Callout type="key" title="Τι ξεκλειδώνει η PSD — πρακτικός χάρτης">
 
-<Callout type="key" title="Wiener-Khinchin (random-signal version)">
-Για WSS random process $X(t)$:
-$$
-\boxed{\,S_X(f) = \mathcal{F}\{R_X(\tau)\} = \int_{-\infty}^{\infty} R_X(\tau)\, e^{-j 2\pi f \tau}\, d\tau\,}
-$$
-και αντιστρόφως:
-$$
-R_X(\tau) = \int_{-\infty}^{\infty} S_X(f)\, e^{j 2\pi f \tau}\, df
-$$
+Η PSD δεν είναι «ένα ακόμη formula»· είναι η **μοναδική γέφυρα** που μετατρέπει WSS από abstract παραδοχή σε εργαλείο που λύνεις προβλήματα μαζί του. Έξι σημεία όπου θα τη χρησιμοποιήσεις στις επόμενες σελίδες:
+
+1. **[/noise/sources](/noise/sources)** — ο θερμικός θόρυβος **ορίζεται** μέσω PSD: $S_N(f) = N_0/2$. Χωρίς PSD, δεν υπάρχει ορισμός του «θερμικού».
+2. **[/noise/white-noise](/noise/white-noise)** — η «λευκότητα» είναι ιδιότητα **της PSD** (επίπεδη), όχι του waveform.
+3. **[/noise/through-filters](/noise/through-filters)** — η μηχανή $S_Y(f) = |H(f)|^2 S_X(f)$ είναι μία γραμμή και απαντάει σε όλο τον LTI-θόρυβο.
+4. **[/noise/bandpass](/noise/bandpass)** — η ισχύς σε ζώνη $[f_c - B, f_c + B]$ είναι $\int_\text{band} S_X(f)\,df$. Δεν υπάρχει $R_X$-based τρόπος.
+5. **[/am/modulator-demodulator](/am/modulator-demodulator)** — η ανάλυση SNR του AM ξεκινάει από PSD θορύβου εισόδου και τελειώνει σε ισχύ θορύβου εξόδου.
+6. **[/fm/in-noise](/fm/in-noise)** — το «τριγωνικό» PSD μετά τον discriminator, που δίνει το $9\beta^2$ gain του FM, βγαίνει αποκλειστικά μέσω PSD-arithmetic.
+
 </Callout>
 
-**Σημαντικό:** η PSD είναι η **FT της autocorrelation** — όχι του ίδιου του σήματος. Η αυτοσυσχέτιση είναι το «μη-τυχαίο πρόσωπο» του random process — όλη η spectral information κρύβεται εκεί.
+**Operational μηχανική.** Από εδώ και κάτω, σε κάθε WSS πρόβλημα έχεις **δύο ισοδύναμα κανάλια** για την ίδια πληροφορία:
 
-🎯 **Κλείνει υπόσχεση** από [`/foundations/fourier-transform §10`](/foundations/fourier-transform#10-wiener-khinchin-and-the-bridge-to-psd): εκεί ορίσαμε τη ντετερμινιστική ESD $|X(f)|^2$ ως FT της autocorrelation. Εδώ εκτείνουμε στο random/power case: η ίδια FT-ταυτότητα ισχύει με PSD αντί ESD.
+| Time domain | Frequency domain |
+| --- | --- |
+| $R_X(\tau)$ — «μνήμη» | $S_X(f)$ — «κατανομή ισχύος ανά Hz» |
+| $R_X(0) = P_X = E[X^2]$ | $\int S_X(f)\,df = P_X$ |
+| ΓΧΑ: $R_Y = R_X * h(\tau) * h(-\tau)$ | ΓΧΑ: $S_Y = \lvert H(f)\rvert^2\,S_X$ |
+| Διπλή συνέλιξη (3 ολοκληρώματα) | Ένας πολλαπλασιασμός |
 
-### Διαισθητική απόδειξη
+Όποτε ο πρώτος δρόμος γίνεται δύσκολος, **μεταβαίνεις στον δεύτερο μέσω WK** — ποτέ δεν χάνεις τίποτα, αφού η ταυτότητα είναι αντιστρέψιμη.
 
-Τυπική **απόδειξη**: ορίζουμε truncated process $X_T(t) = X(t) \cdot \mathrm{rect}(t/2T)$ και υπολογίζουμε $E[|X_T(f)|^2]/(2T)$. Παίρνοντας $T \to \infty$ προκύπτει η Wiener-Khinchin.
+## 2. Ορισμός — slide 36 verbatim
 
-**Διαισθητικά:** η FT της autocorrelation σπάει τη μνήμη του process σε «πόσο γρήγορα ξεχνάει». Αν $R_X(\tau)$ είναι «πλατιά» (αργή λήθη), τότε $S_X(f)$ είναι «στενή» (χαμηλή frequency content). Αν $R_X(\tau)$ είναι **δ-spike** (καμία μνήμη — λευκός θόρυβος), τότε $S_X(f)$ είναι **flat** (όλες οι συχνότητες ίδιες ισχύς).
+Οι διαφάνειες γράφουν (slide 36):
 
-## 3. Ιδιότητες της PSD
+> «Η *φασματική πυκνότητα ισχύος (power spectral density)* ενός σήματος ισχύος προκύπτει από τον μετασχηματισμό Fourier της ΣΑΣ του. Με τον ίδιο τρόπο ορίζεται κι η ΦΠΙ μιας στάσιμης (αυστηρά ή υπό την ευρεία έννοια) ΤΔ.»
 
-| Ιδιότητα | Τύπος | Προέλευση |
+Σε formula form, για WSS ΤΔ $X(t)$:
+
+<Callout type="key" title="Wiener-Khinchin θεώρημα (random-signal version)">
+
+$$
+\boxed{\;S_X(f) \;=\; \int_{-\infty}^{+\infty} R_X(\tau)\, e^{-j 2\pi f \tau}\, d\tau\;}
+$$
+
+$$
+R_X(\tau) \;=\; \int_{-\infty}^{+\infty} S_X(f)\, e^{+j 2\pi f \tau}\, df
+$$
+
+Η $S_X(f)$ είναι ο **FT της αυτοσυσχέτισης** — όχι του ίδιου του σήματος. Η αντίστροφη φορά (inverse WK) δίνει την $R_X$ από την $S_X$, οπότε **οι δύο γνώσεις είναι ισοδύναμες**: ξέρεις τη μία, ξέρεις την άλλη.
+
+</Callout>
+
+**Παρατήρηση κρίσιμης σημασίας — γιατί όχι $\mathcal{F}\{X(t)\}$;** Η ΤΔ $X(t)$ έχει **πλειάδα κυματομορφών-δειγμάτων** $x_i(t)$. Κάθε $x_i$ έχει το δικό της $X_i(f)$ — διαφορετικό σε κάθε realization. Άρα το «$\mathcal{F}$ της ΤΔ» δεν είναι σταθερό, δεν είναι αντικείμενο μελέτης. Αντίθετα, η $R_X(\tau)$ είναι ensemble-average — **το ίδιο για κάθε realization** (για WSS). Άρα ο FT της $R_X$ είναι μια καλά-ορισμένη συνάρτηση συχνότητας: αυτό είναι το «μη-τυχαίο πρόσωπο» του τυχαίου process στο frequency domain.
+
+## 3. Από ESD σε PSD — η ντετερμινιστική γέφυρα (slide 36, session 10)
+
+Η ίδια γραμμή που γράφει η WK για WSS ΤΔ **ήταν ήδη γνωστή** για ντετερμινιστικά σήματα ενέργειας. Οι διαφάνειες (slide 36, session 10) ξεκινούν ακριβώς από εκεί:
+
+<Callout type="note" title="slide 36 (session 10) — η ντετερμινιστική προέλευση">
+
+Για σήμα ενέργειας $x(t)$ με $X(f) = \mathcal{F}\{x(t)\}$:
+
+$$
+\mathcal{F}\{R_x(\tau)\} \;=\; |X(f)|^2 \quad \text{(Energy Spectral Density, ESD)}
+$$
+
+**Απόδειξη** (από το slide):
+
+$$
+\mathcal{F}\{R_x(\tau)\} \;=\; \mathcal{F}\{x(\tau) * x^*(-\tau)\} \;=\; X(f)\, X^*(f) \;=\; |X(f)|^2
+$$
+
+Για **περιοδικό σήμα ισχύος** $x(t)$ ορίζεται κατ' αναλογία:
+
+$$
+S_x(f) \;\triangleq\; \mathcal{F}\{R_x(\tau)\} \quad \text{(Power Spectral Density, PSD)}
+$$
+
+</Callout>
+
+🎯 **Κλείνει υπόσχεση** από [`/foundations/fourier-transform §10`](/foundations/fourier-transform): είχαμε ορίσει εκεί την ντετερμινιστική ESD ως FT της αυτοσυσχέτισης. **Η σελίδα αυτή είναι όπου αυτή η ταυτότητα γενικεύεται** — πάει από «energy signals με $|X|^2$» σε «WSS power signals με $S_X$», και η αλγεβρική μορφή είναι η **ίδια**.
+
+**Γιατί δεν δουλεύει η ESD κατευθείαν στις WSS ΤΔ.** Ένα WSS process έχει **σταθερή μέση ισχύ σε όλους τους χρόνους**. Επομένως η συνολική ενέργεια
+
+$$
+\int_{-\infty}^{\infty} |X|^2 \, dt \;=\; \infty
+$$
+
+— δηλαδή $|X(f)|^2$ δεν υπάρχει ως καλά-ορισμένο πεπερασμένο αντικείμενο. Όμως η **μέση ισχύς ανά μονάδα χρόνου** ($P_X = E[X^2]$) είναι πεπερασμένη και σταθερή — και είναι αυτή ακριβώς που η PSD «σπάει» κατά συχνότητα. Δηλαδή:
+
+$$
+\text{ESD} \to \text{PSD}: \quad |X(f)|^2 \;\longrightarrow\; S_X(f) \;=\; \mathcal{F}\{R_X(\tau)\}
+$$
+
+Η ESD ήταν για «πεπερασμένη ενέργεια απλωμένη στις συχνότητες»· η PSD είναι για «πεπερασμένη μέση ισχύς απλωμένη στις συχνότητες». Ο ίδιος FT-μηχανισμός, διαφορετική **πηγή** (autocorrelation, όχι το σήμα).
+
+## 4. $R_X(0) = P_X$ — γιατί η PSD μετράει ισχύ
+
+Από την αντίστροφη WK, βάζοντας $\tau = 0$:
+
+$$
+R_X(0) \;=\; \int_{-\infty}^{+\infty} S_X(f)\, df
+$$
+
+Αλλά $R_X(0) = E[X(t)^2] = P_X$ (ισχύς, από WSS). Άρα:
+
+$$
+\boxed{\;P_X \;=\; R_X(0) \;=\; \int_{-\infty}^{+\infty} S_X(f)\, df\;} \quad \text{✓ Στο τυπολόγιο μέσω WK}
+$$
+
+**Διάβασμα:** το ολοκλήρωμα της PSD πάνω σε **όλες τις συχνότητες** δίνει τη συνολική ισχύ. Άρα **«ισχύς ανά μονάδα συχνότητας (Hz)»** είναι ο φυσικός μετρητής μονάδων της $S_X(f)$ — μετριέται σε **W/Hz**.
+
+Αυτή η μοναδική εξίσωση είναι **το πιο συχνά εφαρμοζόμενο εργαλείο** σε όλα τα προβλήματα θορύβου: όταν θέλεις «πόση ισχύς υπάρχει σε ζώνη $[f_1, f_2]$», υπολογίζεις:
+
+$$
+P_X^{[f_1, f_2]} \;=\; \int_{f_1}^{f_2} S_X(f)\,df \;+\; \int_{-f_2}^{-f_1} S_X(f)\,df
+$$
+
+(δύο όροι λόγω της δίψας-όψεως PSD που χρησιμοποιεί το course — δες §5).
+
+## 5. Ιδιότητες της PSD — τι κληρονομεί από την $R_X$
+
+Οι ιδιότητες της PSD προκύπτουν **όλες ως άμεσες συνέπειες** των αντίστοιχων ιδιοτήτων της $R_X(\tau)$ (που μάθαμε στην [`/randomness/stationarity §5`](/randomness/stationarity)):
+
+| Ιδιότητα της $R_X(\tau)$ | Συνέπεια για $S_X(f)$ | Γιατί |
 | --- | --- | --- |
-| Πραγματική | $S_X(f) \in \mathbb{R}$ | $R_X$ είναι real → FT είναι real για άρτια |
-| Άρτια | $S_X(-f) = S_X(f)$ | $R_X$ είναι άρτια → FT είναι άρτια real |
-| Μη-αρνητική | $S_X(f) \geq 0$ | non-negative definiteness της $R_X$ |
-| Συνολική ισχύς | $\int S_X df = R_X(0) = P_X$ | Από WK με $\tau = 0$ |
-| Bandpass / lowpass | $S_X$ έχει υποστήριξη μόνο όπου το process έχει frequency content | by definition |
+| $R_X(\tau) \in \mathbb{R}$ | $S_X(-f) = S_X^*(f)$ | FT πραγματικής συνάρτησης είναι Hermitian |
+| $R_X(-\tau) = R_X(\tau)$ (άρτια) | $S_X(f) \in \mathbb{R}$ (πραγματική) | FT πραγματικής-άρτιας είναι πραγματική-άρτια |
+| $R_X$ real ∧ άρτια | $S_X(f)$ real ∧ άρτια | συνδυασμός των δύο παραπάνω |
+| $\lvert R_X(\tau)\rvert \le R_X(0)$ | $S_X(f) \ge 0$ | Bochner — βλ. παρακάτω |
+| $R_X(0) = P_X$ | $\int S_X(f)\,df = P_X$ | inverse WK με $\tau = 0$ |
 
-**Η μη-αρνητικότητα** $S_X(f) \geq 0$ είναι κρίσιμη — σημαίνει ότι η PSD μετρά **πραγματική ισχύς** σε κάθε συχνότητα. Δεν μπορεί να είναι αρνητική, διαφορετικά «θα έβγαζες ενέργεια» από συχνότητες, που είναι αδύνατο φυσικά.
+**Συνεπώς, για WSS ΤΔ:**
 
-## 4. Παραδείγματα PSD
+$$
+\boxed{\;S_X(f) \in \mathbb{R},\quad S_X(-f) = S_X(f),\quad S_X(f) \ge 0\;}
+$$
 
-Πάμε να συνδέσουμε γνωστά autocorrelation patterns με PSDs:
+**Η μη-αρνητικότητα $S_X(f) \ge 0$** είναι η πιο βαθιά ιδιότητα. Δεν προκύπτει από απλή Fourier-arithmetic· προκύπτει από το **θεώρημα Bochner**: η $R_X(\tau)$ είναι **positive semi-definite** function (consequence του ότι είναι μέση τιμή του γινομένου $X(t)X(t+\tau)$, που με κατάλληλα τεστ-σήματα δίνει πάντα μη-αρνητικά εσωτερικά γινόμενα). Το αντίστροφο: το $S_X(f) \ge 0$ **επιβάλλεται φυσικά** γιατί το $S_X(f)\,df$ είναι «μέση ισχύς σε λεπτή ζώνη $df$» — δεν μπορεί να είναι αρνητική ποσότητα.
+
+<Callout type="warning" title="Παγίδα — «$R_X(\tau) < 0$ σε κάποιο $\tau$» δεν σημαίνει «$S_X(f) < 0$»">
+
+Η $R_X(\tau)$ **μπορεί** να πάρει αρνητικές τιμές — π.χ. random-phase cosine: $R_X(\tau) = (A^2/2)\cos(2\pi f_0 \tau)$. Στα $\tau = T/2$ (μισή περίοδος) η $R_X$ είναι ακριβώς $-A^2/2 < 0$. Αυτό **δεν παραβιάζει** τη μη-αρνητικότητα της PSD — η αρνητική $R_X$ είναι συνέπεια της correlation, ενώ η PSD μετράει **ισχύ ανά Hz** που είναι θετική ποσότητα. Στο παρόν παράδειγμα: $S_X(f) = (A^2/4)\bigl[\delta(f - f_0) + \delta(f + f_0)\bigr] \ge 0$ ✓.
+
+</Callout>
+
+**Δίψα-όψεως ή μονή-όψεως PSD;** Στο μάθημα δουλεύουμε με **two-sided PSD** ($-\infty < f < \infty$), όπου ο λευκός θόρυβος έχει $S_N(f) = N_0/2$ (όχι $N_0$). Η ισχύς προκύπτει διπλασιάζοντας το θετικό-όψεως ολοκλήρωμα — π.χ. λευκός θόρυβος μέσα σε zone $|f| \le B$ έχει $P = \int_{-B}^{B} (N_0/2)\,df = N_0 B$. Πρακτικά laboratory βιβλία γράφουν συχνά «one-sided PSD» $G_N(f) = N_0$ μόνο για $f > 0$ — προσοχή στις μετατροπές αν διαβάζετε μικτές πηγές.
+
+## 6. Παραδείγματα — 4 κανονικές αντιστοιχίες $R_X \leftrightarrow S_X$
+
+Πριν προχωρήσουμε στα LTI-results, ας δούμε πώς συμπεριφέρονται οι τέσσερις πιο συχνές περιπτώσεις, με τη βοήθεια του AutocorrelationViz: για κάθε επιλογή (preset) σχεδιάζονται **side-by-side** το $R_X(\tau)$ και η $S_X(f)$ — έτσι «πιάνεις στο μάτι» ότι **πλατιά $R_X$ ↔ στενή $S_X$** και αντίστροφα (η αντίστροφη σχέση χρόνου-συχνότητας του FT).
 
 <AutocorrelationViz />
 
-### (α) Λευκός θόρυβος
+<Callout type="intuition" title="Πώς να διαβάσεις τα 4 presets">
 
-$R_X(\tau) = (N_0/2)\, \delta(\tau)$ → $S_X(f) = N_0/2$ (επίπεδη).
+- **«Λευκός θόρυβος»** ($R_X = (N_0/2)\delta(\tau)$ → $S_X = N_0/2$, επίπεδη). **Καμία μνήμη** στον χρόνο ⇔ **όλες οι συχνότητες ίδια ισχύς**. Η ιδανική «λευκότητα» — όνομα από το λευκό φως που περιέχει όλα τα μήκη κύματος ισόποσα.
+- **«$\cos(2\pi f_0 t + \Theta)$»** (random-phase cosine, βλ. [`/randomness/stationarity §6`](/randomness/stationarity)). $R_X(\tau) = (A^2/2)\cos(2\pi f_0 \tau)$ → $S_X(f) = (A^2/4)\bigl[\delta(f-f_0) + \delta(f+f_0)\bigr]$. **Όλη η ισχύς συγκεντρωμένη σε δύο impulses στις $\pm f_0$** — λογικό, αφού ο sinusoid έχει μία και μόνο συχνότητα.
+- **«Lowpass-bandlimited»** $S_X(f) = N_0/2$ μέσα σε $|f| \le B$, αλλιώς 0. Από inverse WK: $R_X(\tau) = N_0 B \cdot \mathrm{sinc}(2B\tau)$. **«Αργή» σχέση** μνήμης — όσο μικρότερο το $B$, τόσο πιο πλατύ το sinc, τόσο πιο πολλή «μνήμη» κρατάει ο θόρυβος. Αυτό είναι το **PSD-μοντέλο** του θερμικού θορύβου μετά από LPF.
+- **«Bandpass»** $S_X(f) = N_0/2$ σε $|f \pm f_c| \le B$. $R_X(\tau) = 2N_0 B\cdot \mathrm{sinc}(2B\tau)\cdot\cos(2\pi f_c \tau)$ — sinc-envelope × carrier. **Bandpass εκδοχή του lowpass** — η ίδια «αργή» μνήμη, μετατοπισμένη στο $f_c$. Αυτό προετοιμάζει την [`/noise/bandpass`](/noise/bandpass) σελίδα.
 
-**Όνομα:** «λευκός» γιατί όλες οι συχνότητες έχουν **ίδια ισχύ**, όπως το λευκό φως. Στην πράξη, δεν υπάρχει αληθινά λευκός θόρυβος (θα είχε άπειρη ισχύ) — ο θόρυβος που μετράμε είναι «λευκός σε εύρος που μας ενδιαφέρει» (συνήθως μέχρι κάποια GHz).
+</Callout>
 
-### (β) Τυχαίας φάσης sinusoid
+**Reading guide για το viz:** πατώντας από preset σε preset, παρατήρησε ότι **όταν η $R_X$ είναι «πλατιά» η $S_X$ είναι «στενή»** (lowpass), **όταν η $R_X$ είναι «στενή» η $S_X$ είναι «πλατιά»** (white), και **όταν η $R_X$ είναι ταλαντούμενη** η $S_X$ έχει peaks στη συχνότητα ταλάντωσης (cosine, bandpass). Αυτό είναι το κανονικό time-frequency uncertainty principle εφαρμοσμένο σε PSD-arithmetic.
 
-$R_X(\tau) = (A^2/2)\cos(2\pi f_0 \tau)$ → $S_X(f) = (A^2/4)[\delta(f - f_0) + \delta(f + f_0)]$.
+## 7. Η ΦΠΙ της εξόδου ΓΧΑ συστήματος — full slide 37–39 derivation
 
-**Συνέπεια:** όλη η ισχύς $A^2/2$ συγκεντρώνεται σε δύο impulses στις $\pm f_0$. Λογικό — ο sinusoid έχει συγκεκριμένη συχνότητα.
-
-### (γ) Lowpass-bandlimited θόρυβος
-
-Αν $S_X(f) = N_0/2$ για $|f| \leq B$ και 0 αλλιώς (ιδανικό LPF στον λευκό θόρυβο), τότε
-
-$$
-R_X(\tau) = N_0 B \cdot \mathrm{sinc}(2B\tau)
-$$
-
-(η συμμετρική FT του rect είναι sinc).
-
-**Διαβάζεται:** ο θόρυβος μετά από LPF έχει «κάποια μνήμη» — η αυτοσυσχέτιση πέφτει σε αργό sinc, όχι σε δ-spike. Όσο μικρότερο το $B$, τόσο πιο πλατύ το sinc — δηλαδή ο θόρυβος γίνεται πιο «αργός».
-
-### (δ) Bandpass θόρυβος
-
-PSD επίπεδο σε ζώνη $[f_c - B, f_c + B]$ (και συμμετρικά αρνητική) → autocorrelation:
+Έρχεται τώρα το πιο **εξαμηνιαίως-φορτωμένο** αποτέλεσμα της σελίδας: η PSD της εξόδου ΓΧΑ συστήματος. Η εξής εξίσωση είναι η ιδρυτική γλώσσα της επόμενης ομάδας:
 
 $$
-R_X(\tau) = 2 N_0 B \cdot \mathrm{sinc}(2B\tau) \cdot \cos(2\pi f_c \tau)
+\boxed{\;S_Y(f) \;=\; \lvert H(f)\rvert^2 \, S_X(f)\;}
 $$
 
-Δηλαδή lowpass-style envelope πολλαπλασιασμένο με carrier — όπως η bandpass εκδοχή ενός sinc.
+Οι διαφάνειες την κατασκευάζουν σε **τρία βήματα**, αξίζει να τα δεις σύμφωνα με το πλαίσιο τους (slides 37, 38, 39).
 
-<Collectible id="psd-poster" />
+### 7α. Slide 37 — η συνέλιξη (input → output)
 
-## 5. Συνολική ισχύς από την PSD
-
-$$
-P_X = R_X(0) = \int_{-\infty}^{\infty} S_X(f)\, df
-$$
-
-**Πρακτική χρήση:** σε FM-in-noise υπολογισμούς, όπου ο θόρυβος μετά τον discriminator έχει $S_n(f) = N_0 f^2 / A_c^2$ μέσα σε $|f| \leq W$:
+> «Έστω ότι η WSS ΤΔ $X(t)$ διέρχεται από ένα σύστημα ΓΧΑ με κρουστική απόκριση $h(t)$. Ισχύει για τη WSS ΤΔ $Y(t)$ της εξόδου:»
 
 $$
-P_n = \int_{-W}^{W} \frac{N_0 f^2}{A_c^2} df = \frac{2 N_0 W^3}{3 A_c^2}
+Y(t) \;=\; X(t) * h(t) \;=\; \int_{-\infty}^{+\infty} X(\tau)\, h(t - \tau)\, d\tau
 $$
 
-Αυτό ακριβώς εμφανίστηκε στο [/fm/in-noise](/fm/in-noise) Section 4.
+**Σημαντικό background:** όταν περνάς WSS ΤΔ μέσα από ΓΧΑ σύστημα, **η έξοδος είναι κι αυτή WSS** (αυτό είναι θεώρημα, όχι ορισμός). Άρα η $Y(t)$ έχει δική της $R_Y(\tau)$ και $S_Y(f)$, και έχει νόημα να τις υπολογίσουμε.
 
-## 6. Cross-PSD
+### 7β. Slide 38 — από συνέλιξη σε double convolution της $R_X$
 
-Για δύο jointly WSS processes $X(t), Y(t)$:
-
-$$
-S_{XY}(f) = \mathcal{F}\{R_{XY}(\tau)\}
-$$
-
-Γενικά **μιγαδική** (σε αντίθεση με αυτο-PSD που είναι real-even). Ικανοποιεί $S_{XY}(f) = S_{YX}^*(f)$.
-
-Αν τα δύο processes είναι **uncorrelated** ($R_{XY} = 0$), τότε $S_{XY}(f) = 0$ — δηλαδή δεν υπάρχει συσχέτιση σε **καμία** συχνότητα.
-
-## 7. PSD μετά από LTI φίλτρο
-
-**Πανίσχυρο αποτέλεσμα.** Αν περάσεις WSS process $X(t)$ με PSD $S_X(f)$ μέσα από LTI φίλτρο με transfer function $H(f)$, η έξοδος $Y(t)$ είναι WSS και η PSD της είναι:
+Ξεκινώντας από τον ορισμό της $R_Y(\tau)$:
 
 $$
-\boxed{\,S_Y(f) = |H(f)|^2\, S_X(f)\,} \quad \text{✓ Στο τυπολόγιο}
+R_Y(\tau) \;=\; E\bigl[\,Y(t)\,Y(t + \tau)\,\bigr]
 $$
 
-**Παρατηρήσεις:**
-
-- Η φάση του $H(f)$ **δεν** εμφανίζεται — μόνο το μέτρο. Λογικό, αφού η PSD μετρά μόνο ισχύς.
-- Αυτή η εξίσωση είναι **το βασικό εργαλείο** για να αναλύσεις πώς ο θόρυβος αλλάζει μέσα από φίλτρα — που είναι όλη η δουλειά του [Noise group](/noise/sources) που έρχεται.
-
-**Παράδειγμα:** ιδανικό LPF με cutoff $B$ έχει $|H(f)|^2 = 1$ για $|f| \leq B$ και 0 αλλιώς. Αν εισέρχεται λευκός θόρυβος ($S_X = N_0/2$):
-
 $$
-S_Y(f) = (N_0/2) \cdot |H(f)|^2 = N_0/2 \text{ για } |f| \leq B
+=\; E\!\left[\!\int_{-\infty}^{\infty}\!\! X(\tau_1)\,h(t - \tau_1)\,d\tau_1 \cdot \!\!\int_{-\infty}^{\infty}\!\! X(\tau_2)\,h(t + \tau - \tau_2)\,d\tau_2\!\right]
 $$
 
-Output power:
-
 $$
-P_Y = \int S_Y df = (N_0/2)(2B) = N_0 B
+=\; \int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty}\!\! E\bigl[X(\tau_1)\,X(\tau_2)\bigr]\, h(t-\tau_1)\,h(t+\tau-\tau_2)\,d\tau_1\,d\tau_2
 $$
 
-## 8. Worked example — ισχύς θορύβου σε συγκεκριμένη ζώνη
+**Με αλλαγή μεταβλητών** $u = t - \tau_1,\; v = t + \tau - \tau_2$ (slide 38 verbatim βήμα):
 
-<Example title="Ex. — υπολογισμός ισχύος από PSD">
+$$
+=\; \int\!\!\int\, E\bigl[X(t-u)\,X(t+\tau-v)\bigr]\, h(u)\,h(v)\,du\,dv
+$$
 
-Έστω WSS process με PSD $S_X(f) = \frac{2\alpha}{\alpha^2 + 4\pi^2 f^2}$ (Lorentzian — εμφανίζεται σε RC-φιλτραρισμένο λευκό θόρυβο).
+Από WSS, η εσωτερική μέση τιμή εξαρτάται μόνο από τη διαφορά χρόνων: $(t + \tau - v) - (t - u) = \tau + u - v$. Άρα:
 
-**Ζητούνται:** (α) η συνολική ισχύς $P_X$; (β) η αυτοσυσχέτιση $R_X(\tau)$;
+$$
+=\; \int\!\!\int\, R_X(\tau + u - v)\, h(u)\,h(v)\,du\,dv
+$$
+
+**Αναγνώριση ως διπλή συνέλιξη** (το slide-38 closing γραμμή):
+
+$$
+\boxed{\;R_Y(\tau) \;=\; R_X(\tau) \,*\, h(\tau) \,*\, h(-\tau)\;}
+$$
+
+(Το $h(-\tau)$ είναι ο **time-reversed** της κρουστικής απόκρισης — προκύπτει από τη σχέση $\int X(\tau)h(-\tau+v)dv$ που είναι συνέλιξη με $h(-\tau)$.)
+
+### 7γ. Slide 39 — FT της διπλής συνέλιξης = $\lvert H\rvert^2$
+
+Παίρνοντας FT και των δύο πλευρών της παραπάνω, και υπενθυμίζοντας:
+
+- $\mathcal{F}\{x(t) * y(t)\} = X(f)\,Y(f)$
+- $\mathcal{F}\{h(-\tau)\} = H(-f) = H^*(f)$ (όταν $h$ πραγματική)
+
+προκύπτει:
+
+$$
+S_Y(f) \;=\; \mathcal{F}\{R_Y(\tau)\} \;=\; S_X(f)\cdot H(f)\cdot H^*(f) \;=\; S_X(f)\,\lvert H(f)\rvert^2
+$$
+
+που είναι το πολυπόθητο αποτέλεσμα:
+
+$$
+\boxed{\;S_Y(f) \;=\; \lvert H(f)\rvert^2 \, S_X(f)\;,\quad P_Y \;=\; R_Y(0) \;=\; \int_{-\infty}^{\infty} \lvert H(f)\rvert^2\, S_X(f)\, df\;}
+$$
+
+✓ Στο τυπολόγιο **μέσω** της παραπάνω αλυσίδας. Είναι ένα από τα ελάχιστα τυπολογικά αποτελέσματα που στηρίζονται σε WSS και FT ταυτότητες — δεν χρειάζεται μνήμη ξεχωριστά.
+
+<Callout type="key" title="Δύο παρατηρήσεις για τη μηχανή $S_Y = |H|^2 S_X$">
+
+- **Η φάση του $H(f)$ δεν παίζει ρόλο** — μόνο το μέτρο. Λογικό: η PSD μετράει **ισχύ ανά Hz**, και η ισχύς δεν εξαρτάται από φάση.
+- **Η έξοδος είναι αυτόματα WSS** αν η είσοδος είναι WSS και το $h$ είναι σταθερό (LTI). Άρα η $R_Y$ είναι συνάρτηση μόνο της διαφοράς χρόνων, και η αναπαράσταση μέσω $S_Y$ είναι καλά-ορισμένη.
+
+</Callout>
+
+## 8. Το πιο σημαντικό visual — δες την $S_Y = |H|^2 S_X$ μηχανή να δουλεύει
+
+Το παρακάτω viz σου δείχνει σε τρεις στήλες (input PSD, $|H|^2$, output PSD) πώς δουλεύει ο πολλαπλασιασμός $\lvert H(f)\rvert^2 S_X(f)$ για τα τρία πιο συχνά φίλτρα στο μάθημα: ιδανικό LPF, ιδανικό BPF, RC LPF (1-pole).
+
+<NoiseFilterShapingViz />
+
+<Callout type="intuition" title="Reading guide για τα 3 φίλτρα">
+
+- **Ιδανικό LPF (cutoff $B$).** $\lvert H\rvert^2 = 1$ μέσα στο $\lvert f\rvert \le B$, μηδέν αλλιώς. Με input $S_X = N_0/2$ → $S_Y = N_0/2$ μέσα στη ζώνη. **Έξοδος ισχύος:** $P_Y = N_0 B$. Αυτή είναι η περίπτωση που εμφανίστηκε στις 4 ασκήσεις της §6 (slide 39 / [`/noise/through-filters`](/noise/through-filters)).
+- **Ιδανικό BPF (κέντρο $f_c$, εύρος $\Delta B$).** $\lvert H\rvert^2 = 1$ μέσα σε δύο rect-ζώνες $\lvert f \pm f_c\rvert \le \Delta B / 2$. Output: $P_Y = N_0 \Delta B$ (μετράμε **διπλάσιες** ζώνες λόγω two-sided PSD). Αυτό είναι το ίδιο PSD-μοντέλο του bandpass θορύβου της §6, εδώ από LTI-perspective.
+- **RC LPF (1-pole).** $\lvert H(f)\rvert^2 = 1/(1 + (f/f_c)^2)$ — **Lorentzian** σχήμα. Output: $S_Y(f) = (N_0/2)/(1 + (f/f_c)^2)$. Συνολική ισχύς: $P_Y = (N_0 / 2)\cdot \pi f_c = \pi N_0 f_c / 2$. **Σύγκριση με ιδανικό LPF:** το $\pi/2 \approx 1.57\times$ extra noise προέρχεται από τις «ουρές» έξω από $\lvert f\rvert = f_c$ — το πραγματικό RC δεν είναι ιδανικό φίλτρο.
+
+</Callout>
+
+## 9. Cross-PSD — μία πρόταση και τέλος
+
+Για **δύο jointly WSS ΤΔ** $X(t), Y(t)$ ορίζουμε αντίστοιχα:
+
+$$
+S_{X,Y}(f) \;\triangleq\; \mathcal{F}\{R_{X,Y}(\tau)\} \;,\quad R_{X,Y}(\tau) = E[X(t)\,Y(t+\tau)]
+$$
+
+**Γενικά μιγαδική** (σε αντίθεση με την αυτο-PSD που είναι real-even), και ικανοποιεί $S_{X,Y}(f) = S_{Y,X}^*(f)$.
+
+**Πρακτική χρήση:** όταν δύο ΤΔ είναι **ασυσχέτιστες** ($R_{X,Y} = 0$ παντού), τότε $S_{X,Y}(f) = 0$ — δηλαδή **καμία συσχέτιση σε καμία συχνότητα**. Αυτό είναι χρήσιμο όταν αναλύσεις θόρυβο σε κανάλια AM ή FM όπου ο θόρυβος είναι ανεξάρτητος του σήματος.
+
+## 10. Worked example — Lorentzian PSD ⇔ exponential $R_X$
+
+<Example title="Παράδειγμα — υπολογισμός $P_X$ και $R_X$ από Lorentzian PSD">
+
+Έστω WSS ΤΔ με PSD
+
+$$
+S_X(f) \;=\; \frac{2\alpha}{\alpha^2 + (2\pi f)^2}
+$$
+
+(Lorentzian — εμφανίζεται σε RC-φιλτραρισμένο λευκό θόρυβο, βλ. §8 RC LPF).
+
+**Ζητούνται:** (α) η συνολική ισχύς $P_X$ · (β) η αυτοσυσχέτιση $R_X(\tau)$.
 
 ---
 
-**(α) Συνολική ισχύς.**
+**(α) Συνολική ισχύς από inverse WK με $\tau = 0$:**
 
 $$
-P_X = \int_{-\infty}^{\infty} \frac{2\alpha}{\alpha^2 + 4\pi^2 f^2}\, df
+P_X \;=\; \int_{-\infty}^{\infty}\frac{2\alpha}{\alpha^2 + (2\pi f)^2}\,df
 $$
 
-Με αλλαγή μεταβλητής $u = 2\pi f / \alpha$, $df = \alpha\, du/(2\pi)$:
+Με αλλαγή μεταβλητής $u = 2\pi f / \alpha$, $df = \alpha\,du/(2\pi)$:
 
 $$
-= \int_{-\infty}^{\infty} \frac{2\alpha}{\alpha^2(1 + u^2)} \cdot \frac{\alpha}{2\pi}\, du = \frac{1}{\pi}\int_{-\infty}^{\infty} \frac{du}{1 + u^2} = \frac{1}{\pi}[\arctan u]_{-\infty}^{\infty} = \frac{\pi}{\pi} = 1
+= \int_{-\infty}^{\infty}\frac{2\alpha}{\alpha^2(1 + u^2)}\cdot\frac{\alpha}{2\pi}\,du \;=\; \frac{1}{\pi}\!\int_{-\infty}^{\infty}\!\frac{du}{1 + u^2} \;=\; \frac{1}{\pi}\cdot\pi \;=\; 1
 $$
 
-$P_X = 1$.
+(χρησιμοποιήσαμε την ταυτότητα $\int du/(1+u^2) = \arctan u$, σε $\pm\infty$ δίνει $\pi$).
 
-**(β) Autocorrelation.**
+Άρα $P_X = 1$.
 
-Από Wiener-Khinchin και τους πίνακες FT (ή από το τυπολόγιο):
+**(β) Από inverse WK + πίνακα FT pairs:**
+
+Αναγνωρίζουμε ότι $\frac{2\alpha}{\alpha^2 + (2\pi f)^2}$ είναι το **FT της εκθετικής** $e^{-\alpha|\tau|}$. Άρα από inverse WK:
 
 $$
-\frac{2\alpha}{\alpha^2 + 4\pi^2 f^2} \stackrel{\mathcal{F}}{\longleftrightarrow} e^{-\alpha |\tau|}
+R_X(\tau) \;=\; e^{-\alpha|\tau|}
 $$
 
-Άρα $R_X(\tau) = e^{-\alpha|\tau|}$. **Sanity check:** $R_X(0) = 1 = P_X$ ✓.
+**Sanity check:** $R_X(0) = e^0 = 1 = P_X$ ✓. Επίσης $R_X$ άρτια και θετική, $R_X(\tau) \to 0$ όταν $|\tau| \to \infty$ (memory decays) ✓.
 
 </Example>
 
-## 9. Σύνοψη formulas
+## 11. Worked example — λευκός θόρυβος μέσα από LPF (set-up για /noise/through-filters)
 
-| Έννοια | Τύπος |
-| --- | --- |
-| **Wiener-Khinchin (random)** | $S_X(f) = \mathcal{F}\{R_X(\tau)\}$ |
-| Inverse | $R_X(\tau) = \int S_X(f) e^{j 2\pi f \tau} df$ |
-| Total power | $P_X = \int S_X(f) df = R_X(0)$ |
-| Properties | $S_X \geq 0$, real, even |
-| Cross-PSD | $S_{XY}(f) = \mathcal{F}\{R_{XY}(\tau)\}$ (γενικά μιγαδικό) |
-| **Filter output PSD** | $S_Y(f) = \|H(f)\|^2\, S_X(f)$ |
-| Output power | $P_Y = \int \|H(f)\|^2 S_X(f) df$ |
+<Example title="Παράδειγμα — όλη η αλυσίδα PSD → R_X → ισχύς σε εφαρμογή">
 
-## Εξάσκηση
+**Δεδομένα:** WSS λευκός θόρυβος εισόδου με $S_X(f) = N_0/2$ (επίπεδη παντού). Φιλτράρεται μέσα από ιδανικό LPF με cutoff $B$ και $\lvert H(f)\rvert^2 = 1$ για $\lvert f\rvert \le B$, 0 αλλιώς.
 
-<ExerciseProgress slug="randomness/psd" total={5} />
+**Ζητούμενα:** (α) $S_Y(f)$ · (β) $R_Y(\tau)$ · (γ) $P_Y$.
 
-Πέντε ερωτήσεις πάνω στο PSD και τη σχέση του με autocorrelation και LTI φίλτρα.
+---
 
-<ExamProblem id="psd-from-rx" year="Wiener-Khinchin" weight="τύπος">
-**Ερώτηση:** WSS process έχει $R_X(\tau) = e^{-a|\tau|}$ ($a > 0$). Βρες το $S_X(f)$.
+**(α) Output PSD** από slide-39 μηχανή:
+
+$$
+S_Y(f) \;=\; \lvert H(f)\rvert^2 \, S_X(f) \;=\; \frac{N_0}{2}\quad \text{για}\;\lvert f\rvert \le B,\quad 0\;\text{αλλιώς}
+$$
+
+— δηλαδή rect ύψους $N_0/2$ μεταξύ $-B$ και $+B$.
+
+**(β) Output autocorrelation** από inverse WK:
+
+$$
+R_Y(\tau) \;=\; \int_{-B}^{B} \frac{N_0}{2}\, e^{+j2\pi f \tau}\, df \;=\; \frac{N_0}{2}\cdot\frac{e^{j2\pi B\tau} - e^{-j2\pi B\tau}}{j 2\pi \tau}
+$$
+
+$$
+=\; N_0\, B\cdot\frac{\sin(2\pi B \tau)}{2\pi B \tau} \;=\; N_0\, B\cdot\mathrm{sinc}(2B\tau)
+$$
+
+— sinc που πρώτη φορά πέφτει στο μηδέν στα $\tau = 1/(2B)$. Όσο **μικρότερο** το $B$, τόσο **πιο πλατύ** το sinc και τόσο πιο πολλή μνήμη έχει ο φιλτραρισμένος θόρυβος.
+
+**(γ) Output ισχύς** — δύο τρόποι:
+
+$$
+P_Y \;=\; R_Y(0) \;=\; N_0\, B\cdot\mathrm{sinc}(0) \;=\; N_0\, B
+$$
+
+ή ισοδύναμα:
+
+$$
+P_Y \;=\; \int_{-B}^{B}\frac{N_0}{2}\,df \;=\; \frac{N_0}{2}\cdot 2B \;=\; N_0\, B \quad\checkmark
+$$
+
+**Διάβασμα:** ο λευκός θόρυβος (απείρου bandwidth) έχει $R_X(\tau) = (N_0/2)\delta(\tau)$ — άπειρη ισχύς στο μηδέν, μηδενική μνήμη. Μετά από LPF η ισχύς γίνεται πεπερασμένη ($N_0 B$) και ο θόρυβος αποκτά «αργό» χαρακτήρα (sinc memory). **Αυτό ακριβώς είναι το PSD-μοντέλο του bandlimited thermal noise** που εμφανίζεται σχεδόν σε **κάθε** πρόβλημα της επόμενης ομάδας.
+
+</Example>
+
+<Collectible id="psd-poster" />
+
+## 12. Σύνοψη — η μηχανή PSD σε έναν πίνακα
+
+| Έννοια | Τύπος | Πηγή |
+| --- | --- | --- |
+| **Wiener-Khinchin (forward)** | $S_X(f) = \mathcal{F}\{R_X(\tau)\} = \int R_X(\tau)\,e^{-j2\pi f\tau}\,d\tau$ | slide 36 |
+| **Wiener-Khinchin (inverse)** | $R_X(\tau) = \int S_X(f)\,e^{+j2\pi f\tau}\,df$ | slide 36 |
+| **Συνολική ισχύς** | $P_X = R_X(0) = \int S_X(f)\,df$ | inverse WK με $\tau=0$ |
+| **Properties** | $S_X \in \mathbb{R}$, $S_X(-f) = S_X(f)$, $S_X \ge 0$ | §5 (Bochner) |
+| **ESD γέφυρα** | $\mathcal{F}\{R_x(\tau)\} = \lvert X(f)\rvert^2$ (energy signal) | slide 36 (session 10) |
+| **Cross-PSD** | $S_{X,Y}(f) = \mathcal{F}\{R_{X,Y}(\tau)\}$ (γενικά μιγαδική) | §9 |
+| **Συνέλιξη ΓΧΑ output** | $Y(t) = X(t) * h(t)$ | slide 37 |
+| **$R_Y$ μηχανή** | $R_Y(\tau) = R_X(\tau) * h(\tau) * h(-\tau)$ | slide 38 |
+| **$S_Y$ μηχανή (τυπολόγιο)** | $S_Y(f) = \lvert H(f)\rvert^2\, S_X(f)$ | slide 39 |
+| **Output ισχύς ΓΧΑ** | $P_Y = R_Y(0) = \int \lvert H(f)\rvert^2 S_X(f)\,df$ | slide 39 |
+| **Δίψα-όψεως convention** | $S_N(f) = N_0/2$ για λευκό θόρυβο | §5 σύμβαση |
+
+## 13. Εξάσκηση — πέντε προβλήματα + δύο νέα
+
+<ExerciseProgress slug="randomness/psd" total={7} />
+
+Πριν λύσεις τα προβλήματα, σταμάτα και ρώτησε τον εαυτό σου: «**ποια κατεύθυνση** θα δουλέψω — από $R_X$ προς $S_X$ ή ανάποδα; Είναι η ΓΧΑ-έξοδος μηχανή προφανής εφαρμογή ή χρειάζομαι κάποια ταυτότητα του τυπολογίου;» Η αναγνώριση της κατεύθυνσης είναι το 90% της λύσης.
+
+<ExamProblem id="psd-from-rx" year="Wiener-Khinchin → ευθεία φορά" weight="τύπος">
+**Ερώτηση:** WSS ΤΔ έχει $R_X(\tau) = e^{-a|\tau|}$ ($a > 0$). Βρες το $S_X(f)$.
+
+<Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
+Σου δίνεται $R_X$, σου ζητάει $S_X$ — **forward WK**. Πρέπει να αναγνωρίσεις το FT pair $e^{-a|\tau|} \leftrightarrow ?$ από το τυπολόγιο. Είναι από τα **must-memorize** για ΣΕ (εμφανίζεται στις RC-φιλτραρισμένες περιπτώσεις).
+</Callout>
 
 <Example title="Λύση" defaultOpen={true}>
-Από το γνωστό FT pair $e^{-a|\tau|} \leftrightarrow \frac{2a}{a^2 + (2\pi f)^2}$:
+Από το γνωστό FT pair (τυπολόγιο):
 
-$$S_X(f) = \frac{2a}{a^2 + (2\pi f)^2}$$
+$$
+e^{-a|\tau|}\;\stackrel{\mathcal{F}}{\longleftrightarrow}\;\frac{2a}{a^2 + (2\pi f)^2}
+$$
 
-**Σχήμα:** Lorentzian — μέγιστο στο $f = 0$ (ίσο με $2/a$), φθίνει σαν $1/f^2$ στις υψηλές συχνότητες. Συνολική ισχύς: $\int S_X df = R_X(0) = 1$ ✓ (μπορεί να επαληθευτεί με contour integral ή recognition του standard pair).
+Άρα:
 
-Αυτό είναι το PSD μιας exponentially-correlated process — π.χ. RC-filtered θόρυβος.
+$$
+S_X(f) \;=\; \frac{2a}{a^2 + (2\pi f)^2}
+$$
+
+**Σχήμα:** Lorentzian — μέγιστο στο $f = 0$ (ίσο με $2/a$), φθίνει σαν $1/f^2$ στις υψηλές συχνότητες. Συνολική ισχύς: $\int S_X\,df = R_X(0) = 1$ ✓.
+
+**Πρακτικό context:** ένας exponentially-correlated θόρυβος (που εμφανίζεται φυσικά σε RC-φιλτραρισμένο λευκό θόρυβο) έχει Lorentzian PSD. Δες §10 για τον υπολογισμό συνολικής ισχύος και §11 για τη γενική αλυσίδα από PSD σε ισχύ.
 </Example>
+
+**Take-away:** «$e^{-a|\tau|} \leftrightarrow 2a/(a^2 + (2\pi f)^2)$» είναι FT pair που πρέπει να **το έχεις απ' έξω**. Εμφανίζεται 2-3 φορές κάθε χρόνο στα ΣΕ (RC noise, exponentially-correlated processes).
 </ExamProblem>
 
-<ExamProblem id="rx-from-psd" year="Inverse FT" weight="reverse">
-**Ερώτηση:** WSS process έχει $S_X(f) = N_0/2$ για $|f| < W$, αλλιώς 0 (bandlimited white). Βρες το $R_X(\tau)$.
+<ExamProblem id="rx-from-psd" year="Wiener-Khinchin → αντίστροφη φορά" weight="reverse">
+**Ερώτηση:** WSS ΤΔ έχει $S_X(f) = N_0/2$ για $\lvert f\rvert < W$, αλλιώς 0 (bandlimited white). Βρες το $R_X(\tau)$.
 
-<Example title="Λύση">
-Από inverse FT του rect:
-$$R_X(\tau) = \int_{-W}^{W}\frac{N_0}{2}e^{j 2\pi f\tau}\,df = \frac{N_0}{2}\cdot\frac{e^{j 2\pi W\tau} - e^{-j 2\pi W\tau}}{j 2\pi\tau}$$
-
-$$= N_0\,W\cdot\frac{\sin(2\pi W\tau)}{2\pi W\tau} = N_0\,W\,\mathrm{sinc}(2W\tau)$$
-
-**Σχήμα:** sinc, φθίνει σαν $1/\tau$. Στο $\tau = 0$: $R_X(0) = N_0 W$ — η συνολική ισχύς που υπολογίσαμε για bandlimited white στο `/noise/white-noise`. ✓
-
-**Σημασία:** δείγματα του process στα $\tau = k/(2W)$ (δηλαδή Nyquist sample times) είναι **uncorrelated** — γι' αυτό sampling στον Nyquist rate δεν προσθέτει correlation στις samples του θορύβου.
-</Example>
-</ExamProblem>
-
-<ExamProblem id="lti-output-psd" year="LTI" weight="κρίσιμο">
-**Ερώτηση:** White noise PSD $S_X(f) = N_0/2$ διέρχεται από LTI με $|H(f)|^2 = 1/(1 + (f/f_0)^2)$. Βρες το output PSD.
+<Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
+Σου δίνεται $S_X$, σου ζητάει $R_X$ — **inverse WK**. Το $S_X(f)$ είναι rect από $-W$ σε $+W$ με ύψος $N_0/2$. Το FT pair **rect $\leftrightarrow$ sinc** βρίσκεται στο τυπολόγιο — απλώς εφαρμόζεις την inverse FT.
+</Callout>
 
 <Example title="Λύση" defaultOpen={true}>
-$$S_Y(f) = |H(f)|^2 S_X(f) = \frac{N_0/2}{1 + (f/f_0)^2}$$
+Από inverse WK:
 
-**Σχήμα:** Lorentzian, μέγιστο $N_0/2$ στο $f=0$, half-power σε $|f| = f_0$ (το −3 dB σημείο του φίλτρου). Συνολική ισχύς:
-$$P_Y = \int_{-\infty}^{\infty}\frac{N_0/2}{1 + (f/f_0)^2}\,df = \frac{N_0}{2}\cdot\pi f_0 = \frac{\pi N_0 f_0}{2}$$
+$$
+R_X(\tau) \;=\; \int_{-W}^{W}\frac{N_0}{2}\, e^{j 2\pi f\tau}\,df \;=\; \frac{N_0}{2}\cdot\frac{e^{j 2\pi W\tau} - e^{-j 2\pi W\tau}}{j 2\pi\tau}
+$$
 
-(χρησιμοποιώντας $\int dx/(1+x^2) = \pi$ από $-\infty$ έως $\infty$ και αλλαγή μεταβλητής $x = f/f_0$).
+$$
+=\; N_0\,W\cdot\frac{\sin(2\pi W\tau)}{2\pi W\tau} \;=\; N_0\,W\cdot\mathrm{sinc}(2W\tau)
+$$
 
-**Πρακτική σύγκριση:** ένα ιδανικό LP cutoff $f_0$ θα έδινε $P_Y = N_0 f_0$. Το real Lorentzian φίλτρο πιάνει $\pi/2 \approx 1.57\times$ περισσότερο noise (γιατί έχει tails πέρα από $f_0$).
+**Σχήμα:** sinc που πέφτει στο 0 στις πρώτες ρίζες $\tau = k/(2W)$. Στο $\tau = 0$: $R_X(0) = N_0 W$ — ίσο με την ισχύ της bandlimited white (εμφανίζεται στο `/noise/white-noise`). ✓
+
+**Σημασία:** δείγματα του process στα $\tau = k/(2W)$ (Nyquist sample times) είναι **uncorrelated** — γι' αυτό sampling στον Nyquist rate **δεν προσθέτει** correlation στις samples του θορύβου. Αυτό είναι θεμελιώδες αποτέλεσμα στο sampling theorem με θόρυβο.
 </Example>
+
+**Take-away:** rect-PSD ↔ sinc-$R_X$ είναι η **βασική περίπτωση** για όλες τις bandlimited θορύβους — εμφανίζεται κάθε χρόνο στα ΣΕ ως «λευκός θόρυβος μέσα από LPF» και πάντα ξεκλειδώνεται από αυτή τη μία ταυτότητα.
 </ExamProblem>
 
-<ExamProblem id="psd-properties" year="Properties" weight="reality check">
-**Δήλωση:** Για WSS process, το $S_X(f)$ μπορεί να πάρει αρνητικές τιμές αν το $R_X(\tau)$ έχει αρνητικές τιμές.
+<ExamProblem id="lti-output-psd" year="ΓΧΑ output — η κύρια μηχανή" weight="κρίσιμο">
+**Ερώτηση:** Λευκός θόρυβος PSD $S_X(f) = N_0/2$ διέρχεται από ΓΧΑ σύστημα με $\lvert H(f)\rvert^2 = 1/(1 + (f/f_0)^2)$ (1-pole RC LPF). Βρες το output PSD και την συνολική output ισχύ.
+
+<Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
+Σου δίνεται input PSD + filter magnitude squared, σου ζητάει output PSD + ισχύ. Είναι **άμεση εφαρμογή** της slide-39 μηχανής $S_Y = |H|^2 S_X$. Η συνολική ισχύς προκύπτει με ολοκλήρωμα — και το ολοκλήρωμα $\int 1/(1+x^2)\,dx = \arctan x$ είναι στο τυπολόγιο.
+</Callout>
 
 <Example title="Λύση" defaultOpen={true}>
-**Λάθος.** Από Wiener-Khinchin theorem, για WSS process το $S_X(f) \geq 0$ **πάντα**, ανεξαρτήτως αν το $R_X(\tau)$ έχει αρνητικά τμήματα.
+**Βήμα 1: output PSD** από slide-39 μηχανή:
 
-Αυτό είναι θεμελιώδης συνθήκη: το $S_X(f)$ αντιπροσωπεύει **πυκνότητα ισχύος ανά Hz** — και ισχύς δεν μπορεί να είναι αρνητική. Αυτή η non-negativity επιβάλλει περιορισμούς στο $R_X(\tau)$ — είναι **positive semi-definite** (Bochner's theorem), αλλά μπορεί να έχει αρνητικές τιμές σε κάποια $\tau$.
+$$
+S_Y(f) \;=\; \lvert H(f)\rvert^2 \, S_X(f) \;=\; \frac{N_0/2}{1 + (f/f_0)^2}
+$$
 
-**Παράδειγμα:** $R_X(\tau) = \cos(2\pi f_0 \tau)$ (random-phase cosine). Παίρνει αρνητικές τιμές. PSD: $S_X(f) = \frac{1}{2}[\delta(f-f_0) + \delta(f+f_0)]$ — όλα μη-αρνητικά (impulses ύψους 1/2).
+**Σχήμα:** Lorentzian, μέγιστο $N_0/2$ στο $f=0$, half-power σε $\lvert f\rvert = f_0$ (το **−3 dB** σημείο του φίλτρου).
+
+**Βήμα 2: συνολική ισχύς** — ολοκλήρωμα της Lorentzian:
+
+$$
+P_Y \;=\; \int_{-\infty}^{\infty}\frac{N_0/2}{1 + (f/f_0)^2}\,df
+$$
+
+Με $x = f/f_0$, $df = f_0\,dx$:
+
+$$
+=\; \frac{N_0}{2}\,f_0\!\int_{-\infty}^{\infty}\!\frac{dx}{1 + x^2} \;=\; \frac{N_0}{2}\,f_0\cdot\pi \;=\; \frac{\pi N_0 f_0}{2}
+$$
+
+**Πρακτική σύγκριση:** ιδανικό LPF cutoff $f_0$ θα έδινε $P_Y = N_0 f_0$. Το real RC φίλτρο μαζεύει $\pi/2 \approx 1.57\times$ περισσότερο θόρυβο γιατί έχει tails πέρα από $f_0$. **Αυτό είναι σημαντικό σε σχεδιασμό δεκτών:** το «equivalent noise bandwidth» $\pi f_0 / 2$ για RC είναι μεγαλύτερο του naive $f_0$.
 </Example>
+
+**Take-away:** Lorentzian output PSD είναι το **κανονικό μοντέλο** για RC-φιλτραρισμένο λευκό θόρυβο. Το $\pi f_0/2$ noise BW vs naive $f_0$ είναι classic exam trap.
 </ExamProblem>
 
-<ExamProblem id="white-noise-correlation" year="White noise" weight="key insight">
-**Δήλωση:** Λευκός θόρυβος ($S_X(f) = N_0/2$ για κάθε $f$) έχει $R_X(\tau) = (N_0/2)\delta(\tau)$.
+<ExamProblem id="psd-properties" year="Σ/Λ ιδιότητες" weight="reality check">
+**Δήλωση:** Για WSS ΤΔ, το $S_X(f)$ μπορεί να πάρει αρνητικές τιμές αν το $R_X(\tau)$ έχει αρνητικές τιμές.
+
+<Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
+Καθαρό Σ/Λ ερώτημα ιδιότητας. Η μη-αρνητικότητα της PSD είναι μία από τις τρεις θεμελιώδεις ιδιότητες (§5) — προκύπτει από το θεώρημα Bochner και έχει **φυσικό περιεχόμενο** (ισχύς ≥ 0). Η αρνητικότητα της $R_X$ είναι ξεχωριστή ιδιότητα — μπορεί να συμβαίνει χωρίς να παραβιάζει τη μη-αρνητικότητα της PSD.
+</Callout>
 
 <Example title="Λύση" defaultOpen={true}>
-**Σωστό.** Inverse FT του σταθερού $N_0/2$ είναι ακριβώς $(N_0/2)\delta(\tau)$:
-$$\mathcal{F}^{-1}\{N_0/2\} = (N_0/2)\delta(\tau)$$
+**ΛΑΘΟΣ.** Από WK + Bochner, $S_X(f) \ge 0$ **πάντα** για WSS ΤΔ, ανεξάρτητα αν το $R_X(\tau)$ έχει αρνητικά τμήματα.
+
+**Φυσικό περιεχόμενο:** το $S_X(f)$ μετράει **ισχύ ανά Hz** — δεν μπορεί να είναι αρνητική. Αν ήταν, θα έβγαζες ενέργεια από συχνότητες, που είναι φυσικά αδύνατο.
+
+**Παράδειγμα όπου $R_X < 0$ αλλά $S_X \ge 0$:** random-phase cosine με $R_X(\tau) = \cos(2\pi f_0 \tau)$. Στο $\tau = 1/(2 f_0)$ έχουμε $R_X = \cos(\pi) = -1$ ⇒ αρνητική $R_X$. Αλλά $S_X(f) = (1/2)[\delta(f - f_0) + \delta(f + f_0)] \ge 0$ ✓ (impulses ύψους 1/2 — δεν παίρνουν αρνητική τιμή).
+
+**Η μαθηματική σύνδεση:** η συνθήκη $R_X$ positive semi-definite (Bochner) **είναι ασθενέστερη** από την συνθήκη $R_X \ge 0$ παντού — επιτρέπει αρνητικά $R_X$-values, αλλά εξακολουθεί να δίνει $S_X \ge 0$ μέσω του FT-θεωρήματος.
+</Example>
+
+**Take-away:** Μη-αρνητικότητα του PSD ≠ μη-αρνητικότητα της $R_X$. Είναι ασυνήθης παγίδα σε Σ/Λ ερωτήσεις.
+</ExamProblem>
+
+<ExamProblem id="white-noise-correlation" year="Σ/Λ λευκός θόρυβος" weight="key insight">
+**Δήλωση:** Λευκός θόρυβος με PSD $S_X(f) = N_0/2$ για κάθε $f$ έχει $R_X(\tau) = (N_0/2)\delta(\tau)$.
+
+<Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
+Forward WK σε ειδική περίπτωση. **Inverse FT της επίπεδης σταθεράς $N_0/2$ είναι δ-spike.** Είναι η εξαιρετική περίπτωση όπου η PSD είναι σταθερή σε όλες τις συχνότητες — από εκεί το όνομα «λευκός».
+</Callout>
+
+<Example title="Λύση" defaultOpen={true}>
+**ΣΩΣΤΟ.** Inverse FT της σταθεράς $N_0/2$:
+
+$$
+\mathcal{F}^{-1}\{N_0/2\} \;=\; (N_0/2)\,\delta(\tau)
+$$
 
 **Σημασία:**
 - $R_X(\tau) = 0$ για κάθε $\tau \neq 0$ — **uncorrelated samples** σε διαφορετικά time points.
-- $R_X(0) = (N_0/2)\delta(0) = \infty$ — άπειρη ισχύς (γιατί ο λευκός θόρυβος έχει άπειρο bandwidth).
+- $R_X(0) = (N_0/2)\,\delta(0) = \infty$ — άπειρη ισχύς (γιατί ο λευκός θόρυβος έχει άπειρο bandwidth).
 
-Πρακτικά: ο πραγματικός θόρυβος είναι «λευκός» μόνο μέσα σε κάποιο πεπερασμένο bandwidth, οπότε το $R_X(\tau)$ είναι sinc στο πεπερασμένο εύρος ζώνης (όπως είδαμε στην προηγούμενη ερώτηση). Το «λευκό» μοντέλο είναι μαθηματική ιδανικοποίηση.
+**Πρακτικά:** ο πραγματικός θόρυβος είναι «λευκός» μόνο μέσα σε κάποιο **πεπερασμένο bandwidth** (τυπικά μέχρι GHz για τους δέκτες ραδιοκυμάτων). Σε αυτή την περίπτωση το $R_X(\tau)$ είναι sinc στο πεπερασμένο εύρος ζώνης (όπως είδαμε στο `rx-from-psd` πρόβλημα). Το «πραγματικά λευκό» μοντέλο είναι **μαθηματική ιδανικοποίηση** — χρήσιμη γιατί απλοποιεί τους υπολογισμούς και είναι ακριβής για συχνότητες πολύ κάτω του 10^13 Hz σε room temperature.
+
+**Παγίδα:** ο όρος «λευκός» αναφέρεται **στο σχήμα της PSD** (επίπεδο), όχι στην **κατανομή πλάτους**. Λευκός Gaussian θόρυβος (AWGN) είναι μία μόνο εκδοχή· υπάρχει και λευκός non-Gaussian θόρυβος (π.χ. ομοιόμορφος). **Δες παρακάτω `jan26-th1-3` που εμφανίστηκε ως Σ/Λ-παγίδα και το `pa25-th2-2`-style θέματα.**
 </Example>
+
+**Take-away:** «Λευκός» = PSD-σχήμα, όχι κατανομή πλάτους. Η δύο έννοιες είναι **ορθογώνιες**.
 </ExamProblem>
 
-<Recap>
-- Για WSS random process, ορίζουμε **PSD** $S_X(f) = \mathcal{F}\{R_X(\tau)\}$ — η FT της αυτοσυσχέτισης.
-- **Wiener-Khinchin theorem** (random version): η ίδια FT-σχέση που ισχύει για ντετερμινιστικά energy signals (ESD ↔ R) εκτείνεται στο random/power case (PSD ↔ R_X).
-- **Properties:** $S_X \geq 0$, real, even. Συνολική ισχύς $P_X = \int S_X df = R_X(0)$.
-- **Φιλτράρισμα WSS process μέσω LTI:** $S_Y(f) = |H(f)|^2 S_X(f)$ — η PSD πολλαπλασιάζεται με τη squared magnitude του φίλτρου.
-- Αυτή η μηχανή είναι η **βασική γλώσσα** του Noise group που έρχεται. Ξέροντας μόνο PSDs μπορούμε να υπολογίσουμε output noise σε οποιονδήποτε δέκτη.
+<ExamProblem id="psd-thermal-lpf" year="Νέο — θερμικός μέσα από LPF" weight="apps">
+**Ερώτηση:** Θερμικός θόρυβος έχει PSD $S_N(f) = N_0/2 = kT/2$ (με $T$ θερμοκρασία σε K). Διέρχεται από ιδανικό LPF με cutoff $B$. (α) Πόση είναι η output ισχύς $P_N$ ως συνάρτηση των $k$, $T$, $B$; (β) Σε room temperature $T_0 = 290$ K και $B = 1$ MHz, υπολόγισε την τιμή σε dBm.
 
-🎯 **Κλείνει υπόσχεση** από `/foundations/fourier-transform §10` (random-signal Wiener-Khinchin).
+<Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
+Είναι application της slide-39 μηχανής σε **πραγματικά** physical numbers. **(α)** είναι άμεση εφαρμογή του LPF-white-noise παραδείγματος (§11). **(β)** χρειάζεσαι την μετατροπή σε dBm: $P_\text{dBm} = 10\log_{10}(P_\text{W} / 10^{-3})$.
+</Callout>
+
+<Example title="Λύση" defaultOpen={true}>
+**(α)** Από slide-39 μηχανή:
+
+$$
+S_Y(f) \;=\; \lvert H_{\text{LPF}}(f)\rvert^2 \, S_N(f) \;=\; \frac{kT}{2}\quad\text{για}\;\lvert f\rvert \le B,\quad 0\;\text{αλλιώς}
+$$
+
+$$
+P_N \;=\; \int_{-B}^{B}\frac{kT}{2}\,df \;=\; kT\cdot B
+$$
+
+(η κλασική **Johnson-Nyquist** formula).
+
+**(β)** Με $k = 1.38 \cdot 10^{-23}$ J/K, $T = 290$ K, $B = 10^6$ Hz:
+
+$$
+P_N \;=\; (1.38\times 10^{-23})(290)(10^6) \;\approx\; 4 \times 10^{-15}\,\text{W}
+$$
+
+Σε dBm:
+
+$$
+P_{\text{dBm}} \;=\; 10\log_{10}\!\left(\frac{4\times 10^{-15}}{10^{-3}}\right) \;=\; 10\log_{10}(4\times 10^{-12}) \;\approx\; -114\,\text{dBm}
+$$
+
+**Πρακτική σύγκριση:** η συνηθισμένη τιμή στο receiver design είναι **−174 dBm/Hz** (= $S_N$ στα dBm/Hz), και πολλαπλασιάζοντας με $B$ (σε Hz, μετατροπή σε dB: $+10\log_{10} B$) για $B = 10^6$ Hz παίρνεις $-174 + 60 = -114$ dBm ✓.
+
+Αυτό το «**−174 + 10 log B**» είναι η **βασική εκτίμηση thermal noise floor** για κάθε receiver — εμφανίζεται σε design specifications σε όλο το spectrum (cellular, WiFi, satellite).
+</Example>
+
+**Take-away:** Η μηχανή $S_Y = \lvert H\rvert^2 S_X$ + thermal noise PSD $kT/2$ δίνει αμέσως **Johnson-Nyquist** $P_N = kTB$. Στα ΣΕ εμφανίζεται **κάθε χρόνο** σε noise-floor υπολογισμούς (δες ExamRadar §15).
+</ExamProblem>
+
+<ExamProblem id="psd-bandpass-power" year="Νέο — ισχύς σε ζώνη" weight="bandpass">
+**Ερώτηση:** WSS ΤΔ έχει PSD $S_X(f) = e^{-\lvert f\rvert / f_0}$ (εκθετικά φθίνουσα στις συχνότητες). Βρες την ισχύ που περιέχεται στη ζώνη $\lvert f\rvert \le f_0$.
+
+<Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
+Σου ζητάει «ισχύ σε ζώνη», άρα ολοκληρώνεις την PSD πάνω στη ζώνη. Λόγω της δίψας-όψεως convention, το «$\lvert f\rvert \le f_0$» μεταφράζεται σε integral από $-f_0$ έως $+f_0$. Η συμμετρία της PSD ($S_X$ άρτια) απλοποιεί τη δουλειά σε $2\int_0^{f_0}$.
+</Callout>
+
+<Example title="Λύση" defaultOpen={true}>
+$$
+P^{[\lvert f\rvert \le f_0]} \;=\; \int_{-f_0}^{f_0} e^{-\lvert f\rvert / f_0}\,df \;=\; 2\!\int_0^{f_0} e^{-f/f_0}\,df
+$$
+
+$$
+=\; 2\cdot f_0\,[1 - e^{-1}] \;=\; 2 f_0 (1 - 1/e) \;\approx\; 1.264 f_0
+$$
+
+**Σύγκριση με τη συνολική ισχύ:**
+
+$$
+P_X^{\text{total}} \;=\; \int_{-\infty}^{\infty} e^{-\lvert f\rvert / f_0}\,df \;=\; 2 f_0
+$$
+
+— άρα η ζώνη $\lvert f\rvert \le f_0$ περιέχει $(1 - 1/e) \approx 63.2\%$ της συνολικής ισχύος. Αυτό το **63%** είναι η ίδια αρχή με το «time constant» του RC κυκλώματος — μετά από ένα time-constant στο time domain (ή frequency-constant στο frequency domain), έχεις φτάσει στο $1 - 1/e$ του τελικού σου value.
+</Example>
+
+**Take-away:** «Ισχύς σε ζώνη» = $\int_\text{band} S_X\,df$, με προσοχή στη δίψα-όψεως convention (η ζώνη $\lvert f\rvert \le B$ είναι **δύο** symmetric ζώνες στον $f$).
+</ExamProblem>
+
+## 14. Ανακάλεσε — drills
+
+<ReorderDrill
+  id="psd-derivation-pipeline"
+  prompt={<p>Βάλε στη σωστή σειρά τα 5 βήματα της slide-37-39 αλυσίδας — από είσοδο WSS ΤΔ σε output PSD.</p>}
+  steps={[
+    <span>Η είσοδος είναι WSS ΤΔ <InlineMath>{'X(t)'}</InlineMath> με γνωστή <InlineMath>{'R_X(\\tau)'}</InlineMath> ή <InlineMath>{'S_X(f)'}</InlineMath>.</span>,
+    <span>Συνέλιξη στο time-domain: <InlineMath>{'Y(t) = X(t) * h(t)'}</InlineMath> (slide 37).</span>,
+    <span>Διπλή συνέλιξη της <InlineMath>{'R_X'}</InlineMath>: <InlineMath>{'R_Y(\\tau) = R_X(\\tau) * h(\\tau) * h(-\\tau)'}</InlineMath> (slide 38).</span>,
+    <span>FT των δύο πλευρών χρησιμοποιώντας <InlineMath>{'\\mathcal{F}\\{h(-\\tau)\\} = H^*(f)'}</InlineMath>.</span>,
+    <span>Output PSD: <InlineMath>{'S_Y(f) = |H(f)|^2\\, S_X(f)'}</InlineMath> (slide 39, τυπολόγιο).</span>,
+  ]}
+/>
+
+<ClozeDrill
+  id="psd-key-formulas"
+  prompt={<p>Συμπλήρωσε τα κενά της WK μηχανής. Όλα τα blanks αναφέρονται σε γνωστές ταυτότητες της σελίδας — χωρίς να ξανακοιτάς.</p>}
+  parts={[
+    <span>Forward WK: <InlineMath>{'S_X(f) = \\mathcal{F}\\{ '}</InlineMath></span>,
+    { blank: 'wk-arg', accept: ['R_X(τ)', 'R_X(\\tau)', 'RX(τ)', 'R_X', 'Rx(τ)'], hint: 'R_X(τ)' },
+    <span><InlineMath>{' \\}'}</InlineMath>. Inverse WK με τ=0: <InlineMath>{'P_X = R_X(0) = \\int '}</InlineMath></span>,
+    { blank: 'wk-integrand', accept: ['S_X(f) df', 'S_X df', 'SX(f)df', 'S_X(f)\\,df'], hint: 'S_X(f) df' },
+    <span>. Output PSD: <InlineMath>{'S_Y(f) = '}</InlineMath></span>,
+    { blank: 'lti-out', accept: ['|H(f)|^2 S_X(f)', '|H|^2 S_X', '|H(f)|^2*S_X(f)', '|H|² S_X(f)', '|H(f)|²S_X(f)'], hint: '|H|² S_X' },
+    <span>. PSD φυσικά νόημα: είναι </span>,
+    { blank: 'units', accept: ['W/Hz', 'Watt/Hz', 'watt/hz', 'w/hz'], hint: 'μονάδα' },
+    <span>. Bochner: για WSS </span>,
+    { blank: 'sign', accept: ['≥ 0', '>=0', '>= 0', '≥0', 'πάντα θετική', '≥0'], hint: 'πρόσημο' },
+    <span>. Random-phase cosine: <InlineMath>{'R_X(\\tau) = (A^2/2)\\cos(2\\pi f_0 \\tau) \\Rightarrow S_X(f) = '}</InlineMath></span>,
+    { blank: 'rpc-psd', accept: ['(A²/4)[δ(f-f₀)+δ(f+f₀)]', '(A^2/4)[δ(f-f_0)+δ(f+f_0)]', 'A²/4 (δ(f-f_0) + δ(f+f_0))', 'A^2/4 [δ(f-f_0)+δ(f+f_0)]'], hint: 'δύο impulses στα ±f₀' },
+  ]}
+  solution={
+    <ol className="ml-5 list-decimal space-y-1">
+      <li><InlineMath>{'\\mathcal{F}\\{R_X(\\tau)\\}'}</InlineMath></li>
+      <li><InlineMath>{'\\int S_X(f)\\,df'}</InlineMath></li>
+      <li><InlineMath>{'|H(f)|^2\\, S_X(f)'}</InlineMath></li>
+      <li>W/Hz (Watt per Hertz)</li>
+      <li><InlineMath>{'S_X(f) \\ge 0'}</InlineMath> (Bochner)</li>
+      <li><InlineMath>{'(A^2/4)[\\delta(f - f_0) + \\delta(f + f_0)]'}</InlineMath></li>
+    </ol>
+  }
+/>
+
+<RecallDrill
+  id="psd-derive-lti-output"
+  prompt={<p>Από μνήμη, **διαφημίσεις** την αλυσίδα slide 37-38-39: ξεκίνα από <InlineMath>{'Y = X * h'}</InlineMath> και κατάληξε στο <InlineMath>{'S_Y = |H|^2 S_X'}</InlineMath>. Σου ζητείται μόνο το **σκελετό** των βημάτων (3-4 γραμμές), όχι όλη η αλγεβρική παραγωγή. Όταν τελειώσεις, αποκάλυψε και σύγκρινε.</p>}
+  answer={
+    <ol className="ml-5 list-decimal space-y-1.5">
+      <li><strong>Slide 37 input:</strong> <InlineMath>{'Y(t) = X(t) * h(t) = \\int X(\\tau) h(t-\\tau) d\\tau'}</InlineMath>.</li>
+      <li><strong>Slide 38 step 1:</strong> <InlineMath>{'R_Y(\\tau) = E[Y(t) Y(t+\\tau)]'}</InlineMath> = double integral με <InlineMath>{'E[X(\\tau_1) X(\\tau_2)]'}</InlineMath> ως integrand.</li>
+      <li><strong>Slide 38 step 2:</strong> Αλλαγή μεταβλητών u, v + WSS ⇒ <InlineMath>{'R_Y(\\tau) = R_X(\\tau) * h(\\tau) * h(-\\tau)'}</InlineMath>.</li>
+      <li><strong>Slide 39:</strong> FT των δύο πλευρών χρησιμοποιώντας <InlineMath>{'\\mathcal{F}\\{h(-\\tau)\\} = H^*(f)'}</InlineMath> και <InlineMath>{'H \\cdot H^* = |H|^2'}</InlineMath>. Συνεπώς: <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f)'}</InlineMath>. Ολοκλήρωση δίνει <InlineMath>{'P_Y = \\int |H|^2 S_X\\, df'}</InlineMath>.</li>
+    </ol>
+  }
+/>
+
+## 15. Αναγνώρισε — πώς θα δεις την PSD σε εξέταση
+
+<ThinkingPattern
+  signals={[
+    'φασματική πυκνότητα ισχύος',
+    'ΦΠΙ',
+    'PSD',
+    'λευκός θόρυβος',
+    'kT/2',
+    'N₀/2',
+    'thermal noise',
+    'φέρεται μέσα από φίλτρο',
+    'output ισχύς μετά το φίλτρο',
+    'noise floor',
+    'Wiener-Khinchin',
+    'autocorrelation της εξόδου',
+    'συσχέτιση εξόδου ΓΧΑ',
+  ]}
+>
+  <p>**Αν δεις PSD-ορολογία**, σχεδόν πάντα ζητείται **μία από τρεις** μηχανές της σελίδας:</p>
+  <ol className="ml-5 list-decimal space-y-1.5">
+    <li><strong>Forward WK</strong> — δίνεται <InlineMath>{'R_X(\\tau)'}</InlineMath>, ζητείται <InlineMath>{'S_X(f)'}</InlineMath>. Αναγνώρισε FT pair από τυπολόγιο: exponential ↔ Lorentzian, rect ↔ sinc, cos ↔ impulses, δ ↔ flat.</li>
+    <li><strong>Inverse WK + ολοκλήρωμα</strong> — δίνεται <InlineMath>{'S_X(f)'}</InlineMath>, ζητείται <InlineMath>{'P_X'}</InlineMath> (συνολική ή ζώνης). Ολοκλήρωσε την PSD πάνω στη ζώνη που ζητείται.</li>
+    <li><strong>ΓΧΑ output PSD</strong> — δίνεται input PSD + <InlineMath>{'|H(f)|^2'}</InlineMath>, ζητείται output PSD ή <InlineMath>{'P_Y'}</InlineMath>. Πολλαπλασιασμός στο frequency domain, μετά ολοκλήρωση αν χρειάζεται ισχύς.</li>
+  </ol>
+  <p>**Σ/Λ-παγίδες**: «λευκός θόρυβος = Gaussian», «αν <InlineMath>{'R_X < 0'}</InlineMath> τότε <InlineMath>{'S_X < 0'}</InlineMath>», «η φάση του φίλτρου επηρεάζει την output PSD». Όλες ΛΑΘΟΣ — δες τα aντίστοιχα ExamProblems της §13.</p>
+</ThinkingPattern>
+
+<ExamRadar
+  topic="random"
+  ids={[
+    { id: 'jun25-th1-9', likelihood: 'high', note: 'PSD θερμικού θορύβου — άμεση εφαρμογή του ορισμού S_N(f) = N_0/2 = kT/2.' },
+    { id: 'sept25-th3-10', likelihood: 'high', note: 'PSD θερμικού + ισχύς σε ζώνη B → Johnson-Nyquist P = kTB. Δες §13 πρόβλημα psd-thermal-lpf.' },
+    { id: 'sept25-th3-11', likelihood: 'high', note: 'Άμεση εφαρμογή S_Y = |H|² S_X για λευκό θόρυβο μέσα από LPF — η κύρια μηχανή της §7-§8.' },
+    { id: 'jun25-th1-10', likelihood: 'high', note: 'Λευκός μέσα από LPF + HPF — δύο εφαρμογές της slide-39 μηχανής. Output autocorrelation μέσω inverse WK.' },
+    { id: 'jan26-th1-3', likelihood: 'medium', note: 'Σ/Λ — «λευκός θόρυβος ⇔ Gaussian PDF». Σιωπηρή παγίδα: PSD-shape ≠ amplitude distribution. Δες §13 white-noise-correlation Take-away.' },
+    { id: 'lec-rp-2', likelihood: 'medium', note: 'Foundational — random-phase cosine WSS + ergodic. Από εκεί φτάνεις στη PSD = δύο impulses στα ±f_0 (preset #2 του AutocorrelationViz της §6).' },
+  ]}
+/>
+
+## 16. Πού θα χρειαστείς την PSD στις επόμενες σελίδες
+
+- **[/noise/sources](/noise/sources)** — ο θερμικός θόρυβος **ορίζεται** μέσω PSD. Όλη η δουλειά εκεί είναι «PSD identity για διαφορετικές πηγές» (resistor, antenna, amplifier).
+- **[/noise/white-noise](/noise/white-noise)** — λευκός = επίπεδη PSD. Παράγωγα: $R_X(\tau) = (N_0/2)\delta(\tau)$, $P_X = \infty$ θεωρητικά, $N_0 B$ μετά από LPF.
+- **[/noise/through-filters](/noise/through-filters)** — **καθαρή εφαρμογή** της §7-§8 μηχανής. Όλη η σελίδα είναι παραδείγματα του $S_Y = \lvert H\rvert^2 S_X$.
+- **[/noise/bandpass](/noise/bandpass)** — bandpass noise → I/Q decomposition $n(t) = n_I(t)\cos(2\pi f_c t) - n_Q(t)\sin(2\pi f_c t)$, με PSD-arithmetic για κάθε component.
+- **[/am/modulator-demodulator](/am/modulator-demodulator)** — SNR εισόδου = $P_s / P_n$ όπου $P_n = \int S_n(f) df$ μέσα στο bandwidth του receiver.
+- **[/fm/in-noise](/fm/in-noise)** — το «τριγωνικό» output noise PSD $S_n^\text{out}(f) = N_0 f^2 / A_c^2$ μέσα σε $\lvert f\rvert \le W$ προκύπτει από την $|H_\text{disc}|^2 = (2\pi f / A_c)^2$ μηχανή — δίνει το χαρακτηριστικό FM gain $3\beta^2(\beta+1)$.
+- **[/foundations/fourier-transform §10](/foundations/fourier-transform)** — η αρχική ESD ταυτότητα που γενικεύσαμε εδώ. Η §10 του fourier-transform είναι ο deterministic precursor αυτής της σελίδας.
+
+## 17. Συμπύκνωσε — όλη η σελίδα
+
+<RecallCard
+  variant="summary"
+  keywords={[
+    'PSD = ΦΠΙ = F{R_X(τ)}',
+    'Wiener-Khinchin: forward + inverse',
+    'P_X = R_X(0) = ∫S_X df',
+    'S_X(f) ≥ 0 (Bochner)',
+    'S_X(f) real, even',
+    'W/Hz (Watt per Hz)',
+    'ESD γέφυρα: |X(f)|² για energy',
+    'S_Y(f) = |H(f)|² S_X(f)',
+    'R_Y = R_X * h * h(-τ)',
+    'Δίψα-όψεως: N_0/2 για λευκό',
+    'rect ↔ sinc στις 4 περιπτώσεις',
+    'Lorentzian ↔ exponential R_X',
+  ]}
+  skeleton={[
+    'Πριν αγγίξεις τη σελίδα: επιβεβαίωσε ότι η ΤΔ είναι WSS. Αν δεν είναι, δεν έχεις PSD.',
+    'Αν δίνεται R_X, εφαρμόζεις forward WK: ξεψαχνίζεις FT pair από τυπολόγιο.',
+    'Αν δίνεται S_X, εφαρμόζεις inverse WK (ή recognize pair) για R_X, μετά τ=0 για P_X.',
+    'Αν ζητείται ισχύς σε ζώνη: ∫_band S_X df, με προσοχή στη δίψα-όψεως convention (διπλάσιες ζώνες).',
+    'Αν περνάει μέσα από ΓΧΑ: εφάρμοσε S_Y = |H|² S_X κατευθείαν στο frequency domain — αποφεύγεις τη διπλή συνέλιξη.',
+    'Sanity checks: P_X ≥ 0; S_X(-f) = S_X(f); R_X(0) = P_X.',
+  ]}
+  trap={
+    <>
+      <strong>Τρεις διακριτές παγίδες:</strong> (α) «<InlineMath>{'R_X < 0'}</InlineMath> ⇒ <InlineMath>{'S_X < 0'}</InlineMath>» — ΛΑΘΟΣ, Bochner εξασφαλίζει <InlineMath>{'S_X \\ge 0'}</InlineMath> ανεξάρτητα. (β) «λευκός θόρυβος = Gaussian» — ΛΑΘΟΣ, λευκό αναφέρεται σε PSD-σχήμα, Gaussian σε amplitude distribution. (γ) «η φάση του φίλτρου επηρεάζει output ισχύ» — ΛΑΘΟΣ, μόνο <InlineMath>{'|H|^2'}</InlineMath> εμφανίζεται στη slide-39 μηχανή.
+    </>
+  }
+/>
+
+<Recap>
+- Για WSS ΤΔ, ορίζεται **PSD** <InlineMath>{'S_X(f) = \\mathcal{F}\\{R_X(\\tau)\\}'}</InlineMath> — η FT της αυτοσυσχέτισης.
+- **Wiener-Khinchin** (slide 36): forward + inverse FT pair για <InlineMath>{'R_X \\leftrightarrow S_X'}</InlineMath>. Γενικεύει την ντετερμινιστική ESD ταυτότητα <InlineMath>{'\\mathcal{F}\\{R_x\\} = |X(f)|^2'}</InlineMath>.
+- **Properties:** <InlineMath>{'S_X \\in \\mathbb{R}'}</InlineMath>, άρτια, **non-negative** (Bochner). Συνολική ισχύς <InlineMath>{'P_X = R_X(0) = \\int S_X df'}</InlineMath>.
+- **AutocorrelationViz §6:** 4 canonical pairs (white, cosine, lowpass, bandpass) — visualize την time-frequency δυϊκότητα.
+- **ΓΧΑ μηχανή (slides 37-39):** <InlineMath>{'R_Y = R_X * h * h(-\\tau)'}</InlineMath> στο time domain, <InlineMath>{'S_Y = |H|^2 S_X'}</InlineMath> στο frequency domain. **Η φάση του H δεν παίζει ρόλο.**
+- **NoiseFilterShapingViz §8:** ιδανικό LPF/BPF + RC δείχνουν τη slide-39 μηχανή σε action.
+- **Εφαρμογές:** όλη η Noise group (sources, white, through-filters, bandpass) χρησιμοποιεί αυτές τις 4 ταυτότητες ως **καθημερινό λεξιλόγιο**.
+
+🎯 **Κλείνει υπόσχεση** από [`/foundations/fourier-transform §10`](/foundations/fourier-transform) — η deterministic Wiener-Khinchin έγινε εδώ η random-process generalization.
 </Recap>
 
-Έχουμε ολοκληρώσει την Randomness ομάδα. Επόμενα βήματα: **Noise group** — εφαρμογή όλων αυτών σε θερμικό θόρυβο, λευκό θόρυβο, θόρυβος μέσα από φίλτρα, και SNR.
+## Επόμενο βήμα — η ομάδα Noise
+
+Έχουμε ολοκληρώσει τη **Randomness ομάδα** (5/5 σελίδες): από [`/randomness/why`](/randomness/why) (γιατί), [`/randomness/random-variables`](/randomness/random-variables) (μηχανή ΤΜ), [`/randomness/random-processes`](/randomness/random-processes) (μηχανή ΤΔ), [`/randomness/stationarity`](/randomness/stationarity) (WSS + ergodicity), μέχρι την παρούσα PSD.
+
+Από εδώ, **κάθε page της Noise group εφαρμόζει αυτές τις 4 ταυτότητες**:
+
+- **[/noise/sources](/noise/sources)** — οι πηγές θορύβου (θερμικός, shot, flicker) ορίζονται μέσω PSD.
+- **[/noise/white-noise](/noise/white-noise)** — λευκός = επίπεδη PSD, δ-spike $R_X$.
+- **[/noise/through-filters](/noise/through-filters)** — εξάσκηση πάνω στην $S_Y = \lvert H\rvert^2 S_X$ μηχανή.
+- **[/noise/bandpass](/noise/bandpass)** — bandpass θόρυβος → I/Q components για AM/FM analyses.
+- **[/noise/snr](/noise/snr)** — SNR ορισμός μέσω $P_s / P_n$, όπου τα δύο noise-ισχύς υπολογίζονται από PSD.
+
+Όλα αυτά είναι **εφαρμογές** του Wiener-Khinchin και της slide-39 μηχανής — όχι νέοι ορισμοί. Αν έχεις απορία στη μηχανή, **γύρισε εδώ**.
