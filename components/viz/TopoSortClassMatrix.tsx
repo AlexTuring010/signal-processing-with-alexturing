@@ -19,6 +19,7 @@
 import { useMemo, useState } from 'react'
 import { RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { routeEdge, trimEdgeGeom, type NodeRect } from './edge-routing'
 
 type ClassId = 'weights' | 'dag' | 'tree' | 'bipartite'
 
@@ -159,6 +160,43 @@ const CLASS_TABS: { id: ClassId; label: string; sub: string }[] = [
   { id: 'tree', label: '(iii) Δέντρο', sub: 'ok' },
   { id: 'bipartite', label: '(iv) Διμερές', sub: 'fail' },
 ]
+
+// ── EDGE ROUTING ───────────────────────────────────────────────────────────
+//
+// Each of the 4 tabs has a constant directed layout, so we build one rect set
+// per instance at module scope (mirror of B6's `LayeredSubsetsDAG` two-tab
+// pattern, scaled to 4 tabs). The `GraphSvg` renderer picks the right set
+// via the live `inst` object reference — no extra prop needed.
+//
+// Asymmetric trim: source by R, target by R+4 — preserves byte-identical
+// arrowhead gap for the line case (the pre-retrofit local trim used the
+// same R/R+4 pair).
+const R = 18
+
+function buildRects(inst: Instance): {
+  rects: ReadonlyArray<NodeRect>
+  byId: Record<string, NodeRect>
+} {
+  const rects: NodeRect[] = inst.vertices.map((v) => ({
+    id: v.id,
+    x: v.x - R,
+    y: v.y - R,
+    w: 2 * R,
+    h: 2 * R,
+  }))
+  const byId = Object.fromEntries(rects.map((r) => [r.id, r])) as Record<
+    string,
+    NodeRect
+  >
+  return { rects, byId }
+}
+
+const RECT_SETS_BY_INST = new Map<Instance, ReturnType<typeof buildRects>>([
+  [INSTANCES.weights, buildRects(INSTANCES.weights)],
+  [INSTANCES.dag, buildRects(INSTANCES.dag)],
+  [INSTANCES.tree, buildRects(INSTANCES.tree)],
+  [INSTANCES.bipartite, buildRects(INSTANCES.bipartite)],
+])
 
 type Phase = {
   /** vertices already pulled into the order, in pull-order */
@@ -418,9 +456,21 @@ export function TopoSortClassMatrix() {
 function GraphSvg({ inst, phase }: { inst: Instance; phase: Phase }) {
   const W = 440
   const H = 220
-  const r = 18
+  const r = R
 
   const vertexById = Object.fromEntries(inst.vertices.map((v) => [v.id, v]))
+  const rectSet = RECT_SETS_BY_INST.get(inst)!
+
+  function routedEdge(fromId: string, toId: string) {
+    const ra = rectSet.byId[fromId]
+    const rb = rectSet.byId[toId]
+    const ax = ra.x + ra.w / 2
+    const ay = ra.y + ra.h / 2
+    const bx = rb.x + rb.w / 2
+    const by = rb.y + rb.h / 2
+    const geom = routeEdge(ra, rb, rectSet.rects)
+    return trimEdgeGeom(geom, ax, ay, R, bx, by, R + 4)
+  }
 
   return (
     <svg
@@ -469,15 +519,7 @@ function GraphSvg({ inst, phase }: { inst: Instance; phase: Phase }) {
       {inst.edges.map((e, i) => {
         const a = vertexById[e.from]
         const b = vertexById[e.to]
-        const dx = b.x - a.x
-        const dy = b.y - a.y
-        const len = Math.sqrt(dx * dx + dy * dy)
-        const ux = dx / len
-        const uy = dy / len
-        const x1 = a.x + ux * r
-        const y1 = a.y + uy * r
-        const x2 = b.x - ux * (r + 4)
-        const y2 = b.y - uy * (r + 4)
+        const g = routedEdge(e.from, e.to)
         const removed = phase.removedEdges.has(edgeKey(e))
         const sourceOrdered = phase.ordered.includes(e.from)
         const targetOrdered = phase.ordered.includes(e.to)
@@ -494,21 +536,38 @@ function GraphSvg({ inst, phase }: { inst: Instance; phase: Phase }) {
           : stuck
             ? 'url(#topo-arrow-cycle)'
             : 'url(#topo-arrow)'
-        // mid label position for weight
-        const mx = (x1 + x2) / 2
-        const my = (y1 + y2) / 2
+        // Label midpoint: trimmed line midpoint (byte-identical to the
+        // pre-retrofit `(x1+x2)/2` output) or Bezier midpoint
+        // `(P0 + 2Q + P2) / 4` for curves (P0/P2 = untrimmed centers).
+        const mx =
+          g.kind === 'line' ? (g.x1 + g.x2) / 2 : (a.x + b.x + 2 * g.cx) / 4
+        const my =
+          g.kind === 'line' ? (g.y1 + g.y2) / 2 : (a.y + b.y + 2 * g.cy) / 4
+        const strokeWidth = stuck ? 2.5 : 1.6
+        const dashed = removed ? '4 3' : undefined
         return (
           <g key={i}>
-            <line
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
-              stroke={color}
-              strokeWidth={stuck ? 2.5 : 1.6}
-              markerEnd={marker}
-              strokeDasharray={removed ? '4 3' : undefined}
-            />
+            {g.kind === 'line' ? (
+              <line
+                x1={g.x1}
+                y1={g.y1}
+                x2={g.x2}
+                y2={g.y2}
+                stroke={color}
+                strokeWidth={strokeWidth}
+                markerEnd={marker}
+                strokeDasharray={dashed}
+              />
+            ) : (
+              <path
+                d={g.d}
+                fill="none"
+                stroke={color}
+                strokeWidth={strokeWidth}
+                markerEnd={marker}
+                strokeDasharray={dashed}
+              />
+            )}
             {e.weight !== undefined && (
               <text
                 x={mx + 6}

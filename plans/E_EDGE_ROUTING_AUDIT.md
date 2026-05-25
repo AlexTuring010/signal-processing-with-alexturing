@@ -544,14 +544,100 @@ that's the regression channel.
   actually draws. Native-frame rects would silently misalign collision
   testing by the offset.
 
-#### B7.4 — Multi-instance / multi-tab graphs (B6 mirror)
+#### B7.4 — Multi-instance / multi-tab graphs (B6 mirror) ✅ DONE 2026-05-25
 
 2 vizzes with multiple presets / tabs that have DIFFERENT node sets. Mirror
-of B6's `LayeredSubsetsDAG` / `LayeredTripPlanner` pattern — either per-tab
-module-scope rect sets or per-render `useMemo` keyed on the active instance.
+of B6's `LayeredSubsetsDAG` / `LayeredTripPlanner` pattern — module-scope
+per-instance rect sets when the layouts are compile-time constants.
 
-- `components/viz/ComponentsBfsSweep.tsx` (2 presets via `instance` prop: `pt5-th1` = 11 nodes / 3 components / 13 undirected edges; `head-succ` = 8 nodes / 3 components / 6 undirected edges. No weights. Renders without trim — circles drawn center-to-center.)
-- `components/viz/TopoSortClassMatrix.tsx` (4 tabs each with a different directed graph: weights = 4 nodes / 4 edges; dag = 5/5; tree = 7/6; bipartite = 6/7. Weight labels on tab `weights`; arrows on every tab.)
+- `components/viz/ComponentsBfsSweep.tsx` ✅ (2 presets via `instance` prop:
+  `pt5-th1` = 11 vertices / 3 components / 13 undirected edges; `head-succ` =
+  8 letters {a..h} / 3 components / 6 undirected edges; NODE_R=18; module-
+  scope `RECT_SETS: Record<string, ...>` keyed by the `instance` prop value;
+  undirected center-to-center routing — no trim. The «current» vertex
+  transient radius 18→22 bump is exactly absorbed by `routeEdge`'s default
+  padding=4.)
+- `components/viz/TopoSortClassMatrix.tsx` ✅ (4 tabs each with a different
+  directed graph: weights = 4 nodes / 4 edges; dag = 5/5; tree = 7/6;
+  bipartite = 5/5; all R=18 with asymmetric trim source-R / target-R+4
+  preserving the pre-retrofit `(r+4)` arrowhead-gap byte-identical for the
+  line case; module-scope `RECT_SETS_BY_INST: Map<Instance, ...>` keyed by
+  Instance object reference so `GraphSvg` doesn't need an additional
+  `active: ClassId` prop; weight-label position computed from the trimmed
+  line endpoints for the line case (byte-identical to pre-retrofit) and the
+  Bezier midpoint `(A+B+2·Q)/4` for the curve case; markers/strokeDasharray
+  all carry through both `g.kind` branches.)
+
+**Retrofit shape (as executed).** Two patterns applied per file, both
+mirrors of B6 precedents — no new shared helper:
+
+- **Module-scope `Record<key, rectSet>` keyed by discriminating prop (1
+  file):** `ComponentsBfsSweep`. The parent passes `instance: 'pt5-th1' |
+  'head-succ'` as a prop, so the renderer can look up its rect set via
+  `RECT_SETS[instance] ?? RECT_SETS['pt5-th1']`. Both rect sets are built
+  at module load by calling `buildRects(inst)` twice. The undirected
+  routing skips `trimEdgeGeom` — `routeEdge()` returns center-to-center
+  geometry directly. Standing lesson: when the parent already has a
+  discriminating prop, a `Record` keyed by that prop is cleaner than a
+  `Map` keyed by object reference (saves the `.get(...)!` call site).
+- **Module-scope `Map<Instance, rectSet>` keyed by object reference (1
+  file):** `TopoSortClassMatrix`. The parent (`TopoSortClassMatrix`) owns
+  `active: ClassId` state and passes the live `INSTANCES[active]` as the
+  `inst` prop to its `GraphSvg` sub-component. Adding an `active: ClassId`
+  prop to `GraphSvg` would work, but a `Map<Instance, …>` keyed by the
+  Instance object reference avoids the prop-threading entirely — the
+  Instance pointer is already the canonical discriminator. Standing
+  lesson: when a sub-component receives the live `Instance` rather than
+  the discriminating key, a `Map<Instance, …>` keyed by object reference
+  is the cleanest lookup pattern.
+
+**Asymmetric trim preserves byte-identical arrowhead gap.**
+`TopoSortClassMatrix`'s pre-retrofit local trim was `x1 = a + ux·r`,
+`x2 = b − ux·(r+4)` — source by R=18, target by R+4=22. The retrofit
+passes `rA = R, rB = R+4` to `trimEdgeGeom`, preserving the line case
+byte-identical (same endpoint coordinates). Mirror of `MstPreorderTSP`
+(B7.1) asymmetric tour-arrow trim with explicit per-direction radii.
+
+**Weight-label anchor in the asymmetric-trim case.** The pre-retrofit
+label position uses `(x1+x2)/2` where x1/x2 are POST-TRIM coordinates —
+for asymmetric R/R+4 trim this is `(a+b)/2 - 2·u` (shifted 2 px back along
+the segment). To preserve byte-identical visual on the line case, the
+retrofit uses the LINE GEOM's endpoints `(g.x1+g.x2)/2`, not the
+untrimmed-center midpoint formula `(A+B)/2`. The 2-px shift is invisible
+in steady state but the byte-identical contract is what locks future
+asymmetric-trim retrofits. For the curve case, the standard Bezier
+midpoint `(A+B+2·g.cx)/4` applies — the small visual delta from the
+asymmetric trim is sub-pixel.
+
+**Steady-state visual contract:** every retrofitted edge in every B7.4
+viz routes as a line on the current layouts — verified by inspection. No
+B7.4 layout has an unrelated node sitting on any edge centerline (the 4
+directed graphs in `TopoSortClassMatrix` are small and hand-positioned
+with generous margins; the 2 `ComponentsBfsSweep` instances cluster
+vertices within each component into well-separated regions of the
+canvas). The line case is byte-identical to the pre-retrofit output for
+every consumer. No user-visible change today; the value is structural
+lockout per the audit's standing thesis.
+
+**No new tests required.** `routeEdge` / `trimEdgeGeom` were both locked
+by B1's 20-test suite (still 20/20 pass). The two new rect-build
+helpers are trivial coordinate translations from constant data.
+
+**Standing lessons for B7.5:**
+- **Pick the rect-lookup container by who-knows-what.** When the parent
+  already has a discriminating prop (`'pt5-th1' | 'head-succ'`), use a
+  `Record<key, rectSet>` keyed by that prop. When a sub-component
+  receives the live `Instance` object rather than the discriminating
+  key, use a `Map<Instance, rectSet>` keyed by object reference. Both
+  patterns scale to N tabs/instances; both keep the lookup at the
+  module-scope when the layouts are constants.
+- **Asymmetric trim is preserved by passing distinct `rA` / `rB` to
+  `trimEdgeGeom`.** The B-chunk family now has three asymmetric-trim
+  precedents: B5's UF family (`NODE_R` / `NODE_R+{6,7}`), B7.1's
+  `MstPreorderTSP` tour arrows (`R+4` / `R-6`), and B7.4's
+  `TopoSortClassMatrix` (`R` / `R+4`). All three preserve byte-identical
+  visual for the line case by passing the SAME asymmetric `rA`/`rB` pair
+  that the pre-retrofit code used.
 
 #### B7.5 — Bespoke graph scenarios
 

@@ -23,6 +23,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { routeEdge, type NodeRect } from './edge-routing'
 
 type VId = string
 
@@ -108,6 +109,38 @@ const HEAD_SUCC: Instance = {
 const INSTANCES: Record<string, Instance> = {
   'pt5-th1': PT5_TH1,
   'head-succ': HEAD_SUCC,
+}
+
+// ── EDGE ROUTING ───────────────────────────────────────────────────────────
+//
+// Both presets have constant node positions, so we can build one rect set per
+// instance at module scope (mirror of B6's `LayeredSubsetsDAG` — module-scope
+// per-tab rects when each tab's layout is a compile-time constant). The
+// renderer picks the right set via the `instance` prop.
+//
+// Static radius is 18; the «current» vertex bumps to 22 transiently, which
+// `routeEdge`'s default padding of 4 absorbs exactly.
+
+const NODE_R = 18
+
+function buildRects(inst: Instance): {
+  rects: ReadonlyArray<NodeRect>
+  byId: Map<VId, NodeRect>
+} {
+  const rects: NodeRect[] = inst.vertices.map((v) => ({
+    id: v.id,
+    x: v.x - NODE_R,
+    y: v.y - NODE_R,
+    w: 2 * NODE_R,
+    h: 2 * NODE_R,
+  }))
+  const byId = new Map<VId, NodeRect>(rects.map((r) => [r.id as VId, r]))
+  return { rects, byId }
+}
+
+const RECT_SETS: Record<string, ReturnType<typeof buildRects>> = {
+  'pt5-th1': buildRects(PT5_TH1),
+  'head-succ': buildRects(HEAD_SUCC),
 }
 
 // ── STEP STATE ─────────────────────────────────────────────────────────────
@@ -317,6 +350,7 @@ type Props = {
 
 export function ComponentsBfsSweep({ instance = 'pt5-th1', showHeadSucc = false }: Props) {
   const inst = INSTANCES[instance] ?? PT5_TH1
+  const rectSet = RECT_SETS[instance] ?? RECT_SETS['pt5-th1']
   const [steps, setSteps] = useState<State[]>(() => [emptyState(inst)])
   const [k, setK] = useState(0)
   const [playing, setPlaying] = useState(false)
@@ -428,19 +462,30 @@ export function ComponentsBfsSweep({ instance = 'pt5-th1', showHeadSucc = false 
                   ? colourForComponent(ca)
                   : '#cbb3b8'
               const sw = hi ? 4 : sameComp ? 2.4 : 1.6
-              const pa = inst.vertices.find((v) => v.id === e.a)
-              const pb = inst.vertices.find((v) => v.id === e.b)
-              if (!pa || !pb) return null
-              return (
+              const opacity = sameComp || hi ? 1 : 0.6
+              const ra = rectSet.byId.get(e.a)
+              const rb = rectSet.byId.get(e.b)
+              if (!ra || !rb) return null
+              const g = routeEdge(ra, rb, rectSet.rects)
+              return g.kind === 'line' ? (
                 <line
                   key={i}
-                  x1={pa.x}
-                  y1={pa.y}
-                  x2={pb.x}
-                  y2={pb.y}
+                  x1={g.x1}
+                  y1={g.y1}
+                  x2={g.x2}
+                  y2={g.y2}
                   stroke={stroke}
                   strokeWidth={sw}
-                  opacity={sameComp || hi ? 1 : 0.6}
+                  opacity={opacity}
+                />
+              ) : (
+                <path
+                  key={i}
+                  d={g.d}
+                  fill="none"
+                  stroke={stroke}
+                  strokeWidth={sw}
+                  opacity={opacity}
                 />
               )
             })}
