@@ -227,6 +227,22 @@ justify a static SVG by «it's faster»»).
   executor disagrees on second read. If retrofit: static SVG, simple
   shop scene with labeled stations.
 - **Chunk**: B (only if executor confirms it's a real gap).
+- **Confirmed-skip (2026-05-25).** Re-audited on second read with the
+  binding standard «answer honestly. If the scenario is dynamic, build
+  the interactive; do not justify a static SVG by «it's faster»» in
+  hand: the Gantt's two-row layout already encodes the scenario's
+  load-bearing structure — the top row labelled «Έλεγχος» renders the
+  five `s_i` blocks back-to-back as the single-server bottleneck, and
+  the five lower rows (each labelled «X πλύση») render the `p_i`
+  parallel rectangles starting exactly when each item's check ends. So
+  «one serial machine + N parallel machines» is visible at a glance
+  with widths to scale. A literal cleaner-shop SVG (Γιώργος icon +
+  check station + N washer pictograms) would re-skin those exact
+  relationships without adding teaching content; the exam expects the
+  student to draw the Gantt, not a shop floor plan, and the prose
+  callout already names «η σειριακή φάση είναι η στενωπός · η
+  παράλληλη ξεκινά μόλις τελειώσει η σειριακή ανά εργασία». No real
+  motion is being missed.
 
 ### 4.2 `front-set-7-ask9` — Το πάρτι της Alice
 
@@ -240,6 +256,20 @@ justify a static SVG by «it's faster»»).
   + viz. A separate «Νιώσε» (Alice + named guest list + friendship
   edges) would be a near-duplicate. **Suggested**: skip.
 - **Chunk**: B (only if executor confirms — most likely skipped).
+- **Confirmed-skip (2026-05-25).** Re-audited on second read with the
+  binding standard «is the existing viz IS the scenario picture?»:
+  yes — `<PartyDegreeFilter />` opens with 10 numbered vertices (=
+  υποψήφιοι καλεσμένοι) and 19 undirected edges (= γνωριμίες) laid
+  out as a 6-cycle core + ένας «social butterfly» (vertex 8 with
+  degree 9) + δύο «εξωτερικοί» (vertices 9, 10), exactly the structure
+  the statement names. The two thresholds (≥ K φίλους / ≥ K αγνώστους)
+  are surfaced as live in-graph counters on each guest, and the peel
+  animation IS the scenario's storyline («κάθε αφαίρεση γεννά τον
+  επόμενο»). An «Alice's named-guest-list» tableau (Αλίκη + 10 named
+  cards + acquaintance edges) would just rename the existing vertex
+  ids without changing the picture, and the exam doesn't expect a
+  named-cast picture either — it expects the graph + peeling
+  algorithm. No real motion or scenario element is being missed.
 
 ---
 
@@ -306,5 +336,8 @@ Per `plans/PHASE_E_PLAN.md` § E.4.5:
   - `pt4-th2-a` → static inline SVG (pentagonal 5-city layout, emerald A-B-C triangle, ❄ snowflakes)
   - `pt4-th4` → static inline SVG (♪ ♫ concert pictograms, T-bracket, width-proportional ad-card tray)
   - `front-set-6-ask1` → interactive `<CyclingTripScene />` (day-slider flips edge legality)
-- ☐ E.4.5.B — Chunk B re-audit (optional turn; skip if both
-  borderlines stay skipped)
+- ☑ E.4.5.B — Chunk B re-audit (done 2026-05-25 — both borderlines
+  confirmed-skip on second read; justifications appended to § 4.1 and
+  § 4.2. No code/visual changes per § 5's «if both stay skipped,
+  Chunk B is folded into the wrap-up of Chunk A's commit». Chunk A
+  already shipped in commit `21d88db`.)
