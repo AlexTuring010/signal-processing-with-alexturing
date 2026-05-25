@@ -65,6 +65,9 @@ import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourie
 import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlowViz'
 import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
 import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSeriesViz'
+import { ScalingDualityViz } from '@/components/viz/ScalingDualityViz'
+import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
+import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
 
 const REGISTRY: Record<string, () => ReactNode> = {
   // Foundations · Signal definitions + properties
@@ -108,6 +111,12 @@ const REGISTRY: Record<string, () => ReactNode> = {
   'fourier-convolution': () => <ConvolutionInFrequency />,
   'fourier-modulation-theorem': () => <ModulationTheoremViz />,
   'fourier-freq-shift': () => <ModulationTheoremViz />,
+  'fourier-scaling': () => <ScalingDualityViz />,
+  'ft-periodic-from-pulse': () => <FtAsSampledFsEnvelope />,
+  'cross-correlation': () => <CrossCorrelationPlayground />,
+  autocorrelation: () => <AutocorrelationViz />,
+  'wiener-khinchin-ft': () => <AutocorrelationViz />,
+  parseval: () => <RectToSincViz />,
 
   // AM
   'am-signal': () => <AMSignalViz />,

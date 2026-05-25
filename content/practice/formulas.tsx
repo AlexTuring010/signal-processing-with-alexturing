@@ -453,6 +453,76 @@ export const FORMULA_SHEET: FormulaSection[] = [
         content: <BlockMath>{'\\int |x(t)|^2\\, dt \\;=\\; \\int |X(f)|^2\\, df'}</BlockMath>,
       },
       {
+        id: 'ft-unit-step',
+        title: 'Μοναδιαίο βήμα u(t) ↔ ...',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <BlockMath>{'u(t) \\;\\leftrightarrow\\; \\tfrac{1}{2}\\,\\delta(f) + \\tfrac{1}{j 2\\pi f}'}</BlockMath>
+        ),
+      },
+      {
+        id: 'ft-periodic-from-pulse',
+        title: 'FS συντελεστές = δειγματισμένο FT envelope',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <>
+            <BlockMath>{'x_k \\;=\\; \\frac{1}{T_0}\\, X\\!\\left(\\frac{k}{T_0}\\right)'}</BlockMath>
+            <p className="text-sm text-fg-muted">
+              Αν το <InlineMath>{'x_0(t)'}</InlineMath> είναι ένας μοναδικός παλμός με{' '}
+              <InlineMath>{'\\mathcal{F}\\{x_0\\} = X(f)'}</InlineMath>, οι FS συντελεστές της
+              periodic εκδοχής (με περίοδο <InlineMath>T_0</InlineMath>) είναι samples του{' '}
+              <InlineMath>X(f)</InlineMath> στις αρμονικές <InlineMath>{'k/T_0'}</InlineMath>,
+              διαιρεμένα με <InlineMath>T_0</InlineMath>.
+            </p>
+          </>
+        ),
+      },
+      {
+        id: 'cross-correlation',
+        title: 'Συνάρτηση ετεροσυσχέτισης (ΣΕΣ)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <>
+            <BlockMath>{'R_{xy}(\\tau) \\;=\\; \\int_{-\\infty}^{\\infty} x(t)\\, y^*(t-\\tau)\\, dt \\quad\\text{(energy)}'}</BlockMath>
+            <BlockMath>{'R_{xy}(\\tau) \\;=\\; \\frac{1}{T_0}\\int_{-T_0/2}^{T_0/2} x(t)\\, y^*(t-\\tau)\\, dt \\quad\\text{(periodic ισχύος)}'}</BlockMath>
+            <BlockMath>{'R_{xy}(\\tau) \\;=\\; x(\\tau) * y^*(-\\tau) \\quad\\text{(γέφυρα στο FT)}'}</BlockMath>
+            <BlockMath>{'R_{xy}(\\tau) \\neq R_{yx}(\\tau),\\quad R_{xy}(\\tau) = R_{yx}^*(-\\tau),\\quad R_{xy}(0) = 0 \\Leftrightarrow x\\perp y'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'autocorrelation',
+        title: 'Συνάρτηση αυτοσυσχέτισης (ΣΑΣ)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <>
+            <BlockMath>{'R_x(\\tau) \\;=\\; \\int_{-\\infty}^{\\infty} x(t)\\, x^*(t-\\tau)\\, dt \\;=\\; \\int x(t+\\tau)\\, x^*(t)\\, dt'}</BlockMath>
+            <BlockMath>{'R_x(-\\tau) = R_x^*(\\tau),\\quad R_x(0) = \\mathcal{E}_x,\\quad |R_x(\\tau)| \\leq R_x(0)'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'wiener-khinchin-ft',
+        title: 'Wiener–Khinchin για deterministic σήματα (slide 48)',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/fourier-transform',
+        content: (
+          <>
+            <BlockMath>{'\\mathcal{F}\\{R_x(\\tau)\\} \\;=\\; |X(f)|^2 \\quad\\text{(σήμα ενέργειας — ESD)}'}</BlockMath>
+            <BlockMath>{'S_x(f) \\triangleq \\mathcal{F}\\{R_x(\\tau)\\}\\,,\\quad P_x = R_x(0) = \\int S_x(f)\\, df \\quad\\text{(periodic ισχύος — PSD)}'}</BlockMath>
+          </>
+        ),
+      },
+      {
         id: 'parseval-power',
         title: 'Power signal Parseval (cosines)',
         topic: 'foundations',

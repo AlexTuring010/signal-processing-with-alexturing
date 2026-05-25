@@ -642,6 +642,96 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
       </>
     ),
   },
+  'ft-unit-step': {
+    intuition: (
+      <>
+        Το <InlineMath>u(t)</InlineMath> δεν είναι ούτε άρτιο ούτε φθίνει — οπότε ο FT του
+        έχει δύο κομμάτια. Το <InlineMath>{'\\delta(f)/2'}</InlineMath> κωδικοποιεί τον DC
+        «μέσο όρο 1/2» (το <InlineMath>u(t)</InlineMath> είναι 1 για <InlineMath>t&gt;0</InlineMath>{' '}
+        και 0 για <InlineMath>t&lt;0</InlineMath>, άρα μέση τιμή 1/2). Το{' '}
+        <InlineMath>{'1/(j 2\\pi f)'}</InlineMath> είναι ο μη-DC ανταποκριτής, που δίνει το
+        «βήμα» στη συχνότητα.
+      </>
+    ),
+    derivation: (
+      <>
+        Από <InlineMath>{'u(t) = \\tfrac{1}{2}[1 + \\mathrm{sgn}(t)]'}</InlineMath>, γραμμικότητα και
+        τα έτοιμα pairs <InlineMath>{'1 \\leftrightarrow \\delta(f)'}</InlineMath> +{' '}
+        <InlineMath>{'\\mathrm{sgn}(t) \\leftrightarrow 1/(j\\pi f)'}</InlineMath>.
+      </>
+    ),
+  },
+  'ft-periodic-from-pulse': {
+    intuition: (
+      <>
+        Οι FS συντελεστές δεν είναι «κάτι νέο» — είναι samples του FT του ενός μόνο παλμού,
+        παρμένα σε ισαπέχουσες θέσεις <InlineMath>{'k/T_0'}</InlineMath>. Αυτό συνδέει FS και
+        FT σε **μία** σχέση και κάνει τη rect-pulse-train ανάλυση από τη Σειρά Fourier
+        ξανά διαθέσιμη με ένα μόνο envelope plot.
+      </>
+    ),
+    derivation: (
+      <>
+        Αν <InlineMath>{'x(t) = \\sum_k x_0(t - kT_0)'}</InlineMath> με{' '}
+        <InlineMath>{'\\mathcal{F}\\{x_0\\} = X(f)'}</InlineMath>, τότε ο τύπος των FS
+        συντελεστών συμπτύσσεται σε <InlineMath>{'x_k = X(k/T_0)/T_0'}</InlineMath> με αλλαγή
+        μεταβλητής (δες <Link href="/foundations/fourier-transform#61-η-αντίστροφη-γέφυρα--οι-fs-συντελεστές-είναι-το-ft-envelope-δειγματισμένο-στο-1t-">Section 6.1</Link>).
+      </>
+    ),
+  },
+  'cross-correlation': {
+    intuition: (
+      <>
+        Η συσχέτιση δύο σημάτων μετράει την <strong>ομοιότητά τους όταν ολισθηθούν κατά τ</strong>.
+        Σαν inner product, αλλά παραμετρικός στην ολίσθηση. Το{' '}
+        <InlineMath>{'R_{xy}(0)'}</InlineMath> δίνει την ορθογωνιότητα· οι μέγιστες τιμές του{' '}
+        <InlineMath>{'|R_{xy}(\\tau)|'}</InlineMath> δείχνουν τη βέλτιστη χρονική ευθυγράμμιση.
+        Βασικό εργαλείο σε ραντάρ, σύμφωνη/ασύμφωνη αποδιαμόρφωση, και φίλτρα ταιριάσματος.
+      </>
+    ),
+    derivation: (
+      <>
+        Άμεσος ορισμός από slide 38. Η γέφυρα στο FT προκύπτει με αλλαγή μεταβλητής:{' '}
+        <InlineMath>{'R_{xy}(\\tau) = x(\\tau) * y^*(-\\tau)'}</InlineMath>, οπότε{' '}
+        <InlineMath>{'\\mathcal{F}\\{R_{xy}\\} = X(f)\\,Y^*(f)'}</InlineMath> από την 5b.
+      </>
+    ),
+  },
+  autocorrelation: {
+    intuition: (
+      <>
+        Πόσο μοιάζει ένα σήμα με τον <strong>εαυτό</strong> του ολισθημένο κατά τ. Στο
+        μηδέν δίνει την ενέργεια (ή την ισχύ). Όσο το σήμα «ξεχνάει» τον εαυτό του, η{' '}
+        <InlineMath>{'R_x(\\tau)'}</InlineMath> φθίνει — και το πόσο γρήγορα φθίνει σχετίζεται με
+        το πόσο πλατύ είναι το φάσμα του (Wiener–Khinchin).
+      </>
+    ),
+    derivation: (
+      <>
+        Ειδική περίπτωση cross-correlation με <InlineMath>{'y = x'}</InlineMath>. Η συζυγή
+        συμμετρία <InlineMath>{'R_x(-\\tau) = R_x^*(\\tau)'}</InlineMath> προκύπτει με αλλαγή
+        μεταβλητής στον ορισμό.
+      </>
+    ),
+  },
+  'wiener-khinchin-ft': {
+    intuition: (
+      <>
+        Η σχέση που <strong>ενώνει</strong> τη συσχέτιση με το φάσμα: ο FT της autocorrelation
+        είναι το <InlineMath>{'|X(f)|^2'}</InlineMath> (για σήμα ενέργειας — ESD) ή το PSD (για
+        σήμα ισχύος). Όταν φτάσουμε στα τυχαία σήματα, αυτή θα είναι η <em>μοναδική γέφυρα</em>{' '}
+        στη φασματική ανάλυση — γιατί δεν θα έχουμε «το <InlineMath>{'X(f)'}</InlineMath> του
+        θορύβου».
+      </>
+    ),
+    derivation: (
+      <>
+        Από <InlineMath>{'R_x(\\tau) = x(\\tau) * x^*(-\\tau)'}</InlineMath> και την 5b:{' '}
+        <InlineMath>{'\\mathcal{F}\\{R_x\\} = X(f)\\,X^*(f) = |X(f)|^2'}</InlineMath>.
+        Μία γραμμή — αλλά κουβαλάει όλη την υπόλοιπη ύλη.
+      </>
+    ),
+  },
 
   // ── Foundations · Trig identities ────────────────────────────
   'trig-cos-sum-diff': {

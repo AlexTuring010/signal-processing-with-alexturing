@@ -72,6 +72,9 @@ import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlow
 import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
 import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSeriesViz'
 import { RectToSincViz } from '@/components/viz/RectToSincViz'
+import { ScalingDualityViz } from '@/components/viz/ScalingDualityViz'
+import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
+import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
@@ -248,6 +251,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — foundations / fourier-transform
     RectToSincViz,
+    ScalingDualityViz,
+    FtAsSampledFsEnvelope,
+    CrossCorrelationPlayground,
     ModulationTheoremViz,
     TransformPairsGallery,
     ConvolutionInFrequency,
