@@ -384,48 +384,106 @@ surface as a visible bend in the viz — that's the regression channel.
 
 ### Chunk B7 — Problem-bank scenario graphs
 
-Bespoke per-problem layouts, mostly 4–7 nodes.
+Bespoke per-problem layouts, mostly 4–7 nodes. Re-split into 5 sub-chunks
+along «shares-a-layout-shape» lines after a per-file survey (one chunk per
+turn). Survey: 17 IN-SCOPE vizzes (5 sub-chunks below) · 13 OUT-OF-SCOPE
+(chart / Gantt / scene-illustration / DP-table / interval-bar layouts —
+listed at the end of this section) · 4 CARVE-OUTS (deliberate visual
+encoding that `routeEdge` would destroy — listed in the carve-outs block) ·
+1 already DONE in E.4.6.0 (`RiverCrossingStateGraph`).
 
-- `components/viz/RiverCrossingStateGraph.tsx` ✅ **DONE** (E.4.6.0 — this commit)
-- `components/viz/RiverCrossingGame.tsx`
-- `components/viz/CyclingTripScene.tsx`
-- `components/viz/SightseeingScene.tsx`
-- `components/viz/PartyDegreeFilter.tsx`
-- `components/viz/ComponentsBfsSweep.tsx`
-- `components/viz/MultVsAddPaths.tsx`
-- `components/viz/ReliabilityLogTransform.tsx`
-- `components/viz/SegmentCrossingsToInversions.tsx`
-- `components/viz/DijkstraTreeVsMstTriangle.tsx`
-- `components/viz/DijkstraHandTrace.tsx`
-- `components/viz/MstRunnerWithTies.tsx`
-- `components/viz/MstCountingExplorer.tsx`
-- `components/viz/MstPreorderTSP.tsx`
-- `components/viz/SecondVsThirdEdgeMst.tsx`
-- `components/viz/MaxEdgeAsBridge.tsx`
-- `components/viz/SightseeingDP.tsx`
-- `components/viz/WeightedIntervalDP.tsx`
-- `components/viz/RecursionExplosion.tsx`
-- `components/viz/RestaurantSpacingDP.tsx`
-- `components/viz/LamppostsMISViz.tsx`
-- `components/viz/RodCuttingDP.tsx`
-- `components/viz/GreedyVsDpRelaxation.tsx`
-- `components/viz/EditGraphViz.tsx`
-- `components/viz/GreedyColoringOrders.tsx`
-- `components/viz/MaxHeapKeyDecrease.tsx`
-- `components/viz/KnapsackToIntervalScheduling.tsx`
-- `components/viz/PjExplorer.tsx`
-- `components/viz/GreedyFailsWeighted.tsx`
-- `components/viz/AlignmentBuilder.tsx`
-- `components/viz/PathBuilder.tsx`
-- `components/viz/FloodFillGrid.tsx`
-- `components/viz/InternetPlanCounter.tsx`
-- `components/viz/TopoSortClassMatrix.tsx`
-- `components/viz/UnitIntervalCover.tsx`
-- `components/viz/LaundryFlowShop.tsx`
-- `components/viz/HuffmanEncodeDecode.tsx`
+- `components/viz/RiverCrossingStateGraph.tsx` ✅ **DONE** (E.4.6.0)
 
-Chunk B7 is large — the executor should re-split into 3–5-viz sub-chunks
-along «shares-a-layout-shape» lines after a closer pass through each file.
+#### B7.1 — Small bespoke MST / triangle weighted graphs ✅ DONE 2026-05-25
+
+6 undirected weighted graphs of 3..6 nodes, R≈22, with local `trim(a, b, r)`
+helpers and weight labels in `<rect>+<text>` at the segment midpoint. Mirror
+of the B2/B4 per-file pattern: build module-scope `NODE_RECTS` +
+`NODE_RECT_BY_ID` and a per-file `routedEdge(a, b)` calling
+`routeEdge() → trimEdgeGeom()` with symmetric trim R. `MstPreorderTSP` has
+an asymmetric trim for the tour-arrow edges (mirror of B5's UF pattern).
+`DijkstraTreeVsMstTriangle` has a Panel sub-component that gets shared
+module-scope rects.
+
+- `components/viz/MstCountingExplorer.tsx` ✅ (6 nodes R=22, 7 undirected edges, weighted, mandatory/tie styling)
+- `components/viz/MstPreorderTSP.tsx` ✅ (5 nodes R=22, 10 undirected edges + 5 directed tour edges with asymmetric trim R-6/R+4)
+- `components/viz/MstRunnerWithTies.tsx` ✅ (5 nodes R=22, 8 undirected weighted edges, accept/reject styling)
+- `components/viz/SecondVsThirdEdgeMst.tsx` ✅ (3-node triangle R=22, 3 undirected weighted edges)
+- `components/viz/MaxEdgeAsBridge.tsx` ✅ (4 nodes R=22, 4 undirected weighted edges incl. dangling x via bridge)
+- `components/viz/DijkstraTreeVsMstTriangle.tsx` ✅ (3-node triangle R=22, 3 undirected weighted edges, rendered twice via `Panel` component — module-scope rects shared across both panels)
+
+#### B7.2 — Directed weighted path graphs
+
+4 directed weighted graphs with arrowhead markers and weight labels.
+`DijkstraHandTrace` is a hybrid: 2 instances (one undirected, one directed
+with a hand-tuned `c→a` curve carve-out, mirror of `WhyBFSFailsWeighted`
+B2 + `NegativeCycleDetector` B6).
+
+- `components/viz/MultVsAddPaths.tsx` (5 nodes R=21 shared across 2 panels, 5 directed weighted edges per panel)
+- `components/viz/ReliabilityLogTransform.tsx` (4 nodes R=22, 5 directed weighted edges, focused-edge highlight)
+- `components/viz/GreedyVsDpRelaxation.tsx` (4 nodes R=21, 5 directed weighted edges)
+- `components/viz/DijkstraHandTrace.tsx` (hybrid: instance `pt2-th2-1` is 6-node undirected with 8 weighted edges; instance `pt3-th1` is 5-node directed with 5 edges including a hand-tuned `c→a` cycle curve that stays as a documented carve-out)
+
+#### B7.3 — Tree-shape vizzes (B5 mirror)
+
+3 tree-shaped vizzes: binary tree, Huffman tree, recursion tree. Mirror of
+B5's `MaxHeapKeyDecrease`-class pattern. Per-render `nodeRects` via `useMemo`
+when layout depends on state (`n`, `mode`, `instance`).
+
+- `components/viz/MaxHeapKeyDecrease.tsx` (7-node binary tree with module-scope COORDS, undirected center-to-center)
+- `components/viz/HuffmanEncodeDecode.tsx` (9-node Huffman tree with module-scope NODES, undirected with bit labels)
+- `components/viz/RecursionExplosion.tsx` (recursion tree, dynamic per-render nodes via `useMemo` keyed on `(instance, n, mode)`)
+
+#### B7.4 — Multi-instance / multi-tab graphs (B6 mirror)
+
+2 vizzes with multiple presets / tabs that have DIFFERENT node sets. Mirror
+of B6's `LayeredSubsetsDAG` / `LayeredTripPlanner` pattern — either per-tab
+module-scope rect sets or per-render `useMemo` keyed on the active instance.
+
+- `components/viz/ComponentsBfsSweep.tsx` (2 presets via `instance` prop: `pt5-th1` = 11 nodes / 3 components / 13 undirected edges; `head-succ` = 8 nodes / 3 components / 6 undirected edges. No weights. Renders without trim — circles drawn center-to-center.)
+- `components/viz/TopoSortClassMatrix.tsx` (4 tabs each with a different directed graph: weights = 4 nodes / 4 edges; dag = 5/5; tree = 7/6; bipartite = 6/7. Weight labels on tab `weights`; arrows on every tab.)
+
+#### B7.5 — Bespoke graph scenarios
+
+3 standalone scenario graphs that don't fit any other sub-chunk.
+
+- `components/viz/PartyDegreeFilter.tsx` (10-node static graph, undirected, no weights, no trim. Dynamic edge visibility based on the `present` set.)
+- `components/viz/GreedyColoringOrders.tsx` (6-node hexagon + 2 diagonals, undirected, no weights, no trim. Static layout.)
+- `components/viz/CyclingTripScene.tsx` (4-city K₄ from E.4.5.A, 6 undirected weighted edges. Edge color/dasharray switches based on day-slider — `useMemo` not needed since layout doesn't depend on state.)
+
+#### Out of scope — confirmed no-inter-node-edges in B7
+
+These render `<line>` / `<path>` for chart axes, sliders, timelines, Gantt
+bars, DP tables, alignment tapes, scene-illustration banks-and-boat, or
+number-line layouts. They do not draw edges between positioned graph nodes.
+
+- `FloodFillGrid.tsx` — pixel grid, BFS over cells (no graph edges; cells are pixels)
+- `InternetPlanCounter.tsx` — 13-month timeline with decision blocks
+- `KnapsackToIntervalScheduling.tsx` — 5 ad cards + Gantt-style interval row
+- `LamppostsMISViz.tsx` — street + lampposts on a number line (the `<line>` is the road's dashed center)
+- `UnitIntervalCover.tsx` — number line with points + unit intervals (the `<line>` is the axis)
+- `LaundryFlowShop.tsx` — Gantt-style flow-shop schedule
+- `RestaurantSpacingDP.tsx` — restaurants on a number-line road with exclusion zones
+- `RiverCrossingGame.tsx` — scene illustration (banks/river/boat/character emojis) — no graph nodes/edges
+- `AlignmentBuilder.tsx` — alignment tape (TapeColumn-per-step) — string columns, not graph
+- `WeightedIntervalDP.tsx` — interval bars + DP table (the `<line>` is a column divider)
+- `RodCuttingDP.tsx` — horizontal rod bar visualization, not a graph
+- `PjExplorer.tsx` — interval rows on a timeline with a compatibility-zone shade
+- `GreedyFailsWeighted.tsx` — interval Gantt with pick/skip decisions
+- `PathBuilder.tsx` — ✅ ALREADY DONE in B3 (L06 base graph viz; legitimate dual-listing)
+
+#### Carve-outs in B7 — hand-tuned visuals where the curve IS the teaching surface
+
+These DO draw edges between positioned nodes but the curve is a deliberate
+visual encoding that `routeEdge` would destroy. Collection joins:
+`WhyBFSFailsWeighted` (B2), `DfsTreeBuilder` back-edges (B3),
+`TopoOrderBuilder` (B6), `NegativeCycleDetector` (B6), the `DijkstraHandTrace`
+`c→a` curve (B7.2 hybrid).
+
+- `SegmentCrossingsToInversions.tsx` — two parallel rails (top/bottom) with line segments crossing between them. The crossings ARE the teaching surface; auto-routing would either route around the inversions (destroying the «τομή ⇔ αντιστροφή» visual) or curve them and break the geometric isomorphism. Documented carve-out.
+- `SightseeingScene.tsx` — pins on a baseline; taxi segments drawn as Bezier arcs ABOVE the line, scooter segments as arcs BELOW. The arc DIRECTION encodes transport type. `routeEdge` doesn't know about this convention.
+- `SightseeingDP.tsx` — same scene layout as `SightseeingScene` (sights on a baseline + taxi-above / scooter-below arcs encoding transport type during DP step-through).
+- `EditGraphViz.tsx` — DP grid (m × n cells) where edges only connect ADJACENT cells (right / down / diagonal). By construction every edge is collision-free (adjacent cells are at unit distance, no third cell lies on any segment). Retrofit value is zero. Documented carve-out.
 
 ---
 
