@@ -180,6 +180,27 @@ $$
 Η διαχωριστική γραμμή πέφτει ανάμεσα στο $n^2$ και το $2^n$. Όλοι οι αλγόριθμοι που θα δούμε στο μάθημα στοχεύουν στο αριστερό μισό της ιεραρχίας — πολυωνυμική.
 </Callout>
 
+<RelatedPair
+  patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+  pairs={[
+    { id: 'front-set-2-ask7' },
+    { id: 'pt1-th1-q3' },
+    { id: 'pt1-th1-q1' },
+  ]}
+  cue={
+    <>
+      <strong>«Διάταξε τις παρακάτω συναρτήσεις σε αύξουσα σειρά»</strong> ή{' '}
+      <strong>«ποια αυξάνεται γρηγορότερα;»</strong> — η ίδια ιεραρχία{' '}
+      <InlineMath>{'\\log^* n \\prec \\log n \\prec n^c \\prec n^{\\log n} \\prec a^n \\prec n!'}</InlineMath>{' '}
+      ξανά και ξανά. Τρεις κανόνες-κλειδιά: (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em> (<InlineMath>{'2^{\\log_2 n} = n'}</InlineMath>,{' '}
+      <InlineMath>{'n^{1/\\log_2 n}'}</InlineMath> σταθερά,{' '}
+      <InlineMath>{'c^{\\log n} = n^{\\log c}'}</InlineMath>), (2) <em>ισοδύναμες τάξεις σπάνε με log-σύγκριση</em>{' '}
+      (αν δύο πύργοι μοιάζουν ισόρροποι, σύγκρινε <InlineMath>{'\\log f'}</InlineMath> με <InlineMath>{'\\log g'}</InlineMath>), (3) <em>σταθεροί συντελεστές δεν μετράνε</em> — μόνο ο κυρίαρχος όρος. Παγίδα-σήμα: εκφράσεις σαν <InlineMath>{'n^{1+\\sin n}'}</InlineMath> ή{' '}
+      <InlineMath>{'n^{1+\\tan\\varphi}'}</InlineMath> κρύβουν <strong>ασύγκριτες ζώνες</strong> — όταν ο εκθέτης ταλαντώνεται ή είναι ελεύθερη παράμετρος, η σωστή απάντηση είναι «μη-συγκρίσιμες», ΟΧΙ μέλος του <InlineMath>{'\\Theta'}</InlineMath>.
+    </>
+  }
+/>
+
 ## Wheat and chessboard — γιατί το εκθετικό είναι «καταστροφή»
 
 <Example>
@@ -251,6 +272,22 @@ $$
 
 Άρα $g(n) \in O(\max\{f_1(n), f_2(n)\})$. $\blacksquare$
 </Example>
+
+<RelatedPair
+  patternName="Σωστό ή Λάθος: ασυμπτωτική ταυτότητα μεταξύ συναρτήσεων"
+  pairs={[
+    { id: 'pt4-th1-q2' },
+    { id: 'front-set-2-ask3' },
+    { id: 'front-set-12-ask1' },
+  ]}
+  cue={
+    <>
+      <strong>«Σ/Λ: <InlineMath>{'f + g = \\Theta(\\max\\{f, g\\})'}</InlineMath>;»</strong> ή κάθε «προφανής» συμμετρία/μεταβατικότητα/ταυτότητα που χτίζεται πάνω στους ορισμούς λίγο πιο πάνω — ίδια συνταγή κάθε φορά: <em>πρώτα κυνήγησε αντιπαράδειγμα με μικρές οικείες συναρτήσεις</em> (<InlineMath>{'n'}</InlineMath> vs <InlineMath>{'n^2'}</InlineMath>, σταθερά vs <InlineMath>{'n'}</InlineMath>, <InlineMath>{'n'}</InlineMath> vs <InlineMath>{'2^n'}</InlineMath>), <em>μετά απόδειξη από τον ορισμό</em>. Παγίδα-σήμα: το «<InlineMath>{'='}</InlineMath>» στις ταυτότητες <strong>δεν είναι συμμετρικό</strong> — το{' '}
+      <InlineMath>{'f = O(g)'}</InlineMath> διαβάζεται «μέλος του συνόλου», όχι «ίσο»· γραφές σαν{' '}
+      <InlineMath>{'O(g) = O(f)'}</InlineMath> είναι σχεδόν πάντα λάθος. Δεύτερη παγίδα-σήμα: τα κανονικά «<InlineMath>{'f + g'}</InlineMath>» γενικεύονται στο <InlineMath>{'\\max'}</InlineMath> (σωστό: <InlineMath>{'\\Theta(\\max\\{f,g\\})'}</InlineMath>) αλλά <strong>όχι στο</strong> <InlineMath>{'\\min'}</InlineMath>.
+    </>
+  }
+/>
 
 ## Είναι κάθε δύο συναρτήσεις ασυμπτωτικά συγκρίσιμες;
 
@@ -362,6 +399,24 @@ $$
 
 **Λύση.** Λόγος: $\dfrac{3^n}{2^n} = (3/2)^n \to \infty$. Άρα δεν υπάρχει σταθερά $c$ με $3^n \le c \cdot 2^n$ για κάθε $n \ge n_0$ — το $3^n$ ξεπερνά τελικά κάθε σταθερό πολλαπλάσιο του $2^n$.
 </Example>
+
+<RelatedPair
+  patternName="Δώσε την πολυπλοκότητα του παρακάτω κώδικα (εμφωλευμένοι βρόχοι, αθροιστική ανάλυση)"
+  pairs={[
+    { id: 'front-set-2-ask6' },
+    { id: 'front-set-10-ask2' },
+    { id: 'front-set-4-thema4' },
+  ]}
+  cue={
+    <>
+      <strong>Διπλός ή τριπλός βρόχος όπου ο εσωτερικός εξαρτάται από εξωτερικό δείκτη</strong> — η δουλειά σου είναι ένα{' '}
+      <InlineMath>{'\\sum'}</InlineMath> γινομένων ορίων. Τρία κλειστά αθροίσματα να ξέρεις απ' έξω:{' '}
+      <InlineMath>{'\\sum_{i=1}^{n} i = \\Theta(n^2)'}</InlineMath>,{' '}
+      <InlineMath>{'\\sum_{i=1}^{n} i^2 = \\Theta(n^3)'}</InlineMath>,{' '}
+      <InlineMath>{'\\sum_{k=1}^{n} 1/k = \\Theta(\\log n)'}</InlineMath>. Παγίδα-σήμα #1: ο βρόχος <InlineMath>{'i \\leftarrow 1;\\ i \\leftarrow 2i'}</InlineMath> (ή <InlineMath>{'i \\leftarrow n;\\ i \\leftarrow i/2'}</InlineMath>) εκτελείται <InlineMath>{'\\Theta(\\log n)'}</InlineMath> φορές, ΟΧΙ <InlineMath>{'\\Theta(n)'}</InlineMath> (γεωμετρική, όχι αριθμητική πρόοδος). Παγίδα-σήμα #2: ο φωλιασμένος βρόχος <InlineMath>{'\\text{για } j = 1 \\text{ ως } i'}</InlineMath> δίνει κάτω-τριγωνική δομή με <InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>, ΟΧΙ <InlineMath>{'\\Theta(n)'}</InlineMath>. Όταν ο εσωτερικός βρόχος γίνεται <InlineMath>{'\\sqrt{m}'}</InlineMath> ή <InlineMath>{'\\log^* m'}</InlineMath> φορές, ξεχωριστή ανάλυση — αυτές είναι οι «εξωτικές» περιπτώσεις της εξέτασης.
+    </>
+  }
+/>
 
 ## Εναλλακτική προσέγγιση: οριακές σχέσεις
 
@@ -475,6 +530,22 @@ $$\lim_{x \to \infty} \frac{\ln \ln x}{\tfrac{a}{b} \ln x} = \frac{b}{a} \lim_{x
 **Σύνδεση με την οπτική.** Στο plot, το preset $(\log_2 n)^2 / \sqrt{n}$ έχει την ίδια καμπύλη — κορυφή κάπου γύρω στο $n \approx 100$ και μετά πτώση. Η μόνη διαφορά είναι ότι το «τελικά» έρχεται **πολύ αργότερα** από ό,τι με την εκθετική: χρειάζεται $n$ της τάξης των εκατοντάδων χιλιάδων για να καταρρεύσει ο λόγος. Ο φοιτητής που κρίνει συμπεριφορά από δείγματα μικρού $n$ θα έβγαζε λάθος συμπέρασμα.
 </Example>
 
+<RelatedPair
+  relationship="analogy"
+  patternName="Sub-logarithmic growth — αρμονικό άθροισμα ή iterated log («πιο αργά κι από log»)"
+  pairs={[
+    { id: 'pt2-th1-q2' },
+    { id: 'front-set-1-ask3' },
+    { id: 'front-set-11-ask1' },
+  ]}
+  cue={
+    <>
+      <strong>Αν εμφανιστεί <InlineMath>{'\\sum 1/k'}</InlineMath>, <InlineMath>{'\\log \\log n'}</InlineMath>, ή <InlineMath>{'\\log^* n'}</InlineMath> (επαναλαμβανόμενος λογάριθμος)</strong> — μπαίνεις σε δύο διαφορετικές «πιο αργές από log» ζώνες, και η εξέταση συνήθως ζητάει να τις τοποθετήσεις σωστά μεταξύ τους. Δύο κανόνες-κλειδιά: (1) <em>το αρμονικό άθροισμα ΔΕΝ είναι σταθερά</em>:{' '}
+      <InlineMath>{'H_n = \\sum_{k=1}^{n} 1/k = \\Theta(\\log n)'}</InlineMath> — μεγαλώνει, απλώς πολύ αργά (απόδειξη με επαγωγή ή ολοκληρωτικό φράγμα). (2) <em><InlineMath>{'\\log^* n'}</InlineMath> και <InlineMath>{'\\log \\log n'}</InlineMath> είναι αυστηρά κάτω από <InlineMath>{'\\log n'}</InlineMath></em>, και μεταξύ τους <InlineMath>{'\\log^* n \\prec \\log \\log n'}</InlineMath> — το <InlineMath>{'\\log^*'}</InlineMath> μετράει «πόσες φορές πρέπει να εφαρμόσεις τον λογάριθμο μέχρι να φτάσεις στο 1», και για κάθε ρεαλιστικό <InlineMath>{'n'}</InlineMath> δίνει τιμή <InlineMath>{'\\le 5'}</InlineMath>. Παγίδα-σήμα: «<InlineMath>{'\\log\\!\\bigl(\\sqrt{\\log_2 n}\\bigr)'}</InlineMath>» απλοποιείται σε <InlineMath>{'\\tfrac{1}{2}\\log \\log_2 n'}</InlineMath> — όχι κάτι μεσαίο πάνω από τον <InlineMath>{'\\log n'}</InlineMath>, αλλά κάτι αυστηρά πιο αργό.
+    </>
+  }
+/>
+
 <Callout type="key">
 **Συνδυάζοντας τα δύο αποτελέσματα:**
 
@@ -488,6 +559,24 @@ $$\log^c n \prec n^\epsilon \prec n^c \prec a^n \prec n!$$
   pattern={
     <>
       <strong>Αν εμφανιστούν «τρομακτικές» μορφές όπως <InlineMath>{'a^{\\log_a n}'}</InlineMath>, <InlineMath>{'n^{\\log n}'}</InlineMath>, <InlineMath>{'\\log(\\sqrt{x})'}</InlineMath></strong> — πρώτη κίνηση πάντα: <em>ξεμπλέκεις τις ταυτότητες πριν συγκρίνεις</em> (<InlineMath>{'2^{\\log_2 n} = n'}</InlineMath>, <InlineMath>{'\\log(\\sqrt{x}) = \\tfrac{1}{2}\\log x'}</InlineMath>, <InlineMath>{'\\log_a n = \\log_2 n / \\log_2 a'}</InlineMath>). Συχνά αυτό λύνει το μισό γρίφο. Μετά τοποθετείς τις απλοποιημένες μορφές στην ιεραρχία παραπάνω — μια συνάρτηση με εκθέτη που μεγαλώνει μαζί με το <InlineMath>{'n'}</InlineMath> (π.χ. <InlineMath>{'n^{\\log_2 n}'}</InlineMath>) είναι <strong>υπερπολυωνυμική</strong>: κάθεται ανάμεσα σε <InlineMath>{'n^c'}</InlineMath> και <InlineMath>{'a^n'}</InlineMath>.
+    </>
+  }
+/>
+
+Και η ίδια «ξεμπλέκω-τις-ταυτότητες-πρώτα» κίνηση επιστρέφει σε παλαιότερο θέμα με εντελώς διαφορετική «τρομακτική» μορφή — αυτή τη φορά μια συνάρτηση που ζει στη μεσαία ζώνη `μεταξύ` πολυλογαρίθμου και πολυωνύμου:
+
+<RelatedPair
+  relationship="analogy"
+  patternName="Ταυτότητα πρώτα, ιεραρχία μετά — εκθέτες/λογάριθμοι που κρύβουν την τάξη"
+  pairs={[
+    { id: 'pt5-th2-a' },
+    { id: 'pt1-th1-q2' },
+  ]}
+  cue={
+    <>
+      <strong>Όποτε δεις έκφραση που μοιάζει «τρομακτική»</strong> (<InlineMath>{'2^{\\sqrt{\\log n}}'}</InlineMath>, <InlineMath>{'n^{\\log n}'}</InlineMath>, <InlineMath>{'c^{\\sqrt{n\\log n}}'}</InlineMath>) — η πρώτη κίνηση είναι πάντα <em>ξεμπλέκεις τις ταυτότητες</em> και μετά τοποθετείς στην ιεραρχία. Τρεις ταυτότητες-κλειδιά: <InlineMath>{'2^{\\log_2 n} = n'}</InlineMath> ·{' '}
+      <InlineMath>{'a^{\\log_a x} = x'}</InlineMath> ·{' '}
+      <InlineMath>{'n^{\\log_2 c} = c^{\\log_2 n}'}</InlineMath> (η «κρυφή ισότητα»). Τρεις ζώνες της ιεραρχίας: μια συνάρτηση με εκθέτη που μεγαλώνει μαζί με το <InlineMath>{'n'}</InlineMath> (π.χ. <InlineMath>{'n^{\\log_2 n}'}</InlineMath>, <InlineMath>{'c^{\\sqrt{n\\log n}}'}</InlineMath>) είναι <strong>υπερπολυωνυμική</strong> — αυστηρά μεγαλύτερη από κάθε <InlineMath>{'n^c'}</InlineMath>, αυστηρά μικρότερη από κάθε <InlineMath>{'a^n'}</InlineMath>. Αντίστροφα, <InlineMath>{'2^{\\sqrt{\\log n}}'}</InlineMath> είναι <strong>υπολογαριθμικά-υπερπολυωνυμική</strong>: ζει αυστηρά κάτω από κάθε πολυώνυμο <InlineMath>{'n^c'}</InlineMath>, αλλά πάνω από κάθε <InlineMath>{'\\log^c n'}</InlineMath>.
     </>
   }
 />

@@ -26,6 +26,7 @@
 import type { Exercise } from './types'
 import { InlineMath, BlockMath } from '@/components/math'
 import { Callout } from '@/components/content/Callout'
+import { RelatedPair } from '@/components/content/RelatedPair'
 import { ComplexityZooLab } from '@/components/viz/ComplexityZooLab'
 import { AsymptoticVerdictExplorer } from '@/components/viz/AsymptoticVerdictExplorer'
 import { FunctionOrderingRace } from '@/components/viz/FunctionOrderingRace'
@@ -612,6 +613,18 @@ for i ← 0 to n-2 with step 1 do
           δίνει κυρίαρχο όρο <InlineMath>{'n^{2.5}'}</InlineMath>, οπότε η
           πολυπλοκότητα είναι <strong><InlineMath>{'\\Theta(n^{2.5})'}</InlineMath></strong>.
         </p>
+        <RelatedPair
+          patternName="Δώσε την πολυπλοκότητα του παρακάτω κώδικα (εμφωλευμένοι βρόχοι, αθροιστική ανάλυση)"
+          pairs={[{ id: 'front-set-2-ask6' }, { id: 'front-set-4-thema4' }]}
+          cue={
+            <>
+              <strong>Διπλός ή τριπλός βρόχος όπου ο εσωτερικός εξαρτάται από εξωτερικό δείκτη</strong> — η δουλειά σου είναι ένα{' '}
+              <InlineMath>{'\\sum'}</InlineMath> γινομένων ορίων. Τρία κλειστά αθροίσματα-κλειδιά: <InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath>. Παγίδα-σήμα: εσωτερικός βρόχος με όριο <InlineMath>{'\\sqrt n'}</InlineMath> (όπως εδώ) ή <InlineMath>{'\\log n'}</InlineMath> δίνει πολυπλοκότητα <em>μεταξύ</em> πολυωνύμων (<InlineMath>{'\\Theta(n^{2.5})'}</InlineMath> εδώ) — μην το στρογγυλέψεις σε «πιο κοντινό πολυώνυμο». Δεύτερη παγίδα: γεωμετρικό βήμα (<InlineMath>{'i \\leftarrow 2i'}</InlineMath>) δίνει <InlineMath>{'\\Theta(\\log n)'}</InlineMath> επαναλήψεις, ΟΧΙ <InlineMath>{'\\Theta(n)'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -1531,6 +1544,15 @@ for i ← 0 to n-2 with step 1 do
           <InlineMath>{'g(n) \\ge 2'}</InlineMath></strong> (τελικά για κάθε{' '}
           <InlineMath>{'n \\ge n_0'}</InlineMath>).
         </p>
+        <RelatedPair
+          patternName="Σωστό ή Λάθος: ασυμπτωτική ταυτότητα μεταξύ συναρτήσεων"
+          pairs={[{ id: 'pt4-th1-q2' }, { id: 'front-set-12-ask1' }]}
+          cue={
+            <>
+              <strong>«Σωστό ή Λάθος» πάνω σε ασυμπτωτική ταυτότητα</strong> (συνεπαγωγή, τομή, μονοτονία log/exp) — συνταγή: <em>πρώτα κυνήγησε αντιπαράδειγμα με μικρές οικείες συναρτήσεις</em>, <em>μετά απόδειξη από τον ορισμό ή ορίου</em>. Παγίδα-σήμα: ταυτότητες σαν «<InlineMath>{'\\log f = O(\\log g)'}</InlineMath>» χρειάζονται προϋπόθεση «<InlineMath>{'g \\ge 2'}</InlineMath>» (μην ξεχάσεις τη σταθερά στον λογάριθμο)· «<InlineMath>{'2^f = O(2^g)'}</InlineMath>» ΣΠΑΕΙ από <InlineMath>{'O'}</InlineMath> αλλά ισχύει από <InlineMath>{'o'}</InlineMath> — η μεγέθυνση του εκθέτη απαιτεί αυστηρή κυριαρχία.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -1604,6 +1626,15 @@ for i ← 0 to n-2 with step 1 do
           Άρα <InlineMath>{'f_1 + f_2 = O(\\max(g_1, g_2))'}</InlineMath> — όταν
           προσθέτουμε δύο όρους, κυριαρχεί ο μεγαλύτερος.
         </p>
+        <RelatedPair
+          patternName="Σωστό ή Λάθος: ασυμπτωτική ταυτότητα μεταξύ συναρτήσεων"
+          pairs={[{ id: 'pt4-th1-q2' }, { id: 'front-set-11-ask3' }]}
+          cue={
+            <>
+              <strong>«Σωστό ή Λάθος» πάνω σε ασυμπτωτική ταυτότητα</strong> (συνεπαγωγή O→o, log/exp κάθε πλευράς, <InlineMath>{'f+g'}</InlineMath> και max) — συνταγή: <em>πρώτα κυνήγησε αντιπαράδειγμα με μικρές οικείες συναρτήσεις</em>, <em>μετά απόδειξη από τον ορισμό</em>. Παγίδα-σήμα: «<InlineMath>{'2^f = O(2^g)'}</InlineMath>» (β) ΣΠΑΕΙ από <InlineMath>{'O'}</InlineMath> αλλά ισχύει από <InlineMath>{'o'}</InlineMath> (γ) — η μεγέθυνση του εκθέτη απαιτεί αυστηρή κυριαρχία. Δεύτερη παγίδα: «<InlineMath>{'\\log f = O(\\log g)'}</InlineMath>» (α) χρειάζεται προϋπόθεση «<InlineMath>{'g \\ge 2'}</InlineMath>».
+            </>
+          }
+        />
       </>
     ),
   },
@@ -1696,6 +1727,19 @@ for i ← 0 to n-2 with step 1 do
           <InlineMath>{'\\log(n!) \\ge \\tfrac{n}{2}\\log n'}</InlineMath>.
           Συνδυάζοντας: <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath>.
         </p>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Κατάταξε αυτές τις συναρτήσεις σε αύξουσα σειρά»</strong> — η ίδια ιεραρχία{' '}
+              <InlineMath>{'\\log^* n \\prec \\log n \\prec n^c \\prec n^{\\log n} \\prec a^n \\prec n!'}</InlineMath>{' '}
+              ξανά. Συνταγή (όπως εδώ): (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em> (<InlineMath>{'4^{\\log n} = n^2'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum \\binom{n}{k} = 2^n'}</InlineMath>,{' '}
+              <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath>), (2) <em>πέτα σταθερές</em>, (3) <em>τοποθέτησε στην ιεραρχία</em>. Παγίδα-σήμα: τεράστιες σταθερές σαν <InlineMath>{'9^{500}'}</InlineMath> είναι <InlineMath>{'O(1)'}</InlineMath> (όχι συνάρτηση του n!)· ελεύθερη παράμετρος ή ταλάντωση τύπου <InlineMath>{'\\sin n'}</InlineMath> → «μη-συγκρίσιμες», ΟΧΙ μέλος του <InlineMath>{'\\Theta'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -1958,6 +2002,17 @@ for i ← 0 to n-2 with step 1 do
           <InlineMath>{'\\log_n n = 1'}</InlineMath> είναι το «δόλωμα» που
           μετατρέπει το πρόβλημα σε αυτή την τετριμμένη περίπτωση.
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Διάταξε / σύγκρινε / κύκλωσε ποιες σχέσεις ισχύουν»</strong> πάνω σε λίστα συναρτήσεων — η ίδια ιεραρχία{' '}
+              <InlineMath>{'\\log^* n \\prec \\log n \\prec n^c \\prec n^{\\log n} \\prec a^n \\prec n!'}</InlineMath>{' '}
+              ξανά και ξανά. Συνταγή: (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em> (όπως εδώ, <InlineMath>{'\\log_n n = 1'}</InlineMath>), (2) <em>πέτα σταθερές</em>, (3) <em>τοποθέτησε στην ιεραρχία</em>. Παγίδα-σήμα: παράμετρος στον εκθέτη ή ταλάντωση τύπου <InlineMath>{'\\sin n'}</InlineMath> / <InlineMath>{'\\tan\\varphi'}</InlineMath> → η σωστή απάντηση είναι «μη-συγκρίσιμες», ΟΧΙ μέλος του <InlineMath>{'\\Theta'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -2026,6 +2081,16 @@ for i ← 0 to n-2 with step 1 do
           <InlineMath>{'g = n^{\\log n}'}</InlineMath> — μια απλή «πολυωνυμικό
           vs υπερ-πολυωνυμικό» μάχη, αλλά μόνο αφού καθαρίσει η αριστερή πλευρά.
         </Callout>
+        <RelatedPair
+          relationship="analogy"
+          patternName="Ταυτότητα πρώτα, ιεραρχία μετά"
+          pairs={[{ id: 'pt5-th2-a' }]}
+          cue={
+            <>
+              <strong>Έκφραση που μοιάζει «τρομακτική»</strong> (<InlineMath>{'2^{\\sqrt{\\log n}}'}</InlineMath>, <InlineMath>{'n^{\\log n}'}</InlineMath>, <InlineMath>{'c^{\\sqrt{n\\log n}}'}</InlineMath>) — η πρώτη κίνηση είναι πάντα <em>ξεμπλέκεις τις ταυτότητες</em>, μετά τοποθετείς στην ιεραρχία. Τρεις ταυτότητες-κλειδιά: <InlineMath>{'2^{\\log_2 n} = n'}</InlineMath> · <InlineMath>{'a^{\\log_a x} = x'}</InlineMath> · <InlineMath>{'n^{\\log_2 c} = c^{\\log_2 n}'}</InlineMath> (κρυφή ισότητα). Συναρτήσεις με εκθέτη που μεγαλώνει μαζί με το <InlineMath>{'n'}</InlineMath> (όπως <InlineMath>{'n^{\\log_2 n}'}</InlineMath> εδώ) ζουν στη <strong>υπερπολυωνυμική</strong> ζώνη — αυστηρά πάνω από κάθε <InlineMath>{'n^c'}</InlineMath>, αυστηρά κάτω από κάθε <InlineMath>{'a^n'}</InlineMath>. Αντίστροφα, εκφράσεις σαν <InlineMath>{'2^{\\sqrt{\\log n}}'}</InlineMath> ζουν στην <strong>υπολογαριθμικά-υπερπολυωνυμική</strong> ζώνη.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -2094,6 +2159,17 @@ for i ← 0 to n-2 with step 1 do
           <InlineMath>{'[0, 2\\pi]'}</InlineMath>. Η σωστή απάντηση είναι
           «μη-συγκρίσιμες» — όχι «δεν ξέρω».
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q1' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Διάταξε / σύγκρινε / κύκλωσε ποιες σχέσεις ισχύουν»</strong> πάνω σε λίστα συναρτήσεων — η ίδια ιεραρχία{' '}
+              <InlineMath>{'\\log^* n \\prec \\log n \\prec n^c \\prec n^{\\log n} \\prec a^n \\prec n!'}</InlineMath>{' '}
+              ξανά και ξανά. Συνταγή: (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em>, (2) <em>πέτα σταθερές</em>, (3) <em>τοποθέτησε στην ιεραρχία</em>. Παγίδα-σήμα (αυτή η άσκηση είναι το ίδιο το paradigm): παράμετρος στον εκθέτη (<InlineMath>{'n^{1+\\tan\\varphi}'}</InlineMath>) ή ταλάντωση τύπου <InlineMath>{'\\sin n'}</InlineMath> → η σωστή απάντηση είναι «μη-συγκρίσιμες», ΟΧΙ μέλος του <InlineMath>{'\\Theta'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -3095,6 +3171,16 @@ for i ← 0 to n-2 with step 1 do
           <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath>. Αν δεν θυμάσαι
           τον τύπο, φράξε: το άθροισμα n όρων με μέγιστο M είναι μεταξύ M και nM.
         </Callout>
+        <RelatedPair
+          relationship="analogy"
+          patternName="Άθροισμα → κλειστός τύπος → Θ-από-ορισμό"
+          pairs={[{ id: 'pt4-th1-q5' }]}
+          cue={
+            <>
+              <strong>«Δείξε ότι <InlineMath>{'\\sum f(i) = \\Theta(g(n))'}</InlineMath>»</strong> ή <strong>«σύγκρινε άθροισμα με πολυώνυμο × λογάριθμο»</strong> — η ίδια συνταγή σε δύο διαδοχικά έτη (Σεπτ 2024 με <InlineMath>{'1+2+\\cdots+n = \\Theta(n^2)'}</InlineMath>, Σεπτ 2025 με <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>). Συνταγή: (1) <em>κλείσε το άθροισμα σε αναγνωρίσιμη μορφή</em> με τα τρία κλειδιά (<InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>, <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>, <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath>) ή φράγμα «μισοί όροι ≥ μισή τιμή», (2) <em>σύγκρινε τάξεις, πέτα σταθερές</em>. Παγίδα-σήμα: «<InlineMath>{'\\Theta'}</InlineMath>» απαιτεί <strong>δύο</strong> φράγματα (<InlineMath>{'O'}</InlineMath> ΚΑΙ <InlineMath>{'\\Omega'}</InlineMath>) — όχι μόνο το ένα.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -3156,6 +3242,16 @@ for i ← 0 to n-2 with step 1 do
           όρος του L02 ανάγεται σε log, n, ή πολυώνυμο — μην παγώσεις απ' την
           εμφάνιση.
         </Callout>
+        <RelatedPair
+          relationship="analogy"
+          patternName="Sub-logarithmic growth — αρμονικό άθροισμα ή iterated log"
+          pairs={[{ id: 'front-set-1-ask3' }, { id: 'front-set-11-ask1' }]}
+          cue={
+            <>
+              <strong>Εμφανίζεται <InlineMath>{'\\sum 1/k'}</InlineMath>, <InlineMath>{'\\log \\log n'}</InlineMath>, ή <InlineMath>{'\\log^* n'}</InlineMath></strong> — δύο διαφορετικές «πιο αργές από log» ζώνες, και η εξέταση συνήθως ζητάει να τις τοποθετήσεις σωστά μεταξύ τους. Κανόνες-κλειδιά: <em>το αρμονικό άθροισμα <InlineMath>{'H_n = \\sum 1/k = \\Theta(\\log n)'}</InlineMath></em> ΔΕΝ είναι σταθερά (όπως εδώ)· <em><InlineMath>{'\\log \\log n'}</InlineMath> και <InlineMath>{'\\log^* n'}</InlineMath> κάθονται αυστηρά κάτω από <InlineMath>{'\\log n'}</InlineMath></em>, και μεταξύ τους <InlineMath>{'\\log^* n \\prec \\log \\log n'}</InlineMath>. Παγίδα-σήμα: <InlineMath>{'\\log(\\sqrt{\\log_2 n})'}</InlineMath> απλοποιείται σε <InlineMath>{'\\tfrac{1}{2}\\log \\log_2 n'}</InlineMath> — αυστηρά πιο αργό από κάθε <InlineMath>{'\\log^c n'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -4583,6 +4679,15 @@ for i ← 0 to n-2 with step 1 do
           παραλλαγές: «το άθροισμα είναι μεταξύ του μέγιστου όρου και n φορές το
           μέγιστο» και «κάθε όρος αθροίσματος φράσσεται από σταθερές → άθροισμα Θ(n)».
         </Callout>
+        <RelatedPair
+          patternName="Σωστό ή Λάθος: ασυμπτωτική ταυτότητα μεταξύ συναρτήσεων"
+          pairs={[{ id: 'front-set-2-ask3' }, { id: 'front-set-12-ask1' }]}
+          cue={
+            <>
+              <strong>«Σωστό ή Λάθος» πάνω σε ασυμπτωτική ταυτότητα</strong> (συμμετρία, μεταβατικότητα, συνεπαγωγές) — συνταγή: <em>πρώτα αντιπαράδειγμα με μικρές οικείες συναρτήσεις</em> (<InlineMath>{'n'}</InlineMath> vs <InlineMath>{'n^2'}</InlineMath>, σταθερά vs <InlineMath>{'n'}</InlineMath>), <em>μετά απόδειξη από τον ορισμό</em>. Παγίδα-σήμα: «<InlineMath>{'='}</InlineMath>» στις ταυτότητες δεν είναι συμμετρικό· γραφές σαν <InlineMath>{'O(g) = O(f)'}</InlineMath> διαβάζονται «μέλος», όχι «ισότητα». Δεύτερη παγίδα: τα κανονικά «<InlineMath>{'f + g'}</InlineMath>» γενικεύονται στο <InlineMath>{'\\max'}</InlineMath> (όπως εδώ) αλλά <strong>όχι στο</strong> <InlineMath>{'\\min'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -4798,6 +4903,16 @@ for i ← 0 to n-2 with step 1 do
           <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>. Αν τα ξέρεις
           απ' έξω, οι ασκήσεις πολυπλοκότητας λύνονται σε δύο γραμμές.
         </Callout>
+        <RelatedPair
+          relationship="analogy"
+          patternName="Άθροισμα → κλειστός τύπος → Θ-από-ορισμό"
+          pairs={[{ id: 'pt2-th1-q1' }]}
+          cue={
+            <>
+              <strong>«Δείξε ότι <InlineMath>{'\\sum f(i) = \\Theta(g(n))'}</InlineMath>»</strong> ή <strong>«σύγκρινε άθροισμα με πολυώνυμο × λογάριθμο»</strong> — η ίδια συνταγή σε δύο διαδοχικά έτη (Σεπτ 2024 με <InlineMath>{'1+2+\\cdots+n = \\Theta(n^2)'}</InlineMath>, Σεπτ 2025 με <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>). Συνταγή: (1) <em>κλείσε το άθροισμα σε αναγνωρίσιμη μορφή</em> με τα τρία κλειδιά (<InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>, <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>, <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath>) ή φράγμα «μισοί όροι ≥ μισή τιμή», (2) <em>σύγκρινε τάξεις, πέτα σταθερές</em>. Παγίδα-σήμα: «<InlineMath>{'\\Theta'}</InlineMath>» απαιτεί <strong>δύο</strong> φράγματα (<InlineMath>{'O'}</InlineMath> ΚΑΙ <InlineMath>{'\\Omega'}</InlineMath>) — όχι μόνο το ένα.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -5484,6 +5599,17 @@ return c, mark`}</pre>
           <InlineMath>{'\\log^3 n'}</InlineMath> — η πρώτη περιέχει πολυωνυμικό
           παράγοντα <InlineMath>{'\\sqrt n'}</InlineMath>, νικάει αυτόματα.
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Διάταξε / σύγκρινε / κύκλωσε ποιες σχέσεις ισχύουν»</strong> πάνω σε λίστα συναρτήσεων — η ίδια ιεραρχία{' '}
+              <InlineMath>{'\\log^* n \\prec \\log n \\prec n^c \\prec n^{\\log n} \\prec a^n \\prec n!'}</InlineMath>{' '}
+              ξανά και ξανά. Συνταγή: (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em>, (2) <em>πέτα σταθερές</em>, (3) <em>για ισόποσες τάξεις, σύγκρινε <InlineMath>{'\\log f'}</InlineMath> με <InlineMath>{'\\log g'}</InlineMath></em> (όπως εδώ). Παγίδα-σήμα: εκθέτες όπως <InlineMath>{'\\sqrt{n\\log n}'}</InlineMath>, <InlineMath>{'\\log^c n'}</InlineMath> ή ελεύθερη παράμετρος → ίδια συνταγή «log και στις δύο πλευρές» κάθε φορά.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -5555,6 +5681,16 @@ return c, mark`}</pre>
           <InlineMath>{'g/n = 2^{\\sqrt{\\log n} - \\log n}'}</InlineMath>, και ο
           εκθέτης φεύγει στο <InlineMath>{'-\\infty'}</InlineMath>.
         </Callout>
+        <RelatedPair
+          relationship="analogy"
+          patternName="Ταυτότητα πρώτα, ιεραρχία μετά"
+          pairs={[{ id: 'pt1-th1-q2' }]}
+          cue={
+            <>
+              <strong>Έκφραση που μοιάζει «τρομακτική»</strong> (<InlineMath>{'2^{\\sqrt{\\log n}}'}</InlineMath> εδώ, <InlineMath>{'n^{\\log n}'}</InlineMath> στο 2025 paper) — η πρώτη κίνηση είναι πάντα <em>ξεμπλέκεις τις ταυτότητες</em>, μετά τοποθετείς στην ιεραρχία. Τρεις ταυτότητες-κλειδιά: <InlineMath>{'2^{\\log_2 n} = n'}</InlineMath> · <InlineMath>{'a^{\\log_a x} = x'}</InlineMath> · <InlineMath>{'n^{\\log_2 c} = c^{\\log_2 n}'}</InlineMath> (κρυφή ισότητα). Δύο νέες ζώνες της ιεραρχίας: <em>υπερπολυωνυμικά</em> (όπως <InlineMath>{'n^{\\log_2 n}'}</InlineMath>) ζουν αυστηρά πάνω από κάθε <InlineMath>{'n^c'}</InlineMath> αλλά κάτω από κάθε <InlineMath>{'a^n'}</InlineMath>· αντίστροφα, <em>υπολογαριθμικά-υπερπολυωνυμικά</em> (όπως <InlineMath>{'2^{\\sqrt{\\log n}}'}</InlineMath> εδώ) ζουν αυστηρά κάτω από κάθε <InlineMath>{'n^c'}</InlineMath> αλλά πάνω από κάθε <InlineMath>{'\\log^c n'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6021,6 +6157,15 @@ return c, mark`}</pre>
           <InlineMath>{'a^{\\log_a x} = x'}</InlineMath>. Πάντα πρώτα απλοποίηση,
           μετά «κράτα τον κυρίαρχο», μετά εφαρμογή ιεραρχίας.
         </Callout>
+        <RelatedPair
+          patternName="Σωστό ή Λάθος: ασυμπτωτική ταυτότητα μεταξύ συναρτήσεων"
+          pairs={[{ id: 'pt4-th1-q2' }, { id: 'front-set-2-ask3' }]}
+          cue={
+            <>
+              <strong>«Σωστό ή Λάθος» πάνω σε ασυμπτωτική σχέση μεταξύ εκφράσεων</strong> — συνταγή: <em>πρώτα απλοποίησε</em> κάθε πλευρά (ταυτότητες, κυρίαρχος όρος), <em>μετά σύγκρινε στην ιεραρχία</em>. Παγίδα-σήμα: «ψευδο-εκθετικοί» όροι σαν <InlineMath>{'2^{\\log n}'}</InlineMath> δεν είναι εκθετικοί — απλοποιούνται σε <InlineMath>{'n'}</InlineMath>. Δεύτερη παγίδα: «<InlineMath>{'='}</InlineMath>» στις ταυτότητες δεν είναι συμμετρικό — διαβάζεται «μέλος», όχι «ισότητα».
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6179,6 +6324,17 @@ return c, mark`}</pre>
           αλληλοαναιρούνται → σταθερά· (β) δύο εκφράσεις πέφτουν στην ΙΔΙΑ
           Θ-class — μόνο τότε χρειάζεσαι λεπτότερη σύγκριση συντελεστών.
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Διάταξε / σύγκρινε ομάδες συναρτήσεων»</strong> — η ίδια ιεραρχία{' '}
+              <InlineMath>{'\\log^* n \\prec \\log n \\prec n^c \\prec n^{\\log n} \\prec a^n \\prec n!'}</InlineMath>{' '}
+              ξανά. Συνταγή (όπως εδώ): (1) <em>απλοποίησε σε Θ-class</em> (ταυτότητες λογαρίθμου, αλληλοαναιρέσεις, Stirling για παραγοντικά), (2) <em>πέτα σταθερές</em>, (3) <em>τοποθέτησε στην ιεραρχία</em>. Για ισόποσες Θ-classes σύγκρινε <InlineMath>{'\\log f'}</InlineMath> με <InlineMath>{'\\log g'}</InlineMath>. Παγίδα-σήμα: ελεύθερη παράμετρος στον εκθέτη ή ταλάντωση τύπου <InlineMath>{'\\sin n'}</InlineMath> → «μη-συγκρίσιμες», ΟΧΙ μέλος του <InlineMath>{'\\Theta'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6262,6 +6418,16 @@ return c, mark`}</pre>
           εκτίμηση: για κάθε ρεαλιστικό <InlineMath>{'n'}</InlineMath>{' '}
           (ως 2^65536), <InlineMath>{'\\log^* n \\le 5'}</InlineMath>.
         </Callout>
+        <RelatedPair
+          relationship="analogy"
+          patternName="Sub-logarithmic growth — αρμονικό άθροισμα ή iterated log"
+          pairs={[{ id: 'pt2-th1-q2' }, { id: 'front-set-11-ask1' }]}
+          cue={
+            <>
+              <strong>Εμφανίζεται <InlineMath>{'\\sum 1/k'}</InlineMath>, <InlineMath>{'\\log \\log n'}</InlineMath>, ή <InlineMath>{'\\log^* n'}</InlineMath></strong> — δύο διαφορετικές «πιο αργές από log» ζώνες. Κανόνες-κλειδιά: <em>το αρμονικό άθροισμα <InlineMath>{'H_n = \\sum 1/k = \\Theta(\\log n)'}</InlineMath></em> ΔΕΝ είναι σταθερά (μεγαλώνει σαν <InlineMath>{'\\log n'}</InlineMath>)· <em><InlineMath>{'\\log \\log n'}</InlineMath> και <InlineMath>{'\\log^* n'}</InlineMath> κάθονται αυστηρά κάτω από <InlineMath>{'\\log n'}</InlineMath></em>, και μεταξύ τους <InlineMath>{'\\log^* n \\prec \\log \\log n'}</InlineMath>. Παγίδα-σήμα: το <InlineMath>{'\\log^* n'}</InlineMath> (όπως εδώ) μετράει «πόσες φορές πρέπει να εφαρμόσεις τον λογάριθμο μέχρι να φτάσεις στο 1» — σχεδόν σταθερά, αλλά ΟΧΙ ακριβώς σταθερά.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6337,6 +6503,15 @@ return c, mark`}</pre>
           θεώρημα). (δ) Ανακλαστικότητα — αν το αριστερό = δεξιό, η σχέση είναι
           τετριμμένα Θ.
         </Callout>
+        <RelatedPair
+          patternName="Σωστό ή Λάθος: ασυμπτωτική ταυτότητα μεταξύ συναρτήσεων"
+          pairs={[{ id: 'pt4-th1-q2' }, { id: 'front-set-2-ask3' }]}
+          cue={
+            <>
+              <strong>«Σωστό ή Λάθος» πάνω σε ασυμπτωτική ταυτότητα</strong> — συνταγή: <em>πρώτα κυνήγησε αντιπαράδειγμα με μικρές οικείες συναρτήσεις</em>, <em>μετά απόδειξη από τον ορισμό</em>. Παγίδα-σήμα: «<InlineMath>{'='}</InlineMath>» στις ταυτότητες δεν είναι συμμετρικό — γραφές σαν <InlineMath>{'O(g) = O(f)'}</InlineMath> διαβάζονται «μέλος του συνόλου», όχι «ίσο». Δεύτερη παγίδα: τα κανονικά «<InlineMath>{'f + g'}</InlineMath>» γενικεύονται στο <InlineMath>{'\\max'}</InlineMath> (σωστό) αλλά <strong>όχι στο</strong> <InlineMath>{'\\min'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6416,6 +6591,15 @@ return c, mark`}</pre>
           είναι σταθερά — όχι συνάρτηση του n!) και ζευγάρια που πέφτουν στην
           ίδια κλάση — εκεί χρειάζεσαι σύγκριση συντελεστών.
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Διάταξε ομάδες συναρτήσεων κατά ρυθμό αύξησης»</strong> — η ίδια ιεραρχία ξανά και ξανά. Συνταγή: (1) <em>πρώτα log και των δύο</em> όταν είναι «εκθετικοί πύργοι» (όπως εδώ), (2) <em>απλοποίηση σε Θ-class</em>, (3) <em>τοποθέτηση στην ιεραρχία</em>. Παγίδα-σήμα: σταθερές μεταμφιεσμένες σε «τέρατα» (<InlineMath>{'4002^{4002}'}</InlineMath> είναι <InlineMath>{'O(1)'}</InlineMath>!) ή ταλάντωση τύπου <InlineMath>{'\\sin n'}</InlineMath> / <InlineMath>{'\\tan\\varphi'}</InlineMath> → «μη-συγκρίσιμες», ΟΧΙ μέλος του <InlineMath>{'\\Theta'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6570,6 +6754,15 @@ return c, mark`}</pre>
           αλλά διατηρείται κάτω από <strong>σταθερές δυνάμεις</strong> από κοινού (αν{' '}
           <InlineMath>{'f = O(g)'}</InlineMath> τότε <InlineMath>{'f^k = O(g^k)'}</InlineMath>).
         </Callout>
+        <RelatedPair
+          patternName="Σωστό ή Λάθος: ασυμπτωτική ταυτότητα μεταξύ συναρτήσεων"
+          pairs={[{ id: 'pt4-th1-q2' }, { id: 'front-set-12-ask1' }]}
+          cue={
+            <>
+              <strong>«Σωστό ή Λάθος» πάνω σε ασυμπτωτική συνεπαγωγή ή ταυτότητα</strong> — συνταγή: <em>πρώτα κυνήγησε αντιπαράδειγμα με μικρές οικείες συναρτήσεις</em> (όπως <InlineMath>{'f=2n, g=n'}</InlineMath> εδώ), <em>μετά απόδειξη από τον ορισμό</em>. Παγίδα-σήμα: μη-γραμμικοί μετασχηματισμοί (<InlineMath>{'2^f'}</InlineMath>, <InlineMath>{'f^2'}</InlineMath>, <InlineMath>{'\\log f'}</InlineMath>) δεν διατηρούν το <InlineMath>{'O'}</InlineMath> γενικά — απαιτούν αυστηρότερη προϋπόθεση (<InlineMath>{'f = o(g)'}</InlineMath> για <InlineMath>{'2^f = O(2^g)'}</InlineMath>· <InlineMath>{'g \\ge 2'}</InlineMath> για <InlineMath>{'\\log f = O(\\log g)'}</InlineMath>).
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6643,6 +6836,15 @@ return c, mark`}</pre>
           της. Άρα <InlineMath>{'n^k \\cdot a^n \\to 0'}</InlineMath> για κάθε{' '}
           <InlineMath>{'k'}</InlineMath> και <InlineMath>{'a < 1'}</InlineMath>.
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Σύγκρινε δύο εκφράσεις και βρες ποια σχέση ισχύει»</strong> — η ίδια ιεραρχία ξανά και ξανά. Συνταγή: (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em> (όπως εδώ, <InlineMath>{'n = 2^{\\log n}'}</InlineMath> για ίδια βάση), (2) <em>πέτα σταθερές</em>, (3) <em>τοποθέτησε στην ιεραρχία</em>. Παγίδα-σήμα: εκθετικά με βάση <InlineMath>{'< 1'}</InlineMath> (όπως <InlineMath>{'(2/5)^n'}</InlineMath> εδώ) ΝΙΚΑΝΕ κάθε πολυωνυμικό μπροστά τους — όπως κάθε εκθετικό με βάση <InlineMath>{'> 1'}</InlineMath> νικάει κάθε πολυωνυμικό αλλά «προς τα πάνω».
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6720,6 +6922,18 @@ procedure CALC(w):
           (όπως <InlineMath>{'i'}</InlineMath> ως <InlineMath>{'i^2'}</InlineMath>) απαιτεί άθροισμα,
           όχι απλό πολλαπλασιασμό.
         </Callout>
+        <RelatedPair
+          patternName="Δώσε την πολυπλοκότητα του παρακάτω κώδικα (εμφωλευμένοι βρόχοι, αθροιστική ανάλυση)"
+          pairs={[{ id: 'front-set-10-ask2' }, { id: 'front-set-4-thema4' }]}
+          cue={
+            <>
+              <strong>Διπλός ή τριπλός βρόχος όπου ο εσωτερικός εξαρτάται από εξωτερικό δείκτη</strong> — η δουλειά σου είναι ένα{' '}
+              <InlineMath>{'\\sum'}</InlineMath> γινομένων ορίων. Τρία κλειστά αθροίσματα-κλειδιά: <InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum i^3 = \\Theta(n^4)'}</InlineMath> (όπως εδώ). Παγίδα-σήμα #1: εσωτερική διαδικασία (όπως CALC) έχει το <em>δικό της</em> κόστος που εξαρτάται από το όρισμα — μέτρα ΠΡΩΤΑ αυτό. Παγίδα-σήμα #2: βήμα <InlineMath>{'0.1'}</InlineMath> είναι σταθερά (όχι «πιο πυκνό» κατά τάξη)· γεωμετρικό βήμα (<InlineMath>{'i \\leftarrow 2i'}</InlineMath>) δίνει <InlineMath>{'\\Theta(\\log n)'}</InlineMath> επαναλήψεις.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6827,6 +7041,15 @@ procedure CALC(w):
           (κρυφή ισότητα),
           (6) log(n!) = Θ(log(n^n)) (Stirling).
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'pt1-th1-q1' }]}
+          cue={
+            <>
+              <strong>«Διάταξε / σύγκρινε ζεύγη συναρτήσεων»</strong> — αυτή είναι <em>η μεγάλη πινακοποιημένη μορφή</em> του pattern: 6 ζεύγη, 6 σχέσεις (<InlineMath>{'O, o, \\Omega, \\omega, \\Theta'}</InlineMath>). Σχεδόν κάθε σύγκριση πέφτει σε μία από τις 6 αρχέτυπες μάχες παραπάνω. Συνταγή: (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em> (η κρυφή <InlineMath>{'n^{\\log c} = c^{\\log n}'}</InlineMath> είναι το σήμα-κατατεθέν), (2) <em>πέτα σταθερές</em>, (3) <em>τοποθέτησε στην ιεραρχία</em>. Παγίδα-σήμα: ταλάντωση (<InlineMath>{'n^{\\sin n}'}</InlineMath>) → «μη-συγκρίσιμες»· σταθερά κρυμμένη ως τεράστια εκθετική (<InlineMath>{'4002^{4002}'}</InlineMath>) είναι <InlineMath>{'O(1)'}</InlineMath>.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -6961,6 +7184,15 @@ procedure CALC(w):
           <InlineMath>{'H_n \\approx \\ln n'}</InlineMath> μετατρέπει την σε{' '}
           <InlineMath>{'n^{\\ln a}'}</InlineMath> — πολυώνυμο με μη-ακέραιο εκθέτη.
         </Callout>
+        <RelatedPair
+          patternName="Κατάταξε αυτές τις συναρτήσεις κατά ρυθμό αύξησης"
+          pairs={[{ id: 'pt1-th1-q3' }, { id: 'front-set-2-ask7' }]}
+          cue={
+            <>
+              <strong>«Διάταξε / σύγκρινε εκφράσεις σε αύξουσα τάξη»</strong> — η ίδια ιεραρχία ξανά και ξανά. Συνταγή: (1) <em>ξεμπλέκεις ταυτότητες πρώτα</em> (<InlineMath>{'n^{\\log n} = 2^{\\log^2 n}'}</InlineMath>, <InlineMath>{'5^{H_n} = n^{\\ln 5}'}</InlineMath>, <InlineMath>{'\\log(n!) = \\Theta(n\\log n)'}</InlineMath>), (2) <em>πέτα σταθερές</em>, (3) <em>τοποθέτησε στην ιεραρχία</em>. Παγίδα-σήμα: «<em>ψευδο-εκθετικά</em>» τύπου <InlineMath>{'a^{H_n}'}</InlineMath> είναι ΠΟΛΥΩΝΥΜΙΚΑ (μετά την απλοποίηση)· πολυωνυμικός εκθέτης που πέφτει αυστηρά μεταξύ ακεραίων (π.χ. <InlineMath>{'n^{1.6}'}</InlineMath> εδώ) ζει αυστηρά ανάμεσα σε δύο γνωστές τάξεις.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -8169,6 +8401,18 @@ procedure CALC(w)
           εκτίμηση παίρνει το χειρότερο όριο, και κατά κανόνα ταυτίζεται με το
           πραγματικό άθροισμα μέχρι σταθερά.
         </Callout>
+        <RelatedPair
+          patternName="Δώσε την πολυπλοκότητα του παρακάτω κώδικα (εμφωλευμένοι βρόχοι, αθροιστική ανάλυση)"
+          pairs={[{ id: 'front-set-2-ask6' }, { id: 'front-set-10-ask2' }]}
+          cue={
+            <>
+              <strong>Διπλός ή τριπλός βρόχος όπου ο εσωτερικός εξαρτάται από εξωτερικό δείκτη</strong> — η δουλειά σου είναι ένα{' '}
+              <InlineMath>{'\\sum'}</InlineMath> γινομένων ορίων. Τρία κλειστά αθροίσματα-κλειδιά: <InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath>. Παγίδα-σήμα #1: εσωτερικός βρόχος με όριο <InlineMath>{'i^2'}</InlineMath> (όπως εδώ) δίνει τάξη <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath> ή κάτι τετραγωνικό μπροστά. Παγίδα-σήμα #2: μη-μοναδιαίο βήμα (<InlineMath>{'0.1'}</InlineMath>) είναι σταθερά — δεν αλλάζει την τάξη.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -8283,6 +8527,18 @@ procedure CALC(m)
           (3) <strong>Συνάρτηση του ορίσματος</strong> (CALC με while που χτίζει
           άθροισμα) → δες το αναλυτικά ποια ισότητα ικανοποιεί η συνθήκη τερματισμού.
         </Callout>
+        <RelatedPair
+          patternName="Δώσε την πολυπλοκότητα του παρακάτω κώδικα (εμφωλευμένοι βρόχοι, αθροιστική ανάλυση)"
+          pairs={[{ id: 'front-set-2-ask6' }, { id: 'front-set-10-ask2' }]}
+          cue={
+            <>
+              <strong>Διπλός ή τριπλός βρόχος όπου ο εσωτερικός εξαρτάται από εξωτερικό δείκτη</strong> — η δουλειά σου είναι ένα{' '}
+              <InlineMath>{'\\sum'}</InlineMath> γινομένων ορίων. Τρία κλειστά αθροίσματα-κλειδιά: <InlineMath>{'\\sum i = \\Theta(n^2)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum i^2 = \\Theta(n^3)'}</InlineMath>,{' '}
+              <InlineMath>{'\\sum 1/k = \\Theta(\\log n)'}</InlineMath>. Παγίδα-σήμα #1: «ψευδο-σταθερό» βήμα (<InlineMath>{'\\text{step } 2j'}</InlineMath>) είναι ΣΤΗΝ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ γεωμετρικό (<InlineMath>{'j \\leftarrow 3j'}</InlineMath>) → λογαριθμικός. Παγίδα-σήμα #2: «while που χτίζει αθροιστή» (όπως <InlineMath>{'1+2+\\cdots+i > m'}</InlineMath>) σταματά σε <InlineMath>{'\\sqrt{m}'}</InlineMath> — μέτρα την κρυφή αναλλοίωτη.
+            </>
+          }
+        />
       </>
     ),
   },
