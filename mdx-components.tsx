@@ -143,6 +143,7 @@ import { FmThresholdEffectViz } from '@/components/viz/FmThresholdEffectViz'
 import { CaptureEffectViz } from '@/components/viz/CaptureEffectViz'
 import { RandomPhaseCosineViz } from '@/components/viz/RandomPhaseCosineViz'
 import { RandomProcessRealizationsViz } from '@/components/viz/RandomProcessRealizationsViz'
+import { DistributionExplorerViz } from '@/components/viz/DistributionExplorerViz'
 import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
 import { ErgodicityViz } from '@/components/viz/ErgodicityViz'
 import { WhiteNoiseSimulationViz } from '@/components/viz/WhiteNoiseSimulationViz'
@@ -369,6 +370,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RandomProcessRealizationsViz,
     AutocorrelationViz,
     ErgodicityViz,
+    DistributionExplorerViz,
 
     // Visualizations — noise
     WhiteNoiseSimulationViz,
