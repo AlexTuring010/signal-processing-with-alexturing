@@ -1205,7 +1205,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         topic: 'noise',
         inTypology: false,
         derivedIn: 'noise/sources',
-        content: <BlockMath>{'P_N = kTB \\quad,\\quad k = 1.38\\times 10^{-23}\\,\\text{J/K}, \\;T_0 = 290\\,\\text{K}'}</BlockMath>,
+        content: <BlockMath>{'\\sigma^2 = 4kTRW \\;\\Rightarrow\\; P_N = kTW = kTB \\quad,\\quad \\mathcal{S}_N(f) = kT/2,\\;\\;k = 1.38\\times 10^{-23}\\,\\text{J/K},\\;T_0 = 290\\,\\text{K}'}</BlockMath>,
       },
       {
         id: 'white-noise-psd',
