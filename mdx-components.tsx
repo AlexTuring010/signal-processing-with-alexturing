@@ -153,6 +153,9 @@ import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
 import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
 import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
+import { FilterSpectralMaskViz } from '@/components/viz/FilterSpectralMaskViz'
+import { SincTruncationToRealFilterViz } from '@/components/viz/SincTruncationToRealFilterViz'
+import { RealFilterStepperViz } from '@/components/viz/RealFilterStepperViz'
 import { Tabs } from '@/components/ui/Tabs'
 import { Collapsible } from '@/components/ui/Collapsible'
 import { Eq, InlineMath, BlockMath } from '@/components/math'
@@ -272,6 +275,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — foundations / filters
     FilterTypeViewer,
     IdealVsRealFilterViz,
+    FilterSpectralMaskViz,
+    SincTruncationToRealFilterViz,
+    RealFilterStepperViz,
 
     // Visualizations — modulation / bridge
     IQDecompositionViz,

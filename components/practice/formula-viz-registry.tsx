@@ -68,6 +68,9 @@ import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSe
 import { ScalingDualityViz } from '@/components/viz/ScalingDualityViz'
 import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
 import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
+import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
+import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
+import { RealFilterStepperViz } from '@/components/viz/RealFilterStepperViz'
 
 const REGISTRY: Record<string, () => ReactNode> = {
   // Foundations · Signal definitions + properties
@@ -117,6 +120,12 @@ const REGISTRY: Record<string, () => ReactNode> = {
   autocorrelation: () => <AutocorrelationViz />,
   'wiener-khinchin-ft': () => <AutocorrelationViz />,
   parseval: () => <RectToSincViz />,
+
+  // Foundations · Filters
+  'ideal-filter-shapes': () => <FilterTypeViewer />,
+  'ideal-lp-impulse-response': () => <IdealVsRealFilterViz />,
+  'real-filter-specs': () => <RealFilterStepperViz />,
+  'filter-gain-db': () => <RealFilterStepperViz />,
 
   // AM
   'am-signal': () => <AMSignalViz />,

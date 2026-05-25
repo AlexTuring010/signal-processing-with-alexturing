@@ -981,6 +981,83 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
     ),
   },
 
+  // ── Filters ───────────────────────────────────────────────────
+  'ideal-filter-shapes': {
+    intuition: (
+      <>
+        Τα τέσσερα ιδανικά φίλτρα είναι απλώς διαφορετικά brick-wall σχήματα του{' '}
+        <InlineMath>{'|H(f)|'}</InlineMath>: όπου είναι 1, η συχνότητα{' '}
+        περνάει αναλλοίωτη· όπου είναι 0, εξαφανίζεται. Όλα έχουν even συμμετρία στη συχνότητα,
+        οπότε η κρουστική <InlineMath>{'h(t)'}</InlineMath> είναι real και even (μηδενική phase).
+      </>
+    ),
+    derivation: (
+      <>
+        Οι τέσσερις ορισμοί προέρχονται από το slide 36-40 του deck — απλώς ο
+        σχεδιαστής διαλέγει σε ποιες περιοχές βάζει 1 και ποιες 0. Το BS προκύπτει
+        ως complement του BP: <InlineMath>{'H_{BS}(f) = 1 - H_{BP}(f)'}</InlineMath>.
+      </>
+    ),
+  },
+  'ideal-lp-impulse-response': {
+    intuition: (
+      <>
+        Το ιδανικό LP είναι rect στη συχνότητα, οπότε από τη βασική Fourier pair{' '}
+        <InlineMath>{'\\mathrm{rect} \\leftrightarrow \\mathrm{sinc}'}</InlineMath>{' '}
+        η κρουστική του είναι <strong>sinc</strong>. Αυτό όμως εκτείνεται μέχρι το{' '}
+        <InlineMath>{'\\pm\\infty'}</InlineMath> — άρα το φίλτρο είναι{' '}
+        <strong>μη-αιτιατό</strong>, αδύνατο να υλοποιηθεί σε real-time. Από εκεί
+        έρχεται όλη η συμβιβαστική λογική των ρεαλιστικών φίλτρων.
+      </>
+    ),
+    derivation: (
+      <>
+        Από <InlineMath>{'\\mathrm{rect}(t/T) \\leftrightarrow T\\,\\mathrm{sinc}(fT)'}</InlineMath>{' '}
+        με duality (αντί <InlineMath>{'t \\leftrightarrow f'}</InlineMath>) και{' '}
+        <InlineMath>{'T = 2f_c'}</InlineMath>. Για ιδανικό BP, εφαρμόζουμε modulation
+        theorem στο LP <InlineMath>{'(\\text{LP}_{2W} \\cdot \\cos(2\\pi f_0 t))'}</InlineMath>.
+      </>
+    ),
+  },
+  'real-filter-specs': {
+    intuition: (
+      <>
+        Οι τέσσερις προδιαγραφές <InlineMath>{'f_p, f_s, \\delta_p, \\delta_s'}</InlineMath>{' '}
+        είναι το πεπερασμένο vocabulary για να μιλήσουμε για ένα φίλτρο που <em>δεν είναι</em>{' '}
+        ιδανικό: πόσο επιτρέπεις την passband να ταλαντώνεται γύρω από το 1, πόσο επιτρέπεις
+        την stopband να μην είναι ακριβώς 0, και πόσο πλατύ είναι το «δεν κάνω promise» κομμάτι
+        ανάμεσα.
+      </>
+    ),
+    derivation: (
+      <>
+        Δεν προέρχονται από αλγεβρική παραγωγή — είναι ο συμβατικός τρόπος που η
+        κοινότητα μηχανικών περιγράφει ρεαλιστικά φίλτρα (slides 42-46). Φυσική αιτία:
+        truncation του ιδανικού sinc στο <InlineMath>{'\\pm T'}</InlineMath> δημιουργεί
+        ripple και transition band — δες το SincTruncationToRealFilterViz.
+      </>
+    ),
+  },
+  'filter-gain-db': {
+    intuition: (
+      <>
+        Επειδή το <InlineMath>{'|H(f)|'}</InlineMath> καλύπτει εύρος από κοντά στο 1
+        (passband) έως πολύ κοντά στο 0 (stopband), η γραμμική κλίμακα είναι άχρηστη
+        για να δεις πόσο καλά μπλοκάρει η stopband. Σε dB, ένας παράγοντας 10 σε amplitude
+        γίνεται 20 dB — και ένας παράγοντας 10 σε ισχύ γίνεται 10 dB. Έτσι μιλάμε για
+        «60 dB attenuation» (= διαίρεση με 1000 σε amplitude, με <InlineMath>{'10^6'}</InlineMath>{' '}
+        σε ισχύ).
+      </>
+    ),
+    derivation: (
+      <>
+        Slide 46 ορίζει: <InlineMath>{'\\text{gain (dB)} = 20\\log_{10}|H(f)|'}</InlineMath>.
+        Αντιστροφή: <InlineMath>{'|H| = 10^{\\text{dB}/20}'}</InlineMath>, οπότε «−60 dB»
+        αντιστοιχεί σε <InlineMath>{'|H| = 10^{-3}'}</InlineMath>.
+      </>
+    ),
+  },
+
   // ── AM ───────────────────────────────────────────────────────
   'am-signal': {
     intuition: (

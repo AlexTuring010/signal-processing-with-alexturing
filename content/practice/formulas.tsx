@@ -676,6 +676,63 @@ export const FORMULA_SHEET: FormulaSection[] = [
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\frac{1}{\\sin^2(x)}\\, dx = -\\cot(x) + C'}</BlockMath>,
       },
+
+      // Filters (derived in /foundations/filters) ────────────
+      {
+        id: 'ideal-filter-shapes',
+        title: 'Τα τέσσερα ιδανικά φίλτρα',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/filters',
+        content: (
+          <>
+            <BlockMath>{'\\text{LP (κατωπερατό/βαθυπερατό)}:\\quad |H(f)| = \\begin{cases} 1, & |f| < f_c \\\\ 0, & \\text{αλλιώς} \\end{cases}'}</BlockMath>
+            <BlockMath>{'\\text{HP (υψιπερατό)}:\\quad |H(f)| = \\begin{cases} 1, & |f| > f_c \\\\ 0, & \\text{αλλιώς} \\end{cases}'}</BlockMath>
+            <BlockMath>{'\\text{BP (ζωνοπερατό)}:\\quad |H(f)| = \\begin{cases} 1, & f_1 < |f| < f_2 \\\\ 0, & \\text{αλλιώς} \\end{cases}'}</BlockMath>
+            <BlockMath>{'\\text{BS (απόρριψης ζώνης)}:\\quad |H(f)| = 1 - |H_{BP}(f)|'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'ideal-lp-impulse-response',
+        title: 'Κρουστική απόκριση ιδανικού LP',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/filters',
+        content: (
+          <>
+            <BlockMath>{'H(f) = \\mathrm{rect}\\!\\left(\\dfrac{f}{2 f_c}\\right) \\;\\xleftrightarrow{\\mathcal{F}}\\; h_{LP}(t) = 2 f_c\\,\\mathrm{sinc}(2 f_c\\, t)'}</BlockMath>
+            <BlockMath>{'\\text{ιδανικό BP (κέντρο } f_0 \\text{, πλάτος } 2W \\text{)}:\\quad h_{BP}(t) = 4 W\\,\\mathrm{sinc}(2W t)\\cos(2\\pi f_0 t)'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'real-filter-specs',
+        title: 'Προδιαγραφές ρεαλιστικού LP',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/filters',
+        content: (
+          <>
+            <BlockMath>{'\\text{passband}\\;(|f| \\le f_p):\\quad 1 - \\delta_p \\le |H(f)| \\le 1 + \\delta_p'}</BlockMath>
+            <BlockMath>{'\\text{transition}\\;(f_p < |f| < f_s):\\quad \\text{no spec, monotonic fall}'}</BlockMath>
+            <BlockMath>{'\\text{stopband}\\;(|f| \\ge f_s):\\quad |H(f)| \\le \\delta_s'}</BlockMath>
+          </>
+        ),
+      },
+      {
+        id: 'filter-gain-db',
+        title: 'Κέρδος φίλτρου σε dB',
+        topic: 'foundations',
+        inTypology: false,
+        derivedIn: 'foundations/filters',
+        content: (
+          <>
+            <BlockMath>{'\\text{Κέρδος (dB)} = 20\\,\\log_{10}\\bigl(|H(f)|\\bigr)'}</BlockMath>
+            <BlockMath>{'\\text{Ισχύς}\\;|H(f)|^2 \\;\\longrightarrow\\; 10\\,\\log_{10}\\bigl(|H(f)|^2\\bigr) \\;\\text{(ίδιο νούμερο)}'}</BlockMath>
+          </>
+        ),
+      },
     ],
   },
 
