@@ -1,0 +1,414 @@
+export const metadata = {
+  title: 'Bandpass θόρυβος — η I/Q decomposition $N = N_I\\cos - N_Q\\sin$',
+  description:
+    'Κάθε ζωνοπερατή διαδικασία θορύβου γύρω από f_c γράφεται ως δύο αργές baseband συνιστώσες πάνω σε φέρον: N(t) = N_I(t)cos(2πf_c t) − N_Q(t)sin(2πf_c t), με N_I, N_Q ανεξάρτητες baseband Gauss processes. Intuition του «θολού φέροντος» (envelope/phase), η canonical I/Q μορφή της /modulation/bridge εφαρμοσμένη σε τυχαία g(t), και η γενική joint-WSS ιστορία: παραγωγή της R_N(τ) = R_{N_I}(τ)cos(2πf_cτ) − R_{N_I N_Q}(τ)sin(2πf_cτ), οι συνθήκες joint-WSS (R_{N_I}=R_{N_Q}, περιττή cross-correlation), και πώς το συμμετρικό-γύρω-από-f_c φάσμα δίνει ανεξάρτητες συνιστώσες. Anchor: η Άσκηση 8 της /noise/through-filters (slide 54). Cross-mount NoiseFilterShapingViz, full 5-stage loop.',
+}
+
+export const frontmatter = {
+  title: 'Bandpass θόρυβος — I/Q decomposition',
+  slug: 'noise/bandpass',
+  order: 4,
+  prerequisites: ['noise/white-noise', 'noise/through-filters', 'modulation/bridge'],
+  examWeight: 3,
+  estimatedReadTime: 26,
+  lastUpdated: '2026-05-28',
+}
+
+import { CompleteToggle } from '@/components/layout/CompleteToggle'
+import { Bookmark } from '@/components/layout/Bookmark'
+import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
+
+<div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
+  <span>Noise · 4</span>
+  <span>·</span>
+  <span>~26 min read</span>
+  <span>·</span>
+  <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Η γέφυρα προς AM/FM-in-noise</span>
+</div>
+
+# Bandpass θόρυβος — I/Q decomposition
+
+<div className="-mt-1 mb-4 flex flex-wrap items-center gap-2">
+  <CompleteToggle slug="noise/bandpass" />
+  <Bookmark id="noise/bandpass" />
+</div>
+
+<PrerequisitesBar prerequisites={frontmatter.prerequisites} />
+
+<SourceDoc
+  sources={[
+    {
+      pdf: 'SE_session10_noise.pdf',
+      slides: '51–55',
+      label: 'Άσκηση 8 — bandpass-filtered λευκός θόρυβος: η ΣΑΣ R_Y = N_0 W cos(2πf_cτ) sinc(Wτ), P_Y = N_0 W (slide 54), έξοδος WSS Gauss zero-mean με σ² = N_0 W (slide 55). Αυτή είναι η ζωνοπερατή διαδικασία που εδώ σπάμε σε I/Q.',
+    },
+    {
+      pdf: 'SE_session7&8_theory_2025.pdf',
+      slides: '17–35',
+      label: 'canonical I/Q μορφή x = x_I cos − x_Q sin μέσω complex envelope g(t) (δες /modulation/bridge) — εδώ εφαρμόζεται σε τυχαία g(t).',
+    },
+  ]}
+/>
+
+## 1. Νιώσε — ο «θολός φέρων»
+
+Φαντάσου ότι συντονίζεις ένα ραδιόφωνο σε **κενή** συχνότητα — εκεί που δεν εκπέμπει κανένας σταθμός. Ακούς ένα «σσσσ», στατικό. Αυτό **δεν** είναι λευκός θόρυβος όπως τον ορίσαμε στη [`/noise/white-noise`](/noise/white-noise): ο δέκτης σου έχει ένα ζωνοπερατό φίλτρο (BPF) που αφήνει να περάσει μόνο μια **στενή ζώνη γύρω από τη συχνότητα συντονισμού $f_c$**. Ό,τι ακούς είναι λευκός θόρυβος **αφού** περάσει από αυτό το BPF — δηλαδή ακριβώς η **Άσκηση 8** της [`/noise/through-filters §8`](/noise/through-filters): θόρυβος με όλη του την ισχύ μαζεμένη σε μια ζώνη πλάτους $W$ γύρω από το $\pm f_c$.
+
+Πώς «μοιάζει» ένα τέτοιο σήμα στον χρόνο; **Σαν ένα φέρον $\cos(2\pi f_c t)$ που τρέμει.** Το πλάτος του ανεβοκατεβαίνει τυχαία και η φάση του ολισθαίνει τυχαία — αλλά **αργά**, πολύ πιο αργά από την ταλάντωση του ίδιου του φέροντος. Σαν μια νότα σταθερού ύψους $f_c$ της οποίας η ένταση και το «πότε ακριβώς» μετατοπίζονται συνεχώς, λίγο.
+
+<Callout type="intuition" title="Γιατί «αργά»; — γιατί το φάσμα είναι στενό">
+
+Η ζώνη του θορύβου έχει πλάτος $W$ και το $W \ll f_c$ (narrowband — η ίδια υπόθεση της [`/modulation/bridge §2`](/modulation/bridge)). Όλη η «γρήγορη» ταλάντωση του σήματος είναι το φέρον στα $f_c$· **αυτό που μένει** όταν αφαιρέσεις νοερά το φέρον είναι το «πόσο τρέμει» — και αυτό ζει σε ζώνη μόλις $\sim W/2$ γύρω από το 0, άρα μεταβάλλεται **αργά** σε σχέση με τον ρυθμό $f_c$. Ένας bandpass θόρυβος είναι, με μία φράση, **ένα γρήγορο φέρον με αργή τυχαία περιβάλλουσα και αργή τυχαία φάση.**
+
+</Callout>
+
+Αυτή η εικόνα έχει **δύο ισοδύναμες μαθηματικές γραφές**, και όλη η σελίδα χτίζει τη γέφυρα ανάμεσά τους:
+
+- **Πολική (envelope / phase):** $N(t) = R(t)\,\cos\big(2\pi f_c t + \Psi(t)\big)$ — ένα φέρον με **αργά** μεταβαλλόμενο πλάτος $R(t)$ και φάση $\Psi(t)$.
+- **Καρτεσιανή (I/Q):** $N(t) = N_I(t)\,\cos(2\pi f_c t) - N_Q(t)\,\sin(2\pi f_c t)$ — **δύο** αργές baseband τυχαίες διαδικασίες $N_I, N_Q$ που «οδηγούν» ένα $\cos$ και ένα $\sin$.
+
+<Callout type="key" title="Το βασικό σημείο της σελίδας">
+
+**Κάθε** ζωνοπερατή WSS διαδικασία θορύβου $N(t)$ συγκεντρωμένη γύρω από $f_c$ γράφεται:
+
+$$
+\boxed{\;N(t) \;=\; N_I(t)\,\cos(2\pi f_c t) \;-\; N_Q(t)\,\sin(2\pi f_c t)\;}
+$$
+
+όπου οι **in-phase** $N_I(t)$ και **quadrature** $N_Q(t)$ είναι:
+
+1. **baseband** (χαμηλόσυχνες) τυχαίες διαδικασίες — όλη η «γρήγορη» κίνηση έφυγε στο φέρον·
+2. **Gaussian, μηδενικής μέσης τιμής**, αν ο αρχικός θόρυβος είναι AWGN·
+3. **ανεξάρτητες** μεταξύ τους όταν το φάσμα είναι **συμμετρικό γύρω από το $f_c$** (η συνήθης περίπτωση)·
+4. με **ίση ισχύ**, ίση με την ισχύ του ίδιου του $N(t)$.
+
+Αυτή είναι **η ίδια canonical I/Q μορφή** της [`/modulation/bridge §6`](/modulation/bridge) — μόνο που τώρα τα $N_I, N_Q$ δεν είναι αιτιοκρατικά μηνύματα, αλλά **τυχαίες διαδικασίες**. Είναι το **κλειδί** για να αναλύσεις θόρυβο μέσα σε **οποιονδήποτε** δέκτη AM ή FM.
+
+</Callout>
+
+## 2. Η ζωνοπερατή διαδικασία που εννοούμε
+
+Για να μην μιλάμε στον αέρα, ας κρατήσουμε στο μυαλό μας **μία συγκεκριμένη** ζωνοπερατή διαδικασία — αυτήν που ήδη λύσαμε. Στην [`/noise/through-filters §8`](/noise/through-filters) (Άσκηση 8, slides 51–55) περάσαμε λευκό θόρυβο $N_0/2$ μέσα από **ιδανικό BPF** εύρους $W$ ανά πλευρά γύρω από το $\pm f_c$ και βρήκαμε:
+
+$$
+\mathcal{S}_N(f) \;=\; \frac{N_0}{2}\quad\text{για}\;\; f_c - \tfrac{W}{2} \le \lvert f\rvert \le f_c + \tfrac{W}{2}\,, \qquad
+R_N(\tau) \;=\; N_0\,W\,\cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)\,, \qquad
+\mathcal{P}_N \;=\; N_0\,W\,.
+$$
+
+<Callout type="note" title="Σύμβαση ονομάτων — N(t) εδώ = Y(t) της Άσκησης 8">
+
+Στην Άσκηση 8 τη ζωνοπερατή έξοδο τη λέγαμε $Y(t)$ (έξοδος φίλτρου) και το λευκό **είσοδο** $N(t)$. Σε **αυτή** τη σελίδα μας ενδιαφέρει η ίδια η ζωνοπερατή διαδικασία ως «ο θόρυβος» — γι' αυτό τη συμβολίζουμε $N(t)$ και μιλάμε για το $\mathcal{S}_N$, $R_N$ της. Είναι το ίδιο αντικείμενο· άλλαξε μόνο το όνομα γιατί άλλαξε ο ρόλος (δεν υπάρχει πια «είσοδος/έξοδος», υπάρχει «ο ζωνοπερατός θόρυβος που βλέπει ο δέκτης»). Από τη slide 55 ξέρουμε επίσης ότι η $N(t)$ είναι **WSS Gauss, μηδενικής μέσης τιμής, με $\sigma_N^2 = R_N(0) = N_0 W$.**
+
+</Callout>
+
+Από τη slide 54 ξεχωρίζουμε **δύο κομμάτια** στη ΣΑΣ — και αυτά τα δύο κομμάτια είναι ολόκληρη η ιστορία της σελίδας:
+
+$$
+R_N(\tau) \;=\; \underbrace{N_0\,W\,\mathrm{sinc}(W\tau)}_{\text{αργό baseband «envelope»}}\;\cdot\;\underbrace{\cos(2\pi f_c \tau)}_{\text{γρήγορο φέρον}}\,.
+$$
+
+Η ΣΑΣ είναι **ένα γρήγορο $\cos(2\pi f_c \tau)$ πολλαπλασιασμένο με ένα αργό $\mathrm{sinc}(W\tau)$**. Αυτό **δεν είναι σύμπτωση**: είναι η υπογραφή του «θολού φέροντος». Το $\cos(2\pi f_c\tau)$ είναι η μνήμη του φέροντος· το $\mathrm{sinc}(W\tau)$ είναι η μνήμη της αργής περιβάλλουσας (πρώτο μηδέν στο $\tau = 1/W$ — όσο πιο στενή η ζώνη, τόσο πιο μακριά «θυμάται»). Στη §5 θα δούμε ότι αυτό το $N_0 W\,\mathrm{sinc}(W\tau)$ είναι **ακριβώς** η αυτοσυσχέτιση της κάθε baseband συνιστώσας.
+
+**Operational χάρτης — πού κάθεται αυτή η σελίδα:**
+
+| Από | Παίρνω | Δίνω σε |
+| --- | --- | --- |
+| [`/noise/through-filters §8`](/noise/through-filters) | <InlineMath>{'R_N(\\tau) = N_0 W \\cos(2\\pi f_c\\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath>, <InlineMath>{'\\mathcal{P}_N = N_0 W'}</InlineMath> | — |
+| [`/modulation/bridge §6`](/modulation/bridge) | canonical μορφή <InlineMath>{'x = x_I\\cos - x_Q\\sin'}</InlineMath> (αιτιοκρατική) | — |
+| **Αυτή η σελίδα** | <InlineMath>{'N(t) = N_I\\cos(2\\pi f_c t) - N_Q\\sin(2\\pi f_c t)'}</InlineMath>, <InlineMath>{'N_I,N_Q'}</InlineMath> ανεξάρτητα baseband Gauss | [`/am/modulator-demodulator`](/am/modulator-demodulator), [`/fm/in-noise`](/fm/in-noise) |
+| **Αυτή η σελίδα** | <InlineMath>{'R_N = R_{N_I}\\cos(2\\pi f_c\\tau) - R_{N_I N_Q}\\sin(2\\pi f_c\\tau)'}</InlineMath> (joint-WSS) | [`/noise/snr`](/noise/snr), AM/FM-in-noise SNR |
+
+## 3. Δες — το φάσμα ζει γύρω από το $f_c$
+
+Πριν τα μαθηματικά, δες **πού** ζει η ισχύς αυτού του θορύβου. Διάλεξε **«Ιδανικό BPF»** στο viz και μετακίνησε το $f_c$: η ΦΠΙ εξόδου (δεξιά καμπύλη) είναι **δύο μπλοκ** πλάτους $W$, κεντραρισμένα στο $\pm f_c$, με σταθερό ύψος $N_0/2$. Όλη η ισχύς του θορύβου είναι **μαζεμένη εκεί** — τίποτα κοντά στο 0, τίποτα μακριά από το $f_c$.
+
+<NoiseFilterShapingViz />
+
+<Callout type="intuition" title="Πώς να «δεις» τις δύο baseband συνιστώσες μέσα σε αυτό το φάσμα">
+
+Πάρε το ένα μπλοκ — αυτό γύρω από το $+f_c$, από $f_c - W/2$ έως $f_c + W/2$. **Ολίσθησέ το νοερά κατά $-f_c$**, να έρθει στο 0. Τότε καταλαμβάνει τη ζώνη $\lvert f\rvert \le W/2$ — είναι **baseband**. Αυτό το «κατεβασμένο» φάσμα είναι ακριβώς το φάσμα των $N_I, N_Q$: δύο baseband τυχαίες διαδικασίες, η καθεμία στενή (μέχρι $W/2$), που «κουβαλούν» όλη την πληροφορία του ζωνοπερατού θορύβου.
+
+Η κίνηση «ολίσθησε το φάσμα στο baseband» είναι **ακριβώς** ο ορισμός της complex envelope $g(t) = N_p(t)\,e^{-j2\pi f_c t}$ της [`/modulation/bridge §5`](/modulation/bridge) — μόνο που εδώ το $g(t)$ είναι **τυχαίο**. Αυτή είναι η §4.
+
+</Callout>
+
+Η ίδια εικόνα φαίνεται και στον χρόνο: η slide 56 του session-10 δείχνει μια **πραγμάτωση** εξόδου του BPF — μοιάζει με ένα φέρον $f_c$ που το πλάτος και η φάση του «αναπνέουν» αργά. Στενό $W$ → αργή αναπνοή· ευρύ $W$ → γρήγορη. Αυτό το «αναπνέει» **είναι** τα $R(t), \Psi(t)$ της §1.
+
+## 4. Συμπύκνωσε (I) — η canonical I/Q μορφή για τυχαία διαδικασία
+
+Στη [`/modulation/bridge §4–6`](/modulation/bridge) δείξαμε ότι **οποιοδήποτε** ζωνοπερατό σήμα $x(t)$ — αιτιοκρατικό — γράφεται μέσω της **complex envelope** του:
+
+$$
+x_p(t) = x(t) + j\,\hat{x}(t)\;\;\text{(pre-envelope)}\,, \qquad
+g(t) = x_p(t)\,e^{-j 2\pi f_c t}\,, \qquad
+x(t) = \mathrm{Re}\{g(t)\,e^{j 2\pi f_c t}\}\,,
+$$
+
+και σπάζοντας $g(t) = x_I(t) + j\,x_Q(t)$ παίρνουμε την canonical μορφή $x(t) = x_I(t)\cos(2\pi f_c t) - x_Q(t)\sin(2\pi f_c t)$.
+
+**Η κατασκευή αυτή είναι καθαρά γραμμική και δουλεύει σε κάθε πραγμάτωση χωριστά.** Ο Hilbert, η pre-envelope, η μετατόπιση κατά $e^{-j2\pi f_c t}$ — όλα είναι ΓΧΑ πράξεις. Άρα αν αντί για αιτιοκρατικό $x(t)$ έχουμε μια **τυχαία διαδικασία** $N(t)$, εφαρμόζουμε **την ίδια ακριβώς κατασκευή στην κάθε πραγμάτωση** $N(t,\omega)$ και παίρνουμε:
+
+$$
+\boxed{\;N(t) \;=\; N_I(t)\,\cos(2\pi f_c t) - N_Q(t)\,\sin(2\pi f_c t)\;,\qquad g_N(t) = N_I(t) + j\,N_Q(t)\;}
+$$
+
+όπου τώρα $N_I(t) = \mathrm{Re}\{g_N(t)\}$ και $N_Q(t) = \mathrm{Im}\{g_N(t)\}$ είναι **πραγματικές, baseband τυχαίες διαδικασίες**.
+
+<Callout type="key" title="Η πολική γραφή — το «θολό φέρον» ρητά">
+
+Σε πολική μορφή $g_N(t) = R(t)\,e^{j\Psi(t)}$, οπότε
+
+$$
+N(t) = R(t)\,\cos\big(2\pi f_c t + \Psi(t)\big)\,, \qquad
+R(t) = \sqrt{N_I^2(t) + N_Q^2(t)}\,, \qquad
+\Psi(t) = \arctan\!\frac{N_Q(t)}{N_I(t)}\,.
+$$
+
+- $R(t) \ge 0$ είναι η **(στιγμιαία) περιβάλλουσα** — το «πόσο δυνατό» είναι το στατικό αυτή τη στιγμή.
+- $\Psi(t)$ είναι η **στιγμιαία φάση** — το «πού ακριβώς» βρίσκεται το τρεμάμενο φέρον.
+
+Όταν τα $N_I, N_Q$ είναι **ανεξάρτητα Gaussian** μηδενικής μέσης τιμής και ίδιας διασποράς (η συνήθης AWGN περίπτωση), τότε — γνωστή ιδιότητα από [`/randomness/random-variables`](/randomness/random-variables) — η περιβάλλουσα $R(t)$ ακολουθεί **κατανομή Rayleigh** και η φάση $\Psi(t)$ είναι **ομοιόμορφη** στο $[0, 2\pi)$. Να γιατί ο «θόρυβος» ενός κενού καναλιού δεν έχει σταθερό πλάτος: η περιβάλλουσά του είναι μια Rayleigh τυχαία μεταβλητή που χοροπηδά.
+
+</Callout>
+
+<Callout type="note" title="Σημείωση συμβολισμού — N_I/N_Q εδώ, n_I/n_Q στις downstream σελίδες">
+
+Εδώ χρησιμοποιούμε **κεφαλαία** $N_I, N_Q$ (όπως ταιριάζει σε τυχαίες διαδικασίες, και όπως τα ανήγγειλε η [`/noise/through-filters §16`](/noise/through-filters)). Στις σελίδες εφαρμογής — [`/fm/in-noise`](/fm/in-noise), [`/am/modulator-demodulator`](/am/modulator-demodulator) — η ίδια ανάλυση γράφεται με **πεζά** $n_I, n_Q$ (τοπικός θόρυβος δέκτη). **Είναι το ίδιο πράγμα**: $N_I \equiv n_I$, $N_Q \equiv n_Q$.
+
+</Callout>
+
+## 5. Συμπύκνωσε (II) — η joint-WSS ιστορία
+
+Έχουμε **δύο** διαδικασίες $N_I, N_Q$ που μαζί φτιάχνουν τη μία $N(t)$. Για να είναι η $N(t)$ **WSS** (να έχει νόημα η $R_N(\tau)$, η $\mathcal{S}_N(f)$ — όλη η μηχανή της [`/randomness/psd`](/randomness/psd)), δεν αρκεί η κάθε μία να είναι WSS — πρέπει να είναι **από κοινού WSS (jointly WSS)** με συγκεκριμένο τρόπο. Ας το **παραγάγουμε**: ξεκινάμε από τον ορισμό και απαιτούμε να βγει $R_N$ ανεξάρτητη του $t$.
+
+### 5α. Η παραγωγή της $R_N(\tau)$
+
+$$
+R_N(t, t+\tau) = E\big[N(t)\,N(t+\tau)\big]\,,
+$$
+
+με $N(t) = N_I(t)\cos\omega_c t - N_Q(t)\sin\omega_c t$ (γράφουμε $\omega_c = 2\pi f_c$). Αναπτύσσοντας το γινόμενο των δύο παρενθέσεων προκύπτουν **τέσσερις** όροι, με τις τέσσερις συσχετίσεις $R_{N_I}, R_{N_Q}, R_{N_I N_Q}, R_{N_Q N_I}$ (υποθέτουμε ότι όλες εξαρτώνται μόνο από το $\tau$ — αυτό **είναι** η jointly-WSS υπόθεση):
+
+$$
+\begin{aligned}
+R_N(t, t+\tau) =\;& R_{N_I}(\tau)\,\cos\omega_c t\,\cos\omega_c(t+\tau)
+ + R_{N_Q}(\tau)\,\sin\omega_c t\,\sin\omega_c(t+\tau) \\
+ &- R_{N_I N_Q}(\tau)\,\cos\omega_c t\,\sin\omega_c(t+\tau)
+ - R_{N_Q N_I}(\tau)\,\sin\omega_c t\,\cos\omega_c(t+\tau)\,.
+\end{aligned}
+$$
+
+Με τις τριγωνομετρικές ταυτότητες γινομένου-σε-άθροισμα (από [`/reference/trig-identities`](/reference/trig-identities)) κάθε γινόμενο σπάει σε έναν όρο **σταθερό ως προς $t$** (εξαρτάται μόνο από $\omega_c\tau$) και έναν όρο που **ταλαντώνεται με $2t$** (περιέχει $\omega_c(2t+\tau)$). Μαζεύοντας τους όρους $2t$:
+
+$$
+\text{όροι }2t:\quad \tfrac{1}{2}\big[R_{N_I}(\tau) - R_{N_Q}(\tau)\big]\cos\omega_c(2t+\tau)
+ - \tfrac{1}{2}\big[R_{N_I N_Q}(\tau) + R_{N_Q N_I}(\tau)\big]\sin\omega_c(2t+\tau)\,.
+$$
+
+<Callout type="key" title="Οι δύο συνθήκες που γεννά η απαίτηση «WSS»">
+
+Για να **μην** εξαρτάται η $R_N$ από το $t$, οι όροι $2t$ πρέπει να μηδενιστούν **για κάθε $t$**. Επειδή τα $\cos\omega_c(2t+\tau)$ και $\sin\omega_c(2t+\tau)$ είναι γραμμικά ανεξάρτητα, οι συντελεστές τους μηδενίζονται χωριστά:
+
+$$
+\boxed{\;R_{N_I}(\tau) = R_{N_Q}(\tau)\;}\qquad\text{και}\qquad \boxed{\;R_{N_Q N_I}(\tau) = -\,R_{N_I N_Q}(\tau)\;}
+$$
+
+Δηλαδή: **(1)** οι δύο συνιστώσες έχουν **ίδια αυτοσυσχέτιση** (άρα ίδια ισχύ και ίδιο φάσμα), και **(2)** η ετεροσυσχέτισή τους είναι **περιττή** συνάρτηση του $\tau$ (αφού $R_{N_Q N_I}(\tau) = R_{N_I N_Q}(-\tau)$ πάντα, η συνθήκη δίνει $R_{N_I N_Q}(\tau) = -R_{N_I N_Q}(-\tau)$).
+
+</Callout>
+
+Με τις δύο συνθήκες, οι όροι $2t$ φεύγουν και μένει το σταθερό κομμάτι:
+
+$$
+\boxed{\;R_N(\tau) \;=\; R_{N_I}(\tau)\,\cos(2\pi f_c \tau) \;-\; R_{N_I N_Q}(\tau)\,\sin(2\pi f_c \tau)\;}
+$$
+
+**Αυτή είναι η γενική «I/Q ανάλυση» στο επίπεδο της αυτοσυσχέτισης.** Παρατήρησε τη συμμετρία με την ίδια τη σχέση $N = N_I\cos - N_Q\sin$ της §4: το $N$ γράφεται $\cos$-όρος μείον $\sin$-όρος· **το ίδιο** και η $R_N$.
+
+### 5β. Η περιττή ετεροσυσχέτιση ⇒ ίδια-χρονική ασυσχετιστία
+
+Επειδή η $R_{N_I N_Q}(\tau)$ είναι **περιττή**, στο $\tau = 0$ αναγκαστικά:
+
+$$
+R_{N_I N_Q}(0) = E[N_I(t)\,N_Q(t)] = 0\,.
+$$
+
+**Σε κάθε δεδομένη χρονική στιγμή, οι $N_I(t)$ και $N_Q(t)$ είναι πάντα ασυσχέτιστες** — ανεξάρτητα από το σχήμα του φάσματος. Αν είναι και Gaussian, τότε ασυσχέτιστες ⇒ **ανεξάρτητες** σε κάθε στιγμή. (Αυτό αρκεί για τους περισσότερους υπολογισμούς ισχύος/SNR, που γίνονται σε **μία** στιγμή.)
+
+### 5γ. Συμμετρικό φάσμα γύρω από $f_c$ ⇒ πλήρης ανεξαρτησία
+
+Πότε είναι οι δύο συνιστώσες **εντελώς** (σε όλα τα $\tau$) ασυσχέτιστες; Όταν $R_{N_I N_Q}(\tau) \equiv 0$. Το πότε συμβαίνει αυτό κρίνεται από το **σχήμα του φάσματος** $\mathcal{S}_N(f)$:
+
+<Callout type="note" title="Ο κανόνας του συμμετρικού φάσματος">
+
+Αν η ΦΠΙ $\mathcal{S}_N(f)$ είναι **συμμετρική γύρω από το $f_c$** (δηλαδή το «καμπούρι» γύρω από το $+f_c$ είναι κάτοπτρο ως προς τον άξονα $f = f_c$), τότε η ετεροσυσχέτιση είναι **ταυτοτικά μηδέν**: $R_{N_I N_Q}(\tau) = 0$ για κάθε $\tau$, οπότε
+
+$$
+R_N(\tau) = R_{N_I}(\tau)\,\cos(2\pi f_c\tau)\,.
+$$
+
+Διαισθητικά: το φάσμα κάτω από το $f_c$ και το φάσμα πάνω από το $f_c$ είναι ισορροπημένα, άρα δεν υπάρχει «κλίση» που να συζευγνύει το $N_I$ με το $N_Q$. Όταν το φάσμα είναι **ασύμμετρο** (π.χ. SSB-style μισή ζώνη), η $R_{N_I N_Q}$ **δεν** μηδενίζεται και οι δύο συνιστώσες είναι συσχετισμένες.
+
+</Callout>
+
+### 5δ. Τα φάσματα των συνιστωσών — «κατέβασε και δίπλωσε»
+
+Από τη συνθήκη $R_{N_I} = R_{N_Q}$ έπεται $\mathcal{S}_{N_I}(f) = \mathcal{S}_{N_Q}(f)$: **ίδιο baseband φάσμα**. Και οι δύο συνιστώσες παίρνουν το ίδιο lowpass-ισοδύναμο φάσμα, που προκύπτει αν **κατεβάσεις** το ζωνοπερατό $\mathcal{S}_N$ από το $f_c$ στο 0 και **διπλώσεις** τις δύο πλευρές:
+
+$$
+\mathcal{S}_{N_I}(f) = \mathcal{S}_{N_Q}(f) = \mathcal{S}_N(f - f_c) + \mathcal{S}_N(f + f_c)\,, \qquad \lvert f\rvert \le \tfrac{W}{2}\quad(\text{συμμετρική περίπτωση})\,.
+$$
+
+<Callout type="key" title="Πού προσγειώνεται για την Άσκηση 8 (το παράδειγμά μας)">
+
+Ο ιδανικός BPF της §2 είναι **συμμετρικός** γύρω από το $f_c$, άρα **οι δύο συνιστώσες είναι ανεξάρτητες**. Κατεβάζοντας το $\mathcal{S}_N = N_0/2$ της ζώνης $[f_c - W/2, f_c + W/2]$ στο baseband και διπλώνοντας, παίρνουμε **επίπεδο** φάσμα:
+
+$$
+\mathcal{S}_{N_I}(f) = \mathcal{S}_{N_Q}(f) = N_0 \quad\text{για}\;\lvert f\rvert \le \tfrac{W}{2}\,, \qquad
+R_{N_I}(\tau) = R_{N_Q}(\tau) = N_0\,W\,\mathrm{sinc}(W\tau)\,.
+$$
+
+Δύο πράγματα αξίζει να προσέξεις:
+
+- **Διπλάσιο ύψος.** Το baseband φάσμα είναι $N_0$ — **διπλάσιο** από το ζωνοπερατό $N_0/2$. Λογικό: μαζέψαμε **δύο** μπλοκ (γύρω από $+f_c$ και $-f_c$) σε **ένα** baseband.
+- **Ίδια ισχύς.** $\mathcal{P}_{N_I} = R_{N_I}(0) = N_0 W = \mathcal{P}_N$. Κάθε συνιστώσα κουβαλά **όλη** την ισχύ του ζωνοπερατού θορύβου — όχι τη μισή. Η «μισή» βγαίνει στο τέλος από τον μέσο όρο του $\cos^2$: $\mathcal{P}_N = \tfrac{1}{2}(\mathcal{P}_{N_I} + \mathcal{P}_{N_Q})$, και επειδή $\mathcal{P}_{N_I} = \mathcal{P}_{N_Q} = N_0 W$, βγαίνει $\mathcal{P}_N = N_0 W$. ✓ ταυτίζεται με τη slide 54.
+
+Η **αναλυτική παραγοντοποίηση βήμα-βήμα** της Άσκησης-8 ΣΑΣ σε αυτή τη μορφή είναι η εφαρμογή που χτίζει πάνω σε αυτό το πλαίσιο — το γενικό αποτέλεσμα της §5α είναι ήδη όλη η μηχανή που χρειάζεται.
+
+</Callout>
+
+<RecallCard
+  variant="summary"
+  title="Συμπύκνωσε — bandpass θόρυβος σε I/Q"
+  keywords={[
+    'N(t) = N_I cos(2π f_c t) − N_Q sin(2π f_c t)',
+    'πολική: N = R(t) cos(2π f_c t + Ψ(t))',
+    'N_I, N_Q baseband, |f| ≤ W/2',
+    'AWGN ⇒ N_I, N_Q Gauss zero-mean',
+    'R_N(τ) = R_{N_I}(τ)cos(2πf_cτ) − R_{N_I N_Q}(τ)sin(2πf_cτ)',
+    'WSS ⇒ R_{N_I} = R_{N_Q} & R_{N_I N_Q} περιττή',
+    'R_{N_I N_Q}(0) = 0 (ίδια-χρονική ασυσχετιστία)',
+    'συμμετρικό φάσμα ⇒ R_{N_I N_Q} ≡ 0 ⇒ ανεξάρτητες',
+    'S_{N_I} = S_{N_Q} = "κατέβασε & δίπλωσε" (N_0 flat για ιδανικό BPF)',
+    'P_{N_I} = P_{N_Q} = P_N (ίση ισχύς)',
+  ]}
+  skeleton={[
+    'Αναγνώρισε ζωνοπερατό θόρυβο γύρω από f_c (π.χ. λευκό μέσα από BPF — Άσκηση 8).',
+    'Γράψε την canonical I/Q μορφή: N = N_I cos − N_Q sin (όπως /modulation/bridge, αλλά τυχαία g(t)).',
+    'Τα N_I, N_Q είναι baseband (|f| ≤ W/2), Gauss zero-mean αν AWGN.',
+    'Joint-WSS: R_{N_I} = R_{N_Q}, η cross-correlation περιττή ⇒ R_{N_I N_Q}(0) = 0.',
+    'Αν το φάσμα είναι συμμετρικό γύρω από f_c ⇒ ανεξάρτητες, ίδιο flat baseband φάσμα.',
+    'Ισχύς: κάθε συνιστώσα έχει P_N· το cos² δίνει P_N = ½(P_{N_I}+P_{N_Q}).',
+  ]}
+  trap={
+    <>
+      <strong>Τρεις παγίδες:</strong> (α) το <strong>μείον</strong> στο{' '}
+      <InlineMath>{'N_I\\cos - N_Q\\sin'}</InlineMath> (ίδιο με τη /modulation/bridge — έρχεται από το{' '}
+      <InlineMath>{'j^2=-1'}</InlineMath>). (β) Το baseband φάσμα είναι{' '}
+      <InlineMath>{'N_0'}</InlineMath>, <strong>διπλάσιο</strong> του ζωνοπερατού{' '}
+      <InlineMath>{'N_0/2'}</InlineMath>. (γ) «Ανεξάρτητες» <strong>δεν</strong> είναι δωρεάν — απαιτεί{' '}
+      <strong>συμμετρικό</strong> φάσμα γύρω από <InlineMath>{'f_c'}</InlineMath>· σε κάθε στιγμή όμως είναι πάντα ασυσχέτιστες (
+      <InlineMath>{'R_{N_I N_Q}(0)=0'}</InlineMath>).
+    </>
+  }
+/>
+
+## 6. Ανακάλεσε
+
+<RecallDrill
+  id="bandpass-iq-decomposition-recall"
+  prompt={<p>Από μνήμη: γράψε **(α)** την I/Q μορφή ενός ζωνοπερατού θορύβου <InlineMath>{'N(t)'}</InlineMath>, και **(β)** τις **δύο** συνθήκες που πρέπει να ισχύουν στις συσχετίσεις των <InlineMath>{'N_I, N_Q'}</InlineMath> ώστε η <InlineMath>{'N(t)'}</InlineMath> να είναι WSS. Μετά αποκάλυψε και σύγκρινε.</p>}
+  answer={
+    <ol className="ml-5 list-decimal space-y-1.5">
+      <li><strong>I/Q μορφή:</strong> <InlineMath>{'N(t) = N_I(t)\\cos(2\\pi f_c t) - N_Q(t)\\sin(2\\pi f_c t)'}</InlineMath>, με <InlineMath>{'N_I, N_Q'}</InlineMath> baseband (πραγματικές, χαμηλόσυχνες).</li>
+      <li><strong>Συνθήκη 1 — ίσες αυτοσυσχετίσεις:</strong> <InlineMath>{'R_{N_I}(\\tau) = R_{N_Q}(\\tau)'}</InlineMath>.</li>
+      <li><strong>Συνθήκη 2 — περιττή ετεροσυσχέτιση:</strong> <InlineMath>{'R_{N_Q N_I}(\\tau) = -R_{N_I N_Q}(\\tau)'}</InlineMath> (άρα <InlineMath>{'R_{N_I N_Q}'}</InlineMath> περιττή, και <InlineMath>{'R_{N_I N_Q}(0)=0'}</InlineMath>).</li>
+      <li><strong>Συνέπεια:</strong> <InlineMath>{'R_N(\\tau) = R_{N_I}(\\tau)\\cos(2\\pi f_c\\tau) - R_{N_I N_Q}(\\tau)\\sin(2\\pi f_c\\tau)'}</InlineMath>.</li>
+    </ol>
+  }
+/>
+
+<ClozeDrill
+  id="bandpass-iq-cloze"
+  prompt={<p>Συμπλήρωσε τα κενά για τον ζωνοπερατό θόρυβο μέσα από **ιδανικό BPF** (το setup της Άσκησης 8):</p>}
+  parts={[
+    <span>Ιδανικός BPF γύρω από <InlineMath>{'\\pm f_c'}</InlineMath>, εύρους <InlineMath>{'W'}</InlineMath>. Είναι συμμετρικός, άρα οι συνιστώσες είναι </span>,
+    { blank: 'indep', accept: ['ανεξάρτητες', 'ασυσχέτιστες', 'independent', 'uncorrelated'], size: 12, hint: 'συμμετρικό φάσμα ⇒ ;' },
+    <span>. Καθεμία έχει baseband φάσμα ύψους </span>,
+    { blank: 'height', accept: ['N_0', 'N0'], size: 5, hint: 'διπλάσιο του ζωνοπερατού N_0/2' },
+    <span> στο <InlineMath>{'\\lvert f\\rvert \\le W/2'}</InlineMath>, και αυτοσυσχέτιση <InlineMath>{'R_{N_I}(\\tau) ='}</InlineMath> </span>,
+    { blank: 'rni', accept: ['N_0 W sinc(Wτ)', 'N0 W sinc(Wτ)', 'N_0 W sinc(W tau)', 'N_0·W·sinc(Wτ)'], size: 16, hint: 'ίδιο envelope με την Άσκηση 8, χωρίς το cos' },
+    <span>. Η ισχύς κάθε συνιστώσας είναι <InlineMath>{'\\mathcal{P}_{N_I} ='}</InlineMath> </span>,
+    { blank: 'power', accept: ['N_0 W', 'N0 W', 'N_0·W'], size: 7, hint: 'ίση με την P_N — όχι η μισή' },
+  ]}
+  solution={
+    <ol className="ml-5 list-decimal space-y-1">
+      <li>συμμετρικό φάσμα ⇒ <strong>ανεξάρτητες</strong> (§5γ).</li>
+      <li>baseband ύψος <InlineMath>{'N_0'}</InlineMath> — διπλάσιο του <InlineMath>{'N_0/2'}</InlineMath> (§5δ).</li>
+      <li><InlineMath>{'R_{N_I}(\\tau) = N_0 W\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> (το «αργό envelope» της §2).</li>
+      <li><InlineMath>{'\\mathcal{P}_{N_I} = R_{N_I}(0) = N_0 W = \\mathcal{P}_N'}</InlineMath> (§5δ).</li>
+    </ol>
+  }
+/>
+
+## 7. Αναγνώρισε — πότε φτάνεις σε αυτό το εργαλείο
+
+<ThinkingPattern
+  signals={[
+    'θόρυβος μέσα σε δέκτη (AM/FM)',
+    'θόρυβος μετά από bandpass φίλτρο',
+    'narrowband / στενής ζώνης θόρυβος',
+    'θόρυβος γύρω από φέρον f_c',
+    'in-phase και quadrature συνιστώσες θορύβου',
+    'n(t) = n_I cos − n_Q sin',
+    'περιβάλλουσα θορύβου',
+    'φάση θορύβου',
+    'SNR εξόδου δέκτη',
+    'envelope detector + θόρυβος',
+    'limiter + θόρυβος FM',
+  ]}
+>
+  <p>**Αν δεις «θόρυβος μέσα σε δέκτη» ή «θόρυβος γύρω από φέρον $f_c$»**, σχεδόν πάντα το πρώτο βήμα είναι **να τον σπάσεις σε I/Q**:</p>
+  <ol className="ml-5 list-decimal space-y-1.5">
+    <li><strong>Γράψε</strong> <InlineMath>{'n(t) = n_I(t)\\cos(2\\pi f_c t) - n_Q(t)\\sin(2\\pi f_c t)'}</InlineMath>. Αμέσως ξέρεις: <InlineMath>{'n_I, n_Q'}</InlineMath> baseband, Gauss zero-mean, ανεξάρτητα (αν συμμετρικό φάσμα), ίδια ισχύ <InlineMath>{'= \\mathcal{P}_n'}</InlineMath>, baseband φάσμα <InlineMath>{'N_0'}</InlineMath>.</li>
+    <li><strong>AM (σύμφωνη/envelope):</strong> ο αποδιαμορφωτής κρατά τη συνιστώσα <strong>παράλληλη</strong> στο φέρον (<InlineMath>{'n_I'}</InlineMath>) — δες [`/am/modulator-demodulator`](/am/modulator-demodulator).</li>
+    <li><strong>FM (limiter + discriminator):</strong> ο limiter αφαιρεί τη radial (πλάτος) συνιστώσα και κρατά **μόνο** την <InlineMath>{'n_Q'}</InlineMath> (φάση) — γι' αυτό η FM «πετάει δωρεάν το μισό θόρυβο». Δες [`/fm/in-noise`](/fm/in-noise).</li>
+  </ol>
+  <p>**Mnemonic:** «**ζωνοπερατός θόρυβος = δύο αργές baseband Gauss πάνω σε cos/sin**». Το φέρον είναι ντετερμινιστικό· όλη η τυχαιότητα είναι στις δύο συνιστώσες.</p>
+</ThinkingPattern>
+
+<ExamRadar
+  topic="noise"
+  ids={[
+    { id: 'jun25-th1-10', likelihood: 'high', note: 'Ιούνιος 2025 — λευκός μέσα από LPF + HPF: το συνδυασμένο φίλτρο φτιάχνει ζωνοπερατό θόρυβο. Είναι η πιο άμεση «bandpass θόρυβος» εκφώνηση· το I/Q πλαίσιο εδώ εξηγεί τι είναι αυτό που φτιάχνεις.' },
+    { id: 'proodos26-6', likelihood: 'medium', note: 'Πρόοδος Απριλίου 2026 — λευκός μέσα από ιδανικό φίλτρο εύρους W. Η ισχύς N_0 W και η «WSS Gauss σ²=N_0 W» ταμπέλα (slide 55) είναι ακριβώς η αφετηρία της I/Q ανάλυσης.' },
+    { id: 'sept25-th3-11', likelihood: 'medium', note: 'Σεπτέμβριος 2025 — ίδιο pattern φιλτραρισμένου λευκού. Όταν το φίλτρο είναι bandpass, η έξοδος σπάει σε I/Q όπως εδώ.' },
+  ]}
+/>
+
+<Callout type="note" title="Πού «ζει» αυτό στις εξετάσεις — και μια ειλικρινής σημείωση κάλυψης">
+
+Η I/Q decomposition **σπάνια** ζητείται «σκέτη» σε εξέταση· είναι το **πρώτο βήμα** σε προβλήματα **AM-in-noise** και **FM-in-noise** (υπολογισμός $\mathrm{SNR}_{out}$). Εκεί την εφαρμόζεις, στις [`/am/modulator-demodulator`](/am/modulator-demodulator) και [`/fm/in-noise`](/fm/in-noise). Τα ζωνοπερατά-θορύβου παραδείγματα στην τράπεζα ασκήσεων που πατούν πάνω σε αυτό το πλαίσιο φαίνονται περιορισμένα (κυρίως `jun25-th1-10`)· η πλήρης χαρτογράφηση των AM/FM-in-noise θεμάτων που το χρησιμοποιούν είναι ξεχωριστή δουλειά κάλυψης.
+
+</Callout>
+
+## 8. Πού θα χρειαστείς αυτή τη σελίδα
+
+- **[/am/modulator-demodulator](/am/modulator-demodulator)** — στην ανάλυση **AM-in-noise**, ο θόρυβος μετά το bandpass στάδιο του δέκτη γράφεται ακριβώς ως $n(t) = n_I\cos - n_Q\sin$· ο σύμφωνος (ή ο envelope) αποδιαμορφωτής επιλέγει τη μία συνιστώσα. Η $\mathrm{SNR}_{out}$ βγαίνει από τις ισχείς $\mathcal{P}_{n_I} = N_0 W$ που μετρήσαμε εδώ.
+- **[/fm/in-noise §3b](/fm/in-noise)** — η ίδια I/Q ανάλυση είναι το **Stage 2** του FM δέκτη: ο limiter κρατά μόνο την quadrature $n_Q$, και $\theta_n \approx n_Q/A_c$ δίνει την τριγωνική noise PSD. Αυτή η σελίδα είναι το **γενικό σπίτι** εκείνης της απόσπασης.
+- **[/noise/snr](/noise/snr)** — η ισχύς ζωνοπερατού θορύβου $\mathcal{P}_N = N_0 W$ που εδώ μοιράσαμε σε δύο baseband συνιστώσες είναι το ίδιο $N_0 B$ που τροφοδοτεί κάθε υπολογισμό SNR δέκτη.
+- **[/modulation/bridge](/modulation/bridge)** — η **αιτιοκρατική** ρίζα: η canonical I/Q μορφή. Αυτή η σελίδα είναι η ίδια ιδέα με **τυχαίο** $g(t)$.
+
+## 9. Recap
+
+<Recap>
+- **Η ιδέα:** ένας ζωνοπερατός θόρυβος γύρω από $f_c$ είναι ένα «θολό φέρον» — ένα γρήγορο $\cos(2\pi f_c t)$ με **αργή** τυχαία περιβάλλουσα και φάση.
+- **Η I/Q μορφή:** <InlineMath>{'N(t) = N_I(t)\\cos(2\\pi f_c t) - N_Q(t)\\sin(2\\pi f_c t)'}</InlineMath> — η canonical μορφή της [`/modulation/bridge`](/modulation/bridge) με **τυχαίο** complex envelope <InlineMath>{'g_N = N_I + j N_Q'}</InlineMath>. Πολικά: <InlineMath>{'N = R(t)\\cos(2\\pi f_c t + \\Psi(t))'}</InlineMath>.
+- **Οι συνιστώσες:** baseband (<InlineMath>{'\\lvert f\\rvert \\le W/2'}</InlineMath>), Gauss zero-mean (αν AWGN), με ίση ισχύ <InlineMath>{'\\mathcal{P}_{N_I} = \\mathcal{P}_{N_Q} = \\mathcal{P}_N'}</InlineMath> και baseband φάσμα <InlineMath>{'N_0'}</InlineMath> (**διπλάσιο** του ζωνοπερατού <InlineMath>{'N_0/2'}</InlineMath>).
+- **Joint-WSS:** η απαίτηση «η <InlineMath>{'N(t)'}</InlineMath> WSS» γεννά <InlineMath>{'R_{N_I} = R_{N_Q}'}</InlineMath> και περιττή <InlineMath>{'R_{N_I N_Q}'}</InlineMath>, δίνοντας <InlineMath>{'R_N(\\tau) = R_{N_I}(\\tau)\\cos(2\\pi f_c\\tau) - R_{N_I N_Q}(\\tau)\\sin(2\\pi f_c\\tau)'}</InlineMath>.
+- **Ανεξαρτησία:** σε κάθε στιγμή πάντα ασυσχέτιστες (<InlineMath>{'R_{N_I N_Q}(0)=0'}</InlineMath>)· **πλήρως** ανεξάρτητες όταν το φάσμα είναι **συμμετρικό** γύρω από <InlineMath>{'f_c'}</InlineMath> (η περίπτωση της Άσκησης 8).
+- **Anchor:** η Άσκηση 8 της [`/noise/through-filters`](/noise/through-filters) (slide 54) δίνει <InlineMath>{'R_N = N_0 W \\cos(2\\pi f_c\\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> — το <InlineMath>{'\\cos'}</InlineMath> είναι το φέρον, το <InlineMath>{'\\mathrm{sinc}'}</InlineMath> είναι η <InlineMath>{'R_{N_I}'}</InlineMath> των baseband συνιστωσών.
+</Recap>
+
+<NextUp slug="noise/snr" />

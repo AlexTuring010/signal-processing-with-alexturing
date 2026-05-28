@@ -108,6 +108,7 @@ export const CHAPTERS: Chapter[] = [
       { slug: 'noise/sources', title: 'Πηγές θορύβου', available: true, examWeight: 3 },
       { slug: 'noise/white-noise', title: 'White noise', available: true, examWeight: 4 },
       { slug: 'noise/through-filters', title: 'Θόρυβος μέσα από φίλτρα', available: true, examWeight: 4 },
+      { slug: 'noise/bandpass', title: 'Bandpass θόρυβος — I/Q', available: true, examWeight: 3 },
       { slug: 'noise/snr', title: 'SNR', available: true, examWeight: 3 },
     ],
   },
