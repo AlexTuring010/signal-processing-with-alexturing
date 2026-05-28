@@ -144,25 +144,54 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'proodos26-6': {
     takeaway: (
       <p>
-        Η συνταγή για θόρυβο μέσα από LTI φίλτρο είναι πάντα{' '}
-        <InlineMath>{'S_y(f) = |H(f)|^2 S_n(f)'}</InlineMath>, και η
-        συνολική ισχύς εξόδου είναι το ολοκλήρωμα του{' '}
-        <InlineMath>{'S_y'}</InlineMath>. Για ιδανικό LPF με εύρος{' '}
-        <InlineMath>W</InlineMath> και white noise{' '}
-        <InlineMath>{'N_0/2'}</InlineMath>, βγαίνει{' '}
-        <InlineMath>{'P = N_0 W'}</InlineMath> — αυτό το αποτέλεσμα
-        ξανασυναντιέται σε κάθε SNR άσκηση.
+        <strong>
+          Θόρυβος μέσα από οποιοδήποτε LTI — μία συνταγή δύο βημάτων:
+        </strong>{' '}
+        πρώτα <InlineMath>{'S_y(f) = |H(f)|^2 S_n(f)'}</InlineMath>, μετά
+        ολοκλήρωσε για την ισχύ, <InlineMath>{'P = \\int S_y(f)\\,df'}</InlineMath>.
+        Για <em>ιδανικό</em> φίλτρο το <InlineMath>{'|H|^2'}</InlineMath> είναι 0
+        ή 1, οπότε το ολοκλήρωμα εκφυλίζεται σε καθαρό{' '}
+        <strong>εμβαδόν εντός ζώνης</strong> = ύψος × συνολικό πλάτος. Με ύψος{' '}
+        <InlineMath>{'N_0/2'}</InlineMath> και ιδανικό LPF cutoff{' '}
+        <InlineMath>W</InlineMath> (συνολικό πλάτος <InlineMath>{'2W'}</InlineMath>)
+        βγαίνει <InlineMath>{'P = N_0 W'}</InlineMath>. Όταν δεις «επίπεδος
+        θόρυβος μέσα από ιδανικό φίλτρο», μην ολοκληρώνεις τυφλά — η απάντηση
+        είναι ύψος × πλάτος· και αυτό το <InlineMath>{'N_0 W'}</InlineMath> θα το
+        ξαναδείς ως τον παρονομαστή κάθε SNR.
       </p>
     ),
     examRadar: (
-      <p>
-        «Λευκός θόρυβος» + «φίλτρο» + «ισχύς εξόδου» → τύπος{' '}
-        <InlineMath>{'P = (N_0/2)\\int |H(f)|^2 df'}</InlineMath>. Για
-        ιδανικό φίλτρο με εύρος <InlineMath>B</InlineMath>, το ολοκλήρωμα
-        είναι απλά <InlineMath>{'B'}</InlineMath> (ή{' '}
-        <InlineMath>{'2B'}</InlineMath> για bandpass two-sided), άρα{' '}
-        <InlineMath>{'P = N_0 B'}</InlineMath>.
-      </p>
+      <>
+        <p>
+          «Λευκός θόρυβος» + «ιδανικό φίλτρο» + «ισχύς εξόδου» → απάντηση μιας
+          γραμμής: <InlineMath>{'P = (N_0/2)\\int |H(f)|^2\\,df'}</InlineMath> =
+          ύψος × συνολικό πλάτος ζώνης. Ιδανικό LPF cutoff <InlineMath>W</InlineMath>{' '}
+          → πλάτος <InlineMath>{'2W'}</InlineMath> →{' '}
+          <InlineMath>{'P = N_0 W'}</InlineMath>. Χρόνος-στόχος:{' '}
+          <strong>~2 λεπτά</strong> — σχεδόν δωρεάν μονάδες, μην ξοδέψεις
+          παραπάνω.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Η παγίδα — one-sided vs two-sided (παράγοντας 2).</strong>{' '}
+          Με την δίψας όψεως (two-sided) σύμβαση{' '}
+          <InlineMath>{'S_n = N_0/2'}</InlineMath> ολοκληρώνεις σε <em>όλη</em> τη
+          ζώνη <InlineMath>{'[-W, W]'}</InlineMath> (πλάτος{' '}
+          <InlineMath>{'2W'}</InlineMath>): το{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> και το <InlineMath>2</InlineMath>{' '}
+          ακυρώνονται → <InlineMath>{'N_0 W'}</InlineMath>. Σφάλμα παράγοντα 2 αν{' '}
+          <em>μπερδέψεις</em> τα ζευγάρια: το{' '}
+          <InlineMath>{'(N_0/2)\\times W'}</InlineMath> (ξεχνάς τις αρνητικές
+          συχνότητες) δίνει <InlineMath>{'N_0 W/2'}</InlineMath>, ενώ το{' '}
+          <InlineMath>{'N_0 \\times 2W'}</InlineMath> (μονόπλευρο επί διπλό
+          πλάτος) δίνει <InlineMath>{'2 N_0 W'}</InlineMath>. Κράτα ένα ζευγάρι
+          σταθερό: two-sided <InlineMath>{'N_0/2'}</InlineMath> με πλάτος{' '}
+          <InlineMath>{'2W'}</InlineMath>, ή one-sided <InlineMath>{'N_0'}</InlineMath>{' '}
+          με πλάτος <InlineMath>W</InlineMath>. Και προσοχή: το «<InlineMath>{'N_0 \\times'}</InlineMath>{' '}
+          εύρος» ισχύει μόνο για <em>ιδανικά</em> φίλτρα — σε RC LPF το ολοκλήρωμα
+          δίνει <InlineMath>{'\\pi N_0 f_c/2'}</InlineMath>, όχι{' '}
+          <InlineMath>{'N_0 f_c'}</InlineMath>.
+        </div>
+      </>
     ),
   },
 
