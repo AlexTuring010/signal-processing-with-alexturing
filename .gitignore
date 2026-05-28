@@ -42,3 +42,9 @@ next-env.d.ts.local
 
 # sprite preview renders (the script is checked in; outputs are throwaway)
 scripts/sprite-preview/tmp/
+
+# overnight apparatus (do not commit) — see .overnight/HANDOFF.md
+/.overnight/
+/.claude/agents/overnight-*.md
+/.claude/commands/overnight.md
+/START_HERE.md
