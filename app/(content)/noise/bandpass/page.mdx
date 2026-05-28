@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Bandpass θόρυβος — η I/Q decomposition $N = N_I\\cos - N_Q\\sin$',
+  title: 'Bandpass θόρυβος — η I/Q decomposition N = N_I·cos − N_Q·sin',
   description:
     'Κάθε ζωνοπερατή διαδικασία θορύβου γύρω από f_c γράφεται ως δύο αργές baseband συνιστώσες πάνω σε φέρον: N(t) = N_I(t)cos(2πf_c t) − N_Q(t)sin(2πf_c t), με N_I, N_Q ανεξάρτητες baseband Gauss processes. Intuition του «θολού φέροντος» (envelope/phase), η canonical I/Q μορφή της /modulation/bridge εφαρμοσμένη σε τυχαία g(t), και η γενική joint-WSS ιστορία: παραγωγή της R_N(τ) = R_{N_I}(τ)cos(2πf_cτ) − R_{N_I N_Q}(τ)sin(2πf_cτ), οι συνθήκες joint-WSS (R_{N_I}=R_{N_Q}, περιττή cross-correlation), και πώς το συμμετρικό-γύρω-από-f_c φάσμα δίνει ανεξάρτητες συνιστώσες. Anchor: η Άσκηση 8 της /noise/through-filters (slide 54). Cross-mount NoiseFilterShapingViz, full 5-stage loop.',
 }
@@ -39,7 +39,7 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   sources={[
     {
       pdf: 'SE_session10_noise.pdf',
-      slides: '51–55',
+      slides: '51–56',
       label: 'Άσκηση 8 — bandpass-filtered λευκός θόρυβος: η ΣΑΣ R_Y = N_0 W cos(2πf_cτ) sinc(Wτ), P_Y = N_0 W (slide 54), έξοδος WSS Gauss zero-mean με σ² = N_0 W (slide 55). Αυτή είναι η ζωνοπερατή διαδικασία που εδώ σπάμε σε I/Q.',
     },
     {
@@ -272,7 +272,7 @@ $$
 Δύο πράγματα αξίζει να προσέξεις:
 
 - **Διπλάσιο ύψος.** Το baseband φάσμα είναι $N_0$ — **διπλάσιο** από το ζωνοπερατό $N_0/2$. Λογικό: μαζέψαμε **δύο** μπλοκ (γύρω από $+f_c$ και $-f_c$) σε **ένα** baseband.
-- **Ίδια ισχύς.** $\mathcal{P}_{N_I} = R_{N_I}(0) = N_0 W = \mathcal{P}_N$. Κάθε συνιστώσα κουβαλά **όλη** την ισχύ του ζωνοπερατού θορύβου — όχι τη μισή. Η «μισή» βγαίνει στο τέλος από τον μέσο όρο του $\cos^2$: $\mathcal{P}_N = \tfrac{1}{2}(\mathcal{P}_{N_I} + \mathcal{P}_{N_Q})$, και επειδή $\mathcal{P}_{N_I} = \mathcal{P}_{N_Q} = N_0 W$, βγαίνει $\mathcal{P}_N = N_0 W$. ✓ ταυτίζεται με τη slide 54.
+- **Ίδια ισχύς.** $\mathcal{P}_{N_I} = R_{N_I}(0) = N_0 W = \mathcal{P}_N$ — απευθείας από τη γενική $R_N(\tau)$ της §5α στο $\tau = 0$ (ο όρος $\sin$ σβήνει, μένει $R_N(0) = R_{N_I}(0)$). Κάθε συνιστώσα κουβαλά **όλη** την ισχύ του ζωνοπερατού θορύβου — **όχι** τη μισή: το **διπλάσιο ύψος** του baseband φάσματος αντισταθμίζεται **ακριβώς** από το **μισό συνολικό εύρος** (ένα μπλοκ αντί για δύο), οπότε το εμβαδόν-ισχύς βγαίνει ίδιο. Το ρητό ολοκλήρωμα που το κλειδώνει — και η ταύτιση με τη slide 54 — είναι στη §5ε (Βήμα 4).
 
 Πώς ακριβώς «πέφτουν» αυτά τα νούμερα από τη γενική μορφή; Αυτή η **αναλυτική παραγοντοποίηση βήμα-βήμα** — με **μόνο** τη μηχανή της §5α — είναι η §5ε αμέσως παρακάτω.
 
@@ -382,7 +382,7 @@ $$
     'Τα N_I, N_Q είναι baseband (|f| ≤ W/2), Gauss zero-mean αν AWGN.',
     'Joint-WSS: R_{N_I} = R_{N_Q}, η cross-correlation περιττή ⇒ R_{N_I N_Q}(0) = 0.',
     'Αν το φάσμα είναι συμμετρικό γύρω από f_c ⇒ ανεξάρτητες, ίδιο flat baseband φάσμα.',
-    'Ισχύς: κάθε συνιστώσα έχει P_N· το cos² δίνει P_N = ½(P_{N_I}+P_{N_Q}).',
+    'Ισχύς: κάθε συνιστώσα κουβαλά όλη την P_N (διπλάσιο ύψος × μισό εύρος ⇒ ίδιο εμβαδόν): P_N = P_{N_I} = P_{N_Q}.',
   ]}
   trap={
     <>
@@ -452,7 +452,7 @@ $$
     'limiter + θόρυβος FM',
   ]}
 >
-  <p>**Αν δεις «θόρυβος μέσα σε δέκτη» ή «θόρυβος γύρω από φέρον $f_c$»**, σχεδόν πάντα το πρώτο βήμα είναι **να τον σπάσεις σε I/Q**:</p>
+  <p>**Αν δεις «θόρυβος μέσα σε δέκτη» ή «θόρυβος γύρω από φέρον <InlineMath>{'f_c'}</InlineMath>»**, σχεδόν πάντα το πρώτο βήμα είναι **να τον σπάσεις σε I/Q**:</p>
   <ol className="ml-5 list-decimal space-y-1.5">
     <li><strong>Γράψε</strong> <InlineMath>{'n(t) = n_I(t)\\cos(2\\pi f_c t) - n_Q(t)\\sin(2\\pi f_c t)'}</InlineMath>. Αμέσως ξέρεις: <InlineMath>{'n_I, n_Q'}</InlineMath> baseband, Gauss zero-mean, ανεξάρτητα (αν συμμετρικό φάσμα), ίδια ισχύ <InlineMath>{'= \\mathcal{P}_n'}</InlineMath>, baseband φάσμα <InlineMath>{'N_0'}</InlineMath>.</li>
     <li><strong>AM (σύμφωνη/envelope):</strong> ο αποδιαμορφωτής κρατά τη συνιστώσα <strong>παράλληλη</strong> στο φέρον (<InlineMath>{'n_I'}</InlineMath>) — δες [`/am/modulator-demodulator`](/am/modulator-demodulator).</li>
