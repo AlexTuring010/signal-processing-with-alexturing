@@ -46,7 +46,7 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | --- | --- | --- | --- |
 | A | (ground truth) | τυπολόγιο audit | **DONE** — §1 below (visual PDF audit, 3 pp.) |
 | A | Noise — **theory** (5 pages) | `mustlearn-inventory-noise-theory` | **DONE** — §2 below |
-| A | Noise — **problems** (8 problems) | `mustlearn-inventory-noise-problems` | TODO (next step) |
+| A | Noise — **problems** (8 problems) | `mustlearn-inventory-noise-problems` | **DONE** — §2.7 below |
 | A | AM / FM / Foundations / … | per-chapter | TODO (reuse §1 ground truth) |
 | B | weighting | per-formula | TODO |
 | C | apply | per-placement | TODO |
@@ -150,12 +150,17 @@ live page-level contradiction discovered** (white-noise §10 — see §2 flag F1
 
 ---
 
-## 2. Pass A inventory — NOISE THEORY (5 pages)
+## 2. Pass A inventory — NOISE chapter (theory §2.1–§2.6; problems §2.7)
 
-**Scope of this step:** the 5 noise *theory* pages only —
-`app/(content)/noise/{sources,white-noise,through-filters,bandpass,snr}/page.mdx`. The 8
-noise *problems* in `exercises.tsx` are the **next** step
-(`mustlearn-inventory-noise-problems`) and are deliberately untouched here.
+**Scope.** The **theory side** (§2.1–§2.6, step `mustlearn-inventory-noise-theory`) covers
+the 5 noise *theory* pages —
+`app/(content)/noise/{sources,white-noise,through-filters,bandpass,snr}/page.mdx`. The
+**problems side** (§2.7, step `mustlearn-inventory-noise-problems`) covers the 8
+`topic:'noise'` *problems* in `content/practice/exercises.tsx` (+ their companion coaching
+in `sose-coaching.tsx`). Together they complete noise Pass A; the problems step REUSES the
+§1 τυπολόγιο ground-truth set (no re-audit of `slides/formulas.pdf`).
+
+The remainder of §2 (through §2.6) is the **theory-side** inventory.
 
 **Method / grounding note.** Each row records a formula **taught on the page** and the
 **slide the page itself cites** for it (the pages were built with their own mandatory PDF
@@ -302,6 +307,123 @@ Their primary inventory home is the future `randomness` pass.
 
 ---
 
+## 2.7 Pass A inventory — NOISE PROBLEMS (8 problems)
+
+**Scope of this step (`mustlearn-inventory-noise-problems`).** The 8 `topic:'noise'`
+problems in `content/practice/exercises.tsx` (located by id; companion coaching in
+`content/practice/sose-coaching.tsx`). **Read-only** sweep; the only write is this doc.
+Every on/off-sheet call REUSES the §1 ground-truth audit — no re-audit of
+`slides/formulas.pdf`. No annotation of the problems (that is Pass C / the per-problem
+rework), no weighting (Pass B), no touch to `formulas.tsx`.
+
+The 8 problems (id → one-line): `proodos26-6` (white noise → ideal LPF, find power),
+`sept25-th3-10` (thermal-noise PSD), `sept25-th3-11` (white noise → ideal LPF, find power),
+`jan26-th1-3` (T/F: white noise ⇔ Gaussian), `jun25-th1-9` (thermal-noise PSD),
+`jun25-th1-10` (white noise → LPF + HPF, **draw** spectra + autocorr), `pa25-th1-3` (T/F:
+white ⇔ Gaussian), `pb25-th1-3` (T/F: thermal-noise PSD ⇔ Gaussian).
+
+### Headline finding (problems)
+
+> **Every formula used in the noise problems is off-sheet (must-learn)** — consistent with
+> §1/§2 (the τυπολόγιο carries zero noise formulas). **5 of the 8** problems use must-learn
+> formulas (`proodos26-6`, `sept25-th3-10`, `sept25-th3-11`, `jun25-th1-9`, `jun25-th1-10`);
+> the other **3** (`jan26-th1-3`, `pa25-th1-3`, `pb25-th1-3`) are conceptual True/False
+> problems on the "white/thermal noise ≠ Gaussian" trap that **write no formula at all** —
+> so placement-(b) has nothing to attach to there. Stated explicitly so Pass C does **not**
+> bolt a must-learn callout onto a formula-free problem.
+
+### Per-problem must-learn formula instances
+
+Each row = one must-learn formula instance in a problem; the off-sheet call is grounded in
+§1; the cross-ref column links to the §2 theory row where the same formula was already
+logged (so the two halves of the noise inventory are linked). `\|·\|` = magnitude bars.
+
+| Problem | Must-learn formula (readable) | formulaId | Where used | Cross-ref (§2 theory) | Why not on sheet (§1) |
+| --- | --- | --- | --- | --- | --- |
+| `proodos26-6` | `S_n(f)=N_0/2` (white-noise PSD) | `white-noise-psd` | statement | §2.2 r1 / §2.1 | no noise PSD on sheet |
+| `proodos26-6` | `S_y(f)=\|H(f)\|^2 S_n(f)` (PSD through LTI) | `lti-output-psd` | solution + coaching | §2.3 master eq | no PSD-through-LTI on sheet |
+| `proodos26-6` | `P_y=∫_{-W}^{W}(N_0/2)df=N_0 W` (bandlimited power) | — (no id; F2) | solution + coaching | §2.2 §4α / §2.3 §5 | no noise-power formula on sheet |
+| `sept25-th3-10` | `S_N(f)=N_0/2=kT/2` W/Hz (thermal PSD) | `thermal-noise` / `white-noise-psd` | solution + coaching | §2.1 (kT/2) / §2.2 | no thermal/PSD formula on sheet |
+| `sept25-th3-10` | `P_N=N_0 B=kTB` (matched-load / band power) | `thermal-noise` | solution + coaching | §2.1 (kTW=kTB) | no noise-power formula on sheet |
+| `sept25-th3-10` | `N_0≈4×10⁻²¹ W/Hz = −174 dBm/Hz` @290 K | — (no id; F2) | solution + coaching | §2.1 (−174 dBm/Hz) | practical value, not on sheet |
+| `sept25-th3-11` | `S_Y(f)=\|H(f)\|^2 S_X(f)` (PSD through LTI) | `lti-output-psd` | solution | §2.3 master eq | no PSD-through-LTI on sheet |
+| `sept25-th3-11` | `S_X(f)=N_0/2` (white-noise PSD) | `white-noise-psd` | solution | §2.2 r1 | no noise PSD on sheet |
+| `sept25-th3-11` | `P_Y=∫_{-B}^{B}(N_0/2)df=N_0 B` (bandlimited power) | — (no id; F2) | solution + coaching | §2.2 §4α / §2.3 §5 | no noise-power formula on sheet |
+| `jun25-th1-9` | `S_N(f)=N_0/2=kT/2` (thermal/white PSD) | `white-noise-psd` / `thermal-noise` | solution + coaching | §2.1 / §2.2 | no thermal/PSD formula on sheet |
+| `jun25-th1-9` | `N_0≈−174 dBm/Hz` @290 K | — (no id; F2) | coaching | §2.1 | practical value, not on sheet |
+| `jun25-th1-10` | `S_Y(f)=\|H(f)\|^2·(N_0/2)` (PSD through LTI, applied) | `lti-output-psd` / `white-noise-psd` | solution + coaching | §2.3 master eq | no PSD-through-LTI on sheet |
+| `jun25-th1-10` | `R_Y(τ)=N_0 W·sinc(2Wτ)` (bandlimited-LPF ΣΑΣ) | — (no id; F2; **see F6**) | solution + coaching | §2.2 §4β / §2.3 §5 | rect↔sinc IS on sheet, the noise ΣΑΣ result is not |
+| `jun25-th1-10` | `P_Y^{LPF}=N_0 W` (LPF output power) | — (no id; F2) | solution | §2.2 §4α / §2.3 §5 | no noise-power formula on sheet |
+
+The 3 conceptual T/F problems (`jan26-th1-3`, `pa25-th1-3`, `pb25-th1-3`) contribute **no
+rows** — they invoke the *labels* "white = flat PSD" and "Gaussian = amplitude
+distribution" (cf. §2.2 "AWGN … (label)") but write no formula and carry no `formulaIds`.
+See the judgment-call note below.
+
+### Placement-(b) verification (owner hypothesis — VERIFY, not assert)
+
+The owner (`bus/inbox/001` §2b) believes the explicit problem-side must-learn signal —
+«⚠️ αυτόν τον τύπο πρέπει να τον ξέρεις απ' έξω — δεν δίνεται στο τυπολόγιο» — is currently
+MISSING. Checked **each** problem's `solution` (exercises.tsx) AND its companion coaching
+(sose-coaching.tsx) for (i) the **standardised** must-learn/τυπολόγιο callout, and (ii) any
+**ad-hoc** "learn-by-heart" prose (which is *not* the standardised signal — it never names
+the τυπολόγιο).
+
+| Problem | Uses must-learn formula? | Standardised «δεν δίνεται στο τυπολόγιο» callout? | Ad-hoc "μάθε/ξέρε απέξω" prose? |
+| --- | --- | --- | --- |
+| `proodos26-6` | Yes | **NO** | No — coaching says «ξανασυναντιέται σε κάθε SNR άσκηση» (frequency, not τυπολόγιο) |
+| `sept25-th3-10` | Yes | **NO** | Partial — coaching «−174 … το νούμερο που πρέπει να ξέρεις» (the dBm value, not the core formula; no τυπολόγιο ref) |
+| `sept25-th3-11` | Yes | **NO** | No |
+| `jan26-th1-3` | No (conceptual) | **NO** — N/A (no formula) | No |
+| `jun25-th1-9` | Yes | **NO** | **Yes** — coaching «Είναι από τους τύπους που πρέπει να ξέρεις απέξω» (closest to the signal, but **no τυπολόγιο reference**) |
+| `jun25-th1-10` | Yes | **NO** | No |
+| `pa25-th1-3` | No (conceptual) | **NO** — N/A (no formula) | No |
+| `pb25-th1-3` | No (conceptual) | **NO** — N/A (no formula) | No |
+
+**Verification conclusion — hypothesis CONFIRMED (with one refinement).** The
+**standardised** must-learn/τυπολόγιο callout (placement (b)) is **absent from all 8
+problems**, in both the solution and the coaching. Refinement: placement-(b) is not a
+total blank — **two coaching entries carry ad-hoc "learn-by-heart" prose** (`jun25-th1-9`:
+«πρέπει να ξέρεις απέξω»; `sept25-th3-10`: the −174 dBm value «πρέπει να ξέρεις») — but
+**neither names the τυπολόγιο**, so neither is the standardised signal the owner wants and
+both are inconsistent with the rest. This mirrors the theory-side finding exactly (§2
+placement-(a) observation / **F3**: through-filters §8στ is standardised, while
+sources/bandpass/snr are ad-hoc). So the real gap on the problems side is twofold:
+**(i)** the standardised "off the sheet" callout is universally missing, and **(ii)** where
+any "learn this" awareness exists at all it is ad-hoc and un-anchored to the τυπολόγιο.
+Pass C should propagate the §8στ wording («⚠️ Πρέπει να θυμάσαι (όχι στο επίσημο τυπολόγιο)»)
+uniformly across the **5 formula-bearing problems** and leave the **3 conceptual problems**
+untouched.
+
+### Judgment calls & flags (this step)
+
+- **Conceptual T/F problems use no formula — not a placement-(b) gap.** `jan26-th1-3`,
+  `pa25-th1-3`, `pb25-th1-3` test the *distinction* white/thermal noise (flat PSD) vs
+  Gaussian (amplitude distribution). They reference the white-noise *definition* as a label
+  (cf. §2.2 "AWGN … (label)") but write no formula and carry no `formulaIds`. **Call:** they
+  contribute no must-learn instance and need no placement-(b) callout — flagged rather than
+  silently forcing a formula match. (Ambiguity admitted: if Pass C decides the *label*
+  "white = flat PSD, N_0/2" itself deserves the must-learn treatment, these 3 would gain a
+  conceptual callout — that is a Pass-C wording decision, not an inventory fact.)
+- **F6 — `jun25-th1-10` `formulaId` mis-tag.** Its `formulaIds` includes `bandpass-noise-r`
+  (canonical form `R_Y(τ)=N_0 W·sinc(Wτ)·cos(2πf_cτ)`, `formulas.tsx` L1227), but the
+  problem has an **LPF (cutoff W) + HPF (cutoff 10W)** — *no* bandpass filter — and its
+  solution derives the **bandlimited-LPF** autocorrelation `R_Y(τ)=N_0 W·sinc(2Wτ)` (no
+  carrier factor; `sinc(2Wτ)`, not `sinc(Wτ)`). The tag is loose. Both forms are off-sheet,
+  so this does **not** change the must-learn classification — it is a grounding/tagging note
+  for Pass C, and it feeds **F2** (the bandlimited-LPF ΣΑΣ has no dedicated `formulaId`).
+- **`jun25-th1-10` is a "Σχεδιάστε" (DRAW) problem with a text-only answer** (draw both
+  output spectra + both time responses) → a prime bespoke-viz candidate for the Phase-2
+  noise-exercise rework. Surfaced to the planner; not actioned in this read-only step.
+- **Out-of-scope pointer (for the foundations must-learn pass), surfaced to the planner:**
+  `pb25-th1-5` coaching (a `topic:'foundations'` problem, NOT noise) tells students the
+  triangular-pulse `sinc²` envelope is «από τα standard Fourier pairs που πρέπει να ξέρεις
+  απ' έξω» — but `fourier-pair-tri` **IS on the τυπολόγιο** (§1, sheet p.1), so that is the
+  *inverse* error (telling them to memorise an on-sheet formula). Logged for the foundations
+  inventory; not actioned here.
+
+---
+
 ## 3. Discoveries, flags & open questions (for the planner — surfaced via bus/inbox)
 
 - **F1 — LIVE MISCITATION (correctness).** `app/(content)/noise/white-noise/page.mdx`
@@ -332,9 +454,24 @@ Their primary inventory home is the future `randomness` pass.
   loop, SourceDoc has no slide numbers). Its must-learn formulas (§2.5) are recap-heavy
   (AM/FM). When D11 reworks it, the must-learn flags should be baked in (coordinate Pass C
   with D11 to avoid double-touch — same logic as the noise-exercise ordering call).
-- **Note (next step):** `mustlearn-inventory-noise-problems` must VERIFY (not assert) the
-  owner's hypothesis that the problem-side must-learn flag (placement b) is currently
-  missing — check each of the 8 noise problems for any existing must-learn callout.
+- **F6 — `jun25-th1-10` `formulaId` mis-tag (grounding, Pass C).** Tagged `bandpass-noise-r`
+  (`R_Y=N_0 W·sinc(Wτ)·cos(2πf_cτ)`) but its LPF+HPF solution derives the bandlimited-LPF
+  `R_Y=N_0 W·sinc(2Wτ)` (no carrier; `sinc(2Wτ)`). Loose tag; both off-sheet so the
+  classification is unaffected. Feeds **F2** (the bandlimited-LPF ΣΑΣ has no `formulaId`).
+  Full detail in §2.7. (Surfaced via `bus/inbox/010`.)
+- **PROBLEM-SIDE placement-(b) RESULT (owner hypothesis CONFIRMED).** §2.7 verified per
+  problem: the **standardised** «δεν δίνεται στο τυπολόγιο» must-learn callout is **absent
+  from all 8** noise problems (solution + coaching). Two coaching entries carry **ad-hoc**
+  "learn-by-heart" prose (`jun25-th1-9`, `sept25-th3-10`) that does **not** name the
+  τυπολόγιο — same ad-hoc/standardised split as theory-side **F3**. The 3 conceptual T/F
+  problems (`jan26-th1-3`/`pa25-th1-3`/`pb25-th1-3`) use no formula → no placement-(b)
+  target. Pass C: propagate the §8στ wording across the 5 formula-bearing problems; leave
+  the 3 conceptual ones alone.
+- **Beyond-scope discoveries surfaced to the planner (`bus/inbox/010`):** (1) `jun25-th1-10`
+  is a "Σχεδιάστε" (DRAW) problem with a text-only answer → bespoke-viz candidate for the
+  Phase-2 noise-exercise rework. (2) `pb25-th1-5` coaching (foundations, NOT noise) tells
+  students an **on-sheet** formula (`fourier-pair-tri`, `sinc²`) must be memorised — the
+  *inverse* error; flag for the foundations must-learn pass.
 
 ---
 
