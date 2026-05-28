@@ -74,16 +74,16 @@ $$
 \boxed{\,x_{DSB}(t) = m(t)\,\cos(2\pi f_c t)\,}
 $$
 
-<Callout type="key" title="Πώς ορίζει το DSB-AM-SC ο καθηγητής (slide 53)">
+<Callout type="key" title="Πώς ορίζεται το DSB-AM-SC (slide 53)">
   <p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
     «Στο συμβατικό AM το <InlineMath>{'x(t) = (A_c + m(t))\\cos(2\\pi f_c t)'}</InlineMath>{' '}
     (το φέρον συνεισφέρει <InlineMath>{'A_c^2/2'}</InlineMath> στην ισχύ). Προφανώς, ο όρος{' '}
     <InlineMath>{'A_c\\cos(2\\pi f_c t)'}</InlineMath> δεν περιέχει πληροφορία κι η αφαίρεσή του θα συνδράμει στην αύξηση της ενεργειακής αποδοτικότητας της διαμόρφωσης. Πρόκειται για τη <strong>διαμόρφωση AM διπλής πλευρικής ζώνης με κατηργημένο φέρον (DSB-AM-SC)</strong>.»
   </p>
 
-  Το πλήρες όνομα από το slide είναι **DSB-AM-SC** (*Double Side Band AM, Suppressed Carrier*) — *διπλής πλευρικής ζώνης AM με κατηργημένο φέρον*. Στις διαφάνειες και στις εξεταστικές θα δεις και τις δύο μορφές: τη μακρά «DSB-AM-SC» (επίσημη ονομασία του καθηγητή) και τη συντομογραφία «DSB-SC» (διεθνής). Χρησιμοποιούμε τη συντομογραφία στο κείμενο, αλλά αναγνώρισε και τη μακρά μορφή.
+  Το πλήρες όνομα από το slide είναι **DSB-AM-SC** (*Double Side Band AM, Suppressed Carrier*) — *διπλής πλευρικής ζώνης AM με κατηργημένο φέρον*. Στις διαφάνειες και στις εξεταστικές θα δεις και τις δύο μορφές: τη μακρά «DSB-AM-SC» (η επίσημη ονομασία στις διαφάνειες) και τη συντομογραφία «DSB-SC» (διεθνής). Χρησιμοποιούμε τη συντομογραφία στο κείμενο, αλλά αναγνώρισε και τη μακρά μορφή.
 
-  Η μορφή που γράφει ο καθηγητής στον χρόνο **κρατά τον <InlineMath>{'A_c'}</InlineMath> ρητό**:
+  Η μορφή που δίνεται στις διαφάνειες στον χρόνο **κρατά τον <InlineMath>{'A_c'}</InlineMath> ρητό**:
 
   $$
   x(t) = A_c\, m(t)\,\cos(2\pi f_c t)
@@ -111,7 +111,7 @@ $$
 V(t) = |A_c\, m(t)|, \qquad \theta(t) = 0
 $$
 
-(Το <InlineMath>{'\\theta(t) = 0'}</InlineMath> ακολουθεί από <InlineMath>{'x_Q = 0'}</InlineMath>: <InlineMath>{'\\theta = \\arctan(x_Q/x_I) = 0'}</InlineMath>. Αυτές οι δύο γραμμές είναι **ακριβώς** ό,τι αναφέρει ο καθηγητής στο slide 53.)
+(Το <InlineMath>{'\\theta(t) = 0'}</InlineMath> ακολουθεί από <InlineMath>{'x_Q = 0'}</InlineMath>: <InlineMath>{'\\theta = \\arctan(x_Q/x_I) = 0'}</InlineMath>. Αυτές οι δύο γραμμές είναι **ακριβώς** ό,τι αναφέρεται στο slide 53.)
 
 Όπως και στη Conventional AM, <InlineMath>{'x_Q = 0'}</InlineMath> — όλη η πληροφορία στο envelope. Αλλά τώρα **το envelope είναι <InlineMath>{'|A_c m(t)|'}</InlineMath>**, όχι <InlineMath>{'|A_c + m(t)|'}</InlineMath>. Η απόλυτη τιμή είναι **εκ φύσεως μη γραμμική**: όταν το <InlineMath>{'m(t)'}</InlineMath> αλλάζει πρόσημο, το envelope «αναποδογυρίζει» — και αυτό είναι ακριβώς που διαλύει τον envelope detector.
 </Callout>
@@ -157,7 +157,7 @@ $$
     «Δεν αρκεί η χρήση <strong>ασύμφωνης αποδιαμόρφωσης</strong> αφού <InlineMath>{'V(t) = |A_c m(t)|'}</InlineMath>. Για να αρκούσε θα έπρεπε <InlineMath>{'m(t) \\geq 0\\ \\forall t'}</InlineMath>, το οποίο σπάνια συμβαίνει στα σήματα πληροφορίας στα συστήματα επικοινωνιών.»
   </p>
 
-  Μόλις είπαμε ότι ο envelope detector σπάει επειδή ο envelope είναι <InlineMath>{'|m(t)|'}</InlineMath>, όχι <InlineMath>{'m(t)'}</InlineMath>. Πριν περάσουμε στον coherent στο §4, αξίζει να ρωτήσουμε το αντίστροφο: **πότε ΘΑ ταυτίζονταν τα δύο;** Η συνθήκη που ξεκλειδώνει ο καθηγητής (παραπάνω) είναι ακριβής — αν <InlineMath>{'m(t) \\geq 0'}</InlineMath> για κάθε <InlineMath>{'t'}</InlineMath>, τότε <InlineMath>{'|m(t)| = m(t)'}</InlineMath> και η rectification δεν αλλάζει τίποτα: ο envelope detector βγάζει ακριβώς το <InlineMath>{'m(t)'}</InlineMath>. Αλλά τα πραγματικά σήματα πληροφορίας (audio, video, μετρήσεις) **έχουν αρνητικές τιμές** και συνήθως μέση τιμή <InlineMath>{'\\bar m = 0'}</InlineMath> (αλλιώς σπαταλάς ισχύ στο DC). Επομένως η συνθήκη παραβιάζεται **σχεδόν πάντα** — γι' αυτό το DSB-AM-SC υποχρεωτικά απαιτεί coherent demod.
+  Μόλις είπαμε ότι ο envelope detector σπάει επειδή ο envelope είναι <InlineMath>{'|m(t)|'}</InlineMath>, όχι <InlineMath>{'m(t)'}</InlineMath>. Πριν περάσουμε στον coherent στο §4, αξίζει να ρωτήσουμε το αντίστροφο: **πότε ΘΑ ταυτίζονταν τα δύο;** Η συνθήκη που ξεκλειδώνει το slide 67 (παραπάνω) είναι ακριβής — αν <InlineMath>{'m(t) \\geq 0'}</InlineMath> για κάθε <InlineMath>{'t'}</InlineMath>, τότε <InlineMath>{'|m(t)| = m(t)'}</InlineMath> και η rectification δεν αλλάζει τίποτα: ο envelope detector βγάζει ακριβώς το <InlineMath>{'m(t)'}</InlineMath>. Αλλά τα πραγματικά σήματα πληροφορίας (audio, video, μετρήσεις) **έχουν αρνητικές τιμές** και συνήθως μέση τιμή <InlineMath>{'\\bar m = 0'}</InlineMath> (αλλιώς σπαταλάς ισχύ στο DC). Επομένως η συνθήκη παραβιάζεται **σχεδόν πάντα** — γι' αυτό το DSB-AM-SC υποχρεωτικά απαιτεί coherent demod.
 
   **Βαθύτερη σύνδεση με το Conventional AM:** ο όρος <InlineMath>{'A_c'}</InlineMath> που η Conventional AM προσθέτει στο message είναι ακριβώς ο όρος που εξασφαλίζει <InlineMath>{'A_c + m(t) \\geq 0\\ \\forall t'}</InlineMath> (για <InlineMath>{'\\mu \\leq 1'}</InlineMath>). Άρα η Conventional AM είναι κυριολεκτικά **DSB-AM-SC + DC offset που γυρίζει τη συνθήκη <InlineMath>{'m \\geq 0'}</InlineMath> πάντα αληθή**. Πληρώνεις σε ισχύ (carrier δαπανά <InlineMath>{'A_c^2/2'}</InlineMath>), κερδίζεις απλούστερο δέκτη.
 </Callout>
@@ -229,7 +229,7 @@ $$
 **Bandwidth μένει ίδιο** — δεν κερδίζουμε φάσμα. Η μόνη βελτίωση είναι η ισχύς. (Αν θέλουμε να κόψουμε το bandwidth στο μισό, πάμε σε **SSB** στο επόμενο κεφάλαιο.)
 
 <Callout type="connection" title="Πώς γεννιέται πρακτικά το DSB-AM-SC — ο ισοσταθμισμένος διαμορφωτής (slide 66)">
-**Παρένθεση για τον πομπό — πριν περάσουμε στον δέκτη στο §4.** Η μορφή <InlineMath>{'x = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath> γράφεται εύκολα στο χαρτί, αλλά στην πράξη ο **πολλαπλασιαστής** δεν είναι τετριμμένο κύκλωμα: αναλογικοί πολλαπλασιαστές κοστίζουν και έχουν περιορισμένο dynamic range. Ο καθηγητής στο slide 66 παρουσιάζει την κανονική πρακτική λύση — τον **ισοσταθμισμένο διαμορφωτή** (*balanced modulator*) που χρησιμοποιεί δύο πανομοιότυπα μη γραμμικά στοιχεία σε αντισυμμετρική διάταξη ώστε:
+**Παρένθεση για τον πομπό — πριν περάσουμε στον δέκτη στο §4.** Η μορφή <InlineMath>{'x = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath> γράφεται εύκολα στο χαρτί, αλλά στην πράξη ο **πολλαπλασιαστής** δεν είναι τετριμμένο κύκλωμα: αναλογικοί πολλαπλασιαστές κοστίζουν και έχουν περιορισμένο dynamic range. Το slide 66 παρουσιάζει την κανονική πρακτική λύση — τον **ισοσταθμισμένο διαμορφωτή** (*balanced modulator*) που χρησιμοποιεί δύο πανομοιότυπα μη γραμμικά στοιχεία σε αντισυμμετρική διάταξη ώστε:
 
 - **Ο carrier ακυρώνεται** στην έξοδο μέσω αλγεβρικής διαφοράς (δεν χρειάζεται BPF τόσο επιλεκτικό όσο στο Conventional AM).
 - **Οι κοινοί όροι** <InlineMath>{'\\cos^2'}</InlineMath> και <InlineMath>{'m^2'}</InlineMath> ακυρώνονται από την ίδια αντισυμμετρία.
@@ -333,7 +333,7 @@ $$
 
 ### 5a. Γενική μορφή — η ταυτότητα μέσω της περιβάλλουσας (slide 64)
 
-Το single-tone αποτέλεσμα <InlineMath>{'A_m^2/4'}</InlineMath> είναι ειδική περίπτωση. Ο καθηγητής στο slide 64 δίνει τον **γενικό τύπο** που δουλεύει για κάθε message <InlineMath>{'m(t)'}</InlineMath> — όχι μόνο για single-tone — παράγοντάς τον **μέσω της περιβάλλουσας** <InlineMath>{'V(t) = |A_c m(t)|'}</InlineMath>. Είναι ο ίδιος αλγεβρικός σκελετός που χρησιμοποιήσαμε στη [Conventional AM §5cγ](/am/conventional#5-ισχύς-εκπομπής).
+Το single-tone αποτέλεσμα <InlineMath>{'A_m^2/4'}</InlineMath> είναι ειδική περίπτωση. Το slide 64 δίνει τον **γενικό τύπο** που δουλεύει για κάθε message <InlineMath>{'m(t)'}</InlineMath> — όχι μόνο για single-tone — παράγοντάς τον **μέσω της περιβάλλουσας** <InlineMath>{'V(t) = |A_c m(t)|'}</InlineMath>. Είναι ο ίδιος αλγεβρικός σκελετός που χρησιμοποιήσαμε στη [Conventional AM §5cγ](/am/conventional#5-ισχύς-εκπομπής).
 
 Για κάθε bandpass σήμα <InlineMath>{'x(t) = V(t)\\cos(2\\pi f_c t + \\theta(t))'}</InlineMath> με <InlineMath>{'f_c \\gg W'}</InlineMath>, η μέση ισχύς είναι **το μισό της μέσης τιμής του τετραγώνου της περιβάλλουσας**:
 
@@ -341,7 +341,7 @@ $$
 P_x = \frac{1}{2}\,\overline{V^2(t)} = \frac{P_V}{2}
 $$
 
-(Ο λόγος είναι ότι <InlineMath>{'\\cos^2 = \\tfrac{1}{2}(1 + \\cos\\, 2(\\cdot))'}</InlineMath> — ο γρήγορος όρος στις <InlineMath>{'2f_c'}</InlineMath> δεν συνεισφέρει στη μέση τιμή, και μένει ο παράγοντας <InlineMath>{'1/2'}</InlineMath>.) Για το DSB-AM-SC, <InlineMath>{'V = |A_c m|'}</InlineMath>, οπότε <InlineMath>{'V^2 = A_c^2\\, m^2'}</InlineMath> (η απόλυτη τιμή φεύγει στο τετράγωνο). Άρα η παραγωγή του καθηγητή είναι:
+(Ο λόγος είναι ότι <InlineMath>{'\\cos^2 = \\tfrac{1}{2}(1 + \\cos\\, 2(\\cdot))'}</InlineMath> — ο γρήγορος όρος στις <InlineMath>{'2f_c'}</InlineMath> δεν συνεισφέρει στη μέση τιμή, και μένει ο παράγοντας <InlineMath>{'1/2'}</InlineMath>.) Για το DSB-AM-SC, <InlineMath>{'V = |A_c m|'}</InlineMath>, οπότε <InlineMath>{'V^2 = A_c^2\\, m^2'}</InlineMath> (η απόλυτη τιμή φεύγει στο τετράγωνο). Άρα η παραγωγή στις διαφάνειες είναι:
 
 $$
 P_x \;=\; \frac{1}{2}\, \overline{V^2(t)} \;=\; \frac{1}{2}\, \overline{A_c^2\, m^2(t)} \;=\; \frac{A_c^2}{2}\, P_m
@@ -351,7 +351,7 @@ $$
 \boxed{\;P_{DSB\text{-}AM\text{-}SC} \;=\; \frac{A_c^2\, P_m}{2}\;}
 $$
 
-**Αυτή είναι η master μορφή** που χρησιμοποιεί ο καθηγητής στις εξεταστικές — δουλεύει για οποιοδήποτε <InlineMath>{'m(t)'}</InlineMath> (single-tone, multi-tone, sinc, οτιδήποτε). Δες την [αντίστοιχη entry στη σελίδα formulas](/formulas#formula:dsb-sc-power) (⚠️ «πρέπει να θυμάσαι» — δεν είναι μέσα στο επίσημο τυπολόγιο).
+**Αυτή είναι η master μορφή** που χρησιμοποιείται στις εξεταστικές — δουλεύει για οποιοδήποτε <InlineMath>{'m(t)'}</InlineMath> (single-tone, multi-tone, sinc, οτιδήποτε). Δες την [αντίστοιχη entry στη σελίδα formulas](/formulas#formula:dsb-sc-power) (⚠️ «πρέπει να θυμάσαι» — δεν είναι μέσα στο επίσημο τυπολόγιο).
 
 **Sanity check single-tone.** Με <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath>, η message power είναι <InlineMath>{'P_m = A_m^2/2'}</InlineMath>. Άρα <InlineMath>{'P_{DSB} = A_c^2 \\cdot (A_m^2/2)/2 = A_c^2 A_m^2 / 4'}</InlineMath>. Για <InlineMath>{'A_c = 1'}</InlineMath> (έτσι όπως γράφτηκε το <InlineMath>{'x_{DSB} = m(t)\\cos'}</InlineMath> στην αρχή της §5), παίρνουμε <InlineMath>{'P_{DSB} = A_m^2/4'}</InlineMath> — ταυτίζεται με την κατευθείαν παραγωγή «δύο cosines πλάτους <InlineMath>{'A_m/2'}</InlineMath>» παραπάνω. ✓
 
@@ -676,7 +676,7 @@ Bandwidth = $2W$, σύμφωνο με τη γενική $\text{BW}_{DSB} = 2W$.
 
 **Σημείο.** Στο `CoherentDemodChainViz` παραπάνω, το στάδιο 2 χρησιμοποιεί $2\cos$ ακριβώς για να μη μείνει αυτός ο παράγοντας $1/2$ — και έτσι στο στάδιο 3 βγαίνει $\hat m = m$ ακριβώς. Καθαρή παρουσίαση.
 
-**Σύμβαση καθηγητή.** Στις διαφάνειες (slides 51, 79), ο καθηγητής σταθερά **δεν** βάζει τον παράγοντα $2$ — γράφει `y(t) = x(t)·cos(2πf_c t)` και κρατάει τον $1/2$ μπροστά στο `m(t)` στην έξοδο: <InlineMath>{'\\hat m = (1/2) A_c m(t)'}</InlineMath>. Είναι μαθηματικά **ισοδύναμη** σύμβαση. Αν μια εξεταστική σου δώσει τον τοπικό ταλαντωτή ως πλάτους $1$, μη ξεχάσεις το $1/2$.
+**Σύμβαση των διαφανειών.** Στις διαφάνειες (slides 51, 79), ο παράγοντας $2$ σταθερά **δεν** μπαίνει — γράφεται `y(t) = x(t)·cos(2πf_c t)` και ο $1/2$ κρατιέται μπροστά στο `m(t)` στην έξοδο: <InlineMath>{'\\hat m = (1/2) A_c m(t)'}</InlineMath>. Είναι μαθηματικά **ισοδύναμη** σύμβαση. Αν μια εξεταστική σου δώσει τον τοπικό ταλαντωτή ως πλάτους $1$, μη ξεχάσεις το $1/2$.
 </Example>
 </ExamProblem>
 
@@ -723,14 +723,14 @@ $$
 ## 8. Recap
 
 <Recap>
-- **DSB-AM-SC** (πλήρες όνομα του καθηγητή· συντομογραφία **DSB-SC**) = Conventional AM χωρίς το $A_c$ component: $x(t) = A_c m(t)\cos(2\pi f_c t)$. Επίσης γράφεται με τον $A_c$ απορροφημένο: $x(t) = m(t)\cos(2\pi f_c t)$.
+- **DSB-AM-SC** (πλήρες όνομα στις διαφάνειες· συντομογραφία **DSB-SC**) = Conventional AM χωρίς το $A_c$ component: $x(t) = A_c m(t)\cos(2\pi f_c t)$. Επίσης γράφεται με τον $A_c$ απορροφημένο: $x(t) = m(t)\cos(2\pi f_c t)$.
 - Στην I/Q canonical form (slide 53): $x_I = A_c m(t)$, $x_Q = 0$, $V(t) = |A_c m(t)|$, $\theta(t) = 0$.
 - **Φάσμα:** μόνο sidebands $\frac{A_c}{2}M(f \mp f_c)$, καθόλου carrier impulses. Bandwidth = $2W$ (ίδιο με Conventional AM).
 - **Ισχύς — master form (slide 64):** $P_x = \frac{1}{2}\overline{V^2} = \frac{A_c^2}{2}P_m$. Δουλεύει για κάθε $m(t)$, όχι μόνο single-tone. Single-tone ειδική περίπτωση: $A_m^2/4$ για $A_c = 1$.
 - **Power efficiency = 100%** — όλη η ισχύς στις sidebands. Σύγκριση: για ίδιο message, χρησιμοποιεί ~9× λιγότερη συνολική ισχύ από Conventional AM στο $\mu = 0.5$.
 - **Envelope detector NON-OK** (slide 67): ο envelope είναι $|A_c m(t)|$, rectified message. Phase reversals $\pi$ στα zero crossings του $m(t)$. Η ασύμφωνη αποδιαμόρφωση θα δούλευε **μόνο αν** $m(t) \geq 0\ \forall t$ — σπάνιο σε πραγματικά σήματα.
 - **Βαθύτερη σύνδεση Conventional ↔ DSB-AM-SC:** ο $A_c$ της Conventional AM είναι ακριβώς ο DC offset που εξασφαλίζει $A_c + m \geq 0$ πάντα ⇒ envelope detector OK. Πληρώνεις σε ισχύ ($A_c^2/2$), κερδίζεις απλούστερο δέκτη.
-- **Coherent demodulation (μίκτης + LPF):** πολλαπλασιασμός με τοπικό $2\cos(2\pi f_c t)$ (ή ισοδύναμα $\cos$ με παράγοντα $1/2$ στην έξοδο — η σύμβαση του καθηγητή) + LPF. Στο φάσμα: shift back to baseband + isolate. Recovers $m(t)$ ακριβώς όταν η φάση = 0.
+- **Coherent demodulation (μίκτης + LPF):** πολλαπλασιασμός με τοπικό $2\cos(2\pi f_c t)$ (ή ισοδύναμα $\cos$ με παράγοντα $1/2$ στην έξοδο — η σύμβαση των διαφανειών) + LPF. Στο φάσμα: shift back to baseband + isolate. Recovers $m(t)$ ακριβώς όταν η φάση = 0.
 - **Phase sensitivity:** error $\varphi$ → output $m(t)\cos\varphi$. Στις $90°$ τίποτα (quadrature null). Χρειάζεται PLL/Costas loop ή pilot στον δέκτη — γι' αυτό το DSB-AM-SC είναι «πιο δύσκολο» από AM σε αναλογικό hardware.
 - **Πομπός — ισοσταθμισμένος διαμορφωτής (slide 66):** δύο πανομοιότυπα μη γραμμικά στοιχεία σε αντισυμμετρική διάταξη — ο carrier ακυρώνεται αλγεβρικά, μένει μόνο ο σταυρωτός όρος $m(t)\cos$. Πλήρης ανάλυση στο [/am/modulator-demodulator §1c](/am/modulator-demodulator#1c-balanced-modulator-για-dsb-sc).
 - **Μετατροπή συχνότητας ($f_1 \to f_2$):** ίδιο εργαλείο, αλλάζει μόνο το φίλτρο. Πολλαπλασιαστής με $\cos(2\pi(f_2-f_1)t)$ + BPF γύρω από $f_2$. Coherent demod = ειδική περίπτωση $f_2 = 0$ με LPF.
