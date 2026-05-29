@@ -55,7 +55,7 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | A | **AM** — theory (7 pages) + problems (~20) | `mustlearn-inventory-am` | **DONE** — §6 below |
 | A | **FM** chapter (5 pages) | `mustlearn-inventory-fm` | **DONE** — §8 below |
 | A | **Remaining randomness** (random-variables, random-processes, stationarity) | `mustlearn-inventory-fm` | **DONE** — §8.6 below |
-| B | weighting | per-formula | TODO |
+| B | **Noise** — weighting | `mustlearn-passb-noise-formulas` | **DONE** — §2B below |
 | C | apply | per-placement | TODO |
 
 ---
@@ -430,6 +430,205 @@ untouched.
   inventory; not actioned here.
 
 ---
+
+---
+
+## 2B. Pass B — Noise-Chapter Weighting Results
+
+> **Step:** `mustlearn-passb-noise-formulas` · **Status:** DONE  
+> **Scope:** every must-learn formula in §2 (noise chapter). Weight = count of distinct past-exam exercises that required the formula (either directly or as a key derivation step). References cite `exercises.tsx` problem IDs.
+
+### Exam-paper audit
+
+All theory exam papers available in `past_exams/` were visually audited (images + PDFs):
+
+| Exam session | Files | Audit method |
+| --- | --- | --- |
+| Πρόοδος Απρίλιος 2026 | `προοδος_2026.jpg` | image read |
+| Εξέταση Σεπτεμβρίου 2025 | `2025_sept_exam.jpg` | image read |
+| Επι-πτυχίο Ιανουαρίου 2026 | `Epi-Ptyxio-Jan-26_1.jpg`, `_2.jpg` | image read (2 pp.) |
+| Εξέταση Ιουνίου 2025 Team A | `Syst-Epik-June-2025.pdf` | PDF read (2 pp.) |
+| Πρόοδος Α Μαΐου 2025 | `proodos_a1.jpg`, `proodos_a2.jpg` | image read |
+| Πρόοδος Β Μαΐου 2025 | `proodos_b1.jpg`, `proodos_b2.jpg` | image read |
+| Solutions compilation 2025 | `systepik-exams-solutions-ΤΗΕΜΑΤΑ-KANELOU.pdf` → copied to `kanelou-exams.pdf` (ASCII path); 23 pp. | PDF read; covers same six sessions above |
+| MATLAB/lab exams (2023, 2020–21) | Various | Not audited — lab-only content |
+
+**Coverage note:** No theory exam papers pre-2025 are available. The kanelou-exams compilation confirms the six exam sessions above are the full 2025 academic-year corpus. All 8 `topic:'noise'` exercises already in `exercises.tsx` were confirmed against the original papers. **No additional noise-formula problems were found outside `exercises.tsx`.** Cross-topic rule applied: one FM comparison problem (`sept25-th2-7`) explicitly invokes SNR formulas from §2.5 — counted where applicable.
+
+---
+
+### 2B.1 Core noise formulas (§2.1–§2.4)
+
+#### `white-noise-psd` — S_N(f) = N₀/2 (flat PSD, bilateral)
+
+**Weight: 5** ← highest in the noise chapter
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-6` | Proodos Απρίλιος 2026 · ΘΕΜΑ 6 | S_n(f) = N₀/2 stated as given; foundation for output-power calculation |
+| `sept25-th3-10` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 3.10 | Answer to "what is the PSD of thermal noise N(t)?" — S_N = kT/2 = N₀/2 |
+| `sept25-th3-11` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 3.11 | S_X = N₀/2 used with `lti-output-psd` to get P_Y = N₀B |
+| `jun25-th1-9` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.9 | Answer to "what is the PSD of thermal noise?" — S_N = kT/2 = N₀/2 |
+| `jun25-th1-10` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.10 | Refers to previous thermal noise (N₀/2); applied to draw LPF and HPF output spectra |
+
+**Not counted (T/F only):** `jan26-th1-3`, `pa25-th1-3`, `pb25-th1-3` — these engage the *definition* "white = flat PSD, not Gaussian" but write no formula.
+
+---
+
+#### `lti-output-psd` — S_Y(f) = |H(f)|²·S_X(f)
+
+**Weight: 3**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-6` | Proodos Απρίλιος 2026 · ΘΕΜΑ 6 | Ideal LPF → |H|²=1 for |f|≤W → S_Y = N₀/2 → P_Y = N₀W |
+| `sept25-th3-11` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 3.11 | Ideal LPF → |H|²=1 for |f|≤B → P_Y = N₀B |
+| `jun25-th1-10` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.10 | Applied to ideal LPF (f_c=W) AND ideal HPF (f_c=10W) to draw both output spectra |
+
+**Not counted:** `sept25-th3-10` and `jun25-th1-9` ask only for the PSD of thermal noise (no filter present); `white-noise-psd` is the answer but `lti-output-psd` is not invoked.
+
+---
+
+#### `thermal-noise` — S_N(f) = kT/2 W/Hz; P_N = kTB = N₀·B
+
+**Weight: 2**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th3-10` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 3.10 | Explicitly asked: "what is the PSD of thermal noise N(t)?"; answer: S_N = kT/2 = N₀/2 where N₀ = kT; full-band power P_N = N₀B = kTB |
+| `jun25-th1-9` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.9 | Same question, identical answer |
+
+**Note:** `pb25-th1-3` asks whether thermal noise has a Gaussian amplitude distribution (T/F) — conceptual only, no formula. Same thermal-noise question repeated in two exam sessions (September and June), confirming it is a standard pattern.
+
+---
+
+#### `wiener-khinchin` — R_X(τ) = F⁻¹{S_X(f)}; S_X(f) = F{R_X(τ)}
+
+**Weight: 3**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-6` | Proodos Απρίλιος 2026 · ΘΕΜΑ 6 | Power consequence P_Y = R_Y(0) = ∫S_Y(f)df: integrates N₀/2 over [−W,W] to get N₀W |
+| `sept25-th3-11` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 3.11 | Power consequence: P_Y = ∫S_Y df = N₀B |
+| `jun25-th1-10` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.10 | **Full inverse FT required**: part 2 asks "σχεδιάστε την χρονική απόκριση" → R_LP(τ) = N₀·sin(2πWτ)/(2πτ) = N₀W·sinc(2Wτ) via explicit inverse FT; also uses power consequence for both filters |
+
+**Counting rationale:** P_Y = R_Y(0) = ∫S_Y df is the Wiener–Khinchin theorem evaluated at τ=0. Problems that compute output power from output PSD invoke this (proodos26-6, sept25-th3-11). The full forward + inverse FT apparatus is explicitly required only in jun25-th1-10. Problems that only quote the PSD value (sept25-th3-10, jun25-th1-9) do not invoke W-K.
+
+---
+
+#### `bandpass-noise-r` — R_Y(τ) = N₀·W·sinc(Wτ)·cos(2πf_c τ)
+
+**Weight: 0**
+
+**Finding:** No available past-exam exercise explicitly derives or requires the bandpass noise autocorrelation. Exercise `jun25-th1-10` carries `bandpass-noise-r` in its `formulaIds` but this is the confirmed **F6 mis-tag** (§2.7): that problem uses LPF + HPF (no bandpass filter), and its solution derives R_LP = N₀W·sinc(2Wτ) with **no carrier factor**. The bandpass formula is not invoked anywhere in the exercise.
+
+**Pass C note:** Zero exam weight ≠ unimportant — the formula is taught and flagged must-learn in `through-filters §8στ`. Pass C should retain the must-learn callout but set exam-weight = 0 (from available bank) with a note that this formula is examined through theory exercises (§8δ/§8ε) rather than standalone past-exam problems in the current bank.
+
+---
+
+### 2B.2 SNR formulas (§2.5 — many are recaps; primary homes noted)
+
+#### `snr` — SNR = P_signal/P_noise; SNR_dB = 10·log₁₀(SNR)
+
+**Weight: 0**
+
+No past-exam exercise asks a student to compute the basic P_s/P_n ratio from first principles. The SNR definition underlies all noise analysis but is not the operationally demanded formula in any of the 8 noise problems (which focus on PSD and power calculations).
+
+---
+
+#### `fm-snr-ref` — SNR_ref = P_{s,RF}/(N₀W) = A_c²/(2N₀W)
+
+**Weight: 1** (cross-topic: FM problem invoking noise chapter formula)
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | Implicit anchor behind both SNR_out,FM = 3β²·SNR_ref and SNR_out,AM = η·SNR_ref; the qualitative comparison table requires knowing SNR_ref as the common baseline |
+
+---
+
+#### `am-output-snr` — SNR_out,AM = η·SNR_ref (primary home: `am/modulator-demodulator`)
+
+**Weight: 1** (cross-topic)
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | Referenced in FM-vs-AM comparison: AM column states SNR gain ~ μ² (= η-form of SNR_out,AM) |
+
+---
+
+#### `fm-snr-out` — SNR_out,FM = 3β²·SNR_ref (primary home: `fm/in-noise`)
+
+**Weight: 1** (cross-topic)
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | Explicitly quoted: "FM output SNR gain = 3β²"; FM column in comparison table |
+
+---
+
+#### `fm-gain-am` — G_FM/AM = 9β² (primary home: `fm/in-noise`)
+
+**Weight: 1** (cross-topic)
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | Explicitly quoted: "FM gain over AM = 9β²"; example β=5 → 225-fold = 23.5 dB |
+
+---
+
+#### `fm-noise-output-psd` — S_n^out(f) = N₀f²/A_c² (triangular noise after FM discriminator)
+
+**Weight: 0**
+
+Not explicitly derived or required in any available past-exam exercise. The result 3β²·SNR_ref in `sept25-th2-7` presupposes this triangular-noise PSD in its derivation, but the qualitative comparison problem does not invoke the triangular-noise formula directly.
+
+---
+
+#### `noise-figure` — F = SNR_in/SNR_out; T_e = (F−1)·T₀
+
+**Weight: 0** — not required in any available past-exam exercise.
+
+#### `snr-input` — SNR_in = P_{s,RF}/(N₀·B)
+
+**Weight: 0** — not directly tested; no past-exam problem computes input SNR from given parameters.
+
+#### Processing gain — G_proc = SNR_out/SNR_in
+
+**Weight: 0** — same: taught in theory but no past-exam problem directly requires computing G_proc.
+
+---
+
+### 2B.3 No-formulaId entries (§2.1–§2.3 F2 category)
+
+These formulas are must-learn (off-sheet) but have no dedicated `formulaId` in `formulas.tsx`. Weighted here for Pass C planning.
+
+| Formula | Weight | Exercises | Note |
+| --- | --- | --- | --- |
+| **P_N = N₀B** (bandlimited white-noise power, no id) | **5** | proodos26-6, sept25-th3-10, sept25-th3-11, jun25-th1-9, jun25-th1-10 | Intermediate or final result in every power-computation problem; tied with `white-noise-psd` at weight 5; see F2 for the formulaId gap |
+| **N₀ ≈ −174 dBm/Hz @ 290 K** (noise floor value, no id) | **2** | sept25-th3-10 (coaching), jun25-th1-9 (coaching) | Numerical constant cited in solutions/coaching; not the asked-for formula but contextually required |
+| **R_N(τ) = N₀B·sinc(2Bτ)** (LPF autocorrelation, no id) | **1** | jun25-th1-10 (explicit R_LP derivation in part 2) | Derived via inverse FT of rect PSD; jun25-th1-10 explicitly requires drawing the "χρονική απόκριση" |
+| S_N⁺(f) = N₀, f≥0 (one-sided PSD convention) | 0 | — | Taught in §2.2 but no exam tests the notation distinction |
+| B_N (equivalent noise bandwidth) | 0 | — | Taught in through-filters §7; no past-exam derivation |
+| P_Y = πN₀f_c/2 (RC LPF power integral) | 0 | — | RC application in through-filters §6; no past-exam |
+| R_Y(τ) = (πN₀f_c/2)·e^{−2πf_c\|τ\|} (RC ΣΑΣ) | 0 | — | Same as above |
+
+---
+
+### 2B.4 Ranked summary — noise chapter Pass B
+
+**Ordered by weight (descending), with formulaId and Pass C priority:**
+
+| Rank | Formula | formulaId | Weight | Pass C priority |
+| --- | --- | --- | --- | --- |
+| 1 | S_N(f) = N₀/2 (white-noise PSD) | `white-noise-psd` | **5** | HIGH — universal, wrong callout on `white-noise` §10 (F1) |
+| 1 | P_N = N₀B (bandlimited power) | — (F2) | **5** | HIGH — new formulaId needed; used in every computation |
+| 3 | S_Y = \|H\|²·S_X (LTI output PSD) | `lti-output-psd` | **3** | HIGH — already has §8στ callout; propagate to problems |
+| 3 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **3** | HIGH — primary home `randomness/psd`; no callout yet |
+| 5 | S_N = kT/2, P_N = kTB (thermal noise) | `thermal-noise` | **2** | HIGH — repeated exam question; no callout on `sources` |
+| 5 | N₀ ≈ −174 dBm/Hz (noise floor) | — | **2** | MEDIUM — numerical constant; appears in coaching |
+| 7 | fm-snr-ref, am-output-snr, fm-snr-out, fm-gain-am | various | **1 each** | MEDIUM — cross-topic; primary homes are `fm/in-noise` + `am/mod-demod`; must-learn callout missing from all |
+| 8 | R_N = N₀B·sinc(2Bτ) (LPF autocorrelation) | — (F2) | **1** | MEDIUM — jun25-th1-10 only; no formulaId |
+| 9 | bandpass-noise-r, noise-figure, fm-noise-output-psd, snr, snr-input, G_proc, RC results, B_N | various | **0** | LOWER — must-learn but zero exam weight in current bank; flag as must-learn without high-weight badge |
 
 ---
 
@@ -1387,7 +1586,6 @@ pattern from §7.4) — placement-(b) concept does not apply to them.
 ## 10. Placeholders for later passes (do not delete — structure for the whole sub-goal)
 
 - **Pass A — COMPLETE.** All chapters inventoried: Noise §2, Foundations §3, Randomness/why §4, Modulation bridge §5, AM §6, Foundations-supplemental + PSD §7, FM + remaining-randomness §8. Proceed to Pass B.
-- **Pass B — weighting**: per must-learn formula, count distinct `past_exams/` exercises +
-  collect refs (cite specific problems; do not estimate).
+- **Pass B — NOISE weighting DONE** (`mustlearn-passb-noise-formulas`) — results in §2B. Highest-weight: `white-noise-psd` + bandlimited P_N = N₀B (weight 5 each), `lti-output-psd` + `wiener-khinchin` (weight 3 each). Zero-weight: `bandpass-noise-r`, `noise-figure`, `fm-noise-output-psd`. Remaining chapters (AM, FM, foundations, randomness) — Pass B weighting TODO.
 - **Pass C — apply**: annotate placements (a) theory pages, (b) problems, (c) `/formulas`,
   driven by a single source of truth in `formulas.tsx`/`formulaIds`.
