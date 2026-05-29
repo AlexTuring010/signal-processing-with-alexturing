@@ -165,7 +165,7 @@ $$
 Αλλά $R_X(0) = E[X(t)^2] = P_X$ (ισχύς, από WSS). Άρα:
 
 $$
-\boxed{\;P_X \;=\; R_X(0) \;=\; \int_{-\infty}^{+\infty} S_X(f)\, df\;} \quad \text{✓ Στο τυπολόγιο μέσω WK}
+\boxed{\;P_X \;=\; R_X(0) \;=\; \int_{-\infty}^{+\infty} S_X(f)\, df\;} \quad \text{⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο}
 $$
 
 **Διάβασμα:** το ολοκλήρωμα της PSD πάνω σε **όλες τις συχνότητες** δίνει τη συνολική ισχύ. Άρα **«ισχύς ανά μονάδα συχνότητας (Hz)»** είναι ο φυσικός μετρητής μονάδων της $S_X(f)$ — μετριέται σε **W/Hz**.
@@ -298,7 +298,7 @@ $$
 \boxed{\;S_Y(f) \;=\; \lvert H(f)\rvert^2 \, S_X(f)\;,\quad P_Y \;=\; R_Y(0) \;=\; \int_{-\infty}^{\infty} \lvert H(f)\rvert^2\, S_X(f)\, df\;}
 $$
 
-✓ Στο τυπολόγιο **μέσω** της παραπάνω αλυσίδας. Είναι ένα από τα ελάχιστα τυπολογικά αποτελέσματα που στηρίζονται σε WSS και FT ταυτότητες — δεν χρειάζεται μνήμη ξεχωριστά.
+⚠️ **Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.** Μπορεί να παραχθεί από WSS + FT ταυτότητες, αλλά η παραγωγή αυτή δεν σου δίνεται· στην εξέταση πρέπει να ξέρεις αμέσως το αποτέλεσμα.
 
 <Callout type="key" title="Δύο παρατηρήσεις για τη μηχανή $S_Y = |H|^2 S_X$">
 
@@ -437,7 +437,7 @@ $$
 | **Cross-PSD** | $S_{X,Y}(f) = \mathcal{F}\{R_{X,Y}(\tau)\}$ (γενικά μιγαδική) | §9 |
 | **Συνέλιξη ΓΧΑ output** | $Y(t) = X(t) * h(t)$ | slide 37 |
 | **$R_Y$ μηχανή** | $R_Y(\tau) = R_X(\tau) * h(\tau) * h(-\tau)$ | slide 38 |
-| **$S_Y$ μηχανή (τυπολόγιο)** | $S_Y(f) = \lvert H(f)\rvert^2\, S_X(f)$ | slide 39 |
+| **$S_Y$ μηχανή (⚠️ must-learn)** | $S_Y(f) = \lvert H(f)\rvert^2\, S_X(f)$ | slide 39 |
 | **Output ισχύς ΓΧΑ** | $P_Y = R_Y(0) = \int \lvert H(f)\rvert^2 S_X(f)\,df$ | slide 39 |
 | **Δίψα-όψεως convention** | $S_N(f) = N_0/2$ για λευκό θόρυβο | §5 σύμβαση |
 
@@ -451,11 +451,11 @@ $$
 **Ερώτηση:** WSS ΤΔ έχει $R_X(\tau) = e^{-a|\tau|}$ ($a > 0$). Βρες το $S_X(f)$.
 
 <Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
-Σου δίνεται $R_X$, σου ζητάει $S_X$ — **forward WK**. Πρέπει να αναγνωρίσεις το FT pair $e^{-a|\tau|} \leftrightarrow ?$ από το τυπολόγιο. Είναι από τα **must-memorize** για ΣΕ (εμφανίζεται στις RC-φιλτραρισμένες περιπτώσεις).
+Σου δίνεται $R_X$, σου ζητάει $S_X$ — **forward WK**. Πρέπει να αναγνωρίσεις το FT pair $e^{-a|\tau|} \leftrightarrow ?$ — **⚠️ δεν δίνεται στο τυπολόγιο, πρέπει να το θυμάσαι**. Είναι από τα **must-memorize** για ΣΕ (εμφανίζεται στις RC-φιλτραρισμένες περιπτώσεις).
 </Callout>
 
 <Example title="Λύση" defaultOpen={true}>
-Από το γνωστό FT pair (τυπολόγιο):
+Από το FT pair που πρέπει να θυμάσαι (⚠️ δεν δίνεται στο τυπολόγιο):
 
 $$
 e^{-a|\tau|}\;\stackrel{\mathcal{F}}{\longleftrightarrow}\;\frac{2a}{a^2 + (2\pi f)^2}
@@ -505,7 +505,7 @@ $$
 **Ερώτηση:** Λευκός θόρυβος PSD $S_X(f) = N_0/2$ διέρχεται από ΓΧΑ σύστημα με $\lvert H(f)\rvert^2 = 1/(1 + (f/f_0)^2)$ (1-pole RC LPF). Βρες το output PSD και την συνολική output ισχύ.
 
 <Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
-Σου δίνεται input PSD + filter magnitude squared, σου ζητάει output PSD + ισχύ. Είναι **άμεση εφαρμογή** της slide-39 μηχανής $S_Y = |H|^2 S_X$. Η συνολική ισχύς προκύπτει με ολοκλήρωμα — και το ολοκλήρωμα $\int 1/(1+x^2)\,dx = \arctan x$ είναι στο τυπολόγιο.
+Σου δίνεται input PSD + filter magnitude squared, σου ζητάει output PSD + ισχύ. Είναι **άμεση εφαρμογή** της slide-39 μηχανής $S_Y = |H|^2 S_X$. Η συνολική ισχύς προκύπτει με ολοκλήρωμα — και το ολοκλήρωμα $\int 1/(1+x^2)\,dx = \arctan x$ ⚠️ πρέπει να θυμάσαι (δεν δίνεται στο τυπολόγιο).
 </Callout>
 
 <Example title="Λύση" defaultOpen={true}>
@@ -659,7 +659,7 @@ $$
     <span>Συνέλιξη στο time-domain: <InlineMath>{'Y(t) = X(t) * h(t)'}</InlineMath> (slide 37).</span>,
     <span>Διπλή συνέλιξη της <InlineMath>{'R_X'}</InlineMath>: <InlineMath>{'R_Y(\\tau) = R_X(\\tau) * h(\\tau) * h(-\\tau)'}</InlineMath> (slide 38).</span>,
     <span>FT των δύο πλευρών χρησιμοποιώντας <InlineMath>{'\\mathcal{F}\\{h(-\\tau)\\} = H^*(f)'}</InlineMath>.</span>,
-    <span>Output PSD: <InlineMath>{'S_Y(f) = |H(f)|^2\\, S_X(f)'}</InlineMath> (slide 39, τυπολόγιο).</span>,
+    <span>Output PSD: <InlineMath>{'S_Y(f) = |H(f)|^2\\, S_X(f)'}</InlineMath> (slide 39 — ⚠️ must-learn, δεν δίνεται στο τυπολόγιο).</span>,
   ]}
 />
 
@@ -726,7 +726,7 @@ $$
 >
   <p>**Αν δεις PSD-ορολογία**, σχεδόν πάντα ζητείται **μία από τρεις** μηχανές της σελίδας:</p>
   <ol className="ml-5 list-decimal space-y-1.5">
-    <li><strong>Forward WK</strong> — δίνεται <InlineMath>{'R_X(\\tau)'}</InlineMath>, ζητείται <InlineMath>{'S_X(f)'}</InlineMath>. Αναγνώρισε FT pair από τυπολόγιο: exponential ↔ Lorentzian, rect ↔ sinc, cos ↔ impulses, δ ↔ flat.</li>
+    <li><strong>Forward WK</strong> — δίνεται <InlineMath>{'R_X(\\tau)'}</InlineMath>, ζητείται <InlineMath>{'S_X(f)'}</InlineMath>. Αναγνώρισε FT pair: rect ↔ sinc, cos ↔ impulses, δ ↔ flat (τυπολόγιο p.1) · <strong>exponential ↔ Lorentzian (⚠️ must-learn — δεν δίνεται στο τυπολόγιο)</strong>.</li>
     <li><strong>Inverse WK + ολοκλήρωμα</strong> — δίνεται <InlineMath>{'S_X(f)'}</InlineMath>, ζητείται <InlineMath>{'P_X'}</InlineMath> (συνολική ή ζώνης). Ολοκλήρωσε την PSD πάνω στη ζώνη που ζητείται.</li>
     <li><strong>ΓΧΑ output PSD</strong> — δίνεται input PSD + <InlineMath>{'|H(f)|^2'}</InlineMath>, ζητείται output PSD ή <InlineMath>{'P_Y'}</InlineMath>. Πολλαπλασιασμός στο frequency domain, μετά ολοκλήρωση αν χρειάζεται ισχύς.</li>
   </ol>
@@ -775,7 +775,7 @@ $$
   ]}
   skeleton={[
     'Πριν αγγίξεις τη σελίδα: επιβεβαίωσε ότι η ΤΔ είναι WSS. Αν δεν είναι, δεν έχεις PSD.',
-    'Αν δίνεται R_X, εφαρμόζεις forward WK: ξεψαχνίζεις FT pair από τυπολόγιο.',
+    'Αν δίνεται R_X, εφαρμόζεις forward WK: αναγνώρισε FT pair — rect/sinc/cos/δ στο τυπολόγιο, exponential↔Lorentzian must-learn.',
     'Αν δίνεται S_X, εφαρμόζεις inverse WK (ή recognize pair) για R_X, μετά τ=0 για P_X.',
     'Αν ζητείται ισχύς σε ζώνη: ∫_band S_X df, με προσοχή στη δίψα-όψεως convention (διπλάσιες ζώνες).',
     'Αν περνάει μέσα από ΓΧΑ: εφάρμοσε S_Y = |H|² S_X κατευθείαν στο frequency domain — αποφεύγεις τη διπλή συνέλιξη.',
