@@ -50,7 +50,8 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | A | **Foundations** — theory (6 pages) + problems (22) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §3 below |
 | A | **Randomness/why** — theory (1 page) + problems (2) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §4 below |
 | A | **Modulation bridge** — theory (1 page) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §5 below |
-| A | Remaining randomness pages / AM / FM | per-chapter | TODO (reuse §1 ground truth) |
+| A | **AM** — theory (7 pages) + problems (~20) | `mustlearn-inventory-am` | **DONE** — §6 below |
+| A | Remaining randomness pages / FM | per-chapter | TODO (reuse §1 ground truth) |
 | B | weighting | per-formula | TODO |
 | C | apply | per-placement | TODO |
 
@@ -670,7 +671,208 @@ must-learn callout (oversight; add in Pass C when this page is reworked).
 
 ---
 
-## 6. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
+## 6. Pass A inventory — AM chapter (theory §6.1–§6.7; problems §6.8)
+
+**Scope.** All 7 theory pages in `app/(content)/am/`: `overview`, `conventional`, `dsb-sc`, `ssb`,
+`vsb`, `multiplexing`, `modulator-demodulator`. Plus all `topic:'am'` problems in
+`content/practice/exercises.tsx` (~20 problems) and their companion coaching in `sose-coaching.tsx`.
+
+**Method / grounding note.** Pages read directly. All on/off-sheet calls from §1 ground-truth
+(τυπολόγιο has **zero AM formulas** — the entire AM chapter is must-learn, with the sole
+exception of the Hilbert transform definition and its Fourier relation, which ARE on the sheet).
+This step did **not** re-audit `slides/formulas.pdf`.
+
+### Headline finding
+
+> **The entire AM chapter is must-learn.** Not a single AM-specific formula taught on the 7 theory
+> pages appears on the τυπολόγιο (consistent with §1: the sheet is purely Fourier-pair/property +
+> Hilbert + trig/integral/Bessel). The sole exception is the Hilbert transform (`hilbert` id), which
+> IS on the sheet and is correctly labeled as such on the `ssb` and `bridge` pages. Every
+> AM-specific formula — signal forms, modulation index, bandwidth, power, efficiency, envelope
+> detector conditions, FDM spacing, SNR — is must-learn.
+
+### Placement-(a) status on theory pages
+
+Inconsistent, but better than noise (§2 observation):
+
+- `am/conventional §2` explicitly labels μ: «✓ Ορίζεται μέσα στη Conventional AM (όχι στο
+  τυπολόγιο)» and the ThinkingPattern labels P_AM: «πρέπει να θυμάσαι, όχι μέσα στο τυπολόγιο».
+  **Two formulas carry standardized callouts.**
+- `am/dsb-sc §5a` explicitly labels P_DSB: «(⚠️ «πρέπει να θυμάσαι» — δεν είναι μέσα στο
+  επίσημο τυπολόγιο)». **One formula standardized.**
+- `am/modulator-demodulator §2b` labels envelope-detector-rc: «⚠️ Πρέπει να θυμάσαι». **One
+  formula standardized.**
+- `am/ssb`, `am/vsb`, `am/multiplexing`, `am/overview`: **no standardized must-learn callouts**
+  found for any formula.
+
+### 6.1 `/am/overview` — slides 1–9 (SE_session11&12&13.pdf)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `x_{AM}(t) = [A_c + m(t)]cos(2πf_c t)` (basic AM, conceptual intro) | `am-signal` | §2 | slide 6 | no AM signal formula on sheet |
+| `B_{AM} = B_{DSB-SC} = 2W`, `B_{SSB} = W` (bandwidth overview) | `am-bandwidth` | §3 | slide 9 | no AM bandwidth on sheet |
+| η ≤ 33% (intro mention; primary detail in §6.2) | `am-eta` | §3 | slide 9 | no AM efficiency on sheet |
+
+**On-sheet formulas used here:** modulation theorem `x(t)cos ↔ ½[X(f-fc)+X(f+fc)]` — on sheet
+(`fourier-modulation-theorem`). FT cosine/sine pairs — on sheet.
+
+### 6.2 `/am/conventional` — slides 10–32
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `x(t) = [A_c + m(t)]cos(2πf_c t)` | `am-signal` | §1 | slide 10 | no AM signal on sheet — **line 116 explicitly "όχι στο τυπολόγιο"** |
+| `μ = \|min m(t)\|/A_c`; single-tone: `μ = A_m/A_c` | `am-mu` | §2 | slides 16–18 | no modulation index on sheet |
+| `X_AM(f) = (A_c/2)[δ(f∓f_c)] + ½[M(f∓f_c)]` | `am-spectrum` | §4 | slides 26–27 | no AM spectrum on sheet |
+| `BW = 2W` | `am-bandwidth` | §4b | slide 27 | not on sheet |
+| `P_c = A_c²/2` | (part of `am-power`) | §5a | slide 29 | not on sheet |
+| `P_sb = μ²A_c²/8` (one sideband); `2P_sb = μ²A_c²/4` | (part of `am-power`) | §5b–5c | slides 29–31 | not on sheet |
+| `P_total = (A_c²/2)(1 + μ²/2)` (single-tone compact) | `am-power` | §5c | slide 31 | not on sheet |
+| `P_AM = A_c²/2 + P_m/2` (general, zero-mean m) | `am-power` | §5cγ | slides 29–31 | not on sheet — **ThinkingPattern "πρέπει να θυμάσαι, όχι μέσα στο τυπολόγιο"** |
+| `η = P_m/(A_c²+P_m)` (general); `= μ²/(2+μ²) ≤ 1/3` (single-tone) | `am-eta` | §5d | slide 31 | not on sheet |
+
+**On-sheet formulas used:** modulation theorem for spectrum derivation; `cos²x = ½(1+cos2x)` trig
+identity (on sheet) for power derivation — the derived AM results themselves are off-sheet.
+
+### 6.3 `/am/dsb-sc` — slides 49–67 + slide 14 (askisis)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `x_{DSB}(t) = A_c m(t)cos(2πf_c t)` | `dsb-sc-signal` | §1 | slide 53 | no DSB-SC signal on sheet |
+| `P_{DSB} = A_m²/4` (single-tone) | `dsb-sc-power` | §5 | (derived) | not on sheet |
+| `P_{DSB} = A_c² P_m/2` (general) | `dsb-sc-power` | §5a | slide 64 | not on sheet — **§5a labels "⚠️ πρέπει να θυμάσαι — δεν μέσα στο τυπολόγιο"** |
+| `η_{DSB} = 100%` | (within `dsb-sc-power`) | §5b | (derived) | not on sheet |
+| Phase-error coherent demod output: `m̂ = m(t)cos(φ)` | — | §4a | (derived) | not on sheet |
+| DSB bandwidth: `BW = 2W` (same as conventional AM) | `am-bandwidth` | §3 | (modulation theorem) | not on sheet |
+
+**On-sheet:** `cos A cos B = ½[cos(A-B)+cos(A+B)]` product-to-sum (for power and demod);
+`cos²x = ½(1+cos2x)`.
+
+### 6.4 `/am/ssb` — slides 68–80 + slides 15–17 (askisis)
+
+| Formula | formulaId | On-sheet? | Taught | Slide cite | Note |
+| --- | --- | --- | --- | --- | --- |
+| Hilbert/FT: `F{m̂} = -j·sgn(f)·M(f)` | `hilbert` | **YES** (§1 p.2) | used throughout | slide 18 (bridge) | Correctly labeled on-sheet in §2b |
+| `x_{USB} = A_c m cos(2πf_c t) - A_c m̂ sin(2πf_c t)` | `ssb-signal` | **NO** | §2b | slide 69 | Must-learn — **no explicit callout found** |
+| `x_{LSB} = A_c m cos(2πf_c t) + A_c m̂ sin(2πf_c t)` | `ssb-signal` | **NO** | §2b | slide 69 | Must-learn — **no explicit callout found** |
+| Single-tone USSB: `A_c A_m cos(2π(f_c+f_m)t)` | — | **NO** | §5b | (trig identity) | Must-learn result |
+| `B_{SSB} = W` | `am-bandwidth` | **NO** | §5 | slide 68 | Must-learn |
+| `P_x = A_c² P_m` (SSB power, no 1/2 factor) | `ssb-power` | **NO** | §5a | slide 71 | Must-learn — **no explicit callout found** |
+| Phase-error output: `y = m cos(φ) ∓ m̂ sin(φ)` | — | **NO** | §4a | (derived) | Must-learn; differentiates SSB from DSB |
+| `P_{m̂} = P_m` (Hilbert energy preservation, key fact) | — | **NO** | §5a | (Parseval + \|sgn\|=1) | Must-know; no dedicated formulaId |
+
+**Placement-(a) gap:** `ssb-signal` and `ssb-power` have no standardized must-learn callout — clean
+gap for Pass C (same as noise/through-filters before §8στ was added).
+
+### 6.5 `/am/vsb` — slides 8–9 only (SE_session11&12&13.pdf)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `x_{VSB}` = full USB + vestige (via shaping filter H_VSB) | `vsb-signal` | §1 | slide 9 (name only) | no VSB on sheet |
+| Nyquist symmetry: `H_VSB(f_c+Δ) + H_VSB(f_c-Δ) = const` | `vsb-nyquist-symmetry` | §2 | (Haykin/Lathi — no dedicated slide this year) | not on sheet |
+| `B_{VSB} = W + W_vestige`, `W < B_{VSB} < 2W` | `vsb-bandwidth` | §1/§3 | (Haykin) | not on sheet |
+| Coherent demod: `M̃(f) = ½M(f)[H(f_c+f)+H(f_c-f)]` | — | §2a | (derived) | not on sheet |
+
+**Note:** page explicitly states «Δεν υπάρχουν dedicated content slides για VSB-AM στο φετινό
+deck» — all VSB formulas beyond the bandwidth are from general bibliography. Exam weight 2%; Pass C
+priority low.
+
+### 6.6 `/am/multiplexing` — slide 5 + slide 80
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| FDM non-overlap: `Δf ≥ 2W` (AM/DSB), `Δf ≥ W` (SSB), `Δf ≥ W+W_v` (VSB) | `fdm-spacing` | §3 | (modulation theorem applied) | no FDM formula on sheet |
+| Superheterodyne demux: `f_LO = f_target + f_IF` (principle) | — | §6 | (practical) | not on sheet |
+
+**Note:** only slide 5 mentions FDM in the deck; the canonical exam template (m=sinc, k=Π in two
+carriers) draws primarily on the modulation theorem (on sheet) + non-overlap condition (off sheet).
+
+### 6.7 `/am/modulator-demodulator` — slides 34–~50 + askisis deck
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| Nonlinear modulator condition: `f_c > 3W` | `nonlinear-modulator-fc` | §1b | slides 34–40 | not on sheet |
+| Balanced modulator output: `y = 4d₂ m(t)cos(2πf_c t)` (DSB-SC) | — | §1c | slide 66 | circuit result, not on sheet |
+| Envelope detector RC range: `1/f_c ≪ RC ≪ 1/W` | `envelope-detector-rc` | §2b | slides 45–47 | not on sheet — **page labels "⚠️ Πρέπει να θυμάσαι"** |
+| AM output SNR: `(SNR)_out,AM = η·(SNR)_ref` = `(μ²/2/(1+μ²/2))·SNR_ref` | `am-output-snr` | §5+ | slides 47–50 area | not on sheet — **primary teaching home here; recap in `noise/snr` §5** |
+| Threshold effect: envelope detector nonlinear noise enhancement below ~10 dB SNR | — | (threshold section) | slides 50–54 | conceptual must-know, not a formula |
+
+**Cross-chapter note:** `am-output-snr` is already listed in §2.5 as a recap formula; its primary
+home is this page. Pass C should mark it in both `am/modulator-demodulator` and `noise/snr` with
+consistent wording to avoid double-teaching confusion.
+
+---
+
+### 6.8 Pass A — AM PROBLEMS (~20 problems)
+
+**Scope.** All `topic:'am'` problems in `content/practice/exercises.tsx`. Sources: Πρόοδος
+Απρίλιος 2026 (10 problems), Πρόοδος β 2025 (6 problems), Εξέταση Σεπτεμβρίου 2025 (2+ problems),
+and 1 lecture problem.
+
+**Method.** Each problem's `formulaIds` cross-checked against `formulas.tsx` `inTypology` flag.
+All AM-specific formulaIds are `inTypology:false` (consistent with §1). On-sheet formulaIds
+(Fourier pairs, modulation theorem) correctly appear in some problems and need no must-learn callout.
+
+### Headline finding (AM problems)
+
+> **Every AM-specific formula used in AM problems is off-sheet (must-learn).** All `am-*`,
+> `dsb-sc-*`, `ssb-*`, `vsb-*`, `nonlinear-modulator-fc`, `envelope-detector-rc`, `am-output-snr`,
+> and `fdm-spacing` formulaIds carry `inTypology:false`. On-sheet formulaIds (`fourier-pair-cos/sin/
+> rect/tri`, `fourier-modulation-theorem`) that co-appear in some problems are correctly classified
+> and need no must-learn callout. **No formulaId inconsistencies found.**
+
+### Per-problem formulaId cross-check
+
+| Problem | AM (off-sheet) formulaIds | On-sheet formulaIds co-present | Must-learn cross-check result |
+| --- | --- | --- | --- |
+| `proodos26-1` | `am-mu`, `am-signal` | — | Both off-sheet ✓ |
+| `proodos26-2` | `am-power`, `am-mu`, `am-eta` | — | All off-sheet ✓ |
+| `proodos26-3` | `am-mu`, `am-signal` | — | Both off-sheet ✓ |
+| `proodos26-4` | `am-power`, `am-eta` | — | Both off-sheet ✓ |
+| `proodos26-5` | `am-signal`, `nonlinear-modulator-fc` | — | Both off-sheet ✓ |
+| `proodos26-7` | `dsb-sc-signal` | — | Off-sheet ✓ |
+| `proodos26-9` | `am-signal`, `am-spectrum` | `fourier-pair-cos`, `fourier-pair-sin` | AM ids off-sheet ✓; Fourier pairs on-sheet ✓ |
+| `proodos26-11` | `ssb-signal` | `fourier-pair-rect`, `fourier-pair-tri` | SSB signal off-sheet ✓; pairs on-sheet ✓ |
+| `proodos26-12` | `ssb-signal` | — | Off-sheet ✓ |
+| `proodos26-13` | `ssb-signal` | — | Off-sheet ✓ |
+| `pb25-th2-1` | none (conceptual — λόγοι DSB-SC) | — | No formulaId → no placement-(b) target |
+| `pb25-th2-2` | `am-signal` | — | Off-sheet ✓ |
+| `pb25-th2-3` | `ssb-signal` | `fourier-pair-rect` | SSB signal off-sheet ✓; pair on-sheet ✓ |
+| `pb25-th2-5` | `am-signal` | — | Off-sheet ✓ |
+| `pb25-th3` | `dsb-sc-signal` | — | Off-sheet ✓ |
+| `pb25-th4` | `am-signal`, `nonlinear-modulator-fc` | `fourier-pair-rect`, `fourier-modulation-theorem` | AM ids off-sheet ✓; FT tools on-sheet ✓ |
+| `sept25-th1-1` | `am-signal`, `am-spectrum`, `am-bandwidth` | — | All off-sheet ✓ |
+| `sept25-th1-2` | `am-power`, `am-mu` (inferred from problem content) | — | Off-sheet ✓ |
+| `lec-am-1` | `am-mu`, `am-signal` | — | Both off-sheet ✓ |
+
+### Placement-(b) verification
+
+The standardized «δεν δίνεται στο τυπολόγιο» callout is **absent from all AM problems**
+(solution + coaching), consistent with the site-wide pattern from noise (§2.7) and foundations
+(§3.7). One ad-hoc mention found:
+
+- `sept25-th1-3` coaching: «Πίνακας που πρέπει να ξέρεις απέξω: AM = 2W bandwidth…» — ad-hoc
+  «learn by heart», no τυπολόγιο reference. Same ad-hoc/standardised split as noise §2.7 and
+  foundations §3.7.
+
+**Conceptual problem:** `pb25-th2-1` tests understanding of *why* DSB-SC is used (no formula) —
+no placement-(b) target. Pass C should leave it untouched.
+
+**Conclusion:** Placement-(b) gap is universal across the 18 formula-bearing AM problems. Pass C
+should propagate the standardised «⚠️ Πρέπει να θυμάσαι (όχι στο επίσημο τυπολόγιο)» callout
+(the §8στ-of-through-filters model) to all 18 problems.
+
+### 6.9 Inverse-error check (AM scope)
+
+**No AM-specific inverse errors found.** No coaching entry for any `topic:'am'` problem tells
+students to memorise a formula that IS on the τυπολόγιο.
+
+One FM inverse error surfaced during the AM sweep — logged as **F12** in §7 (out of scope for this
+step): `sose-coaching.tsx` (~line 506) says «Ο τύπος του Carson είναι στο τυπολόγιο», but per §1
+there are zero FM formulas on the sheet.
+
+---
+
+## 7. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
 
 - **F1 — LIVE MISCITATION (correctness).** `app/(content)/noise/white-noise/page.mdx`
   **line 340** (§10 summary table) marks `S_N(f) = N_0/2` as **"✓ τυπολόγιο"** — i.e. it
@@ -756,14 +958,20 @@ must-learn callout (oversight; add in Pass C when this page is reworked).
   properties table, not the definition integral explicitly (§1 p.1 description). Whether there is
   a dedicated `fourier-definition` formulaId in `formulas.tsx`, and whether it is `inTypology:
   false`, was not verified in this step. Flagged; verify in Pass C or the FT-page-specific pass.
+- **F12 — FM COACHING INVERSE ERROR (correctness).** `sose-coaching.tsx` (~line 506) coaching for
+  an FM problem states «Ο τύπος του Carson είναι στο τυπολόγιο» — referring to Carson's bandwidth
+  rule `B_c = 2(β+1)f_m`. Per §1 ground truth, the τυπολόγιο has **zero FM formulas**;
+  `formulas.tsx` tags `fm-carson-bandwidth` as `inTypology:false`. This is the same inverse-error
+  pattern as F1 and F8: an off-sheet formula is described as if it were on the sheet. Surfaced
+  during the AM inverse-error sweep (§6.9) — outside AM scope, logged here for the planner.
+  **Recommend Pass C fix:** change wording to «⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο»
+  for the Carson formula coaching entry.
 
 ---
 
-## 7. Placeholders for later passes (do not delete — structure for the whole sub-goal)
+## 8. Placeholders for later passes (do not delete — structure for the whole sub-goal)
 
-- **Pass A — noise PROBLEMS** (`mustlearn-inventory-noise-problems`): sweep the 8 noise
-  problems; classify each used formula against §1; verify placement-(b) presence.
-- **Pass A — am / fm / foundations / …**: per-chapter inventories that REUSE §1.
+- **Pass A — remaining randomness pages / fm**: per-chapter inventories that REUSE §1 (AM complete — §6).
 - **Pass B — weighting**: per must-learn formula, count distinct `past_exams/` exercises +
   collect refs (cite specific problems; do not estimate).
 - **Pass C — apply**: annotate placements (a) theory pages, (b) problems, (c) `/formulas`,
