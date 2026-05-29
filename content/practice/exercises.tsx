@@ -794,7 +794,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'medium',
     prerequisites: ['am/ssb', 'am/multiplexing'],
-    formulaIds: ['ssb-signal'],
+    formulaIds: ['ssb-signal', 'fdm-spacing'],
     statement: (
       <p>
         Πόσο πρέπει να είναι τα φέροντα <InlineMath>{'f_1'}</InlineMath> και{' '}
@@ -2053,7 +2053,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
+    formulaIds: ['fourier-series-rect-pulse'],
     statement: (
       <p>
         Σ/Λ: Η περιβάλλουσα του φάσματος πλάτους του Μ/Σ Fourier ενός
@@ -2161,7 +2161,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal', 'am-spectrum', 'fourier-pair-sin'],
+    formulaIds: ['am-signal', 'am-spectrum', 'fourier-pair-sin', 'am-mu'],
     statement: (
       <p>
         Σχεδιάστε το διαμορφωμένο κατά AM σήμα στον χρόνο και στο φάσμα όταν
@@ -2243,7 +2243,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['parseval-power'],
+    formulaIds: ['parseval-power', 'cos-power-half'],
     statement: (
       <p>
         Έστω το σήμα{' '}
@@ -2600,7 +2600,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
+    formulaIds: ['fourier-series-rect-pulse'],
     statement: (
       <p>
         Σχεδιάστε (1) το σήμα στον χρόνο και (2) το φάσμα πλάτους ενός
@@ -2638,7 +2638,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
+    formulaIds: ['fourier-series-rect-pulse'],
     statement: (
       <p>
         Στο προηγούμενο παράδειγμα, τι θα συμβεί στο φάσμα αν το χρονικό
@@ -2725,7 +2725,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['fourier-pair-rect'],
+    formulaIds: ['fourier-series-rect-pulse'],
     statement: (
       <p>
         Στο προηγούμενο, πόσο πρέπει να ισούνται οι συντελεστές{' '}
@@ -2925,7 +2925,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/conventional', 'am/modulator-demodulator'],
-    formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect'],
+    formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect', 'fdm-spacing'],
     statement: (
       <p>
         Έστω τα δύο βασικά σήματα πληροφορίας{' '}
@@ -3361,7 +3361,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['parseval-power'],
+    formulaIds: ['parseval-power', 'cos-power-half'],
     statement: <p>Έστω σήμα <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με <InlineMath>{'f_1 \\neq f_2 \\neq f_3'}</InlineMath>. Ισχύς;</p>,
     solution: <BlockMath>{'P = \\frac{A^2}{2} + \\frac{B^2}{2} + \\frac{C^2}{2}'}</BlockMath>,
   },
@@ -3407,7 +3407,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/ssb'],
-    formulaIds: ['ssb-signal', 'fourier-pair-rect'],
+    formulaIds: ['ssb-signal', 'fourier-pair-rect', 'fdm-spacing'],
     statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(4Wt)'}</InlineMath>. Διαμορφώνονται κατά AM-USSB με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) <InlineMath>{'f_1, f_2'}</InlineMath> σχέση με W για non-overlap. (3) Σχεδιασμός G(f).</p>,
     solution: (
       <>
@@ -3636,7 +3636,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
-    formulaIds: ['am-signal'],
+    formulaIds: ['am-signal', 'am-mu'],
     statement: <p>Σχεδιάστε το διαμορφωμένο κατά AM σήμα όταν <InlineMath>{'c(t) = \\cos(8\\pi t)'}</InlineMath> και <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.</p>,
     solution: (
       <>
@@ -3704,7 +3704,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
-    formulaIds: ['parseval-power'],
+    formulaIds: ['parseval-power', 'cos-power-half'],
     statement: <p>Έστω <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με όλες τις f διαφορετικές. Ισχύς;</p>,
     solution: <BlockMath>{'P = \\frac{A^2 + B^2 + C^2}{2}'}</BlockMath>,
   },
@@ -3744,7 +3744,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/dsb-sc'],
-    formulaIds: ['dsb-sc-signal'],
+    formulaIds: ['dsb-sc-signal', 'fdm-spacing'],
     statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(Wt)'}</InlineMath> διαμορφώνονται κατά DSB-SC με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) Σχέση f για non-overlap. (3) G(f).</p>,
     solution: (
       <>
