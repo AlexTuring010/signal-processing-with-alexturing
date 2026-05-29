@@ -3465,16 +3465,88 @@ export const EXERCISES: Exercise[] = [
   },
   {
     id: 'pb25-th1-3',
+    repeatGroup: 'tf-white-noise-gaussian',
     origin: 'past-exam',
     source: 'proodos-b-2025',
     problemNumber: 'ΘΕΜΑ 1.3',
     weight: 4,
-    title: 'Σ/Λ — θερμικός θόρυβος Gauss',
+    title: 'Σ/Λ — θερμικός θόρυβος ⇔ Gaussian',
     topic: 'noise',
     difficulty: 'medium',
     prerequisites: ['noise/sources', 'noise/white-noise'],
     statement: <p>Σ/Λ: Ο θερμικός θόρυβος είναι ο θόρυβος του οποίου η φασματική πυκνότητα ισχύος ακολουθεί την κατανομή Gauss.</p>,
-    solution: <p><strong>ΛΑΘΟΣ.</strong> Η PSD του θερμικού θορύβου είναι <strong>επίπεδη</strong> (λευκός). Η κατανομή <em>πλάτους</em> είναι Gaussian, αλλά αυτό είναι ξεχωριστή ιδιότητα από την PSD.</p>,
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση — ο θερμικός θόρυβος έχει δύο ξεχωριστά «πρόσωπα», σε δύο
+            διαφορετικά γραφήματα.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            (1) Η <strong>κατανομή πλάτους</strong> του: αν κατέγραφες τις τιμές
+            της τάσης στον χρόνο κι έφτιαχνες ιστόγραμμα, θα έβγαινε{' '}
+            <strong>καμπάνα</strong> — Gaussian (amplitude domain). (2) Το{' '}
+            <strong>σχήμα της PSD</strong> του: πού κάθεται η ισχύς στις
+            συχνότητες — <strong>επίπεδο πάτωμα</strong>,{' '}
+            <InlineMath>{'S_N(f) = N_0/2'}</InlineMath>, ίσο σε κάθε{' '}
+            <InlineMath>{'f'}</InlineMath> (λευκός, frequency domain).{' '}
+            <strong className="text-fg">Το κρίσιμο:</strong> η καμπάνα ζει στο
+            ιστόγραμμα των τιμών, <em>όχι</em> στην PSD — η PSD δεν είναι καν
+            κατανομή πιθανότητας, είναι ισχύς ανά Hz πάνω στη συχνότητα. Δύο{' '}
+            <strong>ορθογώνιοι άξονες</strong>: ο ένας δεν συνεπάγεται τον άλλον.
+          </span>
+        </div>
+
+        <p>
+          <strong>
+            ΛΑΘΟΣ — κι είναι μια «μισή αλήθεια», γι&rsquo; αυτό μπερδεύει.
+          </strong>{' '}
+          Το «Gaussian» <em>ισχύει</em> για τον θερμικό θόρυβο — αλλά αφορά την{' '}
+          <strong>κατανομή πλάτους</strong> του: πάρα πολλά ανεξάρτητα ηλεκτρόνια
+          αθροίζονται, οπότε από το CLT η τάση είναι Gaussian (
+          <Link
+            href="/noise/sources"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/sources §2
+          </Link>
+          ). Η εκφώνηση παίρνει αυτό το <em>αληθινό</em> γεγονός και το κολλάει
+          σε <strong>λάθος άξονα</strong>: ισχυρίζεται ότι η{' '}
+          <strong>PSD</strong> «ακολουθεί κατανομή Gauss». Όμως η PSD του
+          θερμικού είναι <strong>επίπεδη</strong> (
+          <InlineMath>{'S_N(f) = N_0/2'}</InlineMath>, σταθερή σε κάθε{' '}
+          <InlineMath>{'f'}</InlineMath>) — το ακριβώς αντίθετο μιας καμπάνας. Η
+          καμπάνα Gauss ζει στο ιστόγραμμα των <em>τιμών</em>, όχι στην PSD. Άρα:{' '}
+          <strong>σωστό γεγονός</strong> (ο θερμικός είναι Gaussian στα{' '}
+          <em>πλάτη</em>), <strong>λάθος ισχυρισμός</strong> (η PSD του «ακολουθεί
+          Gauss»). Ο θερμικός είναι ακριβώς <strong>AWGN</strong> = λευκός{' '}
+          <em>και</em> Gaussian ταυτόχρονα — αλλά οι δύο ιδιότητες ζουν σε
+          διαφορετικά γραφήματα.
+        </p>
+
+        <p className="text-sm text-fg-muted">
+          Ίδια παγίδα, σε θερμική διατύπωση, με την αδελφή Σ/Λ{' '}
+          <Link
+            href="/practice#exercise:jan26-th1-3"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            Ιαν. 2026 ΘΕΜΑ 1.3
+          </Link>{' '}
+          — εκεί ζει η πλήρης ανάλυση: ο πίνακας 2×2 (λευκός/έγχρωμος ×
+          Gaussian/μη-Gaussian) με αντιπαράδειγμα σε κάθε κελί, και το{' '}
+          <strong>ανάποδο</strong> της παγίδας («κάθε Gaussian θόρυβος είναι
+          λευκός» — επίσης ΛΑΘΟΣ: φιλτράρισε AWGN κι έχεις colored Gaussian). Η
+          κορυφαία αυτή παγίδα της Noise group αναλύεται στο{' '}
+          <Link
+            href="/noise/white-noise"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/white-noise §6
+          </Link>
+          .
+        </p>
+      </>
+    ),
   },
   {
     id: 'pb25-th1-4',
