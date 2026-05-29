@@ -39,6 +39,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-mu', 'am-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και ο
+        δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'m = A_m / A_c'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>8</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-7"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.7
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Αν το πλάτος του φέροντος σήματος είναι 10V και το πλάτος του σήματος
@@ -68,6 +92,31 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-power', 'am-mu', 'am-eta'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        η ισχύς{' '}
+        <InlineMath>{'P_{AM} = P_c(1 + m^2/2)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>4</strong> παλιά θέματα), ο δείκτης{' '}
+        <InlineMath>{'m = A_m / A_c'}</InlineMath>{' '}
+        (σε <strong>8</strong>) και η απόδοση{' '}
+        <InlineMath>{'\\eta = m^2/(2+m^2) \\le 1/3'}</InlineMath>{' '}
+        (σε <strong>3</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 4
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Ποια είναι η συνολική ισχύς <InlineMath>P</InlineMath> ενός σήματος AM
@@ -103,6 +152,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional', 'am/modulator-demodulator'],
     formulaIds: ['am-mu', 'am-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και ο
+        δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'m = A_m / A_c'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>8</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Τι συμβαίνει όταν ο δείκτης διαμόρφωσης{' '}
@@ -532,6 +605,32 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/conventional', 'foundations/fourier-transform'],
     formulaIds: ['am-signal', 'am-spectrum', 'fourier-pair-cos', 'fourier-pair-sin'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα) και το φάσμα AM{' '}
+        <InlineMath>{'X_{AM}(f) = \\tfrac{A_c}{2}\\delta(f\\mp f_c) + \\tfrac{1}{2}M(f\\mp f_c)'}</InlineMath>{' '}
+        (σε <strong>4</strong>). Τα ζεύγη Fourier{' '}
+        (<InlineMath>{'\\cos'}</InlineMath>,{' '}
+        <InlineMath>{'\\sin'}</InlineMath>) βρίσκονται στο τυπολόγιο — δεν
+        χρειάζεται να τα θυμάσαι. Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-7"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.7
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Να σχεδιάσετε το διαμορφωμένο κατά AM σήμα στον χρόνο και στο φάσμα
