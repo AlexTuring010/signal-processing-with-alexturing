@@ -46,7 +46,7 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
     ),
     derivation: (
       <>
-        Πρόσεξε τη σύμβαση του prof: <InlineMath>{'\\frac{1}{2T}\\int_{-T}^{T}'}</InlineMath> (συμμετρικό
+        Πρόσεξε τη σύμβαση των διαφανειών: <InlineMath>{'\\frac{1}{2T}\\int_{-T}^{T}'}</InlineMath> (συμμετρικό
         ±T) — όχι <InlineMath>{'\\frac{1}{T}\\int_{0}^{T}'}</InlineMath>. Αποτέλεσμα το ίδιο για κάθε
         σταθερό σήμα, αλλά οι τύποι «κουμπώνουν» μόνο με τη συμμετρική.
       </>
@@ -1630,7 +1630,7 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
     ),
     derivation: (
       <>
-        «<InlineMath>{'\\sim 10'}</InlineMath> dB» είναι loose qualifier του prof
+        «<InlineMath>{'\\sim 10'}</InlineMath> dB» είναι loose qualifier
         — το ακριβές threshold εξαρτάται από τον δέκτη και αυξάνεται με{' '}
         <InlineMath>{'\\beta'}</InlineMath> (περισσότερο BW = περισσότερος θόρυβος που μπαίνει).
       </>
@@ -1691,7 +1691,7 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
   'fm-significant-harmonics': {
     intuition: (
       <>
-        Ο prof στο slide 46 δίνει τον ΑΚΡΙΒΗ αριθμό σημαντικών αρμονικών:{' '}
+        Το slide 46 δίνει τον ΑΚΡΙΒΗ αριθμό σημαντικών αρμονικών:{' '}
         <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath>. Παράδειγμα{' '}
         <InlineMath>{'\\beta = 10'}</InlineMath> ⇒{' '}
         <InlineMath>{'N = 23'}</InlineMath> συνιστώσες (carrier + 11 ζεύγη sidebands).
