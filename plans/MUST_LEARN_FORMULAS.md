@@ -47,7 +47,10 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | A | (ground truth) | τυπολόγιο audit | **DONE** — §1 below (visual PDF audit, 3 pp.) |
 | A | Noise — **theory** (5 pages) | `mustlearn-inventory-noise-theory` | **DONE** — §2 below |
 | A | Noise — **problems** (8 problems) | `mustlearn-inventory-noise-problems` | **DONE** — §2.7 below |
-| A | AM / FM / Foundations / … | per-chapter | TODO (reuse §1 ground truth) |
+| A | **Foundations** — theory (6 pages) + problems (22) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §3 below |
+| A | **Randomness/why** — theory (1 page) + problems (2) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §4 below |
+| A | **Modulation bridge** — theory (1 page) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §5 below |
+| A | Remaining randomness pages / AM / FM | per-chapter | TODO (reuse §1 ground truth) |
 | B | weighting | per-formula | TODO |
 | C | apply | per-placement | TODO |
 
@@ -424,7 +427,250 @@ untouched.
 
 ---
 
-## 3. Discoveries, flags & open questions (for the planner — surfaced via bus/inbox)
+---
+
+## 3. Pass A inventory — FOUNDATIONS chapter (theory §3.1–§3.5; problems §3.6)
+
+**Scope.** Six theory pages in `app/(content)/foundations/`: `signals`, `systems`, `fourier-series`,
+`fourier-transform`, `signal-transformations`, and `filters`. Plus all `topic:'foundations'` problems
+in `content/practice/exercises.tsx` (22 problems) and their companion coaching in `sose-coaching.tsx`.
+
+**Method / grounding note.** Pages `signals` and `systems` read directly. The `fourier-series` and
+`fourier-transform` page formulas inferred from `content/practice/formulas.tsx` (`derivedIn` fields)
+and problem `formulaIds`. `signal-transformations` and `filters` exist but were not read directly —
+see flag **F10**. All on/off-sheet calls grounded in §1 ground-truth audit. This step did **not**
+re-audit `slides/formulas.pdf`.
+
+### Headline finding (split: NOT uniformly must-learn)
+
+> Unlike the noise chapter (100% must-learn), the foundations chapter has a **critical split**: the
+> **Fourier pairs and properties** that dominate exam problems (rect↔T·sinc, tri↔T·sinc², cos/sin
+> pairs, duality, scaling, shift, convolution, modulation theorem) are ALL **on the sheet** (§1 p.1).
+> The **structural formulas** — energy/power/RMS, convolution, frequency response, Fourier *series*
+> (entirely off-sheet), general Parseval, periodicity conditions, and the I/Q canonical form — are
+> **all off-sheet (must-learn)**. This split is non-obvious and is the source of the inverse errors
+> in §3.7.
+
+### Placement-(a) status on the theory pages
+
+Inconsistent across the chapter:
+
+- `foundations/signals` does it **correctly** for I/Q (line 341: «ΔΕΝ είναι μέσα στο επίσημο
+  τυπολόγιο») and even/odd (line 492: same wording). Other must-learn formulas (energy, power,
+  δ sifting, periodicity) are derived/presented without any τυπολόγιο flag.
+- `foundations/systems`, `foundations/fourier-series`, `foundations/fourier-transform`:
+  not directly checked for callout wording — assumed inconsistent based on site-wide pattern.
+- `modulation/bridge`: canonical I/Q form **incorrectly labeled "✓ Στο τυπολόγιο"** (page line
+  275) — inverse error, see flag **F7** below and §3.7.
+
+### 3.1 `foundations/signals` — slides 1–35 (SE_session3_theory1_2025.pdf)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `E_x = ∫\|x(t)\|² dt` (signal energy) | `signal-energy` | §7α | slide 21 | no energy formula on sheet |
+| `P_x = lim(1/2T)∫_{-T}^{T}\|x(t)\|² dt` (signal power) | `signal-power` | §7β | slide 21 | no power formula on sheet |
+| `P = A²/2` for `A·cos(2πf_c t + φ)` | `cos-power-half` | §7ε | slide 23 | derived from trig, not printed |
+| `R_x^DC = lim(1/2T)∫x dt`; `R_x^RMS = √P_x` | `dc-rms` | §7δ | slide 26 | not on sheet |
+| `x_e = (x + x(-t))/2`, `x_o = (x − x(-t))/2` (even/odd) | `even-odd-decomposition` | §8β | slide 18 | page says «ΔΕΝ μέσα στο τυπολόγιο» |
+| `∫x(t)δ(t−t₀)dt = x(t₀)` (sifting property) | `delta-sifting` | §4δ | slides 30–33 | not on sheet |
+| `δ(−t)=δ(t)`, `δ(at)=(1/\|a\|)δ(t)`, `∫δ dt=1` | `delta-properties` | §4δ | slide 33 | not on sheet |
+| `cos(ωn) periodic ↔ 2π/ω ∈ ℚ, integer N` | `discrete-periodic-condition` | §9β | slides 11–12 | not on sheet |
+| `T₁/T₂ ∈ ℚ → sum of cosines periodic` | `continuous-periodic-condition` | §9α | slide 10 | not on sheet |
+| `x = x_I cos(2πf_c t) − x_Q sin(2πf_c t)` (I/Q canonical) | `iq-decomposition` | §5γ | slide 16 | page says «ΔΕΝ μέσα στο τυπολόγιο»; inTypology: false |
+
+**On-sheet formulas referenced in the signals page (no must-learn callout needed):**
+`δ(t)↔1`, `1↔δ(f)`, `e^{±j2πf₀t}↔δ(f∓f₀)` — slide 34 previews these as "θα δεις στο τυπολόγιο".
+Rect and triangle pulse definitions (Π, Λ) are on sheet; their FT pairs are on sheet.
+
+### 3.2 `foundations/systems` — slides 3–20 (SE_session4_theory2_2025.pdf)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `y(t) = x(t)∗h(t) = ∫x(τ)h(t−τ)dτ` (convolution definition) | `convolution-definition` | §3/§4 | slide 4 | convolution pairs are on sheet; the time-domain definition integral is not |
+| Cascade: `h_eff=h₁∗h₂`; parallel: `h₁+h₂`; identity: `x∗δ=x` | `convolution-properties` | §5 | slide 7 | not on sheet |
+| `H(f₀) = ∫h(τ)e^{−j2πf₀τ}dτ` (frequency-response definition) | `lti-frequency-response` | §6γ | slides 16–18 | not on sheet |
+| `y(t) = H(f₀)·x(t)` for complex-exp input (eigenfunction property) | `lti-eigenfunction` | §6γ | slides 16–18 | not on sheet |
+| `y = \|H(f₀)\|A·cos(2πf₀t+φ+∠H)` (LTI cosine corollary) | `lti-cosine-response` | §6δ | (derived) | not on sheet |
+| BIBO: `∫\|h(t)\|dt < ∞` | `bibo-stability` | §2β | (background) | not on sheet |
+
+**On-sheet formulas used in systems page:** convolution theorem `x∗h ↔ XH` and
+multiplication–convolution dual `xh ↔ X∗H` are on sheet (§1 p.1) — these are the Fourier-domain
+form. The time-domain definition `∫x(τ)h(t−τ)dτ` is not.
+
+### 3.3 `foundations/fourier-series` — (FS deck, session3/4 area)
+
+> **The entire Fourier-series chapter is must-learn.** The τυπολόγιο has **no** Fourier *series*
+> formulas — it has only Fourier *transform* pairs/properties (§1 p.1). FS synthesis, analysis,
+> Parseval, orthogonality, conjugate symmetry, and the LTI-output-for-periodic result are all off-sheet.
+
+| Must-learn formula (readable) | formulaId | Why not on sheet |
+| --- | --- | --- |
+| `x(t) = Σ aₖ e^{j2πkf₀t}` (synthesis) | `fourier-series-synthesis` | no FS on sheet |
+| `aₖ = (1/T₀)∫x(t)e^{−j2πkf₀t}dt` (analysis) | `fourier-series-analysis` | no FS on sheet |
+| Real/cosine form: `x = a₀ + 2Σ\|aₖ\|cos(2πkf₀t + ∠aₖ)`, `k≥1` | `fourier-series-dual-form` | no FS on sheet |
+| Orthogonality: `(1/T₀)∫e^{j2πkf₀t}e^{−j2πmf₀t}dt = δ_{k,m}` | `fourier-orthogonality` | not on sheet |
+| Conjugate symmetry: `a_{−k} = aₖ*` for real x(t) | `fourier-series-conjugate-symmetry` | not on sheet |
+| Square-wave aₖ: `aₖ = (Aτ/T₀)sinc(kf₀τ)` | `fourier-series-rect-pulse` | specific result; not on sheet |
+| LTI output for periodic input: `bₖ = H(kf₀)·aₖ` | `lti-output-fourier-series` | not on sheet |
+| FS Parseval: `P_x = Σ\|aₖ\|² = Σ Aₖ²/2` (power via FS) | `parseval-power` | not on sheet |
+
+### 3.4 `foundations/fourier-transform` — (FT properties deck)
+
+Most FT content is **on the sheet** (§1 p.1 covers the full pairs/properties table). Must-learn
+contributions from this page:
+
+| Must-learn formula (readable) | formulaId | Why not on sheet |
+| --- | --- | --- |
+| General Parseval: `∫\|x(t)\|²dt = ∫\|X(f)\|²df` | `parseval` | Sheet prints only Hilbert energy equality (§1 edge call) — not the general FT version; `parseval` is `inTypology: false` |
+| FT definition: `X(f) = ∫x(t)e^{−j2πft}dt`; inverse `x = ∫X(f)e^{j2πft}df` | (**uncertain** — see F11) | Sheet gives only the pairs table, not the definition integrals explicitly — **FLAGGED** |
+
+**On-sheet formulas dominate this page:** all pairs and properties listed in §1 p.1 are on the
+sheet — duality, scaling, shift, modulation theorem, convolution/multiplication, differentiation,
+integration, and all standard pairs (rect, tri, cos, sin, δ, 1). No must-learn callout needed.
+
+### 3.5 Unread pages — flag F10
+
+`foundations/signal-transformations` and `foundations/filters` exist but were not read directly.
+Assessment from indirect evidence:
+- **`signal-transformations`**: covers x(at+b) combination rules. These operations derive from the
+  on-sheet FT properties (scaling, shift) → likely zero new must-learn formulas. Verify in Pass C.
+- **`foundations/filters`**: covers ideal LPF/HPF/BPF and RC filter shape |H(f)|²=1/(1+(f/f_c)²).
+  Filter shapes are not on the sheet — already logged in §2.3 (noise/through-filters §6). Verify
+  no additional must-learn entries in Pass C.
+
+---
+
+### 3.6 Foundations problems — placement-(b) verification (22 problems)
+
+**ON-SHEET formulaIds** (no must-learn callout needed):
+`fourier-pair-rect`, `fourier-pair-tri`, `fourier-pair-cos`, `fourier-pair-sin`,
+`fourier-convolution`, `fourier-modulation-theorem`, `fourier-shift` — all §1 p.1 on-sheet
+pairs/properties. Problems whose formulaIds consist entirely of these need no placement-(b) work.
+
+**OFF-SHEET formulaIds** (must-learn callout needed — placement-(b) gap):
+
+| Problem IDs | Must-learn formulaId | Coaching callout status |
+| --- | --- | --- |
+| pa25-th2-4, pa25-th2-9, pb25-th2-4, pb25-th2-9, jan26-th2-4, and others | `parseval-power` (P = Σ Aₖ²/2, power of tone sums) | **ABSENT** — grep of `sose-coaching.tsx` for "parseval" and "τυπολόγιο": **zero matches** |
+| jan26-th2-5, pa25-th2-5 ("Φάσμα πλάτους και ισχύς for sin+sinc") | `parseval-power` | **ABSENT** — same |
+
+**Placement-(b) conclusion:** The standardized «δεν δίνεται στο τυπολόγιο» callout for
+`parseval-power` is **absent from all foundations problem coaching**. Unlike the noise problems
+(which had at least some ad-hoc "learn-by-heart" prose), the foundations problem coaching has
+**zero awareness** of the must-learn status for this formula family. Clean gap for Pass C.
+
+**Note — on-sheet problems with coaching inverse error:** Problems `pa25-th1-5` and `pb25-th1-5`
+use `fourier-pair-tri` (ON-SHEET) — no must-learn callout is appropriate — but their coaching
+wrongly tells students to memorize an on-sheet formula. See flag **F8**.
+
+---
+
+### 3.7 Inverse errors (foundations chapter)
+
+Two inverse-error discoveries confirmed this step (inverse of F1 — a formula that IS on the sheet,
+but the site tells students to memorize it):
+
+- **F8** — `pb25-th1-5` and `pa25-th1-5` coaching says sinc² envelope «πρέπει να ξέρεις απ' έξω»,
+  but `fourier-pair-tri` IS on the sheet (see §6 below for full description).
+- **F7** — `modulation/bridge` line 275 labels the canonical I/Q form "✓ Στο τυπολόγιο" when it
+  is NOT on the sheet (see §6 below for full description).
+
+---
+
+## 4. Pass A inventory — RANDOMNESS chapter (theory §4.1; problems §4.2)
+
+**Scope.** This batch covers `randomness/why` only (the introductory/vocabulary page). Remaining
+randomness pages (`random-variables`, `random-processes`, `stationarity`, `psd`) are deferred to
+later Pass-A steps. Problems: the 2 `topic:'random'` problems in `exercises.tsx`.
+
+**Method.** Page read directly. All on/off-sheet calls from §1 (τυπολόγιο has **zero** random-process
+or PSD formulas — the entire randomness chapter is must-learn). FormulaIds `random-mean`,
+`random-autocorr`, `random-cross`, `random-phase-cosine`, `wss` are all `inTypology: false`
+(consistent with §1). This step did **not** re-audit `slides/formulas.pdf`.
+
+### Headline finding
+
+> **The entire randomness chapter is must-learn.** Not a single formula taught on the randomness
+> pages appears on the τυπολόγιο (consistent with §1: the sheet is purely Fourier/Hilbert/trig/
+> integral). `randomness/why` is a vocabulary/motivation page — its must-learn formulas are
+> definitions (mean, autocorrelation, WSS conditions) that appear verbatim in exam questions
+> («υπολογίστε E[X(t)]», «δείξτε ότι η ΤΔ είναι WSS», «R_X(0) = ?»).
+
+### Placement-(a) status
+
+`randomness/why` uses no standardized «δεν δίνεται στο τυπολόγιο» callout. The vocabulary table
+(§5) introduces notation as definitions without a must-memorize flag — appropriate for a motivation
+page, but the downstream pages (`random-processes`, `stationarity`, `psd`) should carry the standard
+callout. Deferred to those pages' Pass-A steps; Pass C can add it to the two lecture problems.
+
+### 4.1 `randomness/why` — slide 6 + 30 (SE_session9_random1_upload.pdf, 40 slides)
+
+| Must-learn formula / definition | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `m_X(t) = E[X(t)] = ∫a·f_{X(t)}(a)da` (mean / μέση τιμή) | `random-mean` | §4 | (ορισμός) | no random-process formula on sheet |
+| `R_X(t₁,t₂) = E[X(t₁)X(t₂)]` (autocorrelation / ΣΑΣ) | `random-autocorr` | §5 | (ορισμός) | not on sheet |
+| `R_{X,Y}(t₁,t₂) = E[X(t₁)Y(t₂)]` (cross-correlation / ΕΣ) | `random-cross` | §5 | (ορισμός) | not on sheet |
+| WSS: `m_X = const` AND `R_X(t₁,t₂) = R_X(τ)` where `τ = t₁−t₂` | `wss` | §5/§6 | (ορισμός) | not on sheet |
+| Ergodicity (label): time-average = ensemble-average (for WSS, in ΣΕ) | (within `wss`) | §6 | slide 30 | convention/label — must-know, not a printable formula |
+| PSD: `S_X(f) = F{R_X(τ)}` (motivation/forward-look; primary home `randomness/psd`) | `wiener-khinchin` | §7 teaser | (upcoming) | not on sheet; same family as §2.6 |
+| `P_X = R_X(0) = ∫S_X(f)df` (forward-look; primary home `randomness/psd`) | `wss-rx-properties` | §7 teaser | (upcoming) | not on sheet; already in §2.6 |
+
+**Context-only (mentioned as motivation, not examined directly from this page):**
+`S_Y = S_X\|H\|²` — primary teaching home `noise/through-filters` + `randomness/psd` (already in §2.3).
+Autocovariance `C_X = R_X − m_X²` — defined in vocab table; appears in `lec-rp-1` but primary
+derivation home in `randomness/random-processes`.
+
+### 4.2 Randomness problems — placement-(b) verification (2 problems)
+
+| Problem | Must-learn formulaIds | Standardized callout? | Ad-hoc awareness? |
+| --- | --- | --- | --- |
+| `lec-rp-1` (joint statistics — lecture) | `random-mean`, `random-autocorr`, `random-cross` | **NO** | No (lecture origin; minimal coaching) |
+| `lec-rp-2` (ergodicity random-phase cosine — lecture) | `random-phase-cosine`, `wss` | **NO** | No (lecture origin; same) |
+
+**Conclusion:** Both problems are lecture-origin (not past-exam). The standardized callout is absent
+— consistent with the site-wide pattern from noise. Priority for Pass C is lower than past-exam
+problems; add callout when those pages are reworked.
+
+---
+
+## 5. Pass A inventory — MODULATION BRIDGE (`modulation/bridge`)
+
+**Scope.** Single page `app/(content)/modulation/bridge/page.mdx`. No `topic:'bridge'` problems
+in `exercises.tsx`; bridge concepts appear embedded in AM/FM/SSB problem `formulaIds` (those
+belong to their respective chapter inventories). Source: SE_session7&8_theory_2025.pdf slides 17–35;
+SE_session11&12&13.pdf slides 1–9.
+
+### Headline finding (mixed: Hilbert ON sheet; everything built on it is must-learn)
+
+> The **Hilbert transform definition** and its **Fourier-domain property** are both on the sheet
+> (§1 p.2). Everything built on them — pre-envelope, complex envelope, canonical I/Q form, polar
+> envelope/phase, and the X(f)↔G(f) bandpass-spectrum relation — is **must-learn**. One inverse
+> error discovered (F7): the canonical I/Q form is labeled "✓ Στο τυπολόγιο" on the bridge page
+> when it is NOT on the sheet.
+
+### 5.1 `modulation/bridge` formula table
+
+| Formula | formulaId | On-sheet? | Slide cite | Note |
+| --- | --- | --- | --- | --- |
+| Hilbert def: `x̂ = x∗(1/πt) = (1/π)∫x(τ)/(t−τ)dτ` | `hilbert` | **YES** (§1 p.2) | slide 17 | Correctly labeled "✓ Στο τυπολόγιο" in page (§3 intro) |
+| Hilbert/Fourier: `F{x̂(t)} = −j·sgn(f)·X(f)` | `hilbert` | **YES** (§1 p.2) | slide 18 | Correctly labeled "✓ Στο τυπολόγιο" in page |
+| Hilbert pairs: cos→sin, sin→−cos, e^{jt}→−je^{jt}, x(t−t₀)→x̂(t−t₀), x(αt)→sgn(α)x̂(αt) | (within `hilbert`) | **YES** (§1 p.2 Hilbert pairs table) | slide 18 | On sheet — all listed in §1 |
+| Exotic Hilbert pairs: `Π(t)→(1/π)log\|(2t+1)/(2t−1)\|`; `sinc(t)→(1−cos πt)/(πt)` | — | **NO** (not in §1 p.2) | slide 18 | Must-learn for SSB/bandpass applications; no formulaId in exercises |
+| Pre-envelope: `x_p(t) = x(t) + j·x̂(t)` | — | **NO** | slides 19–22 | Not on sheet; no formulaId in exercises |
+| Complex envelope: `g(t) = x_p(t)·e^{−j2πf_c t}` | — | **NO** | slides 24–28 | Not on sheet; no formulaId in exercises |
+| `x(t) = Re{g(t)·e^{j2πf_c t}}` (from complex envelope) | — | **NO** | slides 28–29 | Not on sheet |
+| Canonical I/Q: `x = x_I cos(2πf_c t) − x_Q sin(2πf_c t)` | `iq-decomposition` | **NO** (`inTypology: false`) | slide 30 | **F7 — inverse error**: page line 275 labels this "✓ Στο τυπολόγιο" |
+| Envelope + phase: `V = √(x_I²+x_Q²)`, `θ = arctan(x_Q/x_I)` | (within `iq-decomposition`) | **NO** | slide 30 | Not on sheet |
+| Bandpass spectrum: `X(f) = ½[G(f−f_c) + G*(−f−f_c)]` | — | **NO** | slides 34–35 | Not on sheet; no dedicated formulaId |
+| Five-modulation table: AM→`x_I=A_c+m, x_Q=0`; DSB→`x_I=m, x_Q=0`; SSB→`x_I=m/2, x_Q=∓m̂/2`; FM→`x_I=A_c cosφ, x_Q=−A_c sinφ`; PM→`x_I=A_c cos(k_p m), x_Q=−A_c sin(k_p m)` | (per-scheme formulaIds in AM/FM chapters) | **NO** | slide 32 | Must-learn; each row's formulaId lives in respective chapter |
+
+**Placement-(a) status:** Hilbert formulas correctly labeled on-sheet. Canonical I/Q form (line 275)
+incorrectly labeled — inverse error F7. Pre-envelope, complex envelope, bandpass spectrum carry no
+must-learn callout (oversight; add in Pass C when this page is reworked).
+
+---
+
+## 6. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
 
 - **F1 — LIVE MISCITATION (correctness).** `app/(content)/noise/white-noise/page.mdx`
   **line 340** (§10 summary table) marks `S_N(f) = N_0/2` as **"✓ τυπολόγιο"** — i.e. it
@@ -475,7 +721,45 @@ untouched.
 
 ---
 
-## 4. Placeholders for later passes (do not delete — structure for the whole sub-goal)
+- **F7 — BRIDGE PAGE CANONICAL I/Q INVERSE ERROR (correctness).** `modulation/bridge` page line 275
+  labels the canonical I/Q form `x = x_I cos(2πf_c t) − x_Q sin(2πf_c t)` as **"✓ Στο
+  τυπολόγιο"**. This is wrong on three grounds: (a) `formulas.tsx` tags `iq-decomposition` as
+  `inTypology: false`, (b) `foundations/signals` line 341 explicitly states «η μορφή αυτή ΔΕΝ
+  είναι μέσα στο επίσημο τυπολόγιο», (c) §1 ground-truth audit does not list the I/Q canonical
+  form anywhere in the three sheet pages. The bridge page contradicts both `formulas.tsx` and the
+  signals page. Students who encounter the bridge page first may fail to memorize a must-learn
+  formula. Same inverse-pattern as F1. **Recommend Pass C fix:** change line 275 label from
+  "✓ Στο τυπολόγιο" to the standard must-learn callout: «⚠️ Πρέπει να θυμάσαι — δεν δίνεται
+  στο τυπολόγιο».
+- **F8 — pb25-th1-5 / pa25-th1-5 COACHING INVERSE ERROR (correctness).** `sose-coaching.tsx`
+  entry for `pb25-th1-5` (takeaway section, confirmed by direct read) says: *«Είναι από τα
+  standard Fourier pairs που πρέπει να ξέρεις απ' έξω»* — referring to the sinc² envelope of a
+  triangular pulse (`fourier-pair-tri`, `Λ(t/T) ↔ T·sinc²(fT)`). But `fourier-pair-tri` IS on the
+  sheet (§1 p.1; `formulas.tsx` `inTypology: true`). Identical coaching text appears in the sibling
+  `pa25-th1-5` entry. This is the inverse of F1: the site tells students to memorize an on-sheet
+  formula. **Recommend Pass C fix:** both problem coaching entries need the wording changed to
+  «✓ Στο τυπολόγιο — δεν χρειάζεται αποστήθιση» for the `fourier-pair-tri` formula.
+- **F9 — `parseval-power` must-learn callout ABSENT from all foundations problem coaching.**
+  `parseval-power` (power of sum of tones: P = Σ Aₖ²/2) is the key must-learn formula used in
+  foundations problems about power calculations (pa25-th2-4, pa25-th2-9, pb25-th2-4, pb25-th2-9,
+  jan26-th2-4, others). Grep of `sose-coaching.tsx` for "parseval" and "τυπολόγιο" in the
+  foundations context: **zero matches**. Unlike the noise problems (which had at least some ad-hoc
+  "learn-by-heart" prose), the foundations problem coaching has **no awareness at all** of the
+  must-learn status for this formula. Clean placement-(b) gap for Pass C.
+- **F10 — UNREAD FOUNDATIONS PAGES.** `foundations/signal-transformations` and
+  `foundations/filters` exist but were not read directly in this step. Indirect assessment:
+  `signal-transformations` formulas derive from on-sheet FT properties → likely zero new must-learn
+  formulas. `filters` RC filter shape |H|²=1/(1+(f/f_c)²) is already in §2.3; verify no additional
+  must-learn entries. Both pages need a dedicated sweep before Pass C touches foundations.
+- **F11 — FT DEFINITION formulaId UNCERTAIN.** `X(f) = ∫x(t)e^{−j2πft}dt` (and its inverse) are
+  the most fundamental formulas in the FT chapter. The sheet appears to list only the pairs/
+  properties table, not the definition integral explicitly (§1 p.1 description). Whether there is
+  a dedicated `fourier-definition` formulaId in `formulas.tsx`, and whether it is `inTypology:
+  false`, was not verified in this step. Flagged; verify in Pass C or the FT-page-specific pass.
+
+---
+
+## 7. Placeholders for later passes (do not delete — structure for the whole sub-goal)
 
 - **Pass A — noise PROBLEMS** (`mustlearn-inventory-noise-problems`): sweep the 8 noise
   problems; classify each used formula against §1; verify placement-(b) presence.
