@@ -1075,16 +1075,32 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'jun25-th1-9': {
     takeaway: (
       <p>
-        Θερμικός θόρυβος: <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath>{' '}
-        W/Hz, σταθερή PSD (διπλής όψεως). Είναι από τους τύπους που πρέπει
-        να ξέρεις απέξω — είναι μονόλεκτη απάντηση όταν την ζητάει.
+        «PSD θερμικού θορύβου;» → ένας <strong>σταθερός αριθμός</strong>, όχι
+        καμπύλη: <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath> W/Hz —
+        επίπεδο πάτωμα, δίψας όψεως (μονόπλευρα{' '}
+        <InlineMath>{'N_0 = kT'}</InlineMath>). Εξαρτάται <strong>μόνο</strong>{' '}
+        από τη θερμοκρασία <InlineMath>T</InlineMath>· <em>όχι</em> από τη
+        συχνότητα, <em>ούτε</em> από το εύρος ζώνης. Όταν λέει σκέτο «πόση είναι
+        η PSD», η απάντηση είναι μονόλεκτη — η ισχύς σε ζώνη{' '}
+        (<InlineMath>{'kTB'}</InlineMath>) και το νούμερο{' '}
+        <InlineMath>{'-174'}</InlineMath> dBm/Hz είναι <em>ξεχωριστές</em>{' '}
+        ερωτήσεις (αδελφό θέμα Σεπτ. 2025 ΘΕΜΑ 3.10).
       </p>
     ),
     examRadar: (
       <p>
-        Σύντομη ερώτηση γνώσης. Απάντηση μία γραμμή — ο τύπος. Αν θέλει
-        αριθμό σε room temp: −174 dBm/Hz. Δεν εξαρτάται από το BW —
-        αυτή η ερώτηση πρέπει να απαντηθεί σε λιγότερο από 30 δευτερόλεπτα.
+        Σύντομη ερώτηση <strong>γνώσης</strong> — απάντηση μία γραμμή, ο τύπος{' '}
+        <InlineMath>{'S_N(f) = kT/2'}</InlineMath>. Πρέπει να βγει σε λιγότερο
+        από <strong>30 δευτερόλεπτα</strong>· σχεδόν δωρεάν μονάδες, μην ξοδέψεις
+        παραπάνω. <strong>Προσοχή στο νούμερο:</strong> το{' '}
+        <InlineMath>{'-174'}</InlineMath> dBm/Hz είναι το{' '}
+        <strong>μονόπλευρο</strong> <InlineMath>{'kT'}</InlineMath>· το
+        δίψας-όψεως <InlineMath>{'kT/2'}</InlineMath> που γράφεις εδώ αντιστοιχεί
+        σε <InlineMath>{'-177'}</InlineMath> dBm/Hz (3 dB πιο κάτω). Καθώς η
+        ερώτηση ζητάει τον <em>τύπο</em>, όχι αριθμό, γράψε{' '}
+        <InlineMath>{'kT/2'}</InlineMath> και τελείωσες — το πλήρες{' '}
+        <InlineMath>{'-174'}</InlineMath> και η ισχύς σε ζώνη{' '}
+        <InlineMath>{'kTB'}</InlineMath> ζουν στο Σεπτ. 2025 ΘΕΜΑ 3.10.
       </p>
     ),
   },

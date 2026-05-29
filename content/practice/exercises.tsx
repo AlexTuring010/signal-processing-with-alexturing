@@ -2593,8 +2593,20 @@ export const EXERCISES: Exercise[] = [
     title: 'Φασματική πυκνότητα ισχύος θερμικού θορύβου',
     topic: 'noise',
     difficulty: 'easy',
-    prerequisites: ['noise/white-noise'],
+    prerequisites: ['noise/sources', 'noise/white-noise'],
     formulaIds: ['white-noise-psd', 'thermal-noise'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Η μόνη ποσότητα που ζητάει η άσκηση — η PSD του θερμικού θορύβου{' '}
+        <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath> — λείπει από το
+        επίσημο τυπολόγιο, όπως και ο ορισμός{' '}
+        <InlineMath>{'N_0 \\triangleq kT'}</InlineMath>. Το τυπολόγιο δεν
+        περιέχει <em>κανέναν</em> τύπο θορύβου — ολόκληρη η ενότητα «Noise»
+        είναι μνήμη. Άρα αυτή τη μία γραμμή πρέπει να την έχεις μέσα σου· δεν θα
+        σου δοθεί φύλλο να την ψάξεις.
+      </>
+    ),
     statement: (
       <p>
         Έστω ΤΔ <InlineMath>N(t)</InlineMath> θερμικού θορύβου. Πόση είναι η
@@ -2602,7 +2614,79 @@ export const EXERCISES: Exercise[] = [
       </p>
     ),
     solution: (
-      <BlockMath>{'S_N(f) = \\frac{N_0}{2} = \\frac{kT}{2} \\quad \\text{(W/Hz, διπλής όψεως, σταθερή)}'}</BlockMath>
+      <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — γιατί η απάντηση είναι ένας σταθερός αριθμός.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Μέσα σε κάθε αγωγό τα ηλεκτρόνια «τρέμουν» από τη θερμότητα (slide
+            42): δισεκατομμύρια ανεξάρτητα, αστραπιαία τινάγματα φορτίου. Επειδή
+            κάθε τίναγμα είναι απειροελάχιστο, ασυσχέτιστο με τα υπόλοιπα και
+            πολύ <em>ταχύτερο</em> από οποιαδήποτε συχνότητα μάς απασχολεί, καμία
+            συχνότητα δεν προτιμάται έναντι κάποιας άλλης — η ισχύς μοιράζεται{' '}
+            <strong>ομοιόμορφα παντού</strong>, όπως το λευκό φως κουβαλά ίσα όλα
+            τα χρώματα. Γι' αυτό λέγεται <strong>λευκός</strong> θόρυβος, και η
+            PSD του δεν είναι καμπύλη αλλά ένα <strong>επίπεδο πάτωμα</strong>:
+            ίδιο ύψος σε κάθε <InlineMath>f</InlineMath>. Έτσι το «πόση είναι η
+            PSD;» έχει <em>μονόλεκτη</em> απάντηση — το ύψος του πατώματος,{' '}
+            <InlineMath>{'kT/2'}</InlineMath> (slide 45), σταθερό μέχρι τα{' '}
+            <InlineMath>{'\\sim 10^{12}'}</InlineMath> Hz (πιο ψηλά η κβαντική
+            φυσική το κάμπτει, αλλά καμία εξέταση K21 δεν πάει τόσο μακριά).{' '}
+            <strong>
+              Και γιατί <InlineMath>{'/2'}</InlineMath>;
+            </strong>{' '}
+            Το πάτωμα το ζωγραφίζουμε σε <strong>όλον</strong> τον άξονα — θετικές{' '}
+            <em>και</em> αρνητικές συχνότητες (η μαθηματική, δίψας-όψεως εικόνα).
+            Μοιράζοντας την ίδια ισχύ σε δύο πλευρές, το ύψος κάθε πλευράς είναι
+            το μισό: <InlineMath>{'N_0/2'}</InlineMath>, με{' '}
+            <InlineMath>{'N_0 \\triangleq kT'}</InlineMath> (slide 47). Αν
+            μετρούσες μόνο τις φυσικές (θετικές) συχνότητες — μονόπλευρα — το
+            ύψος θα ήταν ολόκληρο το <InlineMath>{'N_0 = kT'}</InlineMath>:{' '}
+            <strong>ίδια συνολική ισχύς, απλώς άλλο λογιστικό σύστημα.</strong>
+          </span>
+        </div>
+
+        <p className="font-medium text-fg">Η απάντηση — μία γραμμή:</p>
+        <BlockMath>{'S_N(f) = \\frac{N_0}{2} = \\frac{kT}{2}\\;\\text{W/Hz}\\quad(\\text{δίψας όψεως, επίπεδη}),\\qquad N_0 \\triangleq kT'}</BlockMath>
+
+        <p>
+          Πρόσεξε τι <em>δεν</em> υπάρχει στην απάντηση: ούτε{' '}
+          <InlineMath>f</InlineMath>, ούτε εύρος ζώνης <InlineMath>B</InlineMath>.
+          Η PSD εξαρτάται <strong>μόνο</strong> από τη θερμοκρασία{' '}
+          <InlineMath>T</InlineMath> (ζεστότερος αγωγός → ψηλότερο πάτωμα). Το
+          εύρος ζώνης το «νιώθει» μόνο η <em>συνολική ισχύς</em> — το εμβαδόν
+          κάτω από το πάτωμα — όχι η ίδια η PSD, κι αυτό είναι ξεχωριστή ερώτηση.
+          Εδώ ζητείται σκέτη η PSD: γράψε τη μία γραμμή και προχώρα.
+        </p>
+
+        <p className="text-sm text-fg-muted">
+          Αν η εκφώνηση συνεχίσει σε «ισχύ σε ζώνη <InlineMath>B</InlineMath>»
+          (<InlineMath>{'P_N = kTB = N_0 B'}</InlineMath>) ή ζητήσει το room-temp
+          νούμερο <InlineMath>{'-174'}</InlineMath> dBm/Hz, η πλήρης απαγωγή —
+          γιατί βγαίνει <InlineMath>{'kTB'}</InlineMath> κι όχι{' '}
+          <InlineMath>{'kTB/2'}</InlineMath>, και η παγίδα one-sided/two-sided
+          πίσω από το <InlineMath>{'-174'}</InlineMath> — ζει στο αδελφό θέμα{' '}
+          <strong>Σεπτ. 2025 ΘΕΜΑ 3.10</strong>· δεν την επαναλαμβάνουμε εδώ. Η
+          θεωρία ζει στο{' '}
+          <Link
+            href="/noise/white-noise"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/white-noise §2
+          </Link>{' '}
+          (η PSD) και στο{' '}
+          <Link
+            href="/noise/sources"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/sources
+          </Link>{' '}
+          (θερμική προέλευση §2, <InlineMath>{'kT/2'}</InlineMath> &{' '}
+          <InlineMath>{'kTB'}</InlineMath> §5, το{' '}
+          <InlineMath>{'-174'}</InlineMath> dBm/Hz §8).
+        </p>
+      </>
     ),
   },
   {
