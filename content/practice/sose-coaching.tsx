@@ -503,7 +503,7 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
         <InlineMath>{'B = 2(\\beta + 1) f_m'}</InlineMath>. Αν{' '}
         <InlineMath>{'\\beta \\ge 1'}</InlineMath> έχεις WBFM· αν{' '}
         <InlineMath>{'\\beta \\ll 1'}</InlineMath>, NBFM. Ο τύπος του
-        Carson είναι στο τυπολόγιο, αλλά πρέπει να ξέρεις πότε εφαρμόζεται.
+        Carson <strong>δεν δίνεται στο τυπολόγιο</strong> — πρέπει να τον θυμάσαι (και να ξέρεις πότε εφαρμόζεται).
       </p>
     ),
     examRadar: (
@@ -1472,8 +1472,7 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
       <p>
         Ίδια παγίδα με pa25-th1-5: η περιβάλλουσα του τριγωνικού παλμού
         στο φάσμα είναι <InlineMath>{'\\mathrm{sinc}^2'}</InlineMath>, όχι
-        ημιτονοειδής/συνημιτονοειδής. Είναι από τα standard Fourier
-        pairs που πρέπει να ξέρεις απ' έξω.
+        ημιτονοειδής/συνημιτονοειδής. Δίνεται στο τυπολόγιο — δεν χρειάζεται να το θυμάσαι.
       </p>
     ),
     examRadar: (
