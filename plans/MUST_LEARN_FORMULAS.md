@@ -1371,7 +1371,7 @@ and have no companion coaching in `sose-coaching.tsx`; no separate problems swee
 
 > **signal-transformations:** zero new must-learn formulas — the page is explicitly a **reference page** for applying on-sheet FT properties (scaling, shift, duality). Every rule taught either IS on the sheet or derives from on-sheet pairs in exam conditions.
 >
-> **filters:** one clear must-learn (dB gain formula, slide 46; no formulaId). LP/BP impulse responses are derivable from on-sheet rect↔sinc + duality + modulation theorem — borderline, not standalone must-learns.
+> **filters:** one clear must-learn (dB gain formula, slide 46; `filter-gain-db` already exists at formulas.tsx L724, inTypology:false, weight 0 — no new entry needed; Pass C must wire placement-(c) must-learn flag). LP/BP impulse responses are derivable from on-sheet rect↔sinc + duality + modulation theorem — borderline, not standalone must-learns.
 >
 > **randomness/psd:** this page IS the **primary teaching home** for Wiener-Khinchin and $S_Y = |H|^2 S_X$ (both listed in §2.6 as "imported from randomness/*" — now confirmed). One new inverse error: F13 (exponential FT pair wrongly labeled "(τυπολόγιο)").
 
@@ -1400,7 +1400,7 @@ and have no companion coaching in `sose-coaching.tsx`; no separate problems swee
 
 | Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
 | --- | --- | --- | --- | --- |
-| **dB gain**: $\text{Κέρδος (dB)} = 20\log_{10}\lvert H(f)\rvert$ | — (no dedicated formulaId; see F2 addendum) | §6α | slide 46 | No dB formula of any kind on the sheet — definition must be known cold |
+| **dB gain**: $\text{Κέρδος (dB)} = 20\log_{10}\lvert H(f)\rvert$ | `filter-gain-db` (L724) | §6α | slide 46 | No dB formula of any kind on the sheet — definition must be known cold |
 | **dB inversion**: $\lvert H\rvert = 10^{-\text{dB}/20}$; $\lvert H\rvert^2 = 10^{-\text{dB}/10}$ | — | §6α, `ExamProblem filter-db-conversion` | (derived from above) | Needed to convert spec to linear for filter-power calculations |
 
 **Derivable-from-sheet (exam shortcuts but not standalone must-learns):**
@@ -1418,7 +1418,7 @@ and have no companion coaching in `sose-coaching.tsx`; no separate problems swee
 
 **Minor wording issue (not a full inverse error):** `Recap` line says "Τα τέσσερα κλασικά (slide 36): κατωπερατά (LP), υψιπερατά (HP), ζωνοπερατά (BP), απόρριψης ζώνης (BS) — **όλα στο τυπολόγιο**." These are filter-type *names/definitions*, not formulas, and are NOT on the exam formula sheet (§1). Less dangerous than F1/F7/F8/F12 (no student skips memorizing a specific formula value), but Pass C should reword to "standard terminology, not on the formula sheet."
 
-**formulaId gap for F2 list:** No dedicated `formulaId` in `formulas.tsx` for dB gain. Needs a new entry (suggested id `filter-gain-db`) for Pass C placement-(c).
+**formulaId gap for F2 list:** `filter-gain-db` already exists (formulas.tsx L724, weight 0) — wire placement-(c) must-learn flag in Pass C; no new entry needed.
 
 **Conclusion:** One must-learn (dB formula, slide 46); LP/BP impulse responses are derivable from on-sheet tools. F10 closed for filters page.
 
@@ -1478,7 +1478,7 @@ This step did **not** re-audit `slides/formulas.pdf`.
 **F12 verification.** The formulaId for Carson's rule in `formulas.tsx` is `carson` (id
 `fm-bandwidth-carson` does not exist). Confirmed `inTypology: false` ✓. **6** `topic:'fm'`
 problems reference it: `sept25-th2-7`, `sept25-th2-8`, `sept25-th2-9`, `jan26-th1-5`,
-`jan26-th4-13-16`, `jun25-th3`. `sose-coaching.tsx` ~L506 inverse error confirmed:
+`jan26-th4-fm`, `jun25-th3-fm`. `sose-coaching.tsx` ~L506 inverse error confirmed:
 «Ο τύπος του Carson είναι στο τυπολόγιο» — live, DO NOT fix here (Pass C).
 
 ### Headline finding — FM chapter
@@ -1686,8 +1686,8 @@ inconsistencies found across the 9 problems.
 | `sept25-th2-8` | `fm-beta`, `carson` | Both off-sheet ✓ |
 | `sept25-th2-9` | `fm-bessel-sidebands`, `fm-bessel-property`, `carson` | All off-sheet ✓ |
 | `jan26-th1-5` | `fm-beta`, `carson` | Both off-sheet ✓ |
-| `jan26-th4-13-16` | `fm-single-tone`, `fm-beta`, `carson`, `fm-bessel-sidebands`, `fm-power` | All off-sheet ✓ |
-| `jun25-th3` | `fm-single-tone`, `fm-beta`, `carson`, `fm-bessel-sidebands`, `fm-power` | All off-sheet ✓ |
+| `jan26-th4-fm` | `fm-single-tone`, `fm-beta`, `carson`, `fm-bessel-sidebands`, `fm-power` | All off-sheet ✓ |
+| `jun25-th3-fm` | `fm-single-tone`, `fm-beta`, `carson`, `fm-bessel-sidebands`, `fm-power` | All off-sheet ✓ |
 | `lec-fm-1` (Session 15 Άσκηση 1) | `fm-single-tone`, `pm-signal` | Both off-sheet ✓ |
 | `lec-fm-3` (Session 15 Άσκηση 3) | `fm-bessel-sidebands`, `fm-bessel-property`, `fm-power` | All off-sheet ✓ |
 
@@ -1700,8 +1700,8 @@ inconsistencies found across the 9 problems.
 | `sept25-th2-8` | **NO** | **YES — INVERSE ERROR (F12)**: coaching ~L506 says «Ο τύπος του Carson είναι στο τυπολόγιο» |
 | `sept25-th2-9` | **NO** | No |
 | `jan26-th1-5` | **NO** | No |
-| `jan26-th4-13-16` | **NO** | No |
-| `jun25-th3` | **NO** | No |
+| `jan26-th4-fm` | **NO** | No |
+| `jun25-th3-fm` | **NO** | No |
 | `lec-fm-1` | **NO** | No |
 | `lec-fm-3` | **NO** | No |
 
@@ -1747,7 +1747,7 @@ All theory exam papers in `past_exams/` were visually audited for FM content (im
 **Key structural finding:** FM problems appear **only in the full final exams and Epi-Ptyxio** — the three midterms (Proodos 2026, Proodos A, Proodos B) are AM/foundations-focused and contain **zero FM content**. This means all FM exam weight is concentrated in 3 exam sessions: Sept 2025, Jan 2026, and June 2025.
 
 **Past-exam FM exercise corpus:** 7 distinct exercises (cross-checked against `exercises.tsx`):
-`sept25-th2-6`, `sept25-th2-7`, `sept25-th2-8`, `sept25-th2-9`, `jan26-th1-5`, `jan26-th4-13-16`, `jun25-th3`. **No additional FM exercises found outside `exercises.tsx`.**
+`sept25-th2-6`, `sept25-th2-7`, `sept25-th2-8`, `sept25-th2-9`, `jan26-th1-5`, `jan26-th4-fm`, `jun25-th3-fm`. **No additional FM exercises found outside `exercises.tsx`.**
 
 **Cross-reference note for §2B formulas:** `fm-snr-out`, `fm-gain-am`, `fm-snr-ref`, and `am-output-snr` were already counted in §2B via the cross-topic problem `sept25-th2-7` (FM vs AM SNR comparison). For those formulas, §2B is the baseline. Per the step prompt: **note the §2B entry and ADD any additional FM-primary exercises found** — none additional were found. Total weight therefore = §2B weight (1 each).
 
@@ -1775,7 +1775,7 @@ All theory exam papers in `past_exams/` were visually audited for FM content (im
 | --- | --- | --- |
 | `sept25-th2-6` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.6 | "ορίστε τον δείκτη διαμόρφωσης β" — defining β_f = ΔF_max/W = K_f·max\|m\|/W requires stating instantaneous frequency f_i = f_c + K_f m(t) |
 
-**Untagged key step note:** `jun25-th3` (ΘΕΜΑ 3.1) uses K_f = 1 kHz/Volt to compute β_f = K_f·A_m/W = 1·2/2 = 1 — this implicitly invokes `fm-instantaneous-freq` (K_f is the frequency sensitivity constant from f_i = f_c + K_f m(t)), but the formulaId is NOT tagged in `jun25-th3`. This is a tagging gap for Pass C.
+**Untagged key step note:** `jun25-th3-fm` (ΘΕΜΑ 3.1) uses K_f = 1 kHz/Volt to compute β_f = K_f·A_m/W = 1·2/2 = 1 — this implicitly invokes `fm-instantaneous-freq` (K_f is the frequency sensitivity constant from f_i = f_c + K_f m(t)), but the formulaId is NOT tagged in `jun25-th3-fm`. This is a tagging gap for Pass C.
 
 ---
 
@@ -1789,8 +1789,8 @@ All theory exam papers in `past_exams/` were visually audited for FM content (im
 | `sept25-th2-8` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.8 | m=A_m cos(2πf_m t), f_m=5 kHz, Δf=50 kHz → β_f = Δf/f_m = 50/5 = 10; then Carson B = 2(10+1)·5 = 110 kHz |
 | `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | β=2.5 given; student must understand β_f as the sideband count parameter for the Bessel series |
 | `jan26-th1-5` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.5 | T/F: β=0.3 → WBFM? ΛΑΘΟΣ — β<1 defines NBFM; β>1 defines WBFM |
-| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.14 | s(t)=10cos(2π·100000t+3sin(2π·1000t)) → read β=3 from signal form; then Carson B = 2(3+1)·1000 = 8 kHz |
-| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1–3.2 | Sub-1: K_f=1 kHz/V, A_m=2V, W=2 kHz → β=K_f·A_m/W=1; Sub-2: given B₁=16 kHz → β=B/(2W)−1=3 (via Carson inverted) |
+| `jan26-th4-fm` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.14 | s(t)=10cos(2π·100000t+3sin(2π·1000t)) → read β=3 from signal form; then Carson B = 2(3+1)·1000 = 8 kHz |
+| `jun25-th3-fm` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1–3.2 | Sub-1: K_f=1 kHz/V, A_m=2V, W=2 kHz → β=K_f·A_m/W=1; Sub-2: given B₁=16 kHz → β=B/(2W)−1=3 (via Carson inverted) |
 
 ---
 
@@ -1800,8 +1800,8 @@ All theory exam papers in `past_exams/` were visually audited for FM content (im
 
 | Exercise | Exam (problem) | How used |
 | --- | --- | --- |
-| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.13 | s(t)=10cos(2π·100000t+3sin(2π·1000t)) — recognize single-tone FM form to extract A_c=10, f_c=100 kHz, β=3, f_m=1 kHz |
-| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1–3.2 | m(t)=2cos(2π·2000t) → FM output is single-tone form A_c cos[2πf_ct+β sin(2πf_mt)] |
+| `jan26-th4-fm` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.13 | s(t)=10cos(2π·100000t+3sin(2π·1000t)) — recognize single-tone FM form to extract A_c=10, f_c=100 kHz, β=3, f_m=1 kHz |
+| `jun25-th3-fm` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1–3.2 | m(t)=2cos(2π·2000t) → FM output is single-tone form A_c cos[2πf_ct+β sin(2πf_mt)] |
 
 **Not counted:** `sept25-th2-6` uses the *general* FM signal form (`fm-signal`); `sept25-th2-8` and `sept25-th2-9` implicitly use a single-tone message but their formulaIds tag `fm-beta` + `carson` / `fm-bessel-sidebands` as the primary formulas.
 
@@ -1825,8 +1825,8 @@ Only appears in lecture exercise `lec-fm-1` (not a past-exam exercise). No past-
 
 | Exercise | Exam (problem) | How used |
 | --- | --- | --- |
-| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.16 | "Να υπολογιστεί το ποσοστό ισχύος που μεταφέρεται από το φέρον" — needs P_FM = A_c²/2 = 50 W; carrier fraction = J₀²(3)/1 (via Bessel energy identity) |
-| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.3, 3.6 | Sub-3: "Πόση είναι η ισχύς του FM σήματος;" → P = A_c²/2; Sub-6: "% of power at filter output" → subset of Σ J_n² relative to P_FM |
+| `jan26-th4-fm` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.16 | "Να υπολογιστεί το ποσοστό ισχύος που μεταφέρεται από το φέρον" — needs P_FM = A_c²/2 = 50 W; carrier fraction = J₀²(3)/1 (via Bessel energy identity) |
+| `jun25-th3-fm` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.3, 3.6 | Sub-3: "Πόση είναι η ισχύς του FM σήματος;" → P = A_c²/2; Sub-6: "% of power at filter output" → subset of Σ J_n² relative to P_FM |
 
 ---
 
@@ -1847,8 +1847,8 @@ No past-exam exercise explicitly requires writing or citing the Jacobi-Anger ide
 | Exercise | Exam (problem) | How used |
 | --- | --- | --- |
 | `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | β=2.5: (A) "Write Bessel series for FM spectrum" — x_FM = A_c Σ J_n(2.5)cos[2π(f_c+nf_m)t]; (B) "find relative amplitudes for first 3 sideband pairs" using Bessel table |
-| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.15 | "Expand signal using Bessel functions, identify 3 strongest sidebands" for β=3: s(t)=10·Σ J_n(3)cos[2π(100000+n·1000)t] |
-| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1, 3.5 | Sub-1: "πόσες αρμονικές περιέχονται στο ενεργό εύρος ζώνης;" — count sidebands with significant J_n(β); Sub-5: "πόσες αρμονικές περνάνε από RF filter B_RF=4 kHz?" — identify which Bessel components fall within |
+| `jan26-th4-fm` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.15 | "Expand signal using Bessel functions, identify 3 strongest sidebands" for β=3: s(t)=10·Σ J_n(3)cos[2π(100000+n·1000)t] |
+| `jun25-th3-fm` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1, 3.5 | Sub-1: "πόσες αρμονικές περιέχονται στο ενεργό εύρος ζώνης;" — count sidebands with significant J_n(β); Sub-5: "πόσες αρμονικές περνάνε από RF filter B_RF=4 kHz?" — identify which Bessel components fall within |
 
 ---
 
@@ -1859,8 +1859,8 @@ No past-exam exercise explicitly requires writing or citing the Jacobi-Anger ide
 | Exercise | Exam (problem) | How used |
 | --- | --- | --- |
 | `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | (B) "Προσδιορίστε τις σχετικές εντάσεις για τα πρώτα τρία ζεύγη πλευρικών ζωνών" — symmetry J_{-n}=(-1)^n J_n used to read both-side values from Bessel table |
-| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.16 | "% ισχύος που μεταφέρεται από το φέρον" → carrier fraction = A_c² J₀²(3)/2 ÷ P_FM; **energy identity Σ J_n²=1 confirms P_FM = A_c²/2** |
-| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.6 | "% of power at filter output" — compute Σ J_n² for n values within B_RF=8 kHz filter; uses energy identity for normalisation |
+| `jan26-th4-fm` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.16 | "% ισχύος που μεταφέρεται από το φέρον" → carrier fraction = A_c² J₀²(3)/2 ÷ P_FM; **energy identity Σ J_n²=1 confirms P_FM = A_c²/2** |
+| `jun25-th3-fm` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.6 | "% of power at filter output" — compute Σ J_n² for n values within B_RF=8 kHz filter; uses energy identity for normalisation |
 
 ---
 
@@ -1876,8 +1876,8 @@ No past-exam exercise explicitly requires writing or citing the Jacobi-Anger ide
 | `sept25-th2-8` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.8 | β=10 computed, then B = 2(10+1)·5 kHz = 110 kHz — Carson is the primary deliverable |
 | `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | (C) "Εκτιμήστε το πρακτικό εύρος ζώνης με τον κανόνα Carson": B ≅ 2(2.5+1)f_m |
 | `jan26-th1-5` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.5 | β=0.3 → NBFM (β<1); Carson limit β→0 gives B→2W (same as AM bandwidth) — knowing Carson anchors the NBFM/WBFM distinction |
-| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.14 | β=3, f_m=1 kHz → B = 2(3+1)·1 = 8 kHz — Carson is the primary deliverable of sub-problem 14 |
-| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.2 | Given B₁=16 kHz, W=2 kHz → β = B/(2W)−1 = 3; Carson used in **reverse** to compute β |
+| `jan26-th4-fm` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.14 | β=3, f_m=1 kHz → B = 2(3+1)·1 = 8 kHz — Carson is the primary deliverable of sub-problem 14 |
+| `jun25-th3-fm` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.2 | Given B₁=16 kHz, W=2 kHz → β = B/(2W)−1 = 3; Carson used in **reverse** to compute β |
 
 **Inverse-error F12 reminder:** `sose-coaching.tsx` ~L506 for `sept25-th2-8` states «Ο τύπος του Carson είναι στο τυπολόγιο» — confirmed WRONG; Carson is `inTypology: false`. Pass C must fix this.
 
@@ -1944,7 +1944,7 @@ The four noise-chapter formulas that appeared in `sept25-th2-7` were already cou
 
 | Formula | Exercises where untagged but key step | Suggested fix for Pass C |
 | --- | --- | --- |
-| `fm-instantaneous-freq` | `jun25-th3` (uses K_f·A_m/W to compute β, implicitly using f_i = f_c + K_f m(t)) | Add `fm-instantaneous-freq` to `jun25-th3` formulaIds |
+| `fm-instantaneous-freq` | `jun25-th3-fm` (uses K_f·A_m/W to compute β, implicitly using f_i = f_c + K_f m(t)) | Add `fm-instantaneous-freq` to `jun25-th3-fm` formulaIds |
 
 No other significant tagging gaps found. Unlike the AM pass (where `fdm-spacing` was absent from 4 exercises), FM tagging is largely complete.
 
@@ -2125,7 +2125,7 @@ All six theory exam sessions in `past_exams/` were visually audited for foundati
 | 5 | ∫\|x\|²dt = ∫\|X\|²df (general Parseval) | `parseval` | **1** | MEDIUM — co-appears with `signal-energy`; untagged in `jun25-th2` |
 | 6 | All FS structural formulas (synthesis, analysis-general, orthogonality, conjugate-sym., bₖ=H·aₖ) | various | **0** | MEDIUM — entire FS chapter is off-sheet; callouts needed on `foundations/fourier-series` theory page |
 | 6 | All LTI systems formulas (convolution-def, freq-response, eigenfunction, BIBO) | various | **0** | MEDIUM — all must-learn; zero direct weight; invoked via AM/FM/noise chapters |
-| 6 | dB gain: 20·log₁₀\|H(f)\| | — (needs formulaId `filter-gain-db`) | **0** | LOWER — only in inline ExamProblem on filters page; no standalone past-exam exercise; add formulaId |
+| 6 | dB gain: 20·log₁₀\|H(f)\| | `filter-gain-db` (formulas.tsx L724, weight 0) | **0** | LOWER — only in inline ExamProblem on filters page; no standalone past-exam exercise; wire must-learn flag in Pass C |
 | 6 | signal-power, dc-rms, delta props, periodicity conds, even/odd | various | **0** | LOWER — must-learn callouts on `foundations/signals` theory page; no direct past-exam test |
 
 ---
@@ -2242,7 +2242,7 @@ Per step specification — these §7 formulas were already counted in §2B (nois
 
 | Formula | formulaId | Weight | Note |
 | --- | --- | --- | --- |
-| dB gain: 20·log₁₀\|H(f)\| | — (needs `filter-gain-db`) | **0** | Only in inline ExamProblem `filter-db-conversion` on filters page; no standalone past-exam exercise |
+| dB gain: 20·log₁₀\|H(f)\| | `filter-gain-db` (formulas.tsx L724, weight 0) | **0** | Only in inline ExamProblem `filter-db-conversion` on filters page; no standalone past-exam exercise; wire must-learn flag in Pass C |
 | dB inversion: \|H\| = 10^{−dB/20} | — | **0** | Same |
 
 ### 7B.3 Ranked summary — §7 + remaining randomness Pass B
@@ -2255,7 +2255,7 @@ Per step specification — these §7 formulas were already counted in §2B (nois
 | 4 | e^{−a\|τ\|} ↔ 2a/(a²+(2πf)²) (exponential FT pair, F13) | — (needs `fourier-pair-exp`) | **0** | HIGH — no standalone exam weight but page flags as frequent; F13 inverse error ("τυπολόγιο") must be fixed; add `fourier-pair-exp` to `formulas.tsx` |
 | 5 | All randomness process definitions (E[X], R_X, WSS, ergodicity) | various | **0** | MEDIUM — vocabulary; must-learn callouts on randomness theory pages; lecture-only exercises |
 | 6 | PSD properties, ESD identity, LTI ΣΑΣ chain, cross-PSD | various | **0** | MEDIUM — theoretical tools; callouts needed on psd page |
-| 7 | dB gain (filters) | — (needs `filter-gain-db`) | **0** | LOWER — no standalone past-exam exercise; add formulaId for Pass C |
+| 7 | dB gain (filters) | `filter-gain-db` (formulas.tsx L724, weight 0) | **0** | LOWER — no standalone past-exam exercise; wire must-learn flag in Pass C |
 
 ---
 
@@ -2342,8 +2342,9 @@ Per step specification — these §7 formulas were already counted in §2B (nois
 - **F10 — UNREAD FOUNDATIONS PAGES. ✅ RESOLVED (`mustlearn-inventory-foundations-supplemental`).**
   Both pages read directly in §7. Findings: `signal-transformations` confirmed zero new must-learn
   formulas (reference page for on-sheet FT properties — all transformations derive from on-sheet
-  scaling, shift, duality). `filters` contributes one new must-learn (dB gain:
-  $20\log_{10}\lvert H(f)\rvert$, slide 46; no formulaId) and confirms RC shape
+  scaling, shift, duality). `filters` contributes one must-learn (dB gain:
+  $20\log_{10}\lvert H(f)\rvert$, slide 46; `filter-gain-db` already exists at formulas.tsx L724,
+  inTypology:false — no new entry needed, Pass C wires must-learn flag) and confirms RC shape
   $\lvert H\rvert^2=1/(1+(f/f_c)^2)$ is already in §2.3. See §7.1–§7.2 for full inventory.
 - **F11 — FT DEFINITION formulaId UNCERTAIN.** `X(f) = ∫x(t)e^{−j2πft}dt` (and its inverse) are
   the most fundamental formulas in the FT chapter. The sheet appears to list only the pairs/
