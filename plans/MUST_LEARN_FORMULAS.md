@@ -57,6 +57,7 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | A | **Remaining randomness** (random-variables, random-processes, stationarity) | `mustlearn-inventory-fm` | **DONE** — §8.6 below |
 | B | **Noise** — weighting | `mustlearn-passb-noise-formulas` | **DONE** — §2B below |
 | B | **AM** — weighting | `mustlearn-passb-am-formulas` | **DONE** — §6B below |
+| B | **FM** — weighting | `mustlearn-passb-fm-formulas` | **DONE** — §8B below |
 | C | apply | per-placement | TODO |
 
 ---
@@ -1720,6 +1721,262 @@ pattern from §7.4) — placement-(b) concept does not apply to them.
 
 ---
 
+## 8B. Pass B — FM Chapter Weighting Results
+
+> **Step:** `mustlearn-passb-fm-formulas` · **Status:** DONE  
+> **Scope:** every must-learn formula in §8 (FM chapter). Weight = count of distinct past-exam exercises that required the formula (either directly or as a key derivation step). References cite `exercises.tsx` problem IDs.
+
+### Exam-paper audit
+
+All theory exam papers in `past_exams/` were visually audited for FM content (images + PDF):
+
+| Exam session | Files | FM problems found | Audit method |
+| --- | --- | --- | --- |
+| Πρόοδος Απρίλιος 2026 | `προοδος_2026.jpg` | **NONE** — AM/noise/foundations midterm | image read |
+| Εξέταση Σεπτεμβρίου 2025 | `2025_sept_exam.jpg` | ΘΕΜΑ 2.6–2.9 (4 FM sub-problems) | image read |
+| Επι-πτυχίο Ιανουαρίου 2026 | `Epi-Ptyxio-Jan-26_1.jpg`, `_2.jpg` | ΘΕΜΑ 1.5 (T/F β=0.3 WBFM) + ΘΕΜΑ 4.13–16 (Bessel expansion) | image read (2 pp.) |
+| Εξέταση Ιουνίου 2025 Team A | `Syst-Epik-June-2025.pdf` (2 pp., visually read) | ΘΕΜΑ 3.1–3.6 (6 FM sub-problems) | PDF visual read |
+| Πρόοδος Α Μαΐου 2025 | `proodos_a1.jpg`, `proodos_a2.jpg` | **NONE** — AM/foundations midterm | image read |
+| Πρόοδος Β Μαΐου 2025 | `proodos_b1.jpg`, `proodos_b2.jpg` | **NONE** — AM/foundations midterm | image read |
+| Solutions compilation | `systepik-exams-solutions-ΤΗΕΜΑΤΑ-KANELOU.pdf` | Covers same 6 sessions; no additional FM problems | referenced |
+
+**Key structural finding:** FM problems appear **only in the full final exams and Epi-Ptyxio** — the three midterms (Proodos 2026, Proodos A, Proodos B) are AM/foundations-focused and contain **zero FM content**. This means all FM exam weight is concentrated in 3 exam sessions: Sept 2025, Jan 2026, and June 2025.
+
+**Past-exam FM exercise corpus:** 7 distinct exercises (cross-checked against `exercises.tsx`):
+`sept25-th2-6`, `sept25-th2-7`, `sept25-th2-8`, `sept25-th2-9`, `jan26-th1-5`, `jan26-th4-13-16`, `jun25-th3`. **No additional FM exercises found outside `exercises.tsx`.**
+
+**Cross-reference note for §2B formulas:** `fm-snr-out`, `fm-gain-am`, `fm-snr-ref`, and `am-output-snr` were already counted in §2B via the cross-topic problem `sept25-th2-7` (FM vs AM SNR comparison). For those formulas, §2B is the baseline. Per the step prompt: **note the §2B entry and ADD any additional FM-primary exercises found** — none additional were found. Total weight therefore = §2B weight (1 each).
+
+---
+
+### 8B.1 Core FM signal formulas (§8.1)
+
+#### `fm-signal` — x_FM = A_c cos[2πf_c t + 2πK_f ∫m(τ)dτ]
+
+**Weight: 1**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-6` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.6 | "Εξηγήστε την αρχή λειτουργίας FM — δώστε τη μαθηματική έκφραση του σήματος FM" — general FM signal form is the primary deliverable |
+
+**Note:** The other FM exercises use the **single-tone** form (`fm-single-tone`) or implicitly invoke it. Only `sept25-th2-6` explicitly demands the **general** FM signal expression.
+
+---
+
+#### `fm-instantaneous-freq` — f_i(t) = f_c + K_f m(t)
+
+**Weight: 1**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-6` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.6 | "ορίστε τον δείκτη διαμόρφωσης β" — defining β_f = ΔF_max/W = K_f·max\|m\|/W requires stating instantaneous frequency f_i = f_c + K_f m(t) |
+
+**Untagged key step note:** `jun25-th3` (ΘΕΜΑ 3.1) uses K_f = 1 kHz/Volt to compute β_f = K_f·A_m/W = 1·2/2 = 1 — this implicitly invokes `fm-instantaneous-freq` (K_f is the frequency sensitivity constant from f_i = f_c + K_f m(t)), but the formulaId is NOT tagged in `jun25-th3`. This is a tagging gap for Pass C.
+
+---
+
+#### `fm-beta` — β_f = ΔF_max/W = K_f·max\|m\|/W
+
+**Weight: 6** ← tied with `carson` for highest in the FM chapter; tested in all three final-exam sessions
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-6` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.6 | Define FM modulation index β; β_f = ΔF_max/W is the core deliverable |
+| `sept25-th2-8` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.8 | m=A_m cos(2πf_m t), f_m=5 kHz, Δf=50 kHz → β_f = Δf/f_m = 50/5 = 10; then Carson B = 2(10+1)·5 = 110 kHz |
+| `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | β=2.5 given; student must understand β_f as the sideband count parameter for the Bessel series |
+| `jan26-th1-5` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.5 | T/F: β=0.3 → WBFM? ΛΑΘΟΣ — β<1 defines NBFM; β>1 defines WBFM |
+| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.14 | s(t)=10cos(2π·100000t+3sin(2π·1000t)) → read β=3 from signal form; then Carson B = 2(3+1)·1000 = 8 kHz |
+| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1–3.2 | Sub-1: K_f=1 kHz/V, A_m=2V, W=2 kHz → β=K_f·A_m/W=1; Sub-2: given B₁=16 kHz → β=B/(2W)−1=3 (via Carson inverted) |
+
+---
+
+#### `fm-single-tone` — x_FM = A_c cos[2πf_c t + β_f sin(2πf_m t)]
+
+**Weight: 2**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.13 | s(t)=10cos(2π·100000t+3sin(2π·1000t)) — recognize single-tone FM form to extract A_c=10, f_c=100 kHz, β=3, f_m=1 kHz |
+| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1–3.2 | m(t)=2cos(2π·2000t) → FM output is single-tone form A_c cos[2πf_ct+β sin(2πf_mt)] |
+
+**Not counted:** `sept25-th2-6` uses the *general* FM signal form (`fm-signal`); `sept25-th2-8` and `sept25-th2-9` implicitly use a single-tone message but their formulaIds tag `fm-beta` + `carson` / `fm-bessel-sidebands` as the primary formulas.
+
+---
+
+### 8B.2 PM formulas (§8.2)
+
+#### `pm-signal` — x_PM = A_c cos[2πf_c t + K_p m(t)]
+
+**Weight: 0**
+
+Only appears in lecture exercise `lec-fm-1` (not a past-exam exercise). No past-exam exercise requires writing the PM signal form as a key step. Pass C should add must-learn callout on `fm/pm` theory page regardless — the exam pattern is to test β_p / Carson for PM, not the signal form directly.
+
+---
+
+### 8B.3 FM power (§8.1–§8.2)
+
+#### `fm-power` — P_FM = A_c²/2 (constant envelope, independent of β)
+
+**Weight: 2**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.16 | "Να υπολογιστεί το ποσοστό ισχύος που μεταφέρεται από το φέρον" — needs P_FM = A_c²/2 = 50 W; carrier fraction = J₀²(3)/1 (via Bessel energy identity) |
+| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.3, 3.6 | Sub-3: "Πόση είναι η ισχύς του FM σήματος;" → P = A_c²/2; Sub-6: "% of power at filter output" → subset of Σ J_n² relative to P_FM |
+
+---
+
+### 8B.4 Bessel formulas (§8.3)
+
+#### `fm-bessel-expansion` — Jacobi-Anger: e^{jβsinθ} = Σ_{n=-∞}^{∞} J_n(β) e^{jnθ}
+
+**Weight: 0**
+
+No past-exam exercise explicitly requires writing or citing the Jacobi-Anger identity by name or formula. The identity is the derivation backbone for `fm-bessel-sidebands`, but exam problems skip directly to the Bessel-sidebands result. **Pass C note:** `fm-bessel-expansion` is a must-learn *derivation tool* rather than a directly evaluated formula — students need it to understand why the Bessel series appears, but the exam tests the result (`fm-bessel-sidebands`).
+
+---
+
+#### `fm-bessel-sidebands` — x_FM = A_c Σ J_n(β_f) cos[2π(f_c + nf_m)t]
+
+**Weight: 3**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | β=2.5: (A) "Write Bessel series for FM spectrum" — x_FM = A_c Σ J_n(2.5)cos[2π(f_c+nf_m)t]; (B) "find relative amplitudes for first 3 sideband pairs" using Bessel table |
+| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.15 | "Expand signal using Bessel functions, identify 3 strongest sidebands" for β=3: s(t)=10·Σ J_n(3)cos[2π(100000+n·1000)t] |
+| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.1, 3.5 | Sub-1: "πόσες αρμονικές περιέχονται στο ενεργό εύρος ζώνης;" — count sidebands with significant J_n(β); Sub-5: "πόσες αρμονικές περνάνε από RF filter B_RF=4 kHz?" — identify which Bessel components fall within |
+
+---
+
+#### `fm-bessel-property` — J_{-n}(β) = (−1)^n J_n(β); Σ_n J_n²(β) = 1 (energy identity)
+
+**Weight: 3**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | (B) "Προσδιορίστε τις σχετικές εντάσεις για τα πρώτα τρία ζεύγη πλευρικών ζωνών" — symmetry J_{-n}=(-1)^n J_n used to read both-side values from Bessel table |
+| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.16 | "% ισχύος που μεταφέρεται από το φέρον" → carrier fraction = A_c² J₀²(3)/2 ÷ P_FM; **energy identity Σ J_n²=1 confirms P_FM = A_c²/2** |
+| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.6 | "% of power at filter output" — compute Σ J_n² for n values within B_RF=8 kHz filter; uses energy identity for normalisation |
+
+---
+
+### 8B.5 Carson's rule (§8.4)
+
+#### `carson` — B ≅ 2W(β+1) = 2(Δf + W)
+
+**Weight: 6** ← tied with `fm-beta` for highest in the FM chapter
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | FM vs AM comparison: FM bandwidth = Carson B=2(β+1)W vs AM bandwidth = 2W; Carson cited explicitly in comparison table |
+| `sept25-th2-8` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.8 | β=10 computed, then B = 2(10+1)·5 kHz = 110 kHz — Carson is the primary deliverable |
+| `sept25-th2-9` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.9 | (C) "Εκτιμήστε το πρακτικό εύρος ζώνης με τον κανόνα Carson": B ≅ 2(2.5+1)f_m |
+| `jan26-th1-5` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.5 | β=0.3 → NBFM (β<1); Carson limit β→0 gives B→2W (same as AM bandwidth) — knowing Carson anchors the NBFM/WBFM distinction |
+| `jan26-th4-13-16` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 4.14 | β=3, f_m=1 kHz → B = 2(3+1)·1 = 8 kHz — Carson is the primary deliverable of sub-problem 14 |
+| `jun25-th3` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3.2 | Given B₁=16 kHz, W=2 kHz → β = B/(2W)−1 = 3; Carson used in **reverse** to compute β |
+
+**Inverse-error F12 reminder:** `sose-coaching.tsx` ~L506 for `sept25-th2-8` states «Ο τύπος του Carson είναι στο τυπολόγιο» — confirmed WRONG; Carson is `inTypology: false`. Pass C must fix this.
+
+---
+
+### 8B.6 FM-in-noise formulas (§8.5) — cross-reference to §2B
+
+The four noise-chapter formulas that appeared in `sept25-th2-7` were already counted in **§2B** (noise Pass B). Per the step protocol: note §2B as baseline and report any additional FM-primary exercises. **No additional FM exercises beyond `sept25-th2-7` were found for any of these formulas.**
+
+#### `fm-snr-out` — SNR_out,FM = 3β²·SNR_ref
+
+**Total weight: 1** (§2B baseline; no additional FM-primary exercises)
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | FM output SNR = 3β²·SNR_ref; listed explicitly in FM column of FM vs AM comparison table |
+
+**→ See §2B for full entry; no additional exercises found in this pass.**
+
+---
+
+#### `fm-gain-am` — G_FM/AM = 9β² (FM advantage over AM, μ=1, equal total power)
+
+**Total weight: 1** (§2B baseline; no additional)
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | "FM gain over AM = 9β²"; example β=5 → 225× = 23.5 dB gain |
+
+**→ See §2B for full entry.**
+
+---
+
+#### `fm-snr-ref` — SNR_ref = A_c²/(2N₀W)
+
+**Total weight: 1** (§2B baseline; no additional)
+
+**→ See §2B for full entry (cross-topic `sept25-th2-7`).**
+
+---
+
+#### `fm-noise-output-psd` — S_n^out(f) = N₀f²/A_c² (triangular noise after discriminator)
+
+**Total weight: 0** (§2B confirmed; also confirmed in this FM pass)
+
+`sept25-th2-7` presupposes triangular noise in its derivation of 3β²·SNR_ref, but the qualitative comparison problem does not invoke the triangular-noise formula directly. **No past-exam exercise explicitly derives or evaluates this formula.**
+
+---
+
+### 8B.7 No-formulaId FM entries from §8
+
+| Formula | Exam weight | Note |
+| --- | --- | --- |
+| NBFM approximation x_NBFM ≈ A_c cos − A_c φ(t) sin | 0 | Conceptually invoked in `jan26-th1-5` (β=0.3 → NBFM), but no exam requires writing the NBFM approximation explicitly |
+| P_n,out = N₀W³/(3A_c²) (output noise power) | 0 | No past-exam exercise; `sept25-th2-7` uses 3β²·SNR_ref as a result, not this intermediate |
+| PM instant. freq: f_i^PM = f_c + (K_p/2π)dm/dt | 0 | Only in lecture; no past-exam exercise |
+| Significant sidebands: N = 2⌊β⌋+3 | 0 | Used as a counting heuristic in Bessel problems but not as a separately-evaluated formula; covered under `fm-bessel-sidebands` |
+| WBFM limit β→∞: B→2Δf; NBFM limit β→0: B→2W | 0 | Limits of Carson; invoked conceptually in `jan26-th1-5` but Carson carries the weight |
+| Single-tone PM: Δf_PM = K_p A_m f_m | 0 | PM-specific; not tested in any past-exam exercise |
+
+---
+
+### 8B.8 Formulaid tagging gaps discovered during FM Pass B
+
+| Formula | Exercises where untagged but key step | Suggested fix for Pass C |
+| --- | --- | --- |
+| `fm-instantaneous-freq` | `jun25-th3` (uses K_f·A_m/W to compute β, implicitly using f_i = f_c + K_f m(t)) | Add `fm-instantaneous-freq` to `jun25-th3` formulaIds |
+
+No other significant tagging gaps found. Unlike the AM pass (where `fdm-spacing` was absent from 4 exercises), FM tagging is largely complete.
+
+---
+
+### 8B.9 Coverage gap — no FM exercises in any midterm exam
+
+**Finding:** FM content is **entirely absent** from the three midterm exams (Proodos 2026, Proodos A/B May 2025). All FM exam weight comes from the 3 final/Epi-Ptyxio sessions. This is a pedagogical pattern worth flagging in Pass C coaching: *students who only practice from midterm papers will have zero FM exercise exposure*.
+
+No FM problems were found **outside** `exercises.tsx` — no coverage gap in the exercise bank.
+
+---
+
+### 8B.10 Ranked summary — FM chapter Pass B
+
+| Rank | Formula | formulaId | Weight | Pass C priority |
+| --- | --- | --- | --- | --- |
+| 1 | β_f = ΔF_max/W (FM modulation index) | `fm-beta` | **6** | HIGH — tested in all 3 final-exam sessions; central to all FM analysis |
+| 1 | B ≅ 2W(β+1) (Carson's rule) | `carson` | **6** | HIGH — tested in all 3 final-exam sessions; F12 inverse error in coaching must be fixed |
+| 3 | x_FM = A_c Σ J_n cos[2π(f_c+nf_m)t] (Bessel sidebands) | `fm-bessel-sidebands` | **3** | HIGH — every Bessel-type FM problem requires it |
+| 3 | J_{-n}=(−1)^n J_n; Σ J_n²=1 (Bessel properties) | `fm-bessel-property` | **3** | HIGH — energy identity is the key for power-fraction problems |
+| 5 | A_c cos[2πf_ct+β sin(2πf_mt)] (single-tone FM) | `fm-single-tone` | **2** | HIGH — pattern-recognition for recognizing a given FM signal |
+| 5 | P_FM = A_c²/2 (constant FM power) | `fm-power` | **2** | HIGH — required in any power-computation FM problem |
+| 7 | x_FM = A_c cos[…+2πK_f∫m dt] (general FM signal) | `fm-signal` | **1** | HIGH — the fundamental definition; F14 inverse error must be fixed |
+| 7 | f_i(t) = f_c + K_f m(t) (instantaneous frequency) | `fm-instantaneous-freq` | **1** | HIGH — anchor for understanding K_f and β_f; F14 inverse error (labeled "στο τυπολόγιο") |
+| 7 | SNR_out,FM = 3β²·SNR_ref | `fm-snr-out` | **1** | MEDIUM — cross-topic; §2B primary; must-learn callout missing from `fm/in-noise` area |
+| 7 | G_FM/AM = 9β² | `fm-gain-am` | **1** | MEDIUM — cross-topic; §2B primary; F14 inverse error ("στο τυπολόγιο" in fm/idea) |
+| 7 | SNR_ref = A_c²/(2N₀W) | `fm-snr-ref` | **1** | MEDIUM — cross-topic; §2B primary |
+| 12 | x_PM = A_c cos[2πf_ct+K_p m(t)] (PM signal) | `pm-signal` | **0** | LOWER — must-learn; F15 inverse error on fm/pm; no direct exam exercise |
+| 12 | e^{jβsinθ} = Σ J_n e^{jnθ} (Jacobi-Anger) | `fm-bessel-expansion` | **0** | LOWER — derivation tool; must-learn for understanding, but exam tests the result |
+| 12 | S_n^out = N₀f²/A_c² (triangular FM noise) | `fm-noise-output-psd` | **0** | LOWER — zero direct exam weight (confirmed); must-learn callout still needed on fm/in-noise |
+| 12 | FM threshold (~10 dB), capture effect, pre-emphasis | `fm-threshold` + no-id | **0** | LOWER — conceptual must-knows; no formula evaluated in exam |
+| 12 | NBFM/WBFM limits, PM distinctions, N=2⌊β⌋+3, P_n,out | various | **0** | LOWER — context/derivation knowledge; no dedicated exam formula |
+
+---
+
 ## 9. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
 
 - **F1 — LIVE MISCITATION (correctness).** `app/(content)/noise/white-noise/page.mdx`
@@ -1862,6 +2119,7 @@ pattern from §7.4) — placement-(b) concept does not apply to them.
 
 - **Pass A — COMPLETE.** All chapters inventoried: Noise §2, Foundations §3, Randomness/why §4, Modulation bridge §5, AM §6, Foundations-supplemental + PSD §7, FM + remaining-randomness §8. Proceed to Pass B.
 - **Pass B — NOISE weighting DONE** (`mustlearn-passb-noise-formulas`) — results in §2B. Highest-weight: `white-noise-psd` + bandlimited P_N = N₀B (weight 5 each), `lti-output-psd` + `wiener-khinchin` (weight 3 each). Zero-weight: `bandpass-noise-r`, `noise-figure`, `fm-noise-output-psd`.
-- **Pass B — AM weighting DONE** (`mustlearn-passb-am-formulas`) — results in §6B. Highest-weight: `am-signal` (17), `am-mu` (8), `ssb-signal` (6), `dsb-sc-signal` (5), `am-spectrum`/`am-power`/`fdm-spacing` (4 each). Key finding: `fdm-spacing` untagged in all 4 multiplexing exercises; `dsb-sc-phase-error` needs a new formulaId. Zero-weight: `ssb-power`, all VSB formulas. Remaining chapters (FM, foundations, randomness) — Pass B weighting TODO.
+- **Pass B — AM weighting DONE** (`mustlearn-passb-am-formulas`) — results in §6B. Highest-weight: `am-signal` (17), `am-mu` (8), `ssb-signal` (6), `dsb-sc-signal` (5), `am-spectrum`/`am-power`/`fdm-spacing` (4 each). Key finding: `fdm-spacing` untagged in all 4 multiplexing exercises; `dsb-sc-phase-error` needs a new formulaId. Zero-weight: `ssb-power`, all VSB formulas.
+- **Pass B — FM weighting DONE** (`mustlearn-passb-fm-formulas`) — results in §8B. Highest-weight: `fm-beta` + `carson` (weight 6 each — tied; tested in all 3 final-exam sessions); `fm-bessel-sidebands` + `fm-bessel-property` (weight 3 each); `fm-single-tone` + `fm-power` (weight 2 each). FM problems appear only in final exams (not midterms). Zero-weight: `pm-signal`, `fm-bessel-expansion`, `fm-noise-output-psd`, `fm-threshold`. `fm-snr-out`/`fm-gain-am`/`fm-snr-ref` weight 1 each (cross-topic, from §2B). Remaining chapters (foundations, randomness) — Pass B weighting TODO.
 - **Pass C — apply**: annotate placements (a) theory pages, (b) problems, (c) `/formulas`,
   driven by a single source of truth in `formulas.tsx`/`formulaIds`.
