@@ -1861,16 +1861,184 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — ένας θόρυβος έχει δύο ανεξάρτητα «αποτυπώματα».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            (1) <strong>Πού</strong> κάθεται η ισχύς του στις συχνότητες — το
+            σχήμα της PSD. «<strong>Λευκός</strong>» απαντά εδώ: η ισχύς
+            απλώνεται <em>ίσα</em> σε όλες τις συχνότητες, όπως το λευκό φως
+            κουβαλά ίσα όλα τα χρώματα, οπότε η PSD είναι ένα{' '}
+            <strong>επίπεδο πάτωμα</strong> (
+            <Link
+              href="/noise/white-noise"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              /noise/white-noise §2
+            </Link>
+            ). (2) <strong>Πώς</strong> κατανέμονται οι <em>τιμές</em> του στο
+            χρόνο — αν κατέγραφες την τάση του θορύβου για ώρα κι έφτιαχνες{' '}
+            <strong>ιστόγραμμα</strong> των τιμών, τι σχήμα θα έβγαινε;{' '}
+            «<strong>Gaussian</strong>» απαντά εδώ: καμπάνα.{' '}
+            <strong className="text-fg">Το κρίσιμο:</strong> δύο ηχογραφήσεις
+            «σσσσ» μπορεί να έχουν <em>πανομοιότυπη</em> επίπεδη PSD (ίδιο
+            «χρώμα» θορύβου) κι όμως τελείως διαφορετικό ιστόγραμμα πλάτους — η
+            μία καμπάνα (Gaussian), η άλλη επίπεδο κουτί (uniform). Η PSD δεν
+            «βλέπει» τη διαφορά: ξέρει μόνο πού κάθεται η ισχύς στις συχνότητες,
+            όχι πώς μοιράζονται οι τιμές. Άρα «λευκός» και «Gaussian» μετρούν δύο
+            εντελώς διαφορετικά πράγματα — το ένα δεν συνεπάγεται το άλλο.
+          </span>
+        </div>
+
         <p>
-          <strong>ΛΑΘΟΣ — κλασική παγίδα.</strong> «Λευκός» αναφέρεται στο
-          σχήμα της PSD (επίπεδο, σταθερό σε όλες τις συχνότητες).{' '}
-          «Gaussian» αναφέρεται στην κατανομή πλάτους. Είναι{' '}
-          <strong>ξεχωριστές ιδιότητες</strong>.
+          <strong>ΛΑΘΟΣ — η κλασική παγίδα της Noise group.</strong> Η εκφώνηση
+          βάζει την PSD να «ακολουθεί την κατανομή Gauss», και κάνει{' '}
+          <strong>διπλό</strong> λάθος. <em>(i) Σύγχυση αξόνων:</em> «λευκός»
+          περιγράφει το <strong>σχήμα της PSD</strong> (frequency domain), ενώ
+          «Gaussian» περιγράφει την <strong>κατανομή πλάτους</strong> (amplitude
+          domain) — δύο <strong>ορθογώνιες</strong> ιδιότητες, η μία δεν
+          συνεπάγεται την άλλη. <em>(ii) Κατηγορηματικό λάθος:</em> η PSD δεν
+          είναι καν κατανομή πιθανότητας — είναι <strong>ισχύς ανά Hz</strong>{' '}
+          πάνω στη συχνότητα (
+          <Link
+            href="/noise/sources"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/sources §6
+          </Link>
+          ), και για λευκό θόρυβο το σχήμα της είναι <strong>επίπεδο</strong>{' '}
+          (<InlineMath>{'S_N(f) = N_0/2'}</InlineMath>, σταθερό σε κάθε{' '}
+          <InlineMath>{'f'}</InlineMath>) — το ακριβώς αντίθετο μιας καμπάνας. Η
+          καμπάνα Gauss ζει σε <em>άλλο</em> γράφημα: το ιστόγραμμα των τιμών
+          του θορύβου, όχι η PSD.
         </p>
+
         <p>
-          Ο θερμικός θόρυβος ικανοποιεί και τα δύο (γι' αυτό λέγεται AWGN —
-          Additive White Gaussian Noise). Αλλά π.χ. uniform-amplitude white
-          noise είναι λευκός χωρίς να είναι Gaussian.
+          Οι δύο άξονες είναι ανεξάρτητοι — και οι <strong>τέσσερις</strong>{' '}
+          συνδυασμοί υπάρχουν στ' αλήθεια:
+        </p>
+
+        <table className="my-3 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="py-2 pr-3 text-left font-normal text-fg-subtle">
+                PSD ↓ · Πλάτος →
+              </th>
+              <th className="py-2 pr-3 text-left">Gaussian (καμπάνα)</th>
+              <th className="py-2 text-left">μη-Gaussian</th>
+            </tr>
+          </thead>
+          <tbody className="text-fg-muted">
+            <tr>
+              <th
+                scope="row"
+                className="py-2 pr-3 text-left align-top font-semibold text-fg"
+              >
+                Λευκός
+                <br />
+                (επίπεδη PSD)
+              </th>
+              <td className="py-2 pr-3 align-top">
+                <strong className="text-fg">AWGN</strong> — ο θερμικός θόρυβος·
+                το μοντέλο <em>κάθε</em> άσκησης θορύβου.
+              </td>
+              <td className="py-2 align-top">
+                <strong className="text-fg">Uniform-λευκός</strong> —
+                ασυσχέτιστες τιμές <InlineMath>{'U[-1,+1]'}</InlineMath>:
+                επίπεδη PSD ✓, καμπάνα ✗.
+              </td>
+            </tr>
+            <tr>
+              <th
+                scope="row"
+                className="py-2 pr-3 text-left align-top font-semibold text-fg"
+              >
+                Έγχρωμος
+                <br />
+                (μη-επίπεδη PSD)
+              </th>
+              <td className="py-2 pr-3 align-top">
+                <strong className="text-fg">Colored Gaussian</strong> — AWGN
+                μέσα από LPF: η καμπάνα μένει, η PSD γίνεται Lorentzian.
+              </td>
+              <td className="py-2 align-top">
+                <strong className="text-fg">
+                  Φιλτραρισμένο <InlineMath>{'\\pm 1'}</InlineMath>
+                </strong>{' '}
+                — ούτε επίπεδη PSD ούτε καμπάνα.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Η εκφώνηση δείχνει το πάνω-αριστερά κελί (AWGN) και το βαφτίζει{' '}
+          <em>ορισμό</em> του «λευκού» — αγνοώντας ότι υπάρχει λευκός θόρυβος{' '}
+          <em>χωρίς</em> καμπάνα (πάνω-δεξιά). <strong>Και το ανάποδο
+          εξετάζεται:</strong> «κάθε Gaussian θόρυβος είναι λευκός» είναι{' '}
+          <em>επίσης</em> ΛΑΘΟΣ — φιλτράρισε AWGN κι έχεις{' '}
+          <strong>colored Gaussian</strong> (κάτω-αριστερά): η καμπάνα μένει (το
+          γραμμικό φίλτρο διατηρεί τη Gaussianity), η επίπεδη PSD χάνεται.
+        </p>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Δοκίμασέ το — ρώτησε τον εαυτό σου</strong>
+          <span className="text-fg-muted">
+            {' '}(κάθε ερώτηση είναι μια θέση στο πλέγμα 2×2):
+          </span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Είναι ο θερμικός θόρυβος λευκός ΚΑΙ Gaussian;</strong>{' '}
+              Ναι, και τα δύο — γι' αυτό λέγεται AWGN (πάνω-αριστερά). Το
+              «Gaussian» έρχεται «δωρεάν» από το CLT, το «λευκό» από το επίπεδο
+              φάσμα.
+            </li>
+            <li>
+              <strong>Είναι ένα Gaussian σήμα πάντα λευκό;</strong> Όχι —
+              φιλτράρισέ το (π.χ. RC LPF) και γίνεται colored Gaussian: καμπάνα
+              ναι, επίπεδη PSD όχι. (Το ανάποδο της παγίδας.)
+            </li>
+            <li>
+              <strong>
+                «Ο θερμικός θόρυβος έχει PSD που ακολουθεί κατανομή Gauss»
+              </strong>{' '}
+              (η διατύπωση της Προόδου Β 2025). Ίδια παγίδα, ίδιο ΛΑΘΟΣ: ο
+              θερμικός <em>είναι</em> AWGN, αλλά το «Gaussian» αφορά τα πλάτη του
+              — η PSD του είναι επίπεδη, όχι καμπάνα.
+            </li>
+            <li>
+              <strong>Ονόμασε μια διαδικασία λευκή-αλλά-όχι-Gaussian.</strong>{' '}
+              Uniform-amplitude white: ασυσχέτιστες τιμές{' '}
+              <InlineMath>{'U[-1,+1]'}</InlineMath> — επίπεδη PSD (λευκός), αλλά
+              ιστόγραμμα κουτί (όχι καμπάνα).
+            </li>
+          </ul>
+        </div>
+
+        <p className="text-sm text-fg-muted">
+          Ο πλήρης πίνακας 2×2 με τα αντιπαραδείγματα ζει στο{' '}
+          <Link
+            href="/noise/white-noise"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/white-noise §6
+          </Link>
+          · η φυσική «γιατί ο θερμικός είναι Gaussian» (CLT) στο{' '}
+          <Link
+            href="/noise/sources"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/sources §2
+          </Link>
+          , και το «colored Gaussian μετά από LPF» στο{' '}
+          <Link
+            href="/noise/through-filters"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/through-filters §6
+          </Link>
+          .
         </p>
       </>
     ),
