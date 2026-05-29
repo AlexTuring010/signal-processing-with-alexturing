@@ -56,6 +56,7 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | A | **FM** chapter (5 pages) | `mustlearn-inventory-fm` | **DONE** — §8 below |
 | A | **Remaining randomness** (random-variables, random-processes, stationarity) | `mustlearn-inventory-fm` | **DONE** — §8.6 below |
 | B | **Noise** — weighting | `mustlearn-passb-noise-formulas` | **DONE** — §2B below |
+| B | **AM** — weighting | `mustlearn-passb-am-formulas` | **DONE** — §6B below |
 | C | apply | per-placement | TODO |
 
 ---
@@ -1074,6 +1075,280 @@ there are zero FM formulas on the sheet.
 
 ---
 
+## 6B. Pass B — AM Chapter Weighting Results
+
+> **Step:** `mustlearn-passb-am-formulas` · **Status:** DONE  
+> **Scope:** every must-learn formula in §6 (AM chapter). Weight = count of distinct past-exam exercises that required the formula (either directly or as a key derivation step). References cite `exercises.tsx` problem IDs.
+
+### Exam-paper audit
+
+All six theory exam-session papers in `past_exams/` were visually audited (images + PDF) for AM content:
+
+| Exam session | Files | AM problems found |
+| --- | --- | --- |
+| Πρόοδος Απρίλιος 2026 | `προοδος_2026.jpg` | ΘΕΜΑ 1–5, 7, 9, 11–13 (10 problems: conventional AM, DSB-SC, SSB/FDM) |
+| Εξέταση Σεπτεμβρίου 2025 | `2025_sept_exam.jpg` | ΘΕΜΑ 1.1–1.5 (5 AM problems) + ΘΕΜΑ 2.7 (FM/AM cross-topic) |
+| Επι-πτυχίο Ιανουαρίου 2026 | `Epi-Ptyxio-Jan-26_1.jpg`, `_2.jpg` | ΘΕΜΑ 1.1, ΘΕΜΑ 2.7–2.8, ΘΕΜΑ 3.11–12 |
+| Εξέταση Ιουνίου 2025 Team A | `Syst-Epik-June-2025.pdf` → `june2025-exam.pdf` (ASCII copy, 2 pp., visually read) | ΘΕΜΑ 2 entire (DSB-SC + conventional AM multiplexing, 6 sub-problems as `jun25-th2`) |
+| Πρόοδος Α Μαΐου 2025 | `proodos_a1.jpg`, `proodos_a2.jpg` | ΘΕΜΑ 1.1, ΘΕΜΑ 2.2, ΘΕΜΑ 2.5, ΘΕΜΑ 3 (USSB) |
+| Πρόοδος Β Μαΐου 2025 | `proodos_b1.jpg`, `proodos_b2.jpg` | ΘΕΜΑ 1.1, ΘΕΜΑ 2.2, ΘΕΜΑ 2.3, ΘΕΜΑ 2.5, ΘΕΜΑ 3, ΘΕΜΑ 4 |
+| Solutions compilation | `systepik-exams-solutions-ΤΗΕΜΑΤΑ-KANELOU.pdf` | Confirms same six sessions; no additional AM problems found |
+| MATLAB/lab exams | Various | Lab-only; not audited |
+
+**Coverage note:** Every AM exercise found in the visual audit matches an exercise already present in `exercises.tsx`. **No additional AM exercises outside `exercises.tsx` were identified.** **One potential coverage gap:** Proodos A 2025 ΘΕΜΑ 4 — `proodos_a2.jpg` image is cut off before ΘΕΜΑ 4 content is visible; no `pa25-th4` exercise exists in `exercises.tsx`. If it parallels `pb25-th4-nonlinear` (the square-law modulator problem), it would add +1 to `am-signal` and `nonlinear-modulator-fc`. Flagged; **not counted** below since unconfirmed.
+
+**Exercise corpus:** 21 distinct past-exam `topic:'am'` exercises (excluding lecture exercise `lec-am-1`) + 1 cross-topic FM exercise (`sept25-th2-7`) that invokes `am-output-snr` and `am-bandwidth`.
+
+**`formulaIds` tagging note:** Several exercises use a formula as a key step but do not list it in `formulaIds`. These are flagged per formula as "(untagged key step)". The `fdm-spacing` formula is consistently absent from all four multiplexing exercises that require it — a uniform tagging gap flagged for Pass C.
+
+---
+
+### 6B.1 Conventional AM formulas (§6.2)
+
+#### `am-signal` — x_AM(t) = [A_c + m(t)]cos(2πf_c t)
+
+**Weight: 17** ← highest in the AM chapter; tested in all six exam sessions
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-1` | Proodos Απρίλιος 2026 · ΘΕΜΑ 1 | Compute μ = Am/Ac from given amplitudes; signal form is the starting model |
+| `proodos26-3` | Proodos Απρίλιος 2026 · ΘΕΜΑ 3 | Explain what m=1 means; x_AM = [Ac+m]cos(2πfct) is the core model |
+| `proodos26-5` | Proodos Απρίλιος 2026 · ΘΕΜΑ 5 | Square-law modulator circuit; BPF-filtered output produces x_AM form |
+| `proodos26-9` | Proodos Απρίλιος 2026 · ΘΕΜΑ 9 | Draw AM signal in time/frequency for fc=500Hz, fm=1Hz; x_AM written explicitly |
+| `sept25-th1-1` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.1 | Explain AM operation, write signal equation, show sidebands |
+| `sept25-th1-2` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.2 | Compute μ, Pc, P_AM from Ac=10V, Am=5V — signal form is the starting model |
+| `sept25-th1-5` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.5 | Draw AM spectrum of m(t)=cos(2π·1kHz·t)+0.5cos(2π·2kHz·t) on fc=100kHz |
+| `jan26-th1-1` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.1 | T/F: [Ac·cos(2πt)]cos(2πfct) → ΛΑΘΟΣ (DSB-SC); solution states correct am-signal form [Ac+m]cos |
+| `jan26-th2-7` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 2.7 | Draw AM in time and frequency for c=cos(20πt), m=2sin(2πt) |
+| `pa25-th1-1` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 1.1 | T/F: [Ac·cos(2πt)]cos(2πfct) → ΛΑΘΟΣ (DSB-SC); correct am-signal form is the answer |
+| `pa25-th2-2` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 2.2 | Draw AM signal cos(8πt) with m=2sin(2πt); write x_AM and identify overmodulation |
+| `pa25-th2-5` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 2.5 | x(t)=Σncos(2πnt) as message: draw AM spectrum, count harmonics (1 carrier + 2×8 sidebands) |
+| `pb25-th1-1` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 1.1 | T/F: [Ac+cos(2πt)]cos(2πfct) → ΣΩΣΤΟ; direct test of conventional AM formula |
+| `pb25-th2-2` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 2.2 | Draw AM signal cos(8πt) with m=2sin(2πt) (repeat-group with pa25-th2-2) |
+| `pb25-th2-5` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 2.5 | x=Σ(10-n)cos(2πnt), n=1..6: draw baseband spectrum, count AM harmonics |
+| `pb25-th4-nonlinear` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 4 | Nonlinear y=x²(t) modulator: BPF output → z(t)=m(t)cos(2πfct); am-signal is the target form |
+| `jun25-th2` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 2 | Sub-problem 1: x_k(t)=[Ac+k(t)]cos(2πf2t) (conventional AM); write signal form + spectrum |
+
+---
+
+#### `am-mu` — μ = \|min m(t)\|/A_c ; single-tone: μ = A_m/A_c
+
+**Weight: 8**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-1` | Proodos Απρίλιος 2026 · ΘΕΜΑ 1 | Direct: μ = Am/Ac = 5/10 = 0.5 |
+| `proodos26-2` | Proodos Απρίλιος 2026 · ΘΕΜΑ 2 | μ=1 used to evaluate P_total and derive η |
+| `proodos26-3` | Proodos Απρίλιος 2026 · ΘΕΜΑ 3 | Explain what m=1 means: envelope just touches zero, maximum efficiency |
+| `sept25-th1-2` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.2 | μ = Am/Ac = 5/10 = 0.5 (same structure as proodos26-1) |
+| `sept25-th1-4` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.4 | Condition μ ≤ 1 for correct envelope-detector operation |
+| `pa25-th2-2` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 2.2 | μ = Am/Ac = 2/1 = 2 > 1 → overmodulation (tagged) |
+| `pb25-th2-2` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 2.2 | μ = 2 > 1 → overmodulation, phase reversals visible in waveform (untagged key step) |
+| `jan26-th2-7` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 2.7 | μ = 2/1 = 2 > 1 → overmodulation identified in time-domain drawing (untagged key step) |
+
+---
+
+#### `am-power` — P_total = (A_c²/2)(1 + μ²/2) ; P_AM = A_c²/2 + P_m/2 (general)
+
+**Weight: 4**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-2` | Proodos Απρίλιος 2026 · ΘΕΜΑ 2 | Direct: P_AM = Pc(1+m²/2) = 100·1.5 = 150 W |
+| `proodos26-4` | Proodos Απρίλιος 2026 · ΘΕΜΑ 4 | Derive η_max = 1/3 via P_total formula |
+| `sept25-th1-2` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.2 | P_AM = Ac²/2 + Am²/4 = 50 + 6.25 = 56.25 W |
+| `sept25-th1-3` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.3 | AM vs DSB-SC vs SSB power comparison: P_AM includes carrier overhead (≤1/3 efficiency) |
+
+---
+
+#### `am-eta` — η = P_m/(A_c² + P_m) = μ²/(2+μ²) ≤ 1/3
+
+**Weight: 3**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-2` | Proodos Απρίλιος 2026 · ΘΕΜΑ 2 | η_max context: m=1 maximises sideband power, η = 1/3 at maximum |
+| `proodos26-4` | Proodos Απρίλιος 2026 · ΘΕΜΑ 4 | Direct: maximize η, find η_max = μ²/(2+μ²)\|_{μ=1} = 1/3 ≈ 33.3% |
+| `sept25-th1-3` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.3 | AM power efficiency ≤ 33% in comparison table (untagged key step — only `am-power` and `dsb-sc-power` tagged) |
+
+---
+
+#### `am-spectrum` — X_AM(f) = (A_c/2)[δ(f∓f_c)] + ½[M(f∓f_c)]
+
+**Weight: 4**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-9` | Proodos Απρίλιος 2026 · ΘΕΜΑ 9 | Draw spectrum: carrier impulse + USB + LSB for specific fc, fm |
+| `sept25-th1-1` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.1 | Derive and explain AM spectrum, show sideband positions |
+| `pa25-th2-5` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 2.5 | Count harmonics in AM spectrum: 1 carrier + 2×n sidebands per side |
+| `jan26-th2-7` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 2.7 | Draw AM spectrum for c=cos(20πt), m=2sin(2πt) |
+
+---
+
+#### `am-bandwidth` — B_AM = B_DSB-SC = 2W ; B_SSB = W
+
+**Weight: 3**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th1-1` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.1 | State B_AM = 2W when explaining spectrum structure |
+| `sept25-th1-3` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.3 | Bandwidth comparison: AM=2W, DSB-SC=2W, SSB=W — core deliverable of the problem |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | FM-vs-AM comparison: AM bandwidth = 2W as baseline against Carson rule for FM |
+
+---
+
+### 6B.2 DSB-SC formulas (§6.3)
+
+#### `dsb-sc-signal` — x_DSB(t) = A_c·m(t)·cos(2πf_c t)
+
+**Weight: 5**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-7` | Proodos Απρίλιος 2026 · ΘΕΜΑ 7 | Phase-error coherent demod: x_DSB × cos(2πfct+φ) → m(t)cos(φ) after LPF |
+| `jan26-th1-1` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.1 | T/F: [Ac·cos(2πt)]cos(2πfct) IS the DSB-SC form — distinguish from conventional AM |
+| `jan26-th2-8` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 2.8 | Draw DSB-SC spectrum for m=2sinc(2Wt): x_DSB=m·cos(2πfct), no carrier impulse |
+| `pb25-th3-mux` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 3 | DSB-SC multiplexing of sinc(Wt)+Π(Wt): write x_DSB forms, draw spectra, compute non-overlap |
+| `jun25-th2` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 2 | Sub-problem 1: x_m(t)=m(t)cos(2πf1t) (DSB-SC, no carrier); signal form and spectrum |
+
+---
+
+#### `dsb-sc-power` — P_DSB = A_c²·P_m/2 (general) ; P_DSB = A_m²/4 (single-tone)
+
+**Weight: 1**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th1-3` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.3 | DSB-SC has η=100% (P=Ac²Pm/2, no carrier power overhead) in comparison table |
+
+---
+
+#### DSB-SC phase-error demod output — no dedicated formulaId; result: m(t)cos(φ)
+
+**Weight: 1**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-7` | Proodos Απρίλιος 2026 · ΘΕΜΑ 7 | Core of problem: coherent demod with phase error φ → output amplitude scales by cos(φ) |
+
+**Pass C note:** No dedicated `formulaId` in `formulas.tsx` for this result. Suggest creating `dsb-sc-phase-error`. Exam weight 1, but it is the primary exam trap for DSB-SC demodulation.
+
+---
+
+### 6B.3 SSB formulas (§6.4)
+
+#### `ssb-signal` — x_USB = A_c·m(t)·cos(2πf_c t) − A_c·m̂(t)·sin(2πf_c t)
+
+**Weight: 6**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-11` | Proodos Απρίλιος 2026 · ΘΕΜΑ 11 | Draw USSB spectra for sinc(Wt) and sinc²(Wt) — USSB keeps upper sideband only |
+| `proodos26-12` | Proodos Απρίλιος 2026 · ΘΕΜΑ 12 | USSB non-overlap condition: B_USSB=W per signal → f1 ≥ W/2, f2 ≥ max(W, f1+W/2) |
+| `proodos26-13` | Proodos Απρίλιος 2026 · ΘΕΜΑ 13 | Draw G(f) of multiplexed USSB signal |
+| `pb25-th2-3` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 2.3 | Draw AM-LSSB spectrum for m=2sinc(2Wt): LSB only below fc |
+| `pa25-th3-mux` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 3 | USSB multiplexing of sinc(2Wt)+Π(4Wt): spectra + non-overlap + G(f) |
+| `jan26-th3-mux` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 3.11–12 | USSB multiplexing of sinc(2Wt)+Π(4Wt) on f1=100kHz, f2=1MHz: spectra + G(f) |
+
+---
+
+#### `ssb-power` — P_SSB = A_c²·P_m (no 1/2 factor compared to P_DSB)
+
+**Weight: 0** — Not required as a key formula step in any past-exam problem. Pass C: add must-learn callout on theory page.
+
+---
+
+### 6B.4 VSB and FDM formulas (§6.5–§6.6)
+
+#### `vsb-signal`, `vsb-nyquist-symmetry`, `vsb-bandwidth` — each
+
+**Weight: 0** — No past-exam exercise requires VSB formulas. Exam weight ~2% (noted on vsb theory page). Must-learn callout needed; low Pass C priority.
+
+---
+
+#### `fdm-spacing` — Δf ≥ 2W (DSB-SC/AM), Δf ≥ W (SSB), Δf ≥ W+W_vestige (VSB)
+
+**Weight: 4**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-12` | Proodos Απρίλιος 2026 · ΘΕΜΑ 12 | USSB non-overlap: f1 ≥ W/2, f2 ≥ max(W, f1+W/2); derived from B_SSB=W per channel |
+| `pb25-th3-mux` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 3 | DSB-SC non-overlap: f2−W ≥ f1+W/2 → f2 ≥ f1+3W/2 |
+| `pa25-th3-mux` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 3 | USSB non-overlap: f2 ≥ f1+W |
+| `jun25-th2` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 2 | Sub-problem 2: find n for non-overlap of DSB-SC and AM channels |
+
+**Tagging gap (HIGH priority for Pass C):** `fdm-spacing` is absent from the `formulaIds` of all four exercises above. The non-overlap condition is the central deliverable of each multiplexing problem.
+
+---
+
+### 6B.5 Modulator/Demodulator formulas (§6.7)
+
+#### `nonlinear-modulator-fc` — f_c > 3W
+
+**Weight: 2**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-5` | Proodos Απρίλιος 2026 · ΘΕΜΑ 5 | Square-law modulator circuit: fc>3W ensures AM term separable from baseband with BPF |
+| `pb25-th4-nonlinear` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 4 | Nonlinear y=x²(t) modulator with fc>>W — this is the operating design condition |
+
+---
+
+#### `envelope-detector-rc` — 1/f_c ≪ RC ≪ 1/W
+
+**Weight: 1**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th1-4` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 1.4 | "Describe envelope detector and state basic prerequisites" — RC time-constant condition is the primary formula answer |
+
+---
+
+#### `am-output-snr` — (SNR)_out,AM = η·SNR_ref = (μ²P_m/(2+μ²P_m))·SNR_ref
+
+**Weight: 1** (cross-topic; also counted in §2B from the noise side)
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `sept25-th2-7` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.7 | FM-vs-AM comparison: AM output SNR = η·SNR_ref is the AM baseline; G_FM/AM = 9β² expresses the FM advantage over it |
+
+---
+
+### 6B.6 Formulaid tagging gaps discovered during Pass B
+
+| Formula | Exercises where untagged but key step | Suggested fix for Pass C |
+| --- | --- | --- |
+| `am-mu` | `pb25-th2-2` (μ=2→overmod), `jan26-th2-7` (same) | Add `am-mu` to both `formulaIds` arrays |
+| `am-eta` | `sept25-th1-3` (η≤33% in comparison table) | Add `am-eta` to `formulaIds` |
+| `fdm-spacing` | `proodos26-12`, `pb25-th3-mux`, `pa25-th3-mux`, `jun25-th2` | Add `fdm-spacing` to all four |
+| DSB-SC phase-error demod | `proodos26-7` (only exercise; output = m(t)cos(φ)) | Create `dsb-sc-phase-error` formulaId in `formulas.tsx` |
+
+---
+
+### 6B.7 Ranked summary — AM chapter Pass B
+
+| Rank | Formula | formulaId | Weight | Pass C priority |
+| --- | --- | --- | --- | --- |
+| 1 | x_AM = [Ac+m]cos(2πfct) | `am-signal` | **17** | HIGH — tested in all six exam sessions; callout universally missing |
+| 2 | μ = Am/Ac (modulation index) | `am-mu` | **8** | HIGH — in nearly every conventional AM exercise; 2 exercises untagged |
+| 3 | x_USB/LSB via Hilbert | `ssb-signal` | **6** | HIGH — tested in every exam session with SSB content |
+| 4 | x_DSB = Ac·m·cos(2πfct) | `dsb-sc-signal` | **5** | HIGH — fundamental DSB-SC form; no carrier term |
+| 5 | X_AM(f) = (Ac/2)δ(f∓fc) + ½M(f∓fc) | `am-spectrum` | **4** | HIGH — drawing AM spectrum is a recurrent pattern |
+| 5 | P_AM = (Ac²/2)(1+μ²/2) | `am-power` | **4** | HIGH — repeated power computation |
+| 5 | Δf ≥ 2W (DSB), Δf ≥ W (SSB) | `fdm-spacing` | **4** | HIGH — untagged in all 4 multiplexing exercises; must-learn callout missing |
+| 8 | B_AM = 2W; B_SSB = W | `am-bandwidth` | **3** | HIGH — universal bandwidth reference |
+| 8 | η = μ²/(2+μ²) ≤ 1/3 | `am-eta` | **3** | HIGH — the AM efficiency bound is a signature exam fact |
+| 10 | fc > 3W (square-law modulator) | `nonlinear-modulator-fc` | **2** | MEDIUM — dedicated modulator problems |
+| 11 | P_DSB = Ac²Pm/2 | `dsb-sc-power` | **1** | MEDIUM — comparison table |
+| 11 | 1/fc ≪ RC ≪ 1/W (envelope detector) | `envelope-detector-rc` | **1** | MEDIUM — directly tested Sept 2025 |
+| 11 | (SNR)_out,AM = η·SNR_ref | `am-output-snr` | **1** | MEDIUM — cross-topic; primary homes: am/mod-demod + noise/snr |
+| 11 | DSB-SC phase-error: output = m(t)cos(φ) | — (no id) | **1** | MEDIUM — primary AM demodulator trap; needs new formulaId |
+| 15 | P_SSB = Ac²Pm | `ssb-power` | **0** | LOWER — must-learn callout needed; zero direct exam weight |
+| 15 | VSB formulas (vsb-signal, vsb-nyquist-symmetry, vsb-bandwidth) | various | **0 each** | LOWER — exam weight ~2%; must-learn but low priority |
+
+---
+
 ## 7. Pass A inventory — FOUNDATIONS supplemental (signal-transformations; filters) and RANDOMNESS/psd
 
 **Scope.** Three pages deferred by the batch-1 pass (flag **F10**):
@@ -1586,6 +1861,7 @@ pattern from §7.4) — placement-(b) concept does not apply to them.
 ## 10. Placeholders for later passes (do not delete — structure for the whole sub-goal)
 
 - **Pass A — COMPLETE.** All chapters inventoried: Noise §2, Foundations §3, Randomness/why §4, Modulation bridge §5, AM §6, Foundations-supplemental + PSD §7, FM + remaining-randomness §8. Proceed to Pass B.
-- **Pass B — NOISE weighting DONE** (`mustlearn-passb-noise-formulas`) — results in §2B. Highest-weight: `white-noise-psd` + bandlimited P_N = N₀B (weight 5 each), `lti-output-psd` + `wiener-khinchin` (weight 3 each). Zero-weight: `bandpass-noise-r`, `noise-figure`, `fm-noise-output-psd`. Remaining chapters (AM, FM, foundations, randomness) — Pass B weighting TODO.
+- **Pass B — NOISE weighting DONE** (`mustlearn-passb-noise-formulas`) — results in §2B. Highest-weight: `white-noise-psd` + bandlimited P_N = N₀B (weight 5 each), `lti-output-psd` + `wiener-khinchin` (weight 3 each). Zero-weight: `bandpass-noise-r`, `noise-figure`, `fm-noise-output-psd`.
+- **Pass B — AM weighting DONE** (`mustlearn-passb-am-formulas`) — results in §6B. Highest-weight: `am-signal` (17), `am-mu` (8), `ssb-signal` (6), `dsb-sc-signal` (5), `am-spectrum`/`am-power`/`fdm-spacing` (4 each). Key finding: `fdm-spacing` untagged in all 4 multiplexing exercises; `dsb-sc-phase-error` needs a new formulaId. Zero-weight: `ssb-power`, all VSB formulas. Remaining chapters (FM, foundations, randomness) — Pass B weighting TODO.
 - **Pass C — apply**: annotate placements (a) theory pages, (b) problems, (c) `/formulas`,
   driven by a single source of truth in `formulas.tsx`/`formulaIds`.
