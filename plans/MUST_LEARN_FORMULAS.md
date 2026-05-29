@@ -53,7 +53,8 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | A | **Randomness/psd** — theory + inline ExamProblems | `mustlearn-inventory-foundations-supplemental` | **DONE** — §7 below |
 | A | **Modulation bridge** — theory (1 page) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §5 below |
 | A | **AM** — theory (7 pages) + problems (~20) | `mustlearn-inventory-am` | **DONE** — §6 below |
-| A | Remaining randomness pages (random-variables, random-processes, stationarity) / FM | per-chapter | psd → §7; others TODO |
+| A | **FM** chapter (5 pages) | `mustlearn-inventory-fm` | **DONE** — §8 below |
+| A | **Remaining randomness** (random-variables, random-processes, stationarity) | `mustlearn-inventory-fm` | **DONE** — §8.6 below |
 | B | weighting | per-formula | TODO |
 | C | apply | per-placement | TODO |
 
@@ -986,7 +987,266 @@ or `filters`-specific formulaIds. The δ(t−T₁) time-shift problem (`jun25-th
 
 ---
 
-## 8. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
+## 8. Pass A inventory — FM chapter (§8.1–§8.5) + remaining randomness pages (§8.6)
+
+**Scope.** Five FM theory pages in `app/(content)/fm/`: `idea`, `pm`, `bessel`, `carson`,
+`in-noise`. Plus 3 remaining randomness pages confirmed to exist:
+`randomness/random-variables`, `randomness/random-processes`, `randomness/stationarity`.
+All on/off-sheet calls grounded in §1 (zero FM and zero random-process formulas on the
+sheet). All FM formulaIds confirmed `inTypology: false` in `content/practice/formulas.tsx`.
+This step did **not** re-audit `slides/formulas.pdf`.
+
+**F12 verification.** The formulaId for Carson's rule in `formulas.tsx` is `carson` (id
+`fm-bandwidth-carson` does not exist). Confirmed `inTypology: false` ✓. **6** `topic:'fm'`
+problems reference it: `sept25-th2-7`, `sept25-th2-8`, `sept25-th2-9`, `jan26-th1-5`,
+`jan26-th4-13-16`, `jun25-th3`. `sose-coaching.tsx` ~L506 inverse error confirmed:
+«Ο τύπος του Carson είναι στο τυπολόγιο» — live, DO NOT fix here (Pass C).
+
+### Headline finding — FM chapter
+
+> **The entire FM chapter is must-learn.** Not a single FM-specific formula taught on the
+> 5 FM theory pages appears on the τυπολόγιο (consistent with §1). **One critical nuance:**
+> J_n(β) **VALUES** for specific (n, β) pairs ARE on the sheet (Bessel table p.3,
+> `bessel-table`, `inTypology: true`). The **formulas derived from Bessel** (Jacobi-Anger
+> identity, Bessel-sidebands rule, energy identity `Σ J_n²=1`, Carson bandwidth, NBFM
+> approximation) are NOT on the sheet and are must-learn.
+
+### Placement-(a) status — FM chapter (two inverse-error pages discovered)
+
+The FM chapter has the **most severe inverse-error problem found in any chapter so far**.
+Two theory pages label must-learn FM formulas as "✓ Στο τυπολόγιο" (flags F14, F15 below).
+Contrast: `fm/carson` **correctly** labels Carson as must-learn (line 68: "⚠️ Πρέπει να
+θυμάσαι — δεν είναι μέσα στο επίσημο τυπολόγιο"); `fm/in-noise` **correctly** labels
+`fm-gain-am` as must-learn (line 574). The same Carson formula therefore has **three**
+inconsistent treatments across pages — correct on `fm/carson`, inverse-error on `fm/pm`
+(F15), inverse-error in `sose-coaching` (F12).
+
+### 8.1 `fm/idea` — slides 1-18, 26-34 (SE_session15_16_16_FM.pdf)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `f_i(t) = f_c + K_f m(t)` (instantaneous frequency) | `fm-instantaneous-freq` | §2 | slide 6 | no FM formula on sheet |
+| `x_FM = A_c cos[2πf_c t + 2πK_f ∫m(τ)dτ]` (general FM signal) | `fm-signal` | §3 | slide 8 | not on sheet — **⚠️ F14: page labels "✓ Στο τυπολόγιο" (line 170)** |
+| `β_f = Δf_max/W = K_f max\|m\|/W` (FM modulation index, general) | `fm-beta` | §5 | slide 9 | not on sheet — **⚠️ F14: page labels "✓ Στο τυπολόγιο" (line 221)** |
+| Single-tone: `x_FM = A_c cos[2πf_c t + β_f sin(2πf_m t)]` | `fm-single-tone` | §5α | (derived) | not on sheet — **⚠️ F14: page labels "✓ Στο τυπολόγιο" (line 248)** |
+| PM/FM duality: `K_p = 2πK_f` (insert integrator before PM → FM output) | — | §4 | slides 12-13 | not on sheet |
+| `P_x^FM = A_c²/2` (constant envelope, power independent of β) | `fm-power` | §6α | slide 11 | not on sheet |
+| NBFM (β≪1): `x_NBFM ≈ A_c cos(2πf_c t) − A_c φ(t) sin(2πf_c t)` | — | §7α | slides 29-31 | not on sheet |
+| NBFM single-tone LSB sign-flip: `A_c cos(ω_c t) + (A_c β_f/2)cos(ω_+t) − (A_c β_f/2)cos(ω_−t)` | — | §7β | slide 33 | not on sheet |
+| `G_FM/AM = 9β²` (FM gain over AM, μ=1, same P_T) | `fm-gain-am` | ThinkingPattern | (recap from `fm/in-noise`) | not on sheet — **⚠️ F14: ThinkingPattern ~line 540 calls it "στο τυπολόγιο" (contradicts `fm/in-noise` own labeling)** |
+
+**On-sheet used in derivations:** product-to-sum `cos a cos b = ½[cos(a-b)+cos(a+b)]`,
+`cos²x = ½(1+cos 2x)`, modulation theorem — all §1 p.1, no must-learn callout needed.
+
+---
+
+### 8.2 `fm/pm` — slides 4-13, 18, 26, 29-34
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `x_PM = A_c cos[2πf_c t + K_p m(t)]` (PM signal) | `pm-signal` | §1 | slide 7 | not on sheet |
+| `β_p = K_p max\|m\|` (PM modulation index, in radians, no W denominator) | `fm-beta` | §2 | slide 7 | not on sheet — **⚠️ F15: page labels "✓ Στο τυπολόγιο (μαζί με β_f)" (line 94)** |
+| `f_i^PM(t) = f_c + (K_p/2π)(dm/dt)` (PM inst. freq follows dm/dt, not m) | — | §3 | (derived from def) | not on sheet |
+| `K_p = 2πK_f` (duality constant; differentiator before FM = PM) | — | §5 | slides 12-13 | not on sheet |
+| `P_x^PM = A_c²/2` (same constant envelope as FM) | `fm-power` | §6 | slide 11 | not on sheet |
+| Carson `B ≅ 2W(β+1)` (ισχύει and for PM, β = β_p) | `carson` | §7 | slide 26 | not on sheet — **⚠️ F15: page labels "✓ Στο τυπολόγιο (στο /fm/carson)" (line 222)** |
+| Single-tone PM: `Δf_PM = K_p A_m f_m` (freq deviation ∝ f_m — vs FM where Δf = K_f A_m) | — | §3/§13 | (derived) | not on sheet |
+| NBFM/NBPM spectrum: `X_NB(f) ≈ (A_c/2)δ(f∓f_c) + (jA_c/2)Φ(f-f_c) − (jA_c/2)Φ(f+f_c)` | — | §9 | slides 30-31 | not on sheet |
+
+**Key distinctions (must-know):** PM phase = β_p cos(2πf_m t) for single-tone; FM phase =
+β_f sin(2πf_m t). The cos/sin 90° shift distinguishes them on both time-domain and phasor
+diagrams. PM Δf depends on f_m; FM Δf does not.
+
+---
+
+### 8.3 `fm/bessel` — slides 19-25, 29-34, 35-47, 48-50
+
+**Bessel nuance:** J_n(β) VALUES are on the sheet (p.3 table, `bessel-table`,
+`inTypology: true`, given in exam). The formulas derived from Bessel below are NOT on the sheet.
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| Jacobi-Anger: `e^{jβ sinθ} = Σ_{n=-∞}^{∞} J_n(β) e^{jnθ}` | `fm-bessel-expansion` | §5 | slides 36/44 | not on sheet (table gives VALUES; the FS-expansion identity is not) |
+| `x_FM = A_c Σ J_n(β_f) cos[2π(f_c + n f_m)t]` (Bessel sidebands) | `fm-bessel-sidebands` | §6 | slide 44 | not on sheet |
+| `X_FM(f) = (A_c/2) Σ J_n(β_f)[δ(f-f_c-nf_m) + δ(f+f_c+nf_m)]` | (within `fm-bessel-sidebands`) | §6 | slide 44 | not on sheet |
+| Bessel symmetry: `J_{-n}(β) = (-1)^n J_n(β)` | `fm-bessel-property` | §7.1 | slide 45 | not on sheet |
+| Energy identity: `Σ_{n} J_n²(β) = 1` → `P_FM = A_c²/2` (ανεξ. β) | `fm-bessel-property` | §7.3 | slide 47 | not on sheet |
+| Significant sidebands: `N = 2⌊β⌋ + 3` (slide 46, single-tone FM) | — | §9 | slide 46 | not on sheet |
+| J_0 roots (carrier null pattern): β ≈ 2.405, 5.520, 8.654 | — | §8 | slide 37 | table gives values; the J_0=0 identification must-know |
+
+**Placement-(a) status:** No inverse errors. `fm/bessel` correctly identifies the Bessel
+table as on-sheet and does NOT label the derived formulas as "✓ Στο τυπολόγιο".
+
+---
+
+### 8.4 `fm/carson` — slides 22-26, 27-28, 31, 44-46
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `B ≅ 2W(β+1) = 2(Δf + W)` (Carson's rule, ~98% energy) | `carson` | §1 | slide 26 | not on sheet — **correctly labeled "⚠️ Πρέπει να θυμάσαι" (line 68)** |
+| NBFM limit β→0: `B → 2W` (same as AM bandwidth) | — | §3 | slide 31 | limit of Carson |
+| WBFM limit β→∞: `B → 2Δf` (deviation-dominated) | — | §4 | (derived from Carson) | limit of Carson |
+| Single-tone PM: `N = 2⌊K_p α⌋ + 3`, FM: `N = 2⌊K_f α/f_m⌋ + 3` (slide 46 explicit) | — | §5-§6 | slide 46 | not on sheet |
+| W = one-sided bandwidth of m(t) (key operation for non-single-tone: Fourier → read support) | — | §7 (Άσκηση 2) | slides 27-28 | operational definition/procedure |
+
+**Placement-(a) status:** `fm/carson` correctly labels Carson as off-sheet. It is the
+reference-correct page that F15 (`fm/pm`) contradicts.
+
+---
+
+### 8.5 `fm/in-noise` — FM demodulator noise analysis
+
+(Hardware: slides 65-66 of SE_session15_16_16_FM.pdf. Quantitative noise analysis: standard bibliography (Haykin/Lathi); no dedicated in-noise slides this year per page SourceDoc note.)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `S_{v_n}(f) = N_0 f²/A_c²` (triangular noise PSD after FM discriminator) | `fm-noise-output-psd` | §3d | (derivation: discriminator ×j2πf → PSD×f²) | not on sheet |
+| `P_n,out = N_0 W³/(3 A_c²)` (output noise power, LPF at ±W) | — (no formulaId) | §4 | (∫₀^W N_0 f²/A_c² df = N_0 W³/(3A_c²)) | not on sheet; the integral `∫f²=W³/3` is also not on sheet (p.3 lists `∫cos`, `∫sin`, `∫eˣ`, `∫(a+bx)ⁿ`, etc. — no `∫f²`) |
+| `P_s,out = (Δf)²/2` (single-tone: discriminator output is K_f m(t), power = (K_f A_m)²/2 = (Δf)²/2) | — | §4 | (discriminator definition) | not on sheet |
+| `SNR_ref = A_c²/(2 N_0 W)` (universal reference SNR baseline) | `fm-snr-ref` | §4 | (ορισμός) | not on sheet |
+| `SNR_out,FM = 3β² · SNR_ref` (single-tone FM output SNR, above threshold) | `fm-snr-out` | §4 | (παραγωγή) | not on sheet — **correctly labeled "πρέπει να θυμάσαι"** |
+| `G_FM/AM = 9β²` (FM gain over AM, μ=1, same P_T, ratio `3β²/(1/3)`) | `fm-gain-am` | §5 | (table) | not on sheet — **correctly labeled "πρέπει να θυμάσαι — δεν μέσα στο επίσημο τυπολόγιο" (line 574)** |
+| Threshold: ~10 dB SNR_in (small-noise approx breaks → clicks → exponential collapse) | `fm-threshold` | §6 | (bibliography) | conceptual bound |
+| Capture effect: ≥6 dB → total capture (FM only, not AM) | — | §7 | (bibliography) | not a printable formula |
+| Pre-emphasis τ: 50 μs (Europe) / 75 μs (US) | — | §8 | (bibliography) | practical standard |
+
+**`SNR_out,FM = 3β²` scope note:** valid for **single-tone** message **above threshold**.
+For general m(t), the numerator becomes `3 K_f² P_m / (N_0 W³) · (A_c²/2)`.
+
+**Note on F14/F15/F12 consistency:** `fm/in-noise` correctly labels `fm-gain-am` must-learn.
+`fm/idea` incorrectly labels it "στο τυπολόγιο" (F14). Pass C should fix F14 to match the
+correct behavior already present on `fm/in-noise`.
+
+---
+
+### 8.6 Remaining randomness pages
+
+#### 8.6.1 `randomness/random-variables` — slides 8, 10, 14-19 (SE_session9_random1_upload.pdf)
+
+**Headline: prerequisite recap page (examWeight: 1%). Zero new must-learn entries specific to K21.**
+
+This page is explicitly a "γρήγορος οδηγός" of upstream probability course material. Its
+formulas are background for K21 (used constantly in ΤΔ calculations), but none has a
+standalone K21 formulaId because they belong to the prerequisite course.
+
+| Formula/definition | formulaId | K21 note |
+| --- | --- | --- |
+| `E[X] = ∫x f_X(x) dx` (mean) | (absorbed into `random-mean` at RP level) | Primary K21 home: `randomness/random-processes` |
+| `σ_X² = E[X²] − μ_X²`, `E[X²] = μ_X² + σ_X²` | — | No dedicated K21 formulaId |
+| Linearity: `E[aX+bY] = aE[X]+bE[Y]` | — | prerequisite; used throughout ΤΔ |
+| LOTUS: `E[g(X)] = ∫g(x) f_X(x) dx` | — | Key tool for computing m_X(t), R_X — prerequisite |
+| Gaussian PDF: `f_N(x)=(1/σ√2π)e^{-x²/2σ²}` | — | primary home also `noise/sources §3`; no K21 formulaId |
+
+**Conclusion:** Zero new must-learn formulaIds. F10 already resolved for this page in §7; no
+further flags.
+
+---
+
+#### 8.6.2 `randomness/random-processes` — slides 3-19
+
+**Headline: ALL must-learn** (entire chapter off-sheet, consistent with §1).
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| `m_X(t) = E[X(t)] = ∫a f_{X(t)}(a) da` (mean function) | `random-mean` | §5 | slide 10 | no ΤΔ formula on sheet |
+| `R_X(t_i, t_j) = E[X(t_i) X(t_j)]` (autocorrelation / ΣΑΣ) | `random-autocorr` | §6 | slide 11 | not on sheet |
+| `C_X(t_i, t_j) = R_X(t_i, t_j) − m_X(t_i) m_X(t_j)` (autocovariance / ΑΣΔ) | (within `random-autocorr`) | §7 | slide 12 | not on sheet |
+| `R_{X,Y}(t_1, t_2) = E[X(t_1) Y(t_2)]` (cross-correlation / ΕΣΑ) | `random-cross` | §8 | slide 12 | not on sheet |
+| `C_{X,Y}(t_1, t_2) = R_{X,Y} − m_X(t_1) m_Y(t_2)` (cross-covariance / ΕΣΔ) | (within `random-cross`) | §8 | slide 13 | not on sheet |
+| Orthogonal: `R_{X,Y}(t_1,t_2)=0 ∀t_1,t_2` (definition) | — | §8α | slide 13 | definition |
+| Uncorrelated: `C_{X,Y}(t_1,t_2)=0 ∀t_1,t_2` (definition; ≠ orthogonal unless zero-mean) | — | §8α | slide 13 | definition |
+| Random-phase cosine (WSS edition): `R_X(τ) = (A²/2)cos(2πf₀τ)` for `φ~U[0,2π)` | `random-phase-cosine` | §10 | (Άσκηση 2 preview) | not on sheet |
+
+**Primary Άσκηση 1 computed results (slides 14-19):** For `X(t)=A cos(2πf_1 t+φ)`,
+`φ~U[0,π]`: `m_X(t) = -(2A/π)sin(2πf_1 t)` (not WSS); `R_X(t_1,t_2) = (A²/2)cos(2πf_1(t_1-t_2))`
+(mόνο διαφορά). For `Y(t)=α cos(2πf_2 t)`, `α~U[0,2]` independent of φ: `R_{X,Y} = m_X(t_1)m_Y(t_2)`,
+`C_{X,Y}=0` (ασυσχέτιστες, not ορθογώνιες). These specific values are drill-targets, not
+standalone must-learn formulaIds.
+
+**Placement-(a) status:** No standardized must-learn callout. Appropriate (all ΤΔ formulas
+are obviously off-sheet; no "✓ Στο τυπολόγιο" inverse errors found).
+
+---
+
+#### 8.6.3 `randomness/stationarity` — slides 20-35
+
+| Must-learn formula / definition | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| WSS condition 1: `m_X(t) = m_X = const ∀t` | `wss` | §3 | slide 21 | not on sheet |
+| WSS condition 2: `R_X(t_i, t_j) = R_X(τ), τ = t_i−t_j` | `wss` | §3 | slide 21 | not on sheet |
+| Autocovariance (WSS): `C_X(τ) = R_X(τ) − m_X²` | `wss-rx-properties` | §3α | slide 22 | not on sheet |
+| Power from ΣΑΣ: `P_X = R_X(0) = E[X²(t)]` | `wss-rx-properties` | §5 | (direct consequence) | not on sheet |
+| `\|R_X(τ)\| ≤ R_X(0)` (maximum at τ=0) | `wss-rx-properties` | §5 | slides 21 area | not on sheet |
+| `R_X(−τ) = R_X(τ)` (even symmetry of WSS ΣΑΣ) | `wss-rx-properties` | §5 | — | not on sheet |
+| Decomposition: `R_X(τ) = m_X² + R_N(τ)` (DC + zero-mean parts) | — | §7 | slide 27 | not on sheet |
+| Asymptotic DC recovery: `m_X = ±√(lim_{\|τ\|→∞} R_X(τ))` | — | §7α | (derived) | not on sheet |
+| Ergodicity (mean): `E[x_i(t)] = E[X(t)] = m_X ∀i` | `ergodicity` | §10 | slide 29 | not on sheet |
+| Ergodicity (ΣΑΣ): `R_{x_i}(τ) = R_X(τ) ∀i` | `ergodicity` | §11 | slide 30 | not on sheet |
+| Time-average definition: `E[x_i(t)] ≜ lim_{T→∞} (1/T) ∫_{-T/2}^{T/2} x_i(t) dt` | — | §9 | slide 28 | not on sheet |
+
+**Canonical results:** `Z(t)=A cos(2πft+θ), θ~U[0,2π)` → WSS with `R_Z(τ)=(A²/2)cos(2πfτ)`,
+`m_Z=0`, ergodic (Άσκηση 2+5). For Gaussian ΤΔ: SSS ⟺ WSS (no distinction needed in K21).
+
+**Operational note (slide 30 verbatim):** «Στα ΣΕ, οι ΤΔ υπό μελέτη θεωρούνται (συνήθως)
+εργοδικές ως προς τη ΣΑΣ.» — all noise processes in K21 exam problems are assumed ergodic.
+
+**Placement-(a) status:** No standardized must-learn callout. No "✓ Στο τυπολόγιο" inverse
+errors. Clean placement-(a) gap for Pass C (lower priority than AM/FM/noise).
+
+---
+
+### 8.7 FM problems — placement-(b) verification (9 problems)
+
+All `topic:'fm'` formulaIds confirmed `inTypology: false` — consistent with §1. No `inTypology`
+inconsistencies found across the 9 problems.
+
+| Problem | FM (off-sheet) formulaIds | Cross-check result |
+| --- | --- | --- |
+| `sept25-th2-6` | `fm-signal`, `fm-instantaneous-freq`, `fm-beta` | All off-sheet ✓ |
+| `sept25-th2-7` | `fm-snr-out`, `fm-gain-am`, `carson`, `am-bandwidth`, `am-output-snr` | All off-sheet ✓ |
+| `sept25-th2-8` | `fm-beta`, `carson` | Both off-sheet ✓ |
+| `sept25-th2-9` | `fm-bessel-sidebands`, `fm-bessel-property`, `carson` | All off-sheet ✓ |
+| `jan26-th1-5` | `fm-beta`, `carson` | Both off-sheet ✓ |
+| `jan26-th4-13-16` | `fm-single-tone`, `fm-beta`, `carson`, `fm-bessel-sidebands`, `fm-power` | All off-sheet ✓ |
+| `jun25-th3` | `fm-single-tone`, `fm-beta`, `carson`, `fm-bessel-sidebands`, `fm-power` | All off-sheet ✓ |
+| `lec-fm-1` (Session 15 Άσκηση 1) | `fm-single-tone`, `pm-signal` | Both off-sheet ✓ |
+| `lec-fm-3` (Session 15 Άσκηση 3) | `fm-bessel-sidebands`, `fm-bessel-property`, `fm-power` | All off-sheet ✓ |
+
+**Placement-(b) verification:**
+
+| Problem | Standardized «δεν δίνεται στο τυπολόγιο» callout? | Ad-hoc awareness? |
+| --- | --- | --- |
+| `sept25-th2-6` | **NO** | No |
+| `sept25-th2-7` | **NO** | No |
+| `sept25-th2-8` | **NO** | **YES — INVERSE ERROR (F12)**: coaching ~L506 says «Ο τύπος του Carson είναι στο τυπολόγιο» |
+| `sept25-th2-9` | **NO** | No |
+| `jan26-th1-5` | **NO** | No |
+| `jan26-th4-13-16` | **NO** | No |
+| `jun25-th3` | **NO** | No |
+| `lec-fm-1` | **NO** | No |
+| `lec-fm-3` | **NO** | No |
+
+**Conclusion — hypothesis CONFIRMED (same pattern as all prior chapters).** Standardized
+placement-(b) callout absent from all 9 FM problems. The sole ad-hoc awareness entry is the
+**inverse error F12** — the only coaching note mentioning the τυπολόγιο in the FM context
+incorrectly says Carson IS on the sheet. Pass C: propagate «⚠️ Πρέπει να θυμάσαι (όχι στο
+επίσημο τυπολόγιο)» to all 9 problems; fix F12 in the process.
+
+---
+
+### 8.8 Remaining random problems — no new gaps
+
+Both `topic:'random'` problems in `exercises.tsx` — `Session 10 — Άσκηση 1` (= `lec-rp-1`,
+formulaIds: `random-mean`, `random-autocorr`, `random-cross`) and `Session 10 — Άσκηση 5`
+(= `lec-rp-2`, formulaIds: `random-phase-cosine`, `wss`) — were already inventoried in §4.2.
+No new `topic:'random'` problems reference `randomness/random-variables`,
+`randomness/random-processes`, or `randomness/stationarity` beyond those two. **Zero new gaps.**
+Inline ExamProblems in the three pages are not in `exercises.tsx` (same as `randomness/psd`
+pattern from §7.4) — placement-(b) concept does not apply to them.
+
+---
+
+## 9. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
 
 - **F1 — LIVE MISCITATION (correctness).** `app/(content)/noise/white-noise/page.mdx`
   **line 340** (§10 summary table) marks `S_N(f) = N_0/2` as **"✓ τυπολόγιο"** — i.e. it
@@ -1098,12 +1358,35 @@ or `filters`-specific formulaIds. The δ(t−T₁) time-shift problem (`jun25-th
   τυπολόγιο». Also recommend adding a `fourier-pair-exp` entry to `formulas.tsx` (currently
   no formulaId — F2-style gap) since this pair appears "2-3 times per year" in past exams per
   the page's own note.
+- **F14 — fm/idea MULTIPLE INVERSE ERRORS (correctness).** `app/(content)/fm/idea/page.mdx`
+  labels **four** must-learn FM formulas as "✓ Στο τυπολόγιο":
+  (1) `fm-signal` (line 170) — `inTypology: false`;
+  (2) `fm-beta` β_f (line 221) — `inTypology: false`;
+  (3) `fm-single-tone` (line 248) — `inTypology: false`;
+  (4) `fm-gain-am` (9β²) described as "στο τυπολόγιο" in the ThinkingPattern (~line 540) —
+  `inTypology: false` and `fm/in-noise` itself correctly says "πρέπει να θυμάσαι — δεν μέσα
+  στο επίσημο τυπολόγιο" for this formula.
+  Per §1, the τυπολόγιο has **zero FM formulas**. Same pattern as F1/F7/F8/F12/F13.
+  **Recommend Pass C fix:** replace all "✓ Στο τυπολόγιο" labels on `fm-signal`, `fm-beta`
+  (β_f), `fm-single-tone`, and the 9β² ThinkingPattern description with «⚠️ Πρέπει να
+  θυμάσαι — δεν δίνεται στο τυπολόγιο».
+- **F15 — fm/pm INVERSE ERRORS including Carson contradiction (correctness).**
+  `app/(content)/fm/pm/page.mdx` labels **two** must-learn formulas as "✓ Στο τυπολόγιο":
+  (1) `fm-beta` β_p (line 94: "✓ Στο τυπολόγιο (μαζί με β_f)") — `inTypology: false`;
+  (2) `carson` (line 222: "✓ Στο τυπολόγιο (στο /fm/carson)") — `inTypology: false`.
+  The (2) **directly contradicts** `fm/carson/page.mdx` line 68, which correctly labels
+  Carson must-learn ("⚠️ Πρέπει να θυμάσαι — δεν είναι μέσα στο [επίσημο τυπολόγιο]"),
+  and sose-coaching F12 (also inverse error on Carson). The same Carson formula now has
+  **three inconsistent treatments**: correct on `fm/carson`, inverse-error on `fm/pm`,
+  inverse-error in `sose-coaching`. **Recommend Pass C fix:** replace both "✓ Στο
+  τυπολόγιο" labels with «⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο»; coordinate
+  with F12 fix so all three sites say the same thing.
 
 ---
 
-## 9. Placeholders for later passes (do not delete — structure for the whole sub-goal)
+## 10. Placeholders for later passes (do not delete — structure for the whole sub-goal)
 
-- **Pass A — remaining randomness pages / fm**: per-chapter inventories that REUSE §1 (foundations-supplemental + psd complete — §7; AM complete — §6; remaining: random-variables, random-processes, stationarity, FM).
+- **Pass A — COMPLETE.** All chapters inventoried: Noise §2, Foundations §3, Randomness/why §4, Modulation bridge §5, AM §6, Foundations-supplemental + PSD §7, FM + remaining-randomness §8. Proceed to Pass B.
 - **Pass B — weighting**: per must-learn formula, count distinct `past_exams/` exercises +
   collect refs (cite specific problems; do not estimate).
 - **Pass C — apply**: annotate placements (a) theory pages, (b) problems, (c) `/formulas`,
