@@ -544,21 +544,73 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'sept25-th3-10': {
     takeaway: (
       <p>
-        Ο θερμικός θόρυβος έχει σταθερή PSD{' '}
-        <InlineMath>{'N_0/2 = kT/2'}</InlineMath> (W/Hz, διπλής όψεως),
-        ανεξάρτητη από τη συχνότητα. Η ισχύς που μετράς σε ζώνη{' '}
-        <InlineMath>B</InlineMath> είναι <InlineMath>{'kTB'}</InlineMath>{' '}
-        — άμεσα ανάλογη και των δύο. Σε room temp:{' '}
-        <strong>−174 dBm/Hz</strong>.
+        Ο θερμικός θόρυβος είναι <strong>λευκός</strong>: η PSD του είναι ένα{' '}
+        <strong>επίπεδο πάτωμα</strong> στο{' '}
+        <InlineMath>{'N_0/2 = kT/2'}</InlineMath> (δίψας όψεως· μονόπλευρα{' '}
+        <InlineMath>{'N_0 = kT'}</InlineMath>) — εξαρτάται από τη θερμοκρασία{' '}
+        <InlineMath>T</InlineMath> αλλά <em>όχι</em> από το εύρος ζώνης. Αυτό που
+        εξαρτάται από τη ζώνη είναι η <strong>ισχύς</strong>: ολοκλήρωσε το πάτωμα
+        σε ζώνη <InlineMath>B</InlineMath> και παίρνεις{' '}
+        <InlineMath>{'P_N = kTB = N_0 B'}</InlineMath> (ύψος{' '}
+        <InlineMath>{'N_0/2'}</InlineMath> × συνολικό πλάτος{' '}
+        <InlineMath>{'2B'}</InlineMath> → το <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>{' '}
+        και το <InlineMath>2</InlineMath> ακυρώνονται). Αναγνώριση: «PSD θερμικού»
+        → <InlineMath>{'kT/2'}</InlineMath>· «ισχύς σε ζώνη B» →{' '}
+        <InlineMath>{'kTB'}</InlineMath>. Κράτα στη μνήμη το room-temp πάτωμα{' '}
+        <strong>−174 dBm/Hz</strong> (= μονόπλευρο <InlineMath>{'kT'}</InlineMath>)
+        και τον κανόνα <InlineMath>{'P_N[\\text{dBm}] = -174 + 10\\log_{10} B'}</InlineMath>:
+        κάθε διπλασιασμός του <InlineMath>B</InlineMath> →{' '}
+        <InlineMath>{'+3'}</InlineMath> dB. Το ίδιο <InlineMath>{'kTB'}</InlineMath>{' '}
+        είναι ο παρονομαστής κάθε SNR.
       </p>
     ),
     examRadar: (
-      <p>
-        «PSD θερμικού» → τύπος <InlineMath>{'N_0/2 = kT/2'}</InlineMath>.
-        Αν ζητάει «ισχύς σε ζώνη B», απαντάς{' '}
-        <InlineMath>{'P = kTB'}</InlineMath>. Το −174 dBm/Hz είναι το
-        νούμερο που πρέπει να ξέρεις για quick sanity-checks.
-      </p>
+      <>
+        <p>
+          «PSD θερμικού θορύβου» / «πώς εξαρτάται από <InlineMath>B</InlineMath>{' '}
+          και <InlineMath>T</InlineMath>» → απάντηση δύο γραμμών: PSD ={' '}
+          <InlineMath>{'N_0/2 = kT/2'}</InlineMath> (επίπεδη, ανεξάρτητη του{' '}
+          <InlineMath>B</InlineMath>)· ισχύς σε ζώνη <InlineMath>B</InlineMath> ={' '}
+          <InlineMath>{'kTB = N_0 B'}</InlineMath>. Αν δίνεται{' '}
+          <InlineMath>T</InlineMath>, βάλε{' '}
+          <InlineMath>{'k = 1.38\\times 10^{-23}'}</InlineMath> J/K και{' '}
+          <InlineMath>{'T_0 = 290'}</InlineMath> K. Χρόνος-στόχος:{' '}
+          <strong>~2 λεπτά</strong> — σχεδόν δωρεάν μονάδες.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Η παγίδα — one-sided vs two-sided (παράγοντας 2).</strong>{' '}
+          Τρία πράγματα που μπερδεύονται εδώ:
+          <ul className="ml-4 mt-1 list-disc space-y-1">
+            <li>
+              Η <strong>PSD</strong> είναι ανεξάρτητη του{' '}
+              <InlineMath>B</InlineMath>, αλλά η <strong>ισχύς</strong> είναι
+              ανάλογη του <InlineMath>B</InlineMath> (<InlineMath>{'P_N = kTB'}</InlineMath>).
+              Μην πεις «η ισχύς δεν αλλάζει με τη ζώνη» — αλλάζει{' '}
+              <em>γραμμικά</em>.
+            </li>
+            <li>
+              Δίψας όψεως ύψος <InlineMath>{'N_0/2 = kT/2'}</InlineMath> με πλάτος{' '}
+              <InlineMath>{'2B'}</InlineMath>, <em>ή</em> μονόπλευρο{' '}
+              <InlineMath>{'N_0 = kT'}</InlineMath> με πλάτος{' '}
+              <InlineMath>B</InlineMath> — και τα δύο δίνουν{' '}
+              <InlineMath>{'kTB'}</InlineMath>. Μην ανακατεύεις τα ζευγάρια:{' '}
+              <InlineMath>{'(N_0/2)\\cdot B'}</InlineMath> δίνει λάθος{' '}
+              <InlineMath>{'N_0 B/2'}</InlineMath>·{' '}
+              <InlineMath>{'N_0 \\cdot 2B'}</InlineMath> δίνει λάθος{' '}
+              <InlineMath>{'2N_0 B'}</InlineMath>.
+            </li>
+            <li>
+              Το <InlineMath>{'-174'}</InlineMath> dBm/Hz είναι το{' '}
+              <strong>μονόπλευρο</strong> <InlineMath>{'kT'}</InlineMath> (={' '}
+              <InlineMath>{'4\\times 10^{-21}'}</InlineMath> W/Hz). Το
+              δίψας-όψεως <InlineMath>{'kT/2'}</InlineMath> δίνει{' '}
+              <InlineMath>{'-177'}</InlineMath> dBm/Hz —{' '}
+              <InlineMath>{'3'}</InlineMath> dB πιο κάτω. Για τον noise floor
+              χρησιμοποίησε <InlineMath>{'-174 \\,(+\\,10\\log_{10} B + F)'}</InlineMath>.
+            </li>
+          </ul>
+        </div>
+      </>
     ),
   },
 

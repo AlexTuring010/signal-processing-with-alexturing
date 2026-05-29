@@ -1336,6 +1336,19 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['noise/sources', 'noise/white-noise'],
     formulaIds: ['thermal-noise', 'white-noise-psd'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Όλοι οι τύποι αυτής της άσκησης λείπουν από το επίσημο τυπολόγιο: η PSD
+        του θερμικού θορύβου <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath>, η
+        ισχύς σε ζώνη <InlineMath>{'P_N = kTB = N_0 B'}</InlineMath>, ακόμα και το
+        νούμερο <InlineMath>{'N_0 = kT_0 \\approx 4\\times 10^{-21}'}</InlineMath>{' '}
+        W/Hz <InlineMath>{'= -174'}</InlineMath> dBm/Hz. Το τυπολόγιο δεν περιέχει{' '}
+        <em>κανέναν</em> τύπο θορύβου — όλη η ενότητα «Noise» είναι μνήμη. Άρα
+        ούτε το τελικό <InlineMath>{'kTB'}</InlineMath> θα σου δοθεί· πρέπει να το
+        ξέρεις απέξω ή να το φτάσεις μόνος σου από το επίπεδο πάτωμα.
+      </>
+    ),
     statement: (
       <p>
         Ποια είναι η φασματική πυκνότητα ισχύος του θερμικού θορύβου και πώς
@@ -1344,21 +1357,243 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
+          <span className="text-fg-muted">
+            Μέσα σε κάθε αντιστάτη τα ηλεκτρόνια «τρέμουν» από τη θερμότητα — όσο
+            πιο ζεστός, τόσο πιο έντονα (slide 42). Αυτό το ατελείωτο, τυχαίο
+            σπρώξιμο φορτίων παράγει μια μικρή τυχαία τάση στα άκρα του ακόμα κι
+            όταν δεν περνά κανένα σήμα· είναι το «σσσσ» που ακούς σ' έναν
+            ενισχυτή ή ένα ξεκούρδιστο ραδιόφωνο. Επειδή τα τινάγματα είναι
+            αστραπιαία και ασυσχέτιστα μεταξύ τους, κουβαλούν <em>ίση</em> ισχύ
+            σε <strong>όλες</strong> τις συχνότητες — όπως το λευκό φως που τα
+            έχει όλα τα χρώματα μαζί. Γι' αυτό ο θερμικός θόρυβος λέγεται{' '}
+            <strong>λευκός</strong>, και η πυκνότητα ισχύος του είναι ένα{' '}
+            <strong>επίπεδο πάτωμα</strong> στο ύψος <InlineMath>{'kT/2'}</InlineMath>{' '}
+            — δεν έχει σημασία <em>πού</em> στο φάσμα κοιτάς, το ύψος είναι παντού
+            το ίδιο. Άρα η PSD <strong>δεν εξαρτάται από το εύρος ζώνης</strong>·
+            εξαρτάται μόνο από τη θερμοκρασία (ζεστότερος → ψηλότερο πάτωμα).
+            Αυτό που νιώθει τη ζώνη είναι το <em>πόσο</em> μαζεύεις: όσο πιο φαρδύ
+            παράθυρο <InlineMath>B</InlineMath> ανοίγει ο δέκτης σου, τόσο
+            μεγαλύτερη φέτα του πατώματος μπαίνει μέσα — γι' αυτό ένας δέκτης με
+            φαρδιά ζώνη ακούει <em>περισσότερο</em> θόρυβο. Η συνολική ισχύς είναι
+            απλώς το <strong>εμβαδόν</strong> = ύψος × πλάτος ζώνης ={' '}
+            <InlineMath>{'kTB'}</InlineMath>.
+          </span>
+        </div>
+
+        <figure className="my-4">
+          <NoiseFilterShapingViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Διάλεξε «Ιδανικό LPF» και σύρε το slider του cutoff — το{' '}
+            <InlineMath>B</InlineMath> του viz είναι ακριβώς το εύρος ζώνης{' '}
+            <InlineMath>B</InlineMath> στο οποίο μετράς τον θόρυβο. Αριστερά
+            βλέπεις το επίπεδο πάτωμα <InlineMath>{'S_N = N_0/2 = kT/2'}</InlineMath>{' '}
+            (ίδιο ύψος παντού, ανεξάρτητο από το <InlineMath>B</InlineMath>), δεξιά
+            τη σκιασμένη λωρίδα που «βλέπει» ο δέκτης. Πρόσεξε ότι η ένδειξη{' '}
+            <InlineMath>{'P_Y'}</InlineMath> ανεβαίνει <strong>γραμμικά</strong>{' '}
+            καθώς ανοίγεις το cutoff — αυτό ακριβώς λέει το{' '}
+            <InlineMath>{'P_N = N_0 B = kTB'}</InlineMath>: διπλάσιο{' '}
+            <InlineMath>B</InlineMath>, διπλάσια ισχύς. Το «μετράω θόρυβο σε ζώνη{' '}
+            <InlineMath>B</InlineMath>» είναι το <em>ίδιο πράγμα</em> με το
+            «περνάω τον λευκό θόρυβο μέσα από ιδανικό φίλτρο εύρους{' '}
+            <InlineMath>B</InlineMath>» — ίδιο ολοκλήρωμα, ίδια εικόνα με τις
+            ασκήσεις λευκού-θορύβου-μέσα-από-LPF (Πρόοδος 2026 ΘΕΜΑ 6, Σεπτ. 2025
+            ΘΕΜΑ 3.11). Η αναλυτική απαγωγή ζει στο{' '}
+            <Link
+              href="/noise/through-filters"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              /noise/through-filters §4–5
+            </Link>
+            .
+          </figcaption>
+        </figure>
+
         <p>
-          Φασματική πυκνότητα (διπλής όψεως){' '}
-          <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath> W/Hz, σταθερή
-          (επίπεδη) μέχρι ~10¹³ Hz. <strong>Δεν εξαρτάται από το εύρος ζώνης</strong>;
-          όμως η συνολική ισχύς που μετράμε σε ζώνη <InlineMath>B</InlineMath>{' '}
-          είναι:
+          <strong>Βήμα 1 — γιατί η PSD είναι επίπεδη στο{' '}
+          <InlineMath>{'kT/2'}</InlineMath>.</strong> Ο θερμικός θόρυβος γεννιέται
+          από τη θερμική διέγερση των ηλεκτρονίων μέσα στον αγωγό (slide 42):
+          δισεκατομμύρια ανεξάρτητα, αστραπιαία τινάγματα φορτίου. Επειδή είναι
+          ασυσχέτιστα και πολύ ταχύτερα από οποιαδήποτε συχνότητα μάς ενδιαφέρει,
+          η ισχύς μοιράζεται ομοιόμορφα σε όλο το φάσμα — η PSD είναι επίπεδη
+          («λευκή»), σταθερή στο ύψος <InlineMath>{'kT/2'}</InlineMath> (slide 45):
         </p>
-        <BlockMath>{'P_N = N_0 B = kTB'}</BlockMath>
+        <BlockMath>{'S_N(f) = \\frac{N_0}{2} = \\frac{kT}{2}\\;\\text{W/Hz},\\qquad N_0 \\triangleq kT,\\quad |f| \\le 10^{12}\\,\\text{Hz}'}</BlockMath>
         <p>
-          Άμεσα ανάλογη του <InlineMath>T</InlineMath> και του{' '}
-          <InlineMath>B</InlineMath>. Σε room temperature{' '}
-          <InlineMath>{'T_0 = 290'}</InlineMath> K,{' '}
-          <InlineMath>{'N_0 \\approx 4\\cdot 10^{-21}'}</InlineMath> W/Hz =
-          <strong> -174 dBm/Hz</strong>.
+          Από τη slide 47 και μετά απλώς βαφτίζουμε αυτό το ύψος{' '}
+          <InlineMath>{'N_0/2'}</InlineMath>, με <InlineMath>{'N_0 \\triangleq kT'}</InlineMath>.
+          Δύο πράγματα να κρατήσεις: (i) το ύψος εξαρτάται από τη θερμοκρασία{' '}
+          <InlineMath>T</InlineMath>, αλλά (ii) <em>δεν</em> εξαρτάται ούτε από τη
+          συχνότητα ούτε από το εύρος ζώνης — είναι το ίδιο παντού. Το «επίπεδο
+          μέχρι <InlineMath>{'\\sim 10^{12}'}</InlineMath> Hz» (slide 45) καλύπτει
+          κυριολεκτικά όλο το χρήσιμο φάσμα· πιο ψηλά η κβαντική φυσική κάμπτει το
+          πάτωμα, αλλά καμία εξέταση K21 δεν πάει εκεί.
         </p>
+
+        <p>
+          <strong>Βήμα 2 — ισχύς σε ζώνη <InlineMath>B</InlineMath>: ολοκλήρωσε
+          το πάτωμα.</strong> Η μόνη ποσότητα που νιώθει το εύρος ζώνης είναι η
+          συνολική ισχύς — το εμβαδόν κάτω από το πάτωμα μέσα στη ζώνη. Ένας
+          δέκτης εύρους <InlineMath>B</InlineMath> «βλέπει» τις συχνότητες από{' '}
+          <InlineMath>{'-B'}</InlineMath> έως <InlineMath>{'+B'}</InlineMath>{' '}
+          (πλάτος <InlineMath>{'2B'}</InlineMath> στη δίψας-όψεως εικόνα), οπότε
+          (slide 45):
+        </p>
+        <BlockMath>{'P_N = \\int_{-B}^{B} S_N(f)\\,df = \\int_{-B}^{B} \\frac{N_0}{2}\\,df = \\frac{N_0}{2}\\cdot 2B = N_0 B = kTB'}</BlockMath>
+        <p>
+          Άμεσα ανάλογη <em>και</em> του <InlineMath>T</InlineMath> (μέσω{' '}
+          <InlineMath>{'N_0 = kT'}</InlineMath>) <em>και</em> του{' '}
+          <InlineMath>B</InlineMath>. Πρόσεξε <em>γιατί</em> βγαίνει{' '}
+          <InlineMath>{'kTB'}</InlineMath> και όχι <InlineMath>{'kTB/2'}</InlineMath>{' '}
+          — είναι ακριβώς το ίδιο κόλπο με τις ασκήσεις
+          λευκού-θορύβου-μέσα-από-LPF (
+          <Link
+            href="/noise/through-filters"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/through-filters §5
+          </Link>
+          ): το ύψος είναι <InlineMath>{'N_0/2'}</InlineMath> (η δίψας-όψεως
+          σύμβαση μοιράζει την ισχύ σε θετικές <em>και</em> αρνητικές συχνότητες),
+          αλλά η ζώνη <InlineMath>{'[-B, B]'}</InlineMath> έχει πλάτος{' '}
+          <InlineMath>{'2B'}</InlineMath>, όχι <InlineMath>B</InlineMath>. Το μισό
+          του ύψους και το διπλάσιο του πλάτους{' '}
+          <strong>αλληλοεξουδετερώνονται</strong> — το{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> εξαφανίζεται και μένει καθαρό{' '}
+          <InlineMath>{'N_0 B = kTB'}</InlineMath>. Κράτα ένα ζευγάρι σταθερό:
+          δίψας όψεως <InlineMath>{'N_0/2'}</InlineMath> με πλάτος{' '}
+          <InlineMath>{'2B'}</InlineMath> (δες το radar εξέτασης για την παγίδα).
+        </p>
+
+        <p>
+          <strong>Βήμα 3 — το νούμερο που πρέπει να κουβαλάς:{' '}
+          <InlineMath>{'-174'}</InlineMath> dBm/Hz.</strong> Βάλε αριθμούς σε room
+          temperature <InlineMath>{'T_0 = 290'}</InlineMath> K, με τη σταθερά
+          Boltzmann <InlineMath>{'k = 1.38\\times 10^{-23}'}</InlineMath> J/K
+          (slide 43):
+        </p>
+        <BlockMath>{'N_0 = kT_0 = (1.38\\times 10^{-23})(290) \\approx 4.0\\times 10^{-21}\\;\\text{W/Hz}'}</BlockMath>
+        <p>
+          Σε dBm/Hz (ισχύς σε dB σε σχέση με <InlineMath>{'1'}</InlineMath> mW, ανά
+          Hz):
+        </p>
+        <BlockMath>{'N_0[\\text{dBm/Hz}] = 10\\log_{10}\\!\\left(\\frac{4\\times 10^{-21}}{10^{-3}}\\right) = 10\\log_{10}(4\\times 10^{-18}) \\approx -174\\;\\text{dBm/Hz}'}</BlockMath>
+        <p>
+          Από εκεί, η ισχύς θορύβου σε <em>οποιαδήποτε</em> ζώνη{' '}
+          <InlineMath>B</InlineMath> βγαίνει με μια απλή πρόσθεση — η operational
+          rule (
+          <Link
+            href="/noise/sources"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/sources §8
+          </Link>
+          {' '}+{' '}
+          <Link
+            href="/noise/white-noise"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/white-noise §9
+          </Link>
+          ):
+        </p>
+        <BlockMath>{'P_N[\\text{dBm}] = -174 + 10\\log_{10} B[\\text{Hz}]'}</BlockMath>
+        <p>
+          π.χ. κανάλι <InlineMath>{'B = 1'}</InlineMath> MHz →{' '}
+          <InlineMath>{'-174 + 60 = -114'}</InlineMath> dBm.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Το λεπτό σημείο — το <InlineMath>{'-174'}</InlineMath> είναι
+          το <em>μονόπλευρο</em> <InlineMath>{'kT'}</InlineMath>.</strong> Το ίδιο
+          πάτωμα έχει δύο «ονόματα»: δίψας όψεως{' '}
+          <InlineMath>{'kT/2 = N_0/2 \\approx 2\\times 10^{-21}'}</InlineMath> W/Hz
+          (το ύψος που ολοκληρώνεις σε <em>όλο</em> το{' '}
+          <InlineMath>{'[-B, B]'}</InlineMath>) και μονόπλευρο{' '}
+          <InlineMath>{'kT = N_0 \\approx 4\\times 10^{-21}'}</InlineMath> W/Hz
+          (αυτό που θα διάβαζε ένα power meter ανά Hz, μόνο στις θετικές
+          συχνότητες). Το <InlineMath>{'-174'}</InlineMath> dBm/Hz είναι το{' '}
+          <strong>μονόπλευρο</strong> <InlineMath>{'N_0 = kT'}</InlineMath>. Αν
+          κατά λάθος έβαζες το δίψας-όψεως{' '}
+          <InlineMath>{'kT/2'}</InlineMath> στον τύπο dBm θα έβγαζες{' '}
+          <InlineMath>{'-177'}</InlineMath> — λάθος κατά{' '}
+          <InlineMath>{'3'}</InlineMath> dB (παράγοντας <InlineMath>{'2'}</InlineMath>).
+          Και τα δύο ζευγάρια δίνουν την <em>ίδια</em> μετρήσιμη ισχύ{' '}
+          <InlineMath>{'kTB'}</InlineMath> σε ζώνη <InlineMath>B</InlineMath>· απλώς
+          μην ανακατεύεις τα ύψη με τα πλάτη.
+        </div>
+
+        <p>
+          <strong>Με απλά λόγια:</strong> το πάτωμα του θερμικού θορύβου είναι ένα
+          φυσικό κατώφλι που δεν ξεπερνιέται — υπάρχει σε κάθε αντιστάτη, σε κάθε
+          δέκτη, ακόμα κι όταν δεν εκπέμπει κανείς. Δεν το χαμηλώνεις κάνοντας το
+          κύκλωμα «καλύτερο»· το χαμηλώνεις μόνο (i) ψύχοντας (μικρότερο{' '}
+          <InlineMath>T</InlineMath>) ή (ii) στενεύοντας τη ζώνη. Κάθε
+          διπλασιασμός του <InlineMath>B</InlineMath> προσθέτει{' '}
+          <InlineMath>{'+3'}</InlineMath> dB θορύβου — το «bandwidth tax» (
+          <Link
+            href="/noise/white-noise"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/white-noise §9
+          </Link>
+          ). Αυτό το ίδιο <InlineMath>{'kTB'}</InlineMath> θα το ξαναδείς ως τον{' '}
+          <em>παρονομαστή</em> σε κάθε υπολογισμό{' '}
+          <Link
+            href="/noise/snr"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            SNR
+          </Link>
+          : ο θόρυβος που μετράς ορίζει το πάτωμα κάτω από το οποίο χάνεται το
+          σήμα.
+        </p>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted">
+            {' '}— ίδια μηχανή (επίπεδο πάτωμα → εμβαδόν), αλλάζουν μόνο οι
+            αριθμοί:
+          </span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Κρύος δέκτης (cooled LNA).</strong> Ψύξε από{' '}
+              <InlineMath>{'290'}</InlineMath> K σε <InlineMath>{'29'}</InlineMath>{' '}
+              K (<InlineMath>{'\\times 10'}</InlineMath> κάτω): το{' '}
+              <InlineMath>{'N_0 = kT'}</InlineMath> πέφτει{' '}
+              <InlineMath>{'\\times 10'}</InlineMath>, άρα το πάτωμα πέφτει κατά{' '}
+              <InlineMath>{'-10'}</InlineMath> dB → <InlineMath>{'-184'}</InlineMath>{' '}
+              dBm/Hz. Γι' αυτό οι δέκτες ραδιοαστρονομίας και deep-space ψύχονται
+              κρυογονικά: λιγότερο <InlineMath>T</InlineMath>, λιγότερος θόρυβος,
+              πιο αδύναμα σήματα γίνονται ανιχνεύσιμα. (Δοκίμασε{' '}
+              <InlineMath>{'T = 77'}</InlineMath> K, υγρό άζωτο — πόσα dB κερδίζεις
+              από τους <InlineMath>{'290'}</InlineMath> K;)
+            </li>
+            <li>
+              <strong>Μονόπλευρη σύμβαση.</strong> Ξαναγράψε με μονόπλευρο{' '}
+              <InlineMath>{'N_0 = kT'}</InlineMath> για{' '}
+              <InlineMath>{'f \\ge 0'}</InlineMath> (ύψος{' '}
+              <InlineMath>{'N_0'}</InlineMath>, πλάτος <InlineMath>B</InlineMath>):{' '}
+              <InlineMath>{'\\int_0^B N_0\\,df = N_0 B = kTB'}</InlineMath> — ίδιο
+              αποτέλεσμα. Όποια σύμβαση κι αν διαλέξεις, κράτησέ τη σταθερή σε όλη
+              την άσκηση (δες <Link
+                href="/noise/white-noise"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                /noise/white-noise §10
+              </Link>).
+            </li>
+            <li>
+              <strong>Συγκεκριμένος noise floor.</strong> Εμπορικό FM κανάλι{' '}
+              <InlineMath>{'B = 200'}</InlineMath> kHz σε room temp:{' '}
+              <InlineMath>{'-174 + 10\\log_{10}(2\\times 10^{5}) = -174 + 53 = -121'}</InlineMath>{' '}
+              dBm. Κανάλι 4G/LTE <InlineMath>{'B = 20'}</InlineMath> MHz:{' '}
+              <InlineMath>{'-174 + 73 = -101'}</InlineMath> dBm. Πιο φαρδύ κανάλι →
+              ψηλότερο πάτωμα θορύβου, ακριβώς το bandwidth tax.
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
