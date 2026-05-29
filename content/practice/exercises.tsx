@@ -222,6 +222,29 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-power', 'am-eta'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        η ισχύς{' '}
+        <InlineMath>{'P_{AM} = P_c(1 + m^2/2)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>4</strong> παλιά θέματα) και η απόδοση{' '}
+        <InlineMath>{'\\eta = m^2/(2+m^2) \\le 1/3'}</InlineMath>{' '}
+        (σε <strong>3</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 2
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Ποιο είναι το μέγιστο ποσοστό της συνολικής ισχύος που μπορεί να
@@ -257,6 +280,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/modulator-demodulator', 'am/conventional'],
     formulaIds: ['am-signal', 'nonlinear-modulator-fc'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και η
+        συνθήκη μη-γραμμικού modulator{' '}
+        <InlineMath>{'f_c > 3W'}</InlineMath>{' '}
+        (σε <strong>2</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:pb25-th4-nonlinear"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Β 2025 ΘΕΜΑ 4
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σχεδιάστε το κύκλωμα που χρησιμοποιείται συνήθως για τη διαμόρφωση ενός
@@ -509,6 +556,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/dsb-sc', 'am/modulator-demodulator'],
     formulaIds: ['dsb-sc-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{DSB}(t) = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>5</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-8"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.8
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σε έναν σύμφωνο αποδιαμορφωτή AM-DSB-SC, αν υπάρξει σφάλμα φάσης{' '}
