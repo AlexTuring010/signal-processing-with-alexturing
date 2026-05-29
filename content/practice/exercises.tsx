@@ -1123,6 +1123,32 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional', 'am/overview'],
     formulaIds: ['am-signal', 'am-spectrum', 'am-bandwidth'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική), το
+        φάσμα AM{' '}
+        <InlineMath>{'X_{AM}(f) = \\tfrac{A_c}{2}\\delta(f\\mp f_c) + \\tfrac{1}{2}M(f\\mp f_c)'}</InlineMath>{' '}
+        (σε <strong>4</strong>) και το εύρος ζώνης{' '}
+        <InlineMath>{'B_{AM} = 2W'}</InlineMath>{' '}
+        (σε <strong>3</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 9
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-7"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.7
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Εξηγήστε την αρχή λειτουργίας της διαμόρφωσης πλάτους (AM). Γράψτε
@@ -1163,6 +1189,29 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-signal', 'am-mu', 'am-power'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        η ισχύς{' '}
+        <InlineMath>{'P_{AM} = P_c(1 + \\mu^2/2)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>4</strong> παλιά θέματα) και ο δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'\\mu = A_m / A_c'}</InlineMath>{' '}
+        (σε <strong>8</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 4
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:proodos26-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Δίνεται φέρον κύμα με πλάτος <InlineMath>{'A_c = 10'}</InlineMath> V και
@@ -1199,7 +1248,34 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'easy',
     prerequisites: ['am/overview', 'am/conventional', 'am/dsb-sc', 'am/ssb'],
-    formulaIds: ['am-bandwidth', 'am-power', 'dsb-sc-power'],
+    formulaIds: ['am-bandwidth', 'am-power', 'dsb-sc-power', 'am-eta'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        η ισχύς{' '}
+        <InlineMath>{'P_{AM} = P_c(1 + \\mu^2/2)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>4</strong> παλιά θέματα), η απόδοση{' '}
+        <InlineMath>{'\\eta = \\mu^2/(2+\\mu^2) \\le 1/3'}</InlineMath>{' '}
+        (σε <strong>3</strong>), το εύρος ζώνης{' '}
+        <InlineMath>{'B_{AM} = 2W'}</InlineMath>{' '}
+        (σε <strong>3</strong>) και η ισχύς DSB-SC{' '}
+        <InlineMath>{'P_{DSB} = A_c^2 P_m / 2'}</InlineMath>{' '}
+        (σε <strong>1</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 4
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:proodos26-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Να περιγράψετε τις διαφορές μεταξύ AM, DSB-SC (διπλής πλευρικής ζώνης
@@ -1244,6 +1320,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/modulator-demodulator'],
     formulaIds: ['envelope-detector-rc', 'am-mu'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'\\mu = A_m/A_c'}</InlineMath>{' '}
+        (συνθήκη <InlineMath>{'\\mu \\le 1'}</InlineMath> για ορθή λειτουργία —
+        εμφανίστηκε σε <strong>8</strong> παλιά θέματα) και η σταθερά χρόνου{' '}
+        <InlineMath>{'\\tfrac{1}{f_c} \\ll RC \\ll \\tfrac{1}{W}'}</InlineMath>{' '}
+        (σε <strong>1</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:proodos26-3"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 3
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Περιγράψτε τη λειτουργία ενός envelope detector (ανιχνευτή
@@ -1291,7 +1391,32 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'medium',
     prerequisites: ['am/conventional', 'foundations/fourier-transform'],
-    formulaIds: ['am-signal', 'fourier-pair-cos', 'fourier-modulation-theorem'],
+    formulaIds: ['am-signal', 'fourier-pair-cos', 'fourier-modulation-theorem', 'am-spectrum'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα) και το φάσμα AM{' '}
+        <InlineMath>{'X_{AM}(f) = \\tfrac{A_c}{2}\\delta(f\\mp f_c) + \\tfrac{1}{2}M(f\\mp f_c)'}</InlineMath>{' '}
+        (σε <strong>4</strong>). Το ζεύγος Fourier (
+        <InlineMath>{'\\cos'}</InlineMath>) και το θεώρημα διαμόρφωσης βρίσκονται
+        στο τυπολόγιο — δεν χρειάζεται να τα θυμάσαι. Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 9
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.1
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Ένα σήμα πληροφορίας{' '}
