@@ -3135,12 +3135,84 @@ export const EXERCISES: Exercise[] = [
     source: 'proodos-a-2025',
     problemNumber: 'ΘΕΜΑ 1.3',
     weight: 4,
-    title: 'Σ/Λ — λευκός θόρυβος Gauss',
+    title: 'Σ/Λ — λευκός θόρυβος ⇔ Gaussian',
     topic: 'noise',
     difficulty: 'medium',
     prerequisites: ['noise/white-noise'],
-    statement: <p>Σ/Λ: Ο λευκός θόρυβος είναι ο θόρυβος του οποίου ακολουθεί την κατανομή Gauss.</p>,
-    solution: <p><strong>ΛΑΘΟΣ.</strong> «Λευκός» = επίπεδη PSD. «Gaussian» = κατανομή πλάτους. Διαφορετικά concepts.</p>,
+    statement: (
+      <p>
+        Σ/Λ: Ο λευκός θόρυβος είναι ο θόρυβος του οποίου η φασματική πυκνότητα
+        ισχύος ακολουθεί την κατανομή Gauss.
+      </p>
+    ),
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση — «λευκός» και «Gaussian» μετρούν δύο ανεξάρτητα πράγματα.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            «<strong>Λευκός</strong>» = το <strong>σχήμα της PSD</strong>: πού
+            κάθεται η ισχύς στις συχνότητες. Λευκός σημαίνει{' '}
+            <strong>επίπεδη</strong> PSD — ίση ισχύς σε κάθε{' '}
+            <InlineMath>{'f'}</InlineMath>, όπως το λευκό φως κουβαλά ίσα όλα τα
+            χρώματα (frequency domain). «<strong>Gaussian</strong>» = η{' '}
+            <strong>κατανομή πλάτους</strong>: αν κατέγραφες τις τιμές του
+            θορύβου στον χρόνο κι έφτιαχνες ιστόγραμμα, θα έβγαινε{' '}
+            <strong>καμπάνα</strong> (amplitude domain).{' '}
+            <strong className="text-fg">Το κρίσιμο:</strong> δύο ηχογραφήσεις
+            «σσσσ» μπορεί να έχουν <em>πανομοιότυπη</em> επίπεδη PSD κι όμως
+            τελείως διαφορετικό ιστόγραμμα πλάτους — η PSD δεν «βλέπει» πώς
+            μοιράζονται οι τιμές, μόνο πού κάθεται η ισχύς. Άρα οι δύο άξονες
+            είναι <strong>ορθογώνιοι</strong>: ο ένας δεν συνεπάγεται τον άλλον.
+          </span>
+        </div>
+
+        <p>
+          <strong>ΛΑΘΟΣ.</strong> Η εκφώνηση ταυτίζει το{' '}
+          <strong>σχήμα της PSD στη συχνότητα</strong> με τη{' '}
+          <strong>στατιστική των πλατών</strong> — δύο ορθογώνιες ιδιότητες. Κι
+          επιπλέον η PSD του λευκού θορύβου είναι <strong>επίπεδη</strong> (
+          <InlineMath>{'S_N(f) = N_0/2'}</InlineMath>, σταθερή σε κάθε{' '}
+          <InlineMath>{'f'}</InlineMath>) — το ακριβώς αντίθετο μιας καμπάνας· η
+          καμπάνα Gauss ζει σε άλλο γράφημα, στο ιστόγραμμα των τιμών, όχι στην
+          PSD. <strong>Αντιπαράδειγμα που το κλείνει:</strong> ασυσχέτιστες τιμές
+          uniform <InlineMath>{'U[-1,+1]'}</InlineMath> δίνουν <em>ίδια</em>{' '}
+          επίπεδη PSD (άρα λευκός θόρυβος), αλλά ιστόγραμμα <em>κουτί</em> — όχι
+          καμπάνα. Λευκός χωρίς Gaussian· άρα «λευκός» δεν συνεπάγεται «Gaussian».
+        </p>
+
+        <p className="text-sm text-fg-muted">
+          Ίδια ακριβώς παγίδα με την αδελφή Σ/Λ{' '}
+          <Link
+            href="/practice#exercise:jan26-th1-3"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            Ιαν. 2026 ΘΕΜΑ 1.3
+          </Link>{' '}
+          — εκεί ζει η πλήρης ανάλυση: ο πίνακας 2×2 (λευκός/έγχρωμος ×
+          Gaussian/μη-Gaussian) με αντιπαράδειγμα σε κάθε κελί, και το{' '}
+          <strong>ανάποδο</strong> της παγίδας («κάθε Gaussian θόρυβος είναι
+          λευκός» — επίσης ΛΑΘΟΣ: φιλτράρισε AWGN κι έχεις colored Gaussian). Η
+          θεωρία στο{' '}
+          <Link
+            href="/noise/white-noise"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/white-noise §6
+          </Link>{' '}
+          (η κορυφαία παγίδα της Noise group), και το «γιατί ο θερμικός είναι
+          Gaussian» (CLT) στο{' '}
+          <Link
+            href="/noise/sources"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/sources §2
+          </Link>
+          .
+        </p>
+      </>
+    ),
   },
   {
     id: 'pa25-th1-4',
