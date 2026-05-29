@@ -58,6 +58,10 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | B | **Noise** — weighting | `mustlearn-passb-noise-formulas` | **DONE** — §2B below |
 | B | **AM** — weighting | `mustlearn-passb-am-formulas` | **DONE** — §6B below |
 | B | **FM** — weighting | `mustlearn-passb-fm-formulas` | **DONE** — §8B below |
+| B | **Foundations** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §3B below |
+| B | **Randomness/why** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §4B below |
+| B | **Modulation bridge** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §5B below |
+| B | **Randomness/PSD + remaining randomness** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §7B below |
 | C | apply | per-placement | TODO |
 
 ---
@@ -1977,6 +1981,284 @@ No FM problems were found **outside** `exercises.tsx` — no coverage gap in the
 
 ---
 
+## 3B. Pass B — Foundations Chapter Weighting Results
+
+> **Step:** `mustlearn-passb-foundations-randomness-formulas` · **Status:** DONE  
+> **Scope:** every must-learn formula in §3 (Foundations chapter: signals, systems, Fourier series, Fourier transform, signal-transformations, filters). Weight = count of distinct past-exam exercises that required the formula (either directly or as a key derivation step). References cite `exercises.tsx` problem IDs.
+
+### Exam-paper audit
+
+All six theory exam sessions in `past_exams/` were visually audited for foundations content (images + June 2025 PDF). Same paper corpus as §2B; no additional PDFs.
+
+| Exam session | Files | Foundations exercises found |
+| --- | --- | --- |
+| Πρόοδος Απρίλιος 2026 | `προοδος_2026.jpg` | ΘΕΜΑ 8 (`proodos26-8`), ΘΕΜΑ 10 (`proodos26-10`) |
+| Εξέταση Σεπτεμβρίου 2025 | `2025_sept_exam.jpg` | **NONE** — all AM/FM/noise |
+| Επι-πτυχίο Ιανουαρίου 2026 | `Epi-Ptyxio-Jan-26_1.jpg`, `_2.jpg` | ΘΕΜΑ 1.2 (`jan26-th1-2`), ΘΕΜΑ 1.4 (`jan26-th1-4`), ΘΕΜΑ 2.9 (`jan26-th2-9`), ΘΕΜΑ 2.10 (`jan26-th2-10`) |
+| Εξέταση Ιουνίου 2025 | `Syst-Epik-June-2025.pdf` (2 pp., visually read) | ΘΕΜΑ 1.1–1.8 (`jun25-th1-1` through `jun25-th1-8`) |
+| Πρόοδος Α Μαΐου 2025 | `proodos_a1.jpg`, `proodos_a2.jpg` | ΘΕΜΑ 1.2 (`pa25-th1-2`), ΘΕΜΑ 1.4 (`pa25-th1-4`), ΘΕΜΑ 1.5 (`pa25-th1-5`), ΘΕΜΑ 2.4 (`pa25-th2-4`) |
+| Πρόοδος Β Μαΐου 2025 | `proodos_b1.jpg`, `proodos_b2.jpg` | ΘΕΜΑ 1.2 (`pb25-th1-2`), ΘΕΜΑ 1.4 (`pb25-th1-4`), ΘΕΜΑ 1.5 (`pb25-th1-5`), ΘΕΜΑ 2.4 (`pb25-th2-4`) |
+
+**Structural finding:** Foundations content appears in **5 of 6 exam sessions** (only September 2025 is all AM/FM/noise). June 2025 concentrates the most — its entire ΘΕΜΑ 1 (50 pts) covers foundations + noise. The §3 split holds across all sessions: **Fourier pairs/properties dominate (on-sheet, no must-learn callout needed)**; **Fourier series formulas, power/energy, and Parseval are the must-learn core and recur consistently**.
+
+**Must-learn tagging gaps discovered during Pass B (for Pass C):**
+- `cos-power-half` (P = A²/2) is the key formula in 3 exercises but **untagged in all 3** (no formulaIds on the T/F problems).
+- `fourier-series-rect-pulse` is the key formula in 4 exercises but **none tag it** — all tag `fourier-pair-rect` (on-sheet) instead.
+- `signal-energy` (E = ∫\|x\|² dt) is an untagged key step in `pb25-th4-nonlinear` sub-q 1 and `jun25-th2` sub-q 4.
+- `parseval` (∫\|x\|² dt = ∫\|X\|² df) is untagged in `jun25-th2` sub-q 4.
+
+---
+
+### 3B.1 Fourier series formulas (§3.3)
+
+#### `parseval-power` — P_x = Σ\|aₖ\|² = Σ Aₖ²/2 (power of periodic signal / sum of orthogonal tones)
+
+**Weight: 4** ← highest must-learn weight in the foundations chapter
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `proodos26-10` | Proodos Απρίλιος 2026 · ΘΕΜΑ 10 | Power of m(t)=sin(10πt)+sinc(10t): P_sin = A²/2 = 1/2; sinc is an energy signal (P=0); Parseval-power gives P_total = 1/2 |
+| `jan26-th2-9` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 2.9 | Direct: P = A²/2 + B²/2 + C²/2 for x = Acos(2πf₁t)+Bsin(2πf₂t)+Csin(2πf₃t), f₁≠f₂≠f₃ |
+| `pa25-th2-4` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 2.4 | Same structure: P = A²/2 + B²/2 + C²/2 for three orthogonal tones |
+| `pb25-th2-4` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 2.4 | Same structure: P = A²/2 + B²/2 + C²/2 for three orthogonal tones |
+
+**Exam pattern:** The power-of-sum-of-tones problem appears in **4 distinct exam sessions** (Proodos 2026, Jan 2026, Proodos A, Proodos B) — the single most consistently tested must-learn foundations formula. The same form x = Asin + Bcos + Ccos recurs across the May 2025 midterms and the Jan 2026 Epi-Ptyxio, a clear exam template.
+
+---
+
+#### `fourier-series-rect-pulse` — aₖ = (Aτ/T₀)·sinc(kf₀τ) (FS coefficients of periodic rect-pulse train)
+
+**Weight: 4** ← tied with `parseval-power`
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `jun25-th1-5` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.5 | Draw periodic rect pulse (τ=1s, T=10s) spectrum: aₖ = (τ/T)sinc(kτ/T) = 0.1·sinc(k/10) is the primary deliverable |
+| `jun25-th1-6` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.6 | Vary τ→4s, recompute: aₖ = 0.4·sinc(0.4k); first null at k=2.5; direct application of same formula |
+| `jun25-th1-8` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.8 | "What should Aₖ be for x(t) to describe a periodic rect-pulse train?": answer Aₖ = (2Aτ/T)·sinc(kf₀τ) (single-sided form) |
+| `jan26-th1-4` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.4 | T/F: "FS envelope of τ=1s rect is narrower than τ=0.1s" — ΛΑΘΟΣ; requires knowing sinc envelope width = 1/τ (inverse time-BW) from the aₖ sinc shape |
+
+**Tagging gap (HIGH priority for Pass C):** All 4 exercises tag `fourier-pair-rect` (on-sheet FT pair) instead of `fourier-series-rect-pulse` (must-learn FS formula). These problems are **Fourier series** computations, not FT applications. Pass C must fix all 4 formulaId arrays and add the must-learn callout.
+
+---
+
+#### `fourier-series-analysis` — aₖ = (1/T₀)∫₀^{T₀} x(t) e^{−j2πkf₀t} dt (general FS analysis)
+
+**Weight: 0** — The general analysis integral is the derivation route to `fourier-series-rect-pulse`. No past-exam exercise requires writing the general formula from scratch.
+
+**Pass C note:** Must-learn callout required on `foundations/fourier-series` theory page (the entire FS chapter is off-sheet). Exam weight zero; low badge priority.
+
+---
+
+#### `fourier-series-synthesis`, `fourier-series-dual-form`, `fourier-orthogonality`, `fourier-series-conjugate-symmetry`, `lti-output-fourier-series` (bₖ = H(kf₀)·aₖ)
+
+**Weight: 0 each** — Structural FS formulas; no past-exam exercise isolates them.
+
+---
+
+### 3B.2 Signal energy and power (§3.1)
+
+#### `cos-power-half` — P = A²/2 for A·cos(2πf₀t + φ) or A·sin(2πf₀t + φ)
+
+**Weight: 3**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `jan26-th1-2` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.2 | T/F: "m(t)=cos(2πt) είναι σήμα ισχύος" — ΣΩΣΤΟ; answer requires P = A²/2 = 1/2 < ∞, E = ∞ |
+| `pa25-th1-2` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 1.2 | Identical T/F; same formula |
+| `pb25-th1-2` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 1.2 | T/F: "m(t)=cos(2πt) είναι σήμα ενέργειας" — ΛΑΘΟΣ; P = 1/2 (finite) → power signal, not energy |
+
+**Exam pattern:** This T/F has appeared in **3 consecutive exam sessions** (Jan 2026, Proodos A 2025, Proodos B 2025). Standard energy-vs-power-signal trap — the answer always hinges on P = A²/2 = 1/2.
+
+**Tagging gap:** All 3 exercises have no `formulaIds` (T/F problems have empty arrays). Pass C should add `cos-power-half` and the must-learn callout to all 3.
+
+---
+
+#### `signal-energy` — E_x = ∫_{-∞}^{∞} \|x(t)\|² dt
+
+**Weight: 2**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `pb25-th4-nonlinear` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 4 (sub-q 1) | "Find a such that energy of m(t)=a·Π(2Wt) equals 1": E = a²·(1/2W) = 1 → a = √(2W); direct integral of rect² |
+| `jun25-th2` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 2 (sub-q 4) | "Υπολογίστε τη συνολική ενέργεια του πολυπλεγμένου σήματος": E_total = E_{x_m} + E_{x_k} (orthogonal carriers); `signal-energy` opens the problem |
+
+**Tagging gap:** Untagged in both exercises. `pb25-th4-nonlinear` tags `am-signal` + `nonlinear-modulator-fc`; `jun25-th2` tags `dsb-sc-signal` + `am-signal` + `fourier-pair-rect`. Pass C should add `signal-energy` to both.
+
+---
+
+#### `parseval` — ∫\|x(t)\|² dt = ∫\|X(f)\|² df (general FT Parseval)
+
+**Weight: 1**
+
+| Exercise | Exam (problem) | How used |
+| --- | --- | --- |
+| `jun25-th2` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 2 (sub-q 4) | Energy of sinc(Wt): E = ∫\|M(f)\|² df = (1/W)² · W = 1/W; Parseval bridges E from time to frequency domain for the sinc signal |
+
+**Note:** `signal-energy` and `parseval` co-appear in `jun25-th2` sub-q 4: the definition E = ∫\|x\|² opens it; Parseval computes the sinc signal energy from its known rect spectrum.
+
+---
+
+#### `signal-power` — P_x = lim_{T→∞} (1/2T) ∫_{-T}^{T} \|x(t)\|² dt
+
+**Weight: 0** — General power formula is background. The specific result P = A²/2 (`cos-power-half`) is what the exams test. No exercise requires writing the general limit formula.
+
+---
+
+### 3B.3 LTI systems formulas (§3.2) and other foundations formulas
+
+#### `convolution-definition`, `convolution-properties`, `lti-frequency-response`, `lti-eigenfunction`, `lti-cosine-response`, `bibo-stability`
+
+**Weight: 0 each** — No past-exam foundations exercise requires computing H(f₀) from the definition integral, writing the convolution integral from scratch, or deriving the LTI cosine response. On-sheet FT tools (convolution theorem, multiplication dual) handle all exam spectrum-bandwidth calculations. The time-domain convolution definition is not directly tested in the 22 foundations exercises.
+
+**Pass C note:** All §3.2 formulas are must-learn (all off-sheet) with zero direct past-exam weight. Add callouts on `foundations/systems` theory page. Their exam weight appears in AM/FM/noise chapters where LTI filtering is applied.
+
+---
+
+### 3B.4 Ranked summary — Foundations chapter Pass B
+
+| Rank | Formula | formulaId | Weight | Pass C priority |
+| --- | --- | --- | --- | --- |
+| 1 | P = Σ Aₖ²/2 (power of sum of orthogonal tones) | `parseval-power` | **4** | HIGH — 4 exam sessions; callout absent; untagged in 3 of 4 exercises |
+| 1 | aₖ = (Aτ/T₀)sinc(kf₀τ) (FS rect-pulse coefficients) | `fourier-series-rect-pulse` | **4** | HIGH — 4 exercises; zero proper tagging; all wrongly tagged `fourier-pair-rect` (on-sheet) |
+| 3 | P = A²/2 (power of sinusoid) | `cos-power-half` | **3** | HIGH — 3-session T/F trap; formulaIds absent from all 3 problems |
+| 4 | E_x = ∫\|x(t)\|² dt (signal energy) | `signal-energy` | **2** | HIGH — untagged in both exercises; energy-normalization sub-question is a recurring pattern |
+| 5 | ∫\|x\|²dt = ∫\|X\|²df (general Parseval) | `parseval` | **1** | MEDIUM — co-appears with `signal-energy`; untagged in `jun25-th2` |
+| 6 | All FS structural formulas (synthesis, analysis-general, orthogonality, conjugate-sym., bₖ=H·aₖ) | various | **0** | MEDIUM — entire FS chapter is off-sheet; callouts needed on `foundations/fourier-series` theory page |
+| 6 | All LTI systems formulas (convolution-def, freq-response, eigenfunction, BIBO) | various | **0** | MEDIUM — all must-learn; zero direct weight; invoked via AM/FM/noise chapters |
+| 6 | dB gain: 20·log₁₀\|H(f)\| | — (needs formulaId `filter-gain-db`) | **0** | LOWER — only in inline ExamProblem on filters page; no standalone past-exam exercise; add formulaId |
+| 6 | signal-power, dc-rms, delta props, periodicity conds, even/odd | various | **0** | LOWER — must-learn callouts on `foundations/signals` theory page; no direct past-exam test |
+
+---
+
+## 4B. Pass B — Randomness/Why Chapter Weighting Results
+
+> **Step:** `mustlearn-passb-foundations-randomness-formulas` · **Status:** DONE  
+> **Scope:** every must-learn formula in §4 (randomness/why page: 1 theory page + 2 lecture problems). Weight = count of distinct past-exam exercises that required the formula.
+
+### Headline finding
+
+> **Zero past-exam exercises test the §4 randomness/why formulas directly.** All 6 exam sessions have zero standalone problems that ask students to compute E[X(t)], verify R_X(t₁,t₂) = R_X(τ), or state WSS conditions. The two exercises in §4.2 (`lec-rp-1`, `lec-rp-2`) are **lecture problems**, not past-exam problems — they originate from Session 10 lecture examples, not any exam in `past_exams/`.
+
+### Per-formula weights
+
+| Formula | formulaId | Weight | Note |
+| --- | --- | --- | --- |
+| m_X(t) = E[X(t)] = ∫a f_{X(t)}(a) da (mean / μέση τιμή) | `random-mean` | **0** | Lecture exercise only (`lec-rp-1`); no past-exam standalone |
+| R_X(t₁,t₂) = E[X(t₁)X(t₂)] (autocorrelation / ΣΑΣ) | `random-autocorr` | **0** | Lecture exercise only (`lec-rp-1`) |
+| R_{X,Y}(t₁,t₂) = E[X(t₁)Y(t₂)] (cross-correlation / ΕΣ) | `random-cross` | **0** | Lecture exercise only (`lec-rp-1`) |
+| WSS: m_X = const AND R_X(t₁,t₂) = R_X(τ) | `wss` | **0** | Lecture exercise only (`lec-rp-2`); noise problems assume WSS but never ask students to verify it |
+| Ergodicity: time-average = ensemble-average | (within `wss`) | **0** | Conceptual label; no formula to evaluate in exam |
+| S_X(f) = F{R_X(τ)} (WK teaser, forward-look) | `wiener-khinchin` | cross-ref §2B (3) | Primary home `randomness/psd` (§7B); already weighted in §2B |
+| P_X = R_X(0) = ∫S_X df (WK consequence, forward-look) | `wss-rx-properties` | cross-ref §2B | Primary home §7B; already counted in §2B |
+
+### Pass C note
+
+Zero past-exam weight ≠ unimportant. These are the **vocabulary** every noise/modulation derivation uses (WSS assumption, E[X(t)] in mean computations, R_X in Wiener–Khinchin). Add must-learn markers on the `randomness/why` and `randomness/random-processes` theory pages, and on the two lecture problems. Priority: lower than high-weight noise/AM/FM formulas.
+
+---
+
+## 5B. Pass B — Modulation Bridge Weighting Results
+
+> **Step:** `mustlearn-passb-foundations-randomness-formulas` · **Status:** DONE  
+> **Scope:** every must-learn formula in §5 (modulation/bridge page). Weight = count of distinct past-exam exercises.
+
+### Headline finding
+
+> **Zero past-exam exercises test bridge-specific formulas (pre-envelope, complex envelope, bandpass spectrum) in isolation.** The bridge page is a theoretical connector; its formulas underlie AM/FM/noise but are never standalone-examined. The only bridge formulaId with past-exam weight is `iq-decomposition` — but its weight comes from AM/FM/noise-chapter exercises already counted in §2B, §6B, §8B.
+
+### Per-formula weights
+
+| Formula | formulaId | Weight | Note |
+| --- | --- | --- | --- |
+| Pre-envelope: x_p(t) = x(t) + j·x̂(t) | — | **0** | Theoretical; not standalone tested |
+| Complex envelope: g(t) = x_p(t)·e^{−j2πfct} | — | **0** | Theoretical; not standalone tested |
+| x(t) = Re{g(t)·e^{j2πfct}} | — | **0** | Not standalone tested |
+| I/Q canonical: x = x_I cos(2πfct) − x_Q sin(2πfct) | `iq-decomposition` | **0** direct | No past-exam exercise explicitly tests the general I/Q form; specific AM/FM/noise results carry the exam weight (counted in §2B, §6B, §8B) |
+| Envelope + phase: V = √(x_I²+x_Q²), θ = arctan(x_Q/x_I) | (within `iq-decomposition`) | **0** | Not standalone tested |
+| Bandpass spectrum: X(f) = ½[G(f−fc) + G*(−f−fc)] | — | **0** | Not standalone tested |
+| Five-modulation table: AM/DSB/SSB/FM/PM (x_I, x_Q per scheme) | (per-scheme ids in AM/FM chapters) | counted in §6B/§8B | Each row's exam weight credited to respective AM/FM chapter |
+
+### Pass C note
+
+Bridge must-learn callouts: all four non-Hilbert formulas (pre-envelope, complex envelope, I/Q canonical, bandpass spectrum) lack the standard «⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο» callout. Fix F7 (line 275 I/Q "✓ Στο τυπολόγιο" → must-learn). Low exam-weight priority — the concepts are tested through AM/FM/noise problems, not through bridge-page questions.
+
+---
+
+## 7B. Pass B — Randomness/PSD + Remaining Randomness Weighting Results
+
+> **Step:** `mustlearn-passb-foundations-randomness-formulas` · **Status:** DONE  
+> **Scope:** every must-learn formula in §7 (randomness/psd, foundations/filters, foundations/signal-transformations) and §8.6 (random-variables, random-processes, stationarity).
+
+### Exam-paper audit
+
+Same 6-session corpus as §2B. The inline ExamProblems embedded in `randomness/psd/page.mdx` (`psd-from-rx`, `rx-from-psd`, `lti-output-psd`, `psd-properties`, `white-noise-correlation`, `psd-thermal-lpf`, `psd-bandpass-power`) are **NOT** in `exercises.tsx` and have no companion coaching in `sose-coaching.tsx` — placement-(b) concept does not apply. No standalone `topic:'random'` exercises exist in `exercises.tsx` beyond the two lecture exercises already swept in §4.2.
+
+### Overlap rule applied
+
+Per step specification — these §7 formulas were already counted in §2B (noise chapter Pass B):
+- **`lti-output-psd`** (S_Y = \|H\|²S_X): §2B weight = 3 (proodos26-6, sept25-th3-11, jun25-th1-10). **No additional exercises found** in a pure-randomness context. Cross-reference §2B; do not re-count.
+- **`wiener-khinchin`** (R_X ↔ S_X): §2B weight = 3 (same three exercises). **No additional exercises found.** Cross-reference §2B; do not re-count.
+
+### 7B.1 `randomness/psd` formulas (§7.3)
+
+| Formula | formulaId | Weight | Note |
+| --- | --- | --- | --- |
+| S_X(f) = F{R_X(τ)} (WK forward) | `wiener-khinchin` | **cross-ref §2B (3)** | No additional exercises in pure-randomness context beyond §2B entries |
+| R_X(τ) = F⁻¹{S_X(f)} (WK inverse) | `wiener-khinchin` | same entry | Same |
+| P_X = R_X(0) = ∫S_X df (power consequence) | `wss-rx-properties` | **0** direct | The P_X=R_X(0) consequence is used in noise power problems (proodos26-6 etc.) but credited to `wiener-khinchin` in §2B; no exercise tests `wss-rx-properties` in isolation |
+| PSD properties: S_X ∈ ℝ, S_X(−f)=S_X(f), S_X≥0 | `wss-rx-properties` | **0** | No past-exam exercise tests these properties directly |
+| ESD: F{R_x(τ)} = \|X(f)\|² (energy signal identity) | — (no formulaId) | **0** | Inline psd-page ExamProblems only; not in standalone exercise bank |
+| LTI ΣΑΣ chain: R_Y(τ) = R_X(τ)∗h(τ)∗h(−τ) | — | **0** | Intermediate derivation step; not directly examined |
+| S_Y(f) = \|H(f)\|²S_X(f) (LTI output PSD) | `lti-output-psd` | **cross-ref §2B (3)** | Co-primary teaching home here; no additional exercises beyond §2B |
+| e^{−a\|τ\|} ↔ 2a/(a²+(2πf)²) (exponential FT pair, F13) | — (no formulaId; needs `fourier-pair-exp`) | **0** | Page says "2–3 times/year" — refers to inline PSD ExamProblems, NOT the standalone past-exam bank; zero exercises in `exercises.tsx` require this pair explicitly |
+| S_{X,Y}(f) = F{R_{X,Y}(τ)} (cross-PSD) | — | **0** | No past-exam exercise |
+
+### 7B.2 Remaining randomness formulas (§8.6.1–§8.6.3)
+
+**`randomness/random-variables` (§8.6.1):** Zero new must-learn entries specific to K21 — confirmed in Pass A. All formulas (E[X], Var[X], linearity, LOTUS, Gaussian pdf) belong to the prerequisite course.
+
+**`randomness/random-processes` (§8.6.2):**
+
+| Formula | formulaId | Weight | Note |
+| --- | --- | --- | --- |
+| m_X(t) = E[X(t)] | `random-mean` | **0** | Lecture exercise only (`lec-rp-1`) |
+| R_X(t_i,t_j) = E[X(t_i)X(t_j)] | `random-autocorr` | **0** | Lecture only |
+| C_X(t_i,t_j) = R_X − m_X(ti)m_X(tj) (autocovariance) | (within `random-autocorr`) | **0** | Lecture only |
+| R_{X,Y}(t₁,t₂) = E[X(t₁)Y(t₂)] | `random-cross` | **0** | Lecture only |
+| Orthogonal / uncorrelated definitions | — | **0** | No formula to evaluate |
+| R_X(τ) = (A²/2)cos(2πf₀τ) (random-phase cosine) | `random-phase-cosine` | **0** | Lecture only (`lec-rp-2`) |
+
+**`randomness/stationarity` (§8.6.3):**
+
+| Formula | formulaId | Weight | Note |
+| --- | --- | --- | --- |
+| WSS cond 1: m_X(t) = const | `wss` | **0** | Lecture only (`lec-rp-2`) |
+| WSS cond 2: R_X(t_i,t_j) = R_X(τ) | `wss` | **0** | Same |
+| \|R_X(τ)\| ≤ R_X(0); R_X(−τ) = R_X(τ) (ΣΑΣ properties) | `wss-rx-properties` | **0** | No direct test |
+| Decomp: R_X(τ) = m_X² + R_N(τ) | — | **0** | No direct test |
+| Ergodicity: time-average = ensemble-average | `ergodicity` | **0** | Operational assumption stated on slide 30; no formula evaluated |
+
+**`foundations/filters` (§7.2):**
+
+| Formula | formulaId | Weight | Note |
+| --- | --- | --- | --- |
+| dB gain: 20·log₁₀\|H(f)\| | — (needs `filter-gain-db`) | **0** | Only in inline ExamProblem `filter-db-conversion` on filters page; no standalone past-exam exercise |
+| dB inversion: \|H\| = 10^{−dB/20} | — | **0** | Same |
+
+### 7B.3 Ranked summary — §7 + remaining randomness Pass B
+
+| Rank | Formula | formulaId | Weight | Pass C priority |
+| --- | --- | --- | --- | --- |
+| 1 | S_Y = \|H\|²S_X (LTI output PSD) | `lti-output-psd` | **cross-ref §2B (3)** | HIGH — co-primary teaching home; must-learn callout missing from psd page (ambiguous "✓ μέσω αλυσίδας" label); fix alongside noise/through-filters §8στ wording |
+| 1 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **cross-ref §2B (3)** | HIGH — primary teaching home is this page; must-learn callout entirely absent; "✓ μέσω WK" label ambiguous — revise to standard must-learn wording |
+| 3 | P_X = R_X(0) (power-from-ΣΑΣ) | `wss-rx-properties` | **0** direct | HIGH — implicit in every PSD power-computation (credited via §2B); ambiguous "✓ μέσω WK" label needs explicit must-learn fix |
+| 4 | e^{−a\|τ\|} ↔ 2a/(a²+(2πf)²) (exponential FT pair, F13) | — (needs `fourier-pair-exp`) | **0** | HIGH — no standalone exam weight but page flags as frequent; F13 inverse error ("τυπολόγιο") must be fixed; add `fourier-pair-exp` to `formulas.tsx` |
+| 5 | All randomness process definitions (E[X], R_X, WSS, ergodicity) | various | **0** | MEDIUM — vocabulary; must-learn callouts on randomness theory pages; lecture-only exercises |
+| 6 | PSD properties, ESD identity, LTI ΣΑΣ chain, cross-PSD | various | **0** | MEDIUM — theoretical tools; callouts needed on psd page |
+| 7 | dB gain (filters) | — (needs `filter-gain-db`) | **0** | LOWER — no standalone past-exam exercise; add formulaId for Pass C |
+
+---
+
 ## 9. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
 
 - **F1 — LIVE MISCITATION (correctness).** `app/(content)/noise/white-noise/page.mdx`
@@ -2120,6 +2402,11 @@ No FM problems were found **outside** `exercises.tsx` — no coverage gap in the
 - **Pass A — COMPLETE.** All chapters inventoried: Noise §2, Foundations §3, Randomness/why §4, Modulation bridge §5, AM §6, Foundations-supplemental + PSD §7, FM + remaining-randomness §8. Proceed to Pass B.
 - **Pass B — NOISE weighting DONE** (`mustlearn-passb-noise-formulas`) — results in §2B. Highest-weight: `white-noise-psd` + bandlimited P_N = N₀B (weight 5 each), `lti-output-psd` + `wiener-khinchin` (weight 3 each). Zero-weight: `bandpass-noise-r`, `noise-figure`, `fm-noise-output-psd`.
 - **Pass B — AM weighting DONE** (`mustlearn-passb-am-formulas`) — results in §6B. Highest-weight: `am-signal` (17), `am-mu` (8), `ssb-signal` (6), `dsb-sc-signal` (5), `am-spectrum`/`am-power`/`fdm-spacing` (4 each). Key finding: `fdm-spacing` untagged in all 4 multiplexing exercises; `dsb-sc-phase-error` needs a new formulaId. Zero-weight: `ssb-power`, all VSB formulas.
-- **Pass B — FM weighting DONE** (`mustlearn-passb-fm-formulas`) — results in §8B. Highest-weight: `fm-beta` + `carson` (weight 6 each — tied; tested in all 3 final-exam sessions); `fm-bessel-sidebands` + `fm-bessel-property` (weight 3 each); `fm-single-tone` + `fm-power` (weight 2 each). FM problems appear only in final exams (not midterms). Zero-weight: `pm-signal`, `fm-bessel-expansion`, `fm-noise-output-psd`, `fm-threshold`. `fm-snr-out`/`fm-gain-am`/`fm-snr-ref` weight 1 each (cross-topic, from §2B). Remaining chapters (foundations, randomness) — Pass B weighting TODO.
+- **Pass B — FM weighting DONE** (`mustlearn-passb-fm-formulas`) — results in §8B. Highest-weight: `fm-beta` + `carson` (weight 6 each — tied; tested in all 3 final-exam sessions); `fm-bessel-sidebands` + `fm-bessel-property` (weight 3 each); `fm-single-tone` + `fm-power` (weight 2 each). FM problems appear only in final exams (not midterms). Zero-weight: `pm-signal`, `fm-bessel-expansion`, `fm-noise-output-psd`, `fm-threshold`. `fm-snr-out`/`fm-gain-am`/`fm-snr-ref` weight 1 each (cross-topic, from §2B).
+- **Pass B — FOUNDATIONS weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §3B. Highest-weight: `parseval-power` + `fourier-series-rect-pulse` (weight 4 each — tied; both appear across 4 exam sessions); `cos-power-half` (3); `signal-energy` (2); `parseval` (1). All four are untagged or wrongly tagged in exercises.tsx — a comprehensive Pass C tagging sweep is needed. Zero-weight: all LTI systems formulas, all FS structural formulas, dB gain.
+- **Pass B — RANDOMNESS/WHY weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §4B. All formulas weight 0 from the past-exam bank (only lecture exercises exist for this chapter). Vocabulary must-learns (`random-mean`, `random-autocorr`, `wss`) need theory-page callouts; low badge priority.
+- **Pass B — MODULATION BRIDGE weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §5B. All bridge-specific formulas weight 0 (pre-envelope, complex envelope, bandpass spectrum, I/Q canonical not standalone-tested). Exam weight for I/Q already counted via AM/FM/noise chapters. Fix F7 inverse error (line 275) in Pass C.
+- **Pass B — RANDOMNESS/PSD + REMAINING RANDOMNESS weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §7B. `wiener-khinchin` + `lti-output-psd` cross-reference §2B (weight 3 each, no additional exercises). All remaining randomness formulas weight 0 from past-exam bank (lecture-only exercises; inline ExamProblems not in standalone bank). Critical Pass C items: fix "✓ μέσω WK" ambiguous labels on psd page; fix F13 exponential pair inverse error; add `fourier-pair-exp` formulaId.
+- **Pass B — COMPLETE.** All chapters now weighted: Noise §2B · AM §6B · FM §8B · Foundations §3B · Randomness/why §4B · Modulation bridge §5B · Randomness/PSD + remaining §7B. Proceed to Pass C.
 - **Pass C — apply**: annotate placements (a) theory pages, (b) problems, (c) `/formulas`,
   driven by a single source of truth in `formulas.tsx`/`formulaIds`.
