@@ -167,7 +167,7 @@ $$
 Άρα το FM σήμα είναι:
 
 $$
-\boxed{\,x_{FM}(t) = A_c \cos\!\left[2\pi f_c t + 2\pi K_f \int_{-\infty}^{t} m(\tau)\, d\tau\right]\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,x_{FM}(t) = A_c \cos\!\left[2\pi f_c t + 2\pi K_f \int_{-\infty}^{t} m(\tau)\, d\tau\right]\,} \quad \text{⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο}
 $$
 
 <FMSignalViz />
@@ -218,7 +218,7 @@ $$
 «Αν <InlineMath>{'W'}</InlineMath> είναι το **εύρος ζώνης** του <InlineMath>{'m(t)'}</InlineMath>, ο δείκτης διαμόρφωσης <InlineMath>{'\\beta_f'}</InlineMath> εκφράζει τη μέγιστη μεταβολή της στιγμιαίας συχνότητας από την κεντρική συχνότητα <InlineMath>{'f_c'}</InlineMath>, **κανονικοποιημένη ως προς το <InlineMath>{'W'}</InlineMath>**»:
 
 $$
-\boxed{\,\beta_f \triangleq \frac{\Delta f_{max}}{W} = \frac{K_f\, \max|m(t)|}{W}\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,\beta_f \triangleq \frac{\Delta f_{max}}{W} = \frac{K_f\, \max|m(t)|}{W}\,} \quad \text{⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο}
 $$
 
 - <InlineMath>{'\\Delta f_{max} = K_f \\max|m(t)|'}</InlineMath> = η **μέγιστη απόκλιση συχνότητας** (Hz).
@@ -244,7 +244,7 @@ $$
 Το ολοκλήρωμα γίνεται: <InlineMath>{'\\int A_m\\cos(2\\pi f_m \\tau)\\,d\\tau = \\frac{A_m}{2\\pi f_m}\\sin(2\\pi f_m t)'}</InlineMath>. Αντικαθιστώντας στην εξίσωση FM:
 
 $$
-\boxed{\,x_{FM}(t) = A_c \cos[2\pi f_c t + \beta_f \sin(2\pi f_m t)]\,} \quad \text{✓ Στο τυπολόγιο}
+\boxed{\,x_{FM}(t) = A_c \cos[2\pi f_c t + \beta_f \sin(2\pi f_m t)]\,} \quad \text{⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο}
 $$
 
 Αυτή είναι η μορφή που θα δουλέψουμε στο επόμενο κεφάλαιο για να βρούμε το φάσμα μέσω Bessel.
@@ -421,7 +421,7 @@ $$
 </Example>
 </ExamProblem>
 
-## 9. Σύνοψη τύπων (στο τυπολόγιο σου + τα δικά μας entries)
+## 9. Σύνοψη τύπων (κανένας δεν δίνεται στο τυπολόγιο — όλους πρέπει να τους θυμάσαι)
 
 | Ποσότητα | Τύπος |
 | --- | --- |
@@ -536,7 +536,7 @@ $$
   </p>
   <p>
     <strong>«Σύγκρινε FM vs AM»</strong> — δύο διαστάσεις:
-    (α) <em>θόρυβος</em>: FM gain over AM = <InlineMath>{'9\\beta^2'}</InlineMath> στο τυπολόγιο,
+    (α) <em>θόρυβος</em>: FM gain over AM = <InlineMath>{'9\\beta^2'}</InlineMath> ⚠️ (πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο),
     (β) <em>bandwidth</em>: AM = 2W, FM = 2(β+1)W. Στο WBFM, η FM παραδίδει μεγαλύτερο SNR
     με κόστος ~6× χειρότερη χρήση φάσματος. Παράδειγμα: Sept'25 ΘΕΜΑ 2.7.
   </p>
@@ -615,7 +615,7 @@ $$
 
 <Example title="Λύση">
 **Κερδίζει:**
-- **Ανθεκτικότητα σε amplitude noise** — limiter στον δέκτη αφαιρεί amplitude θόρυβο. Σε ίδιες συνθήκες SNR, η FM έχει **καλύτερο output SNR** (factor <InlineMath>{'9\\beta^2'}</InlineMath> gain over AM, ζει στο τυπολόγιο).
+- **Ανθεκτικότητα σε amplitude noise** — limiter στον δέκτη αφαιρεί amplitude θόρυβο. Σε ίδιες συνθήκες SNR, η FM έχει **καλύτερο output SNR** (factor <InlineMath>{'9\\beta^2'}</InlineMath> gain over AM, ⚠️ πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο).
 - **Σταθερή ισχύς** <InlineMath>{'P_{FM} = A_c^2/2'}</InlineMath> ανεξάρτητη του β — όλη η ισχύς είναι «ωφέλιμη» (δεν πάει στο carrier-πλάτος όπως στο Συμβατικό AM).
 - **Ομοιόμορφη αντιμετώπιση όλων των baseband συχνοτήτων** όσον αφορά το θόρυβο (παράγοντας **noise triangle** που εξετάζουμε στο <Link href="/fm/in-noise">/fm/in-noise</Link>).
 
