@@ -38,15 +38,15 @@ import Link from 'next/link'
 
 <SourceDoc
   sources={{ pdf: 'SE_session15_16_16_FM.pdf', label: 'FM modulator/demodulator hardware (slides 65-66) — η αφετηρία για τη noise analysis' }}
-  note="Ο prof δεν έχει dedicated slides για την FM-in-noise ανάλυση φέτος. Η αφετηρία είναι ο FM discriminator (slide 65-66: διαφορίζω → envelope detector → DC blocking) — από εκεί η triangular noise PSD παράγεται με την I/Q decomposition του bandpass θορύβου από το SE_session10_noise.pdf. Στις προηγούμενες εξεταστικές φάνηκε μία ποιοτική «σύγκριση FM vs AM» (Σεπτ. 2025 ΘΕΜΑ 2.7, 8%). Η σελίδα συμπληρώνει το trade-off story της FM ομάδας — χρειάζεσαι το «τι κερδίζει η FM πάνω από την AM» για να απαντήσεις τη σύγκριση."
+  note="Δεν υπάρχουν dedicated slides για την FM-in-noise ανάλυση φέτος. Η αφετηρία είναι ο FM discriminator (slide 65-66: διαφορίζω → envelope detector → DC blocking) — από εκεί η triangular noise PSD παράγεται με την I/Q decomposition του bandpass θορύβου από το SE_session10_noise.pdf. Στις προηγούμενες εξεταστικές φάνηκε μία ποιοτική «σύγκριση FM vs AM» (Σεπτ. 2025 ΘΕΜΑ 2.7, 8%). Η σελίδα συμπληρώνει το trade-off story της FM ομάδας — χρειάζεσαι το «τι κερδίζει η FM πάνω από την AM» για να απαντήσεις τη σύγκριση."
 />
 
 ## 1. Setup — τι έχουμε και τι θα παραγάγουμε
 
 Έχουμε δει ότι η FM δίνει **σταθερή envelope** (το πλάτος δεν περιέχει πληροφορία, μόνο η φάση) και **bandwidth μεγαλύτερο** από αυτό που χρειάζεται το message ([Carson rule](/fm/carson) `B = 2(β+1)W`). Σε αυτό το τελευταίο κεφάλαιο της FM ομάδας απαντάμε στο ερώτημα **«τι κερδίζει η FM σε σχέση με την AM στον θόρυβο;»**.
 
-<Callout type="note" title="Πλαίσιο σπουδών — και πού είναι το όριο του prof">
-Στο επίσημο deck `SE_session15_16_16_FM.pdf` οι slides 65-66 παρουσιάζουν τον FM **demodulator hardware** (διαφορίζω → envelope detector → DC blocking) — και η ύλη του prof τελειώνει εκεί («Τέλος μαθήματος», slide 67). Δεν υπάρχουν dedicated slides για quantitative FM-in-noise ανάλυση (output SNR, threshold effect, capture, pre-emphasis). Η ύλη του θορύβου ([`/noise/snr`](/noise/snr) και sister pages) σταματά στο «λευκός θόρυβος μέσα από ιδανικό BPF» — δεν φτάνει στο FM discriminator output.
+<Callout type="note" title="Πλαίσιο σπουδών — και πού είναι το όριο της ύλης">
+Στο επίσημο deck `SE_session15_16_16_FM.pdf` οι slides 65-66 παρουσιάζουν τον FM **demodulator hardware** (διαφορίζω → envelope detector → DC blocking) — και η ύλη των διαφανειών τελειώνει εκεί («Τέλος μαθήματος», slide 67). Δεν υπάρχουν dedicated slides για quantitative FM-in-noise ανάλυση (output SNR, threshold effect, capture, pre-emphasis). Η ύλη του θορύβου ([`/noise/snr`](/noise/snr) και sister pages) σταματά στο «λευκός θόρυβος μέσα από ιδανικό BPF» — δεν φτάνει στο FM discriminator output.
 
 **Στις προηγούμενες εξεταστικές** (`sept25-th2-7`, 8%) εμφανίζεται **μόνο μία ποιοτική «σύγκριση FM vs AM»** — όχι αναλυτικός υπολογισμός. Η σελίδα παρακάτω χτίζει τη ποσοτική θεωρία (output SNR, 9β² gain, threshold, capture, pre-emphasis) από τη τυπική βιβλιογραφία (Haykin/Lathi) **ως πλήρωση του trade-off story** της FM ομάδας — αν σου ζητηθεί η qualitative σύγκριση, ξέρεις γιατί τα νούμερα είναι αυτά που είναι.
 </Callout>
@@ -63,7 +63,7 @@ import Link from 'next/link'
 
 ## 2. Δέκτης FM: γιατί limiter + discriminator
 
-Ο δέκτης FM (συνέχεια από [`/fm/idea` §1 receiver chain](/fm/idea) και από το slide 65-66 του prof όπου παρουσιάζεται το demodulator hardware) έχει τέσσερις βαθμίδες πριν φτάσει το message στην έξοδο:
+Ο δέκτης FM (συνέχεια από [`/fm/idea` §1 receiver chain](/fm/idea) και από το slide 65-66 όπου παρουσιάζεται το demodulator hardware) έχει τέσσερις βαθμίδες πριν φτάσει το message στην έξοδο:
 
 ```
 RF antenna → [BPF στο f_c, BW = B Carson] → [Limiter] → [Discriminator: d/dt + |·| + DC block] → [LPF στα ±W] → m(t)
@@ -73,7 +73,7 @@ RF antenna → [BPF στο f_c, BW = B Carson] → [Limiter] → [Discriminator:
 
 1. **BPF στα f_c με bandwidth `B = 2(β+1)W`** — απορρίπτει όλον τον θόρυβο έξω από τη Carson ζώνη. Ο θόρυβος που μένει είναι **bandpass** (επίπεδη PSD μέσα στη ζώνη, μηδέν έξω).
 2. **Limiter** — κόβει κάθε amplitude variation. Η FM έχει σταθερή envelope `A_c` ([`/fm/bessel` §7: `P_FM = A_c²/2`](/fm/bessel)), οπότε αν δούμε διακυμάνσεις στο envelope, είναι **καθαρός θόρυβος** που τις προκάλεσε. Ο limiter τις διώχνει — διατηρεί μόνο τη γωνία.
-3. **Discriminator** — διαφορίζει τη γωνία ως προς τον χρόνο για να βγάλει την στιγμιαία συχνότητα: `(1/2π) dθ/dt = f_c + K_f m(t)`. Στο block diagram του prof (slide 66) ο discriminator υλοποιείται ως `d/dt` → envelope detector → DC blocking — η ίδια ιδέα.
+3. **Discriminator** — διαφορίζει τη γωνία ως προς τον χρόνο για να βγάλει την στιγμιαία συχνότητα: `(1/2π) dθ/dt = f_c + K_f m(t)`. Στο block diagram των διαφανειών (slide 66) ο discriminator υλοποιείται ως `d/dt` → envelope detector → DC blocking — η ίδια ιδέα.
 4. **LPF στα `±W`** — κρατά μόνο τις συχνότητες του message, κόβει τον υπόλοιπο θόρυβο.
 
 <Callout type="intuition" title="Γιατί δουλεύει η σταθερή envelope ως «αντι-θορυβική»">
@@ -597,7 +597,7 @@ $$G = 9 \cdot 25 = 225 \quad\Rightarrow\quad 10\log_{10}(225) \approx 23.5 \text
 
 **Πρακτική εικόνα:** στην άκρη της εμβέλειας ενός FM σταθμού, αρχίζεις να ακούς clicks. Αυτό είναι η «προειδοποίηση» — μερικά dB ακόμα και ο σταθμός γίνεται αδιάβαστος. Στο AM δεν υπάρχει αντίστοιχη απότομη μετάβαση.
 
-**Παγίδα:** το ~10 dB είναι loose qualifier του prof — διαφορετικές πηγές δίνουν 10-15 dB. Σχεδίαζε με margin.
+**Παγίδα:** το ~10 dB είναι loose qualifier — διαφορετικές πηγές δίνουν 10-15 dB. Σχεδίαζε με margin.
 </Example>
 </ExamProblem>
 
