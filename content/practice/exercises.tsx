@@ -1372,8 +1372,20 @@ export const EXERCISES: Exercise[] = [
     title: 'Λευκός θόρυβος μέσα από LPF',
     topic: 'noise',
     difficulty: 'easy',
-    prerequisites: ['noise/through-filters'],
+    prerequisites: ['noise/white-noise', 'noise/through-filters', 'foundations/filters'],
     formulaIds: ['white-noise-psd', 'lti-output-psd'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Και οι δύο τύποι που χρειάζεται η άσκηση λείπουν από το επίσημο
+        τυπολόγιο: η PSD λευκού θορύβου{' '}
+        <InlineMath>{'S_X(f) = N_0/2'}</InlineMath> και ο νόμος εξόδου LTI{' '}
+        <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f)'}</InlineMath>. Το τυπολόγιο δεν
+        περιέχει <em>κανέναν</em> τύπο θορύβου — άρα ούτε το τελικό{' '}
+        <InlineMath>{'P_Y = N_0 B'}</InlineMath> θα σου δοθεί· πρέπει να το
+        φτάσεις μόνος σου ή να το ξέρεις απέξω.
+      </>
+    ),
     statement: (
       <p>
         Έστω λευκός θόρυβος με φασματική πυκνότητα{' '}
@@ -1384,11 +1396,147 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
+          <span className="text-fg-muted">
+            Φαντάσου την ισχύ του λευκού θορύβου απλωμένη σε <em>όλες</em> τις
+            συχνότητες με σταθερό ύψος <InlineMath>{'N_0/2'}</InlineMath> — ένα
+            ατελείωτο, επίπεδο πάτωμα από <InlineMath>{'-\\infty'}</InlineMath>{' '}
+            έως <InlineMath>{'+\\infty'}</InlineMath>. Συνολική ισχύς;{' '}
+            <strong>άπειρη</strong>, αφού σταθερό ύψος επί άπειρο πλάτος δίνει
+            άπειρο εμβαδόν. Το ιδανικό LPF δουλεύει σαν ψαλίδι: κρατάει μόνο τη{' '}
+            <strong>φέτα</strong> <InlineMath>{'|f| < B'}</InlineMath> και πετάει
+            όλη την υπόλοιπη ουρά. Ό,τι μένει είναι ένα ορθογώνιο — ύψος{' '}
+            <InlineMath>{'N_0/2'}</InlineMath>, πλάτος <InlineMath>{'2B'}</InlineMath>{' '}
+            (από <InlineMath>{'-B'}</InlineMath> έως <InlineMath>{'+B'}</InlineMath>)
+            — και η ισχύς εξόδου είναι απλώς το <strong>εμβαδόν</strong> του.
+          </span>
+        </div>
+
+        <figure className="my-4">
+          <NoiseFilterShapingViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Διάλεξε «Ιδανικό LPF» και σύρε το slider του cutoff — το{' '}
+            <InlineMath>B</InlineMath> του viz είναι ακριβώς το{' '}
+            <InlineMath>B</InlineMath> της άσκησης. Αριστερά βλέπεις το επίπεδο{' '}
+            <InlineMath>{'S_X = N_0/2'}</InlineMath>, στη μέση τη μάσκα{' '}
+            <InlineMath>{'|H|^2'}</InlineMath> του ιδανικού φίλτρου, δεξιά τη
+            σκιασμένη λωρίδα εξόδου. Πρόσεξε ότι η ένδειξη{' '}
+            <InlineMath>{'P_Y'}</InlineMath> ανεβαίνει <strong>γραμμικά</strong>{' '}
+            καθώς ανοίγεις το cutoff — αυτό ακριβώς λέει το{' '}
+            <InlineMath>{'P_Y = N_0 B'}</InlineMath>: διπλάσιο{' '}
+            <InlineMath>B</InlineMath>, διπλάσια ισχύς. Η αναλυτική απαγωγή ζει
+            στο{' '}
+            <Link
+              href="/noise/through-filters"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              /noise/through-filters §4–5
+            </Link>
+            .
+          </figcaption>
+        </figure>
+
         <p>
-          <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f) = N_0/2'}</InlineMath> για{' '}
-          <InlineMath>{'|f| \\leq B'}</InlineMath>, αλλιώς 0.
+          <strong>Βήμα 1 — ο νόμος του θορύβου μέσα από LTI.</strong> Όταν μια
+          WSS τυχαία διεργασία περνά από γραμμικό, χρονικά αμετάβλητο φίλτρο{' '}
+          <InlineMath>{'H(f)'}</InlineMath>, η PSD εξόδου είναι η PSD εισόδου
+          πολλαπλασιασμένη με <InlineMath>{'|H(f)|^2'}</InlineMath> (slides
+          38–40):
         </p>
-        <BlockMath>{'P_Y = \\int_{-B}^{B} \\frac{N_0}{2}\\,df = N_0 B'}</BlockMath>
+        <BlockMath>{'S_Y(f) = |H(f)|^2\\, S_X(f)'}</BlockMath>
+        <p>
+          <strong>Βήμα 2 — βάλε μέσα το ιδανικό LPF.</strong> Για το ιδανικό
+          χαμηλοπερατό ισχύει <InlineMath>{'|H(f)|^2 = 1'}</InlineMath> μέσα στη
+          ζώνη <InlineMath>{'|f| < B'}</InlineMath> και <InlineMath>0</InlineMath>{' '}
+          έξω, ενώ η είσοδος είναι το επίπεδο{' '}
+          <InlineMath>{'S_X(f) = N_0/2'}</InlineMath> (slide 47). Άρα η έξοδος
+          είναι το ίδιο πάτωμα, αποκομμένο στο{' '}
+          <InlineMath>{'[-B, B]'}</InlineMath>:
+        </p>
+        <BlockMath>{'S_Y(f) = \\begin{cases} N_0/2, & |f| < B \\\\ 0, & |f| > B \\end{cases}'}</BlockMath>
+        <p>
+          <strong>Βήμα 3 — ολοκλήρωσε για την ισχύ.</strong> Η συνολική ισχύς
+          είναι το εμβαδόν κάτω από την <InlineMath>{'S_Y'}</InlineMath> — δηλαδή
+          το εμβαδόν της λωρίδας:
+        </p>
+        <BlockMath>{'P_Y = \\int_{-\\infty}^{\\infty} S_Y(f)\\,df = \\int_{-B}^{B} \\frac{N_0}{2}\\,df = \\frac{N_0}{2}\\cdot 2B = N_0 B'}</BlockMath>
+        <p>
+          Πρόσεξε <em>γιατί</em> βγαίνει <InlineMath>{'N_0 B'}</InlineMath> και
+          όχι <InlineMath>{'N_0 B/2'}</InlineMath>: το ύψος είναι{' '}
+          <InlineMath>{'N_0/2'}</InlineMath> (η σύμβαση δίψας όψεως — two-sided —
+          μοιράζει την ισχύ σε θετικές <em>και</em> αρνητικές συχνότητες), αλλά η
+          ζώνη <InlineMath>{'[-B, B]'}</InlineMath> έχει πλάτος{' '}
+          <InlineMath>{'2B'}</InlineMath>, όχι <InlineMath>B</InlineMath>. Το
+          μισό του ύψους και το διπλάσιο του πλάτους{' '}
+          <strong>αλληλοεξουδετερώνονται</strong>· γι' αυτό το{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> εξαφανίζεται και μένει
+          καθαρό <InlineMath>{'N_0 B'}</InlineMath>. Είναι η νούμερο-ένα πηγή
+          λάθους εδώ (δες το radar εξέτασης).
+        </p>
+
+        <p>
+          <strong>Με απλά λόγια:</strong> το ιδανικό LPF παίρνει τον λευκό
+          θόρυβο (άπειρης ισχύος, αφού το πάτωμα δεν τελειώνει ποτέ) και τον
+          κάνει <strong>bandlimited</strong> με πεπερασμένη ισχύ{' '}
+          <InlineMath>{'N_0 B'}</InlineMath>. Η «άπειρη» ισχύς ζούσε στην
+          ατέρμονη ουρά του φάσματος· ένας πραγματικός δέκτης, με το πεπερασμένο
+          bandwidth του, ποτέ δεν τη βλέπει — βλέπει μόνο τη φέτα{' '}
+          <InlineMath>{'N_0 B'}</InlineMath>. Αυτό το ίδιο νούμερο ξαναγυρίζει ως
+          ο <em>παρονομαστής</em> (η ισχύς θορύβου) σε κάθε υπολογισμό{' '}
+          <Link
+            href="/noise/snr"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            SNR
+          </Link>
+          .
+        </p>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted">
+            {' '}— ίδια συνταγή (<InlineMath>{'S_Y = |H|^2 S_X'}</InlineMath> και
+            μετά ολοκλήρωση), αλλάζει μόνο το <InlineMath>{'|H|^2'}</InlineMath>.
+            Άλλαξε φίλτρο στο viz παραπάνω και επιβεβαίωσε:
+          </span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Ιδανικό BPF</strong> με λωρίδα εύρους{' '}
+              <InlineMath>B</InlineMath> γύρω από κάθε{' '}
+              <InlineMath>{'\\pm f_c'}</InlineMath>: τώρα περνάνε <em>δύο</em>{' '}
+              rects (μία στις θετικές, μία στις αρνητικές συχνότητες), συνολικού
+              πλάτους <InlineMath>{'2B'}</InlineMath> — ίδιο με το LPF, άρα πάλι{' '}
+              <InlineMath>{'P_Y = N_0 B'}</InlineMath>. Το <em>πού</em> κάθεται η
+              ζώνη δεν αλλάζει την ισχύ· μόνο το <em>πόσο</em> συνολικό πλάτος
+              περνάει μετράει.
+            </li>
+            <li>
+              <strong>Μη ιδανικό RC LPF</strong> πρώτης τάξης (όχι rect, αλλά{' '}
+              <InlineMath>{'|H|^2 = 1/(1+(f/f_c)^2)'}</InlineMath>): το
+              ολοκλήρωμα γίνεται Lorentzian και δίνει{' '}
+              <InlineMath>{'P_Y = \\pi N_0 f_c/2'}</InlineMath> — μεγαλύτερο κατά{' '}
+              <InlineMath>{'\\pi/2'}</InlineMath> από ιδανικό LPF ίδιου cutoff,
+              γιατί το RC αφήνει να περάσει και λίγη ουρά πάνω από το{' '}
+              <InlineMath>{'f_c'}</InlineMath> (πλήρης απαγωγή στο{' '}
+              <Link
+                href="/noise/through-filters"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                /noise/through-filters §6
+              </Link>
+              ).
+            </li>
+            <li>
+              <strong>Κι αν η είσοδος δεν είναι λευκή;</strong> Αν το{' '}
+              <InlineMath>{'S_X(f)'}</InlineMath> δεν είναι επίπεδο, δεν βγαίνει
+              σταθερά έξω από το ολοκλήρωμα — πρέπει να υπολογίσεις πραγματικά το{' '}
+              <InlineMath>{'\\int_{-B}^{B} S_X(f)\\,df'}</InlineMath>. Το κόλπο
+              «ύψος × πλάτος» δούλεψε <em>μόνο</em> χάρη στο επίπεδο πάτωμα του
+              λευκού θορύβου.
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },

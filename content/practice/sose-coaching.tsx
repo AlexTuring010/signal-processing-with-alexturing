@@ -565,21 +565,62 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'sept25-th3-11': {
     takeaway: (
       <p>
-        Η συνταγή <InlineMath>{'P = N_0 B'}</InlineMath> είναι ο
-        αριθμός-κλειδί για κάθε noise problem με ιδανικό LPF — βγαίνει
-        από <InlineMath>{'\\int_{-B}^{B} (N_0/2) df'}</InlineMath>. Για
-        bandpass με εύρος <InlineMath>{'2B'}</InlineMath>, η ισχύς γίνεται{' '}
-        <InlineMath>{'2 N_0 B'}</InlineMath>. Πάντα μέτρα τι κρατάει το
-        φίλτρο και πολλαπλασίασε με <InlineMath>{'N_0/2'}</InlineMath>.
+        <strong>
+          Θόρυβος μέσα από οποιοδήποτε LTI — μία συνταγή δύο βημάτων:
+        </strong>{' '}
+        πρώτα <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f)'}</InlineMath>, μετά
+        ολοκλήρωσε, <InlineMath>{'P_Y = \\int S_Y(f)\\,df'}</InlineMath>. Για{' '}
+        <em>ιδανικό</em> φίλτρο το <InlineMath>{'|H|^2'}</InlineMath> είναι 0 ή
+        1, οπότε το ολοκλήρωμα εκφυλίζεται σε καθαρό{' '}
+        <strong>εμβαδόν εντός ζώνης</strong> = ύψος × συνολικό πλάτος. Με ύψος{' '}
+        <InlineMath>{'N_0/2'}</InlineMath> και ιδανικό LPF εύρους{' '}
+        <InlineMath>B</InlineMath> (η ζώνη <InlineMath>{'[-B, B]'}</InlineMath>{' '}
+        έχει πλάτος <InlineMath>{'2B'}</InlineMath>) βγαίνει{' '}
+        <InlineMath>{'P_Y = N_0 B'}</InlineMath>. Όταν δεις «επίπεδος θόρυβος
+        μέσα από ιδανικό φίλτρο», μην ολοκληρώνεις τυφλά — μέτρα{' '}
+        <strong>όλο</strong> το πλάτος που περνάει (θετικές <em>και</em>{' '}
+        αρνητικές συχνότητες) και πολλαπλασίασε με{' '}
+        <InlineMath>{'N_0/2'}</InlineMath>. Το ίδιο{' '}
+        <InlineMath>{'N_0 B'}</InlineMath> θα το ξαναδείς ως τον παρονομαστή
+        κάθε SNR.
       </p>
     ),
     examRadar: (
-      <p>
-        «λευκός θόρυβος μέσω LPF/HPF/BPF» → σχεδόν πάντα η απάντηση είναι{' '}
-        <InlineMath>{'P = N_0 \\times (\\text{εύρος που περνάει})'}</InlineMath>.
-        Αν δεις HPF χωρίς upper cutoff, ανάφερε ότι θεωρητικά η ισχύς
-        αποκλίνει — δεν είναι φυσικό φίλτρο.
-      </p>
+      <>
+        <p>
+          «Λευκός θόρυβος» + «ιδανικό φίλτρο» + «ισχύς εξόδου» → απάντηση μιας
+          γραμμής: <InlineMath>{'P_Y = (N_0/2)\\int |H(f)|^2\\,df'}</InlineMath>{' '}
+          = ύψος × συνολικό πλάτος ζώνης. Ιδανικό LPF εύρους{' '}
+          <InlineMath>B</InlineMath> → ζώνη <InlineMath>{'[-B, B]'}</InlineMath>{' '}
+          πλάτους <InlineMath>{'2B'}</InlineMath> →{' '}
+          <InlineMath>{'P_Y = N_0 B'}</InlineMath>. Χρόνος-στόχος:{' '}
+          <strong>~2 λεπτά</strong> — σχεδόν δωρεάν μονάδες, μην ξοδέψεις
+          παραπάνω.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Η παγίδα — one-sided vs two-sided (παράγοντας 2).</strong>{' '}
+          Με τη δίψας όψεως (two-sided) σύμβαση{' '}
+          <InlineMath>{'S_X = N_0/2'}</InlineMath> ολοκληρώνεις σε <em>όλη</em> τη
+          ζώνη <InlineMath>{'[-B, B]'}</InlineMath> (πλάτος{' '}
+          <InlineMath>{'2B'}</InlineMath>): το{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> και το{' '}
+          <InlineMath>2</InlineMath> ακυρώνονται →{' '}
+          <InlineMath>{'N_0 B'}</InlineMath>. Τα δύο κλασικά λάθη παράγοντα 2:{' '}
+          <InlineMath>{'(N_0/2)\\times B'}</InlineMath> (ξεχνάς τις αρνητικές
+          συχνότητες) δίνει λανθασμένα <InlineMath>{'N_0 B/2'}</InlineMath>, ενώ{' '}
+          <InlineMath>{'N_0 \\times 2B'}</InlineMath> (μονόπλευρο ύψος επί διπλό
+          πλάτος) δίνει <InlineMath>{'2 N_0 B'}</InlineMath>. Κράτα{' '}
+          <strong>ένα</strong> ζευγάρι σταθερό: two-sided{' '}
+          <InlineMath>{'N_0/2'}</InlineMath> με πλάτος{' '}
+          <InlineMath>{'2B'}</InlineMath>, <em>ή</em> one-sided{' '}
+          <InlineMath>{'N_0'}</InlineMath> με πλάτος <InlineMath>B</InlineMath>.
+          Και προσοχή: το «<InlineMath>{'N_0 \\times'}</InlineMath> εύρος» ισχύει
+          μόνο για <em>ιδανικά</em> φίλτρα — σε RC LPF το ολοκλήρωμα δίνει{' '}
+          <InlineMath>{'\\pi N_0 f_c/2'}</InlineMath>. Και αν το φίλτρο είναι HPF
+          χωρίς πάνω cutoff, η ισχύς <em>αποκλίνει</em> (άπειρο) — μη φυσικό,
+          ανάφερέ το.
+        </div>
+      </>
     ),
   },
 
