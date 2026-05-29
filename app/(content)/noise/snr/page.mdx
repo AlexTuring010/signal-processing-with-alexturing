@@ -8,10 +8,10 @@ export const frontmatter = {
   title: 'SNR',
   slug: 'noise/snr',
   order: 4,
-  prerequisites: ['noise/through-filters', 'am/modulator-demodulator', 'fm/in-noise'],
+  prerequisites: ['noise/through-filters', 'noise/bandpass', 'am/modulator-demodulator', 'fm/in-noise'],
   examWeight: 3,
-  estimatedReadTime: 18,
-  lastUpdated: '2026-05-05',
+  estimatedReadTime: 24,
+  lastUpdated: '2026-05-29',
 }
 
 import { CompleteToggle } from '@/components/layout/CompleteToggle'
@@ -21,7 +21,7 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-fg-subtle">
   <span>Noise · 4</span>
   <span>·</span>
-  <span>~18 min read</span>
+  <span>~24 min read</span>
   <span>·</span>
   <span className="font-semibold text-orange-600 dark:text-orange-400">🟠 Medium exam — capstone</span>
 </div>
@@ -38,35 +38,57 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
 <SourceDoc
   sources={{
     pdf: 'SE_session10_noise.pdf',
-    label: 'SNR ορισμός, dB scale, input vs output SNR — recap από όλη τη Noise group',
+    slides: '44–56',
+    label: 'Τα θεμέλια θορύβου για το SNR: θερμικός/λευκός θόρυβος (P_N=kTW, S_N=N_0/2), ισχύς θορύβου σε ζώνη (Άσκηση 8: P_Y=N_0 W) και η κρίσιμη παρατήρηση (slide 55) ότι «η ισχύς του θορύβου αυξάνεται με το εύρος ζώνης».',
   }}
+  note="Το επίσημο deck της Noise group (SE_session10, 57 σελίδες) σταματά στον «λευκό θόρυβο μέσα από ιδανικό BPF» (slide 56· «Τέλος μαθήματος» στο slide 57) — ΔΕΝ περιέχει χωριστή ανάλυση SNR (ορισμός, input/output, processing gain, reference SNR). Η ίδια η μετρική SNR και η σύγκριση των modulation schemes συντίθενται εδώ από τις ήδη-θεμελιωμένες σελίδες AM/FM-σε-θόρυβο — /am/modulator-demodulator (session 11–13) και /fm/in-noise (session 15–16, + τυπική βιβλιογραφία Haykin/Lathi) — που φέρουν τα δικά τους audited SourceDocs."
 />
 
 
-Το SNR είναι **η μετρική** που χρησιμοποιούμε για να συγκρίνουμε modulation schemes, να αξιολογήσουμε δέκτες, και να ποσοτικοποιήσουμε «πόσο καλά ακούγεται» μια μετάδοση. Σε αυτό το τελευταίο κεφάλαιο της Noise group:
+Φαντάσου ότι ακούς ραδιόφωνο. Όσο πιο κοντά στον σταθμό, τόσο πιο **καθαρά** παίζει η μουσική· όσο απομακρύνεσαι, τόσο περισσότερο την πνίγει ένα «σσσσ». Το **SNR** (Signal-to-Noise Ratio) είναι ακριβώς αυτός ο αριθμός: **πόσο πιο δυνατό είναι το σήμα από τον θόρυβο**. Είναι η μετρική με την οποία συγκρίνουμε modulation schemes, αξιολογούμε δέκτες και ποσοτικοποιούμε το «πόσο καλά ακούγεται» μια μετάδοση.
 
-1. Ορίζουμε **SNR** και την dB scale.
-2. Διακρίνουμε **input SNR** vs **output SNR**.
-3. Ορίζουμε **processing gain** του δέκτη.
-4. Ανακεφαλαιώνουμε όλα τα SNR formulas που έχουμε δει.
+Σε αυτό το τελευταίο κεφάλαιο της Noise group χτίζουμε τη **μηχανή μέτρησης SNR**, βήμα-βήμα:
 
-## 1. Ορισμός
+1. Τι **είναι** το SNR και γιατί το διαβάζουμε σε **dB** (§1).
+2. Γιατί το SNR είναι **διαφορετικό** στην είσοδο και στην έξοδο του δέκτη — το ίδιο σήμα, δύο σημεία μέτρησης (§2).
+3. Τι μετράει το **processing gain**: αγόρασε ή έχασε SNR ο δέκτης, και από πού (§3).
+4. Τι είναι το **reference SNR** — ο μόνος δίκαιος «κανόνας» για να συγκρίνεις σχήματα (§4).
+
+Από εκεί και κάτω ανακεφαλαιώνουμε τι δίνει η κάθε modulation (AM, FM) μέσα στον θόρυβο και λύνουμε τα τυπικά exam problems.
+
+## 1. Τι είναι το SNR — η μουσική vs το «σσσσ»
+
+**Νιώσε το πρώτα.** Κάθε σήμα που φτάνει στον δέκτη έρχεται μαζί με θόρυβο — το αναπόφευκτο θερμικό «σσσσ» που χτίσαμε σε όλη τη Noise group. Το αυτί σου κάνει αυτόματα μία σύγκριση: «πόσο δυνατά παίζει η μουσική σε σχέση με το βουητό;». Αν η μουσική είναι πολύ δυνατότερη, ούτε που προσέχεις τον θόρυβο. Αν είναι στο ίδιο επίπεδο, παλεύεις να ξεχωρίσεις τι λέει το τραγούδι. Αυτή ακριβώς η σύγκριση **είναι** το SNR.
+
+Επειδή «δυνατά» σημαίνει **ισχύς**, το SNR είναι ο λόγος της ισχύος του σήματος προς την ισχύ του θορύβου:
 
 $$
 \boxed{\,\text{SNR} = \frac{P_{signal}}{P_{noise}}\,}
 $$
 
-— ο λόγος της ισχύος του σήματος προς την ισχύ του θορύβου, σε **κάποιο σημείο** του δέκτη.
+— μετρημένος σε **κάποιο συγκεκριμένο σημείο** του δέκτη (στο §2 θα δούμε ότι το σημείο μετράει). Σε απλά λόγια: **πόσες φορές δυνατότερο είναι το σήμα από τον θόρυβο** εκεί που κοιτάμε. SNR = 100 σημαίνει «το σήμα έχει 100 φορές την ισχύ του θορύβου».
 
-**Παρατήρηση:** το SNR είναι **dimensionless** (αριθμός χωρίς μονάδες). Είναι ένας **καθαρός λόγος**, οπότε εκφράζεται φυσικά σε **dB**:
+Γιατί ισχύς και όχι πλάτος; Γιατί ο θόρυβος είναι **τυχαίος** — δεν έχει σταθερό πλάτος να μετρήσεις, έχει όμως μέση **ισχύ** (τη διασπορά $\sigma^2$ που υπολογίσαμε στο [`/noise/through-filters`](/noise/through-filters): θόρυβος μέσα σε ζώνη εύρους $W$ έχει ισχύ $N_0 W$). Η ισχύς είναι το μέγεθος που ξέρουμε να υπολογίζουμε για τον θόρυβο — και προστίθεται καθαρά.
+
+### Γιατί το διαβάζουμε σε dB
+
+Το SNR είναι **καθαρός λόγος** (αδιάστατος αριθμός). Το διαβάζουμε όμως σχεδόν πάντα σε **decibels**:
 
 $$
 \text{SNR}_{dB} = 10 \log_{10}\!\left(\frac{P_{signal}}{P_{noise}}\right)
 $$
 
-| SNR linear | SNR dB | Ποιότητα |
+Δύο λόγοι που ο λογάριθμος βγάζει νόημα: **(1)** το SNR καλύπτει τεράστιο εύρος — από ~1 (απελπιστικό) μέχρι 10000+ (hi-fi)· ο λογάριθμος τα στριμώχνει σε μια βολική κλίμακα 0–40+ dB. **(2)** Η αντίληψή μας για την ποιότητα κλιμακώνεται **πολλαπλασιαστικά**, όχι προσθετικά — ένα ×10 στον λόγο «αισθάνεται» σαν σταθερό βήμα, κι αυτό ακριβώς δίνει ο λογάριθμος.
+
+Τι **αισθάνεσαι** σε κάθε βήμα — κράτησέ τα, επιστρέφουν συνέχεια στα problems:
+
+- **+3 dB** = ο λόγος **×2** (διπλασιάζεται). Μόλις-μόλις αντιληπτή βελτίωση.
+- **+10 dB** = ο λόγος **×10**. Σαφώς καθαρότερο.
+- **−3 dB** = ο λόγος **÷2** (υποδιπλασιάζεται).
+
+| SNR (γραμμικά) | SNR σε dB | Πώς ακούγεται / φαίνεται |
 | --- | --- | --- |
-| 1 | 0 dB | Σήμα ίσο με θόρυβο — αόρατο |
+| 1 | 0 dB | Σήμα ίσο με θόρυβο — χαμένο |
 | 10 | 10 dB | Οριακή ανίχνευση |
 | 100 | 20 dB | Ακούγεται καθαρά |
 | 1000 | 30 dB | Καλή ποιότητα |
@@ -74,75 +96,142 @@ $$
 
 <SNRPlaygroundViz />
 
-Σύρε το SNR slider και θα νιώσεις πότε «χάνεις» το σήμα. Στα ~5 dB είναι οριακό· κάτω από 0 dB δεν διακρίνεται καθόλου με γυμνό μάτι.
+Σύρε το slider και **νιώσε** τη μετάβαση: πάνω το καθαρό σήμα, στη μέση ο θόρυβος, κάτω το άθροισμα που πραγματικά φτάνει στον δέκτη. Γύρω στα ~5 dB το ημίτονο μόλις που ξεχωρίζει· κάτω από 0 dB ο θόρυβος είναι δυνατότερος από το σήμα και το χάνεις εντελώς.
 
-## 2. Input vs Output SNR
+## 2. Input vs Output SNR — ίδιο σήμα, δύο σημεία μέτρησης
 
-Σε ένα δέκτη υπάρχουν **πολλαπλά σημεία** στα οποία μπορούμε να μετρήσουμε SNR. Δύο σημαντικά:
+Εδώ μπερδεύονται οι περισσότεροι: **το SNR δεν είναι ένας αριθμός για όλη τη μετάδοση.** Είναι ο λόγος ισχύος **εκεί που τον μετράς** — και ο δέκτης έχει πολλά σημεία, με διαφορετικό SNR στο καθένα. Δύο μετράνε πάνω απ' όλα: η **είσοδος** του αποδιαμορφωτή και η **έξοδός** του.
 
-### Input SNR ($\text{SNR}_{in}$ ή $\text{SNR}_i$)
+<figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
+  <figcaption className="mb-4 text-sm font-semibold tracking-tight text-fg">
+    Η αλυσίδα του δέκτη — δύο σημεία μέτρησης SNR
+  </figcaption>
+  <div className="flex flex-col items-stretch gap-2 text-xs md:flex-row md:items-center">
+    <div className="flex-1 rounded-md border border-border bg-bg-soft px-3 py-2 text-center">
+      <div className="font-semibold text-fg">Κεραία / RF</div>
+      <div className="text-fg-subtle">σήμα + λευκός θόρυβος N₀/2</div>
+    </div>
+    <div className="hidden text-fg-subtle md:block" aria-hidden="true">→</div>
+    <div className="flex-1 rounded-md border border-border bg-bg-soft px-3 py-2 text-center">
+      <div className="font-semibold text-fg">BPF</div>
+      <div className="text-fg-subtle">κρατά ζώνη B γύρω από f_c</div>
+    </div>
+    <div className="hidden text-fg-subtle md:block" aria-hidden="true">→</div>
+    <div className="flex-1 rounded-md border-2 border-accent/50 bg-accent/10 px-3 py-2 text-center">
+      <div className="font-semibold text-fg">📍 SNR_in</div>
+      <div className="text-fg-muted">μετά το BPF · ζώνη B</div>
+    </div>
+    <div className="hidden text-fg-subtle md:block" aria-hidden="true">→</div>
+    <div className="flex-1 rounded-md border border-border bg-bg-soft px-3 py-2 text-center">
+      <div className="font-semibold text-fg">Αποδιαμορφωτής + LPF</div>
+      <div className="text-fg-subtle">κρατά ζώνη W</div>
+    </div>
+    <div className="hidden text-fg-subtle md:block" aria-hidden="true">→</div>
+    <div className="flex-1 rounded-md border-2 border-accent/50 bg-accent/10 px-3 py-2 text-center">
+      <div className="font-semibold text-fg">📍 SNR_out</div>
+      <div className="text-fg-muted">αυτό ακούς · ζώνη W</div>
+    </div>
+  </div>
+  <p className="mt-4 text-xs text-fg-muted">
+    Το ίδιο σήμα, δύο ταμπλό. Ανάμεσά τους η ζώνη στενεύει (B → W → λιγότερος θόρυβος) και ο αποδιαμορφωτής αλλάζει το σχήμα του θορύβου — γι' αυτό το SNR_in δεν ισούται με το SNR_out.
+  </p>
+</figure>
 
-Στην **είσοδο του demodulator** — μετά τον BPF του δέκτη, πριν την αποδιαμόρφωση. Συνήθως εκφράζεται ως:
+### Input SNR
+
+Μετριέται **μετά τον RF/IF bandpass filter (BPF) του δέκτη, αλλά πριν την αποδιαμόρφωση** — στο σήμα όπως μπαίνει στον αποδιαμορφωτή. Ο BPF έχει αφήσει να περάσει μόνο η ζώνη μετάδοσης $B$ (συνήθως Carson) γύρω από τον φορέα, κόβοντας τον θόρυβο έξω από αυτήν:
 
 $$
-\text{SNR}_{in} = \frac{P_{signal,RF}}{N_0\, B}
+\boxed{\,\text{SNR}_{in} = \frac{P_{s,RF}}{N_0\, B}\,}
 $$
 
-όπου $B$ είναι το bandwidth του front-end BPF (συνήθως Carson).
+όπου $P_{s,RF}$ η ισχύς του διαμορφωμένου σήματος που φτάνει, και $N_0 B$ η ισχύς θορύβου μέσα στη ζώνη $B$ — ακριβώς το «ισχύς $= N_0 \times$ εύρος ζώνης» από τα [`/noise/through-filters`](/noise/through-filters) και [`/noise/bandpass`](/noise/bandpass).
 
-### Output SNR ($\text{SNR}_{out}$ ή $\text{SNR}_o$)
+### Output SNR
 
-Μετά τον demodulator και τον LPF στο message bandwidth $W$. Αυτό είναι «το SNR που ακούει ο τελικός χρήστης».
+Μετριέται **μετά τον αποδιαμορφωτή και το τελικό lowpass filter (LPF)** στη ζώνη του μηνύματος $W$. Αυτό είναι «**το SNR που ακούει ο τελικός χρήστης**» — ο αριθμός που στο τέλος μετράει.
 
-## 3. Processing gain
+### Γιατί ο αριθμός αλλάζει από την είσοδο στην έξοδο
+
+Δύο πράγματα συμβαίνουν ανάμεσα στα δύο σημεία, και **και τα δύο** μετακινούν το SNR:
+
+1. **Η ζώνη στενεύει: $W < B$.** Η ισχύς θορύβου είναι $N_0 \times$ (εύρος ζώνης), οπότε όταν το τελικό LPF περιορίζει τον θόρυβο από τη φαρδιά ζώνη $B$ στη στενή $W$, **πετάς θόρυβο** — δωρεάν κέρδος SNR. Είναι η παρατήρηση του slide 55 της Noise group («*η ισχύς του θορύβου αυξάνεται με το εύρος ζώνης του φίλτρου*»), διαβασμένη ανάποδα: στενότερη ζώνη = λιγότερος θόρυβος.
+2. **Ο αποδιαμορφωτής αναδιαμορφώνει τον θόρυβο.** Ο αποδιαμορφωτής δεν είναι παθητικό φίλτρο: πολλαπλασιάζει, παραγωγίζει ή ανιχνεύει envelope, κι αυτό **αλλάζει το σχήμα** του θορύβου — άλλοτε προς όφελός σου (ο FM discriminator μαζί με το πλατύ band δίνει τεράστιο κέρδος) και άλλοτε εις βάρος σου (ο conventional-AM envelope detector σπαταλά ισχύ στον φορέα, και κάτω από ένα κατώφλι «σπάει»).
+
+## 3. Processing gain — αγόρασε ή έχασε SNR ο δέκτης;
 
 <Collectible id="snr-lamp" />
 
-Το **processing gain** ενός δέκτη είναι ο λόγος SNR_out προς SNR_in:
+Τώρα που έχουμε δύο σημεία (είσοδος / έξοδος), η φυσική ερώτηση είναι: **ο δέκτης βελτίωσε ή χειροτέρεψε τον λόγο σήμα-προς-θόρυβο;** Το **processing gain** είναι ακριβώς αυτό — ο λόγος του output προς το input SNR:
 
 $$
-G_{proc} = \frac{\text{SNR}_{out}}{\text{SNR}_{in}}
+\boxed{\,G = \frac{\text{SNR}_{out}}{\text{SNR}_{in}}\,}
 $$
 
-- $G > 1$ ($G_{dB} > 0$): ο δέκτης **βελτιώνει** το SNR (FM με β μεγάλο).
-- $G < 1$ ($G_{dB} < 0$): ο δέκτης **χειροτερεύει** το SNR (AM με μ < 1).
-- $G = 1$ (0 dB): ουδέτερος (DSB-SC με coherent demod).
+- $G > 1$ (θετικά dB): ο δέκτης **κέρδισε** SNR — έβγαλε καθαρότερο σήμα απ' ό,τι μπήκε.
+- $G < 1$ (αρνητικά dB): ο δέκτης **έχασε** SNR.
+- $G = 1$ (0 dB): ουδέτερος.
 
-**Πραγματικά νούμερα:**
+**Από πού έρχεται το κέρδος (ή η ζημιά);** Από τα δύο πράγματα του §2: το **στένεμα της ζώνης** ($B \to W$) δίνει «δωρεάν» κέρδος $B/W$ (πετάς θόρυβο εκτός ζώνης), και ο **αποδιαμορφωτής** προσθέτει από πάνω το δικό του πρόσημο.
 
-| Modulation | $G_{proc}$ | Σε dB |
+Το καθαρότερο παράδειγμα είναι το **DSB-SC με coherent demod**: το coherent demod είναι από μόνο του ουδέτερο για τον θόρυβο, οπότε **όλο** το κέρδος έρχεται από το στένεμα. Η ζώνη μετάδοσης είναι $B = 2W$ (δύο sidebands)· το τελικό LPF την κόβει στο $W$, άρα:
+
+$$
+G_{\text{DSB-SC}} = \frac{B}{W} = \frac{2W}{W} = 2 \quad\Rightarrow\quad +3\text{ dB}.
+$$
+
+Με την ίδια λογική για τα υπόλοιπα σχήματα:
+
+| Δέκτης | Ζώνη εισόδου $B$ | $G = \text{SNR}_{out}/\text{SNR}_{in}$ |
 | --- | --- | --- |
-| DSB-SC coherent | 1 | 0 dB |
-| SSB coherent | 1 | 0 dB |
-| Conventional AM (μ=1, envelope) | 2/3 | -1.8 dB |
-| FM (β=5) | 75 | 18.8 dB |
-| FM (β=10) | 300 | 24.8 dB |
+| SSB coherent | $W$ | $\times 1$ → 0 dB (η ζώνη είναι ήδη $W$ — τίποτα να στενέψει) |
+| DSB-SC coherent | $2W$ | $\times 2$ → +3 dB (καθαρά από το στένεμα ζώνης) |
+| Conventional AM (μ=1) | $2W$ | $\times \tfrac{2}{3}$ → −1.8 dB (η σπατάλη του φορέα νικά το στένεμα) |
+| FM (β) | $2(\beta+1)W$ | $6\beta^2(\beta+1)$ → δεκάδες dB (β=5: ~+30 dB) |
 
-(Αυτά είναι processing gains, όχι σύγκριση με reference SNR — δες παρακάτω για το reference framework.)
+Το FM νούμερο δεν είναι μαγικό: είναι το $3\beta^2$ που κερδίζει ο discriminator ως προς reference (δες §4 και [`/fm/in-noise`](/fm/in-noise)) **επί** το στένεμα από τη ζώνη Carson $B = 2(\beta+1)W$ (από [`/fm/carson`](/fm/carson)): $G = 3\beta^2 \cdot \tfrac{B}{W} = 6\beta^2(\beta+1)$.
 
-## 4. Reference SNR — η «δίκαιη σύγκριση»
+<Callout type="warning" title="Μην μπερδεύεις το processing gain με τη σύγκριση σχημάτων">
+Το **processing gain** ($\text{SNR}_{out}/\text{SNR}_{in}$) απαντά «πόσο βελτίωσε **αυτός ο δέκτης** το σήμα του ανάμεσα στα δύο tap του». Είναι **διαφορετική** ερώτηση από το «πόσο καλύτερη είναι η FM από την AM» — εκείνη η σύγκριση γίνεται πάντα ως προς ένα κοινό **reference** (§4), κι εκεί η FM βγαίνει $3\beta^2$ (όχι $6\beta^2(\beta+1)$). Δύο διαφορετικές ερωτήσεις, δύο διαφορετικοί αριθμοί — μην τους ανακατεύεις.
+</Callout>
 
-Για να συγκρίνουμε modulation schemes **δίκαια**, ορίζουμε:
+## 4. Reference SNR — ο μόνος δίκαιος κανόνας
+
+**Το πρόβλημα της σύγκρισης.** Θέλεις να πεις «η FM είναι καλύτερη από την AM». Καλύτερη ως προς τι; Κάθε σχήμα έχει διαφορετική ζώνη, διαφορετικό input SNR, διαφορετικό δέκτη — αν συγκρίνεις σκέτα output SNR, συγκρίνεις μήλα με πορτοκάλια. Χρειάζεσαι έναν **κοινό κανόνα** που δεν ευνοεί κανένα σχήμα.
+
+Αυτός ο κανόνας είναι το **reference SNR**: «αν έπαιρνες όλη την ισχύ του σήματος και την έστελνες ωμά σε baseband — χωρίς καμία modulation, με θόρυβο μόνο στη ζώνη του μηνύματος $W$ — τι SNR θα έβγαζες;»
 
 $$
-\text{SNR}_{ref} = \frac{P_{signal,RF}}{N_0\, W}
+\boxed{\,\text{SNR}_{ref} = \frac{P_{s,RF}}{N_0\, W}\,}
 $$
 
-Αυτό είναι το SNR που θα είχε **βασικό baseband transmission** χωρίς modulation: σήμα bandwidth $W$, θόρυβος μόνο στη ζώνη $W$.
+Είναι ο «γυμνός» κανόνας: ίδια ισχύς σήματος, ελάχιστη δυνατή ζώνη θορύβου ($W$, όσο ακριβώς χρειάζεται το μήνυμα). Κανένα σχήμα δεν κερδίζει SNR «από το πουθενά» σε σχέση μ' αυτόν — μόνο τον φτάνει, ή ξοδεύει bandwidth για να τον ξεπεράσει.
 
-Τότε όλα τα modulation schemes συγκρίνονται με αυτό:
+Τότε κάθε modulation συγκρίνεται **δίκαια** μαζί του:
 
 | Modulation | $\text{SNR}_{out}$ |
 | --- | --- |
 | DSB-SC | $\text{SNR}_{ref}$ |
 | SSB | $\text{SNR}_{ref}$ |
-| Conventional AM (μ=1) | $(1/3) \text{SNR}_{ref}$ |
-| FM | $3\beta^2 \text{SNR}_{ref}$ |
+| Conventional AM (μ=1) | $\tfrac{1}{3}\,\text{SNR}_{ref}$ |
+| FM | $3\beta^2\,\text{SNR}_{ref}$ |
 
-Έτσι βλέπεις ότι:
-- DSB-SC και SSB είναι «νευτρικά»: δεν κερδίζουν, δεν χάνουν.
-- AM **χάνει** ένα παράγοντα 3 (-4.8 dB) λόγω του carrier που μεταφέρει 2/3 της ισχύος.
-- FM **κερδίζει** $3\beta^2$ — quadratic improvement με το β.
+Τι σου λέει ο πίνακας:
+- **DSB-SC και SSB είναι ουδέτερα**: βγάζουν ακριβώς το reference — ούτε κερδίζουν ούτε χάνουν πληροφορία.
+- **Η AM χάνει** (~$-4.8$ dB ως προς reference): ο φορέας ρουφάει το μεγαλύτερο μέρος της εκπεμπόμενης ισχύος, κι αυτή η ισχύς **δεν κουβαλά πληροφορία**.
+- **Η FM κερδίζει** $3\beta^2$ — τετραγωνική βελτίωση με το β. Δες το ανάποδα: η FM **«αγοράζει» SNR ξοδεύοντας bandwidth** (μεγάλο β → μεγάλο band → μεγάλο κέρδος). Αυτό το trade-off είναι ο πυρήνας όλης της σύγκρισης που ακολουθεί.
+
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+
+Το επίσημο [τυπολόγιο](/formulas) της εξέτασης (3 σελίδες: Fourier pairs/properties, Hilbert, ολοκληρώματα/Bessel) περιέχει **μηδέν** τύπους θορύβου ή SNR. Άρα **όλα όσα μετράνε εδώ είναι off-sheet — τα μαθαίνεις απέξω**:
+
+- **Input SNR** — $\text{SNR}_{in} = P_{s,RF}/(N_0 B)$
+- **Reference SNR** — $\text{SNR}_{ref} = P_{s,RF}/(N_0 W)$
+- **Processing gain** — $G = \text{SNR}_{out}/\text{SNR}_{in}$
+
+Ο ορισμός $\text{SNR} = P_s/P_n$ και ο τύπος των dB **δεν** είναι «τύποι να αποστηθίσεις» — είναι έννοιες που πρέπει να **καταλαβαίνεις**. Αλλά τα τρία παραπάνω, μαζί με τα AM/FM output-SNR αποτελέσματα που ανακεφαλαιώνουμε παρακάτω, θέλουν να είναι **στο μυαλό σου πριν μπεις στην εξέταση**.
+
+</Callout>
 
 ## 5. AM in noise — recap από [/am/modulator-demodulator](/am/modulator-demodulator)
 
