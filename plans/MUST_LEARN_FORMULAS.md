@@ -48,10 +48,12 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | A | Noise — **theory** (5 pages) | `mustlearn-inventory-noise-theory` | **DONE** — §2 below |
 | A | Noise — **problems** (8 problems) | `mustlearn-inventory-noise-problems` | **DONE** — §2.7 below |
 | A | **Foundations** — theory (6 pages) + problems (22) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §3 below |
+| A | **Foundations — supplemental** (signal-transformations + filters, 2 pages) | `mustlearn-inventory-foundations-supplemental` | **DONE** — §7 below |
 | A | **Randomness/why** — theory (1 page) + problems (2) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §4 below |
+| A | **Randomness/psd** — theory + inline ExamProblems | `mustlearn-inventory-foundations-supplemental` | **DONE** — §7 below |
 | A | **Modulation bridge** — theory (1 page) | `mustlearn-inventory-foundations-randomness-modulation` | **DONE** — §5 below |
 | A | **AM** — theory (7 pages) + problems (~20) | `mustlearn-inventory-am` | **DONE** — §6 below |
-| A | Remaining randomness pages / FM | per-chapter | TODO (reuse §1 ground truth) |
+| A | Remaining randomness pages (random-variables, random-processes, stationarity) / FM | per-chapter | psd → §7; others TODO |
 | B | weighting | per-formula | TODO |
 | C | apply | per-placement | TODO |
 
@@ -872,7 +874,119 @@ there are zero FM formulas on the sheet.
 
 ---
 
-## 7. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
+## 7. Pass A inventory — FOUNDATIONS supplemental (signal-transformations; filters) and RANDOMNESS/psd
+
+**Scope.** Three pages deferred by the batch-1 pass (flag **F10**):
+`app/(content)/foundations/signal-transformations/page.mdx`,
+`app/(content)/foundations/filters/page.mdx`,
+`app/(content)/randomness/psd/page.mdx`.
+All three pages read directly. All on/off-sheet calls grounded in §1 ground-truth (no re-audit of
+`slides/formulas.pdf`). No standalone `topic:'signal-transformations'` or `topic:'filters'` entries
+found in `exercises.tsx` — the filter/transformation material feeds into `topic:'noise'` problems
+already swept in §2.7. The PSD page's inline `ExamProblem` blocks are **not** in `exercises.tsx`
+and have no companion coaching in `sose-coaching.tsx`; no separate problems sweep required.
+**Flag F10 resolved.** This step did **not** re-audit `slides/formulas.pdf`.
+
+### Headline finding (three-page split)
+
+> **signal-transformations:** zero new must-learn formulas — the page is explicitly a **reference page** for applying on-sheet FT properties (scaling, shift, duality). Every rule taught either IS on the sheet or derives from on-sheet pairs in exam conditions.
+>
+> **filters:** one clear must-learn (dB gain formula, slide 46; no formulaId). LP/BP impulse responses are derivable from on-sheet rect↔sinc + duality + modulation theorem — borderline, not standalone must-learns.
+>
+> **randomness/psd:** this page IS the **primary teaching home** for Wiener-Khinchin and $S_Y = |H|^2 S_X$ (both listed in §2.6 as "imported from randomness/*" — now confirmed). One new inverse error: F13 (exponential FT pair wrongly labeled "(τυπολόγιο)").
+
+### 7.1 `foundations/signal-transformations` — (SE_session3/4 quick-reference page)
+
+**Headline: ZERO new must-learn formulas.**
+
+> The page itself says «αυτή είναι σελίδα **αναφοράς**» and routes students to the Fourier-transform
+> chapter for the FT property proofs. Every transformation rule derives from on-sheet §1 p.1 properties.
+
+| Formula / rule | On-sheet? | Note |
+| --- | --- | --- |
+| Time shift $x(t - t_0)$ ↔ $X(f)\cdot e^{-j2\pi ft_0}$ | **YES** — `fourier-shift` (§1 p.1) | On-sheet property |
+| Time scaling $x(at)$ ↔ $\frac{1}{\lvert a\rvert}X(f/a)$ | **YES** — `fourier-scaling` (§1 p.1) | On-sheet property |
+| Time reversal $x(-t)$ ↔ $X(-f) = X^*(f)$ for real $x$ | Derived from `fourier-scaling` ($a=-1$) + `fourier-duality` (§1 p.1) | Derivable in exam |
+| Combination: $x(at+b) = x\bigl(a(t+b/a)\bigr)$ → scale by $a$, shift by $-b/a$ | Procedure derived from `fourier-scaling` + `fourier-shift` (both §1 p.1) | No new formula |
+| Convolution $y(t) = \int x(\tau)h(t-\tau)d\tau$ | **Already §3.2** (`convolution-definition`) | No new entry |
+
+**Placement-(a):** No must-learn callouts needed (no off-sheet formulas taught). Page correctly makes no off-sheet formula claims.
+
+**Conclusion:** Zero new must-learn entries. F10 closed for this page.
+
+---
+
+### 7.2 `foundations/filters` — slides 36–46 (SE_session7&8_theory_2025.pdf)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| **dB gain**: $\text{Κέρδος (dB)} = 20\log_{10}\lvert H(f)\rvert$ | — (no dedicated formulaId; see F2 addendum) | §6α | slide 46 | No dB formula of any kind on the sheet — definition must be known cold |
+| **dB inversion**: $\lvert H\rvert = 10^{-\text{dB}/20}$; $\lvert H\rvert^2 = 10^{-\text{dB}/10}$ | — | §6α, `ExamProblem filter-db-conversion` | (derived from above) | Needed to convert spec to linear for filter-power calculations |
+
+**Derivable-from-sheet (exam shortcuts but not standalone must-learns):**
+
+| Formula | On-sheet derivation path |
+| --- | --- |
+| $h_{LP}(t) = 2f_c\,\mathrm{sinc}(2f_c t)$ | `fourier-pair-rect` ($\Pi(t/T) \leftrightarrow T\,\mathrm{sinc}(fT)$) + `fourier-duality` — both §1 p.1 |
+| $h_{BP}(t) = 4W\,\mathrm{sinc}(2Wt)\cos(2\pi f_0 t)$ | LP result above + `fourier-modulation-theorem` (§1 p.1) |
+| RC LPF: $\lvert H(f)\rvert^2 = 1/(1+(f/f_c)^2)$ | Circuit result; **already in §2.3** for noise applications |
+| Noise bandwidth: $B_N = \frac{1}{\lvert H(0)\rvert^2}\int_0^\infty \lvert H(f)\rvert^2 df$ | **Already in §2.3**; primary home noise/through-filters |
+
+**On-sheet (no must-learn):** $Y(f) = X(f)\cdot H(f)$ — `fourier-convolution`, §1 p.1 (the core filter operation).
+
+**Placement-(a) status:** No standardized «⚠️ Πρέπει να θυμάσαι» callout found for the dB formula. The page introduces and uses it in §6α and `ExamProblem filter-db-conversion` without flagging it as off-sheet. **Clean placement-(a) gap for Pass C.**
+
+**Minor wording issue (not a full inverse error):** `Recap` line says "Τα τέσσερα κλασικά (slide 36): κατωπερατά (LP), υψιπερατά (HP), ζωνοπερατά (BP), απόρριψης ζώνης (BS) — **όλα στο τυπολόγιο**." These are filter-type *names/definitions*, not formulas, and are NOT on the exam formula sheet (§1). Less dangerous than F1/F7/F8/F12 (no student skips memorizing a specific formula value), but Pass C should reword to "standard terminology, not on the formula sheet."
+
+**formulaId gap for F2 list:** No dedicated `formulaId` in `formulas.tsx` for dB gain. Needs a new entry (suggested id `filter-gain-db`) for Pass C placement-(c).
+
+**Conclusion:** One must-learn (dB formula, slide 46); LP/BP impulse responses are derivable from on-sheet tools. F10 closed for filters page.
+
+---
+
+### 7.3 `randomness/psd` — slides 36–39 (SE_session9_random1_upload.pdf) + slide 36 (SE_session10_noise.pdf)
+
+| Must-learn formula (readable) | formulaId | Taught | Slide cite | Why not on sheet |
+| --- | --- | --- | --- | --- |
+| **WK (forward)**: $S_X(f) = \mathcal{F}\{R_X(\tau)\} = \int R_X(\tau)e^{-j2\pi f\tau}d\tau$ | `wiener-khinchin` | §2 | slide 36 (session 9) | **PRIMARY teaching home** (§2.6 listed as imported); τυπολόγιο has zero random-process formulas |
+| **WK (inverse)**: $R_X(\tau) = \int S_X(f)e^{+j2\pi f\tau}df$ | `wiener-khinchin` | §2 | slide 36 | same |
+| **Power from PSD**: $P_X = R_X(0) = \int S_X(f)\,df$ | `wss-rx-properties` | §4 | (inverse WK, $\tau=0$) | not on sheet — page labels "✓ Στο τυπολόγιο μέσω WK" (nuanced claim — see wording note) |
+| **PSD properties**: $S_X \in \mathbb{R}$; $S_X(-f) = S_X(f)$; $S_X(f) \ge 0$ (Bochner) | `wss-rx-properties` | §5 | (from $R_X$ real + even + psd) | not on sheet |
+| **ESD identity** (energy signal): $\mathcal{F}\{R_x(\tau)\} = \lvert X(f)\rvert^2$ | — (no formulaId) | §3 | slide 36 (session 10) | not on sheet; deterministic bridge — must-know for derivations |
+| **LTI ΣΑΣ chain**: $R_Y(\tau) = R_X(\tau) * h(\tau) * h(-\tau)$ | — (no formulaId) | §7β | slide 38 | not on sheet; intermediate must-know derivation step |
+| **LTI output PSD**: $S_Y(f) = \lvert H(f)\rvert^2 S_X(f)$ | `lti-output-psd` | §7γ | slide 39 | **CO-PRIMARY home** with noise/through-filters (§2.3); `inTypology:false` confirmed |
+| **LTI output power**: $P_Y = R_Y(0) = \int \lvert H(f)\rvert^2 S_X(f)\,df$ | `lti-output-psd` | §7γ | slide 39 | same formulaId as above |
+| **Exponential FT pair**: $e^{-a\lvert\tau\rvert} \leftrightarrow 2a/(a^2+(2\pi f)^2)$ | — (no formulaId; **F13**) | §10 + ExamProblem `psd-from-rx` | (RC noise application) | NOT on §1 p.1 FT-pairs table (sheet has δ, rect, tri, cos, sin, 1/t — no exponential pair); **page wrongly labels it "(τυπολόγιο)"** — inverse error F13 |
+| **Cross-PSD**: $S_{X,Y}(f) = \mathcal{F}\{R_{X,Y}(\tau)\}$ | — (no formulaId) | §9 | (definition) | not on sheet; used in decorrelated-channels arguments (AM/FM noise analyses) |
+
+**Wording note on "✓ Στο τυπολόγιο μέσω WK" labels.** The page labels $P_X = \int S_X\,df$ and $S_Y = \lvert H\rvert^2 S_X$ as "✓ Στο τυπολόγιο μέσω [WK / αλυσίδας]" — meaning *derivable via the WK chain* from FT tools that ARE on the sheet. This is a nuanced claim (not "literally printed"). However, since WK itself is off-sheet, a student cannot derive these in exam conditions without first memorising WK. The "✓" markers are potentially confusing (they resemble "no need to memorize"). They do NOT create the same "skip memorising a formula value" danger as F1/F7/F8/F12, but Pass C should revise the wording to "derivable via WK (must-learn), not literally printed on the sheet."
+
+**Placement-(a) status:** No standardized «⚠️ Πρέπει να θυμάσαι (όχι στο επίσημο τυπολόγιο)» callout found for any formula on this page. The "✓ μέσω WK" markers are the only annotations — ambiguous and non-standard. Clean placement-(a) gap for all WK-family formulas; Pass C should propagate the §8στ model (noise/through-filters standard wording) to this page.
+
+**formulaId gaps for F2 list:** Three formulas with no `formulaId`: ESD identity; LTI ΣΑΣ chain; exponential FT pair. The exponential pair is the most exam-critical (page says "εμφανίζεται 2-3 φορές κάθε χρόνο στα ΣΕ"). Suggested id: `fourier-pair-exp`.
+
+---
+
+### 7.4 Supplemental problems sweep — no new gaps found
+
+**`topic:'foundations'` problems missed by §3.6:** None. All `topic:'foundations'` exercises in
+`exercises.tsx` use formulaIds for on-sheet Fourier pairs/properties (no must-learn callout needed)
+or `parseval-power` (already flagged F9 in §8). No problem references `signal-transformations`-specific
+or `filters`-specific formulaIds. The δ(t−T₁) time-shift problem (`jun25-th1-3`) uses `fourier-shift`
+(on-sheet); time-scaling problems (`jun25-th1-6`, `proodos26-10`) use `fourier-scaling` (on-sheet).
+
+**`topic:'random'` problems missed by §4.2:** None. Only `lec-rp-1` and `lec-rp-2` exist as
+`topic:'random'`; both already swept in §4.2.
+
+**Inline PSD ExamProblems in `randomness/psd/page.mdx`:** `psd-from-rx`, `rx-from-psd`,
+`lti-output-psd`, `psd-properties`, `white-noise-correlation`, `psd-thermal-lpf`,
+`psd-bandpass-power` — embedded in the theory page, not in `exercises.tsx`, not in
+`sose-coaching.tsx`. Placement-(b) concept does not apply. All use WK + `lti-output-psd` +
+`wss-rx-properties` (all off-sheet, confirmed in §7.3).
+
+---
+
+## 8. Cross-chapter flags & discoveries (for the planner — surfaced via bus/inbox)
 
 - **F1 — LIVE MISCITATION (correctness).** `app/(content)/noise/white-noise/page.mdx`
   **line 340** (§10 summary table) marks `S_N(f) = N_0/2` as **"✓ τυπολόγιο"** — i.e. it
@@ -898,6 +1012,10 @@ there are zero FM formulas on the sheet.
   `∫1/sin²=−cot`). `through-filters §6α` calls it "τυπολόγιο integral 7-8 σχετικά" — loose
   (it says "related", not "on the sheet"), so not a hard error, but the integral behind the
   RC result `P_Y=πN_0 f_c/2` is itself must-derive/remember. Minor wording flag for Pass C.
+  **F4 addendum (`randomness/psd`):** `ExamProblem id="lti-output-psd"` coaching Callout says
+  "το ολοκλήρωμα `∫1/(1+x²)dx = arctan x` **είναι στο τυπολόγιο**" — a stronger (and wrong)
+  claim than through-filters §6α's "σχετικά". Same integral, harder instance. Pass C should fix
+  both pages consistently.
 - **F5 — `/noise/snr` is thin / pre-D11-rework** (`lastUpdated 2026-05-05`, no 5-stage
   loop, SourceDoc has no slide numbers). Its must-learn formulas (§2.5) are recap-heavy
   (AM/FM). When D11 reworks it, the must-learn flags should be baked in (coordinate Pass C
@@ -948,11 +1066,12 @@ there are zero FM formulas on the sheet.
   foundations context: **zero matches**. Unlike the noise problems (which had at least some ad-hoc
   "learn-by-heart" prose), the foundations problem coaching has **no awareness at all** of the
   must-learn status for this formula. Clean placement-(b) gap for Pass C.
-- **F10 — UNREAD FOUNDATIONS PAGES.** `foundations/signal-transformations` and
-  `foundations/filters` exist but were not read directly in this step. Indirect assessment:
-  `signal-transformations` formulas derive from on-sheet FT properties → likely zero new must-learn
-  formulas. `filters` RC filter shape |H|²=1/(1+(f/f_c)²) is already in §2.3; verify no additional
-  must-learn entries. Both pages need a dedicated sweep before Pass C touches foundations.
+- **F10 — UNREAD FOUNDATIONS PAGES. ✅ RESOLVED (`mustlearn-inventory-foundations-supplemental`).**
+  Both pages read directly in §7. Findings: `signal-transformations` confirmed zero new must-learn
+  formulas (reference page for on-sheet FT properties — all transformations derive from on-sheet
+  scaling, shift, duality). `filters` contributes one new must-learn (dB gain:
+  $20\log_{10}\lvert H(f)\rvert$, slide 46; no formulaId) and confirms RC shape
+  $\lvert H\rvert^2=1/(1+(f/f_c)^2)$ is already in §2.3. See §7.1–§7.2 for full inventory.
 - **F11 — FT DEFINITION formulaId UNCERTAIN.** `X(f) = ∫x(t)e^{−j2πft}dt` (and its inverse) are
   the most fundamental formulas in the FT chapter. The sheet appears to list only the pairs/
   properties table, not the definition integral explicitly (§1 p.1 description). Whether there is
@@ -966,12 +1085,25 @@ there are zero FM formulas on the sheet.
   during the AM inverse-error sweep (§6.9) — outside AM scope, logged here for the planner.
   **Recommend Pass C fix:** change wording to «⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο»
   for the Carson formula coaching entry.
+- **F13 — `randomness/psd` EXPONENTIAL FT PAIR INVERSE ERROR (correctness).** `ExamProblem
+  id="psd-from-rx"` Example solution labels the pair $e^{-a\lvert\tau\rvert} \leftrightarrow
+  2a/(a^2+(2\pi f)^2)$ as **"Από το γνωστό FT pair (τυπολόγιο)"** — implying it is on the exam
+  formula sheet. It is **NOT**: the sheet's FT-pairs table (§1 p.1) lists δ, rect, tri, cos, sin,
+  and 1/t — no exponential pair. `formulas.tsx` has no `fourier-pair-exp` entry. The `Callout`
+  preceding the solution and the `Take-away` following it correctly say "must-memorize" and
+  "πρέπει να **το έχεις απ' έξω**" — directly contradicting the Example body's "(τυπολόγιο)"
+  label. Same inverse-error pattern as F1/F7/F8/F12: a student reading only the Example body
+  may conclude they do not need to memorize the pair. **Recommend Pass C fix:** replace
+  "(τυπολόγιο)" in the Example solution with «⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο
+  τυπολόγιο». Also recommend adding a `fourier-pair-exp` entry to `formulas.tsx` (currently
+  no formulaId — F2-style gap) since this pair appears "2-3 times per year" in past exams per
+  the page's own note.
 
 ---
 
-## 8. Placeholders for later passes (do not delete — structure for the whole sub-goal)
+## 9. Placeholders for later passes (do not delete — structure for the whole sub-goal)
 
-- **Pass A — remaining randomness pages / fm**: per-chapter inventories that REUSE §1 (AM complete — §6).
+- **Pass A — remaining randomness pages / fm**: per-chapter inventories that REUSE §1 (foundations-supplemental + psd complete — §7; AM complete — §6; remaining: random-variables, random-processes, stationarity, FM).
 - **Pass B — weighting**: per must-learn formula, count distinct `past_exams/` exercises +
   collect refs (cite specific problems; do not estimate).
 - **Pass C — apply**: annotate placements (a) theory pages, (b) problems, (c) `/formulas`,
