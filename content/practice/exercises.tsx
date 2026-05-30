@@ -3387,6 +3387,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.1
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σ/Λ: Το συμβατικά διαμορφωμένο κατά AM σήμα{' '}
@@ -3615,6 +3636,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-signal', 'am-mu'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και ο
+        δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'\\mu = A_m / A_c'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>8</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: <p>Σχεδιάστε το διαμορφωμένο κατά AM σήμα όταν το φέρον είναι <InlineMath>{'c(t) = \\cos(8\\pi t)'}</InlineMath> και το σήμα πληροφορίας <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.</p>,
     solution: (
       <>
@@ -3668,6 +3713,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['am/conventional', 'foundations/fourier-series'],
     formulaIds: ['am-signal', 'am-spectrum'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και το
+        φάσμα AM{' '}
+        <InlineMath>{'X_{AM}(f) = \\tfrac{A_c}{2}\\delta(f\\mp f_c) + \\tfrac{1}{2}M(f\\mp f_c)'}</InlineMath>{' '}
+        (σε <strong>4</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 9
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-7"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.7
+        </Link>.
+      </>
+    ),
     statement: <p>Έστω σήμα βασικής ζώνης <InlineMath>{'x(t) = \\sum_{n=1}^{8} n\\cos(2\\pi n t)'}</InlineMath>. Σχεδιάστε το φάσμα πλάτους βασικής ζώνης και υπολογίστε πόσες αρμονικές έχει το φάσμα πλάτους του διαμορφωμένου κατά συμβατικό AM του <InlineMath>x(t)</InlineMath>.</p>,
     solution: (
       <>
