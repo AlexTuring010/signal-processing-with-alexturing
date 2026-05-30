@@ -868,14 +868,14 @@ export const EXERCISES: Exercise[] = [
         (εμφανίστηκε σε <strong>6</strong> παλιά θέματα). Οι ζεύγοι Fourier rect
         και tri δίνονται στο τυπολόγιο. Βλ. π.χ.{' '}
         <Link
-          href="\practice#exercise:pb25-th2-3"
+          href="/practice#exercise:pb25-th2-3"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Β 2025 ΘΕΜΑ 2.3
         </Link>{' '}
         και{' '}
         <Link
-          href="\practice#exercise:pa25-th3-mux"
+          href="/practice#exercise:pa25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Α 2025 ΘΕΜΑ 3
@@ -994,14 +994,14 @@ export const EXERCISES: Exercise[] = [
         <InlineMath>{'(\\Delta f \\ge W,\\; f_1 \\ge W/2)'}</InlineMath>{' '}
         (εμφανίστηκε σε <strong>4</strong> παλιά θέματα). Βλ. π.χ.{' '}
         <Link
-          href="\practice#exercise:pb25-th3-mux"
+          href="/practice#exercise:pb25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Β 2025 ΘΕΜΑ 3
         </Link>{' '}
         και{' '}
         <Link
-          href="\practice#exercise:pa25-th3-mux"
+          href="/practice#exercise:pa25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Α 2025 ΘΕΜΑ 3
@@ -1070,14 +1070,14 @@ export const EXERCISES: Exercise[] = [
         φάσμα G(f) εξάγεται από τα φάσματα του ΘΕΜΑ 11 και τη συνθήκη
         μη-επικάλυψης του ΘΕΜΑ 12. Βλ. π.χ.{' '}
         <Link
-          href="\practice#exercise:pb25-th2-3"
+          href="/practice#exercise:pb25-th2-3"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Β 2025 ΘΕΜΑ 2.3
         </Link>{' '}
         και{' '}
         <Link
-          href="\practice#exercise:pa25-th3-mux"
+          href="/practice#exercise:pa25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Α 2025 ΘΕΜΑ 3
@@ -4278,14 +4278,14 @@ export const EXERCISES: Exercise[] = [
         (εμφανίστηκε σε <strong>6</strong> παλιά θέματα). Ο ζεύγος Fourier
         rect δίνεται στο τυπολόγιο. Βλ. π.χ.{' '}
         <Link
-          href="\practice#exercise:proodos26-11"
+          href="/practice#exercise:proodos26-11"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Απρ. 2026 ΘΕΜΑ 11
         </Link>{' '}
         και{' '}
         <Link
-          href="\practice#exercise:pa25-th3-mux"
+          href="/practice#exercise:pa25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Α 2025 ΘΕΜΑ 3
