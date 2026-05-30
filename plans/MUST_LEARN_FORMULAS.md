@@ -65,6 +65,7 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | C | Noise — bundle #1 (3 formulas: white-noise-psd·5, bandlimited-noise-power·5, bandlimited-noise-autocorr·1) | placement-(a) noise/white-noise + placement-(b) 5 exercise cards | **DONE** — step `mustlearn-passc-noise-f2-entries-placements` |
 | C | Noise — bundle #2 (`lti-output-psd`·3) | placement-(a) noise/through-filters §8στ upgraded + placement-(b) 3 exercise cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-lti-output-psd-bundle` |
 | C | Noise — bundle #3 (`wiener-khinchin`·3) | placement-(a) `randomness/psd` §2 warning callout + placement-(b) 3 cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-noise-wiener-khinchin-bundle` |
+| C | Noise — bundle #4 (`thermal-noise`·2 + `N₀≈−174`·2 PAGE-ONLY) | placement-(a) `noise/sources` §5 warning callout + §8 −174 callout; placement-(b) 2 card notes extended (thermal triple); placement-(c) getCitedExercises=2 ✓; formulas.tsx thermal-noise row annotated with −174 | **DONE** — step `mustlearn-passc-noise-thermal-bundle` |
 | C | Remaining chapters (AM, FM, Foundations, …) | per-placement | TODO |
 
 ---
@@ -633,8 +634,8 @@ These formulas are must-learn (off-sheet) but have no dedicated `formulaId` in `
 | 1 | P_N = N₀B (bandlimited power) | `bandlimited-noise-power` | **5** | HIGH — F2(1) RESOLVED; all 5 power-computation cards tagged |
 | 3 | S_Y = \|H\|²·S_X (LTI output PSD) | `lti-output-psd` | **3** | **PASS-C DONE** — §8στ upgraded to weighted callout + all 3 cards extended with weight+refs |
 | 3 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **3** | **PASS-C DONE** — warning callout added to `randomness/psd` §2 + all 3 cards tagged, getCitedExercises=3 |
-| 5 | S_N = kT/2, P_N = kTB (thermal noise) | `thermal-noise` | **2** | HIGH — repeated exam question; no callout on `sources` |
-| 5 | N₀ ≈ −174 dBm/Hz (noise floor) | — | **2** | MEDIUM — numerical constant; appears in coaching |
+| 5 | S_N = kT/2, P_N = kTB (thermal noise) | `thermal-noise` | **2** | **PASS-C DONE** — `sources` §5 callout + 2 card notes extended (thermal triple) |
+| 5 | N₀ ≈ −174 dBm/Hz (noise floor) | — | **2** | **PASS-C DONE (PAGE-ONLY)** — `sources` §8 callout + coaching cards + annotated in `thermal-noise` row |
 | 7 | fm-snr-ref, am-output-snr, fm-snr-out, fm-gain-am | various | **1 each** | MEDIUM — cross-topic; primary homes are `fm/in-noise` + `am/mod-demod`; must-learn callout missing from all |
 | 8 | R_N = N₀B·sinc(2Bτ) (LPF autocorrelation) | `bandlimited-noise-autocorr` | **1** | MEDIUM — F4/F6 RESOLVED; jun25-th1-10 tagged; derivedIn: noise/white-noise |
 | 9 | bandpass-noise-r, noise-figure, fm-noise-output-psd, snr, snr-input, G_proc, RC results, B_N | various | **0** | LOWER — must-learn but zero exam weight in current bank; flag as must-learn without high-weight badge |

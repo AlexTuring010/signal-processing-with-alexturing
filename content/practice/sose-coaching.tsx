@@ -1093,7 +1093,8 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
         συχνότητα, <em>ούτε</em> από το εύρος ζώνης. Όταν λέει σκέτο «πόση είναι
         η PSD», η απάντηση είναι μονόλεκτη — η ισχύς σε ζώνη{' '}
         (<InlineMath>{'kTB'}</InlineMath>) και το νούμερο{' '}
-        <InlineMath>{'-174'}</InlineMath> dBm/Hz είναι <em>ξεχωριστές</em>{' '}
+        <InlineMath>{'-174'}</InlineMath> dBm/Hz (<strong>πρέπει να το θυμάσαι</strong>{' '}
+        — δεν δίνεται) είναι <em>ξεχωριστές</em>{' '}
         ερωτήσεις (αδελφό θέμα Σεπτ. 2025 ΘΕΜΑ 3.10).
       </p>
     ),
