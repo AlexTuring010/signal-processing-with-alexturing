@@ -3475,7 +3475,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'fm',
     difficulty: 'hard',
     prerequisites: ['fm/idea', 'fm/bessel', 'fm/carson'],
-    formulaIds: ['fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-power'],
+    formulaIds: ['fm-instantaneous-freq', 'fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-power'],
     statement: (
       <p>
         FM modulator με{' '}
