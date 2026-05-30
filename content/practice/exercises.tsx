@@ -1537,6 +1537,20 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['fm/idea'],
     formulaIds: ['fm-signal', 'fm-instantaneous-freq', 'fm-beta'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Ο ορισμός{' '}
+        <InlineMath>{'\\beta_f = \\Delta f_{max}/W = K_f\\,\\max|m(t)|/W'}</InlineMath>{' '}
+        απαιτείται να τον ξέρεις απέξω (βάρος 6 — ανώτατο στο FM κεφάλαιο). Εμφανίστηκε
+        και στα τρία τελικά/επί πτυχίω:{' '}
+        <Link href="/practice#exercise:sept25-th2-8">Σεπτ.2025 ΘΕΜΑ 2.8</Link>
+        {' · '}
+        <Link href="/practice#exercise:jan26-th4-fm">Ιαν.2026 ΘΕΜΑ 4</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>.
+      </>
+    ),
     statement: (
       <p>
         Εξηγήστε την αρχή λειτουργίας της διαμόρφωσης συχνότητας (FM). Δώστε
@@ -1575,6 +1589,20 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['fm/in-noise', 'am/modulator-demodulator'],
     formulaIds: ['fm-snr-out', 'fm-gain-am', 'carson', 'am-bandwidth', 'am-output-snr'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Ο κανόνας Carson{' '}
+        <InlineMath>{'B \\cong 2W(\\beta+1)'}</InlineMath>{' '}
+        απαιτείται να τον ξέρεις απέξω (βάρος 6 — ανώτατο στο FM κεφάλαιο). Εμφανίστηκε
+        και στα τρία τελικά/επί πτυχίω:{' '}
+        <Link href="/practice#exercise:sept25-th2-8">Σεπτ.2025 ΘΕΜΑ 2.8</Link>
+        {' · '}
+        <Link href="/practice#exercise:jan26-th4-fm">Ιαν.2026 ΘΕΜΑ 4</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>.
+      </>
+    ),
     statement: (
       <p>
         Συγκρίνετε τα συστήματα FM και AM ως προς: ευαισθησία στον θόρυβο,
@@ -1617,6 +1645,17 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['fm/idea', 'fm/carson'],
     formulaIds: ['fm-beta', 'carson'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνονται στο τυπολόγιο.</strong>{' '}
+        Και ο ορισμός <InlineMath>{'\\beta = \\Delta f / f_m'}</InlineMath> (βάρος 6) και
+        ο κανόνας Carson <InlineMath>{'B = 2(\\beta+1)f_m'}</InlineMath> (βάρος 6)
+        απαιτούνται να τους ξέρεις απέξω — εμφανίζονται μαζί σε κάθε εξεταστική που
+        περιλαμβάνει FM. Αυτή η άσκηση είναι ο κανονικός τύπος: δίνεται{' '}
+        <InlineMath>{'\\Delta f'}</InlineMath> και <InlineMath>{'f_m'}</InlineMath>,
+        βρες β και μετά B.
+      </>
+    ),
     statement: (
       <p>
         Σήμα <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath> με
@@ -1643,12 +1682,26 @@ export const EXERCISES: Exercise[] = [
     topic: 'fm',
     difficulty: 'hard',
     prerequisites: ['fm/bessel'],
-    formulaIds: ['fm-bessel-sidebands', 'fm-bessel-property', 'carson'],
+    formulaIds: ['fm-bessel-sidebands', 'fm-bessel-property', 'carson', 'fm-beta'],
     memorizationNote: (
       <>
         Οι τιμές των <InlineMath>{'J_n(\\beta)'}</InlineMath> δίνονται στο
         τυπολόγιο σε πίνακα — δεν χρειάζεται να τις αποστηθίσεις, αλλά πρέπει
-        να ξέρεις πώς να τον διαβάσεις γρήγορα.
+        να ξέρεις πώς να τον διαβάσεις γρήγορα.{' '}
+        <strong>
+          ⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:{' '}
+          <InlineMath>{'\\beta_f = \\Delta f / W'}</InlineMath> (βάρος 6 —
+          εμφανίστηκε σε 6 παλιά θέματα)
+        </strong>{' '}
+        — εδώ <InlineMath>{'\\beta = 2.5'}</InlineMath> δίνεται άμεσα, αλλά
+        στα υπόλοιπα FM θέματα υπολογίζεις πρώτα{' '}
+        <InlineMath>{'\\beta_f'}</InlineMath> από τα δεδομένα.{' '}
+        <strong>
+          ⚠️ Ο κανόνας Carson{' '}
+          <InlineMath>{'B \\cong 2(\\beta+1)f_m'}</InlineMath> δεν δίνεται στο
+          τυπολόγιο
+        </strong>{' '}
+        (βάρος 6 — ανώτατο στο FM κεφάλαιο) — τον γράφεις απέξω.
       </>
     ),
     statement: (
@@ -2474,6 +2527,18 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['fm/idea', 'fm/pm', 'fm/carson'],
     formulaIds: ['fm-beta', 'carson'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνονται στο τυπολόγιο.</strong>{' '}
+        Το κριτήριο NBFM/WBFM πηγάζει από τον ορισμό{' '}
+        <InlineMath>{'\\beta_f = \\Delta f / W'}</InlineMath> (βάρος 6) και τον
+        κανόνα Carson <InlineMath>{'B = 2(\\beta+1)W'}</InlineMath> (βάρος 6):
+        στο όριο <InlineMath>{'\\beta \\to 0'}</InlineMath> το Carson δίνει{' '}
+        <InlineMath>{'B \\to 2W'}</InlineMath> (ίδιο με AM), επομένως{' '}
+        <InlineMath>{'\\beta = 0.3 < 1'}</InlineMath> → NBFM, όχι WBFM. Και οι
+        δύο τύποι λείπουν από το τυπολόγιο — τους γράφεις απέξω.
+      </>
+    ),
     statement: (
       <p>
         Σ/Λ: Δίνεται FM σήμα με δείκτη διαμόρφωσης β=0.3. Το σήμα είναι WBFM.
@@ -2803,7 +2868,12 @@ export const EXERCISES: Exercise[] = [
         Στο τυπολόγιο υπάρχει πίνακας <InlineMath>{'J_n(\\beta)'}</InlineMath>.
         Πρέπει να ξέρεις πώς να πάρεις τιμές γρήγορα — π.χ. για{' '}
         <InlineMath>{'\\beta = 3'}</InlineMath>:{' '}
-        <InlineMath>{'J_0 \\approx -0.26, J_1 \\approx 0.34, J_2 \\approx 0.49, J_3 \\approx 0.31'}</InlineMath>.
+        <InlineMath>{'J_0 \\approx -0.26, J_1 \\approx 0.34, J_2 \\approx 0.49, J_3 \\approx 0.31'}</InlineMath>.{' '}
+        <strong>⚠️ Ο ορισμός β (βάρος 6) και ο κανόνας Carson (βάρος 6) δεν
+        δίνονται στο τυπολόγιο</strong> — τους γράφεις απέξω. Στο θέμα 14:{' '}
+        β=3 διαβάζεται από τη μορφή του σήματος, μετά{' '}
+        <InlineMath>{'B = 2(\\beta+1)f_m = 2\\cdot 4\\cdot 1 = 8'}</InlineMath>{' '}
+        kHz.
       </>
     ),
     statement: (
@@ -3476,6 +3546,21 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['fm/idea', 'fm/bessel', 'fm/carson'],
     formulaIds: ['fm-instantaneous-freq', 'fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-power'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνονται στο τυπολόγιο.</strong>{' '}
+        Ο ορισμός{' '}
+        <InlineMath>{'\\beta_f = K_f\\,\\max|m|/f_m = K_f A_m/f_m'}</InlineMath>{' '}
+        (βάρος 6) και ο κανόνας Carson{' '}
+        <InlineMath>{'B \\cong 2(\\beta+1)f_m'}</InlineMath> (βάρος 6) —
+        αμφότεροι γράφονται απέξω. Το θέμα δείχνει και την{' '}
+        <strong>αντίστροφη χρήση Carson</strong>: δίνεται{' '}
+        <InlineMath>{'B_2 = 8'}</InlineMath> kHz, βρες νέο β ={' '}
+        <InlineMath>{'B/(2f_m) - 1'}</InlineMath>. Το τυπολόγιο δίνει πίνακα{' '}
+        <InlineMath>{'J_n(\\beta)'}</InlineMath> — χρειάζεσαι τιμές για{' '}
+        <InlineMath>{'\\beta = 1'}</InlineMath>.
+      </>
+    ),
     statement: (
       <p>
         FM modulator με{' '}
