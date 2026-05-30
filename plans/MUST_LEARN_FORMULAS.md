@@ -62,7 +62,8 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | B | **Randomness/why** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §4B below |
 | B | **Modulation bridge** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §5B below |
 | B | **Randomness/PSD + remaining randomness** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §7B below |
-| C | apply | per-placement | TODO |
+| C | Noise — bundle #1 (3 formulas: white-noise-psd·5, bandlimited-noise-power·5, bandlimited-noise-autocorr·1) | placement-(a) noise/white-noise + placement-(b) 5 exercise cards | **DONE** — step `mustlearn-passc-noise-f2-entries-placements` |
+| C | Remaining chapters (AM, FM, Foundations, Noise bundle #2, …) | per-placement | TODO |
 
 ---
 

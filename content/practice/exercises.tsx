@@ -404,10 +404,20 @@ export const EXERCISES: Exercise[] = [
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
         Και οι δύο τύποι του προβλήματος είναι εκτός επίσημου τυπολογίου: η PSD
-        λευκού θορύβου <InlineMath>{'S_n(f) = N_0/2'}</InlineMath> και ο νόμος
-        εξόδου LTI <InlineMath>{'S_y(f) = |H(f)|^2 S_n(f)'}</InlineMath>. Το
-        τυπολόγιο δεν περιέχει κανέναν τύπο θορύβου — άρα και το αποτέλεσμα{' '}
-        <InlineMath>{'P = N_0 W'}</InlineMath> πρέπει να το ξέρεις απέξω.
+        λευκού θορύβου <InlineMath>{'S_n(f) = N_0/2'}</InlineMath>{' '}
+        (βάρος <strong>5</strong> — ανώτατο στο Noise: εμφανίστηκε σε{' '}
+        <Link href="/practice#exercise:sept25-th3-10">Σεπτ.2025 ΘΕΜΑ 3.10</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-9">Ιούν.2025 ΘΕΜΑ 1.9</Link>{' '}
+        κ.ά.) και ο νόμος εξόδου LTI{' '}
+        <InlineMath>{'S_y(f) = |H(f)|^2 S_n(f)'}</InlineMath>. Το τυπολόγιο
+        δεν περιέχει κανέναν τύπο θορύβου — άρα και το αποτέλεσμα{' '}
+        <InlineMath>{'P_N = N_0 B'}</InlineMath>{' '}
+        (βάρος <strong>5</strong>:{' '}
+        <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>{' '}
+        κ.ά.) πρέπει να το ξέρεις απέξω.
       </>
     ),
     statement: (
@@ -1781,10 +1791,20 @@ export const EXERCISES: Exercise[] = [
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
         Όλοι οι τύποι αυτής της άσκησης λείπουν από το επίσημο τυπολόγιο: η PSD
-        του θερμικού θορύβου <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath>, η
-        ισχύς σε ζώνη <InlineMath>{'P_N = kTB = N_0 B'}</InlineMath>, ακόμα και το
-        νούμερο <InlineMath>{'N_0 = kT_0 \\approx 4\\times 10^{-21}'}</InlineMath>{' '}
-        W/Hz <InlineMath>{'= -174'}</InlineMath> dBm/Hz. Το τυπολόγιο δεν περιέχει{' '}
+        του θερμικού θορύβου <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath>{' '}
+        (βάρος <strong>5</strong> — ανώτατο στο Noise: εμφανίστηκε σε{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-9">Ιούν.2025 ΘΕΜΑ 1.9</Link>{' '}
+        κ.ά.), η ισχύς σε ζώνη <InlineMath>{'P_N = kTB = N_0 B'}</InlineMath>{' '}
+        (βάρος <strong>5</strong>:{' '}
+        <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>{' '}
+        κ.ά.), ακόμα και το νούμερο{' '}
+        <InlineMath>{'N_0 = kT_0 \\approx 4\\times 10^{-21}'}</InlineMath>{' '}
+        W/Hz <InlineMath>{'= -174'}</InlineMath> dBm/Hz (αυτό να θυμάσαι
+        απέξω). Το τυπολόγιο δεν περιέχει{' '}
         <em>κανέναν</em> τύπο θορύβου — όλη η ενότητα «Noise» είναι μνήμη. Άρα
         ούτε το τελικό <InlineMath>{'kTB'}</InlineMath> θα σου δοθεί· πρέπει να το
         ξέρεις απέξω ή να το φτάσεις μόνος σου από το επίπεδο πάτωμα.
@@ -2055,11 +2075,21 @@ export const EXERCISES: Exercise[] = [
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
         Και οι δύο τύποι που χρειάζεται η άσκηση λείπουν από το επίσημο
         τυπολόγιο: η PSD λευκού θορύβου{' '}
-        <InlineMath>{'S_X(f) = N_0/2'}</InlineMath> και ο νόμος εξόδου LTI{' '}
+        <InlineMath>{'S_X(f) = N_0/2'}</InlineMath>{' '}
+        (βάρος <strong>5</strong> — ανώτατο στο Noise: εμφανίστηκε σε{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-9">Ιούν.2025 ΘΕΜΑ 1.9</Link>{' '}
+        κ.ά.) και ο νόμος εξόδου LTI{' '}
         <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f)'}</InlineMath>. Το τυπολόγιο δεν
         περιέχει <em>κανέναν</em> τύπο θορύβου — άρα ούτε το τελικό{' '}
-        <InlineMath>{'P_Y = N_0 B'}</InlineMath> θα σου δοθεί· πρέπει να το
-        φτάσεις μόνος σου ή να το ξέρεις απέξω.
+        <InlineMath>{'P_Y = N_0 B'}</InlineMath>{' '}
+        (βάρος <strong>5</strong>:{' '}
+        <Link href="/practice#exercise:sept25-th3-10">Σεπτ.2025 ΘΕΜΑ 3.10</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>{' '}
+        κ.ά.) θα σου δοθεί· πρέπει να το φτάσεις μόνος σου ή να το ξέρεις
+        απέξω.
       </>
     ),
     statement: (
@@ -3325,9 +3355,15 @@ export const EXERCISES: Exercise[] = [
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
         Η μόνη ποσότητα που ζητάει η άσκηση — η PSD του θερμικού θορύβου{' '}
-        <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath> — λείπει από το
-        επίσημο τυπολόγιο, όπως και ο ορισμός{' '}
-        <InlineMath>{'N_0 \\triangleq kT'}</InlineMath>. Το τυπολόγιο δεν
+        <InlineMath>{'S_N(f) = N_0/2 = kT/2'}</InlineMath>{' '}
+        (βάρος <strong>5</strong> — ανώτατο στο Noise: εμφανίστηκε σε{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:sept25-th3-10">Σεπτ.2025 ΘΕΜΑ 3.10</Link>{' '}
+        κ.ά.) — λείπει από το επίσημο τυπολόγιο, όπως και ο ορισμός{' '}
+        <InlineMath>{'N_0 \\triangleq kT'}</InlineMath>. Αν η εκφώνηση ζητήσει
+        και ισχύ σε ζώνη, το <InlineMath>{'P_N = N_0 B'}</InlineMath>{' '}
+        (βάρος <strong>5</strong>) επίσης λείπει. Το τυπολόγιο δεν
         περιέχει <em>κανέναν</em> τύπο θορύβου — ολόκληρη η ενότητα «Noise»
         είναι μνήμη. Άρα αυτή τη μία γραμμή πρέπει να την έχεις μέσα σου· δεν θα
         σου δοθεί φύλλο να την ψάξεις.
@@ -3426,6 +3462,29 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['noise/through-filters'],
     formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power', 'bandlimited-noise-autocorr'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Κανέναν από τους τύπους της άσκησης δεν θα βρεις στο επίσημο
+        τυπολόγιο:{' '}
+        <InlineMath>{'S_N(f) = N_0/2'}</InlineMath>{' '}
+        (βάρος <strong>5</strong> — ανώτατο στο Noise: εμφανίστηκε σε{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:sept25-th3-10">Σεπτ.2025 ΘΕΜΑ 3.10</Link>{' '}
+        κ.ά.),{' '}
+        <InlineMath>{'P_N = N_0 B'}</InlineMath>{' '}
+        (βάρος <strong>5</strong>:{' '}
+        <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
+        {' · '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>{' '}
+        κ.ά.) και{' '}
+        <InlineMath>{'R_N(\\tau) = N_0 B\\,\\mathrm{sinc}(2B\\tau)'}</InlineMath>{' '}
+        (βάρος <strong>1</strong> — μόνο αυτό το θέμα στην παρούσα τράπεζα). Το
+        ζεύγος rect↔sinc βρίσκεται στο τυπολόγιο, αλλά η εφαρμογή στον θόρυβο
+        δεν — τη γράφεις απέξω.
+      </>
+    ),
     statement: (
       <p>
         Για τον προηγούμενο θερμικό θόρυβο, θεωρήστε ότι εισέρχεται σε ένα
