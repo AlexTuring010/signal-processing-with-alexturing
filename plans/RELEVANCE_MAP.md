@@ -46,7 +46,7 @@ primary formula is exercised N times).  The two MUST be consistent:
 | Chapter | Step | Status |
 | --- | --- | --- |
 | **Noise** — 5 theory pages, 8 exercises | `relmap-noise` | **DONE** — §2 below |
-| AM — 7 theory pages, ~20 exercises | `relmap-am` | TODO |
+| **AM** — 7 theory pages, 31 exercises | `relmap-am` | **DONE** — §3 below |
 | FM — 5 theory pages, ~8 exercises | `relmap-fm` | TODO |
 | Foundations — 6 theory pages, 22 exercises | `relmap-foundations` | TODO |
 | Randomness / PSD — 4 theory pages, inline only | `relmap-randomness` | TODO |
@@ -275,11 +275,210 @@ noise problem.
 
 ---
 
-## §3. AM chapter — TODO
+## §3. AM chapter map
 
-Step `relmap-am`.  7 theory pages (`am/overview`, `am/conventional`, `am/dsb-sc`,
-`am/ssb`, `am/vsb`, `am/multiplexing`, `am/modulator-demodulator`), ~20 exercises.
-Map when scheduled.  Reference: `MUST_LEARN_FORMULAS.md §6B`.
+**Theory pages:** `am/overview`, `am/conventional`, `am/dsb-sc`, `am/ssb`, `am/vsb`,
+`am/multiplexing`, `am/modulator-demodulator`.
+
+**Exercises (31 past-exam `topic:'am'`; excludes `lec-am-1`; NOT yet Phase-2-reworked):**
+`proodos26-1`, `proodos26-2`, `proodos26-3`, `proodos26-4`, `proodos26-5`,
+`proodos26-7`, `proodos26-9`, `proodos26-11`, `proodos26-12`, `proodos26-13`,
+`sept25-th1-1`, `sept25-th1-2`, `sept25-th1-3`, `sept25-th1-4`, `sept25-th1-5`,
+`jan26-th1-1`, `jan26-th2-7`, `jan26-th2-8`, `jan26-th3-mux`, `jun25-th2`,
+`pa25-th1-1`, `pa25-th2-2`, `pa25-th2-5`, `pa25-th3-mux`,
+`pb25-th1-1`, `pb25-th2-1`, `pb25-th2-2`, `pb25-th2-3`, `pb25-th2-5`,
+`pb25-th3-mux`, `pb25-th4-nonlinear`.
+
+**Note on exercise count:** `exercises.tsx` now holds 31 past-exam `topic:'am'`
+exercises; §6B stated "21" — the difference reflects exercises added by Pass-C
+annotation steps and T/F conceptual problems (e.g. `pb25-th2-1`) that §6B excluded
+from its formula-weight corpus.  This step uses `exercises.tsx` as ground truth.
+
+**Source:** homes derived from each card's `formulaIds` + solution content + §6B
+formula-usage analysis; verified against actual AM theory page section headings.
+§6B cross-check reuses §6B weights throughout — NOT recomputed.
+**Regime note:** AM exercises are must-learn-FLAGGED but NOT yet Phase-2-reworked;
+theory homes are derived by analysis (formulaIds + solution reading), not inferred
+from pre-citing reworked cards as in the noise chapter.
+
+---
+
+### §3.F Forward table
+
+| Problem | Title | Core concept | Primary theory home | Secondary theory home(s) | Gap? |
+| --- | --- | --- | --- | --- | --- |
+| `proodos26-1` | Δείκτης διαμόρφωσης από A_c και A_m | Direct μ = Am/Ac computation from given amplitudes | `am/conventional` §2 "Modulation index μ — ο «χορτασμός» της διαμόρφωσης" | `am/conventional` §1 "Η εξίσωση Conventional AM" (signal form context) | No |
+| `proodos26-2` | Συνολική ισχύς AM για P_c=100W, m=1 | P_AM = Pc(1+μ²/2) = 150 W; η at μ=1 context | `am/conventional` §5c "Total power" | `am/conventional` §5d "Efficiency η — το «πόσο πάει σε χρήσιμη πληροφορία»"; §2 (μ = 1 context) | No |
+| `proodos26-3` | Τι σημαίνει m=1 | Interpret μ = 1: envelope just touches zero, maximum non-overmodulated operation | `am/conventional` §2 "Modulation index μ — ο «χορτασμός» της διαμόρφωσης" | `am/conventional` §3 "Υπερδιαμόρφωση (overmodulation) — τι σπάει και γιατί" (μ = 1 as the boundary) | No |
+| `proodos26-4` | Μέγιστο ποσοστό ισχύος στα sidebands | Maximize η = μ²/(2+μ²); η_max = 1/3 at μ = 1 | `am/conventional` §5d "Efficiency η — το «πόσο πάει σε χρήσιμη πληροφορία»" | `am/conventional` §5c "Total power" (P_total formula invoked) | No |
+| `proodos26-5` | AM modulator με δίοδο (square-law) | Square-law y = αx²; fc > 3W condition; BPF extracts AM component | `am/modulator-demodulator` §1b "Nonlinear element + bandpass filter (πραγματικός πομπός)" | `am/conventional` §1 "Η εξίσωση Conventional AM" (output form); `am/conventional` §4 "Φάσμα" (BPF selection of 2fc band) | No |
+| `proodos26-7` | DSB-SC: σφάλμα φάσης φ στον σύμφωνο αποδιαμορφωτή | Coherent DSB-SC demod with phase error φ → output = m(t)cos(φ); amplitude scales by cos(φ) | `am/dsb-sc` §4a "Ευαισθησία στη φάση" | `am/dsb-sc` §4 "Coherent demodulation — γιατί δουλεύει" | No |
+| `proodos26-9` | AM σήμα στο χρόνο και στη συχνότητα: tone modulation | Draw AM waveform AND spectrum for single-tone message (fc=500Hz, fm=1Hz); write x_AM, compute X_AM(f) | `am/conventional` §4 "Φάσμα του AM σήματος" | `am/conventional` §1 "Η εξίσωση Conventional AM" | **Viz gap** — «Σχεδιάστε» draw-time + draw-spectrum, text-only answer (inbox/074) |
+| `proodos26-11` | USSB δύο σημάτων: φάσματα baseband και διαμορφωμένων | Draw baseband spectra (sinc(Wt) → rect; sinc²(Wt) → tri) then USSB-modulated spectra keeping only upper sideband | `am/ssb` §2c "Απόδειξη — γιατί το m·cos − m̂·sin δίνει μόνο USB" | `am/ssb` §3 "USSB-AM vs LSSB-AM — δύο επιλογές, ίδια πληροφορία"; `foundations/fourier-transform` (fourier-pair-rect, fourier-pair-tri) | **Viz gap** — static SVG only, not interactive (inbox/080) |
+| `proodos26-12` | Συνθήκη μη-επικάλυψης για USSB FDM | Derive minimum carrier spacing from B_SSB = W (f₁ ≥ W/2, f₂ ≥ max(W, f₁+W/2)) | `am/multiplexing` §3 "Συνθήκη μη-επικάλυψης ανά σχήμα διαμόρφωσης" | `am/ssb` §5 "Bandwidth και ισχύς" (B_SSB = W premise) | **Viz gap** — same cluster as proodos26-11/13; interactive overlap-condition viz absent (inbox/080) |
+| `proodos26-13` | Φάσμα πολυπλεγμένου σήματος G(f) | Draw combined USSB multiplexed G(f) = X₁(f) + X₂(f) (two USSB lobes) | `am/multiplexing` §4 "Η canonical εξεταστική άσκηση" | `am/ssb` §2c (individual USSB spectrum structure); `am/multiplexing` §3 | **Viz gap** — static SVG only (inbox/080) |
+| `sept25-th1-1` | Αρχή λειτουργίας AM — εξίσωση, sidebands | Explain AM: write x_AM equation, derive X_AM(f), show sideband structure, state B_AM = 2W | `am/conventional` §1 "Η εξίσωση Conventional AM" | `am/conventional` §4 "Φάσμα του AM σήματος"; §4b "Bandwidth = 2W" | No |
+| `sept25-th1-2` | Conventional AM — μ, ισχύς carrier, ισχύς συνολική | Compute μ = 0.5; Pc = 50 W; P_AM = 56.25 W from Ac=10V, Am=5V | `am/conventional` §5c "Total power" | `am/conventional` §5a "Carrier power"; §2 "Modulation index μ" | No |
+| `sept25-th1-3` | AM vs DSB-SC vs SSB — bandwidth & ισχύς | Comparison table: bandwidth (2W/2W/W), power efficiency (η≤1/3, η=100%, η=100%), advantages for all three AM variants | `am/overview` §4 "Ο χώρος των trade-offs" | `am/conventional` §4b "Bandwidth = 2W"; `am/conventional` §5d "Efficiency η"; `am/dsb-sc` §5b "Power efficiency"; `am/ssb` §5 "Bandwidth και ισχύς" | No |
+| `sept25-th1-4` | Envelope detector — λειτουργία & συνθήκες | Envelope detector operation; RC range 1/fc ≪ RC ≪ 1/W; μ ≤ 1 condition for distortion-free operation | `am/modulator-demodulator` §2b "Όρια του RC time constant" | `am/modulator-demodulator` §2a "Πώς δουλεύει"; §2c "Όρος για να δουλέψει η envelope detection" (μ ≤ 1); `am/conventional` §2 "Modulation index μ" | No |
+| `sept25-th1-5` | AM φάσμα δύο-τόνου message | Draw two-tone AM spectrum: carrier impulse at fc + sidebands at fc±1kHz and fc±2kHz with given amplitudes | `am/conventional` §4 "Φάσμα του AM σήματος" | `am/conventional` §1 "Η εξίσωση Conventional AM" | **Viz gap** — «Σχεδιάστε» draw spectrum, text-only answer (inbox/074) |
+| `jan26-th1-1` | Σ/Λ — μορφή AM σήματος | T/F: [Ac·cos(2πt)]cos(2πfct) → ΛΑΘΟΣ; DSB-SC lacks the constant-offset carrier term; correct AM form needs [Ac+m(t)]cos | `am/conventional` §1 "Η εξίσωση Conventional AM" | `am/dsb-sc` §1 "Από Conventional AM στο DSB-SC" (distinguishing feature) | No |
+| `jan26-th2-7` | AM σχεδίαση χρόνου + φάσματος | Draw overmodulated AM waveform (μ=2>1, c=cos(20πt), m=2sin(2πt); phase reversals visible) AND spectrum (carrier ± 1Hz sidebands with imaginary-weight from sin) | `am/conventional` §4 "Φάσμα του AM σήματος" | `am/conventional` §3 "Υπερδιαμόρφωση (overmodulation) — τι σπάει και γιατί" (time-domain waveform part); §2 (μ = Am/Ac = 2) | **Viz gap** — draw both time-domain and frequency-domain, text-only (inbox/078) |
+| `jan26-th2-8` | DSB-SC με sinc message | Draw DSB-SC spectrum: sinc(2Wt) message → rect(f/2W) shifts to ±fc with NO carrier impulse | `am/dsb-sc` §3 "Φάσμα — μόνο sidebands" | `am/dsb-sc` §1 "Από Conventional AM στο DSB-SC" (signal form); `foundations/fourier-transform` (fourier-pair-rect: sinc ↔ rect) | **Viz gap** — «Σχεδιάστε» draw DSB-SC spectrum, text-only (inbox/081) |
+| `jan26-th3-mux` | AM-USSB Multiplexing — sinc + Π σε δύο φέροντα | Draw baseband spectra + USSB-modulated spectra for sinc(2Wt) on f₁=100kHz and Π(4Wt) on f₂=1MHz; draw multiplexed G(f) | `am/multiplexing` §4 "Η canonical εξεταστική άσκηση" | `am/ssb` §5 "Bandwidth και ισχύς" (B_SSB = W); `foundations/fourier-transform` (fourier-pair-rect) | **Viz gap (NEW)** — «Αποτυπώστε σχηματικά» draw problem; text-only solution (no interactive spectrum viz) |
+| `jun25-th2` | AM Multiplexing — sinc(Wt) DSB-SC + sinc(6Wt) DSB | Mixed FDM: DSB-SC + conventional AM channels; write signal forms, draw per-channel and combined spectra, derive non-overlap condition for n channels | `am/multiplexing` §4 "Η canonical εξεταστική άσκηση" | `am/multiplexing` §3 "Συνθήκη μη-επικάλυψης ανά σχήμα διαμόρφωσης"; `am/dsb-sc` §3 "Φάσμα — μόνο sidebands"; `am/conventional` §4 "Φάσμα"; `foundations/fourier-transform` | **Viz gap** — draw mixed-FDM spectra, text-only (inbox/078; inbox/081) |
+| `pa25-th1-1` | Σ/Λ — μορφή AM σήματος (DSB-SC vs conventional) | T/F: same trap as jan26-th1-1 — [Ac·cos(2πt)]cos(2πfct) → ΛΑΘΟΣ (DSB-SC, no carrier-offset term) | `am/conventional` §1 "Η εξίσωση Conventional AM" | `am/dsb-sc` §1 "Από Conventional AM στο DSB-SC" | No |
+| `pa25-th2-2` | Σχεδίαση AM σήματος cos(8πt) με 2sin(2πt) | Draw AM waveform; μ = Am/Ac = 2 > 1 → overmodulation; identify envelope and phase reversals | `am/conventional` §3 "Υπερδιαμόρφωση (overmodulation) — τι σπάει και γιατί" | `am/conventional` §2 "Modulation index μ" (μ = 2 > 1 calculation) | **Viz gap (NEW)** — draw AM waveform, text-only; sibling of `pb25-th2-2` (repeatGroup 'am-draw-cos8pi'); pb25-th2-2 was filed (inbox/077) — pa25-th2-2 mentioned as sibling there |
+| `pa25-th2-5` | AM ενός Σ ncos(2πnt), n=1..8 — αρμονικές | Draw baseband amplitude spectrum of Σn·cos(2πnt) (n=1..8) and AM spectrum (carrier + 2×8 sideband lines) | `am/conventional` §4 "Φάσμα του AM σήματος" | `foundations/fourier-series` (multi-harmonic signal representation) | **Viz gap** — «Σχεδιάστε» draw baseband + AM spectra, text-only (inbox/076) |
+| `pa25-th3-mux` | AM-USSB Multiplexing — sinc(2Wt) + Π(4Wt) | USSB FDM: draw baseband and modulated spectra, derive non-overlap condition (f₂ ≥ f₁ + W), draw G(f) | `am/multiplexing` §4 "Η canonical εξεταστική άσκηση" | `am/multiplexing` §3 "Συνθήκη μη-επικάλυψης ανά σχήμα διαμόρφωσης"; `am/ssb` §5 "Bandwidth και ισχύς"; `foundations/fourier-transform` | **Viz gap** — draw spectra and G(f), text-only (inbox/081) |
+| `pb25-th1-1` | Σ/Λ — μορφή AM (σωστή) | T/F: [Ac+cos(2πt)]cos(2πfct) → ΣΩΣΤΟ; conventional AM form correctly includes carrier-offset term Ac | `am/conventional` §1 "Η εξίσωση Conventional AM" | — | No |
+| `pb25-th2-1` | Λόγοι DSB-SC διαμόρφωσης | Motivations for DSB-SC: η = 100% (no carrier power overhead), compared to ηAM ≤ 1/3; same bandwidth as AM (2W) | `am/dsb-sc` §1 "Από Conventional AM στο DSB-SC" | `am/dsb-sc` §5b "Power efficiency" (η = 100% quantification) | No |
+| `pb25-th2-2` | AM σχεδίαση cos(8πt) με 2sin(2πt) | Same as pa25-th2-2 (repeatGroup 'am-draw-cos8pi'): draw overmodulated AM waveform; μ = 2 > 1; phase reversals | `am/conventional` §3 "Υπερδιαμόρφωση (overmodulation) — τι σπάει και γιατί" | `am/conventional` §2 "Modulation index μ" (μ = 2 > 1) | **Viz gap** — draw overmodulated AM waveform, text-only (inbox/077) |
+| `pb25-th2-3` | AM-LSSB φάσμα με sinc message | Draw LSSB spectrum: sinc(2Wt) → rect baseband; LSSB keeps only lower sideband below fc (sign flip from USSB) | `am/ssb` §3 "USSB-AM vs LSSB-AM — δύο επιλογές, ίδια πληροφορία" | `am/ssb` §2c "Απόδειξη — γιατί το m·cos − m̂·sin δίνει μόνο USB" (LSSB sign convention); `foundations/fourier-transform` (fourier-pair-rect) | **Viz gap** — draw LSSB spectrum, text-only (inbox/081) |
+| `pb25-th2-5` | AM φάσμα Σ(10-n)cos(2πnt), n=1..6 | Draw AM spectrum of Σ(10-n)cos(2πnt): count carrier + sideband lines; sibling of pa25-th2-5 | `am/conventional` §4 "Φάσμα του AM σήματος" | `foundations/fourier-series` (multi-harmonic series representation) | **Viz gap** — draw AM spectrum, text-only; pb25-th2-5 also missing `am-spectrum` tag (inbox/077) |
+| `pb25-th3-mux` | AM-DSB-SC Multiplexing — sinc(Wt) + Π(Wt) | DSB-SC FDM: write signal forms, draw per-channel spectra, derive non-overlap condition (f₂ ≥ f₁ + 3W/2 for DSB-SC), draw G(f) | `am/multiplexing` §4 "Η canonical εξεταστική άσκηση" | `am/multiplexing` §3 "Συνθήκη μη-επικάλυψης ανά σχήμα διαμόρφωσης"; `am/dsb-sc` §3 "Φάσμα — μόνο sidebands"; `foundations/fourier-transform` | **Viz gap** — draw DSB-SC FDM spectra and G(f), text-only (inbox/081) |
+| `pb25-th4-nonlinear` | Μη γραμμικός AM transmitter — α, φάσμα, BPF | Nonlinear y = x²(t) modulator: draw spectrum of y(t) (DC + baseband + DSB-SC component + 2fc harmonics); BPF selects the AM term | `am/modulator-demodulator` §1b "Nonlinear element + bandpass filter (πραγματικός πομπός)" | `foundations/fourier-transform` (fourier-pair-rect, fourier-modulation-theorem for squared-signal spectrum) | **Viz gap** — draw spectrum of y(t) showing all components, text-only (inbox/077) |
+
+---
+
+### §3.R Reverse table
+
+#### `am/overview`
+
+| Section | Primary homes | Secondary appearances | §6B cross-check |
+| --- | --- | --- | --- |
+| §2 "Το AM concept — info στο πλάτος του carrier" | — | `sept25-th1-1` (high-level motivation for AM) | Introductory concept section; no standalone must-learn formula; am-signal §6B weight=17 — the formula is TAUGHT in am/conventional §1, not here |
+| §3 "Οι τέσσερις παραλλαγές AM — η οικογένεια" | — | `sept25-th1-3` (comparison context: the four variants and their summary trade-offs) | am-bandwidth overview mention here (2W/2W/W); primary teaching of B_AM = 2W is am/conventional §4b; this section provides the bird's-eye view |
+| §4 "Ο χώρος των trade-offs" | `sept25-th1-3` — **hot for 1** | — | am-bandwidth §6B weight=3 (3 exercises use it: sept25-th1-1, sept25-th1-3, sept25-th2-7). §4 is primary for the 1 direct bandwidth+efficiency COMPARISON problem; other 2 bandwidth exercises home to am/conventional §1 and fm chapter ✓ |
+
+#### `am/conventional`
+
+| Section | Primary homes | Secondary appearances | §6B cross-check |
+| --- | --- | --- | --- |
+| §1 "Η εξίσωση Conventional AM" | `sept25-th1-1`, `jan26-th1-1`, `pa25-th1-1`, `pb25-th1-1` — **hot for 4** | `proodos26-1`, `proodos26-2`, `proodos26-3`, `proodos26-5`, `proodos26-9`, `sept25-th1-2`, `sept25-th1-5`, `jan26-th2-7`, `pa25-th2-2`, `pa25-th2-5`, `pb25-th2-2`, `pb25-th2-5`, `pb25-th4-nonlinear`, `jun25-th2` — secondary for 14 | am-signal §6B weight=17: §1 is primary for 4 exercises where identifying/stating the AM signal form IS the core deliverable (explanatory + T/F problems); the remaining 13 exercises use x_AM as foundational prerequisite machinery — consistent with am-signal being the most ubiquitous formula in the chapter ✓ |
+| §2 "Modulation index μ — ο «χορτασμός» της διαμόρφωσης" | `proodos26-1`, `proodos26-3` — **hot for 2** | `proodos26-2`, `sept25-th1-2`, `sept25-th1-4`, `pa25-th2-2`, `pb25-th2-2`, `jan26-th2-7` | am-mu §6B weight=8: §2 is primary for 2 exercises where computing/interpreting μ IS the deliverable; 6 more invoke μ as a step within power, overmodulation, or spectrum problems. 2+6=8 ✓ |
+| §3 "Υπερδιαμόρφωση (overmodulation) — τι σπάει και γιατί" | `pa25-th2-2`, `pb25-th2-2` — **hot for 2** | `jan26-th2-7` (overmodulation context), `proodos26-3` (μ=1 as boundary condition) | No dedicated overmodulation formulaId in §6B (overmod waveform recognition is tested without a formula as such). am-mu §6B weight=8 encompasses overmod exercises (μ>1 triggers it); §3 hot for 2 draw-waveform problems where overmodulation IS the deliverable ✓ |
+| §4 "Φάσμα του AM σήματος" | `proodos26-9`, `sept25-th1-5`, `jan26-th2-7`, `pa25-th2-5`, `pb25-th2-5` — **hot for 5** | `sept25-th1-1` (spectrum mentioned as part of explanation); `proodos26-5` (BPF selects the 2fc spectrum band) | am-spectrum §6B weight=4: §4 is primary for 4 tagged am-spectrum exercises (proodos26-9, sept25-th1-5, pa25-th2-5, jan26-th2-7); pb25-th2-5 is a 5th with tagging gap (`am-spectrum` absent from its `formulaIds` — sibling of pa25-th2-5 which IS tagged). Hot for 5 ≥ weight 4 ✓; note tagging gap for pb25-th2-5 |
+| §5c "Total power" / §5cγ "Γενική (non-tone) μορφή" | `proodos26-2`, `sept25-th1-2` — **hot for 2** | `proodos26-4`, `sept25-th1-3` | am-power §6B weight=4: §5c teaches P_total = Pc(1+μ²/2); 2 exercises primary (direct computation); proodos26-4 homes to §5d (η maximization); sept25-th1-3 homes to am/overview §4 (comparison table, invokes power as secondary). Combined: 2+2=4 ✓ |
+| §5d "Efficiency η — το «πόσο πάει σε χρήσιμη πληροφορία»" | `proodos26-4` — **hot for 1** | `proodos26-2`, `sept25-th1-3` | am-eta §6B weight=3: §5d teaches η = μ²/(2+μ²) ≤ 1/3; proodos26-4 (maximize η) is primary; proodos26-2 (μ=1 context gives η = 1/3 as bonus) and sept25-th1-3 (comparison: η_AM ≤ 1/3) are secondaries. 1+2 = 3 combined ✓ |
+
+#### `am/dsb-sc`
+
+| Section | Primary homes | Secondary appearances | §6B cross-check |
+| --- | --- | --- | --- |
+| §1 "Από Conventional AM στο DSB-SC" | `pb25-th2-1` — **hot for 1** | `jan26-th1-1`, `pa25-th1-1` (T/F distinguishing DSB-SC from conventional AM) | dsb-sc-signal §6B weight=5: §1 motivates the form x_DSB = Ac·m·cos(2πfct) and is primary for the conceptual "reasons for DSB-SC" problem; the formula-application exercises home to §3 (spectrum) or §4a (phase error) |
+| §3 "Φάσμα — μόνο sidebands" | `jan26-th2-8` — **hot for 1** | `pb25-th3-mux` (per-channel DSB-SC spectrum), `jun25-th2` (DSB-SC component spectrum) | dsb-sc-signal §6B weight=5: §3 teaches "no carrier impulse" DSB-SC spectrum; jan26-th2-8 (draw DSB-SC spectrum) is directly primary; FDM problems invoke §3 as secondary step ✓ |
+| §4a "Ευαισθησία στη φάση" | `proodos26-7` — **hot for 1** | — | DSB-SC phase-error output m(t)cos(φ): §6B weight=1 (no dedicated formulaId; suggested `dsb-sc-phase-error` id). proodos26-7 is the only past-exam exercise testing this trap ✓ |
+| §5b "Power efficiency" | — | `sept25-th1-3` (comparison table: η_DSB = 100%), `pb25-th2-1` (η=100% quantification as motivation) | dsb-sc-power §6B weight=1 (sept25-th1-3, the comparison exercise). §5b provides the η=100% argument ✓ |
+
+#### `am/ssb`
+
+| Section | Primary homes | Secondary appearances | §6B cross-check |
+| --- | --- | --- | --- |
+| §2b "Διαμορφωτής ολίσθησης φάσης (Hilbert) — κομψή αλγεβρικά" | — | `jan26-th3-mux` (Hilbert formulaId tagged; the form is the tool) | ssb-signal §6B weight=6: §2b introduces the Hilbert-based production method |
+| §2c "Απόδειξη — γιατί το m·cos − m̂·sin δίνει μόνο USB" | `proodos26-11` — **hot for 1** | `pb25-th2-3` (LSSB: same proof with sign flip), `proodos26-12`, `proodos26-13`, `pa25-th3-mux`, `jan26-th3-mux` | ssb-signal §6B weight=6: §2c is the primary teaching home for the USSB signal form; proodos26-11 directly exercises "draw USSB spectra for specific baseband signals" — the core of the proof. All 6 ssb-signal exercises depend on §2c's derivation ✓ |
+| §3 "USSB-AM vs LSSB-AM — δύο επιλογές, ίδια πληροφορία" | `pb25-th2-3` — **hot for 1** | `proodos26-11`, `proodos26-12`, `proodos26-13`, `pa25-th3-mux`, `jan26-th3-mux` | ssb-signal §6B weight=6: §3 explains USB vs LSB choice; pb25-th2-3 (LSSB draw problem) homes here specifically because the LSSB variant is directly tested. All USSB FDM problems also pass through §3 ✓ |
+| §5 "Bandwidth και ισχύς" | — | `proodos26-12` (B_SSB=W underpins non-overlap derivation), `sept25-th1-3` (B_SSB=W in comparison), `pa25-th3-mux`, `pb25-th3-mux`, `jan26-th3-mux` | am-bandwidth §6B weight=3 for B_SSB=W: §5 teaches B_SSB=W; this is invoked in all USSB FDM problems as supporting machinery, never the primary deliverable ✓ |
+
+#### `am/vsb`
+
+| Section | Primary homes | Secondary appearances | §6B cross-check |
+| --- | --- | --- | --- |
+| (all sections) | **hot for 0** | 0 | **Coverage gap — see §3.G G3.** vsb-signal, vsb-nyquist-symmetry, vsb-bandwidth all §6B weight=0. No past-exam exercise tests VSB formulas. Consistent with §6B's own finding ("exam weight ~2%"). |
+
+#### `am/multiplexing`
+
+| Section | Primary homes | Secondary appearances | §6B cross-check |
+| --- | --- | --- | --- |
+| §3 "Συνθήκη μη-επικάλυψης ανά σχήμα διαμόρφωσης" | `proodos26-12` — **hot for 1** (non-overlap condition IS the deliverable) | `pa25-th3-mux`, `pb25-th3-mux`, `jun25-th2` (all derive the condition as a step) | fdm-spacing §6B weight=4 (proodos26-12, pb25-th3-mux, pa25-th3-mux, jun25-th2): §3 teaches the non-overlap condition; proodos26-12 is primary (condition = problem); the other 3 invoke it within the canonical template (§4 primary for those) ✓ |
+| §4 "Η canonical εξεταστική άσκηση" | `proodos26-13`, `jan26-th3-mux`, `pa25-th3-mux`, `pb25-th3-mux`, `jun25-th2` — **hot for 5** | `proodos26-12` (non-overlap step is part of the template) | fdm-spacing §6B weight=4: §4 is primary for 5 FDM draw-spectrum+G(f) problems; fdm-spacing weight=4 counts only exercises where the NON-OVERLAP CONDITION is a key derivation step (proodos26-12 + 3 others). §4 hot for 5 ≥ weight 4 ✓ (extra 1 = proodos26-13 / jan26-th3-mux, which draw G(f) without explicitly deriving the spacing condition) |
+
+#### `am/modulator-demodulator`
+
+| Section | Primary homes | Secondary appearances | §6B cross-check |
+| --- | --- | --- | --- |
+| §1b "Nonlinear element + bandpass filter (πραγματικός πομπός)" | `proodos26-5`, `pb25-th4-nonlinear` — **hot for 2** | — | nonlinear-modulator-fc §6B weight=2 ✓ exact match |
+| §2b "Όρια του RC time constant" | `sept25-th1-4` — **hot for 1** | — | envelope-detector-rc §6B weight=1 ✓ |
+| §2c "Όρος για να δουλέψει η envelope detection" | — | `sept25-th1-4` (μ ≤ 1 condition as part of envelope-detector question) | am-mu §6B weight=8 (μ ≤ 1 condition tested here); §2b is the primary home for the RC formula |
+| §5c "Output SNR — πίνακας αναφοράς" | — | `sept25-th2-7` (cross-topic: FM-vs-AM SNR comparison; topic:'fm', invokes am-output-snr as AM baseline) | am-output-snr §6B weight=1 (cross-topic); `sept25-th2-7` is topic:'fm' — primary FM home is `fm/in-noise`; appears here as secondary because the AM SNR formula taught in §5c is the AM side of the comparison. Consistent with §6B cross-topic note ✓ |
+
+---
+
+### §3.G Gaps
+
+#### G1 — AM viz gap cluster (15 already-surfaced by prior steps) ★ HIGH PRIORITY
+
+The following 15 problems are confirmed DRAW («Σχεδιάστε» / «Αποτυπώστε σχηματικά») or
+draw-spectrum problems whose current exercise cards have text-only or static-SVG-only
+answers.  They were individually filed by prior builder steps and confirmed consistent
+with the FLOOR mandate.  Each needs a focused Phase-2 rework step building an
+interactive viz.
+
+**Conventional AM spectrum / waveform draws:**
+- `proodos26-9` — draw AM waveform + spectrum (tone modulation) → text-only (inbox/074)
+- `sept25-th1-5` — draw two-tone AM spectrum → text-only (inbox/074)
+- `jan26-th2-7` — draw overmodulated AM waveform + spectrum → text-only (inbox/078)
+- `pb25-th2-2` — draw overmodulated AM waveform (repeatGroup 'am-draw-cos8pi') → text-only (inbox/077)
+- `pa25-th2-5` — draw multi-harmonic baseband + AM spectra → text-only (inbox/076)
+- `pb25-th2-5` — draw multi-harmonic AM spectrum → text-only; also missing `am-spectrum` tag (inbox/077)
+
+**DSB-SC / SSB spectrum draws:**
+- `jan26-th2-8` — draw DSB-SC spectrum for sinc message → text-only (inbox/081)
+- `pb25-th2-3` — draw LSSB spectrum for sinc message → text-only (inbox/081)
+
+**Nonlinear modulator spectrum:**
+- `pb25-th4-nonlinear` — draw spectrum of y = x²(t) (all components + BPF) → text-only (inbox/077)
+
+**USSB/FDM spectrum cluster (static SVG or text-only):**
+- `proodos26-11` — draw USSB spectra for rect + tri baseband → static SVG only (inbox/080)
+- `proodos26-12` — USSB FDM non-overlap interactive viz absent → static/text (inbox/080)
+- `proodos26-13` — draw combined G(f) → static SVG only (inbox/080)
+- `pa25-th3-mux` — draw USSB FDM spectra + G(f) → text-only (inbox/081)
+- `pb25-th3-mux` — draw DSB-SC FDM spectra + G(f) → text-only (inbox/081)
+- `jun25-th2` — draw mixed DSB-SC + AM FDM spectra → text-only (inbox/078; inbox/081)
+
+**Planner action:** each item above is a focused Phase-2 exercise-rework step (T1 scope,
+`content/practice/exercises.tsx`).  The viz components — AM spectrum sliders, DSB-SC
+spectrum shift, SSBFdmSpectrumViz — belong in `components/viz/` (T2 scope) and should be
+scheduled as paired steps (T2 viz build → T1 wire-up).  The USSB/FDM cluster
+(proodos26-11/12/13) shares one candidate viz component (`SSBFdmSpectrumViz`, per inbox/080).
+
+---
+
+#### G2 — NEW viz gaps discovered during this mapping (2 problems) ★ HIGH PRIORITY
+
+Two additional «Σχεδιάστε» / draw-waveform problems not yet on the existing filed list:
+
+1. **`jan26-th3-mux`** — statement says «Αποτυπώστε σχηματικά το φάσμα πλάτους» (draw
+   the amplitude spectrum schematically) for a two-channel USSB FDM problem
+   (sinc(2Wt) on f₁=100kHz, Π(4Wt) on f₂=1MHz).  Current solution (verified from
+   `exercises.tsx`) is prose-only — describes spectrum structure in words with no
+   interactive viz.  Same family as the proodos26-11/12/13 USSB cluster and the pa/pb25
+   multiplexing viz-gaps.  **Primary home: am/multiplexing §4.**
+
+2. **`pa25-th2-2`** — statement says «Σχεδιάστε το διαμορφωμένο κατά AM σήμα» (draw
+   the AM signal).  Current solution (verified from `exercises.tsx`) is text + formulas
+   with no waveform drawing or interactive viz.  Sibling of `pb25-th2-2` (same
+   `repeatGroup: 'am-draw-cos8pi'`); `pb25-th2-2` was filed in inbox/077 which named
+   `pa25-th2-2` as a sibling, but `pa25-th2-2` was not placed on the filed list.
+   **Primary home: am/conventional §3 (overmodulation, μ=2>1).**
+
+**Planner action:** add `jan26-th3-mux` to the USSB/FDM viz-rework batch and
+`pa25-th2-2` to the overmodulated-waveform viz-rework batch (sibling of `pb25-th2-2`).
+
+---
+
+#### G3 — `am/vsb` has zero past-exam exercise coverage (coverage gap, low severity)
+
+Per §6B, all VSB formula weights = 0 (vsb-signal, vsb-nyquist-symmetry, vsb-bandwidth).
+The theory page is reworked (included in the overall AM theory pass), but no past-exam
+exercise card in the bank tests VSB-specific formulas.  Exam weight ~2% (noted on the
+VSB theory page itself).
+
+This is consistent with §6B's own finding.  Not blocking.
+
+**Planner note:** low priority; revisit if a future exam includes a dedicated VSB
+derivation problem beyond the qualitative trade-off comparison.
 
 ---
 
