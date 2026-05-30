@@ -410,8 +410,12 @@ export const EXERCISES: Exercise[] = [
         {' · '}
         <Link href="/practice#exercise:jun25-th1-9">Ιούν.2025 ΘΕΜΑ 1.9</Link>{' '}
         κ.ά.) και ο νόμος εξόδου LTI{' '}
-        <InlineMath>{'S_y(f) = |H(f)|^2 S_n(f)'}</InlineMath>. Το τυπολόγιο
-        δεν περιέχει κανέναν τύπο θορύβου — άρα και το αποτέλεσμα{' '}
+        <InlineMath>{'S_y(f) = |H(f)|^2 S_n(f)'}</InlineMath>{' '}
+        (βάρος <strong>3</strong>:{' '}
+        <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>{' '}
+        κ.ά.). Το τυπολόγιο δεν περιέχει κανέναν τύπο θορύβου — άρα και το αποτέλεσμα{' '}
         <InlineMath>{'P_N = N_0 B'}</InlineMath>{' '}
         (βάρος <strong>5</strong>:{' '}
         <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
@@ -2081,7 +2085,12 @@ export const EXERCISES: Exercise[] = [
         {' · '}
         <Link href="/practice#exercise:jun25-th1-9">Ιούν.2025 ΘΕΜΑ 1.9</Link>{' '}
         κ.ά.) και ο νόμος εξόδου LTI{' '}
-        <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f)'}</InlineMath>. Το τυπολόγιο δεν
+        <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f)'}</InlineMath>{' '}
+        (βάρος <strong>3</strong>:{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>{' '}
+        κ.ά.). Το τυπολόγιο δεν
         περιέχει <em>κανέναν</em> τύπο θορύβου — άρα ούτε το τελικό{' '}
         <InlineMath>{'P_Y = N_0 B'}</InlineMath>{' '}
         (βάρος <strong>5</strong>:{' '}
@@ -3472,6 +3481,12 @@ export const EXERCISES: Exercise[] = [
         <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
         {' · '}
         <Link href="/practice#exercise:sept25-th3-10">Σεπτ.2025 ΘΕΜΑ 3.10</Link>{' '}
+        κ.ά.),{' '}
+        <InlineMath>{'S_Y(f) = |H(f)|^2 S_N(f)'}</InlineMath>{' '}
+        (βάρος <strong>3</strong>:{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>{' '}
         κ.ά.),{' '}
         <InlineMath>{'P_N = N_0 B'}</InlineMath>{' '}
         (βάρος <strong>5</strong>:{' '}

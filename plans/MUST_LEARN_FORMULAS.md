@@ -63,7 +63,8 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | B | **Modulation bridge** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §5B below |
 | B | **Randomness/PSD + remaining randomness** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §7B below |
 | C | Noise — bundle #1 (3 formulas: white-noise-psd·5, bandlimited-noise-power·5, bandlimited-noise-autocorr·1) | placement-(a) noise/white-noise + placement-(b) 5 exercise cards | **DONE** — step `mustlearn-passc-noise-f2-entries-placements` |
-| C | Remaining chapters (AM, FM, Foundations, Noise bundle #2, …) | per-placement | TODO |
+| C | Noise — bundle #2 (`lti-output-psd`·3) | placement-(a) noise/through-filters §8στ upgraded + placement-(b) 3 exercise cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-lti-output-psd-bundle` |
+| C | Remaining chapters (AM, FM, Foundations, Noise bundle #3, …) | per-placement | TODO |
 
 ---
 
@@ -629,7 +630,7 @@ These formulas are must-learn (off-sheet) but have no dedicated `formulaId` in `
 | --- | --- | --- | --- | --- |
 | 1 | S_N(f) = N₀/2 (white-noise PSD) | `white-noise-psd` | **5** | HIGH — universal, wrong callout on `white-noise` §10 (F1) |
 | 1 | P_N = N₀B (bandlimited power) | `bandlimited-noise-power` | **5** | HIGH — F2(1) RESOLVED; all 5 power-computation cards tagged |
-| 3 | S_Y = \|H\|²·S_X (LTI output PSD) | `lti-output-psd` | **3** | HIGH — already has §8στ callout; propagate to problems |
+| 3 | S_Y = \|H\|²·S_X (LTI output PSD) | `lti-output-psd` | **3** | **PASS-C DONE** — §8στ upgraded to weighted callout + all 3 cards extended with weight+refs |
 | 3 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **3** | HIGH — primary home `randomness/psd`; no callout yet |
 | 5 | S_N = kT/2, P_N = kTB (thermal noise) | `thermal-noise` | **2** | HIGH — repeated exam question; no callout on `sources` |
 | 5 | N₀ ≈ −174 dBm/Hz (noise floor) | — | **2** | MEDIUM — numerical constant; appears in coaching |
