@@ -2155,9 +2155,12 @@ export const EXERCISES: Exercise[] = [
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
-        ο τύπος{' '}
+        ο τύπος AM{' '}
         <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
-        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική). Βλ. π.χ.{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και ο τύπος
+        DSB-SC{' '}
+        <InlineMath>{'x_{DSB}(t) = A_c\\,m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (σε <strong>5</strong> — εδώ εμφανίζεται ως η «λάθος» μορφή στην εκφώνηση). Βλ. π.χ.{' '}
         <Link
           href="/practice#exercise:proodos26-1"
           className="text-accent underline-offset-2 hover:underline"
@@ -2166,10 +2169,10 @@ export const EXERCISES: Exercise[] = [
         </Link>{' '}
         και{' '}
         <Link
-          href="/practice#exercise:pb25-th1-1"
+          href="/practice#exercise:jan26-th2-8"
           className="text-accent underline-offset-2 hover:underline"
         >
-          Πρόοδ. Β 2025 ΘΕΜΑ 1.1
+          Ιαν. 2026 ΘΕΜΑ 2.8
         </Link>.
       </>
     ),
@@ -2611,6 +2614,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/dsb-sc', 'foundations/fourier-transform'],
     formulaIds: ['dsb-sc-signal', 'fourier-pair-rect', 'fourier-modulation-theorem'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος DSB-SC{' '}
+        <InlineMath>{'x_{DSB}(t) = A_c\\,m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>5</strong> παλιά θέματα — δεν υπάρχει carrier impulse στο φάσμα). Οι ζεύγοι Fourier (rect↔sinc, modulation theorem) βρίσκονται στο τυπολόγιο. Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:pb25-th3-mux"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 3
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jun25-th2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σχεδιάστε το φάσμα του διαμορφωμένου κατά AM-DSB-SC σήματος όταν το
@@ -3337,21 +3361,27 @@ export const EXERCISES: Exercise[] = [
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
-        ο τύπος{' '}
+        ο τύπος AM{' '}
         <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
-        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική). Το ζεύγος Fourier (rect↔sinc) βρίσκεται στο τυπολόγιο — δεν χρειάζεται να το θυμάσαι. Βλ. π.χ.{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική),
+        ο τύπος DSB-SC{' '}
+        <InlineMath>{'x_{DSB}(t) = A_c\\,m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (σε <strong>5</strong>), και η συνθήκη μη-επικάλυψης FDM{' '}
+        <InlineMath>{'\\Delta f \\ge 2W'}</InlineMath> για DSB-SC /{' '}
+        <InlineMath>{'\\Delta f \\ge W'}</InlineMath> για SSB{' '}
+        (σε <strong>4</strong>). Το ζεύγος Fourier (rect↔sinc) βρίσκεται στο τυπολόγιο — δεν χρειάζεται να το θυμάσαι. Βλ. π.χ.{' '}
         <Link
-          href="/practice#exercise:proodos26-1"
+          href="/practice#exercise:pb25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
-          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+          Πρόοδ. Β 2025 ΘΕΜΑ 3
         </Link>{' '}
         και{' '}
         <Link
-          href="/practice#exercise:sept25-th1-1"
+          href="/practice#exercise:pa25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
-          Σεπτ. 2025 ΘΕΜΑ 1.1
+          Πρόοδ. Α 2025 ΘΕΜΑ 3
         </Link>.
       </>
     ),
@@ -3906,6 +3936,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/ssb'],
     formulaIds: ['ssb-signal', 'fourier-pair-rect', 'fdm-spacing'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος USSB σήματος{' '}
+        <InlineMath>{'x_{USB}(t)=A_c m(t)\\cos(2\\pi f_c t)-A_c\\hat{m}(t)\\sin(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>6</strong> παλιά θέματα) και η συνθήκη
+        μη-επικάλυψης FDM-SSB{' '}
+        <InlineMath>{'\\Delta f \\ge W'}</InlineMath>{' '}
+        (σε <strong>4</strong>). Ο ζεύγος Fourier rect βρίσκεται στο τυπολόγιο. Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-12"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 12
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th3-mux"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 3.11-12
+        </Link>.
+      </>
+    ),
     statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(4Wt)'}</InlineMath>. Διαμορφώνονται κατά AM-USSB με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) <InlineMath>{'f_1, f_2'}</InlineMath> σχέση με W για non-overlap. (3) Σχεδιασμός G(f).</p>,
     solution: (
       <>
@@ -4334,9 +4388,12 @@ export const EXERCISES: Exercise[] = [
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
-        ο τύπος{' '}
+        ο τύπος DSB-SC{' '}
         <InlineMath>{'x_{DSB}(t) = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
-        (εμφανίστηκε σε <strong>5</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        (εμφανίστηκε σε <strong>5</strong> παλιά θέματα) και η συνθήκη
+        μη-επικάλυψης FDM-DSB-SC{' '}
+        <InlineMath>{'\\Delta f \\ge 2W'}</InlineMath>{' '}
+        (σε <strong>4</strong>). Βλ. π.χ.{' '}
         <Link
           href="/practice#exercise:jan26-th1-1"
           className="text-accent underline-offset-2 hover:underline"
@@ -4345,10 +4402,10 @@ export const EXERCISES: Exercise[] = [
         </Link>{' '}
         και{' '}
         <Link
-          href="/practice#exercise:jan26-th2-8"
+          href="/practice#exercise:pa25-th3-mux"
           className="text-accent underline-offset-2 hover:underline"
         >
-          Ιαν. 2026 ΘΕΜΑ 2.8
+          Πρόοδ. Α 2025 ΘΕΜΑ 3
         </Link>.
       </>
     ),
