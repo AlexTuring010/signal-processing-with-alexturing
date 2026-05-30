@@ -399,7 +399,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'easy',
     prerequisites: ['noise/white-noise', 'noise/through-filters', 'foundations/filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power'],
+    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power', 'wiener-khinchin'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
@@ -421,7 +421,15 @@ export const EXERCISES: Exercise[] = [
         <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
         {' · '}
         <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>{' '}
-        κ.ά.) πρέπει να το ξέρεις απέξω.
+        κ.ά.) πρέπει να το ξέρεις απέξω.{' '}
+        Τέλος, ο υπολογισμός{' '}
+        <InlineMath>{'P_y = \\int S_y(f)\\,df = R_y(0)'}</InlineMath>{' '}
+        είναι εφαρμογή του θεωρήματος Wiener-Khinchin (power corollary — εκτός τυπολογίου, βάρος{' '}
+        <strong>3</strong>:{' '}
+        <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>
+        κ.ά.).
       </>
     ),
     statement: (
@@ -2073,7 +2081,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'easy',
     prerequisites: ['noise/white-noise', 'noise/through-filters', 'foundations/filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power'],
+    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power', 'wiener-khinchin'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
@@ -2098,7 +2106,15 @@ export const EXERCISES: Exercise[] = [
         {' · '}
         <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>{' '}
         κ.ά.) θα σου δοθεί· πρέπει να το φτάσεις μόνος σου ή να το ξέρεις
-        απέξω.
+        απέξω.{' '}
+        Τέλος, ο υπολογισμός{' '}
+        <InlineMath>{'P_Y = \\int S_Y(f)\\,df = R_Y(0)'}</InlineMath>{' '}
+        είναι εφαρμογή του θεωρήματος Wiener-Khinchin (power corollary — εκτός τυπολογίου, βάρος{' '}
+        <strong>3</strong>:{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:jun25-th1-10">Ιούν.2025 ΘΕΜΑ 1.10</Link>
+        κ.ά.).
       </>
     ),
     statement: (
@@ -3470,7 +3486,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'medium',
     prerequisites: ['noise/through-filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power', 'bandlimited-noise-autocorr'],
+    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power', 'bandlimited-noise-autocorr', 'wiener-khinchin'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
@@ -3497,7 +3513,15 @@ export const EXERCISES: Exercise[] = [
         <InlineMath>{'R_N(\\tau) = N_0 B\\,\\mathrm{sinc}(2B\\tau)'}</InlineMath>{' '}
         (βάρος <strong>1</strong> — μόνο αυτό το θέμα στην παρούσα τράπεζα). Το
         ζεύγος rect↔sinc βρίσκεται στο τυπολόγιο, αλλά η εφαρμογή στον θόρυβο
-        δεν — τη γράφεις απέξω.
+        δεν — τη γράφεις απέξω.{' '}
+        Επίσης, το βήμα{' '}
+        <InlineMath>{'R_Y(\\tau) = \\mathcal{F}^{-1}\\{S_Y(f)\\}'}</InlineMath>{' '}
+        (αντίστροφη Wiener-Khinchin — εκτός τυπολογίου, βάρος{' '}
+        <strong>3</strong>:{' '}
+        <Link href="/practice#exercise:proodos26-6">Πρόοδος Απρ.2026 ΘΕΜΑ 6</Link>
+        {' · '}
+        <Link href="/practice#exercise:sept25-th3-11">Σεπτ.2025 ΘΕΜΑ 3.11</Link>
+        κ.ά.).
       </>
     ),
     statement: (

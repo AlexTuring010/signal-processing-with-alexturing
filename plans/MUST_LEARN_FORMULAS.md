@@ -64,7 +64,8 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | B | **Randomness/PSD + remaining randomness** — weighting | `mustlearn-passb-foundations-randomness-formulas` | **DONE** — §7B below |
 | C | Noise — bundle #1 (3 formulas: white-noise-psd·5, bandlimited-noise-power·5, bandlimited-noise-autocorr·1) | placement-(a) noise/white-noise + placement-(b) 5 exercise cards | **DONE** — step `mustlearn-passc-noise-f2-entries-placements` |
 | C | Noise — bundle #2 (`lti-output-psd`·3) | placement-(a) noise/through-filters §8στ upgraded + placement-(b) 3 exercise cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-lti-output-psd-bundle` |
-| C | Remaining chapters (AM, FM, Foundations, Noise bundle #3, …) | per-placement | TODO |
+| C | Noise — bundle #3 (`wiener-khinchin`·3) | placement-(a) `randomness/psd` §2 warning callout + placement-(b) 3 cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-noise-wiener-khinchin-bundle` |
+| C | Remaining chapters (AM, FM, Foundations, …) | per-placement | TODO |
 
 ---
 
@@ -631,7 +632,7 @@ These formulas are must-learn (off-sheet) but have no dedicated `formulaId` in `
 | 1 | S_N(f) = N₀/2 (white-noise PSD) | `white-noise-psd` | **5** | HIGH — universal, wrong callout on `white-noise` §10 (F1) |
 | 1 | P_N = N₀B (bandlimited power) | `bandlimited-noise-power` | **5** | HIGH — F2(1) RESOLVED; all 5 power-computation cards tagged |
 | 3 | S_Y = \|H\|²·S_X (LTI output PSD) | `lti-output-psd` | **3** | **PASS-C DONE** — §8στ upgraded to weighted callout + all 3 cards extended with weight+refs |
-| 3 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **3** | HIGH — primary home `randomness/psd`; no callout yet |
+| 3 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **3** | **PASS-C DONE** — warning callout added to `randomness/psd` §2 + all 3 cards tagged, getCitedExercises=3 |
 | 5 | S_N = kT/2, P_N = kTB (thermal noise) | `thermal-noise` | **2** | HIGH — repeated exam question; no callout on `sources` |
 | 5 | N₀ ≈ −174 dBm/Hz (noise floor) | — | **2** | MEDIUM — numerical constant; appears in coaching |
 | 7 | fm-snr-ref, am-output-snr, fm-snr-out, fm-gain-am | various | **1 each** | MEDIUM — cross-topic; primary homes are `fm/in-noise` + `am/mod-demod`; must-learn callout missing from all |
@@ -2251,7 +2252,7 @@ Per step specification — these §7 formulas were already counted in §2B (nois
 | Rank | Formula | formulaId | Weight | Pass C priority |
 | --- | --- | --- | --- | --- |
 | 1 | S_Y = \|H\|²S_X (LTI output PSD) | `lti-output-psd` | **cross-ref §2B (3)** | HIGH — co-primary teaching home; must-learn callout missing from psd page (ambiguous "✓ μέσω αλυσίδας" label); fix alongside noise/through-filters §8στ wording |
-| 1 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **cross-ref §2B (3)** | HIGH — primary teaching home is this page; must-learn callout entirely absent; "✓ μέσω WK" label ambiguous — revise to standard must-learn wording |
+| 1 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **cross-ref §2B (3)** | **PASS-C DONE** — warning callout added after §2 theorem box; inline `\text{}` at power formula cleaned up; all 3 cards tagged |
 | 3 | P_X = R_X(0) (power-from-ΣΑΣ) | `wss-rx-properties` | **0** direct | HIGH — implicit in every PSD power-computation (credited via §2B); ambiguous "✓ μέσω WK" label needs explicit must-learn fix |
 | 4 | e^{−a\|τ\|} ↔ 2a/(a²+(2πf)²) (exponential FT pair, F13) | — (needs `fourier-pair-exp`) | **0** | HIGH — no standalone exam weight but page flags as frequent; F13 inverse error ("τυπολόγιο") must be fixed; add `fourier-pair-exp` to `formulas.tsx` |
 | 5 | All randomness process definitions (E[X], R_X, WSS, ergodicity) | various | **0** | MEDIUM — vocabulary; must-learn callouts on randomness theory pages; lecture-only exercises |
