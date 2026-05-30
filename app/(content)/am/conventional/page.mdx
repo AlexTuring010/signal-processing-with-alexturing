@@ -120,8 +120,16 @@ $$
 **Ορισμός:**
 
 $$
-\boxed{\,\mu = \frac{|\min m(t)|}{A_c}\,} \quad \text{✓ Ορίζεται μέσα στη Conventional AM (όχι στο τυπολόγιο)}
+\boxed{\,\mu = \frac{|\min m(t)|}{A_c}\,}
 $$
+
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+
+Ο δείκτης διαμόρφωσης $\mu = |\min m(t)|/A_c$ **δεν υπάρχει στο επίσημο τυπολόγιο** — τον γράφεις απέξω. Εμφανίστηκε σε **8 παλιά θέματα**, σε 5 από τις 6 εξεταστικές:
+
+[Πρόοδος Απρ.2026](/practice#exercise:proodos26-1) · [Σεπτ.2025](/practice#exercise:sept25-th1-2) · [Ιαν.2026](/practice#exercise:jan26-th2-7) · [Πρόοδος Α 2025](/practice#exercise:pa25-th2-2) · [Πρόοδος Β 2025](/practice#exercise:pb25-th2-2)
+
+</Callout>
 
 Με λόγια: ο λόγος του «πιο αρνητικού σημείου» του message προς το carrier amplitude. Για **single-tone** message $m(t) = A_m\cos(2\pi f_m t)$ απλοποιείται σε:
 
@@ -233,6 +241,14 @@ $$
 $$
 X(f) = \frac{A_c}{2}\big[\delta(f - f_c) + \delta(f + f_c)\big] \;+\; \frac{1}{2}\big[M(f - f_c) + M(f + f_c)\big]
 $$
+
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+
+Ο τύπος $X_{AM}(f) = \tfrac{A_c}{2}[\delta(f \mp f_c)] + \tfrac{1}{2}M(f \mp f_c)$ **δεν υπάρχει στο τυπολόγιο** — τον γράφεις απέξω. Εμφανίστηκε σε **4 παλιά θέματα**:
+
+[Πρόοδος Απρ.2026](/practice#exercise:proodos26-9) · [Σεπτ.2025](/practice#exercise:sept25-th1-1) · [Ιαν.2026](/practice#exercise:jan26-th2-7) · [Πρόοδος Α 2025](/practice#exercise:pa25-th2-5)
+
+</Callout>
 
 Δύο συνιστώσες:
 
@@ -368,6 +384,14 @@ $$
 \boxed{\,P_{AM} = \frac{A_c^2}{2} + \frac{P_m}{2}\,} \quad \text{(γενική μορφή, για κάθε zero-mean }m(t)\text{)}
 $$
 
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+
+Ο τύπος $P_{AM} = A_c^2/2 + P_m/2$ (και η compact single-tone μορφή $(A_c^2/2)(1 + \mu^2/2)$) **δεν υπάρχουν στο τυπολόγιο** — τους γράφεις απέξω. Εμφανίστηκαν σε **4 παλιά θέματα**:
+
+[Πρόοδος Απρ.2026](/practice#exercise:proodos26-2) · [Σεπτ.2025](/practice#exercise:sept25-th1-2)
+
+</Callout>
+
 **Sanity check στο single-tone.** Για $m(t) = A_m\cos(2\pi f_m t)$, $P_m = A_m^2/2 = \mu^2 A_c^2 / 2$. Τότε $P_{AM} = A_c^2/2 + \mu^2 A_c^2/4 = (A_c^2/2)(1 + \mu^2/2)$ — ταυτίζεται με το §5c. ✓
 
 **Γενική efficiency.** Με τον ίδιο τρόπο, αφαιρώντας τον carrier:
@@ -375,6 +399,14 @@ $$
 $$
 \boxed{\,\eta = \frac{P_m}{A_c^2 + P_m}\,} \quad \text{(γενική μορφή — ορισμός slide 31)}
 $$
+
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+
+Ο τύπος $\eta = P_m/(A_c^2 + P_m) = \mu^2/(2+\mu^2) \le 1/3$ **δεν υπάρχει στο τυπολόγιο** — τον γράφεις απέξω. Εμφανίστηκε σε **3 παλιά θέματα**:
+
+[Πρόοδος Απρ.2026](/practice#exercise:proodos26-4) · [Σεπτ.2025](/practice#exercise:sept25-th1-3)
+
+</Callout>
 
 Πρόσεξε: ο παρανομαστής είναι $P_V = A_c^2 + P_m$ (η **ισχύς της περιβάλλουσας**, όχι του AM σήματος), και ο αριθμητής η ισχύς **μόνο** του message — όχι του $2A_c m$ σταυρωτού (που έδωσε μηδέν στη μέση).
 
