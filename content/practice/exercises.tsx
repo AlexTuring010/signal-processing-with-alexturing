@@ -2083,6 +2083,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional', 'am/dsb-sc'],
     formulaIds: ['am-signal', 'dsb-sc-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:pb25-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 1.1
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σ/Λ: Το συμβατικά διαμορφωμένο κατά AM σήμα <InlineMath>x(t)</InlineMath>{' '}
@@ -2454,6 +2475,32 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-signal', 'am-spectrum', 'fourier-pair-sin', 'am-mu'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα), το φάσμα AM{' '}
+        <InlineMath>{'X_{AM}(f) = \\tfrac{A_c}{2}[\\delta(f-f_c)+\\delta(f+f_c)] + \\tfrac{1}{2}[M(f-f_c)+M(f+f_c)]'}</InlineMath>{' '}
+        (σε <strong>4</strong>) και ο δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'\\mu = A_m/A_c'}</InlineMath>{' '}
+        (σε <strong>8</strong>). Το ζεύγος Fourier (
+        <InlineMath>{'\\sin'}</InlineMath>) βρίσκεται στο τυπολόγιο — δεν χρειάζεται να το θυμάσαι. Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 9
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σχεδιάστε το διαμορφωμένο κατά AM σήμα στον χρόνο και στο φάσμα όταν
@@ -3218,6 +3265,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/conventional', 'am/modulator-demodulator'],
     formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect', 'fdm-spacing'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική). Το ζεύγος Fourier (rect↔sinc) βρίσκεται στο τυπολόγιο — δεν χρειάζεται να το θυμάσαι. Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.1
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Έστω τα δύο βασικά σήματα πληροφορίας{' '}
@@ -4310,6 +4378,29 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-mu', 'am-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'\\mu = A_m/A_c'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>8</strong> παλιά θέματα) και ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (σε <strong>17</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: <p>m(t) = a sin(πt/4) με a=0.5, f_c=2 Hz. Βρες μ για A_c ∈ {'{2, 1, 0.75, 0.5, 0.33, 0.25}'}.</p>,
     solution: (
       <>
