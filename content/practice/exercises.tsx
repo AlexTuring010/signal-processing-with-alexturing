@@ -3808,6 +3808,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.1
+        </Link>.
+      </>
+    ),
     statement: <p>Σ/Λ: Το συμβατικά διαμορφωμένο κατά AM σήμα <InlineMath>{'x(t) = [A_c + \\cos(2\\pi t)]\\cos(2\\pi f_c t)'}</InlineMath> έχει αυτή τη μορφή.</p>,
     solution: <p><strong>ΣΩΣΤΟ.</strong> Carrier <InlineMath>{'A_c'}</InlineMath> προστιθέμενος στο message <InlineMath>{'\\cos(2\\pi t)'}</InlineMath>, μετά πολλαπλασιασμός με carrier oscillation. Καθαρή conventional AM.</p>,
   },
@@ -3998,6 +4019,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: ['am/conventional'],
     formulaIds: ['am-signal', 'am-mu'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και ο
+        δείκτης διαμόρφωσης{' '}
+        <InlineMath>{'\\mu = A_m / A_c'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>8</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: <p>Σχεδιάστε το διαμορφωμένο κατά AM σήμα όταν <InlineMath>{'c(t) = \\cos(8\\pi t)'}</InlineMath> και <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>.</p>,
     solution: (
       <>
@@ -4080,6 +4125,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['am/conventional', 'foundations/fourier-series'],
     formulaIds: ['am-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.1
+        </Link>.
+      </>
+    ),
     statement: <p>Έστω <InlineMath>{'x(t) = \\sum_{n=1}^{6} (10-n)\\cos(2\\pi n t)'}</InlineMath>. Σχεδιάστε φάσμα βασικής ζώνης και υπολογίστε αρμονικές AM.</p>,
     solution: (
       <>
@@ -4106,6 +4172,27 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/dsb-sc'],
     formulaIds: ['dsb-sc-signal', 'fdm-spacing'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{DSB}(t) = A_c m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>5</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-1"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.1
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-8"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.8
+        </Link>.
+      </>
+    ),
     statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(Wt)'}</InlineMath> διαμορφώνονται κατά DSB-SC με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) Σχέση f για non-overlap. (3) G(f).</p>,
     solution: (
       <>
@@ -4139,6 +4226,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'hard',
     prerequisites: ['am/modulator-demodulator', 'foundations/filters'],
     formulaIds: ['am-signal', 'fourier-pair-rect', 'fourier-modulation-theorem', 'nonlinear-modulator-fc'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>17</strong> παλιά θέματα — σε κάθε εξεταστική) και η
+        συνθήκη μη-γραμμικού modulator{' '}
+        <InlineMath>{'f_c > 3W'}</InlineMath>{' '}
+        (σε <strong>2</strong>). Βλ. π.χ.{' '}
+        <Link
+          href="/practice#exercise:proodos26-5"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 5
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σήμα <InlineMath>{'m(t) = \\alpha\\,\\Pi(2Wt)'}</InlineMath>{' '}
