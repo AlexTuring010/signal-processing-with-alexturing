@@ -860,6 +860,28 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/ssb', 'am/multiplexing'],
     formulaIds: ['ssb-signal', 'fourier-pair-rect', 'fourier-pair-tri'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος USSB σήματος{' '}
+        <InlineMath>{'x_{USB}(t)=A_c m(t)\\cos(2\\pi f_c t)-A_c\\hat{m}(t)\\sin(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>6</strong> παλιά θέματα). Οι ζεύγοι Fourier rect
+        και tri δίνονται στο τυπολόγιο. Βλ. π.χ.{' '}
+        <Link
+          href="\practice#exercise:pb25-th2-3"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 2.3
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="\practice#exercise:pa25-th3-mux"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 3
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Έστω τα δύο βασικά σήματα πληροφορίας{' '}
@@ -962,6 +984,30 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/ssb', 'am/multiplexing'],
     formulaIds: ['ssb-signal', 'fdm-spacing'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος USSB σήματος{' '}
+        <InlineMath>{'x_{USB}(t)=A_c m(t)\\cos(2\\pi f_c t)-A_c\\hat{m}(t)\\sin(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>6</strong> παλιά θέματα) και η συνθήκη
+        μη-επικάλυψης FDM-SSB{' '}
+        <InlineMath>{'(\\Delta f \\ge W,\\; f_1 \\ge W/2)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>4</strong> παλιά θέματα). Βλ. π.χ.{' '}
+        <Link
+          href="\practice#exercise:pb25-th3-mux"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 3
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="\practice#exercise:pa25-th3-mux"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 3
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Πόσο πρέπει να είναι τα φέροντα <InlineMath>{'f_1'}</InlineMath> και{' '}
@@ -1015,6 +1061,29 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/ssb', 'am/multiplexing'],
     formulaIds: ['ssb-signal'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος USSB σήματος{' '}
+        <InlineMath>{'x_{USB}(t)=A_c m(t)\\cos(2\\pi f_c t)-A_c\\hat{m}(t)\\sin(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>6</strong> παλιά θέματα). Το πολυπλεγμένο
+        φάσμα G(f) εξάγεται από τα φάσματα του ΘΕΜΑ 11 και τη συνθήκη
+        μη-επικάλυψης του ΘΕΜΑ 12. Βλ. π.χ.{' '}
+        <Link
+          href="\practice#exercise:pb25-th2-3"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 2.3
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="\practice#exercise:pa25-th3-mux"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 3
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Αποτυπώστε σχηματικά το φάσμα του πολυπλεγμένου σήματος{' '}
@@ -4147,6 +4216,28 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['am/ssb'],
     formulaIds: ['ssb-signal', 'fourier-pair-rect'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος LSSB σήματος{' '}
+        <InlineMath>{'x_{LSB}(t)=A_c m(t)\\cos(2\\pi f_c t)+A_c\\hat{m}(t)\\sin(2\\pi f_c t)'}</InlineMath>{' '}
+        (εμφανίστηκε σε <strong>6</strong> παλιά θέματα). Ο ζεύγος Fourier
+        rect δίνεται στο τυπολόγιο. Βλ. π.χ.{' '}
+        <Link
+          href="\practice#exercise:proodos26-11"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Απρ. 2026 ΘΕΜΑ 11
+        </Link>{' '}
+        και{' '}
+        <Link
+          href="\practice#exercise:pa25-th3-mux"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 3
+        </Link>.
+      </>
+    ),
     statement: <p>Σχεδιάστε το φάσμα του διαμορφωμένου κατά AM-LSSB σήματος όταν <InlineMath>{'c(t) = \\cos(2\\pi f_c t)'}</InlineMath> και <InlineMath>{'m(t) = 2\\,\\mathrm{sinc}(2Wt)'}</InlineMath>.</p>,
     solution: (
       <>
