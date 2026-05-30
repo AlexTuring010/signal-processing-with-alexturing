@@ -399,7 +399,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'easy',
     prerequisites: ['noise/white-noise', 'noise/through-filters', 'foundations/filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd'],
+    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
@@ -1776,7 +1776,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'easy',
     prerequisites: ['noise/sources', 'noise/white-noise'],
-    formulaIds: ['thermal-noise', 'white-noise-psd'],
+    formulaIds: ['thermal-noise', 'white-noise-psd', 'bandlimited-noise-power'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
@@ -2049,7 +2049,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'easy',
     prerequisites: ['noise/white-noise', 'noise/through-filters', 'foundations/filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd'],
+    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
@@ -3320,7 +3320,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'easy',
     prerequisites: ['noise/sources', 'noise/white-noise'],
-    formulaIds: ['white-noise-psd', 'thermal-noise'],
+    formulaIds: ['white-noise-psd', 'thermal-noise', 'bandlimited-noise-power'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
@@ -3425,7 +3425,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'noise',
     difficulty: 'medium',
     prerequisites: ['noise/through-filters'],
-    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandpass-noise-r'],
+    formulaIds: ['white-noise-psd', 'lti-output-psd', 'bandlimited-noise-power', 'bandlimited-noise-autocorr'],
     statement: (
       <p>
         Για τον προηγούμενο θερμικό θόρυβο, θεωρήστε ότι εισέρχεται σε ένα

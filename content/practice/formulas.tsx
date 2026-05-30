@@ -1216,6 +1216,43 @@ export const FORMULA_SHEET: FormulaSection[] = [
         content: <BlockMath>{'S_N(f) = \\frac{N_0}{2}, \\quad R_N(\\tau) = \\frac{N_0}{2}\\delta(\\tau), \\quad N_0 = kT'}</BlockMath>,
       },
       {
+        id: 'bandlimited-noise-power',
+        title: 'Bandlimited noise power P_N',
+        topic: 'noise',
+        inTypology: false,
+        derivedIn: 'noise/white-noise',
+        content: (
+          <>
+            <BlockMath>{'P_N \\;=\\; N_0 B'}</BlockMath>
+            <p className="mt-2 text-xs leading-relaxed text-fg-muted">
+              Λευκός + ιδανικό LPF εύρους <InlineMath>B</InlineMath>: επίπεδη PSD{' '}
+              <InlineMath>{'N_0/2'}</InlineMath> × συνολικό εύρος{' '}
+              <InlineMath>{'2B'}</InlineMath> = <InlineMath>{'N_0 B'}</InlineMath>{' '}
+              Watts. (noise/white-noise §4α)
+            </p>
+          </>
+        ),
+      },
+      {
+        id: 'bandlimited-noise-autocorr',
+        title: 'Bandlimited noise autocorrelation R_N(τ)',
+        topic: 'noise',
+        inTypology: false,
+        derivedIn: 'noise/white-noise',
+        content: (
+          <>
+            <BlockMath>{'R_N(\\tau) \\;=\\; N_0 B\\,\\mathrm{sinc}(2B\\tau)'}</BlockMath>
+            <p className="mt-2 text-xs leading-relaxed text-fg-muted">
+              Αντίστροφος FT της rect PSD{' '}
+              <InlineMath>{'N_0/2 \\cdot \\Pi(f/2B)'}</InlineMath>.
+              Πρώτο μηδέν στο{' '}
+              <InlineMath>{'\\tau = 1/(2B)'}</InlineMath> — Nyquist-rate decorrelation.
+              (noise/white-noise §4β)
+            </p>
+          </>
+        ),
+      },
+      {
         id: 'lti-output-psd',
         title: 'PSD μέσα από LTI',
         topic: 'noise',

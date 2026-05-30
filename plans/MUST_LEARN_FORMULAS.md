@@ -610,9 +610,9 @@ These formulas are must-learn (off-sheet) but have no dedicated `formulaId` in `
 
 | Formula | Weight | Exercises | Note |
 | --- | --- | --- | --- |
-| **P_N = N₀B** (bandlimited white-noise power, no id) | **5** | proodos26-6, sept25-th3-10, sept25-th3-11, jun25-th1-9, jun25-th1-10 | Intermediate or final result in every power-computation problem; tied with `white-noise-psd` at weight 5; see F2 for the formulaId gap |
-| **N₀ ≈ −174 dBm/Hz @ 290 K** (noise floor value, no id) | **2** | sept25-th3-10 (coaching), jun25-th1-9 (coaching) | Numerical constant cited in solutions/coaching; not the asked-for formula but contextually required |
-| **R_N(τ) = N₀B·sinc(2Bτ)** (LPF autocorrelation, no id) | **1** | jun25-th1-10 (explicit R_LP derivation in part 2) | Derived via inverse FT of rect PSD; jun25-th1-10 explicitly requires drawing the "χρονική απόκριση" |
+| **P_N = N₀B** (bandlimited white-noise power) | **5** | proodos26-6, sept25-th3-10, sept25-th3-11, jun25-th1-9, jun25-th1-10 | **`bandlimited-noise-power`** (CREATED step mustlearn-passc-noise-f2-entries; all 5 cards tagged; F2(1) RESOLVED) |
+| **N₀ ≈ −174 dBm/Hz @ 290 K** (noise floor value, no id) | **2** | sept25-th3-10 (coaching), jun25-th1-9 (coaching) | PAGE-ONLY per principal decision 0001 — annotated into thermal-noise callouts; no /formulas row |
+| **R_N(τ) = N₀B·sinc(2Bτ)** (LPF autocorrelation) | **1** | jun25-th1-10 (explicit R_LP derivation in part 2) | **`bandlimited-noise-autocorr`** (CREATED step mustlearn-passc-noise-f2-entries; jun25-th1-10 tagged; F4/F6 RESOLVED; `bandpass-noise-r` dropped from jun25-th1-10) |
 | S_N⁺(f) = N₀, f≥0 (one-sided PSD convention) | 0 | — | Taught in §2.2 but no exam tests the notation distinction |
 | B_N (equivalent noise bandwidth) | 0 | — | Taught in through-filters §7; no past-exam derivation |
 | P_Y = πN₀f_c/2 (RC LPF power integral) | 0 | — | RC application in through-filters §6; no past-exam |
@@ -627,13 +627,13 @@ These formulas are must-learn (off-sheet) but have no dedicated `formulaId` in `
 | Rank | Formula | formulaId | Weight | Pass C priority |
 | --- | --- | --- | --- | --- |
 | 1 | S_N(f) = N₀/2 (white-noise PSD) | `white-noise-psd` | **5** | HIGH — universal, wrong callout on `white-noise` §10 (F1) |
-| 1 | P_N = N₀B (bandlimited power) | — (F2) | **5** | HIGH — new formulaId needed; used in every computation |
+| 1 | P_N = N₀B (bandlimited power) | `bandlimited-noise-power` | **5** | HIGH — F2(1) RESOLVED; all 5 power-computation cards tagged |
 | 3 | S_Y = \|H\|²·S_X (LTI output PSD) | `lti-output-psd` | **3** | HIGH — already has §8στ callout; propagate to problems |
 | 3 | R_X(τ) ↔ S_X(f) (Wiener–Khinchin) | `wiener-khinchin` | **3** | HIGH — primary home `randomness/psd`; no callout yet |
 | 5 | S_N = kT/2, P_N = kTB (thermal noise) | `thermal-noise` | **2** | HIGH — repeated exam question; no callout on `sources` |
 | 5 | N₀ ≈ −174 dBm/Hz (noise floor) | — | **2** | MEDIUM — numerical constant; appears in coaching |
 | 7 | fm-snr-ref, am-output-snr, fm-snr-out, fm-gain-am | various | **1 each** | MEDIUM — cross-topic; primary homes are `fm/in-noise` + `am/mod-demod`; must-learn callout missing from all |
-| 8 | R_N = N₀B·sinc(2Bτ) (LPF autocorrelation) | — (F2) | **1** | MEDIUM — jun25-th1-10 only; no formulaId |
+| 8 | R_N = N₀B·sinc(2Bτ) (LPF autocorrelation) | `bandlimited-noise-autocorr` | **1** | MEDIUM — F4/F6 RESOLVED; jun25-th1-10 tagged; derivedIn: noise/white-noise |
 | 9 | bandpass-noise-r, noise-figure, fm-noise-output-psd, snr, snr-input, G_proc, RC results, B_N | various | **0** | LOWER — must-learn but zero exam weight in current bank; flag as must-learn without high-weight badge |
 
 ---
@@ -2269,14 +2269,14 @@ Per step specification — these §7 formulas were already counted in §2B (nois
   inverse-pattern inconsistency the owner flagged (`inbox/001` §2c). **Recommend a focused
   correction step** (Pass C scope, `noise/**`): flip that cell to the must-learn signal.
   Not fixed here — this step writes only the planning doc.
-- **F2 — Several must-learn noise formulas have NO `FORMULA_SHEET` entry**, so placement
-  (c) on `/formulas` cannot link them until entries exist (or it's decided they stay
-  "derive/remember" without a sheet-page row). Examples with no `formulaId`: equivalent
-  noise bandwidth `B_N`; RC power `πN_0 f_c/2` & RC ΣΑΣ; bandlimited `P_N=N_0 B` &
-  `R_N=N_0 B·sinc(2Bτ)`; one-sided `N_0`; noise-floor dBm rule & `T_total`; random-process
-  I/Q decomposition; general joint-WSS `R_N`; down-convert-&-fold component spectra; input
-  SNR; processing gain; differentiator `\|H\|²=(2πf)²`. **Open question for planner/principal:**
-  does Pass C add `formulas.tsx` entries for these, or treat them as page-only must-learns?
+- **F2 — Several must-learn noise formulas have NO `FORMULA_SHEET` entry** ← PARTIALLY RESOLVED.
+  **F2(1) RESOLVED (step mustlearn-passc-noise-f2-entries):** `bandlimited-noise-power` (`P_N=N_0 B`, weight 5) and
+  `bandlimited-noise-autocorr` (`R_N=N_0 B·sinc(2Bτ)`, weight 1) CREATED in formulas.tsx (both `derivedIn:
+  'noise/white-noise'`, `inTypology: false`). Principal decision 0001: `N_0≈−174 dBm/Hz` stays PAGE-ONLY.
+  **Still unresolved (F2 remainder):** equivalent noise bandwidth `B_N`; RC power `πN_0 f_c/2` & RC ΣΑΣ;
+  one-sided `N_0`; noise-floor dBm rule & `T_total`; random-process I/Q decomposition; general joint-WSS `R_N`;
+  down-convert-&-fold component spectra; input SNR; processing gain; differentiator `\|H\|²=(2πf)²`.
+  These remain page-only must-learns pending future principal decisions.
 - **F3 — Placement-(a) is inconsistent across the chapter** (see §2 observation):
   through-filters §8στ correct; white-noise §10 wrong (F1); sources/bandpass/snr use ad-hoc
   "μάθε απέξω". Pass C should propagate the §8στ wording uniformly.
@@ -2292,11 +2292,11 @@ Per step specification — these §7 formulas were already counted in §2B (nois
   loop, SourceDoc has no slide numbers). Its must-learn formulas (§2.5) are recap-heavy
   (AM/FM). When D11 reworks it, the must-learn flags should be baked in (coordinate Pass C
   with D11 to avoid double-touch — same logic as the noise-exercise ordering call).
-- **F6 — `jun25-th1-10` `formulaId` mis-tag (grounding, Pass C).** Tagged `bandpass-noise-r`
-  (`R_Y=N_0 W·sinc(Wτ)·cos(2πf_cτ)`) but its LPF+HPF solution derives the bandlimited-LPF
-  `R_Y=N_0 W·sinc(2Wτ)` (no carrier; `sinc(2Wτ)`). Loose tag; both off-sheet so the
-  classification is unaffected. Feeds **F2** (the bandlimited-LPF ΣΑΣ has no `formulaId`).
-  Full detail in §2.7. (Surfaced via `bus/inbox/010`.)
+- **F6 — `jun25-th1-10` `formulaId` mis-tag ← RESOLVED (step mustlearn-passc-noise-f2-entries).**
+  Dropped `bandpass-noise-r` (carrier form, wrong for LPF+HPF problem); added `bandlimited-noise-power`
+  and `bandlimited-noise-autocorr` (the LPF ΣΑΣ `R_Y=N_0 W·sinc(2Wτ)` correctly tagged). `bandpass-noise-r`
+  still exists in formulas.tsx (correctly tagged to `noise/through-filters` for the bandpass exercise §8δ);
+  its weight-0 status confirmed (§2B.1). Full detail in §2.7. (Surfaced via `bus/inbox/010`.)
 - **PROBLEM-SIDE placement-(b) RESULT (owner hypothesis CONFIRMED).** §2.7 verified per
   problem: the **standardised** «δεν δίνεται στο τυπολόγιο» must-learn callout is **absent
   from all 8** noise problems (solution + coaching). Two coaching entries carry **ad-hoc**
