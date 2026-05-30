@@ -47,7 +47,7 @@ primary formula is exercised N times).  The two MUST be consistent:
 | --- | --- | --- |
 | **Noise** — 5 theory pages, 8 exercises | `relmap-noise` | **DONE** — §2 below |
 | **AM** — 7 theory pages, 31 exercises | `relmap-am` | **DONE** — §3 below |
-| FM — 5 theory pages, ~8 exercises | `relmap-fm` | TODO |
+| FM — 5 theory pages, 7 exercises | `relmap-fm` | **DONE** — §4 below |
 | Foundations — 6 theory pages, 22 exercises | `relmap-foundations` | TODO |
 | Randomness / PSD — 4 theory pages, inline only | `relmap-randomness` | TODO |
 | Modulation bridge — 1 theory page | `relmap-modulation` | TODO |
@@ -482,11 +482,154 @@ derivation problem beyond the qualitative trade-off comparison.
 
 ---
 
-## §4. FM chapter — TODO
+## §4. FM chapter map
 
-Step `relmap-fm`.  5 theory pages (`fm/overview`, `fm/idea`, `fm/pm`, `fm/bessel`,
-`fm/in-noise`), ~8 exercises.  Map when scheduled.  Reference:
-`MUST_LEARN_FORMULAS.md §8B`.
+**Theory pages:** `fm/idea`, `fm/pm`, `fm/bessel`, `fm/carson`, `fm/in-noise`.
+
+**Exercises (7 past-exam `topic:'fm'`; excludes `lec-fm-1`, `lec-fm-3`; NOT yet Phase-2-reworked):**
+`sept25-th2-6`, `sept25-th2-7`, `sept25-th2-8`, `sept25-th2-9`,
+`jan26-th1-5`, `jan26-th4-fm`, `jun25-th3-fm`.
+
+**Note on theory page set:** the §4 TODO placeholder listed `fm/overview` — the actual
+directory contains `fm/carson` (Carson's rule + NBFM/WBFM) instead; there is no
+`fm/overview` page.  Corrected here.
+
+**Source:** homes derived from each card's `formulaIds` + solution content + §8B
+formula-usage analysis; verified against actual FM theory page section headings.
+§8B cross-check reuses §8B weights throughout — NOT recomputed.
+**Regime note:** FM theory is fully reworked; FM exercises are NOT yet Phase-2-reworked,
+so cards do not pre-cite clean theory homes — homes derived by formulaId + solution
+analysis, then verified against page headings.
+
+---
+
+### §4.F Forward table
+
+| Problem | Title | Core concept | Primary theory home | Secondary theory home(s) | Gap? |
+| --- | --- | --- | --- | --- | --- |
+| `sept25-th2-6` | FM αρχή λειτουργίας + δείκτης β | Explain FM: write x_FM = A_c cos[2πf_c t + 2πK_f ∫m dτ] from instantaneous-frequency definition; define β_f = ΔF_max/W | `fm/idea` §3 "Από στιγμιαία συχνότητα στην εξίσωση FM" | `fm/idea` §5 "Modulation index β_f — η σωστή γενική μορφή" (β definition); `fm/idea` §2 "Στιγμιαία συχνότητα — η μηχανική αναλογία" (f_i = f_c + K_f m(t)) | No |
+| `sept25-th2-7` | Σύγκριση FM vs AM | Compare across noise immunity (constant envelope → limiter removes amplitude noise), bandwidth (2(β+1)W vs 2W), power efficiency (A_c²/2 all-useful vs η ≤ 33%), receiver complexity | `fm/in-noise` §9 "AM vs FM — η canonical σύγκριση" | `fm/in-noise` §5 "Η σύγκριση: G = 9β² over AM" (G_FM/AM formula); `fm/carson` §1 "Carson — η εξίσωση + ο ορισμός από τις διαφάνειες" (FM bandwidth = 2(β+1)W); `am/modulator-demodulator` §5c "Output SNR — πίνακας αναφοράς" (AM SNR baseline for comparison) | No |
+| `sept25-th2-8` | FM — β και Carson για εμπορικό σήμα | Given Δf = 50 kHz, fm = 5 kHz (single-tone): β = Δf/fm = 10 (WBFM); B_Carson = 2(β+1)fm = 110 kHz | `fm/carson` §7 "Άσκηση 2 — η canonical Carson εξάσκηση (slides 27-28)" | `fm/idea` §5 "Modulation index β_f — η σωστή γενική μορφή" (β = Δf/W formula premise) | No |
+| `sept25-th2-9` | FM Bessel — sidebands για β=2.5 | (Α) Write Bessel series x_FM = A_c Σ J_n(2.5) cos[2π(f_c+nf_m)t]; (Β) read J_0≈−0.05 (carrier ≈ null near β=2.405), J_1≈0.50 strongest; (Γ) Carson BW = 2(2.5+1)fm = 7fm | `fm/bessel` §6 "Το WBFM φάσμα — forest of impulses (slide 44)" | `fm/bessel` §10 "Άσκηση 3 — η κανονική εξεταστική (slides 48-50)" (worked analog of same problem type); `fm/bessel` §7.1 "Συμμετρία (slide 45)" + §7.2 "Σύγκλιση (slide 45)" (Bessel properties for part Β); `fm/carson` §1 "Carson — η εξίσωση" (BW in part Γ) | No |
+| `jan26-th1-5` | Σ/Λ — β=0.3 είναι WBFM | T/F: ΛΑΘΟΣ — β = 0.3 ≪ 1 → NBFM, not WBFM; WBFM requires β ≫ 1; NBFM linearisation cos ≈ 1, sin ≈ φ applies | `fm/idea` §7 "NBFM vs WBFM — δύο regimes και η σχέση τους με την AM" | `fm/carson` §3 "NBFM όριο — Carson → 2W" (NBFM bandwidth consequence) | No |
+| `jan26-th4-fm` | FM — f_c, β, Bessel sidebands, ποσοστό ισχύος | Multi-part (30%): (13) read f_c=100kHz, f_m=1kHz, β=3 from canonical s(t) form; (14) Carson BW = 8kHz; (15) 3 strongest J_n(3): ±2 (4.9V) > ±1 (3.4V) > ±3 (3.1V); (16) carrier power fraction = J_0²(3) = 6.76% | `fm/bessel` §10 "Άσκηση 3 — η κανονική εξεταστική (slides 48-50)" | `fm/idea` §5α "Single-tone ειδική περίπτωση" (pattern-match β from given s(t) form); `fm/carson` §1 "Carson — η εξίσωση" (BW in step 14); `fm/bessel` §7.3 "Energy identity → P_FM = A_c²/2 (slide 47)" (power fraction in step 16 via Σ J_n² = 1) | No |
+| `jun25-th3-fm` | FM στα 90 MHz με αλλαγή bandwidth + RF φιλτράρισμα | Multi-step (25%): β₁ = K_f·A_m/fm = 2/2 = 1; harmonics n ≤ B₁/(2fm) = ±4 → 9 total; P_FM = A_c²/2; reduce A_m to narrow BW; RF BRF=4kHz → \|n\| ≤ 1 → 3 harmonics pass; power fraction 97.4% | `fm/carson` §1 "Carson — η εξίσωση + ο ορισμός από τις διαφάνειες" | `fm/idea` §5 "Modulation index β_f — η σωστή γενική μορφή" (β = K_f·A_m/fm computation); `fm/bessel` §9 "Πόσα sidebands μετράνε; (slide 46)" (harmonic count via B/(2fm) rule); `fm/bessel` §7.3 "Energy identity → P_FM = A_c²/2 (slide 47)" (power fraction part 6) | No |
+
+---
+
+### §4.R Reverse table
+
+#### `fm/idea`
+
+| Section | Primary homes | Secondary appearances | §8B cross-check |
+| --- | --- | --- | --- |
+| §2 "Στιγμιαία συχνότητα — η μηχανική αναλογία" | — | `sept25-th2-6` (f_i = f_c + K_f m(t) is part of the explanatory answer) | fm-instantaneous-freq §8B weight=1; §2 teaches it, but §3 (signal equation derivation) is the primary home for the one exercise that invokes it — consistent ✓ |
+| §3 "Από στιγμιαία συχνότητα στην εξίσωση FM" | `sept25-th2-6` — **hot for 1** | — | fm-signal §8B weight=1 ✓ exact match |
+| §5 "Modulation index β_f — η σωστή γενική μορφή" | — | `sept25-th2-6` (β definition in explanatory answer), `sept25-th2-8` (β formula premise), `sept25-th2-9` (β given, formula premise), `jan26-th4-fm` (β read from signal as step), `jun25-th3-fm` (β computed from K_f) — secondary for 5 | fm-beta §8B weight=6 (all 6 exercises invoke β): no exercise has "define β" as its standalone deliverable — β is always a step toward Carson or Bessel analysis.  §5 hot for 0 primary; secondary for 5.  The remaining exercise (`jan26-th1-5`) tests the β regime threshold, homing to §7 ✓ |
+| §5α "Single-tone ειδική περίπτωση" | — | `jan26-th4-fm` (pattern-match β=3 from canonical s(t) = A_c cos[…+β sin(2πfmt)]), `jun25-th3-fm` (single-tone premise for β = K_f·A_m/fm) | fm-single-tone §8B weight=2: both exercises use the single-tone form as a recognition/decomposition step rather than the primary deliverable ✓ |
+| §6α "Η ισχύς του PM/FM σήματος (slide 11)" | — | `jan26-th4-fm` (total P = A_c²/2, used to compute carrier power fraction), `jun25-th3-fm` (FM power = A_c²/2 in part 3) | fm-power §8B weight=2 ✓: both exercises invoke it as a key computational step; both primary homes are elsewhere (fm/bessel §10 and fm/carson §1) |
+| §7 "NBFM vs WBFM — δύο regimes και η σχέση τους με την AM" | `jan26-th1-5` — **hot for 1** | — | fm-beta §8B weight=6: jan26-th1-5 is one of the 6 β exercises; the tested concept here is regime threshold (β ≪ 1 → NBFM), NOT a β computation.  §7 hot for 1 ≤ total β weight 6 — consistent; the other 5 β invocations are computational and home to fm/carson or fm/bessel ✓ |
+| §8 "Worked example — Άσκηση 2 (slide 27-28)" | — | — | The parallel worked example for β + Carson lives in fm/carson §7 (not here); sept25-th2-8 maps there.  Hot for 0 ✓ |
+
+#### `fm/pm`
+
+| Section | Primary homes | Secondary appearances | §8B cross-check |
+| --- | --- | --- | --- |
+| §1 "Πώς ορίζεται η PM (slide 7)" | — | — | pm-signal §8B weight=0 ✓ |
+| §2 "Modulation index β_p (slide 7)" | — | — | β_p §8B weight=0 for PM-specific invocations ✓ |
+| (all sections) | **hot for 0** | `jan26-th1-5` has fm/pm in prerequisites (NBFM/WBFM regime applies equally to PM/FM) but PM-specific formulas are not the core tested concept | **Coverage gap — see §4.G G1** |
+
+#### `fm/bessel`
+
+| Section | Primary homes | Secondary appearances | §8B cross-check |
+| --- | --- | --- | --- |
+| §6 "Το WBFM φάσμα — forest of impulses (slide 44)" | `sept25-th2-9` — **hot for 1** | `jan26-th4-fm` (§10 is primary; §6 houses the Bessel formula itself), `jun25-th3-fm` (Bessel expansion is implicit in sidebands counting) | fm-bessel-sidebands §8B weight=3 (sept25-th2-9, jan26-th4-fm, jun25-th3-fm): §6 is primary for sept25-th2-9 (writing the series IS the deliverable); secondary for the other 2.  1+2 = 3 ✓ |
+| §7.1 "Συμμετρία (slide 45)" | — | `sept25-th2-9` (J_{-n} = (−1)^n J_n used to read ±n intensities), `jan26-th4-fm` (same property applied) | fm-bessel-property §8B weight=3: symmetry half of the property invoked in 2 of 3 exercises ✓ |
+| §7.2 "Σύγκλιση — για n > β, J_n ≈ 0 (slide 45)" | — | `sept25-th2-9`, `jan26-th4-fm` (implicit: stopping sideband count at n > β) | Convergence criterion is the practical stopping rule for the Bessel table read in both exercises ✓ |
+| §7.3 "Energy identity → P_FM = A_c²/2 (slide 47)" | — | `jan26-th4-fm` (step 16: carrier fraction = J_0²(3)/Σ J_n²(3) = J_0²(3)/1), `jun25-th3-fm` (power fraction 97.4% via Σ J_n² = 1) | fm-bessel-property §8B weight=3: energy identity is the key step for power-fraction computations in 2 of the 3 exercises ✓ |
+| §8 "Carrier εξαφάνιση — οι ρίζες του J_0 (slide 37)" | — | `sept25-th2-9` (β=2.5 ≈ 2.405 first J_0 root → carrier ≈ 0 in solution commentary) | Carrier-null pattern is not a separately-weighted formulaId; referenced as an observation in the sept25-th2-9 solution ✓ |
+| §9 "Πόσα sidebands μετράνε; (slide 46)" | — | `jun25-th3-fm` (count harmonics via n ≤ B/(2fm)), `jan26-th4-fm` (implicit convergence for finding "3 strongest") | The N ≈ 2⌊β⌋+3 counting heuristic is not a separately-weighted formulaId (§8B.7); practical tool in 2 exercises ✓ |
+| §10 "Άσκηση 3 — η κανονική εξεταστική (slides 48-50)" | `jan26-th4-fm` — **hot for 1** | `sept25-th2-9` (3-part version of the same canonical 4-part template) | This section IS the canonical template for the full multi-part Bessel analysis (read f_c/f_m/β from s(t), Carson BW, J_n table read, power fraction); jan26-th4-fm is the exact same 4-part structure; sept25-th2-9 is the 3-part version (stops before the power fraction step).  §8B confirms Bessel formula weight = 3 across the 3 exercises ✓ |
+
+#### `fm/carson`
+
+| Section | Primary homes | Secondary appearances | §8B cross-check |
+| --- | --- | --- | --- |
+| §1 "Carson — η εξίσωση + ο ορισμός από τις διαφάνειες" | `jun25-th3-fm` — **hot for 1** (Carson drives parts 1, 2, 4, 5, 6 of the multi-step problem) | `sept25-th2-7` (FM bandwidth 2(β+1)W in comparison table), `sept25-th2-8` (formula premise; §7 is primary for that exercise), `sept25-th2-9` (BW in part Γ), `jan26-th4-fm` (BW in step 14) — secondary for 4 | carson §8B weight=6: all 6 FM exercises invoke Carson; §1 is primary for 1 and secondary for 4; `sept25-th2-8` primary routes to §7 (worked example); `jan26-th1-5` routes to §3 (NBFM limit).  1+4+1 (§7)+1 (§3) = 7 total appearances across carson sections ≥ weight 6 ✓ |
+| §3 "NBFM όριο — Carson → 2W" | — | `jan26-th1-5` (NBFM regime → bandwidth ≈ 2W as corollary) | NBFM limit is the Carson consequence for β→0; secondary context for the T/F problem ✓ |
+| §5 "Carson για PM και FM — slides 26 + 46" | — | — | PM Carson not directly tested (pm-signal weight=0) ✓ |
+| §7 "Άσκηση 2 — η canonical Carson εξάσκηση (slides 27-28)" | `sept25-th2-8` — **hot for 1** | — | The worked example in §7 IS exactly sept25-th2-8 (same structure: given Δf + fm → compute β → B_Carson); exact match ✓ |
+
+#### `fm/in-noise`
+
+| Section | Primary homes | Secondary appearances | §8B cross-check |
+| --- | --- | --- | --- |
+| §4 "Output noise power και SNR_out" | — | `sept25-th2-7` (fm-snr-out = 3β²·SNR_ref cited in comparison table row) | fm-snr-out §8B weight=1 (sept25-th2-7 only) ✓ |
+| §5 "Η σύγκριση: G = 9β² over AM" | — | `sept25-th2-7` (fm-gain-am = 9β² appears as a comparison row) | fm-gain-am §8B weight=1 ✓ |
+| §9 "AM vs FM — η canonical σύγκριση" | `sept25-th2-7` — **hot for 1** | — | The 4-row comparison table in §9 IS the deliverable of sept25-th2-7; all FM-noise cross-topic formulas route here as context ✓ |
+| §1–§3 (derivation chain), §6 (threshold), §7 (capture), §8 (pre-emphasis), §10 (Άσκηση) | **hot for 0** | 0 | **Major coverage gap — see §4.G G2** |
+
+---
+
+### §4.G Gaps
+
+#### G1 — `fm/pm` has zero past-exam exercise coverage (coverage gap, low severity)
+
+`pm-signal` §8B weight=0; β_p §8B weight=0.  No past-exam exercise directly tests PM
+signal formulas.  `jan26-th1-5` lists `fm/pm` in prerequisites (the NBFM/WBFM regime
+applies to PM as well as FM), but PM-specific formulas are not the core tested concept —
+the NBFM regime classification is primary to `fm/idea` §7.
+
+Consistent with §8B's finding ("zero direct exam exercise").  Not blocking; the theory
+page is fully reworked.
+
+**Planner note:** low priority; revisit if a future exam includes a dedicated PM
+computation (PM instantaneous frequency, PM vs FM comparison derivation).  Currently
+fm/pm serves as conceptual background — the exam prefers FM-only problems.
+
+---
+
+#### G2 — `fm/in-noise` derivation sections have zero past-exam exercise coverage (medium severity)
+
+Sections §1–§3 (the derivation chain: bandpass noise → triangular output PSD →
+SNR_out formula), §6 (threshold effect), §7 (capture effect), and §8 (pre-emphasis)
+have zero past-exam primary exercise homes.
+
+Only `sept25-th2-7` invokes FM noise formulas at all — and it does so **qualitatively**
+(a comparison table row, not a step-by-step derivation exercise).  The core formulas:
+
+- `fm-noise-output-psd` (S_n^out = N₀f²/A_c², triangular PSD) — §8B weight=0
+- `fm-snr-out` (SNR_out = 3β²·SNR_ref) — §8B weight=1 (single comparison exercise)
+- `fm-gain-am` (G = 9β²) — §8B weight=1 (same)
+- `fm-snr-ref` (SNR_ref = A_c²/(2N₀W)) — §8B weight=1 (same)
+
+The triangular-PSD derivation (§3a–§3d) and the FM-vs-AM SNR gain derivation (§5) are
+never tested as derivation steps on the current exam bank.  This is NOT the same as the
+`noise/snr` mid-rework gap (§2.G G1) — `fm/in-noise` is fully reworked.  The exam
+simply does not currently test the derivation chain.
+
+After `d11b-snr-comparison-recap` ships (adding SNR comparison exercises to `noise/snr`),
+re-check whether those exercises also map here as secondary homes.
+
+**Planner note:** medium priority; consider whether a dedicated "FM noise derivation"
+exercise card (deriving the triangular PSD or the 3β² SNR formula step-by-step) should
+be added to `exercises.tsx` — currently the theory page's §10 worked example is the
+only practice vehicle.  Flag this when the exam bank is next expanded.
+
+---
+
+#### G3 — No FM DRAW/viz gaps in current exercise bank (informational)
+
+No FM past-exam exercise contains a «Σχεδιάστε» / draw-spectrum instruction with a
+text-only solution.  FM exercises are uniformly computation/analysis type (write series,
+compute β, count sidebands, compute power fraction).  No viz gaps by the §1.3 criterion.
+
+**Informational note for planner:** the Bessel "forest of impulses" spectrum (J_n(β)
+heights vs n, for varying β) is inherently visual and would enrich the teaching of
+`fm/bessel` §6 and §10.  No existing past-exam exercise requires drawing it, so this is a
+theory-page enrichment opportunity rather than an exercise-card rework.  If a viz step is
+warranted, it belongs to the `fm/bessel` page and is T2-scope
+(`components/viz/` for the component) + T1-scope (wiring into the MDX).
 
 ---
 
