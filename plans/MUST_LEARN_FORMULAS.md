@@ -1769,13 +1769,12 @@ All theory exam papers in `past_exams/` were visually audited for FM content (im
 
 #### `fm-instantaneous-freq` — f_i(t) = f_c + K_f m(t)
 
-**Weight: 1**
+**Weight: 2** (2 appearances: sept25-th2-6 primary explicit ask, jun25-th3-fm implicit step computing β)
 
 | Exercise | Exam (problem) | How used |
 | --- | --- | --- |
-| `sept25-th2-6` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.6 | "ορίστε τον δείκτη διαμόρφωσης β" — defining β_f = ΔF_max/W = K_f·max\|m\|/W requires stating instantaneous frequency f_i = f_c + K_f m(t) |
-
-**Untagged key step note:** `jun25-th3-fm` (ΘΕΜΑ 3.1) uses K_f = 1 kHz/Volt to compute β_f = K_f·A_m/W = 1·2/2 = 1 — this implicitly invokes `fm-instantaneous-freq` (K_f is the frequency sensitivity constant from f_i = f_c + K_f m(t)), but the formulaId is NOT tagged in `jun25-th3-fm`. This is a tagging gap for Pass C.
+| `sept25-th2-6` | Εξέταση Σεπτεμβρίου 2025 · ΘΕΜΑ 2.6 | "ορίστε τον δείκτη διαμόρφωσης β" — defining β_f = ΔF_max/W = K_f·max\|m\|/W requires stating instantaneous frequency f_i = f_c + K_f m(t) — **primary explicit ask** |
+| `jun25-th3-fm` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 3 | computes β = K_f·A_m/f_m = 1·2/2 = 1 — implicitly invokes f_i = f_c + K_f m(t) (K_f is the frequency sensitivity constant) — **implicit intermediate step** |
 
 ---
 
@@ -1969,7 +1968,7 @@ No FM problems were found **outside** `exercises.tsx` — no coverage gap in the
 | 5 | A_c cos[2πf_ct+β sin(2πf_mt)] (single-tone FM) | `fm-single-tone` | **2** | HIGH — pattern-recognition for recognizing a given FM signal |
 | 5 | P_FM = A_c²/2 (constant FM power) | `fm-power` | **2** | HIGH — required in any power-computation FM problem |
 | 7 | x_FM = A_c cos[…+2πK_f∫m dt] (general FM signal) | `fm-signal` | **1** | HIGH — the fundamental definition; F14 inverse error must be fixed |
-| 7 | f_i(t) = f_c + K_f m(t) (instantaneous frequency) | `fm-instantaneous-freq` | **1** | HIGH — anchor for understanding K_f and β_f; F14 inverse error (labeled "στο τυπολόγιο") |
+| 7 | f_i(t) = f_c + K_f m(t) (instantaneous frequency) | `fm-instantaneous-freq` | **2** | HIGH — anchor for understanding K_f and β_f; 2 appearances: sept25-th2-6 explicit + jun25-th3-fm implicit |
 | 7 | SNR_out,FM = 3β²·SNR_ref | `fm-snr-out` | **1** | MEDIUM — cross-topic; §2B primary; must-learn callout missing from `fm/in-noise` area |
 | 7 | G_FM/AM = 9β² | `fm-gain-am` | **1** | MEDIUM — cross-topic; §2B primary; F14 inverse error ("στο τυπολόγιο" in fm/idea) |
 | 7 | SNR_ref = A_c²/(2N₀W) | `fm-snr-ref` | **1** | MEDIUM — cross-topic; §2B primary |

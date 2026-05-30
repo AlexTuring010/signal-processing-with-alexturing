@@ -1548,7 +1548,19 @@ export const EXERCISES: Exercise[] = [
         {' · '}
         <Link href="/practice#exercise:jan26-th4-fm">Ιαν.2026 ΘΕΜΑ 4</Link>
         {' · '}
-        <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>.
+        <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>.{' '}
+        <strong>
+          ⚠️ Γενική εξίσωση FM{' '}
+          <InlineMath>{'x_{FM} = A_c\\cos[2\\pi f_c t + 2\\pi K_f\\int_{-\\infty}^{t}m(\\tau)\\,d\\tau]'}</InlineMath>{' '}
+          — δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 1 — ρητή ερώτηση «δώστε τη μαθηματική έκφραση του FM σήματος» στο παρόν θέμα).{' '}
+        <strong>
+          ⚠️ Στιγμιαία συχνότητα{' '}
+          <InlineMath>{'f_i(t) = f_c + K_f\\,m(t)'}</InlineMath>{' '}
+          — δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 2 — 2 παλιά θέματα: εδώ ρητά + Ιούν.2025 ως ενδιάμεσο βήμα στον υπολογισμό β = K_f·A_m/f_m).
       </>
     ),
     statement: (
@@ -2910,7 +2922,14 @@ export const EXERCISES: Exercise[] = [
           ανεξάρτητη του β — δεν δίνεται στο τυπολόγιο
         </strong>{' '}
         (βάρος 2 — θέμα 16:{' '}
-        <InlineMath>{'P_{FM} = 50\\,\\text{W}'}</InlineMath>).
+        <InlineMath>{'P_{FM} = 50\\,\\text{W}'}</InlineMath>).{' '}
+        <strong>
+          ⚠️ Single-tone εξίσωση FM{' '}
+          <InlineMath>{'x_{FM} = A_c\\cos[2\\pi f_c t + \\beta_f\\sin(2\\pi f_m t)]'}</InlineMath>{' '}
+          — δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 2 — 2 παλιά θέματα: αναγνωρίζεις A_c, f_c, β, f_m από τη μορφή· βλ. και{' '}
+        <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>).
       </>
     ),
     statement: (
@@ -3616,7 +3635,20 @@ export const EXERCISES: Exercise[] = [
           ανεξάρτητη του β — δεν δίνεται στο τυπολόγιο
         </strong>{' '}
         (βάρος 2 — θέμα 3.3 ζητά ρητά{' '}
-        <InlineMath>{'P_{FM}'}</InlineMath>).
+        <InlineMath>{'P_{FM}'}</InlineMath>).{' '}
+        <strong>
+          ⚠️ Single-tone εξίσωση FM{' '}
+          <InlineMath>{'x_{FM} = A_c\\cos[2\\pi f_c t + \\beta_f\\sin(2\\pi f_m t)]'}</InlineMath>{' '}
+          — δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 2 — 2 παλιά θέματα: αναγνωρίζεις β, A_c, f_c, f_m από τη μορφή· βλ. και{' '}
+        <Link href="/practice#exercise:jan26-th4-fm">Ιαν.2026 ΘΕΜΑ 4.13</Link>).{' '}
+        <strong>
+          ⚠️ Στιγμιαία συχνότητα{' '}
+          <InlineMath>{'f_i(t) = f_c + K_f\\,m(t)'}</InlineMath>{' '}
+          — δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 2 — 2 παλιά θέματα: εδώ ενδιάμεσο βήμα στον υπολογισμό β = K_f·A_m/f_m + Σεπτ.2025 ρητά).
       </>
     ),
     statement: (
