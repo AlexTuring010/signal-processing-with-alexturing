@@ -1701,7 +1701,22 @@ export const EXERCISES: Exercise[] = [
           <InlineMath>{'B \\cong 2(\\beta+1)f_m'}</InlineMath> δεν δίνεται στο
           τυπολόγιο
         </strong>{' '}
-        (βάρος 6 — ανώτατο στο FM κεφάλαιο) — τον γράφεις απέξω.
+        (βάρος 6 — ανώτατο στο FM κεφάλαιο) — τον γράφεις απέξω.{' '}
+        <strong>
+          ⚠️ Η μορφή Bessel{' '}
+          <InlineMath>{'x_{FM} = A_c\\sum_n J_n(\\beta)\\cos[2\\pi(f_c+nf_m)t]'}</InlineMath>{' '}
+          δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 3 — εμφανίστηκε σε 3 παλιά θέματα) — ο πίνακας τιμών{' '}
+        <InlineMath>{'J_n(\\beta)'}</InlineMath> δίνεται, η ΜΟΡΦΗ όχι.{' '}
+        <strong>
+          ⚠️ Συμμετρία{' '}
+          <InlineMath>{'J_{-n} = (-1)^n J_n'}</InlineMath>{' '}
+          + energy identity{' '}
+          <InlineMath>{'\\sum_n J_n^2 = 1'}</InlineMath>{' '}
+          δεν δίνονται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 3 — ίδια 3 παλιά θέματα) — τις γράφεις απέξω.
       </>
     ),
     statement: (
@@ -2862,7 +2877,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'fm',
     difficulty: 'hard',
     prerequisites: ['fm/idea', 'fm/bessel', 'fm/carson'],
-    formulaIds: ['fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-power'],
+    formulaIds: ['fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-bessel-property', 'fm-power'],
     memorizationNote: (
       <>
         Στο τυπολόγιο υπάρχει πίνακας <InlineMath>{'J_n(\\beta)'}</InlineMath>.
@@ -2873,7 +2888,29 @@ export const EXERCISES: Exercise[] = [
         δίνονται στο τυπολόγιο</strong> — τους γράφεις απέξω. Στο θέμα 14:{' '}
         β=3 διαβάζεται από τη μορφή του σήματος, μετά{' '}
         <InlineMath>{'B = 2(\\beta+1)f_m = 2\\cdot 4\\cdot 1 = 8'}</InlineMath>{' '}
-        kHz.
+        kHz.{' '}
+        <strong>
+          ⚠️ Η μορφή Bessel{' '}
+          <InlineMath>{'x_{FM} = A_c\\sum_n J_n(\\beta)\\cos[2\\pi(f_c+nf_m)t]'}</InlineMath>{' '}
+          δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 3 — 3 παλιά θέματα Bessel) — ο πίνακας τιμών δίνεται, η ΜΟΡΦΗ
+        όχι.{' '}
+        <strong>
+          ⚠️ Συμμετρία{' '}
+          <InlineMath>{'J_{-n} = (-1)^n J_n'}</InlineMath>{' '}
+          + energy identity{' '}
+          <InlineMath>{'\\sum_n J_n^2 = 1'}</InlineMath>{' '}
+          δεν δίνονται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 3 — χρησιμοποιούνται στο θέμα 16 για το ποσοστό ισχύος).{' '}
+        <strong>
+          ⚠️ Ισχύς FM{' '}
+          <InlineMath>{'P_{FM} = A_c^2/2'}</InlineMath>{' '}
+          ανεξάρτητη του β — δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 2 — θέμα 16:{' '}
+        <InlineMath>{'P_{FM} = 50\\,\\text{W}'}</InlineMath>).
       </>
     ),
     statement: (
@@ -3545,7 +3582,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'fm',
     difficulty: 'hard',
     prerequisites: ['fm/idea', 'fm/bessel', 'fm/carson'],
-    formulaIds: ['fm-instantaneous-freq', 'fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-power'],
+    formulaIds: ['fm-instantaneous-freq', 'fm-single-tone', 'fm-beta', 'carson', 'fm-bessel-sidebands', 'fm-bessel-property', 'fm-power'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνονται στο τυπολόγιο.</strong>{' '}
@@ -3558,7 +3595,28 @@ export const EXERCISES: Exercise[] = [
         <InlineMath>{'B_2 = 8'}</InlineMath> kHz, βρες νέο β ={' '}
         <InlineMath>{'B/(2f_m) - 1'}</InlineMath>. Το τυπολόγιο δίνει πίνακα{' '}
         <InlineMath>{'J_n(\\beta)'}</InlineMath> — χρειάζεσαι τιμές για{' '}
-        <InlineMath>{'\\beta = 1'}</InlineMath>.
+        <InlineMath>{'\\beta = 1'}</InlineMath>.{' '}
+        <strong>
+          ⚠️ Η μορφή Bessel{' '}
+          <InlineMath>{'x_{FM} = A_c\\sum_n J_n(\\beta)\\cos[2\\pi(f_c+nf_m)t]'}</InlineMath>{' '}
+          δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 3 — 3 παλιά θέματα Bessel).{' '}
+        <strong>
+          ⚠️ Συμμετρία{' '}
+          <InlineMath>{'J_{-n} = (-1)^n J_n'}</InlineMath>{' '}
+          + energy identity{' '}
+          <InlineMath>{'\\sum_n J_n^2 = 1'}</InlineMath>{' '}
+          δεν δίνονται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 3 — χρησιμοποιούνται στο θέμα 3.6 για ποσοστό ισχύος).{' '}
+        <strong>
+          ⚠️ Ισχύς FM{' '}
+          <InlineMath>{'P_{FM} = A_c^2/2'}</InlineMath>{' '}
+          ανεξάρτητη του β — δεν δίνεται στο τυπολόγιο
+        </strong>{' '}
+        (βάρος 2 — θέμα 3.3 ζητά ρητά{' '}
+        <InlineMath>{'P_{FM}'}</InlineMath>).
       </>
     ),
     statement: (
