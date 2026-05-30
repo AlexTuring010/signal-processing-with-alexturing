@@ -49,8 +49,8 @@ primary formula is exercised N times).  The two MUST be consistent:
 | **AM** — 7 theory pages, 31 exercises | `relmap-am` | **DONE** — §3 below |
 | FM — 5 theory pages, 7 exercises | `relmap-fm` | **DONE** — §4 below |
 | **Foundations** — 6 theory pages, 22 exercises | `relmap-foundations` | **DONE** — §5 below |
-| Randomness / PSD — 4 theory pages, inline only | `relmap-randomness` | TODO |
-| Modulation bridge — 1 theory page | `relmap-modulation` | TODO |
+| **Randomness / PSD** — 5 theory pages, inline only | `relmap-randomness-modulation` | **DONE** — §6 below |
+| **Modulation bridge** — 1 theory page | `relmap-randomness-modulation` | **DONE** — §7 below |
 
 ---
 
@@ -830,16 +830,221 @@ impulse-response properties.
 
 ---
 
-## §6. Randomness / PSD chapter — TODO
+## §6. Randomness / PSD chapter map
 
-Step `relmap-randomness`.  4 theory pages (`randomness/why`, `randomness/random-variables`,
-`randomness/random-processes`, `randomness/psd`).  No standalone `topic:'random'` exercise
-cards in `exercises.tsx`; exercises are inline `<ExamProblem>` blocks only.  Map when
-scheduled.  Reference: `MUST_LEARN_FORMULAS.md §7B`.
+**Theory pages:** `randomness/why`, `randomness/random-variables`, `randomness/random-processes`,
+`randomness/stationarity`, `randomness/psd`.
+
+*(Note: §0 placeholder stated "4 theory pages" — glob confirmed **5** pages; `randomness/stationarity`
+is the additional page not listed in the original placeholder.)*
+
+**Exercises:** Zero standalone `topic:'randomness'` exercise cards in `exercises.tsx` — **confirmed**
+by grep.  Coverage is through three vehicles:
+1. **Inline `<ExamProblem>` blocks** embedded in the theory pages (7 on `randomness/psd`:
+   `psd-from-rx`, `rx-from-psd`, `lti-output-psd`, `psd-properties`, `white-noise-correlation`,
+   `psd-thermal-lpf`, `psd-bandpass-power`; further inline exercises on `why §8`, `random-processes
+   §9/§10`, `stationarity §6/§7/§12`).  On-page only — not in `exercises.tsx`, not deep-linkable.
+2. **Lecture exercises** `lec-rp-1` and `lec-rp-2` (`topic:'random'` in `exercises.tsx`) —
+   Session 10 lecture origin, not past-exam; homes recorded in §6.R.
+3. **Cross-chapter secondary homes**: noise exercises `proodos26-6`, `sept25-th3-11`, `jun25-th1-10`
+   invoke Wiener–Khinchin and LTI output PSD, both **primarily taught** on `randomness/psd`; they
+   are secondary-home there (primary homes: `noise/through-filters §5`).
+
+**Source:** Cross-chapter secondary-home analysis uses §2 (noise) and §5 (foundations) forward
+tables.  §4B and §7B weights reused throughout — not recomputed.
 
 ---
 
-## §7. Modulation bridge — TODO
+### §6.F Forward table
 
-Step `relmap-modulation`.  1 theory page (`modulation`), no standalone exercise cards.
-Map when scheduled.  Reference: `MUST_LEARN_FORMULAS.md §5B`.
+**Zero standalone `topic:'randomness'` exercise cards in `exercises.tsx`** — confirmed by grep.
+The forward table is empty for past-exam bank exercises.
+
+The two `topic:'random'` lecture exercises (`lec-rp-1`, `lec-rp-2`) exist in `exercises.tsx` but
+are not past-exam problems; their theory homes are in §6.R.
+
+*On-page inline coverage:* `randomness/psd` hosts 7 embedded ExamProblems covering W-K, LTI output
+PSD, PSD properties, and the Lorentzian/exponential worked example — on-page only, not in the
+standalone bank.
+
+---
+
+### §6.R Reverse table
+
+#### `randomness/why`
+
+| Section | Primary homes | Secondary appearances | §4B / §7B cross-check |
+| --- | --- | --- | --- |
+| §1 "Νιώσε — γιατί ξαφνικά μιλάμε για τυχαιότητα" | — | 0 | Motivation section; no must-learn formula; §4B weight=0 ✓ |
+| §3 "Η canonical εικόνα: ο cosine με τυχαία φάση" | — | `lec-rp-2` (canonical random-phase cosine introduced here as motivation; primary home: `randomness/random-processes §10`) | random-phase-cosine §4B weight=0 ✓ |
+| §5 "Το λεξιλόγιο που θα δεις στις διαφάνειες" / §6 "Γιατί κρατάμε μόνο 2 ποσότητες" | — | 0 | Vocabulary/motivation; formulas (random-mean, random-autocorr, wss) introduced as definitions here, exercised downstream in noise chapter applications |
+| §7 "Πλάνο: τι έρχεται στα επόμενα κεφάλαια" (W-K teaser) | — | 0 | Primary teaching home of W-K is `randomness/psd §2` |
+| (all sections) | **hot for 0** past-exam | — | §4B all weights=0 (random-mean, random-autocorr, wss) ✓ |
+
+#### `randomness/random-variables`
+
+| Section | Primary homes | Secondary appearances | §7B cross-check |
+| --- | --- | --- | --- |
+| (all sections) | **hot for 0** | 0 | **Coverage gap — see §6.G G2.** Explicitly a «γρήγορος οδηγός» prerequisite-recap page. Zero K21 formulaIds; §7B §8.6.1 confirmed zero new must-learn entries. Exam weight ≈ 1% ✓ |
+
+#### `randomness/random-processes`
+
+| Section | Primary homes | Secondary appearances | §4B / §7B cross-check |
+| --- | --- | --- | --- |
+| §5 "Μέση τιμή $m_X(t)$ — slide 10" | `lec-rp-1` (lecture: compute m_X, R_X, R_{X,Y}) | 0 | random-mean §4B weight=0 ✓ (lecture only) |
+| §6 "Συνάρτηση Αυτοσυσχέτισης $R_X(t_i, t_j)$ — slide 11" | `lec-rp-1` | 0 | random-autocorr §4B weight=0 ✓ |
+| §8 "Ετεροσυσχέτιση και ετεροσυνδιακύμανση — slides 12-13" | `lec-rp-1` | 0 | random-cross §4B weight=0 ✓ |
+| §10 "Παράλληλο παράδειγμα — random-phase cosine με $\phi \sim U[0, 2\pi)$" | `lec-rp-2` (canonical WSS result R_Z(τ) = (A²/2)cos(2πfτ)) | 0 | random-phase-cosine §4B weight=0 ✓ (lecture only) |
+| (all sections) | **hot for 0** past-exam | `lec-rp-1`, `lec-rp-2` lecture only | All §4B weights=0 ✓ |
+
+#### `randomness/stationarity`
+
+| Section | Primary homes | Secondary appearances | §4B / §7B cross-check |
+| --- | --- | --- | --- |
+| §3 "Στάσιμη Υπό την Ευρεία Έννοια (WSS) — slides 21-22" | — | `jan26-th1-3`, `pa25-th1-3`, `pb25-th1-3` (noise T/F exercises: white noise is WSS with flat PSD; WSS is background context, NOT the primary derivation step — primary homes are `noise/white-noise §6 "Παγίδα κορυφαία"`) | wss §4B weight=0 ✓; the 3 T/F exercises do not invoke WSS conditions as a derivation deliverable |
+| §6 "Άσκηση 2 (slide 26) — canonical WSS-απόδειξη" | `lec-rp-2` (WSS proof for Z(t)=Acos(2πft+θ)) | 0 | wss §4B weight=0 ✓ (lecture only) |
+| §10 "Εργοδικότητα ως προς τη μέση τιμή" / §11 "Εργοδικότητα ως προς την ΣΑΣ" | — | 0 | ergodicity §7B weight=0 ✓; assumed throughout noise chapter (slide 30: «οι ΤΔ θεωρούνται εργοδικές») but not explicitly derived in past-exam problems |
+| (all sections) | **hot for 0** past-exam | `lec-rp-2` lecture only; soft WSS background: 3 noise T/F exercises | All §4B / §7B wss/ergodicity weights=0 ✓ |
+
+#### `randomness/psd`
+
+| Section | Primary homes | Secondary appearances | §2B / §7B cross-check |
+| --- | --- | --- | --- |
+| §2 "Ορισμός — slide 36 verbatim" ($S_X = \mathcal{F}\{R_X\}$, W-K forward) | — | `proodos26-6`, `sept25-th3-11`, `jun25-th1-10` — secondary for 3 (W-K power consequence $P_Y = R_Y(0) = \int S_Y\,df$ is a key derivation step in each; primary homes: `noise/through-filters §5`) | wiener-khinchin §2B weight=3; §7B cross-ref §2B ✓ — 3 exercises use W-K, all secondary here |
+| §7γ "Slide 39 — FT της διπλής συνέλιξης = $\lvert H\rvert^2$" ($S_Y = \lvert H\rvert^2 S_X$) | — | `proodos26-6`, `sept25-th3-11`, `jun25-th1-10` — secondary for 3 (co-primary teaching home with `noise/through-filters §2γ "Slide 40"`; the applied baseline step homes to through-filters) | lti-output-psd §2B weight=3; §7B cross-ref §2B ✓ — same 3 exercises |
+| §10 "Worked example — Lorentzian PSD ⇔ exponential $R_X$" | — | 0 | Exponential FT pair (F13) has no formulaId; zero standalone past-exam exercises ✓ |
+| §13 "Εξάσκηση — πέντε προβλήματα + δύο νέα" (7 inline ExamProblems) | — | 0 | Inline only; placement-(b) concept does not apply; §7B weight=0 direct for all psd-page formulas ✓ |
+| (all sections) | **hot for 0** past-exam primary | W-K + LTI: secondary for 3 noise exercises each | wiener-khinchin + lti-output-psd: cross-ref §2B (weight 3 each) ✓ |
+
+---
+
+### §6.G Gaps
+
+#### G1 — All randomness theory pages have zero direct past-exam primary exercise coverage (structural, inherent / low severity)
+
+All 5 randomness theory pages are hot-for-0 for past-exam primary homes.  This is **structural and
+expected**: the randomness chapter teaches prerequisite tools (W-K, WSS, random-mean) that are
+exercised through noise/AM/FM problems, not as standalone exam deliverables.
+
+The past-exam bank contains:
+- Zero `topic:'randomness'` exercises.
+- Two `topic:'random'` **lecture** exercises (`lec-rp-1`, `lec-rp-2`) covering the chapter's core
+  methods (mean/autocorrelation computation, WSS proof, ergodicity) — lecture origin, not past-exam.
+- Seven inline ExamProblems on `randomness/psd` providing hands-on W-K, LTI-PSD, and PSD-properties
+  practice — on-page only, not in the standalone bank.
+
+§4B and §7B confirm: all randomness formulas weight=0 from the past-exam bank; `wiener-khinchin`
+and `lti-output-psd` are counted in §2B (weight 3 each) where they appear as operational tools in
+noise exercises.
+
+**Planner note:** no action needed at this stage.  After `d11b-snr-comparison-recap` ships (adding
+SNR exercises to `noise/snr`), re-check whether those exercises also create a secondary-home link
+to `randomness/psd §7γ` ($S_Y = \lvert H\rvert^2 S_X$ is the backbone of the SNR derivation chain).
+
+---
+
+#### G2 — `randomness/random-variables` has zero K21 exam coverage (structural, very low severity)
+
+Per §7B §8.6.1: zero K21 must-learn entries; prerequisite-recap page.  Hot-for-0 is the correct
+status — the page serves as a reference bridge for students who need to refresh prior-course
+probability theory.  Exam weight ≈ 1%.
+
+**Planner note:** no action needed.
+
+---
+
+## §7. Modulation bridge chapter map
+
+**Theory page:** `modulation/bridge`
+
+**Section headings (confirmed from `page.mdx` — RE-CONFIRMED vs iter-22 Phase-4 ground truth):**
+§1 "Νιώσε — η σελίδα που ξεκλειδώνει όλη τη modulation" ·
+§2 "Baseband vs Bandpass — δύο οικογένειες σημάτων" ·
+§3 "Μετασχηματισμός Hilbert — phase-shifter όλων των συχνοτήτων" (§3a "Παράδειγμα: cos → sin",
+§3b "Βασικά ζεύγη Hilbert — ο πίνακας από slide 18", §3c "Άλλες χρήσιμες ιδιότητες",
+§3d "Γιατί τον χρειαζόμαστε εδώ") ·
+§4 "Pre-envelope $x_p(t)$ — μονόπλευρο φάσμα" ·
+§5 "Complex envelope $g(t)$ — το demodulated baseband ισοδύναμο" ·
+§6 "I/Q components — η canonical μορφή που ξεδιπλώνει τα πάντα"
+(§6a "Πολική μορφή: envelope και phase", §6b "Πέντε διαμορφώσεις, μία canonical μορφή") ·
+§7 "Φάσμα ζωνοπερατού σήματος — X(f) ως συνάρτηση του G(f)".
+*§3 Hilbert ✓ · §4 pre-envelope ✓ · §6/§6b I/Q canonical ✓ — all confirmed.*
+
+**Exercises:** 2 standalone `topic:'modulation'` exercise cards in `exercises.tsx` — confirmed
+by grep.
+
+**Source:** Homes derived from each card's content, solution, prerequisites, and formulaIds (both
+carry no formulaIds — conceptual problems).  §5B cross-check reuses §5B weights — not recomputed.
+
+---
+
+### §7.F Forward table
+
+| Problem | Title | Core concept | Primary theory home | Secondary theory home(s) | Gap? |
+| --- | --- | --- | --- | --- | --- |
+| `jan26-th2-6` | Λόγοι διαμόρφωσης | 5 reasons for modulation: antenna size (λ/4 shrinks at MHz/GHz), FDM channel separation, efficient spectrum use, noise immunity (FM), regulatory frameworks | `am/overview` §2 "Το AM concept — info στο πλάτος του carrier" | `modulation/bridge §2 "Baseband vs Bandpass"` (soft secondary: bandpass-vs-baseband framing contextualises antenna-size and spectrum arguments) | No (conceptual — no formulaIds) |
+| `pa25-th2-1` | Λόγοι διαμόρφωσης — βασικοί | Identical to `jan26-th2-6` (repeatGroup 'why-modulate') | `am/overview` §2 "Το AM concept — info στο πλάτος του carrier" | `modulation/bridge §2 "Baseband vs Bandpass"` (soft secondary) | No (conceptual — no formulaIds) |
+
+**Note on primary homes:** Both exercises have `prerequisites: ['am/overview']` and test the
+practical motivation for modulation (antenna geometry, FDM, spectrum allocation) — NOT the I/Q
+canonical mathematics taught on the bridge page.  Primary home is `am/overview §2` where
+modulation motivation is introduced before AM specifics.
+
+**Cross-reference gap noted:** these exercises were NOT included in the §3 AM chapter forward
+table (`topic:'modulation'` excluded from that sweep), so `am/overview §2` was recorded as
+hot-for-0 in §3.R.  Corrected to hot-for-2 in §7.G G1.
+
+---
+
+### §7.R Reverse table
+
+#### `modulation/bridge`
+
+| Section | Primary homes | Secondary appearances | §5B cross-check |
+| --- | --- | --- | --- |
+| §2 "Baseband vs Bandpass — δύο οικογένειες σημάτων" | — | `jan26-th2-6`, `pa25-th2-1` (soft secondary: bandpass framing contextualises the "why modulate" answer; primary homes are `am/overview §2`) | No formulaId; conceptual; §5B weight=0 ✓ |
+| §3 "Μετασχηματισμός Hilbert" (§3a–§3d) | — | `proodos26-11`, `pb25-th2-3`, `proodos26-12`, `proodos26-13`, `pa25-th3-mux`, `jan26-th3-mux` — **soft secondary for 6** SSB exercises (Hilbert is the production method for SSB; primary homes are `am/ssb §2b/§2c`; Hilbert definition IS on-sheet so bridge §3 provides conceptual grounding, not the formula itself) | `hilbert` inTypology:true (ON-SHEET); §5B bridge-specific formulas weight=0 ✓ |
+| §4 "Pre-envelope $x_p(t)$" | — | 0 | pre-envelope §5B weight=0 ✓; not standalone-tested |
+| §5 "Complex envelope $g(t)$" | — | 0 | complex-envelope §5B weight=0 ✓; not standalone-tested |
+| §6 "I/Q components — η canonical μορφή" | — | `noise/bandpass` theory page (bandpass-noise I/Q decomposition references the canonical form taught here; but no past-exam noise exercise directly tests bandpass-noise I/Q — §2.G G3) | iq-decomposition §5B weight=0 direct ✓; I/Q exam weight is credited via AM/FM/noise chapter formulas in §2B/§6B/§8B — no standalone bridge-I/Q deliverable |
+| §6b "Πέντε διαμορφώσεις, μία canonical μορφή" | — | 0 | 5-modulation table is a reference map; no past-exam problem asks "give x_I, x_Q for FM" as its primary deliverable |
+| §7 "Φάσμα ζωνοπερατού σήματος — X(f) ως συνάρτηση του G(f)" | — | 0 | Bandpass spectrum §5B weight=0 ✓; not standalone-tested |
+| (all sections) | **hot for 0** past-exam primary | Soft secondary: §3 for 6 SSB exercises; §2 for 2 why-modulate exercises | §5B all bridge-specific formulas weight=0 ✓ |
+
+---
+
+### §7.G Gaps
+
+#### G1 — `am/overview §2` under-count in §3.R (cross-reference correction) ★ LOW PRIORITY
+
+The §3 AM chapter map's `am/overview §2 "Το AM concept — info στο πλάτος του carrier"` reverse
+entry was written as hot-for-0 because `topic:'modulation'` exercises were excluded from that
+sweep.  Two exercises surface here as primary homes:
+
+- `jan26-th2-6` → primary: `am/overview §2`
+- `pa25-th2-1` → primary: `am/overview §2`
+
+**Correction:** `am/overview §2` should be **hot for 2** (jan26-th2-6, pa25-th2-1).  No §6B
+formula-weight impact (both carry no formulaIds — conceptual only).
+
+**Planner note:** documentation correction; no rework step needed.
+
+---
+
+#### G2 — Modulation bridge has zero direct past-exam exercise primary coverage (structural, low severity)
+
+The bridge page is a theoretical connector.  Its formulas (pre-envelope, complex envelope, I/Q
+canonical, bandpass spectrum) underlie AM/FM/noise but are never the primary deliverable of any
+past-exam problem.  The 2 `topic:'modulation'` exercises test general motivation reasons and
+primary-home to `am/overview §2`, not the bridge.
+
+Consistent with §5B: all bridge-specific must-learn formulas have weight=0 from the past-exam
+bank.  `iq-decomposition` exam weight is credited via AM/FM/noise chapter exercises (§2B/§6B/§8B)
+— no standalone bridge-I/Q primary deliverable exists in any past-exam.
+
+**Severity:** low / structural.  The bridge page is the mathematical foundation that makes SSB
+derivations and bandpass-noise I/Q decomposable.  It is examined indirectly through those topics.
+
+**Planner note:** no rework step needed.  If the owner wants direct bridge-page exam coverage,
+an inline ExamProblem asking "identify x_I and x_Q for a given s(t)" would fill the gap; §8
+"Εξάσκηση" already provides this on-page.
