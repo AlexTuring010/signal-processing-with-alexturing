@@ -47,12 +47,17 @@ export function FormulaEntryCard({ entry }: Props) {
       id={`formula:${entry.id}`}
       className="scroll-mt-20 rounded-lg border border-border bg-bg-elevated p-4"
     >
+      {/* ── Header row: title + badges + derivedIn link ── */}
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-baseline gap-2">
           <h3 className="text-sm font-semibold tracking-tight">
             {entry.title}
           </h3>
           <TypologyBadge inTypology={entry.inTypology} />
+          {/* (1) Weight chip — always visible when must-learn AND has exam refs */}
+          {!entry.inTypology && cited.length > 0 && (
+            <WeightChip count={cited.length} />
+          )}
         </div>
         {entry.derivedIn && (
           <Link
@@ -66,8 +71,35 @@ export function FormulaEntryCard({ entry }: Props) {
         )}
       </div>
 
+      {/* ── Math content ── */}
       <div className="text-sm">{entry.content}</div>
 
+      {/* (2) Refs preview row — visible at a glance in collapsed state */}
+      {!open && !entry.inTypology && cited.length > 0 && (
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          {cited.slice(0, 3).map((ex) => (
+            <CitedChip key={ex.id} ex={ex} />
+          ))}
+          {cited.length > 3 && (
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="inline-flex items-center gap-0.5 rounded border border-border bg-bg px-2 py-0.5 text-[11px] text-fg-muted transition hover:border-accent/40 hover:text-fg"
+            >
+              +{cited.length - 3} δες όλα →
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Muted hint for must-learn entries not yet linked to any exam problem */}
+      {!entry.inTypology && cited.length === 0 && (
+        <p className="mt-1.5 text-[11px] text-fg-subtle">
+          ακόμα δεν έχει συνδεθεί με παλιά θέματα
+        </p>
+      )}
+
+      {/* ── Expand button + full expansion panel ── */}
       {hasExpansion && (
         <>
           <button
@@ -158,6 +190,22 @@ export function FormulaEntryCard({ entry }: Props) {
         />
       </div>
     </article>
+  )
+}
+
+function WeightChip({ count }: { count: number }) {
+  const isHeavy = count >= 5
+  return (
+    <span
+      className={cn(
+        'inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-200',
+        isHeavy
+          ? 'border-amber-500 bg-amber-500/25'
+          : 'border-amber-500/50 bg-amber-500/10 dark:text-amber-300',
+      )}
+    >
+      🔥 {count} παλιά θέματα
+    </span>
   )
 }
 

@@ -33,6 +33,8 @@ export type FormulaEntry = {
   content: ReactNode
   /** Section slug where this formula is derived/explained. */
   derivedIn?: string
+  /** Pedagogical category for the /formulas kind filter. */
+  kind?: 'theory' | 'trig-identity' | 'fourier-pair' | 'integral' | 'hilbert' | 'bessel-table'
 }
 
 export type FormulaSection = {
@@ -321,6 +323,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Rect ↔ sinc',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: <BlockMath>{'\\Pi(t/T) \\;\\leftrightarrow\\; T\\,\\mathrm{sinc}(fT)'}</BlockMath>,
       },
@@ -329,6 +332,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Triangle ↔ sinc²',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: <BlockMath>{'\\Lambda(t/T) \\;\\leftrightarrow\\; T\\,\\mathrm{sinc}^2(fT)'}</BlockMath>,
       },
@@ -337,6 +341,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Cosine ↔ impulses',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'\\cos(2\\pi f_0 t) \\;\\leftrightarrow\\; \\tfrac{1}{2}[\\delta(f-f_0) + \\delta(f+f_0)]'}</BlockMath>
@@ -347,6 +352,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Sine ↔ impulses (imaginary)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'\\sin(2\\pi f_0 t) \\;\\leftrightarrow\\; \\tfrac{1}{2j}[\\delta(f-f_0) - \\delta(f+f_0)]'}</BlockMath>
@@ -357,6 +363,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sgn(t) ↔ 1/(jπf)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'modulation/bridge',
         content: (
           <BlockMath>{'\\mathrm{sgn}(t) \\;\\leftrightarrow\\; \\frac{1}{j\\pi f} \\quad\\Longleftrightarrow\\quad \\frac{1}{\\pi t} \\;\\leftrightarrow\\; -j\\,\\mathrm{sgn}(f)'}</BlockMath>
@@ -367,6 +374,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Σταθερά ↔ δ(f) (και η δυϊκότητα δ(t) ↔ 1)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'1 \\;\\leftrightarrow\\; \\delta(f) \\quad,\\quad \\delta(t) \\;\\leftrightarrow\\; 1'}</BlockMath>
@@ -377,6 +385,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Δυϊκότητα (symmetry)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'x(t) \\,\\leftrightarrow\\, X(f) \\;\\;\\Longrightarrow\\;\\; X(t) \\,\\leftrightarrow\\, x(-f)'}</BlockMath>
@@ -387,6 +396,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Scaling',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: <BlockMath>{'x(\\alpha t) \\;\\leftrightarrow\\; \\frac{1}{|\\alpha|} X\\!\\left(\\frac{f}{\\alpha}\\right)'}</BlockMath>,
       },
@@ -395,6 +405,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Time shift',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: <BlockMath>{'x(t - t_0) \\;\\leftrightarrow\\; X(f)\\, e^{-j 2\\pi f t_0}'}</BlockMath>,
       },
@@ -403,6 +414,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Convolution ↔ multiplication',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'x(t) * h(t) \\;\\leftrightarrow\\; X(f)\\, H(f) \\quad,\\quad x(t)\\,y(t) \\;\\leftrightarrow\\; X(f) * Y(f)'}</BlockMath>
@@ -413,6 +425,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Modulation theorem',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'x(t)\\cos(2\\pi f_c t) \\;\\leftrightarrow\\; \\tfrac{1}{2}[X(f-f_c) + X(f+f_c)]'}</BlockMath>
@@ -423,6 +436,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Frequency shift (μιγαδικός φέρων)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: <BlockMath>{'x(t)\\, e^{j 2\\pi f_0 t} \\;\\leftrightarrow\\; X(f - f_0)'}</BlockMath>,
       },
@@ -431,6 +445,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Παράγωγος στο time domain',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: <BlockMath>{'\\frac{d\\,x(t)}{dt} \\;\\leftrightarrow\\; j 2\\pi f \\, X(f)'}</BlockMath>,
       },
@@ -439,6 +454,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Ολοκλήρωση στο time domain',
         topic: 'foundations',
         inTypology: true,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'\\int_{-\\infty}^{t} x(\\tau)\\, d\\tau \\;\\leftrightarrow\\; \\frac{X(f)}{j 2\\pi f} + \\frac{X(0)}{2}\\,\\delta(f)'}</BlockMath>
@@ -457,6 +473,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Μοναδιαίο βήμα u(t) ↔ ...',
         topic: 'foundations',
         inTypology: false,
+        kind: 'fourier-pair',
         derivedIn: 'foundations/fourier-transform',
         content: (
           <BlockMath>{'u(t) \\;\\leftrightarrow\\; \\tfrac{1}{2}\\,\\delta(f) + \\tfrac{1}{j 2\\pi f}'}</BlockMath>
@@ -541,6 +558,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos(x ± y)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos(x \\pm y) = \\cos(x)\\cos(y) \\mp \\sin(x)\\sin(y)'}</BlockMath>,
       },
@@ -549,6 +567,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x ± y)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x \\pm y) = \\sin(x)\\cos(y) \\pm \\cos(x)\\sin(y)'}</BlockMath>,
       },
@@ -557,6 +576,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos(x) μέσω εκθετικών',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos(x) = \\tfrac{1}{2}\\!\\left(e^{jx} + e^{-jx}\\right)'}</BlockMath>,
       },
@@ -565,6 +585,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x) μέσω εκθετικών',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x) = \\tfrac{1}{2j}\\!\\left(e^{jx} - e^{-jx}\\right)'}</BlockMath>,
       },
@@ -573,6 +594,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos(x)·cos(y) → product-to-sum',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos(x)\\cos(y) = \\tfrac{1}{2}\\,[\\cos(x - y) + \\cos(x + y)]'}</BlockMath>,
       },
@@ -581,6 +603,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x)·sin(y) → product-to-sum',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x)\\sin(y) = \\tfrac{1}{2}\\,[\\cos(x - y) - \\cos(x + y)]'}</BlockMath>,
       },
@@ -589,6 +612,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin(x)·cos(y) → product-to-sum',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin(x)\\cos(y) = \\tfrac{1}{2}\\,[\\sin(x - y) + \\sin(x + y)]'}</BlockMath>,
       },
@@ -597,6 +621,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'cos²(x) (διπλάσιο τόξο)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\cos^2(x) = \\tfrac{1}{2}\\,[1 + \\cos(2x)]'}</BlockMath>,
       },
@@ -605,6 +630,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'sin²(x) (διπλάσιο τόξο)',
         topic: 'foundations',
         inTypology: true,
+        kind: 'trig-identity',
         derivedIn: 'reference/trig-identities',
         content: <BlockMath>{'\\sin^2(x) = \\tfrac{1}{2}\\,[1 - \\cos(2x)]'}</BlockMath>,
       },
@@ -615,6 +641,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ cos(x) dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\cos(x)\\, dx = \\sin(x) + C'}</BlockMath>,
       },
@@ -623,6 +650,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ sin(x) dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\sin(x)\\, dx = -\\cos(x) + C'}</BlockMath>,
       },
@@ -631,6 +659,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (a + bx)ⁿ dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: (
           <BlockMath>{'\\int (a + bx)^{n}\\, dx = \\frac{(a + bx)^{n+1}}{b\\,(n + 1)} + C \\quad (n \\neq -1)'}</BlockMath>
@@ -641,6 +670,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ eˣ dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int e^{x}\\, dx = e^{x} + C'}</BlockMath>,
       },
@@ -649,6 +679,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ ln(x) dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\ln(x)\\, dx = x\\,\\ln(x) - x + C'}</BlockMath>,
       },
@@ -657,6 +688,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (1/x) dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\frac{1}{x}\\, dx = \\ln|x| + C'}</BlockMath>,
       },
@@ -665,6 +697,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (1/cos²(x)) dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\frac{1}{\\cos^2(x)}\\, dx = \\tan(x) + C'}</BlockMath>,
       },
@@ -673,6 +706,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: '∫ (1/sin²(x)) dx',
         topic: 'foundations',
         inTypology: true,
+        kind: 'integral',
         derivedIn: 'reference/integrals',
         content: <BlockMath>{'\\int \\frac{1}{\\sin^2(x)}\\, dx = -\\cot(x) + C'}</BlockMath>,
       },
@@ -824,6 +858,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Hilbert transform',
         topic: 'am',
         inTypology: true,
+        kind: 'hilbert',
         derivedIn: 'modulation/bridge',
         content: <BlockMath>{'\\mathcal{F}\\{\\hat m(t)\\} = -j\\,\\mathrm{sgn}(f)\\, M(f)'}</BlockMath>,
       },
@@ -1080,6 +1115,7 @@ export const FORMULA_SHEET: FormulaSection[] = [
         title: 'Bessel table Jₙ(β)',
         topic: 'fm',
         inTypology: true,
+        kind: 'bessel-table',
         derivedIn: 'fm/bessel',
         content: (
           <>
