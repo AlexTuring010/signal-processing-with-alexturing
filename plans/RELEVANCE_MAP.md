@@ -48,7 +48,7 @@ primary formula is exercised N times).  The two MUST be consistent:
 | **Noise** — 5 theory pages, 8 exercises | `relmap-noise` | **DONE** — §2 below |
 | **AM** — 7 theory pages, 31 exercises | `relmap-am` | **DONE** — §3 below |
 | FM — 5 theory pages, 7 exercises | `relmap-fm` | **DONE** — §4 below |
-| Foundations — 6 theory pages, 22 exercises | `relmap-foundations` | TODO |
+| **Foundations** — 6 theory pages, 22 exercises | `relmap-foundations` | **DONE** — §5 below |
 | Randomness / PSD — 4 theory pages, inline only | `relmap-randomness` | TODO |
 | Modulation bridge — 1 theory page | `relmap-modulation` | TODO |
 
@@ -633,12 +633,200 @@ warranted, it belongs to the `fm/bessel` page and is T2-scope
 
 ---
 
-## §5. Foundations chapter — TODO
+## §5. Foundations chapter map
 
-Step `relmap-foundations`.  6 theory pages (`foundations/signals`, `foundations/systems`,
-`foundations/fourier-series`, `foundations/fourier-transform`,
-`foundations/signal-transformations`, `foundations/filters`), 22 exercises.  Map when
-scheduled.  Reference: `MUST_LEARN_FORMULAS.md §3B`.
+**Theory pages:** `foundations/signals`, `foundations/signal-transformations`,
+`foundations/fourier-series`, `foundations/fourier-transform`, `foundations/systems`,
+`foundations/filters`.
+
+**Exercises (22 past-exam `topic:'foundations'`):**
+`proodos26-8`, `proodos26-10`,
+`jan26-th1-2`, `jan26-th1-4`, `jan26-th2-9`, `jan26-th2-10`,
+`jun25-th1-1`, `jun25-th1-2`, `jun25-th1-3`, `jun25-th1-4`,
+`jun25-th1-5`, `jun25-th1-6`, `jun25-th1-7`, `jun25-th1-8`,
+`pa25-th1-2`, `pa25-th1-4`, `pa25-th1-5`, `pa25-th2-4`,
+`pb25-th1-2`, `pb25-th1-4`, `pb25-th1-5`, `pb25-th2-4`.
+
+**Source:** homes derived from each card's `formulaIds` + solution content + statement
+analysis; verified against actual theory page section headings (all 6 pages read).
+§3B cross-check reuses §3B weights throughout — NOT recomputed.  No Sept-2025
+foundations exercises exist (that session is entirely AM/FM/noise, confirmed from
+`MUST_LEARN_FORMULAS.md §3B` exam-paper audit).
+
+**Regime note:** Foundations theory is fully reworked; foundations exercises are NOT
+Phase-2-reworked.  Cards do not pre-cite clean theory homes — homes derived by statement
++ formulaIds + solution analysis, then verified against page headings.  Most exercises
+use on-sheet FT pairs/properties (`fourier-pair-rect`, `fourier-pair-cos`, etc.) with no
+must-learn callout needed; the must-learn formulas are `parseval-power` (weight 4),
+`fourier-series-rect-pulse` (weight 4), `cos-power-half` (weight 3) — per §3B.
+
+---
+
+### §5.F Forward table
+
+| Problem | Title | Core concept | Primary theory home | Secondary theory home(s) | Gap? |
+| --- | --- | --- | --- | --- | --- |
+| `proodos26-8` | Εύρος του φάσματος του m²(t) | m²(t) = m(t)·m(t) → M(f)∗M(f) in freq. domain (multiplication → convolution duality); support of M∗M = [−W,W]+[−W,W] = [−2W,2W]; bandwidth doubles to 2W | `foundations/fourier-transform` §5 "Ιδιότητες του FT — η εργαλειοθήκη" | `foundations/fourier-transform` §7 "Modulation theorem ⭐" (sinusoidal multiplication is a special case; contextualises the general bandwidth-doubling result) | No |
+| `proodos26-10` | Φάσμα πλάτους και ισχύς για sin + sinc | FT of m(t)=sin(10πt)+sinc(10t): sin → impulses at ±5 Hz (height 1/2) via `fourier-pair-sin`; sinc(10t) → rect(f/10)/10 (height 1/10, width 10 Hz) via `fourier-pair-rect`; Power: P_sin = A²/2 = 1/2 (power signal), P_sinc = 0 (energy signal); P_total = 1/2 | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" | `foundations/signals` §"Ενέργεια και Ισχύς" (sinc = energy signal → P=0 classification) | **Viz gap — static SVG, not interactive (see §5.G G2)** |
+| `jan26-th1-2` | Σ/Λ — cos είναι σήμα ισχύος | T/F ΣΩΣΤΟ: cos(2πt) has P = A²/2 = 1/2 (finite) → power signal; E = ∫cos²dt = ∞ → not an energy signal | `foundations/signals` §"Ενέργεια και Ισχύς" | — | No |
+| `jan26-th1-4` | Σ/Λ — Envelope FS τετραγωνικού παλμού | FS amplitude envelope is sinc-shaped (first null at k = T₀/τ = 10); wider τ → narrower sinc lobe (time-BW reciprocity); T/F about which envelope is narrower requires knowing sinc width ∝ 1/τ | `foundations/fourier-series` §"Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (sinc = FT of rect explains why the FS envelope is sinc-shaped) | No |
+| `jan26-th2-9` | Ισχύς αθροίσματος cosines + sines | P = A²/2 + B²/2 + C²/2 for x = Acos(2πf₁t)+Bsin(2πf₂t)+Csin(2πf₃t) with all f distinct → orthogonal components → powers add (Parseval-power / FS Parseval theorem) | `foundations/fourier-series` §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" | `foundations/signals` §"Ενέργεια και Ισχύς" (cos-power-half: each sinusoidal term individually has power A²/2) | No |
+| `jan26-th2-10` | Φάσμα πλάτους του sum-of-cosines+sines | «Σχεδιάστε» amplitude spectrum of x = Acos(2πf₁t)+Bsin(2πf₂t)+Csin(2πf₃t): 6 impulses at ±f₁, ±f₂, ±f₃ with heights A/2, B/2, C/2 | `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (cos/sin → impulse FT pairs are the derivation tool) | **Viz gap — «Σχεδιάστε», text-only bullet list (see §5.G G2)** |
+| `jun25-th1-1` | Σειρά συχνοτήτων: δορυφορικά, ραδιοφωνικά, τηλεοπτικά | AM radio (535 kHz–1.7 MHz) < FM radio (88–108 MHz) < TV VHF/UHF (54–806 MHz) < satellite (4–30 GHz); answer requires knowing standard broadcast band ranges and the physics of propagation vs. bandwidth | — | — | **Soft theory gap — no foundations page teaches comm-band frequency ordering (see §5.G G1)** |
+| `jun25-th1-2` | Ρόλος καναλιού στο τηλεπικοινωνιακό σύστημα | Channel = physical medium between Tx and Rx; affects amplitude (path loss/attenuation), phase (group-delay distortion), bandwidth (acts as a filter), and adds AWGN noise | `foundations/systems` §"Τι είναι ένα σύστημα;" | — | No |
+| `jun25-th1-3` | Φασματικές συνιστώσες δ(t-T₁) | F{δ(t−T₁)} = e^{−j2πfT₁}; amplitude spectrum = 1 (flat) for all f → infinite spectral components; phase = −2πfT₁ (linear in f) | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" | `foundations/fourier-transform` §5 "Ιδιότητες του FT — η εργαλειοθήκη" (fourier-shift property applied to the δ(t)↔1 base pair) | No |
+| `jun25-th1-4` | Φάσμα πλάτους + φάσης 2cos(1000πt+π/4) | FT: 2cos(2π·500·t+π/4) → two impulses at ±500 Hz; amplitude spectrum height = 1; phase spectrum = ±π/4 | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" | — | No |
+| `jun25-th1-5` | Περιοδικός τετραγωνικός παλμός — χρόνος + φάσμα | «Σχεδιάστε» time domain AND amplitude spectrum of periodic rect-pulse train (T=10s, τ=1s): aₖ = (τ/T)sinc(kτ/T) = 0.1·sinc(k/10); DC = 0.1; first null at k=10 (1/τ = 1 Hz) | `foundations/fourier-series` §"Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)" | — | **Viz gap — «Σχεδιάστε» both time domain + spectrum, text-only (see §5.G G2)** |
+| `jun25-th1-6` | Αν τ μεγαλώσει σε 4sec, τι αλλάζει στο φάσμα | Wider pulse τ=4s: aₖ = 0.4·sinc(0.4k); amplitude grows (0.4 vs 0.1); first null shifts from k=10 to k=2.5 — time-bandwidth reciprocity: wider τ → smaller first-null-k → denser, larger sinc lobe | `foundations/fourier-series` §"Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)" | — | No |
+| `jun25-th1-7` | Φάσμα πλάτους & φάσης Σ A_k cos(2πk f_c t + φ_k) | «Σχεδιάστε» amplitude and phase spectra: amplitude impulses at ±kf_c, heights A_k/2 = k²/2 for k=1..6; phase ±kπ/4 | `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (cos FT pair: each harmonic → impulse at ±kf_c) | **Viz gap — «Σχεδιάστε», text-only bullet list (see §5.G G2)** |
+| `jun25-th1-8` | A_k για περιοδικούς τετραγωνικούς παλμούς | Compute single-sided FS amplitudes Aₖ = (2Aτ/T₀)·sinc(kf₀τ) for periodic rect-pulse train; direct application of fourier-series-rect-pulse | `foundations/fourier-series` §"Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)" | — | No |
+| `pa25-th1-2` | Σ/Λ — cos είναι σήμα ισχύος | Same as `jan26-th1-2` — T/F ΣΩΣΤΟ; identical question, different exam session | `foundations/signals` §"Ενέργεια και Ισχύς" | — | No |
+| `pa25-th1-4` | Σ/Λ — Bandwidth του M³(f) | T/F ΛΑΘΟΣ: claim "M³(f) bandwidth = W³"; correct is 3W. m³ = m·m² → M³ = M∗M² (bandwidth 2W+W = 3W); each convolution step adds W | `foundations/fourier-transform` §5 "Ιδιότητες του FT — η εργαλειοθήκη" | — | No |
+| `pa25-th1-5` | Σ/Λ — Envelope FS τριγωνικού παλμού | T/F ΛΑΘΟΣ: claim "FS envelope is sinusoidal"; correct is sinc²-shaped. Tri pulse FS envelope follows FT pair Λ(t/T) ↔ T·sinc²(fT) (on-sheet; fourier-pair-tri); inverse-error in coaching fixed in step `fix-inverse-corrections-batch` | `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (tri↔sinc² FT pair; fourier-pair-tri IS ON-SHEET) | No |
+| `pa25-th2-4` | Ισχύς Asin(2πf₁t) + Bcos(2πf₂t) + Ccos(2πf₃t) | Same structure as `jan26-th2-9` (repeatGroup 'power-sum-sinusoids'): P = (A²+B²+C²)/2 | `foundations/fourier-series` §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" | `foundations/signals` §"Ενέργεια και Ισχύς" | No |
+| `pb25-th1-2` | Σ/Λ — cos είναι σήμα ενέργειας | T/F ΛΑΘΟΣ: cos(2πt) has P = 1/2 (finite) → power signal, NOT energy signal (E = ∞); inverse formulation of `jan26-th1-2` | `foundations/signals` §"Ενέργεια και Ισχύς" | — | No |
+| `pb25-th1-4` | Σ/Λ — M³(f) bandwidth | Same as `pa25-th1-4` (same exam question, Proodos B) | `foundations/fourier-transform` §5 "Ιδιότητες του FT — η εργαλειοθήκη" | — | No |
+| `pb25-th1-5` | Σ/Λ — Envelope FS τριγωνικού = συνημιτονοειδής | T/F ΛΑΘΟΣ: claim "FS envelope is cosine-shaped"; same core as `pa25-th1-5` (variant: «ημιτονοειδής» vs «συνημιτονοειδής» — both ΛΑΘΟΣ, correct answer is sinc²) | `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (tri↔sinc² FT pair) | No |
+| `pb25-th2-4` | Ισχύς Asin + Bcos + Ccos διαφορετικών συχνοτήτων | Same as `jan26-th2-9` and `pa25-th2-4` (repeatGroup 'power-sum-sinusoids'): P = (A²+B²+C²)/2 | `foundations/fourier-series` §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" | `foundations/signals` §"Ενέργεια και Ισχύς" | No |
+
+---
+
+### §5.R Reverse table
+
+#### `foundations/signals`
+
+| Section | Primary homes | Secondary appearances | §3B cross-check |
+| --- | --- | --- | --- |
+| §"Τι είναι ένα σήμα;" through §"Πώς ξεχωρίζουμε σήματα — ταξινομία" | **hot for 0** | 0 | These sections define signal concepts but no past-exam exercise isolates them as standalone deliverables; consistent with §3B (signal-power and signal-energy general definitions weight=0 in the foundations bank) |
+| §"Ενέργεια και Ισχύς" | `jan26-th1-2`, `pa25-th1-2`, `pb25-th1-2` — **hot for 3** | `proodos26-10` (sinc = energy signal → P=0), `jan26-th2-9`, `pa25-th2-4`, `pb25-th2-4` (cos-power-half as per-term building block) | cos-power-half §3B weight=3 ✓ exact match (3 T/F exercises where P=A²/2 IS the deliverable); power-sum exercises invoke it as a sub-step (secondary) — consistent |
+| §"Παγίδες που πέφτουν στα εξεταστικά" | **hot for 0** | 0 | Exam-trap awareness section; consistent with §3B weight=0 ✓ |
+| §"I/Q αναπαράσταση — η canonical form" | **hot for 0** | 0 | I/Q decomposition is tested cross-topic (AM/FM exercises), not in the foundations exercise bank ✓ |
+
+#### `foundations/signal-transformations`
+
+| Section | Primary homes | Secondary appearances | §3B cross-check |
+| --- | --- | --- | --- |
+| (all sections) | **hot for 0** | 0 | **Coverage gap — see §5.G G3.** All signal-transformations formulas have §3B weight=0 for the foundations bank (no past-exam problem isolates amplitude-scaling, time-shift, time-reversal, or time-scaling as a standalone foundations question) |
+
+#### `foundations/fourier-series`
+
+| Section | Primary homes | Secondary appearances | §3B cross-check |
+| --- | --- | --- | --- |
+| §"Η σειρά Fourier — οι δύο βασικές εξισώσεις" | — | 0 | synthesis+analysis equations must-learn (entire FS chapter is off-sheet per §3B.1) but no exercise isolates them without invoking the rect-pulse formula; their primary exam vehicle is §"Παράδειγμα" below |
+| §"Φάσμα: το σήμα στο frequency domain" | `jan26-th2-10`, `jun25-th1-7`, `pa25-th1-5`, `pb25-th1-5` — **hot for 4** | — | FS amplitude spectrum (Aₖ = 2\|aₖ\| at ±kf₀, envelope = FT of one period) is the core concept; fourier-pair-cos/sin/tri used here are all on-sheet → no §3B must-learn weight; hot for 4 consistent with on-sheet status ✓ |
+| §"Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)" | `jan26-th1-4`, `jun25-th1-5`, `jun25-th1-6`, `jun25-th1-8` — **hot for 4** | — | fourier-series-rect-pulse §3B weight=4 ✓ exact match |
+| §"LTI σε periodic σήμα — κάθε αρμονική ξεχωριστά" | — | 0 | lti-output-fourier-series §3B weight=0 for foundations bank ✓ |
+| §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" | `jan26-th2-9`, `pa25-th2-4`, `pb25-th2-4` — **hot for 3** | `proodos26-10` (parseval-power invoked for the sin-component power P = A²/2) | parseval-power §3B weight=4: 3 primary + 1 secondary = 4 total parseval-power invocations ✓ consistent |
+
+#### `foundations/fourier-transform`
+
+| Section | Primary homes | Secondary appearances | §3B cross-check |
+| --- | --- | --- | --- |
+| §"1. Από Fourier series σε Fourier transform: το πέρασμα στο όριο" | — | 0 | Derivation context; no exercise isolates the T→∞ limit argument ✓ |
+| §"2. Οι δύο εξισώσεις του Fourier transform" | — | 0 | FT synthesis+analysis equations are on-sheet; no exercise requires writing them from scratch ✓ |
+| §"4. Παραδείγματα — οι «πρωταγωνιστές»" | `proodos26-10`, `jun25-th1-3`, `jun25-th1-4` — **hot for 3** | `jan26-th1-4`, `jan26-th2-10`, `jun25-th1-7`, `pa25-th1-5`, `pb25-th1-5` — secondary for 5 | All FT pairs invoked (rect, sin, cos, tri, δ(t)) are on-sheet → §3B weight=0 for these; hot for 3 primary + secondary for 5 (exercises where on-sheet pairs supply supporting machinery) ✓ |
+| §5 "Ιδιότητες του FT — η εργαλειοθήκη" | `proodos26-8`, `pa25-th1-4`, `pb25-th1-4` — **hot for 3** | `jun25-th1-3` (fourier-shift property for the δ(t−T₁) phase argument) | fourier-convolution and fourier-shift are on-sheet → §3B weight=0 ✓. Nonetheless, 3 exercises test the non-obvious APPLICATION of on-sheet multiplication↔convolution duality (bandwidth doubles when a signal is squared/cubed) — a trap that consistently recurs |
+| §"6. Spectrum of periodic signals: από FT σε FS και πίσω" | — | `jan26-th2-10`, `jun25-th1-7` (FS↔FT bridge contextualises periodic-signal spectrum drawing) | Bridge section; no exercise isolates the T→∞ argument itself ✓ |
+| §"7. Modulation theorem ⭐" | — | `proodos26-8` (squaring = self-modulation; modulation theorem contextualises bandwidth-doubling intuition) | fourier-modulation-theorem (on-sheet); no exercise has modulation-theorem application as its primary deliverable ✓ |
+| §"9. Parseval και Energy Spectral Density" | — | 0 | FT Parseval (`parseval` §3B weight=1) is cross-topic via `jun25-th2` (topic:'am'); no foundations-bank exercise requires this section as a home ✓ |
+
+#### `foundations/systems`
+
+| Section | Primary homes | Secondary appearances | §3B cross-check |
+| --- | --- | --- | --- |
+| §"Τι είναι ένα σύστημα;" | `jun25-th1-2` — **hot for 1** | — | Channel-as-system concept tested; no must-learn formula invoked (§3B.3: all LTI systems formulas weight=0 for foundations bank) ✓ |
+| §"Η κρουστική απόκριση h(t)" / §"Συνέλιξη" / §"Ιδιότητες της συνέλιξης" / §"Πώς συμπεριφέρεται ένα LTI σε μία συχνότητα" | **hot for 0** | 0 | LTI convolution and H(f) are foundational machinery tested cross-topic (AM/FM/noise chapters), not as standalone foundations exam deliverables; §3B.3: all weight=0 for foundations bank ✓ |
+
+#### `foundations/filters`
+
+| Section | Primary homes | Secondary appearances | §3B cross-check |
+| --- | --- | --- | --- |
+| (all sections) | **hot for 0** | 0 | **Coverage gap — see §5.G G3.** filter-gain-db §3B weight=0 (only inline ExamProblem on filters page); no past-exam foundations exercise tests LP/HP/BP/BS filter parameters or specifications ✓ |
+
+---
+
+### §5.G Gaps
+
+#### G1 — `jun25-th1-1` has no foundations theory home (soft theory gap, low severity)
+
+The problem asks to order AM radio (535 kHz–1.7 MHz), FM radio (88–108 MHz),
+TV VHF/UHF (54–806 MHz), and satellite (4–30 GHz) by ascending frequency and explain
+why.  The correct ordering and rationale (longer-range propagation at low frequencies;
+high frequencies needed for large bandwidth and compact antennas; satellite requires
+line-of-sight) are general telecommunications context knowledge — not derivable from
+any formula on these pages.
+
+None of the six foundations theory pages has a section that explicitly teaches carrier
+frequency ranges for standard broadcast systems.  The closest touchpoints are:
+- `foundations/signals` §"Τι είναι ένα σήμα;" — real-world signal examples but no
+  carrier-frequency taxonomy
+- The `am/conventional` and `fm/idea` pages (outside foundations scope) mention specific
+  frequency bands in their opening motivation sections
+
+**Severity:** low.  Exam weight = 3 (one session, June 2025 only), factual recall rather
+than derivation.
+
+**Planner note:** Options — (a) add a 2–3 line callout in `foundations/signals`
+§"Τι είναι ένα σήμα;" listing the broadcast-band frequency hierarchy with a one-sentence
+propagation note; or (b) accept that this is served adequately by the AM/FM opening
+sections and add no foundations-page fix.  The planner chooses; no urgent rework
+warranted.
+
+---
+
+#### G2 — 4 foundations «Σχεδιάστε» exercises with static or text-only solutions (viz gaps) ★ HIGH PRIORITY
+
+The following four foundations exercises are explicit «Σχεδιάστε» / draw-spectrum problems
+whose current solutions are text-only or static-SVG-only, violating the FLOOR mandate.
+
+1. **`proodos26-10`** — statement says «να σχεδιαστεί το φάσμα πλάτους».  Current solution
+   contains a **static SVG** (rect + impulses at ±5 Hz).  Static SVG = viz gap by the
+   precedent of §3.G G1 (where `proodos26-11/13` with static SVGs are filed as viz gaps).
+   No interactive element; student cannot vary f₀ or T or observe the mixed energy/power
+   decomposition live.  Primary home: `foundations/fourier-transform` §4 "Παραδείγματα".
+
+2. **`jan26-th2-10`** — statement says «σχεδιάστε το φάσμα πλάτους».  Solution is a
+   **bullet list** of 6 impulse heights with no diagram.  Primary home:
+   `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain".
+
+3. **`jun25-th1-5`** — statement says «Σχεδιάστε (1) το σήμα στον χρόνο και (2) το φάσμα
+   πλάτους».  Solution is **text + BlockMath formula** only — no time-domain waveform, no
+   spectrum drawing.  A two-part draw problem with zero visual output.  Primary home:
+   `foundations/fourier-series` §"Παράδειγμα: rectangular pulse train".
+
+4. **`jun25-th1-7`** — statement says «Σχεδιάστε φάσμα πλάτους και φάσης».  Solution is a
+   **bullet list** of per-harmonic heights and phases.  Primary home:
+   `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain".
+
+**Planner action:** Schedule focused Phase-2 rework steps for each (T1 scope,
+`content/practice/exercises.tsx`).  Candidate viz components:
+
+- **`SpectrumLineViz`** — impulse-line spectrum with configurable harmonics; reusable
+  for `jan26-th2-10`, `jun25-th1-7`, and the multi-harmonic AM exercises already filed
+  in §3.G G1 (`pa25-th2-5`, `pb25-th2-5`).
+- **`RectPulseSeriesViz`** — time-domain rect train + discrete FS amplitude spectrum
+  with τ/T slider; would serve `jun25-th1-5`, `jun25-th1-6`, and `jan26-th1-4`.
+- **`MixedSpectrumViz`** — mixed continuous rect + impulses for `proodos26-10`.
+
+All candidate components belong in `components/viz/` (T2 scope).  Schedule paired
+T2-build → T1-wire steps as with the AM viz cluster.
+
+---
+
+#### G3 — `foundations/signal-transformations` and `foundations/filters` have zero past-exam coverage (coverage gaps, low severity)
+
+Per §3B.3, all signal-transformations-specific and filter-specific must-learn formulas
+have weight=0 for the foundations exercise bank.  No past-exam problem isolates time-
+scaling, time-reversal, amplitude-scaling, or LP/HP filter specification parameters as
+a standalone foundations exercise.  Both theory pages are fully reworked.
+
+This is consistent with §3B's own finding — both pages serve as prerequisite context
+for the AM/FM/noise chapters (LTI filtering applications, convolution theorem) rather
+than as directly examined standalone content.
+
+**Planner note:** Very low priority; revisit if a future exam includes a dedicated
+foundations exercise testing time-reversal + spectrum conjugation symmetry, or ideal-LPF
+impulse-response properties.
 
 ---
 
