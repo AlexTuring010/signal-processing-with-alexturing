@@ -1599,22 +1599,49 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'pb25-th4-nonlinear': {
     takeaway: (
       <p>
-        Square-law modulator παράγει τέσσερα φασματικά μπλοκ:{' '}
-        <InlineMath>{'m^2'}</InlineMath> (baseband, BW 2W),{' '}
+        <strong>Square-law modulator = ανάπτυξε το τετράγωνο.</strong> Με{' '}
+        <InlineMath>{'x=m+\\cos\\omega_c t'}</InlineMath>, το{' '}
+        <InlineMath>{'y=x^2'}</InlineMath> σπάει σε <strong>τέσσερα</strong> φασματικά
+        μπλοκ: <InlineMath>{'m^2'}</InlineMath> (baseband, εύρος{' '}
+        <InlineMath>{'2W'}</InlineMath>),{' '}
         <InlineMath>{'2m\\cos\\omega_c t'}</InlineMath> (DSB-SC γύρω από{' '}
         <InlineMath>{'\\pm f_c'}</InlineMath>), DC, και{' '}
-        <InlineMath>{'\\cos(2\\omega_c t)'}</InlineMath>. Το BPF γύρω από{' '}
-        <InlineMath>{'f_c'}</InlineMath> με BW 2W κρατά μόνο το
-        DSB-SC κομμάτι, με gain 1/2 για να καθαρίσει και τον συντελεστή.
+        <InlineMath>{'\\pm 2f_c'}</InlineMath>. Το ζητούμενο{' '}
+        <InlineMath>{'m\\cos\\omega_c t'}</InlineMath> είναι το <strong>μισό</strong> του
+        cross-term → BPF γύρω από <InlineMath>{'f_c'}</InlineMath> με gain{' '}
+        <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>. Η μόνη λεπτή συνθήκη:{' '}
+        <InlineMath>{'f_c>3W'}</InlineMath>, ώστε το <InlineMath>{'m^2'}</InlineMath>{' '}
+        (εύρος <InlineMath>{'2W'}</InlineMath>) να μην μπει στο BPF (αριστερό άκρο{' '}
+        <InlineMath>{'f_c-W'}</InlineMath>). Καθαρό τετράγωνο → <strong>χωρίς</strong>{' '}
+        γραμμή carrier στα <InlineMath>{'\\pm f_c'}</InlineMath>.
       </p>
     ),
     examRadar: (
-      <p>
-        Πλήρες πρόβλημα μη-γραμμικού AM (~25%) → ανάλυση{' '}
-        <InlineMath>{'(c+m)^2'}</InlineMath>, ταυτοποίηση 4 φασματικών
-        όρων, σχεδιασμός BPF. Πρόσεξε ότι η ενέργεια του message είναι
-        νορμαλισμένη — ο συντελεστής α βγαίνει από τη συνθήκη ενέργειας.
-      </p>
+      <>
+        <p>
+          «Μη γραμμικό στοιχείο» + «<InlineMath>{'y=x^2'}</InlineMath>» + «βρες το φάσμα /
+          το BPF» → πλήρες πρόβλημα ~25%, και τα τρία υποερωτήματα δένουν. Ξεκίνα από την
+          ενέργεια (<InlineMath>{'\\alpha=\\sqrt{2W}'}</InlineMath>), ανάπτυξε το
+          τετράγωνο για το φάσμα, σχεδίασε το BPF με gain{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>. Χρόνος-στόχος:{' '}
+          <strong>~15 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Τρεις παγίδες.</strong> (1) <strong>Ξεχνάς το{' '}
+          <InlineMath>{'\\cos^2'}</InlineMath>:</strong> δίνει DC + κρούσεις στα{' '}
+          <InlineMath>{'\\pm 2f_c'}</InlineMath>, όχι μόνο{' '}
+          <InlineMath>{'m^2'}</InlineMath> και cross-term. (2) <strong>Ξεχνάς το gain{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>:</strong> ο cross-term είναι{' '}
+          <InlineMath>{'2m\\cos'}</InlineMath>, οπότε χωρίς το{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> βγάζεις διπλάσιο{' '}
+          <InlineMath>{'z(t)'}</InlineMath>. (3) <strong>Γράφεις{' '}
+          <InlineMath>{'f_c>2W'}</InlineMath> ή απλώς{' '}
+          <InlineMath>{'f_c\\gg W'}</InlineMath>:</strong> η σωστή, αυστηρότερη συνθήκη
+          είναι <InlineMath>{'f_c>3W'}</InlineMath> (το <InlineMath>{'m^2'}</InlineMath>{' '}
+          φτάνει ως το <InlineMath>{'2W'}</InlineMath>, το BPF αρχίζει στο{' '}
+          <InlineMath>{'f_c-W'}</InlineMath>).
+        </div>
+      </>
     ),
   },
 

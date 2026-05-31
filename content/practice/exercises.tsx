@@ -22,6 +22,7 @@
 import Link from 'next/link'
 import { BlockMath, InlineMath } from '@/components/math'
 import { NoiseFilterShapingViz } from '@/components/viz/NoiseFilterShapingViz'
+import { NonlinearModulatorSpectrumViz } from '@/components/viz/NonlinearModulatorSpectrumViz'
 import type { Exercise } from './types'
 
 export const EXERCISES: Exercise[] = [
@@ -5120,37 +5121,204 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
+          <span className="text-fg-muted">
+            Το μόνο «εργαλείο» εδώ είναι ένα τετράγωνο:{' '}
+            <InlineMath>{'y = x^2'}</InlineMath> με{' '}
+            <InlineMath>{'x = m + \\cos(2\\pi f_c t)'}</InlineMath>. Πολλαπλασιασμός
+            στον χρόνο σημαίνει <strong>ανάμειξη συχνοτήτων</strong>, και το τετράγωνο
+            πολλαπλασιάζει κάθε όρο με κάθε όρο. Βγαίνουν τρία ζευγάρια:{' '}
+            <InlineMath>{'m\\times m'}</InlineMath> (βασική ζώνη × βασική ζώνη → μένει
+            στο baseband αλλά <em>απλώνεται</em>),{' '}
+            <InlineMath>{'m\\times\\cos'}</InlineMath> (βασική ζώνη × φέρον →{' '}
+            <em>ανεβαίνει</em> γύρω από <InlineMath>{'\\pm f_c'}</InlineMath> — αυτό
+            είναι DSB-SC), και <InlineMath>{'\\cos\\times\\cos'}</InlineMath> (φέρον ×
+            φέρον → <em>άθροισμα</em> στα <InlineMath>{'2 f_c'}</InlineMath> και{' '}
+            <em>διαφορά</em> στο DC). Το ζητούμενο{' '}
+            <InlineMath>{'m\\cos'}</InlineMath> είναι ακριβώς το μεσαίο ζευγάρι — γι'
+            αυτό ένα bandpass γύρω από <InlineMath>{'f_c'}</InlineMath> το βγάζει
+            καθαρό.
+          </span>
+        </div>
+
         <p>
-          <strong>(1)</strong>{' '}
-          <InlineMath>{'m(t) = \\alpha\\Pi(2Wt)'}</InlineMath> έχει διάρκεια{' '}
-          <InlineMath>{'1/(2W)'}</InlineMath>, ύψος <InlineMath>α</InlineMath>:
+          <strong>(1) Η σταθερά α από την ενέργεια.</strong> Το{' '}
+          <InlineMath>{'m(t) = \\alpha\\,\\Pi(2Wt)'}</InlineMath> είναι ένας ορθογώνιος
+          παλμός ύψους <InlineMath>{'\\alpha'}</InlineMath> και διάρκειας{' '}
+          <InlineMath>{'1/(2W)'}</InlineMath> (αφού{' '}
+          <InlineMath>{'\\Pi(2Wt)=1'}</InlineMath> για{' '}
+          <InlineMath>{'|t|<1/(4W)'}</InlineMath>). Η ενέργεια ενός παλμού είναι (ύψος)²
+          × (διάρκεια):
         </p>
-        <BlockMath>{'\\mathcal{E} = \\int |\\alpha|^2 \\Pi^2(2Wt)\\,dt = \\alpha^2 \\cdot \\tfrac{1}{2W} = 1 \\;\\Rightarrow\\; \\alpha = \\sqrt{2W}'}</BlockMath>
+        <BlockMath>{'\\mathcal{E} = \\int_{-\\infty}^{\\infty}\\!\\alpha^2\\,\\Pi^2(2Wt)\\,dt = \\alpha^2\\cdot\\frac{1}{2W} = 1 \\;\\Rightarrow\\; \\boxed{\\,\\alpha = \\sqrt{2W}\\,}'}</BlockMath>
         <p>
-          <strong>(2)</strong> Είσοδος μη γραμμικού:{' '}
-          <InlineMath>{'x(t) = m(t) + \\cos(2\\pi f_c t)'}</InlineMath>.
-          Έξοδος:
+          <strong>Με απλά λόγια:</strong> κανονικοποιούμε το πλάτος ώστε ο παλμός να
+          «κουβαλά» ακριβώς μία μονάδα ενέργειας — μια καθαρή αφετηρία για τα νούμερα
+          που ακολουθούν.
+        </p>
+
+        <p>
+          <strong>(2) Το φάσμα της εξόδου.</strong> Η είσοδος του μη γραμμικού στοιχείου
+          είναι <InlineMath>{'x(t) = m(t) + \\cos(2\\pi f_c t)'}</InlineMath>· υψώνουμε
+          στο τετράγωνο και αναπτύσσουμε το{' '}
+          <InlineMath>{'\\cos^2'}</InlineMath>:
         </p>
         <BlockMath>{'y = x^2 = m^2 + 2m\\cos(2\\pi f_c t) + \\cos^2(2\\pi f_c t)'}</BlockMath>
+        <BlockMath>{'\\cos^2(2\\pi f_c t) = \\tfrac{1}{2} + \\tfrac{1}{2}\\cos(4\\pi f_c t)'}</BlockMath>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Λεπτομέρεια.</strong> Αυστηρά, ένα rect στον χρόνο
+          έχει φάσμα <InlineMath>{'\\mathrm{sinc}'}</InlineMath> (με ουρές πέρα από το{' '}
+          <InlineMath>{'W'}</InlineMath>). Για το φάσμα δουλεύουμε με το <em>nominal</em>{' '}
+          bandwidth <InlineMath>{'W'}</InlineMath> του message — το ίδιο{' '}
+          <InlineMath>{'W'}</InlineMath> που εννοεί το{' '}
+          <InlineMath>{'f_c\\gg W'}</InlineMath> — και το θεωρούμε περιορισμένο στο{' '}
+          <InlineMath>{'[-W,W]'}</InlineMath> (η σύμβαση του κεφαλαίου που δίνει την
+          καθαρή συνθήκη <InlineMath>{'f_c>3W'}</InlineMath>). Το{' '}
+          <InlineMath>{'\\Pi(2Wt)'}</InlineMath> μάς χρειάστηκε κυρίως για να κλειδώσει
+          την ενέργεια στο (1).
+        </div>
+
+        <p>Άρα στο φάσμα ζουν <strong>τέσσερα</strong> κομμάτια:</p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong><InlineMath>{'m^2'}</InlineMath></strong> — βασική ζώνη. Με{' '}
+            <InlineMath>{'m'}</InlineMath> στο <InlineMath>{'[-W,W]'}</InlineMath>, το{' '}
+            <InlineMath>{'m^2'}</InlineMath> έχει εύρος <InlineMath>{'2W'}</InlineMath> (η
+            συνέλιξη <InlineMath>{'M*M'}</InlineMath> διπλασιάζει το στήριγμα — δες{' '}
+            <Link
+              href="/practice#exercise:proodos26-8"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              Πρόοδ. Απρ. 2026 ΘΕΜΑ 8
+            </Link>
+            ).
+          </li>
+          <li>
+            <strong><InlineMath>{'2m\\cos(2\\pi f_c t)'}</InlineMath></strong> — DSB-SC
+            ζώνη στο <InlineMath>{'[f_c-W,\\,f_c+W]'}</InlineMath> (και κατοπτρικά στο{' '}
+            <InlineMath>{'-f_c'}</InlineMath>). Εδώ ζει το σήμα που θέλουμε.
+          </li>
+          <li>
+            <strong>DC</strong> — το <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> από το{' '}
+            <InlineMath>{'\\cos^2'}</InlineMath>: μια κρούση στο{' '}
+            <InlineMath>{'f=0'}</InlineMath>.
+          </li>
+          <li>
+            <strong><InlineMath>{'\\pm 2f_c'}</InlineMath> harmonic</strong> — το{' '}
+            <InlineMath>{'\\tfrac{1}{2}\\cos(4\\pi f_c t)'}</InlineMath>: κρούσεις στα{' '}
+            <InlineMath>{'\\pm 2f_c'}</InlineMath>.
+          </li>
+        </ul>
         <p>
-          Φασματικά: <InlineMath>{'m^2(t)'}</InlineMath> στο baseband (BW{' '}
-          <InlineMath>{'2W'}</InlineMath>),{' '}
-          <InlineMath>{'2m\\cos(2\\pi f_c t)'}</InlineMath> γύρω από{' '}
-          <InlineMath>{'\\pm f_c'}</InlineMath> με BW{' '}
-          <InlineMath>{'2W'}</InlineMath> (DSB-SC),{' '}
-          <InlineMath>{'\\cos^2 = (1 + \\cos(4\\pi f_c t))/2'}</InlineMath>{' '}
-          → DC + impulses στις <InlineMath>{'\\pm 2 f_c'}</InlineMath>.
+          <strong>Πρόσεξε τι ΔΕΝ υπάρχει:</strong> επειδή είναι <em>καθαρό</em> τετράγωνο
+          (<InlineMath>{'y=x^2'}</InlineMath>, χωρίς γραμμικό όρο{' '}
+          <InlineMath>{'d_1 x'}</InlineMath>), <strong>δεν υπάρχει γραμμή carrier στα{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath></strong> — ο carrier θα εμφανιζόταν μόνο
+          από έναν όρο <InlineMath>{'d_1\\cos(2\\pi f_c t)'}</InlineMath>, που εδώ λείπει.
         </p>
+
+        <figure className="my-4">
+          <NonlinearModulatorSpectrumViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Το viz σχεδιάζει τη <em>γενική</em> μη γραμμικότητα{' '}
+            <InlineMath>{'d_1 v + d_2 v^2'}</InlineMath>. Για το δικό μας{' '}
+            <em>καθαρό</em> τετράγωνο βάλε νοερά{' '}
+            <InlineMath>{'d_1=0'}</InlineMath>: εξαφανίζονται <strong>και η μπλε{' '}
+            <InlineMath>{'d_1 m'}</InlineMath> baseband ζώνη και η βιολετί γραμμή carrier
+            στα <InlineMath>{'\\pm f_c'}</InlineMath></strong>. Μένουν ακριβώς τα δικά
+            μας: κόκκινο <InlineMath>{'m^2'}</InlineMath> (εύρος{' '}
+            <InlineMath>{'2W'}</InlineMath>), πράσινη DSB-SC ζώνη, DC + οι κρούσεις στα{' '}
+            <InlineMath>{'\\pm 2f_c'}</InlineMath>, και το αμπερ παράθυρο του BPF. Σύρε το{' '}
+            <InlineMath>{'f_c/W'}</InlineMath>: πάνω από το <InlineMath>{'3'}</InlineMath>{' '}
+            η ένδειξη είναι πράσινη (καθαρή απομόνωση)· κάτω από το{' '}
+            <InlineMath>{'3'}</InlineMath> η κόκκινη <InlineMath>{'m^2'}</InlineMath> ζώνη
+            ξεχειλίζει μέσα στο BPF — αυτή ακριβώς είναι η συνθήκη του (3).
+          </figcaption>
+        </figure>
+
         <p>
-          <strong>(3) BPF</strong>: ζωνοπερατό γύρω από{' '}
-          <InlineMath>{'f_c'}</InlineMath> με BW <InlineMath>{'2W'}</InlineMath>{' '}
-          → απομονώνει τον όρο{' '}
-          <InlineMath>{'2m(t)\\cos(2\\pi f_c t)'}</InlineMath>. Για να
-          προκύψει <InlineMath>{'z(t) = m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
-          το BPF πρέπει να έχει gain <InlineMath>1/2</InlineMath> στο
-          passband:
+          <strong>(3) Το ζωνοπερατό φίλτρο.</strong> Θέλουμε στην έξοδο{' '}
+          <InlineMath>{'z(t) = m(t)\\cos(2\\pi f_c t)'}</InlineMath>. Στο{' '}
+          <InlineMath>{'y'}</InlineMath> έχουμε τον όρο{' '}
+          <InlineMath>{'2m\\cos(2\\pi f_c t)'}</InlineMath> — <em>διπλάσιο</em> του
+          ζητούμενου. Άρα το BPF πρέπει (α) να κρατήσει μόνο τη ζώνη γύρω από{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath> (πετώντας{' '}
+          <InlineMath>{'m^2'}</InlineMath>, DC και <InlineMath>{'\\pm 2f_c'}</InlineMath>)
+          και (β) να έχει gain <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> ώστε να φύγει ο
+          συντελεστής 2:
         </p>
-        <BlockMath>{'H(f) = \\tfrac{1}{2}\\Pi\\!\\left(\\frac{f - f_c}{2W}\\right) + \\tfrac{1}{2}\\Pi\\!\\left(\\frac{f + f_c}{2W}\\right)'}</BlockMath>
+        <BlockMath>{'H(f) = \\tfrac{1}{2}\\,\\Pi\\!\\left(\\frac{f - f_c}{2W}\\right) + \\tfrac{1}{2}\\,\\Pi\\!\\left(\\frac{f + f_c}{2W}\\right)'}</BlockMath>
+        <p>
+          Δηλαδή ιδανικό BPF εύρους <InlineMath>{'2W'}</InlineMath> κεντραρισμένο στο{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath>, με κέρδος{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> στο passband. Για να{' '}
+          <em>χωράει</em> καθαρά — να μην μπει το <InlineMath>{'m^2'}</InlineMath> (εύρος{' '}
+          <InlineMath>{'2W'}</InlineMath>) μέσα στο αριστερό άκρο{' '}
+          <InlineMath>{'f_c-W'}</InlineMath> του BPF:
+        </p>
+        <BlockMath>{'f_c - W > 2W \\;\\Rightarrow\\; \\boxed{\\,f_c > 3W\\,}'}</BlockMath>
+        <p>
+          Είναι <strong>αυστηρότερη</strong> από το γενικό{' '}
+          <InlineMath>{'f_c\\gg W'}</InlineMath> — μια κλασική εξεταστική παγίδα (η
+          γεωμετρία ζει στο{' '}
+          <Link
+            href="/am/modulator-demodulator"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /am/modulator-demodulator §1b
+          </Link>
+          · σύρε και το viz παραπάνω).
+        </p>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— όταν δεις <em>μη γραμμικό στοιχείο</em> με{' '}
+            <InlineMath>{'m + \\cos'}</InlineMath> στην είσοδο:{' '}
+            <strong>ανάπτυξε το τετράγωνο</strong>. Ο cross-term{' '}
+            <InlineMath>{'2m\\cos'}</InlineMath> <strong>ΕΙΝΑΙ</strong> το DSB-SC σήμα·
+            το <InlineMath>{'m^2'}</InlineMath> είναι ο «μπελάς» στη βασική ζώνη και το{' '}
+            <InlineMath>{'\\cos^2'}</InlineMath> δίνει DC +{' '}
+            <InlineMath>{'2f_c'}</InlineMath>. Ένα BPF (gain{' '}
+            <InlineMath>{'\\tfrac{1}{2}'}</InlineMath>) απομονώνει το DSB-SC, και η μόνη
+            συνθήκη που πρέπει να γράψεις είναι <InlineMath>{'f_c>3W'}</InlineMath>{' '}
+            (γιατί το <InlineMath>{'m^2'}</InlineMath> έχει εύρος{' '}
+            <InlineMath>{'2W'}</InlineMath>).
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted">
+            {' '}— ίδιος σκελετός, αλλαγμένη μία παράμετρος:
+          </span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Διαφορετικό message.</strong> Άλλαξε το{' '}
+              <InlineMath>{'\\Pi(2Wt)'}</InlineMath> σε τριγωνικό ή{' '}
+              <InlineMath>{'\\mathrm{sinc}'}</InlineMath>: το (1) αλλάζει (άλλο
+              ολοκλήρωμα ενέργειας → άλλο <InlineMath>{'\\alpha'}</InlineMath>), αλλά το
+              φάσμα του (2) έχει <em>ακριβώς</em> την ίδια δομή (<InlineMath>{'m^2'}</InlineMath>{' '}
+              baseband, DSB-SC, DC, <InlineMath>{'2f_c'}</InlineMath>).
+            </li>
+            <li>
+              <strong><InlineMath>{'f_c < 3W'}</InlineMath></strong> (π.χ.{' '}
+              <InlineMath>{'f_c=2W'}</InlineMath>): το <InlineMath>{'m^2'}</InlineMath>{' '}
+              (άκρο στο <InlineMath>{'2W'}</InlineMath>) μπαίνει στο BPF (αριστερό άκρο{' '}
+              <InlineMath>{'f_c-W=W'}</InlineMath>) → το <InlineMath>{'z(t)'}</InlineMath>{' '}
+              βγαίνει <em>παραμορφωμένο</em>. Σύρε το viz κάτω από το{' '}
+              <InlineMath>{'3'}</InlineMath> και δες την ένδειξη να γίνεται κόκκινη.
+            </li>
+            <li>
+              <strong>Με κυβικό όρο</strong> <InlineMath>{'d_3 v^3'}</InlineMath>:
+              εμφανίζονται επιπλέον όροι στα <InlineMath>{'\\pm 3f_c'}</InlineMath> και το
+              baseband απλώνεται σε <InlineMath>{'3W'}</InlineMath> — η συνθήκη
+              non-overlap γίνεται ακόμη αυστηρότερη. Καλή «τι αλλάζει;» ερώτηση.
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
