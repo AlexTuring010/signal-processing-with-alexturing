@@ -2349,6 +2349,34 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'easy',
     prerequisites: ['foundations/signals'],
+    formulaIds: ['cos-power-half'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος <InlineMath>{'P = A^2/2'}</InlineMath> για κάθε cosine/sine
+        πλάτους <InlineMath>{'A'}</InlineMath> — εδώ <InlineMath>{'A=1'}</InlineMath>,
+        άρα <InlineMath>{'P = 1/2'}</InlineMath>. Εμφανίστηκε σε{' '}
+        <strong>6</strong> παλιά θέματα (3 εξεταστικές — Σ/Λ «ισχύς vs ενέργεια» και υπολογισμοί ισχύος αθροισμάτων). Βλ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.9
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pa25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 2.4
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pb25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σ/Λ: Το σήμα <InlineMath>{'m(t) = \\cos(2\\pi t)'}</InlineMath> είναι
@@ -2828,6 +2856,32 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
     formulaIds: ['parseval-power', 'cos-power-half'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος <InlineMath>{'P = A^2/2'}</InlineMath> ανά τόνο — χρησιμοποιείται
+        εδώ για κάθε από τους 3 τόνους (<InlineMath>{'A^2/2 + B^2/2 + C^2/2'}</InlineMath>).
+        Εμφανίστηκε σε <strong>6</strong> παλιά θέματα (3 εξεταστικές — Σ/Λ «ισχύς vs ενέργεια» και υπολογισμοί αθροισμάτων). Βλ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.2
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pa25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 2.4
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pb25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Έστω το σήμα{' '}
@@ -3591,7 +3645,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/conventional', 'am/modulator-demodulator'],
-    formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect', 'fdm-spacing'],
+    formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect', 'fdm-spacing', 'signal-energy'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
@@ -3616,6 +3670,16 @@ export const EXERCISES: Exercise[] = [
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Α 2025 ΘΕΜΑ 3
+        </Link>.{' '}
+        Επίσης: ο τύπος ενέργειας{' '}
+        <InlineMath>{'\\mathcal{E}_x = \\int_{-\\infty}^{\\infty} |x(t)|^2\\,dt'}</InlineMath>{' '}
+        (βάρος 2, δεν δίνεται στο τυπολόγιο) — χρησιμοποιείται στο sub-q (4) για τη συνολική
+        ενέργεια του πολυπλεγμένου σήματος (ορθογώνιοι φέροντες → αθροίζεις ενέργειες). Βλ. επίσης{' '}
+        <Link
+          href="/practice#exercise:pb25-th4-nonlinear"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 4
         </Link>.
       </>
     ),
@@ -3883,6 +3947,34 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'easy',
     prerequisites: ['foundations/signals'],
+    formulaIds: ['cos-power-half'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος <InlineMath>{'P = A^2/2'}</InlineMath> για κάθε cosine/sine
+        πλάτους <InlineMath>{'A'}</InlineMath> — εδώ <InlineMath>{'A=1'}</InlineMath>,
+        άρα <InlineMath>{'P = 1/2'}</InlineMath>. Εμφανίστηκε σε{' '}
+        <strong>6</strong> παλιά θέματα (3 εξεταστικές — Σ/Λ «ισχύς vs ενέργεια» και υπολογισμοί ισχύος αθροισμάτων). Βλ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.9
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pa25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 2.4
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pb25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σ/Λ: Το <InlineMath>{'m(t) = \\cos(2\\pi t)'}</InlineMath> είναι σήμα
@@ -4149,6 +4241,32 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
     formulaIds: ['parseval-power', 'cos-power-half'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος <InlineMath>{'P = A^2/2'}</InlineMath> ανά τόνο — χρησιμοποιείται
+        εδώ για κάθε από τους 3 τόνους (<InlineMath>{'A^2/2 + B^2/2 + C^2/2'}</InlineMath>).
+        Εμφανίστηκε σε <strong>6</strong> παλιά θέματα (3 εξεταστικές). Βλ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.2
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.9
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pb25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: <p>Έστω σήμα <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με <InlineMath>{'f_1 \\neq f_2 \\neq f_3'}</InlineMath>. Ισχύς;</p>,
     solution: <BlockMath>{'P = \\frac{A^2}{2} + \\frac{B^2}{2} + \\frac{C^2}{2}'}</BlockMath>,
   },
@@ -4316,6 +4434,35 @@ export const EXERCISES: Exercise[] = [
     topic: 'foundations',
     difficulty: 'easy',
     prerequisites: ['foundations/signals'],
+    formulaIds: ['cos-power-half'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος <InlineMath>{'P = A^2/2'}</InlineMath> για κάθε cosine/sine
+        πλάτους <InlineMath>{'A'}</InlineMath> — εδώ <InlineMath>{'A=1'}</InlineMath>,
+        άρα <InlineMath>{'P = 1/2'}</InlineMath> (πεπερασμένη → σήμα ισχύος, ΟΧΙ ενέργειας).
+        Εμφανίστηκε σε{' '}
+        <strong>6</strong> παλιά θέματα (3 εξεταστικές — Σ/Λ «ισχύς vs ενέργεια» και υπολογισμοί ισχύος αθροισμάτων). Βλ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.9
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pa25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 2.4
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: <p>Σ/Λ: Το <InlineMath>{'m(t) = \\cos(2\\pi t)'}</InlineMath> είναι σήμα ενέργειας.</p>,
     solution: <p><strong>ΛΑΘΟΣ.</strong> Σήμα ισχύος. Ενέργεια άπειρη επειδή είναι περιοδικό μη-μηδενικό.</p>,
   },
@@ -4607,6 +4754,32 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
     formulaIds: ['parseval-power', 'cos-power-half'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος <InlineMath>{'P = A^2/2'}</InlineMath> ανά τόνο — χρησιμοποιείται
+        εδώ για κάθε από τους 3 τόνους (<InlineMath>{'(A^2 + B^2 + C^2)/2'}</InlineMath>).
+        Εμφανίστηκε σε <strong>6</strong> παλιά θέματα (3 εξεταστικές). Βλ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.2
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pa25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 2.4
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pb25-th1-2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 1.2
+        </Link>.
+      </>
+    ),
     statement: <p>Έστω <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με όλες τις f διαφορετικές. Ισχύς;</p>,
     solution: <BlockMath>{'P = \\frac{A^2 + B^2 + C^2}{2}'}</BlockMath>,
   },
@@ -4724,7 +4897,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/modulator-demodulator', 'foundations/filters'],
-    formulaIds: ['am-signal', 'fourier-pair-rect', 'fourier-modulation-theorem', 'nonlinear-modulator-fc'],
+    formulaIds: ['am-signal', 'fourier-pair-rect', 'fourier-modulation-theorem', 'nonlinear-modulator-fc', 'signal-energy'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
@@ -4746,6 +4919,16 @@ export const EXERCISES: Exercise[] = [
           className="text-accent underline-offset-2 hover:underline"
         >
           Σεπτ. 2025 ΘΕΜΑ 1.2
+        </Link>.{' '}
+        Επίσης: ο τύπος ενέργειας{' '}
+        <InlineMath>{'\\mathcal{E}_x = \\int_{-\\infty}^{\\infty} |x(t)|^2\\,dt'}</InlineMath>{' '}
+        (βάρος 2, δεν δίνεται στο τυπολόγιο) — χρησιμοποιείται στο sub-q (1) για να βρεθεί
+        το <InlineMath>{'\\alpha = \\sqrt{2W}'}</InlineMath>. Βλ. επίσης{' '}
+        <Link
+          href="/practice#exercise:jun25-th2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 2
         </Link>.
       </>
     ),

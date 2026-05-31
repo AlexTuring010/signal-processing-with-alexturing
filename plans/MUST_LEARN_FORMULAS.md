@@ -66,7 +66,8 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | C | Noise — bundle #2 (`lti-output-psd`·3) | placement-(a) noise/through-filters §8στ upgraded + placement-(b) 3 exercise cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-lti-output-psd-bundle` |
 | C | Noise — bundle #3 (`wiener-khinchin`·3) | placement-(a) `randomness/psd` §2 warning callout + placement-(b) 3 cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-noise-wiener-khinchin-bundle` |
 | C | Noise — bundle #4 (`thermal-noise`·2 + `N₀≈−174`·2 PAGE-ONLY) | placement-(a) `noise/sources` §5 warning callout + §8 −174 callout; placement-(b) 2 card notes extended (thermal triple); placement-(c) getCitedExercises=2 ✓; formulas.tsx thermal-noise row annotated with −174 | **DONE** — step `mustlearn-passc-noise-thermal-bundle` |
-| C | Remaining chapters (AM, FM, Foundations, …) | per-placement | TODO |
+| C | Foundations — batch 1 (`cos-power-half`·6, `signal-energy`·2; weight-0 callouts: `signal-power`, `iq-decomposition`, `even-odd-decomposition`) | placement-(a) 5 callouts on `foundations/signals`; placement-(b) 6 cards for cos-power-half (3 T/F tagged + 3 power-sum memorizationNote added) + 2 cards for signal-energy (formulaIds + note extended); placement-(c) by-derivation ✓; §3B corrected cos-power-half weight 3→6 | **DONE** — step `mustlearn-passc-foundations-signals`; getCitedExercises('cos-power-half')=6, getCitedExercises('signal-energy')=2 |
+| C | Remaining chapters (Foundations/Fourier/LTI, Randomness, …) | per-placement | TODO |
 
 ---
 
@@ -2062,17 +2063,20 @@ All six theory exam sessions in `past_exams/` were visually audited for foundati
 
 #### `cos-power-half` — P = A²/2 for A·cos(2πf₀t + φ) or A·sin(2πf₀t + φ)
 
-**Weight: 3**
+**Weight: 6** (corrected — Pass B under-counted at 3; the 3 power-sum cards already tagged at Pass B time add 3 more)
 
 | Exercise | Exam (problem) | How used |
 | --- | --- | --- |
-| `jan26-th1-2` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.2 | T/F: "m(t)=cos(2πt) είναι σήμα ισχύος" — ΣΩΣΤΟ; answer requires P = A²/2 = 1/2 < ∞, E = ∞ |
+| `jan26-th1-2` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.2 | T/F: "m(t)=cos(2πt) είναι σήμα ισχύος" — ΣΩΣΤΟ; P = A²/2 = 1/2 < ∞, E = ∞ |
 | `pa25-th1-2` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 1.2 | Identical T/F; same formula |
-| `pb25-th1-2` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 1.2 | T/F: "m(t)=cos(2πt) είναι σήμα ενέργειας" — ΛΑΘΟΣ; P = 1/2 (finite) → power signal, not energy |
+| `pb25-th1-2` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 1.2 | T/F: "m(t)=cos(2πt) είναι σήμα ενέργειας" — ΛΑΘΟΣ; P = 1/2 → power signal |
+| `jan26-th2-9` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 2.9 | Computation: ισχύς αθροίσματος 3 τόνων → A²/2 + B²/2 + C²/2 per tone |
+| `pa25-th2-4` | Πρόοδος Α Μαΐου 2025 · ΘΕΜΑ 2.4 | Computation: ισχύς Asin+Bcos+Ccos → (A²+B²+C²)/2 |
+| `pb25-th2-4` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 2.4 | Computation: ισχύς Asin+Bcos+Ccos → (A²+B²+C²)/2 |
 
-**Exam pattern:** This T/F has appeared in **3 consecutive exam sessions** (Jan 2026, Proodos A 2025, Proodos B 2025). Standard energy-vs-power-signal trap — the answer always hinges on P = A²/2 = 1/2.
+**Exam pattern:** Appears in all **3 exam sessions** in TWO distinct forms: (1) T/F "is cos a power signal?" (Jan/Pa/Pb ΘΕΜΑ 1.2) and (2) computation of sum-of-sinusoids power (Jan/Pa/Pb ΘΕΜΑ 2.4/.9). The formula is A²/2 per tone in both contexts.
 
-**Tagging gap:** All 3 exercises have no `formulaIds` (T/F problems have empty arrays). Pass C should add `cos-power-half` and the must-learn callout to all 3.
+**Pass C status (step mustlearn-passc-foundations-signals):** DONE — `formulaIds: ['cos-power-half']` added to all 3 T/F cards; `memorizationNote` added to all 6 cards; theory callout added to `foundations/signals` after the derivation Example. getCitedExercises('cos-power-half') = 6. All prose says «βάρος 6 παλιά θέματα». §3B.4 weight updated to 6.
 
 ---
 
@@ -2085,7 +2089,7 @@ All six theory exam sessions in `past_exams/` were visually audited for foundati
 | `pb25-th4-nonlinear` | Πρόοδος Β Μαΐου 2025 · ΘΕΜΑ 4 (sub-q 1) | "Find a such that energy of m(t)=a·Π(2Wt) equals 1": E = a²·(1/2W) = 1 → a = √(2W); direct integral of rect² |
 | `jun25-th2` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 2 (sub-q 4) | "Υπολογίστε τη συνολική ενέργεια του πολυπλεγμένου σήματος": E_total = E_{x_m} + E_{x_k} (orthogonal carriers); `signal-energy` opens the problem |
 
-**Tagging gap:** Untagged in both exercises. `pb25-th4-nonlinear` tags `am-signal` + `nonlinear-modulator-fc`; `jun25-th2` tags `dsb-sc-signal` + `am-signal` + `fourier-pair-rect`. Pass C should add `signal-energy` to both.
+**Pass C status (step mustlearn-passc-foundations-signals):** DONE — `signal-energy` added to `formulaIds` of both exercises; existing `memorizationNote` extended with signal-energy flag + weight + cross-ref chip; theory callout added to `foundations/signals` after the E_x formula. getCitedExercises('signal-energy') = 2.
 
 ---
 
@@ -2123,8 +2127,8 @@ All six theory exam sessions in `past_exams/` were visually audited for foundati
 | --- | --- | --- | --- | --- |
 | 1 | P = Σ Aₖ²/2 (power of sum of orthogonal tones) | `parseval-power` | **4** | HIGH — 4 exam sessions; callout absent; untagged in 3 of 4 exercises |
 | 1 | aₖ = (Aτ/T₀)sinc(kf₀τ) (FS rect-pulse coefficients) | `fourier-series-rect-pulse` | **4** | HIGH — 4 exercises; zero proper tagging; all wrongly tagged `fourier-pair-rect` (on-sheet) |
-| 3 | P = A²/2 (power of sinusoid) | `cos-power-half` | **3** | HIGH — 3-session T/F trap; formulaIds absent from all 3 problems |
-| 4 | E_x = ∫\|x(t)\|² dt (signal energy) | `signal-energy` | **2** | HIGH — untagged in both exercises; energy-normalization sub-question is a recurring pattern |
+| 3 | P = A²/2 (power of sinusoid) | `cos-power-half` | **6** (corrected; 3 T/F + 3 power-sum) | **PASS-C DONE** — all 6 cards tagged + theory callout; getCitedExercises=6 |
+| 4 | E_x = ∫\|x(t)\|² dt (signal energy) | `signal-energy` | **2** | **PASS-C DONE** — both cards tagged + theory callout; getCitedExercises=2 |
 | 5 | ∫\|x\|²dt = ∫\|X\|²df (general Parseval) | `parseval` | **1** | MEDIUM — co-appears with `signal-energy`; untagged in `jun25-th2` |
 | 6 | All FS structural formulas (synthesis, analysis-general, orthogonality, conjugate-sym., bₖ=H·aₖ) | various | **0** | MEDIUM — entire FS chapter is off-sheet; callouts needed on `foundations/fourier-series` theory page |
 | 6 | All LTI systems formulas (convolution-def, freq-response, eigenfunction, BIBO) | various | **0** | MEDIUM — all must-learn; zero direct weight; invoked via AM/FM/noise chapters |
