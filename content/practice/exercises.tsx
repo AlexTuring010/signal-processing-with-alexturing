@@ -1665,7 +1665,16 @@ export const EXERCISES: Exercise[] = [
         {' · '}
         <Link href="/practice#exercise:jan26-th4-fm">Ιαν.2026 ΘΕΜΑ 4</Link>
         {' · '}
-        <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>.
+        <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>.{' '}
+        Επίσης off-sheet τα output-SNR αποτελέσματα αυτού του θέματος (βάρος 1
+        έκαστο — αυτό το θέμα είναι το μοναδικό στην τράπεζα που τα ζητάει
+        ρητά):{' '}
+        <InlineMath>{'\\text{SNR}_{out,AM} = \\eta\\,\\text{SNR}_{ref}'}</InlineMath>{' '}
+        (id <code>am-output-snr</code>),{' '}
+        <InlineMath>{'\\text{SNR}_{out,FM} = 3\\beta^2\\,\\text{SNR}_{ref}'}</InlineMath>{' '}
+        (id <code>fm-snr-out</code>), και{' '}
+        <InlineMath>{'G_{FM/AM} = 9\\beta^2'}</InlineMath>{' '}
+        (id <code>fm-gain-am</code>) — δεν δίνεται κανένας τους στο τυπολόγιο.
       </>
     ),
     statement: (

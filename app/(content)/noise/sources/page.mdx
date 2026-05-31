@@ -413,6 +413,12 @@ $$
 
 όπου $T_{\text{antenna}}$ είναι η ισοδύναμη θερμοκρασία της κεραίας (συνήθως **$T_0 = 290$ K** για επίγειες ζεύξεις, αλλά μπορεί να είναι μερικά K για satellite uplinks).
 
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+
+Τόσο ο noise figure $F = \text{SNR}_{in}/\text{SNR}_{out}$ όσο και η ισοδύναμη θερμοκρασία $T_e = (F-1)T_0$ **δεν υπάρχουν στο επίσημο τυπολόγιο** — το τυπολόγιο δεν έχει κανέναν τύπο θορύβου. Βάρος 0 — δεν ζητούνται ρητά σε παλιό θέμα ως πρωτεύων τύπος, αλλά εμφανίζονται ως ενδιάμεσο βήμα στα link-budget + noise-floor προβλήματα.
+
+</Callout>
+
 ## 11. Worked example — noise floor σε FM δέκτη
 
 <ExamProblem id="ex-noise-floor-fm" year="Worked example" weight="κανονική link-budget σύνθεση">

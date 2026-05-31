@@ -146,6 +146,12 @@ $$
 
 <Collectible id="triangle-skin" />
 
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+
+Ο τύπος $S_{v_n}(f) = N_0 f^2/A_c^2$ (triangular noise PSD μετά τον FM discriminator, id `fm-noise-output-psd`) **δεν υπάρχει στο επίσημο τυπολόγιο**. Βάρος 0 — δεν ζητείται ρητά σε παλιό θέμα, αλλά είναι η βάση πίσω από το $3\beta^2$ gain και το pre-emphasis: η $f^2$ εξάρτηση **εξηγεί** γιατί η FM «κερδίζει» SNR και γιατί χρειάζεται pre-emphasis στις υψηλές συχνότητες.
+
+</Callout>
+
 ## 4. Output noise power και SNR_out
 
 Ο τελικός LPF στα `±W` περιορίζει τον θόρυβο στην baseband message ζώνη. Με την κανονική σύμβαση **single-sided ισχύος** (κάθε baseband ζώνη `[0, W]` μετράει την «πραγματική» ισχύ — ο integrator δίνει `N_0 W³/3` αντί για `2 N_0 W³/3`, αποφεύγοντας double-counting από συμμετρικές αρνητικές συχνότητες) η output noise power είναι:
