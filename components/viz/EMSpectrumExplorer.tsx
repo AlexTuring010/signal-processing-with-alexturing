@@ -87,7 +87,7 @@ export function EMSpectrumExplorer() {
 
       {/* Scrollable strip */}
       <div className="overflow-x-auto rounded-md border border-border bg-bg pb-2">
-        <div className="relative h-[160px] min-w-[900px]">
+        <div className="relative h-[180px] min-w-[900px]">
           {/* Bands */}
           {BANDS.map((b) => {
             const left = xFor(b.fLow)
@@ -117,40 +117,39 @@ export function EMSpectrumExplorer() {
             )
           })}
 
-          {/* Tech markers */}
-          {TECHS.map((t) => {
+          {/* Tech markers — κλιμακωτές σειρές ώστε οι κάψουλες να μην πατάνε η μία στην άλλη */}
+          {TECHS.map((t, i) => {
             const left = xFor(t.f)
             const active = selectedId === t.id
+            const row = i % 3
             return (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => setSelectedId(active ? null : t.id)}
                 className={cn(
-                  'absolute top-[80px] flex -translate-x-1/2 flex-col items-center transition-all',
-                  active ? 'z-10 scale-110' : 'hover:scale-105',
+                  'absolute top-[76px] flex -translate-x-1/2 flex-col items-center transition-all',
+                  active ? 'z-20' : 'hover:z-10',
                 )}
                 style={{ left: `${left}%` }}
                 aria-pressed={active}
-                title={t.label}
+                title={`${t.label} · ${formatHz(t.f)}`}
               >
                 <span
-                  className={cn(
-                    'h-3 w-px',
-                    active ? 'bg-accent' : 'bg-fg-muted/60',
-                  )}
+                  className={cn('w-px', active ? 'bg-accent' : 'bg-fg-muted/60')}
+                  style={{ height: `${12 + row * 22}px` }}
                   aria-hidden="true"
                 />
                 <span
                   className={cn(
-                    'rounded-full border bg-bg-elevated px-1.5 py-0.5 text-[10px] font-medium shadow-sm transition-colors',
+                    'whitespace-nowrap rounded-full border bg-bg-elevated px-1.5 py-0.5 text-[10px] font-medium shadow-sm transition-colors',
                     active
                       ? 'border-accent text-accent'
                       : 'border-border text-fg-muted',
                   )}
                 >
-                  <span aria-hidden="true">{t.emoji}</span>{' '}
-                  <span className="hidden sm:inline">{t.label}</span>
+                  <span aria-hidden="true">{t.emoji}</span>
+                  {active && <span className="ml-1">{t.label}</span>}
                 </span>
               </button>
             )

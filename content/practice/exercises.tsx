@@ -22,6 +22,7 @@
 import Link from 'next/link'
 import { BlockMath, InlineMath } from '@/components/math'
 import { NoiseFilterShapingViz } from '@/components/viz/NoiseFilterShapingViz'
+import { ReorderDrill } from '@/components/viz/ReorderDrill'
 import { NonlinearModulatorSpectrumViz } from '@/components/viz/NonlinearModulatorSpectrumViz'
 import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
@@ -3387,10 +3388,32 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'easy',
     prerequisites: [],
     statement: (
-      <p>
-        Τοποθετήστε με σειρά αύξουσας συχνότητας τα δορυφορικά σήματα, τα
-        ραδιοφωνικά σήματα και τα τηλεοπτικά σήματα. Εξηγήστε γιατί.
-      </p>
+      <>
+        <p>
+          Τοποθετήστε με σειρά αύξουσας συχνότητας τα δορυφορικά σήματα, τα
+          ραδιοφωνικά σήματα και τα τηλεοπτικά σήματα. Εξηγήστε γιατί.
+        </p>
+        <ReorderDrill
+          prompt="Δοκίμασέ το πρώτος: βάλε τα σε σειρά αύξουσας συχνότητας (χαμηλή → υψηλή) σύροντας ή με τα βελάκια, μετά πάτα «Έλεγχος». Η αιτιολόγηση είναι στη λύση."
+          items={[
+            {
+              id: 'radio',
+              label: 'Ραδιοφωνικά σήματα',
+              detail: 'AM 535 kHz–1.7 MHz · FM 88–108 MHz',
+            },
+            {
+              id: 'tv',
+              label: 'Τηλεοπτικά σήματα',
+              detail: 'VHF 54–216 MHz · UHF 470–806 MHz',
+            },
+            {
+              id: 'sat',
+              label: 'Δορυφορικά σήματα',
+              detail: '4–30 GHz (C, Ku, Ka bands)',
+            },
+          ]}
+        />
+      </>
     ),
     solution: (
       <>
