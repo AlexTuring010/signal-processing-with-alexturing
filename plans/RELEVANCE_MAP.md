@@ -658,7 +658,8 @@ Phase-2-reworked.  Cards do not pre-cite clean theory homes — homes derived by
 + formulaIds + solution analysis, then verified against page headings.  Most exercises
 use on-sheet FT pairs/properties (`fourier-pair-rect`, `fourier-pair-cos`, etc.) with no
 must-learn callout needed; the must-learn formulas are `parseval-power` (weight 4),
-`fourier-series-rect-pulse` (weight 4), `cos-power-half` (weight 3) — per §3B.
+`fourier-series-rect-pulse` (weight 4), `cos-power-half` (weight 6) — per §3B
+(cos-power-half corrected 3→6 in `mustlearn-passc-foundations-signals`: 3 T/F + 3 power-sum).
 
 ---
 
@@ -670,7 +671,7 @@ must-learn callout needed; the must-learn formulas are `parseval-power` (weight 
 | `proodos26-10` | Φάσμα πλάτους και ισχύς για sin + sinc | FT of m(t)=sin(10πt)+sinc(10t): sin → impulses at ±5 Hz (height 1/2) via `fourier-pair-sin`; sinc(10t) → rect(f/10)/10 (height 1/10, width 10 Hz) via `fourier-pair-rect`; Power: P_sin = A²/2 = 1/2 (power signal), P_sinc = 0 (energy signal); P_total = 1/2 | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" | `foundations/signals` §"Ενέργεια και Ισχύς" (sinc = energy signal → P=0 classification) | **Viz gap — static SVG, not interactive (see §5.G G2)** |
 | `jan26-th1-2` | Σ/Λ — cos είναι σήμα ισχύος | T/F ΣΩΣΤΟ: cos(2πt) has P = A²/2 = 1/2 (finite) → power signal; E = ∫cos²dt = ∞ → not an energy signal | `foundations/signals` §"Ενέργεια και Ισχύς" | — | No |
 | `jan26-th1-4` | Σ/Λ — Envelope FS τετραγωνικού παλμού | FS amplitude envelope is sinc-shaped (first null at k = T₀/τ = 10); wider τ → narrower sinc lobe (time-BW reciprocity); T/F about which envelope is narrower requires knowing sinc width ∝ 1/τ | `foundations/fourier-series` §"Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (sinc = FT of rect explains why the FS envelope is sinc-shaped) | No |
-| `jan26-th2-9` | Ισχύς αθροίσματος cosines + sines | P = A²/2 + B²/2 + C²/2 for x = Acos(2πf₁t)+Bsin(2πf₂t)+Csin(2πf₃t) with all f distinct → orthogonal components → powers add (Parseval-power / FS Parseval theorem) | `foundations/signals` §"Ενέργεια και Ισχύς" (teaches per-tone power A²/2 = cos-power-half; where parseval-power is built from first principles) | `foundations/fourier-series` §"Τα harmonic complex exponentials είναι ορθογώνια" (FS orthogonality: why cross-terms vanish so powers add to ΣAₖ²/2) | No |
+| `jan26-th2-9` | Ισχύς αθροίσματος cosines + sines | P = A²/2 + B²/2 + C²/2 for x = Acos(2πf₁t)+Bsin(2πf₂t)+Csin(2πf₃t) with all f distinct → orthogonal components → powers add (Parseval-power / FS Parseval theorem) | `foundations/fourier-series` §"Parseval — η ισχύς μιας σειράς Fourier" (states + derives P = ΣAₖ²/2 explicitly from orthogonality + per-tone A²/2; the clean FS teaching home created by `fill-fs-parseval-section`) | `foundations/signals` §"Ενέργεια και Ισχύς" (per-tone power A²/2 = cos-power-half building block); `foundations/fourier-series` §"Τα harmonic complex exponentials είναι ορθογώνια" (orthogonality: why cross-terms vanish) | No |
 | `jan26-th2-10` | Φάσμα πλάτους του sum-of-cosines+sines | «Σχεδιάστε» amplitude spectrum of x = Acos(2πf₁t)+Bsin(2πf₂t)+Csin(2πf₃t): 6 impulses at ±f₁, ±f₂, ±f₃ with heights A/2, B/2, C/2 | `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (cos/sin → impulse FT pairs are the derivation tool) | **Viz gap — «Σχεδιάστε», text-only bullet list (see §5.G G2)** |
 | `jun25-th1-1` | Σειρά συχνοτήτων: δορυφορικά, ραδιοφωνικά, τηλεοπτικά | AM radio (535 kHz–1.7 MHz) < FM radio (88–108 MHz) < TV VHF/UHF (54–806 MHz) < satellite (4–30 GHz); answer requires knowing standard broadcast band ranges and the physics of propagation vs. bandwidth | — | — | **Soft theory gap — no foundations page teaches comm-band frequency ordering (see §5.G G1)** |
 | `jun25-th1-2` | Ρόλος καναλιού στο τηλεπικοινωνιακό σύστημα | Channel = physical medium between Tx and Rx; affects amplitude (path loss/attenuation), phase (group-delay distortion), bandwidth (acts as a filter), and adds AWGN noise | `foundations/systems` §"Τι είναι ένα σύστημα;" | — | No |
@@ -683,11 +684,11 @@ must-learn callout needed; the must-learn formulas are `parseval-power` (weight 
 | `pa25-th1-2` | Σ/Λ — cos είναι σήμα ισχύος | Same as `jan26-th1-2` — T/F ΣΩΣΤΟ; identical question, different exam session | `foundations/signals` §"Ενέργεια και Ισχύς" | — | No |
 | `pa25-th1-4` | Σ/Λ — Bandwidth του M³(f) | T/F ΛΑΘΟΣ: claim "M³(f) bandwidth = W³"; correct is 3W. m³ = m·m² → M³ = M∗M² (bandwidth 2W+W = 3W); each convolution step adds W | `foundations/fourier-transform` §5 "Ιδιότητες του FT — η εργαλειοθήκη" | — | No |
 | `pa25-th1-5` | Σ/Λ — Envelope FS τριγωνικού παλμού | T/F ΛΑΘΟΣ: claim "FS envelope is sinusoidal"; correct is sinc²-shaped. Tri pulse FS envelope follows FT pair Λ(t/T) ↔ T·sinc²(fT) (on-sheet; fourier-pair-tri); inverse-error in coaching fixed in step `fix-inverse-corrections-batch` | `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (tri↔sinc² FT pair; fourier-pair-tri IS ON-SHEET) | No |
-| `pa25-th2-4` | Ισχύς Asin(2πf₁t) + Bcos(2πf₂t) + Ccos(2πf₃t) | Same structure as `jan26-th2-9` (repeatGroup 'power-sum-sinusoids'): P = (A²+B²+C²)/2 | `foundations/signals` §"Ενέργεια και Ισχύς" | `foundations/fourier-series` §"Τα harmonic complex exponentials είναι ορθογώνια" | No |
+| `pa25-th2-4` | Ισχύς Asin(2πf₁t) + Bcos(2πf₂t) + Ccos(2πf₃t) | Same structure as `jan26-th2-9` (repeatGroup 'power-sum-sinusoids'): P = (A²+B²+C²)/2 | `foundations/fourier-series` §"Parseval — η ισχύς μιας σειράς Fourier" | `foundations/signals` §"Ενέργεια και Ισχύς" (per-tone A²/2 building block); `foundations/fourier-series` §"Τα harmonic complex exponentials είναι ορθογώνια" (orthogonality) | No |
 | `pb25-th1-2` | Σ/Λ — cos είναι σήμα ενέργειας | T/F ΛΑΘΟΣ: cos(2πt) has P = 1/2 (finite) → power signal, NOT energy signal (E = ∞); inverse formulation of `jan26-th1-2` | `foundations/signals` §"Ενέργεια και Ισχύς" | — | No |
 | `pb25-th1-4` | Σ/Λ — M³(f) bandwidth | Same as `pa25-th1-4` (same exam question, Proodos B) | `foundations/fourier-transform` §5 "Ιδιότητες του FT — η εργαλειοθήκη" | — | No |
 | `pb25-th1-5` | Σ/Λ — Envelope FS τριγωνικού = συνημιτονοειδής | T/F ΛΑΘΟΣ: claim "FS envelope is cosine-shaped"; same core as `pa25-th1-5` (variant: «ημιτονοειδής» vs «συνημιτονοειδής» — both ΛΑΘΟΣ, correct answer is sinc²) | `foundations/fourier-series` §"Φάσμα: το σήμα στο frequency domain" | `foundations/fourier-transform` §"4. Παραδείγματα — οι «πρωταγωνιστές»" (tri↔sinc² FT pair) | No |
-| `pb25-th2-4` | Ισχύς Asin + Bcos + Ccos διαφορετικών συχνοτήτων | Same as `jan26-th2-9` and `pa25-th2-4` (repeatGroup 'power-sum-sinusoids'): P = (A²+B²+C²)/2 | `foundations/signals` §"Ενέργεια και Ισχύς" | `foundations/fourier-series` §"Τα harmonic complex exponentials είναι ορθογώνια" | No |
+| `pb25-th2-4` | Ισχύς Asin + Bcos + Ccos διαφορετικών συχνοτήτων | Same as `jan26-th2-9` and `pa25-th2-4` (repeatGroup 'power-sum-sinusoids'): P = (A²+B²+C²)/2 | `foundations/fourier-series` §"Parseval — η ισχύς μιας σειράς Fourier" | `foundations/signals` §"Ενέργεια και Ισχύς" (per-tone A²/2 building block); `foundations/fourier-series` §"Τα harmonic complex exponentials είναι ορθογώνια" (orthogonality) | No |
 
 ---
 
@@ -698,7 +699,7 @@ must-learn callout needed; the must-learn formulas are `parseval-power` (weight 
 | Section | Primary homes | Secondary appearances | §3B cross-check |
 | --- | --- | --- | --- |
 | §"Τι είναι ένα σήμα;" through §"Πώς ξεχωρίζουμε σήματα — ταξινομία" | **hot for 0** | 0 | These sections define signal concepts but no past-exam exercise isolates them as standalone deliverables; consistent with §3B (signal-power and signal-energy general definitions weight=0 in the foundations bank) |
-| §"Ενέργεια και Ισχύς" | `jan26-th1-2`, `pa25-th1-2`, `pb25-th1-2`, `jan26-th2-9`, `pa25-th2-4`, `pb25-th2-4` — **hot for 6** | `proodos26-10` (sinc = energy signal → P=0) | cos-power-half §3B weight=3 ✓ (3 T/F exercises where P=A²/2 IS the deliverable); parseval-power §3B weight=4: the 3 power-sum exercises are now primary here (this section teaches per-tone A²/2 — the mechanism that makes ΣAₖ²/2 work; FS orthogonality co-home at fourier-series §"Τα harmonic complex exponentials" — F-1 fix; see §5.G G4) |
+| §"Ενέργεια και Ισχύς" | `jan26-th1-2`, `pa25-th1-2`, `pb25-th1-2` — **hot for 3** | `jan26-th2-9`, `pa25-th2-4`, `pb25-th2-4` (per-tone A²/2 building block — PRIMARY re-homed to fourier-series §"Parseval — η ισχύς μιας σειράς Fourier" by `fill-fs-parseval-section`); `proodos26-10` (sinc = energy signal → P=0) | cos-power-half §3B weight=6 ✓ (3 T/F where single-tone P=A²/2 IS the deliverable [primary here] + 3 power-sum where per-tone A²/2 is the building block [secondary here]); parseval-power §3B weight=4: the 3 power-sum are now PRIMARY at fourier-series §"Parseval — η ισχύς μιας σειράς Fourier" (the new clean FS home, G4 RESOLVED); this section stays their per-tone-A²/2 co-home |
 | §"Παγίδες που πέφτουν στα εξεταστικά" | **hot for 0** | 0 | Exam-trap awareness section; consistent with §3B weight=0 ✓ |
 | §"I/Q αναπαράσταση — η canonical form" | **hot for 0** | 0 | I/Q decomposition is tested cross-topic (AM/FM exercises), not in the foundations exercise bank ✓ |
 
@@ -713,11 +714,12 @@ must-learn callout needed; the must-learn formulas are `parseval-power` (weight 
 | Section | Primary homes | Secondary appearances | §3B cross-check |
 | --- | --- | --- | --- |
 | §"Η σειρά Fourier — οι δύο βασικές εξισώσεις" | — | 0 | synthesis+analysis equations must-learn (entire FS chapter is off-sheet per §3B.1) but no exercise isolates them without invoking the rect-pulse formula; their primary exam vehicle is §"Παράδειγμα" below |
-| §"Τα harmonic complex exponentials είναι ορθογώνια" | — | `jan26-th2-9`, `pa25-th2-4`, `pb25-th2-4` — secondary for 3 (FS orthogonality: why cross-terms vanish so powers add to ΣAₖ²/2; primary home for parseval-power is foundations/signals §"Ενέργεια και Ισχύς") | parseval-power §3B weight=4: orthogonality mechanism lives here; the formula conclusion (P=ΣAₖ²/2) is taught in foundations/signals — see §5.G G4 |
+| §"Τα harmonic complex exponentials είναι ορθογώνια" | — | `jan26-th2-9`, `pa25-th2-4`, `pb25-th2-4` — secondary for 3 (orthogonality MECHANISM: why cross-terms vanish so powers add; the explicit P=ΣAₖ²/2 result is now stated + derived in §"Parseval — η ισχύς μιας σειράς Fourier" below, which references this section) | parseval-power §3B weight=4: orthogonality mechanism lives here; the formula conclusion (P=ΣAₖ²/2) is now TAUGHT in §"Parseval — η ισχύς μιας σειράς Fourier" (G4 RESOLVED by `fill-fs-parseval-section`) |
 | §"Φάσμα: το σήμα στο frequency domain" | `jan26-th2-10`, `jun25-th1-7`, `pa25-th1-5`, `pb25-th1-5` — **hot for 4** | — | FS amplitude spectrum (Aₖ = 2\|aₖ\| at ±kf₀, envelope = FT of one period) is the core concept; fourier-pair-cos/sin/tri used here are all on-sheet → no §3B must-learn weight; hot for 4 consistent with on-sheet status ✓ |
+| §"Parseval — η ισχύς μιας σειράς Fourier" | `jan26-th2-9`, `pa25-th2-4`, `pb25-th2-4` — **hot for 3** | `proodos26-10` (parseval-power for the sin-component power P=A²/2) | parseval-power §3B weight=4: the clean FS teaching home — states + derives P=ΣAₖ²/2 from orthogonality (§"Τα harmonic complex exponentials") + per-tone A²/2 (foundations/signals §"Ενέργεια και Ισχύς"); created by `fill-fs-parseval-section` (G4 RESOLVED). 3 power-sum primaries + `proodos26-10` secondary = the weight-4 accounting ✓ |
 | §"Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)" | `jan26-th1-4`, `jun25-th1-5`, `jun25-th1-6`, `jun25-th1-8` — **hot for 4** | — | fourier-series-rect-pulse §3B weight=4 ✓ exact match |
 | §"LTI σε periodic σήμα — κάθε αρμονική ξεχωριστά" | — | 0 | lti-output-fourier-series §3B weight=0 for foundations bank ✓ |
-| §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" | **hot for 0** (jan26-th2-9, pa25-th2-4, pb25-th2-4 re-homed to foundations/signals §"Ενέργεια και Ισχύς" — F-1 fix; this recall-drill section does NOT teach P=ΣAₖ²/2 from first principles) | `proodos26-10` (parseval-power invoked for the sin-component power P = A²/2) | parseval-power §3B weight=4: 3 primaries moved to foundations/signals (where per-tone A²/2 is taught); proodos26-10 remains secondary here; see §5.G G4 |
+| §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" | **hot for 0** | 0 | recall-drill section (write FS equations / compute complex coefficients / order analysis steps); teaches no must-learn formula from first principles. The 3 power-sum primaries + `proodos26-10` secondary now home at §"Parseval — η ισχύς μιας σειράς Fourier" (G4 RESOLVED by `fill-fs-parseval-section`), which states + derives P=ΣAₖ²/2 explicitly |
 
 #### `foundations/fourier-transform`
 
@@ -831,39 +833,51 @@ impulse-response properties.
 
 ---
 
-#### G4 — `foundations/fourier-series` has no explicit Parseval / power-sum teaching section (theory gap, low severity)
+#### G4 — `foundations/fourier-series` Parseval / power-sum teaching section — ✅ RESOLVED (`fill-fs-parseval-section`, iter 88)
 
-The `parseval-power` formula (P = ΣAₖ²/2 for a sum of orthogonal sinusoids, §3B weight=4 —
-the highest-weight foundations formula) has no dedicated teaching section on the
-`foundations/fourier-series` page:
+**RESOLVED.** Shipped a dedicated `## Parseval — η ισχύς μιας σειράς Fourier` subsection on
+`foundations/fourier-series` (placed between §"Φάσμα…" and §"Παράδειγμα…", the natural
+"power read off the spectrum" home) that:
+1. **STATES** the result in the page's own convention — cosine form
+   P = A₀² + Σ Aₖ²/2 (and the no-DC exam case P = Σ Aₖ²/2), plus the compact complex form
+   P = Σ|aₖ|².
+2. **DERIVES** it intuition-first (powers ADD because orthogonal harmonics don't interfere)
+   in four followable steps: power = time-average of x² → expand the square → cross-terms
+   vanish BY the on-page orthogonality (§"Τα harmonic complex exponentials", referenced not
+   re-derived) → diagonal terms = per-tone A²/2 (`foundations/signals` §"Ενέργεια και Ισχύς",
+   referenced) → sum. Includes a static per-harmonic power-bar figure.
+3. **CONNECTS** it as the FS form of Parseval's theorem, linking the FT-Parseval on
+   `foundations/fourier-transform` (§"Parseval / ESD").
 
-- §"Τα harmonic complex exponentials είναι ορθογώνια" teaches WHY cross-terms vanish
-  (the inner-product orthogonality proof) but does not explicitly state or derive
-  P = ΣAₖ²/2 — it teaches the mechanism, not the power conclusion.
-- §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" has only three drills (write the
+The 3 power-sum exercises (jan26-th2-9 / pa25-th2-4 / pb25-th2-4) are re-homed PRIMARY to this
+section in §5.F + §5.R; `foundations/signals` §"Ενέργεια και Ισχύς" drops back to their
+per-tone-A²/2 co-home (now hot-for-3, the T/F trio). parseval-power §3B weight=4 accounting
+intact (home change, not weight change). Grounded in already-taught on-page material (no new
+slide cited → no PDF audit needed). **Teaching content ONLY** — the must-learn
+«⚠️ Πρέπει να θυμάσαι» callout (all 3 placements with weight + refs) is the next step
+`mustlearn-passc-foundations-fourier-lti`, which places parseval-power's placement-(a) callout
+ON this new section.
+
+---
+
+**Original gap (audit trail).** The `parseval-power` formula (P = ΣAₖ²/2 for a sum of orthogonal
+sinusoids, §3B weight=4 — the highest-weight foundations formula) had no dedicated teaching
+section on the `foundations/fourier-series` page:
+
+- §"Τα harmonic complex exponentials είναι ορθογώνια" taught WHY cross-terms vanish
+  (the inner-product orthogonality proof) but did not explicitly state or derive
+  P = ΣAₖ²/2 — it taught the mechanism, not the power conclusion.
+- §"Ανακάλεσε — δες τι μένει χωρίς να γυρίσεις πίσω" had only three drills (write the
   FS equations, compute complex coefficients, order the analysis-derivation steps) —
-  does NOT teach the parseval-power formula from first principles.
+  did NOT teach the parseval-power formula from first principles.
 
-A student deep-linked from a power-sum exercise (jan26-th2-9 / pa25-th2-4 / pb25-th2-4)
-into the fourier-series page would land on a recall-drill section that never teaches the
-tested formula.  The per-tone power A²/2 (cos-power-half) is taught on
-`foundations/signals` §"Ενέργεια και Ισχύς" (now the primary home for the 3 power-sum
-exercises after the F-1 re-home); the orthogonality (cross-terms vanish) lives in
-§"Τα harmonic complex exponentials" — but no single section explicitly joins them to
-state P = ΣAₖ²/2.
-
-**Severity:** low.  The formula IS reachable via the two co-home sections together; the gap
-is the absence of a single clean FS teaching section that states and derives P = ΣAₖ²/2
-explicitly.  parseval-power is the highest-weight foundations formula (weight 4), so the
-gap has pedagogical impact.
-
-**Planner action:** candidate Opus theory-fill step — add a §"Parseval / Ισχύς σειράς"
-callout or subsection to `foundations/fourier-series` that states P = ΣAₖ²/2 explicitly
-and derives it from orthogonality (§"Τα harmonic complex exponentials") + per-tone
-cos-power-half.  This would give parseval-power (weight 4) a clean FS primary home and
-make the hot-for-6 signal at §"Ενέργεια και Ισχύς" more accurate (the FS page would then
-be a better direct landing spot for deep-linked power-sum exercises).  T1 scope, one
-focused step, Opus.
+A student deep-linked from a power-sum exercise into the fourier-series page would have landed
+on a recall-drill section that never taught the tested formula. The per-tone power A²/2
+(cos-power-half) was taught on `foundations/signals` §"Ενέργεια και Ισχύς"; the orthogonality
+lived in §"Τα harmonic complex exponentials" — but no single section explicitly joined them to
+state P = ΣAₖ²/2. **Severity was low** (the formula was reachable via the two co-home sections
+together), but parseval-power is the highest-weight foundations formula (weight 4), so the gap
+had pedagogical impact — now closed.
 
 ---
 

@@ -351,6 +351,124 @@ $$
 
 <SpectrumViewer />
 
+## Parseval — η ισχύς μιας σειράς Fourier
+
+Μόλις είδαμε ότι το **φάσμα** ενός periodic σήματος είναι το σύνολο των συντελεστών $a_k$ (ή ισοδύναμα των πλατών $A_k$). Φυσικό επόμενο ερώτημα: **πόση ισχύ κουβαλάει το σήμα — και μπορώ να τη διαβάσω κατευθείαν από το φάσμα;** Η απάντηση είναι ναι, και είναι αφοπλιστικά απλή: **κάθε αρμονική βάζει τη δική της ισχύ στο τραπέζι, και η ολική ισχύς είναι απλώς το άθροισμά τους.**
+
+<Callout type="intuition" title="Γιατί οι ισχύες απλώς προστίθενται — καμία αλληλεπίδραση">
+  Σκέψου μια ορχήστρα: ένα βιολί παίζει ένα Λα, ένα τσέλο ένα Ντο, μια φλογέρα ένα Σολ — **διαφορετικές νότες, διαφορετικές συχνότητες**. Η συνολική «ένταση» (ισχύς) που φτάνει στ' αυτιά σου είναι το **άθροισμα** της έντασης του καθενός. Δεν ενισχύονται ούτε ακυρώνονται μεταξύ τους κατά μέσο όρο, **ακριβώς επειδή παίζουν σε διαφορετικές συχνότητες**.
+
+  Αυτό είναι, λέξη προς λέξη, η **ορθογωνιότητα** που αποδείξαμε στην ενότητα «Τα harmonic complex exponentials είναι ορθογώνια»: δύο διαφορετικές αρμονικές, όταν τις πολλαπλασιάσεις και πάρεις μέσο όρο σε μία περίοδο, δίνουν **μηδέν**. Η ορθογωνιότητα *είναι* η μαθηματική διατύπωση του «οι αρμονικές δεν αλληλεπιδρούν». Γι' αυτό οι ισχύες προστίθενται χωρίς διασταυρούμενους όρους.
+</Callout>
+
+### Το αποτέλεσμα
+
+Για ένα real periodic σήμα γραμμένο στην **cosine μορφή** (αυτήν που είδαμε στο §«Σχέση μεταξύ μιγαδικής και cosine μορφής»):
+
+$$
+x(t) = A_0 + \sum_{k=1}^{\infty} A_k\cos(2\pi k f_0 t + \phi_k)
+$$
+
+η μέση ισχύς του είναι:
+
+$$
+\boxed{\;\mathcal{P}_x = A_0^2 + \sum_{k=1}^{\infty} \frac{A_k^2}{2}\;}
+$$
+
+Σε **απλά λόγια**: η DC συνιστώσα βάζει $A_0^2$ (είναι σταθερά — η ισχύς της είναι σκέτο το τετράγωνό της), και **κάθε αρμονική πλάτους $A_k$ βάζει $A_k^2/2$** — ακριβώς η ισχύς ενός μεμονωμένου cosine που υπολογίσαμε στο [`foundations/signals` §«Ενέργεια και Ισχύς»](/foundations/signals#energy-power) ($P = A^2/2$ για κάθε cosine). Καμία αρμονική δεν «βλέπει» τις άλλες· η καθεμία συνεισφέρει σαν να ήταν μόνη της.
+
+Στην **πιο συχνή εξεταστική περίπτωση** — άθροισμα τόνων σε **διαφορετικές** συχνότητες, χωρίς DC — ο τύπος γίνεται ακόμα πιο λιτός:
+
+$$
+x(t) = \sum_i A_i\cos(2\pi f_i t + \phi_i),\quad f_i \neq f_j\ \ (i \neq j)
+\qquad\Longrightarrow\qquad
+\mathcal{P}_x = \sum_i \frac{A_i^2}{2}
+$$
+
+<figure className="my-5 rounded-md border border-border bg-bg-soft/40 p-3 text-fg">
+  <svg
+    viewBox="0 0 640 230"
+    role="img"
+    aria-label="Η ισχύς κάθε αρμονικής προστίθεται για να δώσει τη συνολική ισχύ του σήματος"
+    className="block w-full"
+  >
+    {/* y-axis */}
+    <line x1="55" y1="185" x2="55" y2="24" stroke="currentColor" strokeWidth="1.2" />
+    <polygon points="55,18 50,28 60,28" fill="currentColor" />
+    <text x="62" y="26" textAnchor="start" fontSize="11" fill="currentColor" opacity="0.7" fontStyle="italic">ισχύς</text>
+
+    {/* baseline / x-axis */}
+    <line x1="45" y1="185" x2="600" y2="185" stroke="currentColor" strokeWidth="1.2" />
+
+    {/* individual per-harmonic power bars */}
+    <rect x="80"  y="149" width="30" height="36" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="140" y="121" width="30" height="64" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="200" y="151" width="30" height="34" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="255" y="167" width="30" height="18" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+
+    {/* plus signs */}
+    <text x="125" y="173" textAnchor="middle" fontSize="16" fill="currentColor">+</text>
+    <text x="185" y="173" textAnchor="middle" fontSize="16" fill="currentColor">+</text>
+    <text x="242" y="173" textAnchor="middle" fontSize="16" fill="currentColor">+</text>
+    <text x="306" y="173" textAnchor="middle" fontSize="14" fill="currentColor" opacity="0.6">···</text>
+
+    {/* equals sign */}
+    <text x="334" y="150" textAnchor="middle" fontSize="20" fill="currentColor">=</text>
+
+    {/* stacked total bar — the same pieces stacked into one column */}
+    <rect x="372" y="149" width="48" height="36" fill="rgb(29, 78, 216)" fillOpacity="0.30" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="372" y="85"  width="48" height="64" fill="rgb(29, 78, 216)" fillOpacity="0.24" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="372" y="51"  width="48" height="34" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+    <rect x="372" y="33"  width="48" height="18" fill="rgb(29, 78, 216)" fillOpacity="0.12" stroke="rgb(29, 78, 216)" strokeWidth="1.5" />
+
+    {/* per-harmonic labels */}
+    <text x="95"  y="201" textAnchor="middle" fontSize="11" fill="currentColor">A₀²</text>
+    <text x="155" y="201" textAnchor="middle" fontSize="11" fill="currentColor">A₁²/2</text>
+    <text x="215" y="201" textAnchor="middle" fontSize="11" fill="currentColor">A₂²/2</text>
+    <text x="270" y="201" textAnchor="middle" fontSize="11" fill="currentColor">A₃²/2</text>
+    <text x="95"  y="216" textAnchor="middle" fontSize="9"  fill="currentColor" opacity="0.6">(DC)</text>
+    <text x="396" y="201" textAnchor="middle" fontSize="13" fill="currentColor" fontWeight="bold">P</text>
+  </svg>
+  <figcaption className="mt-2 text-center text-xs text-fg-muted">
+    Κάθε αρμονική συνεισφέρει τη δική της ισχύ (DC: <span className="font-mono">A₀²</span>· κάθε αρμονική: <span className="font-mono">Aₖ²/2</span>). Επειδή οι αρμονικές είναι <strong>ορθογώνιες</strong>, οι ισχύες απλώς <strong>προστίθενται</strong> — καμία αλληλεπίδραση, κανένας διασταυρούμενος όρος.
+  </figcaption>
+</figure>
+
+<Callout type="key" title="Η συμπαγής μιγαδική μορφή">
+  Στη μιγαδική μορφή $x(t) = \sum_k a_k\, e^{j2\pi k f_0 t}$ το ίδιο αποτέλεσμα γράφεται ακόμα πιο σύντομα:
+
+  $$ \mathcal{P}_x = \sum_{k=-\infty}^{\infty} |a_k|^2 $$
+
+  Είναι **η ίδια εξίσωση**: θυμήσου ότι $a_0 = A_0$ και $|a_k| = A_k/2$ για $k \geq 1$, οπότε το ζευγάρι των γραμμών στα $\pm k$ μαζί δίνει $|a_k|^2 + |a_{-k}|^2 = 2\,(A_k/2)^2 = A_k^2/2$ — η ισχύς της $k$-οστής αρμονικής.
+</Callout>
+
+### Από πού προκύπτει
+
+Δεν χρειάζεται να το αποστηθίσεις — βγαίνει σε τέσσερα βήματα από πράγματα που **ήδη έχουμε αποδείξει**:
+
+1. **Ισχύς = μέσος όρος του τετραγώνου.** Εξ ορισμού (από το [`foundations/signals`](/foundations/signals#energy-power)), η μέση ισχύς ενός periodic σήματος είναι ο μέσος όρος του $x^2(t)$ πάνω σε **μία** περίοδο:
+   $$\mathcal{P}_x = \frac{1}{T_0}\int_{T_0} x^2(t)\, dt.$$
+
+2. **Άνοιξε το τετράγωνο.** Βάζοντας μέσα τη σειρά $x(t) = A_0 + \sum_{k\geq 1} A_k\cos(2\pi k f_0 t + \phi_k)$ και υψώνοντας στο τετράγωνο, εμφανίζονται τρία είδη όρων: το $A_0^2$, τα **διαγώνια** τετράγωνα $A_k^2\cos^2(\cdot)$, και οι **διασταυρούμενοι** όροι — γινόμενα *δύο διαφορετικών* αρμονικών (ή DC × αρμονική).
+
+3. **Οι διασταυρούμενοι όροι σβήνουν.** Ο μέσος όρος, σε μία περίοδο, του γινομένου **δύο διαφορετικών** αρμονικών είναι **μηδέν** — αυτό ακριβώς λέει η ορθογωνιότητα από την ενότητα «Τα harmonic complex exponentials είναι ορθογώνια». (Ομοίως, DC × οποιαδήποτε αρμονική: ο μέσος όρος ενός σκέτου cosine σε μία περίοδο είναι κι αυτός μηδέν.) Όλοι οι διασταυρούμενοι όροι εξαφανίζονται — κανένα ζευγάρι αρμονικών δεν αφήνει αποτύπωμα στην ισχύ.
+
+4. **Μένουν μόνο τα διαγώνια.** Ο μέσος όρος του $A_0^2$ είναι $A_0^2$. Ο μέσος όρος του $A_k^2\cos^2(2\pi k f_0 t + \phi_k)$ είναι $A_k^2/2$ — η per-tone ισχύς που βγάλαμε στο [`foundations/signals`](/foundations/signals#energy-power) (το $\cos^2$ έχει μέσο όρο $\tfrac{1}{2}$ πάνω σε μία περίοδο).
+
+Άθροισε ό,τι επέζησε:
+
+$$
+\mathcal{P}_x = A_0^2 + \sum_{k=1}^{\infty}\frac{A_k^2}{2}. \qquad\blacksquare
+$$
+
+Ο **μόνος** λόγος που το αποτέλεσμα είναι τόσο απλό — σκέτο άθροισμα — είναι η ορθογωνιότητα: αυτή σκοτώνει κάθε διασταυρούμενο όρο που αλλιώς θα μπέρδευε τις αρμονικές μεταξύ τους.
+
+<Callout type="note" title="Αυτό είναι το θεώρημα Parseval για σειρές Fourier">
+  Το αποτέλεσμα $\mathcal{P}_x = \sum_k |a_k|^2$ είναι η μορφή του **θεωρήματος Parseval** για periodic σήματα: η ισχύς που μετράς στον **χρόνο** ισούται με την ισχύ που διαβάζεις από το **φάσμα**. Είναι η περιοδική αδελφή της γενικής σχέσης Parseval για τον [μετασχηματισμό Fourier](/foundations/fourier-transform) (ενότητα «Parseval / ESD»), $\int |x(t)|^2\, dt = \int |X(f)|^2\, df$, που ισχύει για **μη**-περιοδικά σήματα ενέργειας. Ίδια ιδέα και στις δύο: **η ενέργεια/ισχύς διατηρείται ανάμεσα στα δύο domains** — μπορείς να τη μετρήσεις σε όποιο σου βολεύει.
+</Callout>
+
+**Πότε το πιάνεις στις εξετάσεις:** μόλις δεις «βρείτε την ισχύ του $A\cos(2\pi f_1 t) + B\sin(2\pi f_2 t) + C\cos(2\pi f_3 t)$» με **διαφορετικές** συχνότητες, **μην** υψώνεις στο τετράγωνο και ολοκληρώνεις — απλώς πρόσθεσε $\tfrac{A^2}{2} + \tfrac{B^2}{2} + \tfrac{C^2}{2}$. (Μία μόνο παγίδα: αν δύο όροι έχουν την **ίδια** συχνότητα, πρώτα ένωσέ τους σε έναν cosine, αλλιώς δεν είναι ορθογώνιοι και ο κανόνας «οι ισχύες προστίθενται» δεν ισχύει.)
+
 ## Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)
 
 Αρκετή θεωρία — ώρα για έναν συγκεκριμένο υπολογισμό. Στο slide 9 του session 5&6 αυτή η περίπτωση λύνεται ως «**Παράδειγμα 1 (2.10 του βιβλίου)**». Ας υπολογίσουμε τη σειρά Fourier ενός **τετραγωνικού παλμικού σήματος** (square wave 50% duty cycle):
