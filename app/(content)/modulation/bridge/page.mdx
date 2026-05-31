@@ -195,6 +195,10 @@ $$
 \boxed{\,x_p(t) = x(t) + j\,\hat{x}(t)\,}
 $$
 
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+Το **pre-envelope** $x_p(t) = x(t) + j\hat{x}(t)$ **δεν υπάρχει στο επίσημο τυπολόγιο** — το γράφεις απέξω. (Ο Hilbert transform $\hat{x}$ είναι στο τυπολόγιο, p.2 — αλλά η σύνθεσή του σε pre-envelope όχι.)
+</Callout>
+
 Τι είναι το φάσμα του; Από γραμμικότητα του FT και την ιδιότητα του Hilbert ($\hat{x} \leftrightarrow -j\,\mathrm{sgn}(f)\,X(f)$):
 
 $$
@@ -237,6 +241,10 @@ $$
 $$
 \boxed{\,x(t) = \mathrm{Re}\{g(t)\, e^{j 2\pi f_c t}\}\,}
 $$
+
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+Η **complex envelope** $g(t) = x_p(t)\,e^{-j2\pi f_c t}$ και η αντίστροφη $x(t) = \mathrm{Re}\{g(t)\,e^{j2\pi f_c t}\}$ **δεν υπάρχουν στο επίσημο τυπολόγιο** — τα γράφεις απέξω. (Η canonical I/Q μορφή $x = x_I\cos - x_Q\sin$ παρακάτω επίσης off-sheet.)
+</Callout>
 
 **Αυτή είναι η canonical μορφή κάθε ζωνοπερατού σήματος.** Κάθε διαμόρφωση που θα δούμε (AM, DSB-SC, SSB, FM, PM) είναι **μια συγκεκριμένη επιλογή του $g(t)$**. Το complex envelope είναι το πιο συμπαγές πακέτο πληροφορίας: μέτρο = envelope, φάση = phase, και τα δύο μαζί συντίθενται με το carrier για να σου δώσουν το real bandpass signal.
 
@@ -380,6 +388,10 @@ $$
 $$
 \boxed{\,X(f) = \tfrac{1}{2}\!\left[G(f - f_c) + G^*(-f - f_c)\right]\,}
 $$
+
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+Η σχέση **φάσματος ζωνοπερατού σήματος** $X(f) = \tfrac{1}{2}\left[G(f-f_c) + G^*(-f-f_c)\right]$ **δεν υπάρχει στο επίσημο τυπολόγιο** — τη γράφεις απέξω.
+</Callout>
 
 **Πώς να το διαβάσεις.** Το πραγματικό bandpass spectrum αποτελείται από:
 
