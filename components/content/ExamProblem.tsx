@@ -43,10 +43,8 @@ export function ExamProblem({
   const fallbackId = `${year}|${weight ?? ''}`
   const storageKey = `${slug}:${id ?? fallbackId}`
 
-  const hydrated = useAppStore((s) => s.hydrated)
-  const isSolved = useAppStore((s) => s.isExerciseSolved)
   const toggleSolved = useAppStore((s) => s.toggleSolvedExercise)
-  const solved = hydrated && isSolved(storageKey)
+  const solved = useAppStore((s) => s.hydrated && s.isExerciseSolved(storageKey))
 
   return (
     <section
