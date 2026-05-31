@@ -61,10 +61,8 @@ export function ExerciseCard({ exercise, repeatedIn }: Props) {
   }
 
   const storageKey = `${PRACTICE_SOLVED_PREFIX}:${exercise.id}`
-  const hydrated = useAppStore((s) => s.hydrated)
-  const isExerciseSolved = useAppStore((s) => s.isExerciseSolved)
   const toggleSolved = useAppStore((s) => s.toggleSolvedExercise)
-  const solved = hydrated && isExerciseSolved(storageKey)
+  const solved = useAppStore((s) => s.hydrated && s.isExerciseSolved(storageKey))
 
   return (
     <article

@@ -18,9 +18,7 @@ type Props = {
  * ExamProblem's "Λυμένο" toggle.
  */
 export function ExerciseProgress({ slug, total, className }: Props) {
-  const hydrated = useAppStore((s) => s.hydrated)
-  const count = useAppStore((s) => s.countSolvedInSlug)
-  const solved = hydrated ? count(slug) : 0
+  const solved = useAppStore((s) => (s.hydrated ? s.countSolvedInSlug(slug) : 0))
   const allDone = solved === total && total > 0
 
   return (

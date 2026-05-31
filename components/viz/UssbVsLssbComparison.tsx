@@ -282,15 +282,6 @@ function drawPanel(
   ctx.fillText('+f_c', xt(FC), yZero + 12)
   ctx.fillText('−f_c', xt(-FC), yZero + 12)
 
-  // Title & subtitle
-  ctx.textAlign = 'left'
-  ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
-  ctx.fillStyle = variant === 'usb' ? COLOR_USB : COLOR_LSB
-  ctx.fillText(title, PAD_X - 6, y0 + 14)
-  ctx.font = '9.5px ui-sans-serif, system-ui, sans-serif'
-  ctx.fillStyle = colors.fgMuted
-  ctx.fillText(subtitle, PAD_X + 30, y0 + 14)
-
   // Draw the spectrum content
   const fill = variant === 'usb' ? FILL_USB : FILL_LSB
   const stroke = variant === 'usb' ? COLOR_USB : COLOR_LSB
@@ -300,6 +291,32 @@ function drawPanel(
   } else {
     drawShapePreset(ctx, xt, yv, variant, fill, stroke, colors)
   }
+
+  // Title & subtitle — drawn AFTER the spectrum so they sit on top of any
+  // overlapping arrows / bandwidth brackets / impulse labels, with a
+  // translucent background mask to keep them legible against the graph.
+  ctx.textAlign = 'left'
+  ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
+  const titleW = ctx.measureText(title).width
+  ctx.font = '9.5px ui-sans-serif, system-ui, sans-serif'
+  const subW = ctx.measureText(subtitle).width
+  const maskW = Math.max(PAD_X + 30 + subW, PAD_X - 6 + titleW) - (PAD_X - 9)
+  ctx.fillStyle = bgMaskColor(colors)
+  ctx.fillRect(PAD_X - 9, y0 + 2, maskW + 6, 18)
+
+  ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
+  ctx.fillStyle = variant === 'usb' ? COLOR_USB : COLOR_LSB
+  ctx.fillText(title, PAD_X - 6, y0 + 14)
+  ctx.font = '9.5px ui-sans-serif, system-ui, sans-serif'
+  ctx.fillStyle = colors.fgMuted
+  ctx.fillText(subtitle, PAD_X + 30, y0 + 14)
+}
+
+function bgMaskColor(colors: ReturnType<typeof getThemeColors>, alpha = 0.92): string {
+  if (!colors) return `rgba(255, 255, 255, ${alpha})`
+  const m = colors.bg.match(/rgb\(\s*(\d+)\s+(\d+)\s+(\d+)\s*\)/)
+  if (!m) return `rgba(255, 255, 255, ${alpha})`
+  return `rgba(${m[1]}, ${m[2]}, ${m[3]}, ${alpha})`
 }
 
 function drawImpulse(

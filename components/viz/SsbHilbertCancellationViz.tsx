@@ -186,14 +186,19 @@ function drawScene(
   drawPanelC(ctx, colors, w, labels[2].y0, panelH, labels[2].title, labels[2].sub, sign)
 }
 
+function bgMaskColor(colors: ReturnType<typeof getThemeColors>, alpha = 0.92): string {
+  if (!colors) return `rgba(255, 255, 255, ${alpha})`
+  const m = colors.bg.match(/rgb\(\s*(\d+)\s+(\d+)\s+(\d+)\s*\)/)
+  if (!m) return `rgba(255, 255, 255, ${alpha})`
+  return `rgba(${m[1]}, ${m[2]}, ${m[3]}, ${alpha})`
+}
+
 function drawAxis(
   ctx: CanvasRenderingContext2D,
   colors: ReturnType<typeof getThemeColors>,
   w: number,
   y0: number,
   ph: number,
-  title: string,
-  sub: string,
 ) {
   if (!colors) return
   const xt = (f: number) => lerp(f, -F_MAX, F_MAX, PAD_X, w - PAD_X)
@@ -232,9 +237,32 @@ function drawAxis(
   ctx.fillText('0', xt(0), yZero + 12)
   ctx.fillText('+f_c', xt(FC), yZero + 12)
   ctx.fillText('−f_c', xt(-FC), yZero + 12)
+}
 
-  // Title + subtitle (top-left of panel)
+function drawPanelLabels(
+  ctx: CanvasRenderingContext2D,
+  colors: ReturnType<typeof getThemeColors>,
+  y0: number,
+  title: string,
+  sub: string,
+) {
+  if (!colors) return
+
   ctx.textAlign = 'left'
+
+  // Measure both lines so we can mask the union
+  ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
+  const titleW = ctx.measureText(title).width
+  ctx.font = '9.5px ui-sans-serif, system-ui, sans-serif'
+  const subW = ctx.measureText(sub).width
+  const maxW = Math.max(titleW, subW)
+
+  // Translucent background mask so graph elements behind don't bleed into the text
+  ctx.fillStyle = bgMaskColor(colors)
+  ctx.fillRect(PAD_X - 9, y0, maxW + 8, 30)
+
+  // Title + subtitle (top-left of panel) — drawn AFTER the spectrum so they
+  // sit on top of any overlapping triangles or annotation labels.
   ctx.fillStyle = colors.fg
   ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
   ctx.fillText(title, PAD_X - 6, y0 + 12)
@@ -281,7 +309,7 @@ function drawPanelA(
   sub: string,
 ) {
   if (!colors) return
-  drawAxis(ctx, colors, w, y0, ph, title, sub)
+  drawAxis(ctx, colors, w, y0, ph)
   const xt = (f: number) => lerp(f, -F_MAX, F_MAX, PAD_X, w - PAD_X)
   const yv = (v: number) => lerp(v, 1.1, -1.1, y0 + 4, y0 + ph - 12)
 
@@ -295,6 +323,8 @@ function drawPanelA(
   ctx.textAlign = 'center'
   ctx.fillText('½', xt(FC), yv(0.5) - 3)
   ctx.fillText('½', xt(-FC), yv(0.5) - 3)
+
+  drawPanelLabels(ctx, colors, y0, title, sub)
 }
 
 function drawPanelB(
@@ -307,7 +337,7 @@ function drawPanelB(
   sub: string,
 ) {
   if (!colors) return
-  drawAxis(ctx, colors, w, y0, ph, title, sub)
+  drawAxis(ctx, colors, w, y0, ph)
   const xt = (f: number) => lerp(f, -F_MAX, F_MAX, PAD_X, w - PAD_X)
   const yv = (v: number) => lerp(v, 1.1, -1.1, y0 + 4, y0 + ph - 12)
 
@@ -332,6 +362,8 @@ function drawPanelB(
   ctx.fillStyle = COLOR_NEG
   ctx.fillText('−½', xt(FC) + 12, yv(-0.5) + 11)
   ctx.fillText('−½', xt(-FC) - 12, yv(-0.5) + 11)
+
+  drawPanelLabels(ctx, colors, y0, title, sub)
 }
 
 function drawPanelC(
@@ -345,7 +377,7 @@ function drawPanelC(
   sign: Sign,
 ) {
   if (!colors) return
-  drawAxis(ctx, colors, w, y0, ph, title, sub)
+  drawAxis(ctx, colors, w, y0, ph)
   const xt = (f: number) => lerp(f, -F_MAX, F_MAX, PAD_X, w - PAD_X)
   const yv = (v: number) => lerp(v, 1.1, -1.1, y0 + 4, y0 + ph - 12)
 
@@ -409,4 +441,6 @@ function drawPanelC(
     ctx.fillText('0 (cancelled)', xt(FC - W * 0.5), yv(0.25))
     ctx.fillText('0 (cancelled)', xt(-FC + W * 0.5), yv(0.25))
   }
+
+  drawPanelLabels(ctx, colors, y0, title, sub)
 }
