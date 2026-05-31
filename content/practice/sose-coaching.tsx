@@ -243,24 +243,48 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'proodos26-9': {
     takeaway: (
       <p>
-        Για να σχεδιάσεις AM tone modulation, ανάλυσε το γινόμενο σε
-        άθροισμα cosines/sines: <InlineMath>{'A_c\\cos\\omega_c t'}</InlineMath>{' '}
-        για το carrier, και product-to-sum για κάθε sideband. Το φάσμα
-        γίνεται impulses στις <InlineMath>{'\\pm f_c'}</InlineMath> και{' '}
-        <InlineMath>{'\\pm f_c \\pm f_m'}</InlineMath>. Αν{' '}
-        <InlineMath>{'m>1'}</InlineMath> πρέπει να σημειώσεις
-        overmodulation — δεν είναι σωστή AM.
+        <strong>Σχεδίασε AM = διάβασε παραμέτρους, έλεγξε{' '}
+        <InlineMath>{'m'}</InlineMath>, μετά δύο σχέδια.</strong> Από το φέρον παίρνεις{' '}
+        <InlineMath>{'A_c, f_c'}</InlineMath>, από το message{' '}
+        <InlineMath>{'A_m, f_m'}</InlineMath>· υπολόγισε{' '}
+        <InlineMath>{'m = A_m/A_c'}</InlineMath> και σύγκρινέ το με το{' '}
+        <InlineMath>{'1'}</InlineMath>. <strong>Χρόνος:</strong> carrier «γεμισμένο» από
+        την περιβάλλουσα <InlineMath>{'A_c + m(t)'}</InlineMath>, με phase reversals{' '}
+        <em>μόνο αν</em> <InlineMath>{'m > 1'}</InlineMath>. <strong>Φάσμα</strong>{' '}
+        (product-to-sum ανά τόνο): carrier στα <InlineMath>{'\\pm f_c'}</InlineMath> ύψους{' '}
+        <InlineMath>{'A_c/2'}</InlineMath> + ένα ζεύγος πλευρικών στα{' '}
+        <InlineMath>{'\\pm(f_c \\pm f_m)'}</InlineMath> ύψους{' '}
+        <InlineMath>{'A_m/4'}</InlineMath>, με <InlineMath>{'BW = 2f_m'}</InlineMath>. Το
+        μοτίβο που κουβαλάς: <strong>η υπερδιαμόρφωση είναι ιστορία του χρόνου — το φάσμα
+        single-tone μένει πάντα carrier + ένα ζεύγος, ό,τι κι αν είναι το{' '}
+        <InlineMath>{'m'}</InlineMath>.</strong>
       </p>
     ),
     examRadar: (
-      <p>
-        «Σχεδιάστε στον χρόνο και στη συχνότητα» → δύο plots, με labels.
-        Στη συχνότητα: ύψος impulse <InlineMath>{'A_c/2'}</InlineMath> για
-        carrier, <InlineMath>{'A_m/4'}</InlineMath> ανά sideband (για
-        single-tone). Πάντα έλεγξε αν{' '}
-        <InlineMath>{'A_m \\le A_c'}</InlineMath> — αν όχι, μάρκαρε
-        overmodulation, μην το αγνοήσεις.
-      </p>
+      <>
+        <p>
+          «Σχεδιάστε το AM στον χρόνο <em>και</em> στη συχνότητα» με single-tone message →
+          δύο καθαρά plots με labels (θέσεις γραμμών, ύψη, BW, σημείωση
+          υπερδιαμόρφωσης). Δεν έχει βαρύ algebra — η αξία είναι στην ακρίβεια του σχεδίου
+          και στη σημαία <InlineMath>{'m > 1'}</InlineMath>. Χρόνος-στόχος:{' '}
+          <strong>~10 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Τέσσερις παγίδες.</strong> (1) <strong>Ξεχνάς τον έλεγχο{' '}
+          <InlineMath>{'m'}</InlineMath> ως προς το <InlineMath>{'1'}</InlineMath>:</strong>{' '}
+          σχεδιάζεις καθαρή θετική περιβάλλουσα ενώ <InlineMath>{'m = 2'}</InlineMath> — χάνεις
+          τις αναστροφές φάσης. Η εξέταση ψαρεύει ακριβώς αυτή τη σημαία. (2){' '}
+          <strong>Νομίζεις ότι η υπερδιαμόρφωση προσθέτει/απλώνει φασματικές γραμμές:</strong>{' '}
+          ΟΧΙ — single tone σημαίνει πάντα carrier + ένα ζεύγος πλευρικών· η υπερδιαμόρφωση
+          φαίνεται μόνο στον χρόνο και στον detector. (3) <strong>«Ο envelope detector
+          δουλεύει» για <InlineMath>{'m = 2'}</InlineMath>:</strong> ΟΧΙ — βγάζει{' '}
+          <InlineMath>{'|1 + 2\\sin(2\\pi t)|'}</InlineMath>, όχι το message (χρειάζεσαι
+          σύμφωνη αποδιαμόρφωση). (4) <strong>Σχεδιάζεις την LSB πιο κοντή</strong> λόγω του
+          προσήμου <InlineMath>{'-'}</InlineMath>: στο φάσμα <em>πλάτους</em> όλα είναι
+          μέτρα — εδώ και τα τρία ζεύγη ίσα στο <InlineMath>{'1/2'}</InlineMath>· το{' '}
+          <InlineMath>{'-'}</InlineMath> είναι λεπτομέρεια φάσης.
+        </div>
+      </>
     ),
   },
 

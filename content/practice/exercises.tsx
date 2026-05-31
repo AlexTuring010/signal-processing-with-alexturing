@@ -23,6 +23,9 @@ import Link from 'next/link'
 import { BlockMath, InlineMath } from '@/components/math'
 import { NoiseFilterShapingViz } from '@/components/viz/NoiseFilterShapingViz'
 import { NonlinearModulatorSpectrumViz } from '@/components/viz/NonlinearModulatorSpectrumViz'
+import { AMSignalViz } from '@/components/viz/AMSignalViz'
+import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
+import { OvermodulationPhaseReversalViz } from '@/components/viz/OvermodulationPhaseReversalViz'
 import type { Exercise } from './types'
 
 export const EXERCISES: Exercise[] = [
@@ -732,52 +735,244 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
+          <span className="text-fg-muted">
+            Το AM σήμα είναι ένα φέρον του οποίου το «ύψος» ακολουθεί την{' '}
+            <strong>περιβάλλουσα</strong> <InlineMath>{'A_c + m(t)'}</InlineMath>. Εδώ ο
+            δείκτης διαμόρφωσης βγαίνει <InlineMath>{'m = A_m/A_c = 2 > 1'}</InlineMath>,
+            άρα η περιβάλλουσα <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath>{' '}
+            <strong>πέφτει κάτω από το μηδέν</strong> σε κάποια διαστήματα. Μια φυσική
+            περιβάλλουσα όμως δεν γίνεται αρνητική — οπότε αυτό που στ' αλήθεια συμβαίνει
+            είναι ότι ο carrier <strong>αναστρέφει τη φάση του κατά{' '}
+            <InlineMath>{'180^\\circ'}</InlineMath></strong> σε κάθε σημείο όπου η
+            περιβάλλουσα μηδενίζεται: αυτές είναι οι <em>phase reversals</em>. Ένας
+            envelope detector τότε ανακτά το <InlineMath>{'|1 + 2\\sin(2\\pi t)|'}</InlineMath>,{' '}
+            <strong>όχι</strong> το message — η κλασική παγίδα της υπερδιαμόρφωσης. Και το
+            κλειδί για το δεύτερο σχέδιο: αφού το message είναι <em>ένας τόνος</em>, το
+            φάσμα μένει <strong>carrier + ΕΝΑ ζεύγος πλευρικών</strong> ό,τι κι αν είναι το{' '}
+            <InlineMath>{'m'}</InlineMath> — η υπερδιαμόρφωση φαίνεται στον <em>χρόνο</em> και
+            στον detector, ΟΧΙ σαν επιπλέον φασματικές γραμμές. (Το «γιατί» ζει στο{' '}
+            <Link
+              href="/am/conventional"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              /am/conventional §3 Υπερδιαμόρφωση
+            </Link>
+            .)
+          </span>
+        </div>
+
         <p>
-          Φέρον: <InlineMath>{'A_c = 1'}</InlineMath>,{' '}
-          <InlineMath>{'f_c = 500'}</InlineMath> Hz. Message:{' '}
-          <InlineMath>{'A_m = 2'}</InlineMath>,{' '}
-          <InlineMath>{'f_m = 1'}</InlineMath> Hz. Δείκτης{' '}
-          <InlineMath>{'m = A_m/A_c = 2 > 1'}</InlineMath>: <strong>υπερδιαμόρφωση</strong>{' '}
-          (το σχεδιάζουμε όπως ζητείται, με την σημείωση).
+          Διαβάζουμε τις παραμέτρους από τα δεδομένα. Φέρον{' '}
+          <InlineMath>{'c(t) = \\cos(1000\\pi t)'}</InlineMath>:{' '}
+          <InlineMath>{'A_c = 1'}</InlineMath> και{' '}
+          <InlineMath>{'2\\pi f_c = 1000\\pi \\Rightarrow f_c = 500'}</InlineMath> Hz.
+          Σήμα πληροφορίας <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>:{' '}
+          <InlineMath>{'A_m = 2'}</InlineMath> και{' '}
+          <InlineMath>{'2\\pi f_m = 2\\pi \\Rightarrow f_m = 1'}</InlineMath> Hz. Το
+          συνολικό σήμα κατά Conventional AM:
         </p>
-        <BlockMath>{'x_{AM}(t) = [1 + 2\\sin(2\\pi t)]\\cos(1000\\pi t)'}</BlockMath>
+        <BlockMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t) = [1 + 2\\sin(2\\pi t)]\\cos(1000\\pi t)'}</BlockMath>
+
         <p>
-          <strong>Στον χρόνο:</strong> carrier στα 500 Hz με περιβάλλουσα{' '}
-          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath>. Επειδή{' '}
-          <InlineMath>{'m>1'}</InlineMath>, η περιβάλλουσα αλλάζει πρόσημο
-          (πέφτει στο −1) — βλέπουμε <em>phase reversals</em> εκεί που η{' '}
-          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath> γίνεται αρνητική.
+          <strong>(1) Ο δείκτης διαμόρφωσης — και ο έλεγχος που δεν παραλείπουμε ποτέ.</strong>{' '}
+          <InlineMath>{'m = A_m/A_c = 2/1 = 2'}</InlineMath>. Επειδή{' '}
+          <InlineMath>{'m > 1'}</InlineMath>, έχουμε <strong>υπερδιαμόρφωση</strong>.
         </p>
         <p>
-          <strong>Στη συχνότητα:</strong> με{' '}
-          <InlineMath>{'2\\sin(2\\pi t)\\cos(1000\\pi t) = \\sin(1002\\pi t) - \\sin(998\\pi t)'}</InlineMath>:
+          <strong>Με απλά λόγια:</strong> πρώτη κίνηση σε κάθε «σχεδιάστε AM» — σύγκρινε το{' '}
+          <InlineMath>{'A_m'}</InlineMath> με το <InlineMath>{'A_c'}</InlineMath>. Εδώ το
+          message είναι διπλάσιο του φέροντος· το σχεδιάζουμε όπως ζητείται, αλλά με ρητή
+          σημείωση ότι αυτό είναι μη-έγκυρη AM (ο φτηνός envelope detector θα σπάσει).
         </p>
-        <BlockMath>{'x_{AM}(t) = \\cos(1000\\pi t) + \\sin(1002\\pi t) - \\sin(998\\pi t)'}</BlockMath>
+
         <p>
-          Άρα το φάσμα είναι <strong>τέσσερα ζεύγη impulses</strong> στις
-          συχνότητες <InlineMath>{'\\pm 499,\\, \\pm 500,\\, \\pm 501'}</InlineMath>{' '}
-          Hz:
+          <strong>(2) Στον χρόνο — η κυματομορφή με τις αναστροφές.</strong> Είναι ένα
+          carrier 500 Hz «γεμισμένο» από την περιβάλλουσα{' '}
+          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath>. Οι αναστροφές φάσης συμβαίνουν
+          ακριβώς εκεί που η περιβάλλουσα μηδενίζεται:
+        </p>
+        <BlockMath>{'1 + 2\\sin(2\\pi t) = 0 \\;\\Rightarrow\\; \\sin(2\\pi t) = -\\tfrac{1}{2}'}</BlockMath>
+        <p>
+          Σε κάθε περίοδο <InlineMath>{'T_m = 1/f_m = 1'}</InlineMath> s αυτό δίνει{' '}
+          <InlineMath>{'t = 7/12'}</InlineMath> s και{' '}
+          <InlineMath>{'t = 11/12'}</InlineMath> s — και ανάμεσά τους η περιβάλλουσα είναι
+          αρνητική (φτάνει το <InlineMath>{'1 - 2 = -1'}</InlineMath> στο{' '}
+          <InlineMath>{'t = 3/4'}</InlineMath> s). <strong>Με απλά λόγια:</strong> σε εκείνο
+          το διάστημα ο carrier «αναποδογυρίζει» — στον oscilloscope το cosine ξαφνικά
+          γυρίζει ανάποδα. Στο σχέδιό σου: ζωγράφισε το carrier με πλάτος{' '}
+          <InlineMath>{'|1 + 2\\sin(2\\pi t)|'}</InlineMath>, και βάλε ένα{' '}
+          <InlineMath>{'180^\\circ'}</InlineMath> flip στα δύο αυτά σημεία.
+        </p>
+
+        <figure className="my-4">
+          <AMSignalViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η πάνω καμπύλη είναι το message + η περιβάλλουσα· η κάτω είναι το ίδιο το AM
+            σήμα. Ο δρομέας είναι ο δείκτης διαμόρφωσης (εδώ γραμμένος{' '}
+            <InlineMath>{'\\mu'}</InlineMath> — ίδιο με το δικό μας{' '}
+            <InlineMath>{'m'}</InlineMath>). <strong>Σύρε τον πάνω από το{' '}
+            <InlineMath>{'1'}</InlineMath></strong> (φτάνει μέχρι{' '}
+            <InlineMath>{'1.6'}</InlineMath> εδώ· το δικό μας πρόβλημα κάθεται ακόμη πιο
+            βαθιά, στο <InlineMath>{'m = 2'}</InlineMath>): οι <span className="text-red-600 dark:text-red-400">κόκκινες ζώνες</span>{' '}
+            δείχνουν πού η περιβάλλουσα πέφτει αρνητική και ο carrier αναστρέφεται — ακριβώς
+            το δικό μας σχέδιο (1). Το viz χρησιμοποιεί <em>cosine</em> message ενώ το δικό
+            μας είναι <em>sine</em>· η δομή (αναστροφές όπου{' '}
+            <InlineMath>{'A_c + m(t) < 0'}</InlineMath>) είναι πανομοιότυπη — αλλάζει μόνο{' '}
+            <em>πού</em> πάνω στον άξονα του χρόνου πέφτουν οι αναστροφές.
+          </figcaption>
+        </figure>
+
+        <p>
+          <strong>(3) Στη συχνότητα — το φάσμα πλάτους.</strong> Αναπτύσσουμε τον όρο του
+          message με ταυτότητα γινομένου-σε-άθροισμα{' '}
+          (<InlineMath>{'2\\sin a\\cos b = \\sin(a{+}b) + \\sin(a{-}b)'}</InlineMath>):
+        </p>
+        <BlockMath>{'2\\sin(2\\pi t)\\cos(1000\\pi t) = \\sin(1002\\pi t) - \\sin(998\\pi t)'}</BlockMath>
+        <BlockMath>{'x_{AM}(t) = \\underbrace{\\cos(1000\\pi t)}_{\\text{carrier}} + \\underbrace{\\sin(1002\\pi t)}_{\\text{USB}} - \\underbrace{\\sin(998\\pi t)}_{\\text{LSB}}'}</BlockMath>
+        <p>
+          Τρεις καθαροί τόνοι ⇒ <strong>τρία ζεύγη impulses</strong> στο φάσμα πλάτους:
         </p>
         <ul className="ml-5 list-disc space-y-1 text-fg-muted">
           <li>
             Carrier στα <InlineMath>{'\\pm 500'}</InlineMath> Hz, μέτρο{' '}
-            <InlineMath>{'1/2'}</InlineMath>.
+            <InlineMath>{'A_c/2 = 1/2'}</InlineMath>.
           </li>
           <li>
             USB στα <InlineMath>{'\\pm 501'}</InlineMath> Hz, μέτρο{' '}
-            <InlineMath>{'1/2'}</InlineMath> (από το{' '}
+            <InlineMath>{'A_m/4 = 1/2'}</InlineMath> (από το{' '}
             <InlineMath>{'\\sin(1002\\pi t)'}</InlineMath>).
           </li>
           <li>
             LSB στα <InlineMath>{'\\pm 499'}</InlineMath> Hz, μέτρο{' '}
-            <InlineMath>{'1/2'}</InlineMath> (από το{' '}
+            <InlineMath>{'A_m/4 = 1/2'}</InlineMath> (από το{' '}
             <InlineMath>{'-\\sin(998\\pi t)'}</InlineMath>).
           </li>
         </ul>
         <p>
-          Bandwidth = <InlineMath>{'2 f_m = 2'}</InlineMath> Hz (από 499 έως
-          501 Hz στο positive side).
+          <strong>Με απλά λόγια:</strong> «φάσμα <em>πλάτους</em>» σημαίνει{' '}
+          <em>μέτρα</em> — και τα τρία impulses ανά πλευρά έχουν ίδιο ύψος{' '}
+          <InlineMath>{'1/2'}</InlineMath> (επειδή τυχαίνει{' '}
+          <InlineMath>{'A_c/2 = A_m/4'}</InlineMath> για{' '}
+          <InlineMath>{'A_c=1, A_m=2'}</InlineMath>). Το πρόσημο{' '}
+          <InlineMath>{'-'}</InlineMath> της LSB (από το{' '}
+          <InlineMath>{'-\\sin(998\\pi t)'}</InlineMath>) είναι λεπτομέρεια{' '}
+          <strong>φάσης</strong>, αόρατη στο φάσμα πλάτους — μην τη σχεδιάσεις πιο κοντή. Το
+          bandwidth είναι <InlineMath>{'2 f_m = 2'}</InlineMath> Hz (από 499 ώς 501 Hz στη
+          θετική πλευρά). Πρόσεξε: η <strong>υπερδιαμόρφωση δεν πρόσθεσε καμία γραμμή</strong> —
+          single tone σημαίνει πάντα carrier + ένα ζεύγος πλευρικών{' '}
+          (<Link
+            href="/am/conventional"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /am/conventional §4 Φάσμα
+          </Link>
+          ).
         </p>
+
+        <figure className="my-4">
+          <AMSpectrumViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η δομή του φάσματος μας: carrier (πορτοκαλί) στα{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath> με ύψος{' '}
+            <InlineMath>{'A_c/2'}</InlineMath>, και δύο πλευρικές (μπλε) στα{' '}
+            <InlineMath>{'\\pm f_c \\pm f_m'}</InlineMath> με ύψος{' '}
+            <InlineMath>{'\\mu A_c/4'}</InlineMath>. Για το δικό μας{' '}
+            <InlineMath>{'m = 2'}</InlineMath> κάθε πλευρική φτάνει{' '}
+            <InlineMath>{'2\\cdot 1/4 = 1/2'}</InlineMath> — <strong>ίσο με το
+            carrier</strong>, άρα και οι τρεις γραμμές ισοϋψείς στο{' '}
+            <InlineMath>{'1/2'}</InlineMath>. Ο δρομέας εδώ φτάνει ώς{' '}
+            <InlineMath>{'\\mu = 1'}</InlineMath> (πλευρικές στο{' '}
+            <InlineMath>{'1/4'}</InlineMath>, μισό του carrier)· νοερά σπρώξ' τον στο{' '}
+            <InlineMath>{'2'}</InlineMath> και δες τις πλευρικές ν' ανεβαίνουν στο ύψος του
+            carrier. Οι <em>θέσεις</em> (carrier + ΕΝΑ ζεύγος) και το{' '}
+            <InlineMath>{'BW = 2f_m'}</InlineMath> είναι ακριβώς το σχέδιό μας (2). Το viz
+            σχεδιάζει μέτρα, οπότε το πρόσημο της LSB δεν φαίνεται — όπως και στο δικό σου
+            φάσμα πλάτους.
+          </figcaption>
+        </figure>
+
+        <p>
+          <strong>Γιατί η υπερδιαμόρφωση είναι «κακή» — δες τι βγάζει ο detector.</strong>{' '}
+          Το σχέδιο (1) δείχνει τις αναστροφές· αλλά το πραγματικό κόστος φαίνεται όταν
+          προσπαθήσεις να ανακτήσεις το message με envelope detector. Αυτός βγάζει το{' '}
+          <InlineMath>{'|1 + 2\\sin(2\\pi t)|'}</InlineMath> — και στα διαστήματα όπου το{' '}
+          <InlineMath>{'1 + 2\\sin(2\\pi t)'}</InlineMath> ήταν αρνητικό, το{' '}
+          <InlineMath>{'|\\cdot|'}</InlineMath> το «αναποδογυρίζει» προς τα πάνω. Το
+          αποτέλεσμα <strong>δεν</strong> είναι το <InlineMath>{'2\\sin(2\\pi t)'}</InlineMath>:
+          αποκτά αιχμές και αρμονικές που <strong>δεν φεύγουν με LPF</strong>.
+        </p>
+
+        <figure className="my-4">
+          <OvermodulationPhaseReversalViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Ο δρομέας εδώ φτάνει <strong>ακριβώς στο{' '}
+            <InlineMath>{'\\mu = 2'}</InlineMath></strong> — το δικό μας πρόβλημα (το chip{' '}
+            <InlineMath>{'\\mu = 1.5'}</InlineMath> είναι κοντά· σύρε ώς το{' '}
+            <InlineMath>{'2'}</InlineMath>). Πάνω: το <InlineMath>{'x(t)'}</InlineMath> με
+            τους κόκκινους <span className="text-red-600 dark:text-red-400">↺</span> δείκτες
+            στις αναστροφές. Μέση: το <InlineMath>{'|A_c + m(t)|'}</InlineMath> που
+            αναδιπλώνεται.
+            Κάτω: η ανακτημένη <InlineMath>{'\\hat{m}(t)'}</InlineMath> (μπλε) διαφέρει από
+            το αληθινό <InlineMath>{'m(t)'}</InlineMath> (πορτοκαλί) — η{' '}
+            <span className="text-red-600 dark:text-red-400">κόκκινη ζώνη</span> είναι η
+            παραμόρφωση. Στα δεξιά ένα RMS-error readout κουμπώνει στο «πόσο σπάει». Γι' αυτό
+            κρατάμε πάντα <InlineMath>{'m \\le 1'}</InlineMath>.
+          </figcaption>
+        </figure>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— όταν δεις «<em>σχεδιάστε το AM σήμα στον χρόνο και στο φάσμα</em>» με
+            single-tone message: <strong>(α)</strong> διάβασε{' '}
+            <InlineMath>{'A_c, f_c'}</InlineMath> από το φέρον και{' '}
+            <InlineMath>{'A_m, f_m'}</InlineMath> από το message· <strong>(β)</strong>{' '}
+            υπολόγισε <InlineMath>{'m = A_m/A_c'}</InlineMath> και{' '}
+            <strong>έλεγξε <InlineMath>{'m'}</InlineMath> ως προς το{' '}
+            <InlineMath>{'1'}</InlineMath></strong> (σημαία υπερδιαμόρφωσης)·{' '}
+            <strong>(γ)</strong> στον χρόνο: carrier «γεμισμένο» από την περιβάλλουσα{' '}
+            <InlineMath>{'A_c + m(t)'}</InlineMath>, με phase reversals <em>μόνο αν</em>{' '}
+            <InlineMath>{'m > 1'}</InlineMath>· <strong>(δ)</strong> στο φάσμα: carrier στα{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath> (ύψος <InlineMath>{'A_c/2'}</InlineMath>) +
+            ΕΝΑ ζεύγος πλευρικών στα <InlineMath>{'\\pm(f_c \\pm f_m)'}</InlineMath> (ύψος{' '}
+            <InlineMath>{'A_m/4'}</InlineMath>). Η μνεία-κλειδί:{' '}
+            <strong>η υπερδιαμόρφωση είναι ιστορία του χρόνου — ποτέ δεν προσθέτει
+            φασματικές γραμμές.</strong>
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted">
+            {' '}— ίδιο σκελετό, αλλαγμένη μία παράμετρος (δοκίμασέ τες σύροντας τους δρομείς
+            παραπάνω):
+          </span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Οριακή <InlineMath>{'m = 1'}</InlineMath></strong> (π.χ.{' '}
+              <InlineMath>{'A_m = 1 = A_c'}</InlineMath>): η περιβάλλουσα{' '}
+              <em>μόλις αγγίζει</em> το μηδέν, καμία αναστροφή ακόμη — το όριο. Σύρε τον{' '}
+              <InlineMath>{'\\mu'}</InlineMath> στο <InlineMath>{'1.0'}</InlineMath> και δες
+              τις κόκκινες ζώνες να εξαφανίζονται.
+            </li>
+            <li>
+              <strong>Κανονική <InlineMath>{'m < 1'}</InlineMath></strong> (π.χ.{' '}
+              <InlineMath>{'A_m = 0.5'}</InlineMath>): η περιβάλλουσα μένει θετική, και ένας
+              envelope detector ανακτά <em>καθαρά</em> το message. Στο τρίτο viz η{' '}
+              <InlineMath>{'\\hat{m}'}</InlineMath> πέφτει πάνω στο{' '}
+              <InlineMath>{'m'}</InlineMath> (RMS error <InlineMath>{'\\to 0'}</InlineMath>).
+            </li>
+            <li>
+              <strong>Message δύο τόνων</strong> (π.χ.{' '}
+              <InlineMath>{'m(t) = 2\\sin(2\\pi t) + \\cos(6\\pi t)'}</InlineMath>): το φάσμα
+              αποκτά <em>δεύτερο</em> ζεύγος πλευρικών στα{' '}
+              <InlineMath>{'\\pm(f_c \\pm 3)'}</InlineMath> Hz — η σκάλα προς το
+              πολυαρμονικό AM. Η μέθοδος (γινόμενο-σε-άθροισμα ανά τόνο) δεν αλλάζει.
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
