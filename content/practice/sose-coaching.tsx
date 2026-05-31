@@ -1332,22 +1332,42 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'pa25-th2-2': {
     takeaway: (
       <p>
-        <InlineMath>{'\\mu = A_m/A_c'}</InlineMath> είναι λόγος{' '}
-        <em>πλατών</em>, όχι πλάτους-προς-συχνότητα. Σε πολλές κυκλοφορούσες
-        λύσεις γίνεται το λάθος{' '}
-        <InlineMath>{'\\mu = A_m/f_c'}</InlineMath> — διαστατικά αδύνατο
-        (πλάτος / συχνότητα). Έλεγξε με sanity check: αν η περιβάλλουσα
-        στο plot πέφτει αρνητική, σίγουρα <InlineMath>{'\\mu > 1'}</InlineMath>.
+        <strong>Σχεδίασε AM = διάβασε παραμέτρους, έλεγξε{' '}
+        <InlineMath>{'\\mu'}</InlineMath>, μετά μία κυματομορφή.</strong> Από το φέρον παίρνεις{' '}
+        <InlineMath>{'A_c, f_c'}</InlineMath>, από το message{' '}
+        <InlineMath>{'A_m, f_m'}</InlineMath>· υπολόγισε{' '}
+        <InlineMath>{'\\mu = A_m/A_c'}</InlineMath> (λόγος <em>πλατών</em>, ποτέ{' '}
+        <InlineMath>{'A_m/f_c'}</InlineMath>) και σύγκρινέ το με το{' '}
+        <InlineMath>{'1'}</InlineMath>. Εδώ <InlineMath>{'\\mu = 2 > 1'}</InlineMath>: σχεδιάζεις
+        φέρον με πλάτος <InlineMath>{'|A_c + m(t)|'}</InlineMath> και αναστροφή φάσης{' '}
+        <InlineMath>{'180^\\circ'}</InlineMath> όπου η περιβάλλουσα μηδενίζεται. Το μοτίβο που
+        κουβαλάς: <strong><InlineMath>{'\\mu > 1'}</InlineMath> ⇒ phase reversals + αποτυχία
+        envelope detector — φαινόμενο αμιγώς του χρόνου.</strong> Sanity check: αν η
+        περιβάλλουσα πέφτει αρνητική, σίγουρα <InlineMath>{'\\mu > 1'}</InlineMath>.
       </p>
     ),
     examRadar: (
-      <p>
-        Όταν σου δίνει AM σήμα και το <InlineMath>{'A_m > A_c'}</InlineMath>,
-        αναμένεται «overmodulation» στην απάντηση + σχεδίαση με phase
-        reversals. Αν στη λύση προκύπτει <InlineMath>{'\\mu < 1'}</InlineMath>{' '}
-        ενώ τα νούμερα δείχνουν αλλιώς, ξανακοίτα τη διαίρεση —
-        πιθανώς διαστατικό λάθος.
-      </p>
+      <>
+        <p>
+          ΘΕΜΑ σύντομης απάντησης «με απαραίτητη την αιτιολόγηση» (5%): ζητά{' '}
+          <em>ένα</em> καθαρό σχέδιο της κυματομορφής με labels — όχι φάσμα, ούτε βαρύ algebra.
+          Η αξία είναι στη σημαία <InlineMath>{'\\mu > 1'}</InlineMath> και στις ορατές
+          αναστροφές. Χρόνος-στόχος: <strong>~5 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Δύο παγίδες.</strong> (1) <strong>Σχεδιάζεις λεία θετική περιβάλλουσα και
+          χάνεις την αναστροφή:</strong> ζωγραφίζεις το{' '}
+          <InlineMath>{'|1 + 2\\sin(2\\pi t)|'}</InlineMath> σαν ομαλό λοβό με carrier ίδιας
+          φάσης παντού — αλλά το εκπεμπόμενο είναι{' '}
+          <InlineMath>{'[1 + 2\\sin(2\\pi t)]\\cos(8\\pi t)'}</InlineMath>, που στο{' '}
+          <InlineMath>{'t \\in [7/12,\\, 11/12]'}</InlineMath> s (όπου η αγκύλη είναι αρνητική)
+          αναστρέφει τον carrier κατά <InlineMath>{'180^\\circ'}</InlineMath>. Χωρίς το flip δεν
+          έδειξες υπερδιαμόρφωση — αυτό ακριβώς ψαρεύει η αιτιολόγηση. (2){' '}
+          <strong>Διαστατικό λάθος στο <InlineMath>{'\\mu'}</InlineMath>:</strong> κυκλοφορούσες
+          λύσεις γράφουν <InlineMath>{'\\mu = A_m/f_c = 2/4 = 1/2'}</InlineMath> (πλάτος διά
+          συχνότητα — αδύνατο). Είναι λόγος πλατών: <InlineMath>{'\\mu = 2'}</InlineMath>.
+        </div>
+      </>
     ),
   },
 
@@ -1530,18 +1550,37 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'pb25-th2-2': {
     takeaway: (
       <p>
-        Ίδιο πρόβλημα με pa25-th2-2:{' '}
-        <InlineMath>{'\\mu = A_m/A_c = 2 > 1'}</InlineMath>, overmodulation,
-        phase reversals ορατά. Η ίδια παγίδα{' '}
-        <InlineMath>{'\\mu = A_m/f_c'}</InlineMath> εμφανίζεται.
+        <strong>Πανομοιότυπο με το ΘΕΜΑ 2.2 της Πρόοδος Α (pa25-th2-2):</strong> ίδιο φέρον,
+        ίδιο message, ίδια απάντηση — αν λύσεις το ένα, ξέρεις και το άλλο. Η συνταγή:{' '}
+        <InlineMath>{'A_c, f_c'}</InlineMath> από το φέρον,{' '}
+        <InlineMath>{'A_m, f_m'}</InlineMath> από το message,{' '}
+        <InlineMath>{'\\mu = A_m/A_c = 2 > 1'}</InlineMath> ⇒ υπερδιαμόρφωση. Σχεδιάζεις φέρον
+        με πλάτος <InlineMath>{'|A_c + m(t)|'}</InlineMath> και αναστροφή φάσης{' '}
+        <InlineMath>{'180^\\circ'}</InlineMath> στους μηδενισμούς της περιβάλλουσας. Το μοτίβο:{' '}
+        <strong><InlineMath>{'\\mu > 1'}</InlineMath> ⇒ phase reversals + envelope detector που
+        αποτυγχάνει — όλα στον χρόνο, τίποτα νέο στο φάσμα.</strong>
       </p>
     ),
     examRadar: (
-      <p>
-        Σχεδόν αυτούσιο πρόβλημα με pa25-th2-2 — αν λύνεις το ένα,
-        ξέρεις και το άλλο. Πάντα έλεγξε <InlineMath>{'A_m'}</InlineMath>{' '}
-        vs <InlineMath>{'A_c'}</InlineMath> πριν υπολογίσεις μ.
-      </p>
+      <>
+        <p>
+          Σύντομη απάντηση «με απαραίτητη την αιτιολόγηση» (5%) — ένα προσεγμένο σχέδιο
+          κυματομορφής με labels, χωρίς φάσμα. Πάντα έλεγξε{' '}
+          <InlineMath>{'A_m'}</InlineMath> vs <InlineMath>{'A_c'}</InlineMath> πριν αποφανθείς
+          για το <InlineMath>{'\\mu'}</InlineMath>. Χρόνος-στόχος: <strong>~5 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Δύο παγίδες.</strong> (1) <strong>Λεία περιβάλλουσα χωρίς αναστροφή:</strong>{' '}
+          σχεδιάζεις το <InlineMath>{'|1 + 2\\sin(2\\pi t)|'}</InlineMath> σαν θετικό λοβό με
+          carrier ίδιας φάσης — αλλά το σωστό{' '}
+          <InlineMath>{'[1 + 2\\sin(2\\pi t)]\\cos(8\\pi t)'}</InlineMath> αναστρέφει τον carrier
+          κατά <InlineMath>{'180^\\circ'}</InlineMath> στο{' '}
+          <InlineMath>{'t \\in [7/12,\\, 11/12]'}</InlineMath> s. Χωρίς αυτό, το σχέδιο δεν
+          δείχνει υπερδιαμόρφωση. (2) <strong><InlineMath>{'\\mu = A_m/f_c'}</InlineMath>:</strong>{' '}
+          το <InlineMath>{'\\mu = 2/4 = 1/2'}</InlineMath> που κυκλοφορεί είναι διαστατικά λάθος
+          (πλάτος διά συχνότητα). Σωστό: <InlineMath>{'\\mu = A_m/A_c = 2'}</InlineMath>.
+        </div>
+      </>
     ),
   },
 
