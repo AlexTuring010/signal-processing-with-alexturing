@@ -469,6 +469,13 @@ $$
 
 **Πότε το πιάνεις στις εξετάσεις:** μόλις δεις «βρείτε την ισχύ του $A\cos(2\pi f_1 t) + B\sin(2\pi f_2 t) + C\cos(2\pi f_3 t)$» με **διαφορετικές** συχνότητες, **μην** υψώνεις στο τετράγωνο και ολοκληρώνεις — απλώς πρόσθεσε $\tfrac{A^2}{2} + \tfrac{B^2}{2} + \tfrac{C^2}{2}$. (Μία μόνο παγίδα: αν δύο όροι έχουν την **ίδια** συχνότητα, πρώτα ένωσέ τους σε έναν cosine, αλλιώς δεν είναι ορθογώνιοι και ο κανόνας «οι ισχύες προστίθενται» δεν ισχύει.)
 
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+  Ο τύπος ισχύος periodic σήματος $P_x = A_0^2 + \sum_{k=1}^{\infty} A_k^2/2 = \sum_k |a_k|^2$ **δεν δίνεται στο τυπολόγιο** (θεώρημα Parseval σειρών Fourier). Εμφανίστηκε σε **4** παλιά θέματα. Βλ.{' '}
+  <Link href="/practice#exercise:jan26-th2-9" className="text-accent underline-offset-2 hover:underline">Ιαν. 2026 ΘΕΜΑ 2.9</Link>,{' '}
+  <Link href="/practice#exercise:pa25-th2-4" className="text-accent underline-offset-2 hover:underline">Πρόοδ. Α 2025 ΘΕΜΑ 2.4</Link>,{' '}
+  <Link href="/practice#exercise:proodos26-10" className="text-accent underline-offset-2 hover:underline">Πρόοδ. Απρ. 2026 ΘΕΜΑ 10</Link>.
+</Callout>
+
 ## Παράδειγμα: rectangular pulse train (η εμφάνιση του sinc)
 
 Αρκετή θεωρία — ώρα για έναν συγκεκριμένο υπολογισμό. Στο slide 9 του session 5&6 αυτή η περίπτωση λύνεται ως «**Παράδειγμα 1 (2.10 του βιβλίου)**». Ας υπολογίσουμε τη σειρά Fourier ενός **τετραγωνικού παλμικού σήματος** (square wave 50% duty cycle):
@@ -577,6 +584,15 @@ $$
 - **$a_k = 0$ για άρτιο $k \neq 0$**, γιατί το $\mathrm{sinc}$ μηδενίζεται σε ακέραια non-zero values. Δηλαδή ο τετραγωνικός παλμός 50% **δεν περιέχει** καθόλου άρτιες αρμονικές.
 - **$|a_k|$ φθίνει σαν $1/k$** για περιττά $k$. Οι αρμονικές γίνονται πιο αδύνατες όσο αυξάνεται η συχνότητα. Η περιβάλλουσα του φάσματος είναι το $\mathrm{sinc}$.
 - **Στις άρτιες $k$ η φάση δεν ορίζεται.** Όπου $|a_k| = 0$, η γωνία $\angle a_k$ είναι μη-καθορισμένη (καμία φασματική γραμμή για να της δώσεις φάση). Το slide 10 του session 5&6 το σημειώνει ρητά («**Φάσμα φάσης δεν ορίζεται για 2kf**»). Στην πράξη το αφήνεις κενό ή σχεδιάζεις μόνο τις θέσεις όπου υπάρχει μη-μηδενικό πλάτος.
+
+<Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
+  **Η γενική μορφή** για περιοδικό παλμό πλάτους $A$, διάρκειας $\tau$, περιόδου $T_0$:
+  $$a_k = \frac{A\tau}{T_0}\,\mathrm{sinc}(k f_0\tau)$$
+  **δεν δίνεται στο τυπολόγιο.** Προσοχή: το ζεύγος FT $\Pi(t/\tau) \leftrightarrow \tau\,\mathrm{sinc}(f\tau)$ *δίνεται* — αλλά αυτοί οι **FS συντελεστές** (αριθμητής $A\tau/T_0$, sinc argument $kf_0\tau$) **ΔΕΝ δίνονται**. Εμφανίστηκε σε **4** παλιά θέματα. Βλ.{' '}
+  <Link href="/practice#exercise:jun25-th1-5" className="text-accent underline-offset-2 hover:underline">Εξ. Ιουν. 2025 ΘΕΜΑ 1.5</Link>,{' '}
+  <Link href="/practice#exercise:jun25-th1-8" className="text-accent underline-offset-2 hover:underline">Εξ. Ιουν. 2025 ΘΕΜΑ 1.8</Link>,{' '}
+  <Link href="/practice#exercise:jan26-th1-4" className="text-accent underline-offset-2 hover:underline">Ιαν. 2026 ΘΕΜΑ 1.4</Link>.
+</Callout>
 
 <RectangularPulseFourier />
 

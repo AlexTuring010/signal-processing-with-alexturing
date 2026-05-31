@@ -791,6 +791,37 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-transform', 'foundations/signals'],
     formulaIds: ['fourier-pair-rect', 'fourier-pair-sin', 'parseval-power'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος ισχύος από Parseval FS{' '}
+        <InlineMath>{'P = A_0^2 + \\sum_k A_k^2/2'}</InlineMath>{' '}
+        (parseval-power, βάρος <strong>4</strong>) — χρησιμοποιείται εδώ για να αθροίσεις
+        ισχύ sin-term (<InlineMath>{'P = 1/2'}</InlineMath>, cos-power-half) + ισχύ sinc-term
+        (<InlineMath>{'P = 0'}</InlineMath>, energy signal). Και ο τύπος{' '}
+        <InlineMath>{'P = A^2/2'}</InlineMath>{' '}
+        ανά τόνο (cos-power-half, βάρος 6) επίσης λείπει. Εμφανίστηκε σε{' '}
+        <strong>4</strong> παλιά θέματα. Βλ.{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.9
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pa25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 2.4
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:pb25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 2.4
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Έστω σήμα βασικής ζώνης{' '}
@@ -2607,6 +2638,35 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
     formulaIds: ['fourier-series-rect-pulse'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος FS συντελεστών περιοδικού παλμού{' '}
+        <InlineMath>{'a_k = (A\\tau/T_0)\\,\\mathrm{sinc}(k f_0 \\tau)'}</InlineMath>{' '}
+        (fourier-series-rect-pulse, βάρος <strong>4</strong>). Το ζεύγος FT{' '}
+        <InlineMath>{'\\Pi(t/\\tau) \\leftrightarrow \\tau\\,\\mathrm{sinc}(f\\tau)'}</InlineMath>{' '}
+        δίνεται στο τυπολόγιο — αλλά αυτοί οι FS συντελεστές ΔΕΝ δίνονται.
+        Εμφανίστηκε σε <strong>4</strong> παλιά θέματα. Βλ.{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-5"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.5
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-6"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.6
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-8"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.8
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σ/Λ: Η περιβάλλουσα του φάσματος πλάτους του Μ/Σ Fourier ενός
@@ -2879,7 +2939,11 @@ export const EXERCISES: Exercise[] = [
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Β 2025 ΘΕΜΑ 1.2
-        </Link>.
+        </Link>.{' '}
+        Επίσης: ο τύπος{' '}
+        <InlineMath>{'P = \\sum_k A_k^2/2'}</InlineMath>{' '}
+        (Parseval FS, parseval-power, βάρος <strong>4</strong>) επίσης λείπει — είναι το
+        θεώρημα που δικαιολογεί αυτήν ακριβώς την πρόσθεση ισχύων ανά τόνο.
       </>
     ),
     statement: (
@@ -3273,6 +3337,35 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
     formulaIds: ['fourier-series-rect-pulse'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος FS συντελεστών περιοδικού παλμού{' '}
+        <InlineMath>{'a_k = (A\\tau/T_0)\\,\\mathrm{sinc}(k f_0 \\tau)'}</InlineMath>{' '}
+        (fourier-series-rect-pulse, βάρος <strong>4</strong>). Το ζεύγος FT{' '}
+        <InlineMath>{'\\Pi(t/\\tau) \\leftrightarrow \\tau\\,\\mathrm{sinc}(f\\tau)'}</InlineMath>{' '}
+        δίνεται στο τυπολόγιο — αλλά αυτοί οι FS συντελεστές ΔΕΝ δίνονται.
+        Εμφανίστηκε σε <strong>4</strong> παλιά θέματα. Βλ.{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-6"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.6
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-8"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.8
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.4
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Σχεδιάστε (1) το σήμα στον χρόνο και (2) το φάσμα πλάτους ενός
@@ -3311,6 +3404,35 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
     formulaIds: ['fourier-series-rect-pulse'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος FS συντελεστών περιοδικού παλμού{' '}
+        <InlineMath>{'a_k = (A\\tau/T_0)\\,\\mathrm{sinc}(k f_0 \\tau)'}</InlineMath>{' '}
+        (fourier-series-rect-pulse, βάρος <strong>4</strong>). Το ζεύγος FT{' '}
+        <InlineMath>{'\\Pi(t/\\tau) \\leftrightarrow \\tau\\,\\mathrm{sinc}(f\\tau)'}</InlineMath>{' '}
+        δίνεται στο τυπολόγιο — αλλά αυτοί οι FS συντελεστές ΔΕΝ δίνονται.
+        Εμφανίστηκε σε <strong>4</strong> παλιά θέματα. Βλ.{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-5"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.5
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-8"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.8
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.4
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Στο προηγούμενο παράδειγμα, τι θα συμβεί στο φάσμα αν το χρονικό
@@ -3398,6 +3520,35 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'medium',
     prerequisites: ['foundations/fourier-series'],
     formulaIds: ['fourier-series-rect-pulse'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο τύπος FS συντελεστών περιοδικού παλμού{' '}
+        <InlineMath>{'a_k = (A\\tau/T_0)\\,\\mathrm{sinc}(k f_0 \\tau)'}</InlineMath>{' '}
+        (fourier-series-rect-pulse, βάρος <strong>4</strong>). Το ζεύγος FT{' '}
+        <InlineMath>{'\\Pi(t/\\tau) \\leftrightarrow \\tau\\,\\mathrm{sinc}(f\\tau)'}</InlineMath>{' '}
+        δίνεται στο τυπολόγιο — αλλά αυτοί οι FS συντελεστές ΔΕΝ δίνονται.
+        Εμφανίστηκε σε <strong>4</strong> παλιά θέματα. Βλ.{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-5"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.5
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-6"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Εξ. Ιουν. 2025 ΘΕΜΑ 1.6
+        </Link>,{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.4
+        </Link>.
+      </>
+    ),
     statement: (
       <p>
         Στο προηγούμενο, πόσο πρέπει να ισούνται οι συντελεστές{' '}
@@ -3645,7 +3796,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/conventional', 'am/modulator-demodulator'],
-    formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect', 'fdm-spacing', 'signal-energy'],
+    formulaIds: ['dsb-sc-signal', 'am-signal', 'fourier-pair-rect', 'fdm-spacing', 'signal-energy', 'parseval'],
     memorizationNote: (
       <>
         <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
@@ -3680,7 +3831,14 @@ export const EXERCISES: Exercise[] = [
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Β 2025 ΘΕΜΑ 4
-        </Link>.
+        </Link>.{' '}
+        Τέλος: ο τύπος Parseval{' '}
+        <InlineMath>{'\\int |x|^2\\,dt = \\int |X|^2\\,df'}</InlineMath>{' '}
+        (parseval, βάρος <strong>1</strong>, δεν δίνεται στο τυπολόγιο — το τυπολόγιο
+        έχει μόνο Hilbert energy equality) — χρησιμοποιείται στο sub-q (4) για τον
+        υπολογισμό ενέργειας του{' '}
+        <InlineMath>{'\\mathrm{sinc}(Wt)'}</InlineMath>{' '}
+        μέσω του rect spectrum.
       </>
     ),
     statement: (
@@ -4264,7 +4422,11 @@ export const EXERCISES: Exercise[] = [
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Β 2025 ΘΕΜΑ 1.2
-        </Link>.
+        </Link>.{' '}
+        Επίσης: ο τύπος{' '}
+        <InlineMath>{'P = \\sum_k A_k^2/2'}</InlineMath>{' '}
+        (Parseval FS, parseval-power, βάρος <strong>4</strong>) επίσης λείπει — είναι το
+        θεώρημα που δικαιολογεί αυτήν ακριβώς την πρόσθεση ισχύων ανά τόνο.
       </>
     ),
     statement: <p>Έστω σήμα <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με <InlineMath>{'f_1 \\neq f_2 \\neq f_3'}</InlineMath>. Ισχύς;</p>,
@@ -4777,7 +4939,11 @@ export const EXERCISES: Exercise[] = [
           className="text-accent underline-offset-2 hover:underline"
         >
           Πρόοδ. Β 2025 ΘΕΜΑ 1.2
-        </Link>.
+        </Link>.{' '}
+        Επίσης: ο τύπος{' '}
+        <InlineMath>{'P = \\sum_k A_k^2/2'}</InlineMath>{' '}
+        (Parseval FS, parseval-power, βάρος <strong>4</strong>) επίσης λείπει — είναι το
+        θεώρημα που δικαιολογεί αυτήν ακριβώς την πρόσθεση ισχύων ανά τόνο.
       </>
     ),
     statement: <p>Έστω <InlineMath>{'x(t) = A\\sin(2\\pi f_1 t) + B\\cos(2\\pi f_2 t) + C\\cos(2\\pi f_3 t)'}</InlineMath> με όλες τις f διαφορετικές. Ισχύς;</p>,

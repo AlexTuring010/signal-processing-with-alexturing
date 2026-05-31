@@ -67,7 +67,8 @@ consistent. **This file is the planning/working log, not the rendered source.**
 | C | Noise — bundle #3 (`wiener-khinchin`·3) | placement-(a) `randomness/psd` §2 warning callout + placement-(b) 3 cards extended + placement-(c) by-derivation (getCitedExercises=3) | **DONE** — step `mustlearn-passc-noise-wiener-khinchin-bundle` |
 | C | Noise — bundle #4 (`thermal-noise`·2 + `N₀≈−174`·2 PAGE-ONLY) | placement-(a) `noise/sources` §5 warning callout + §8 −174 callout; placement-(b) 2 card notes extended (thermal triple); placement-(c) getCitedExercises=2 ✓; formulas.tsx thermal-noise row annotated with −174 | **DONE** — step `mustlearn-passc-noise-thermal-bundle` |
 | C | Foundations — batch 1 (`cos-power-half`·6, `signal-energy`·2; weight-0 callouts: `signal-power`, `iq-decomposition`, `even-odd-decomposition`) | placement-(a) 5 callouts on `foundations/signals`; placement-(b) 6 cards for cos-power-half (3 T/F tagged + 3 power-sum memorizationNote added) + 2 cards for signal-energy (formulaIds + note extended); placement-(c) by-derivation ✓; §3B corrected cos-power-half weight 3→6 | **DONE** — step `mustlearn-passc-foundations-signals`; getCitedExercises('cos-power-half')=6, getCitedExercises('signal-energy')=2 |
-| C | Remaining chapters (Foundations/Fourier/LTI, Randomness, …) | per-placement | TODO |
+| C | Foundations — batch 2 (`parseval-power`·4, `fourier-series-rect-pulse`·4, `parseval`·1) | placement-(a) warning callout on `foundations/fourier-series` §Parseval + §rect-pulse example; warning callout on `foundations/fourier-transform` §9; placement-(b) proodos26-10 note added; jan26-th2-9/pa25-th2-4/pb25-th2-4 notes extended; all 4 fourier-series-rect-pulse cards noted; jun25-th2 `parseval` tagged + note extended; placement-(c) by-derivation ✓ (all 3 have `derivedIn` set) | **DONE** — step `mustlearn-passc-foundations-fourier-lti`; getCitedExercises('parseval-power')=4, getCitedExercises('fourier-series-rect-pulse')=4, getCitedExercises('parseval')=1 |
+| C | Remaining chapters (Randomness, LTI systems formulas) | per-placement | TODO |
 
 ---
 
@@ -2005,11 +2006,11 @@ All six theory exam sessions in `past_exams/` were visually audited for foundati
 
 **Structural finding:** Foundations content appears in **5 of 6 exam sessions** (only September 2025 is all AM/FM/noise). June 2025 concentrates the most — its entire ΘΕΜΑ 1 (50 pts) covers foundations + noise. The §3 split holds across all sessions: **Fourier pairs/properties dominate (on-sheet, no must-learn callout needed)**; **Fourier series formulas, power/energy, and Parseval are the must-learn core and recur consistently**.
 
-**Must-learn tagging gaps discovered during Pass B (for Pass C):**
-- `cos-power-half` (P = A²/2) is the key formula in 3 exercises but **untagged in all 3** (no formulaIds on the T/F problems).
-- `fourier-series-rect-pulse` is the key formula in 4 exercises but **none tag it** — all tag `fourier-pair-rect` (on-sheet) instead.
-- `signal-energy` (E = ∫\|x\|² dt) is an untagged key step in `pb25-th4-nonlinear` sub-q 1 and `jun25-th2` sub-q 4.
-- `parseval` (∫\|x\|² dt = ∫\|X\|² df) is untagged in `jun25-th2` sub-q 4.
+**Must-learn tagging gaps discovered during Pass B (for Pass C) — all FIXED:**
+- `cos-power-half` (P = A²/2): was untagged in 3 T/F exercises → **FIXED** in `mustlearn-passc-foundations-signals` (T/F cards tagged; all 6 power-sum + T/F cards have memorizationNote; weight corrected 3→6).
+- `fourier-series-rect-pulse`: all 4 exercises wrongly tagged `fourier-pair-rect` → **FIXED** in `mustlearn-passc-tagging-corrections` (tagging) + `mustlearn-passc-foundations-fourier-lti` (memorizationNote on all 4 + theory callout).
+- `signal-energy` (E = ∫\|x\|² dt): untagged in `pb25-th4-nonlinear` + `jun25-th2` → **FIXED** in `mustlearn-passc-foundations-signals` (both cards tagged + noted).
+- `parseval` (∫\|x\|² dt = ∫\|X\|² df): untagged in `jun25-th2` → **FIXED** in `mustlearn-passc-foundations-fourier-lti` (`jun25-th2` tagged + noted; theory callout on fourier-transform §9).
 
 ---
 
@@ -2041,7 +2042,7 @@ All six theory exam sessions in `past_exams/` were visually audited for foundati
 | `jun25-th1-8` | Εξέταση Ιουνίου 2025 · ΘΕΜΑ 1.8 | "What should Aₖ be for x(t) to describe a periodic rect-pulse train?": answer Aₖ = (2Aτ/T)·sinc(kf₀τ) (single-sided form) |
 | `jan26-th1-4` | Επι-πτυχίο Ιανουαρίου 2026 · ΘΕΜΑ 1.4 | T/F: "FS envelope of τ=1s rect is narrower than τ=0.1s" — ΛΑΘΟΣ; requires knowing sinc envelope width = 1/τ (inverse time-BW) from the aₖ sinc shape |
 
-**Tagging gap (HIGH priority for Pass C):** All 4 exercises tag `fourier-pair-rect` (on-sheet FT pair) instead of `fourier-series-rect-pulse` (must-learn FS formula). These problems are **Fourier series** computations, not FT applications. Pass C must fix all 4 formulaId arrays and add the must-learn callout.
+**Pass C status:** Tagging fixed in `mustlearn-passc-tagging-corrections` (all 4 now have `fourier-series-rect-pulse` in formulaIds). memorizationNote added to all 4 cards + theory callout added to `foundations/fourier-series` §rect-pulse example in `mustlearn-passc-foundations-fourier-lti`. getCitedExercises('fourier-series-rect-pulse')=4. DONE.
 
 ---
 
@@ -2125,11 +2126,11 @@ All six theory exam sessions in `past_exams/` were visually audited for foundati
 
 | Rank | Formula | formulaId | Weight | Pass C priority |
 | --- | --- | --- | --- | --- |
-| 1 | P = Σ Aₖ²/2 (power of sum of orthogonal tones) | `parseval-power` | **4** | HIGH — 4 exam sessions; callout absent; untagged in 3 of 4 exercises |
-| 1 | aₖ = (Aτ/T₀)sinc(kf₀τ) (FS rect-pulse coefficients) | `fourier-series-rect-pulse` | **4** | HIGH — 4 exercises; zero proper tagging; all wrongly tagged `fourier-pair-rect` (on-sheet) |
+| 1 | P = Σ Aₖ²/2 (power of sum of orthogonal tones) | `parseval-power` | **4** | **PASS-C DONE** — theory callout on fourier-series §Parseval; proodos26-10 note added; power-sum trio notes extended; getCitedExercises=4 |
+| 1 | aₖ = (Aτ/T₀)sinc(kf₀τ) (FS rect-pulse coefficients) | `fourier-series-rect-pulse` | **4** | **PASS-C DONE** — theory callout on fourier-series §rect-pulse; all 4 cards memorizationNote added; tagging fixed in prior step; getCitedExercises=4 |
 | 3 | P = A²/2 (power of sinusoid) | `cos-power-half` | **6** (corrected; 3 T/F + 3 power-sum) | **PASS-C DONE** — all 6 cards tagged + theory callout; getCitedExercises=6 |
 | 4 | E_x = ∫\|x(t)\|² dt (signal energy) | `signal-energy` | **2** | **PASS-C DONE** — both cards tagged + theory callout; getCitedExercises=2 |
-| 5 | ∫\|x\|²dt = ∫\|X\|²df (general Parseval) | `parseval` | **1** | MEDIUM — co-appears with `signal-energy`; untagged in `jun25-th2` |
+| 5 | ∫\|x\|²dt = ∫\|X\|²df (general Parseval) | `parseval` | **1** | **PASS-C DONE** — theory callout on fourier-transform §9; jun25-th2 tagged + note extended; getCitedExercises=1 |
 | 6 | All FS structural formulas (synthesis, analysis-general, orthogonality, conjugate-sym., bₖ=H·aₖ) | various | **0** | MEDIUM — entire FS chapter is off-sheet; callouts needed on `foundations/fourier-series` theory page |
 | 6 | All LTI systems formulas (convolution-def, freq-response, eigenfunction, BIBO) | various | **0** | MEDIUM — all must-learn; zero direct weight; invoked via AM/FM/noise chapters |
 | 6 | dB gain: 20·log₁₀\|H(f)\| | `filter-gain-db` (formulas.tsx L724, weight 0) | **0** | LOWER — only in inline ExamProblem on filters page; no standalone past-exam exercise; wire must-learn flag in Pass C |
@@ -2411,7 +2412,7 @@ Per step specification — these §7 formulas were already counted in §2B (nois
 - **Pass B — NOISE weighting DONE** (`mustlearn-passb-noise-formulas`) — results in §2B. Highest-weight: `white-noise-psd` + bandlimited P_N = N₀B (weight 5 each), `lti-output-psd` + `wiener-khinchin` (weight 3 each). Zero-weight: `bandpass-noise-r`, `noise-figure`, `fm-noise-output-psd`.
 - **Pass B — AM weighting DONE** (`mustlearn-passb-am-formulas`) — results in §6B. Highest-weight: `am-signal` (17), `am-mu` (8), `ssb-signal` (6), `dsb-sc-signal` (5), `am-spectrum`/`am-power`/`fdm-spacing` (4 each). Key finding: `fdm-spacing` untagged in all 4 multiplexing exercises; `dsb-sc-phase-error` needs a new formulaId. Zero-weight: `ssb-power`, all VSB formulas.
 - **Pass B — FM weighting DONE** (`mustlearn-passb-fm-formulas`) — results in §8B. Highest-weight: `fm-beta` + `carson` (weight 6 each — tied; tested in all 3 final-exam sessions); `fm-bessel-sidebands` + `fm-bessel-property` (weight 3 each); `fm-single-tone` + `fm-power` (weight 2 each). FM problems appear only in final exams (not midterms). Zero-weight: `pm-signal`, `fm-bessel-expansion`, `fm-noise-output-psd`, `fm-threshold`. `fm-snr-out`/`fm-gain-am`/`fm-snr-ref` weight 1 each (cross-topic, from §2B).
-- **Pass B — FOUNDATIONS weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §3B. Highest-weight: `parseval-power` + `fourier-series-rect-pulse` (weight 4 each — tied; both appear across 4 exam sessions); `cos-power-half` (3); `signal-energy` (2); `parseval` (1). All four are untagged or wrongly tagged in exercises.tsx — a comprehensive Pass C tagging sweep is needed. Zero-weight: all LTI systems formulas, all FS structural formulas, dB gain.
+- **Pass B — FOUNDATIONS weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §3B. Highest-weight: `parseval-power` + `fourier-series-rect-pulse` (weight 4 each — tied; both appear across 4 exam sessions); `cos-power-half` (**6** — corrected from initial 3; 3 T/F + 3 power-sum); `signal-energy` (2); `parseval` (1). **Pass C batch 1 DONE** (`cos-power-half`·6, `signal-energy`·2). **Pass C batch 2 DONE** (`parseval-power`·4, `fourier-series-rect-pulse`·4, `parseval`·1). Zero-weight: all LTI systems formulas, all FS structural formulas, dB gain.
 - **Pass B — RANDOMNESS/WHY weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §4B. All formulas weight 0 from the past-exam bank (only lecture exercises exist for this chapter). Vocabulary must-learns (`random-mean`, `random-autocorr`, `wss`) need theory-page callouts; low badge priority.
 - **Pass B — MODULATION BRIDGE weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §5B. All bridge-specific formulas weight 0 (pre-envelope, complex envelope, bandpass spectrum, I/Q canonical not standalone-tested). Exam weight for I/Q already counted via AM/FM/noise chapters. Fix F7 inverse error (line 275) in Pass C.
 - **Pass B — RANDOMNESS/PSD + REMAINING RANDOMNESS weighting DONE** (`mustlearn-passb-foundations-randomness-formulas`) — results in §7B. `wiener-khinchin` + `lti-output-psd` cross-reference §2B (weight 3 each, no additional exercises). All remaining randomness formulas weight 0 from past-exam bank (lecture-only exercises; inline ExamProblems not in standalone bank). Critical Pass C items: fix "✓ μέσω WK" ambiguous labels on psd page; fix F13 exponential pair inverse error; add `fourier-pair-exp` formulaId.
