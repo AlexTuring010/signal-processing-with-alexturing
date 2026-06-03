@@ -10,7 +10,7 @@ import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
  * finite number. Used inside the energy worked example on /foundations/signals.
  */
 
-type Kind = 'exp' | 'rect' | 'cos' | 'ramp'
+type Kind = 'exp' | 'expA' | 'rect' | 'cos' | 'ramp'
 
 type Config = {
   /** The signal x(t). */
@@ -44,6 +44,23 @@ const CONFIGS: Record<Kind, Config> = {
     caption:
       'x(t) = e⁻ᵗ u(t): η ουρά σβήνει στο 0, οπότε το πράσινο εμβαδόν (το ∫|x|²) σταματάει να μεγαλώνει — η ενέργεια είναι πεπερασμένη.',
     ariaLabel: 'Decaying exponential with the shaded finite energy area under |x|²',
+  },
+  expA: {
+    x: (t) => (t >= 0 ? Math.exp(-0.7 * t) : 0),
+    xRange: [-1, 5],
+    yRange: [-0.12, 1.12],
+    xMarks: [
+      { x: 0, label: '0' },
+      { x: 1, label: '1' },
+      { x: 2, label: '2' },
+      { x: 3, label: '3' },
+      { x: 4, label: '4' },
+    ],
+    energyAt: { x: 0.9, y: 0.16 },
+    energyText: 'E = A²/2α',
+    caption:
+      'x(t) = A e^(−αt) u(t): ανάβει στο t=0 και μετά σβήνει εκθετικά. Ό,τι κι αν βάλεις για A, α (>0), η ουρά πέφτει στο 0 → το πράσινο εμβαδόν (∫|x|²) μένει πεπερασμένο → σήμα ενέργειας. Το A²/2α λέει απλώς «πόσο».',
+    ariaLabel: 'General decaying exponential with the shaded finite energy area under |x|²',
   },
   rect: {
     x: (t) => (Math.abs(t) <= 1 ? 1 : 0),
