@@ -27,6 +27,7 @@ import { DuplexAnimation } from '@/components/viz/DuplexAnimation'
 import { RoadmapGrid } from '@/components/viz/RoadmapGrid'
 import { EverydaySignals } from '@/components/viz/EverydaySignals'
 import { ContinuousVsDiscreteDemo } from '@/components/viz/ContinuousVsDiscreteDemo'
+import { StaircaseHoldDemo } from '@/components/viz/StaircaseHoldDemo'
 import { FourQuadrantSignalDemo } from '@/components/viz/FourQuadrantSignalDemo'
 import { CosineExplorer } from '@/components/viz/CosineExplorer'
 import { RotatingPhasor } from '@/components/viz/RotatingPhasor'
@@ -208,6 +209,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — foundations / signals
     EverydaySignals,
     ContinuousVsDiscreteDemo,
+    StaircaseHoldDemo,
     FourQuadrantSignalDemo,
     CosineExplorer,
     RotatingPhasor,
