@@ -173,11 +173,16 @@ function draw(
   ctx.fill()
   ctx.globalAlpha = 1
 
-  // |x|² boundary curve (green).
-  drawCurve(ctx, sq, N, x0r, x1r, px, py, h, colors.success, 1.5)
+  // x(t) — faint dashed reference, drawn behind (the original signal).
+  ctx.save()
+  ctx.setLineDash([4, 3])
+  ctx.globalAlpha = 0.5
+  drawCurve(ctx, cfg.x, N, x0r, x1r, px, py, h, colors.accent, 1.25)
+  ctx.restore()
 
-  // x(t) on top (accent) — the signal itself.
-  drawCurve(ctx, cfg.x, N, x0r, x1r, px, py, h, colors.accent, 2)
+  // |x|² — solid and prominent: it is the TOP edge of the shaded area, so the
+  // green sits exactly under this curve (energy = area under |x|², not under x).
+  drawCurve(ctx, sq, N, x0r, x1r, px, py, h, colors.success, 2)
 
   // x-axis ticks + labels.
   ctx.fillStyle = colors.fgSubtle
@@ -216,8 +221,8 @@ function draw(
   ctx.globalAlpha = 1
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  legendRow(ctx, lgX, padTop + 6, colors.accent, 'x(t)', colors.fg)
-  legendRow(ctx, lgX, padTop + 20, colors.success, '|x(t)|²', colors.fg)
+  legendRow(ctx, lgX, padTop + 6, colors.success, '|x(t)|²', colors.fg, false)
+  legendRow(ctx, lgX, padTop + 20, colors.accent, 'x(t)', colors.fg, true)
 }
 
 function drawCurve(
@@ -262,13 +267,17 @@ function legendRow(
   swatch: string,
   label: string,
   textColor: string,
+  dashed: boolean,
 ) {
+  ctx.save()
   ctx.strokeStyle = swatch
   ctx.lineWidth = 2
+  if (dashed) ctx.setLineDash([4, 3])
   ctx.beginPath()
   ctx.moveTo(x, y)
   ctx.lineTo(x + 16, y)
   ctx.stroke()
+  ctx.restore()
   ctx.fillStyle = textColor
   ctx.fillText(label, x + 21, y + 3)
 }
