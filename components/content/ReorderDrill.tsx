@@ -44,9 +44,9 @@ function seededShuffle(n: number, seedInput: number): number[] {
 type Saved = { order?: number[]; passed?: boolean }
 
 /**
- * Ανακάλεσε — drag-to-order drill. Steps are presented shuffled; the student
- * uses ↑/↓ buttons to reorder (more reliable on mobile than HTML5 DnD), then
- * checks. Passed state persists per-page-per-id.
+ * Ανακάλεσε — order-the-steps drill. Steps are presented shuffled; the student
+ * reorders them by drag-and-drop (mouse) or the ↑/↓ buttons (touch + keyboard +
+ * a11y fallback), then checks. Passed state persists per-page-per-id.
  */
 export function ReorderDrill({
   id,
@@ -71,6 +71,8 @@ export function ReorderDrill({
   const [checked, setChecked] = useState(false)
   const [revealed, setRevealed] = useState(false)
   const [hydrated, setHydrated] = useState(false)
+  // Position currently being dragged (HTML5 DnD). null when not dragging.
+  const [dragIndex, setDragIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const saved = readJSON<Saved | null>(storageKey, null)
@@ -82,27 +84,37 @@ export function ReorderDrill({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey])
 
+  // Persist on every order/checked change (after hydration). Doing it here —
+  // rather than inside each handler — keeps live drag-reordering correct: the
+  // drag fires `move` several times per gesture via functional setState, and we
+  // still save exactly the final arrangement.
+  useEffect(() => {
+    if (!hydrated) return
+    const passed = checked && order.every((v, i) => v === i)
+    writeJSON<Saved>(storageKey, { order, passed })
+  }, [order, checked, hydrated, storageKey])
+
+  // Move the item at position `from` to position `to`. Functional update so
+  // back-to-back calls within one drag gesture compose correctly.
   function move(from: number, to: number) {
-    if (to < 0 || to >= order.length) return
-    const next = order.slice()
-    const [item] = next.splice(from, 1)
-    next.splice(to, 0, item)
-    setOrder(next)
+    setOrder((prev) => {
+      if (to < 0 || to >= prev.length || from === to) return prev
+      const next = prev.slice()
+      const [item] = next.splice(from, 1)
+      next.splice(to, 0, item)
+      return next
+    })
     setChecked(false)
-    writeJSON<Saved>(storageKey, { order: next, passed: false })
   }
 
   function check() {
-    const allRight = order.every((v, i) => v === i)
     setChecked(true)
-    writeJSON<Saved>(storageKey, { order, passed: allRight })
   }
 
   function reset() {
     setOrder(initial)
     setChecked(false)
     setRevealed(false)
-    writeJSON<Saved>(storageKey, { order: initial, passed: false })
   }
 
   const passed = hydrated && checked && order.every((v, i) => v === i)
@@ -133,14 +145,45 @@ export function ReorderDrill({
 
       <div className="px-4 pt-3 text-[0.95rem] leading-relaxed">{prompt}</div>
 
+      {!revealed && (
+        <p className="px-4 pt-1.5 text-[11px] text-fg-subtle">
+          Σύρε τις γραμμές για αναδιάταξη — ή χρησιμοποίησε τα βελάκια{' '}
+          <span aria-hidden="true">↑↓</span>.
+        </p>
+      )}
+
       <ol className="my-3 list-none space-y-1.5 px-4">
         {displayOrder.map((stepIdx, position) => {
           const correct = !revealed && checked ? stepIdx === position : null
           return (
             <li
               key={stepIdx}
+              draggable={!revealed}
+              onDragStart={(e) => {
+                if (revealed) return
+                setDragIndex(position)
+                e.dataTransfer.effectAllowed = 'move'
+                // Firefox won't start a drag unless some data is set.
+                try {
+                  e.dataTransfer.setData('text/plain', String(position))
+                } catch {}
+              }}
+              onDragOver={(e) => {
+                if (revealed || dragIndex === null) return
+                e.preventDefault()
+                e.dataTransfer.dropEffect = 'move'
+                if (dragIndex !== position) {
+                  move(dragIndex, position)
+                  setDragIndex(position)
+                }
+              }}
+              onDrop={(e) => e.preventDefault()}
+              onDragEnd={() => setDragIndex(null)}
+              title={!revealed ? 'Σύρε για αναδιάταξη (ή χρησιμοποίησε τα βελάκια)' : undefined}
               className={cn(
                 'flex items-center gap-2 rounded-md border px-2 py-1.5 transition',
+                !revealed && 'cursor-grab active:cursor-grabbing',
+                dragIndex === position && 'opacity-60 ring-2 ring-accent/50',
                 revealed
                   ? 'border-dashed border-amber-400/70 bg-amber-400/10'
                   : correct === true
@@ -154,7 +197,10 @@ export function ReorderDrill({
                 {position + 1}.
               </span>
               <GripVertical
-                className="h-3.5 w-3.5 shrink-0 text-fg-subtle"
+                className={cn(
+                  'h-3.5 w-3.5 shrink-0 text-fg-subtle',
+                  !revealed && 'cursor-grab',
+                )}
                 aria-hidden="true"
               />
               <div className="flex-1 text-[0.95rem] leading-snug">
