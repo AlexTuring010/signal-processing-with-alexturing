@@ -11,8 +11,8 @@ import { cn } from '@/lib/utils'
  * · Αιτιατό · Περιοδικό · Ενέργειας/Ισχύος). Per-badge «γιατί;» justification
  * is rendered on hover/focus.
  *
- * Why this viz exists: the prof's slide-4 classification list is the spine of
- * the lecture, but in static prose each badge sits in its own sub-section and
+ * Why this viz exists: slide 4's classification list is the spine of the
+ * lecture, but in static prose each badge sits in its own sub-section and
  * the student never sees them all activated at once for a single signal. This
  * viz consolidates the chapter: ένα σήμα → 6 ετικέτες ταυτόχρονα.
  */
@@ -265,7 +265,7 @@ const SIGNALS: SignalSpec[] = [
       values: 'Πραγματικές.',
       symmetry: 'cos(−πn/3) = cos(πn/3) → άρτιο.',
       causal: 'Όχι.',
-      periodic: 'ω = π/3 → 2π/ω = 6 — ρητός & ακέραιος. Άρα N = 6: cos(π(n+6)/3) = cos(πn/3 + 2π) = cos(πn/3). ✓',
+      periodic: 'ω = π/3 → ένας κύκλος διαρκεί 2π/ω = 6 δείγματα ακριβώς (στρογγυλός αριθμός), άρα N = 6: cos(π(n+6)/3) = cos(πn/3 + 2π) = cos(πn/3). ✓',
       ep: 'Discrete power: lim (1/(2M+1)) Σ |x[n]|² = 1/2.',
     },
   },
@@ -284,12 +284,13 @@ const SIGNALS: SignalSpec[] = [
       P: '1/2',
     },
     reasons: {
-      value: 'Η παγίδα του prof (slide 12). Στο συνεχές το cos(t/4) ΕΙΝΑΙ περιοδικό. Στο διακριτό; ΟΧΙ.',
+      value: 'Η κλασική παγίδα (slide 12): το συνεχές cos(t/4) ΕΙΝΑΙ περιοδικό, αλλά το διακριτό cos(n/4) ΟΧΙ. Δες το «γιατί;» στην ετικέτα «Περιοδικό;».',
       time: 'Ορίζεται μόνο σε ακεραίους n.',
       values: 'Πραγματικές.',
       symmetry: 'cos(−n/4) = cos(n/4) → άρτιο.',
       causal: 'Όχι.',
-      periodic: 'Για περιοδικό: ωN = 2πm → N = 2πm · 4 = 8πm. Επειδή π άρρητο, δεν υπάρχει m ∈ ℕ με N ∈ ℕ. ΟΧΙ περιοδικό!',
+      periodic:
+        'Για περιοδικό χρειάζεται ωN = 2πm με ακεραίους N, m. Εδώ ω = 1/4 → N = 8πm, και επειδή το π είναι άρρητο, κανένα ακέραιο m δεν δίνει ακέραιο N. Με λόγια: ένας πλήρης κύκλος διαρκεί 2π/ω = 8π ≈ 25.13 δείγματα — όχι στρογγυλός αριθμός, οπότε τα δείγματα δεν ξαναπέφτουν ποτέ στο ίδιο μοτίβο. (Το συνεχές cos(t/4) ξανακλείνει κανονικά κάθε 8π s, γιατί εκεί ο χρόνος είναι συνεχής.)',
       ep: 'Παρόλο που δεν είναι περιοδικό, η μακροπρόθεσμη μέση τιμή του |x|² είναι 1/2 (cos² ισοκαταν.). Power signal.',
     },
   },
@@ -334,10 +335,11 @@ export function SignalClassificationPlayground() {
       </div>
 
       <p className="mb-3 text-xs text-fg-muted">
-        Ο prof στη <strong>slide 4</strong> δίνει την κανονική λίστα κατηγοριών. Δοκίμασε ένα σήμα από
-        τη βιβλιοθήκη και δες πώς ανάβουν οι ετικέτες — μερικές παγίδες (όπως το cos(n/4) που είναι
-        περιοδικό στο συνεχές αλλά <strong>όχι</strong> στο διακριτό) είναι ακριβώς αυτές που πέφτουν
-        στις εξετάσεις.
+        Η <strong>slide 4</strong> δίνει την κανονική λίστα κατηγοριών. Διάλεξε ένα σήμα από τη
+        βιβλιοθήκη, δες πώς ανάβουν οι ετικέτες, και πάτησε «γιατί;» σε κάθεμία για την αιτιολόγηση.
+        Μερικές παγίδες — όπως το <code className="font-mono">cos(n/4)</code>, περιοδικό στο{' '}
+        <em>συνεχές</em> αλλά <strong>όχι</strong> στο διακριτό (δες το «γιατί;» στην ετικέτα
+        «Περιοδικό;») — είναι ακριβώς αυτές που πέφτουν στις εξετάσεις.
       </p>
 
       {/* Signal picker */}

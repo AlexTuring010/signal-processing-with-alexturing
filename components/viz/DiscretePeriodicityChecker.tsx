@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
  * POSITIVE INTEGER number of samples — that is, ω N = 2π m with m ∈ ℤ⁺,
  * or equivalently `2π / ω = N / m` must be rational.
  *
- * Presets cover the prof's two canonical examples:
+ * Presets cover the two canonical slide examples:
  *   - ω = 4π/13 (slide 11) → N = 13 ✓
  *   - ω = 1/4 (slide 12) → 2π/ω = 8π, irrational → NOT periodic ✗
  *
@@ -24,7 +24,14 @@ import { cn } from '@/lib/utils'
 const N_MIN = -8
 const N_MAX = 32
 const MAX_DENOM = 200
-const TOL = 1e-3
+// A discrete cosine is periodic only when 2π/ω is *exactly* rational. We can't
+// prove irrationality numerically, but a loose tolerance is worse than useless:
+// every irrational has excellent rational approximations, so TOL = 1e-3 falsely
+// flagged cos(n/4) as periodic (377/15 ≈ 8π to 6e-4) and ω=1 too (710/113 ≈ 2π
+// to 5e-7). A genuine rational ratio from a π-multiple lands within ~1e-15 of
+// its value, so a tight tolerance cleanly separates the two. See node check in
+// the PR that added the continuous overlay.
+const TOL = 1e-7
 
 type Preset = {
   id: string
@@ -115,6 +122,15 @@ export function DiscretePeriodicityChecker() {
         <code className="font-mono">2π / ω = N / m</code> πρέπει να είναι <strong>ρητός</strong>. Όχι «κάποιο» N — <em>ακέραιο</em> N.
       </p>
 
+      <p className="mb-3 text-xs text-fg-muted">
+        Στο διάγραμμα: ο αχνός γκρι κυματισμός είναι το <strong>συνεχές</strong>{' '}
+        <code className="font-mono">cos(ωt)</code>, και τα stems είναι τα δείγματά του στους
+        ακεραίους <code className="font-mono">n</code>. <span className="text-amber-600 dark:text-amber-400">Πορτοκαλί</span> =
+        πού συμπληρώνει <strong>έναν</strong> κύκλο το συνεχές κύμα·{' '}
+        <span className="text-emerald-600 dark:text-emerald-400">πράσινο</span> = πού (αν) ξανακλείνει το διακριτό.
+        Όταν το πορτοκαλί πέφτει <em>ανάμεσα</em> σε δείγματα, το διακριτό δεν ξανακλείνει ποτέ εκεί.
+      </p>
+
       <canvas
         ref={canvasRef}
         style={{ height: 180 }}
@@ -187,17 +203,28 @@ export function DiscretePeriodicityChecker() {
                 <code className="font-mono">N = {result.N}</code> δείγματα.
               </>
             ) : (
-              <>{result.reason}</>
+              <>
+                {result.reason}{' '}
+                <span className="text-fg-muted">
+                  Ένας πλήρης κύκλος του συνεχούς κύματος = 2π/ω ≈{' '}
+                  <code className="font-mono">{ratio.toFixed(2)}</code> δείγματα — μη ακέραιος, οπότε
+                  κανένα δείγμα δεν πέφτει εκεί που το κύμα ξανακλείνει.
+                </span>
+              </>
             )}
           </div>
         </div>
       </div>
 
       <p className="mt-3 text-xs text-fg-muted">
-        <strong>Η παγίδα του prof (slide 12):</strong> <code className="font-mono">x[n] = cos(n/4)</code>{' '}
-        ΔΕΝ είναι περιοδικό — αλλά η <em>συνεχής</em> του αδελφή{' '}
-        <code className="font-mono">cos(t/4)</code> είναι (περίοδος 8π s). Στο διακριτό η συνθήκη
-        είναι αυστηρότερη επειδή απαιτεί <strong>ακέραιο</strong> N, όχι ρητό.
+        <strong>Διαίσθηση — γιατί είναι αυστηρότερο από το συνεχές:</strong> στο συνεχές μπορείς να
+        ολισθήσεις κατά <em>οποιονδήποτε</em> πραγματικό χρόνο, άρα το{' '}
+        <code className="font-mono">cos(ωt)</code> ξανακλείνει πάντα μετά από 2π/ω. Στο διακριτό
+        ολισθαίνεις μόνο κατά <strong>ακέραια</strong> δείγματα, οπότε ξανακλείνει μόνο αν ένας
+        ακέραιος αριθμός δειγμάτων χωρά ακριβώς ακέραιο αριθμό κύκλων. Γι' αυτό η κλασική παγίδα του{' '}
+        <strong>slide 12</strong>, <code className="font-mono">x[n] = cos(n/4)</code>: ένας κύκλος ={' '}
+        8π ≈ 25.13 δείγματα — ποτέ στρογγυλός αριθμός, άρα <strong>όχι</strong> περιοδικό, παρόλο που
+        το συνεχές <code className="font-mono">cos(t/4)</code> είναι (περίοδος 8π s).
       </p>
     </figure>
   )
@@ -252,13 +279,35 @@ function draw(
   ctx.fillText('1', plotX - 4, plotY + 10)
   ctx.fillText('−1', plotX - 4, plotY + plotH - 2)
 
-  // Period highlights (if periodic)
-  if (result.periodic && result.N <= N_MAX - N_MIN) {
-    let n = 0
-    while (n + result.N <= N_MAX) {
-      n += result.N
-      const xx = lerp(n, N_MIN, N_MAX, plotX, plotX + plotW)
-      ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)' // emerald
+  // Faint continuous sibling cos(ω t) — the wave the integer stems are read off
+  // of. Seeing it is the whole point: the discrete signal is just samples of
+  // this curve, and periodicity is about whether a *whole* number of samples
+  // ever lands back where the curve repeats.
+  ctx.strokeStyle = colors.fgSubtle
+  ctx.globalAlpha = 0.5
+  ctx.lineWidth = 1.25
+  ctx.beginPath()
+  const CSTEPS = 600
+  for (let i = 0; i <= CSTEPS; i++) {
+    const t = lerp(i, 0, CSTEPS, N_MIN, N_MAX)
+    const xx = lerp(t, N_MIN, N_MAX, plotX, plotX + plotW)
+    const yy = lerp(Math.cos(omega * t), 1, -1, plotY + 6, plotY + plotH - 6)
+    if (i === 0) ctx.moveTo(xx, yy)
+    else ctx.lineTo(xx, yy)
+  }
+  ctx.stroke()
+  ctx.globalAlpha = 1
+
+  // One full cycle of the continuous wave spans `ratio = 2π/ω` samples.
+  const ratio = omega !== 0 ? (2 * Math.PI) / omega : Infinity
+
+  // GREEN: where the *discrete* signal actually realigns — samples land back
+  // exactly every N. Only happens at integer sample positions.
+  if (result.periodic) {
+    for (let k = 1; k * result.N <= N_MAX; k++) {
+      const nMark = k * result.N
+      const xx = lerp(nMark, N_MIN, N_MAX, plotX, plotX + plotW)
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)' // emerald
       ctx.lineWidth = 1
       ctx.setLineDash([4, 3])
       ctx.beginPath()
@@ -266,11 +315,35 @@ function draw(
       ctx.lineTo(xx, plotY + plotH - 2)
       ctx.stroke()
       ctx.setLineDash([])
-      ctx.fillStyle = '#10b981'
-      ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-      ctx.textAlign = 'center'
-      ctx.fillText(`n=${n}`, xx, plotY + 10)
+      if (k === 1) {
+        ctx.fillStyle = '#10b981'
+        ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText(`ξανακλείνει: n=${result.N}`, xx, plotY + 10)
+      }
     }
+  }
+
+  // ORANGE: where the *continuous* wave first completes one full cycle (back to
+  // its t=0 value). If this falls between integer samples — as it does for
+  // cos(n/4), at 8π ≈ 25.13 — the discrete signal never closes there. Drawn only
+  // when it doesn't coincide with a realignment (otherwise it'd overlap green).
+  const coincides = result.periodic && Math.abs(ratio - result.N) < 0.02
+  if (Number.isFinite(ratio) && ratio <= N_MAX && !coincides) {
+    const xx = lerp(ratio, N_MIN, N_MAX, plotX, plotX + plotW)
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.75)' // amber
+    ctx.lineWidth = 1
+    ctx.setLineDash([3, 3])
+    ctx.beginPath()
+    ctx.moveTo(xx, plotY + 2)
+    ctx.lineTo(xx, plotY + plotH - 2)
+    ctx.stroke()
+    ctx.setLineDash([])
+    ctx.fillStyle = '#d97706' // amber-600
+    ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+    ctx.textAlign = 'center'
+    const lx = Math.min(Math.max(xx, plotX + 40), plotX + plotW - 40)
+    ctx.fillText(`1 κύκλος ≈ ${ratio.toFixed(1)} δείγματα`, lx, plotY + plotH - 4)
   }
 
   // Stems

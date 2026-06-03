@@ -4,7 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle2, AlertTriangle } from 'lucide-react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 
-const T_END = 6.0
+// Window (seconds) shown when the sum is NOT periodic. For periodic sums we
+// instead size the window to the common period so the alignment is visible.
+const FALLBACK_WINDOW = 8
 
 const PRESETS = [
   { label: 'Same f', T1: 1, T2: 1 },
@@ -14,8 +16,12 @@ const PRESETS = [
 ] as const
 
 function rationalApprox(x: number, maxDenom = 200): { p: number; q: number } | null {
-  // Stern-Brocot-like search for a small p/q with |x - p/q| < tol.
-  const tol = 1e-3
+  // Search for a small p/q with |x - p/q| < tol. The tolerance must be TIGHT:
+  // every irrational has excellent rational approximations (√2 ≈ 41/29 to 4e-4),
+  // so a loose tol = 1e-3 falsely flagged the √2 preset as periodic (T = 29 s).
+  // A genuine rational ratio lands within ~1e-15, so 1e-7 cleanly separates the
+  // two. Slider values are multiples of 0.05 → always rational → always periodic.
+  const tol = 1e-7
   for (let q = 1; q <= maxDenom; q++) {
     const p = Math.round(x * q)
     if (p === 0) continue
@@ -51,13 +57,23 @@ export function PeriodicityChecker() {
 
   const result = useMemo(() => analyze(T1, T2), [T1, T2])
 
+  // Size the visible window to the common period (when periodic) so the first
+  // alignment always lands on-screen; clamp so tiny/huge periods stay readable.
+  const windowEnd = useMemo(
+    () =>
+      result.periodic && result.period
+        ? Math.min(Math.max(result.period * 1.4, 4), 12)
+        : FALLBACK_WINDOW,
+    [result],
+  )
+
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const colors = getThemeColors()
     if (!colors) return
-    drawSum(canvas, colors, T1, T2, result.periodic ? result.period : undefined)
-  }, [T1, T2, result])
+    drawSum(canvas, colors, T1, T2, result, windowEnd)
+  }, [T1, T2, result, windowEnd])
 
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
@@ -65,16 +81,20 @@ export function PeriodicityChecker() {
         Είναι περιοδικό το άθροισμα cos(2π · t/T₁) + cos(2π · t/T₂);
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Δύο cosines με περιόδους T₁ και T₂. Το άθροισμά τους είναι περιοδικό{' '}
-        <strong>μόνο αν</strong> ο λόγος <code className="font-mono">T₁/T₂</code>{' '}
-        είναι ρητός αριθμός. Δοκίμασε.
+        Τα δύο πάνω γραφήματα είναι οι δύο cosines <strong>ξεχωριστά</strong>· οι κουκκίδες σημειώνουν
+        πού ο καθένας <strong>συμπληρώνει πλήρη κύκλο</strong> (κορυφή). Το κάτω είναι το άθροισμα. Το
+        άθροισμα ξανακλείνει μόνο όταν <strong>και οι δύο</strong> κορυφώνονται την ίδια στιγμή — εκεί
+        πέφτει η <span className="text-emerald-600 dark:text-emerald-400">πράσινη</span> γραμμή. Αυτό
+        γίνεται <strong>μόνο αν</strong> ο λόγος <code className="font-mono">T₁/T₂</code> είναι ρητός:
+        τότε κάποιοι ακέραιοι <code className="font-mono">q·T₁ = p·T₂ = T</code> πέφτουν μαζί. Άρρητος
+        λόγος (π.χ. √2) → οι κορυφές ποτέ δεν ευθυγραμμίζονται → μη περιοδικό.
       </p>
 
       <canvas
         ref={canvasRef}
-        style={{ height: 180 }}
-        className="block h-[180px] w-full rounded-md border border-border bg-bg-soft/40"
-        aria-label="Sum of two cosines with adjustable periods"
+        style={{ height: 300 }}
+        className="block h-[300px] w-full rounded-md border border-border bg-bg-soft/40"
+        aria-label="Two cosines and their sum, with period-alignment markers"
       />
 
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -133,6 +153,14 @@ export function PeriodicityChecker() {
           </span>
         )}
       </div>
+
+      {result.periodic && result.period > windowEnd && (
+        <p className="mt-2 text-xs text-fg-subtle">
+          Η πρώτη ευθυγράμμιση γίνεται στα{' '}
+          <code className="font-mono">{result.period.toFixed(2)}s</code> — πέρα από το ορατό
+          παράθυρο, αλλά υπάρχει (ο λόγος είναι ρητός).
+        </p>
+      )}
     </figure>
   )
 }
@@ -171,67 +199,136 @@ function Slider({
   )
 }
 
+type Band = {
+  y0: number
+  label: string
+  kind: 'cos1' | 'cos2' | 'sum'
+  color: string
+  range: number
+}
+
 function drawSum(
   canvas: HTMLCanvasElement,
   colors: ReturnType<typeof getThemeColors>,
   T1: number,
   T2: number,
-  period: number | undefined,
+  result: ReturnType<typeof analyze>,
+  windowEnd: number,
 ) {
   if (!colors) return
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
-  const padX = 18
-  const padY = 12
 
-  // Mid-line.
-  ctx.strokeStyle = colors.border
-  ctx.lineWidth = 1
-  ctx.beginPath()
-  ctx.moveTo(padX, h / 2)
-  ctx.lineTo(w - padX, h / 2)
-  ctx.stroke()
+  const padX = 24
+  const topPad = 18
+  const botPad = 16
+  const gap = 16
+  const bandH = (h - topPad - botPad - 2 * gap) / 3
 
-  const xt = (t: number) => lerp(t, 0, T_END, padX, w - padX)
-  const yv = (v: number) => lerp(v, 2.2, -2.2, padY, h - padY)
+  const COS1 = '#0284c7' // sky
+  const COS2 = '#8b5cf6' // violet
 
-  // If finite period <= window, mark its boundary.
-  if (period && period <= T_END) {
-    ctx.save()
-    ctx.setLineDash([4, 4])
-    ctx.strokeStyle = colors.success
-    ctx.beginPath()
-    ctx.moveTo(xt(period), padY)
-    ctx.lineTo(xt(period), h - padY)
-    ctx.stroke()
+  const bands: Band[] = [
+    { y0: topPad, label: 'cos(2π·t/T₁)', kind: 'cos1', color: COS1, range: 1.15 },
+    { y0: topPad + bandH + gap, label: 'cos(2π·t/T₂)', kind: 'cos2', color: COS2, range: 1.15 },
+    { y0: topPad + 2 * (bandH + gap), label: 'άθροισμα', kind: 'sum', color: colors.accent, range: 2.3 },
+  ]
+
+  const xt = (t: number) => lerp(t, 0, windowEnd, padX, w - padX)
+  const yvBand = (v: number, b: Band) => lerp(v, b.range, -b.range, b.y0 + 3, b.y0 + bandH - 3)
+  const w1 = (2 * Math.PI) / T1
+  const w2 = (2 * Math.PI) / T2
+  const period = result.periodic ? result.period : undefined
+
+  // Vertical alignment lines at multiples of the common period: each one passes
+  // through a crest of BOTH cosines at the same instant. That simultaneity is
+  // exactly what "T₁/T₂ rational" buys you.
+  if (period && period <= windowEnd + 1e-9) {
+    for (let k = 1; k * period <= windowEnd + 1e-9; k++) {
+      const x = xt(k * period)
+      ctx.save()
+      ctx.setLineDash([5, 4])
+      ctx.strokeStyle = k === 1 ? colors.success : 'rgba(16, 185, 129, 0.35)'
+      ctx.lineWidth = k === 1 ? 1.5 : 1
+      ctx.beginPath()
+      ctx.moveTo(x, bands[0].y0)
+      ctx.lineTo(x, bands[2].y0 + bandH)
+      ctx.stroke()
+      ctx.restore()
+    }
     ctx.fillStyle = colors.success
     ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText(`T = ${period.toFixed(2)}s`, xt(period), padY + 8)
-    ctx.restore()
+    ctx.fillText(`T = ${period.toFixed(2)}s`, xt(period), bands[0].y0 - 5)
   }
 
-  // Sum waveform.
-  ctx.strokeStyle = colors.accent
-  ctx.lineWidth = 2
-  ctx.beginPath()
-  const steps = w * 2
-  const w1 = (2 * Math.PI) / T1
-  const w2 = (2 * Math.PI) / T2
-  for (let i = 0; i <= steps; i++) {
-    const t = lerp(i, 0, steps, 0, T_END)
-    const v = Math.cos(w1 * t) + Math.cos(w2 * t)
-    const x = xt(t)
-    const y = yv(v)
-    if (i === 0) ctx.moveTo(x, y)
-    else ctx.lineTo(x, y)
-  }
-  ctx.stroke()
+  for (const b of bands) {
+    ctx.fillStyle = colors.fgSubtle
+    ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText(b.label, padX, b.y0 - 5)
 
-  // X-axis labels.
+    // mid-line
+    const mid = yvBand(0, b)
+    ctx.strokeStyle = colors.border
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(padX, mid)
+    ctx.lineTo(w - padX, mid)
+    ctx.stroke()
+
+    // waveform
+    ctx.strokeStyle = b.color
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    const steps = Math.max(64, Math.floor(w - 2 * padX) * 2)
+    for (let i = 0; i <= steps; i++) {
+      const t = lerp(i, 0, steps, 0, windowEnd)
+      const v =
+        b.kind === 'cos1'
+          ? Math.cos(w1 * t)
+          : b.kind === 'cos2'
+            ? Math.cos(w2 * t)
+            : Math.cos(w1 * t) + Math.cos(w2 * t)
+      const x = xt(t)
+      const y = yvBand(v, b)
+      if (i === 0) ctx.moveTo(x, y)
+      else ctx.lineTo(x, y)
+    }
+    ctx.stroke()
+
+    // crest dots — one per completed cycle of each individual cosine
+    if (b.kind === 'cos1' || b.kind === 'cos2') {
+      const Ti = b.kind === 'cos1' ? T1 : T2
+      const yPeak = yvBand(1, b)
+      for (let k = 1; k * Ti <= windowEnd + 1e-9; k++) {
+        ctx.fillStyle = b.color
+        ctx.beginPath()
+        ctx.arc(xt(k * Ti), yPeak, 2.2, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      // green emphasis exactly where the two crests line up (= common period)
+      if (period && period <= windowEnd + 1e-9) {
+        for (let k = 1; k * period <= windowEnd + 1e-9; k++) {
+          const x = xt(k * period)
+          ctx.fillStyle = colors.success
+          ctx.beginPath()
+          ctx.arc(x, yPeak, 3.6, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.strokeStyle = colors.bg
+          ctx.lineWidth = 1.5
+          ctx.beginPath()
+          ctx.arc(x, yPeak, 3.6, 0, Math.PI * 2)
+          ctx.stroke()
+        }
+      }
+    }
+  }
+
+  // X-axis labels (shared time axis across all three bands)
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  ctx.fillText('0', padX, h - 2)
-  ctx.fillText(`${T_END}s`, w - padX, h - 2)
+  ctx.fillText('0', padX, h - 3)
+  ctx.fillText(`${windowEnd.toFixed(1)}s`, w - padX, h - 3)
 }
