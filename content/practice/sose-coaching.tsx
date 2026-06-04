@@ -885,20 +885,49 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'jan26-th2-8': {
     takeaway: (
       <p>
-        DSB-SC είναι απλά το modulation theorem χωρίς carrier:{' '}
-        <InlineMath>{'X(f) = \\tfrac{1}{2}[M(f-f_c) + M(f+f_c)]'}</InlineMath>.
-        Αν το <InlineMath>{'M(f)'}</InlineMath> είναι rect, παίρνεις δύο
-        rects στις <InlineMath>{'\\pm f_c'}</InlineMath> με το μισό ύψος.
-        Δεν υπάρχει impulse στον carrier — αυτό είναι το «suppressed».
+        <strong>Συνταγή:</strong> φάσμα DSB-SC = πάρε το{' '}
+        <InlineMath>{'M(f)'}</InlineMath>, βάλ' το σε <strong>δύο αντίγραφα</strong> στα{' '}
+        <InlineMath>{'\\pm f_c'}</InlineMath> με <strong>μισό ύψος</strong> — και{' '}
+        <strong>καμία γραμμή στο φέρον</strong>{' '}
+        (<InlineMath>{'X(f) = \\tfrac{1}{2}[M(f-f_c) + M(f+f_c)]'}</InlineMath>). Ο{' '}
+        <em>μεταφέρσιμος</em> κανόνας, όχι το νούμερο: ο πολλαπλασιασμός με τη φέρουσα{' '}
+        <em>μετατοπίζει</em> το φάσμα και κρατά το <em>σχήμα</em>· γραμμή-φέρουσα υπάρχει{' '}
+        <em>μόνο</em> αν προστεθεί σταθερά (<InlineMath>{'+A_c'}</InlineMath>){' '}
+        <em>πριν</em> τον πολλαπλασιασμό. Καμία σταθερά στο DSB-SC ⇒ καμία γραμμή — αυτό
+        είναι το «suppressed».
       </p>
     ),
     examRadar: (
-      <p>
-        «Σχεδιάστε φάσμα DSB-SC» → δύο μόνο πράγματα: (1) τι είναι το{' '}
-        <InlineMath>{'M(f)'}</InlineMath>, (2) ανέβασέ το γύρω από{' '}
-        <InlineMath>{'\\pm f_c'}</InlineMath> με ύψος μισό. Αν δεν δεις
-        impulse στον carrier σου, καλά πας — είναι DSB-SC.
-      </p>
+      <>
+        <p>
+          <strong>Πώς εξετάζεται:</strong> σύντομο «σχεδιάστε το φάσμα» (μικρό βάρος,{' '}
+          <strong>~5 λεπτά</strong>) που ελέγχει αν ξεχωρίζεις DSB-SC από συμβατικό AM.
+          Σχεδόν πάντα ζευγαρώνεται με <InlineMath>{'\\mathrm{sinc}'}</InlineMath>-μήνυμα (→
+          rect φάσμα), ώστε να δει αν ξέρεις και το ζεύγος{' '}
+          <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\mathrm{rect}'}</InlineMath>{' '}
+          (τυπολόγιο) και την απουσία γραμμής. Γράψε ρητά τα τρία βήματα:{' '}
+          <InlineMath>{'M(f)'}</InlineMath> → δύο αντίγραφα στα{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath> → μισό ύψος, χωρίς γραμμή.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Παγίδες.</strong> <strong>(1) Φάντασμα-γραμμή στο φέρον</strong> (η Νο1):
+          σχεδιάζεις μια ακίδα <InlineMath>{'\\delta'}</InlineMath> στα{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath>. <em>Δεν υπάρχει</em> στο DSB-SC (κατεσταλμένη
+          φέρουσα) — μόνο στο συμβατικό AM. <strong>(2) Εύρος μηνύματος{' '}
+          <InlineMath>{'W'}</InlineMath> vs εκπεμπόμενο <InlineMath>{'2W'}</InlineMath>:</strong>{' '}
+          το μήνυμα πιάνει <InlineMath>{'|f| \\le W'}</InlineMath>, αλλά η εκπεμπόμενη ζώνη γύρω
+          από κάθε <InlineMath>{'f_c'}</InlineMath> είναι <InlineMath>{'2W'}</InlineMath> (από{' '}
+          <InlineMath>{'f_c - W'}</InlineMath> ως <InlineMath>{'f_c + W'}</InlineMath>).{' '}
+          <strong>(3) Ξεχνάς το μισό ύψος:</strong> κάθε αντίγραφο έχει ύψος{' '}
+          <InlineMath>{'1/(2W)'}</InlineMath>, όχι <InlineMath>{'1/W'}</InlineMath> — το{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> του θεωρήματος διαμόρφωσης.{' '}
+          <strong>(4) Το μπροστινό <InlineMath>{'2'}</InlineMath> «πλαταίνει» τη ζώνη:</strong>{' '}
+          όχι — το <InlineMath>{'2'}</InlineMath> στο{' '}
+          <InlineMath>{'2\\,\\mathrm{sinc}(2Wt)'}</InlineMath> είναι πλάτος (ύψος{' '}
+          <InlineMath>{'1/W'}</InlineMath>)· το εύρος το ορίζει το{' '}
+          <InlineMath>{'2Wt'}</InlineMath>.
+        </div>
+      </>
     ),
   },
 

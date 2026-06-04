@@ -3308,30 +3308,223 @@ export const EXERCISES: Exercise[] = [
     ),
     statement: (
       <p>
-        Σχεδιάστε το φάσμα του διαμορφωμένου κατά AM-DSB-SC σήματος όταν το
-        φέρον είναι <InlineMath>{'c(t) = \\cos(2\\pi f_c t)'}</InlineMath> και
-        το σήμα πληροφορίας{' '}
+        Να σχεδιαστεί το φάσμα του διαμορφωμένου κατά AM-DSB-SC σήματος όταν
+        το φέρον είναι <InlineMath>{'c(t) = \\cos(2\\pi f_c t)'}</InlineMath> και
+        το σήμα πληροφορίας είναι{' '}
         <InlineMath>{'m(t) = 2\\,\\mathrm{sinc}(2Wt)'}</InlineMath>.
       </p>
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — «σχεδιάζω φάσμα DSB-SC» σημαίνει: πάρε το φάσμα του
+            μηνύματος, κάν' το δύο αντίγραφα, σύρε τα στο φέρον.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Το DSB-SC είναι ένας <strong>καθαρός πολλαπλασιασμός</strong>,{' '}
+            <InlineMath>{'m(t)\\times\\cos(2\\pi f_c t)'}</InlineMath> — τίποτα δεν{' '}
+            <em>προστίθεται</em>. Κι ο πολλαπλασιασμός με <InlineMath>{'\\cos'}</InlineMath>{' '}
+            στον χρόνο κάνει ένα μόνο πράγμα στη συχνότητα:{' '}
+            <strong>μετατοπίζει</strong> (αντιγράφει) το φάσμα του μηνύματος πάνω στα{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath>, με μισό ύψος. Άρα όλο το «σχέδιο» είναι
+            τρία βήματα: <strong>(1)</strong> βρες το <InlineMath>{'M(f)'}</InlineMath>,{' '}
+            <strong>(2)</strong> δύο αντίγραφα στα <InlineMath>{'\\pm f_c'}</InlineMath>,{' '}
+            <strong>(3)</strong> κόψε το ύψος στο μισό. Το <em>μόνο</em> σημείο που μπερδεύει:{' '}
+            <strong>υπάρχει ακίδα πάνω στο φέρον;</strong> Όχι — γιατί{' '}
+            <em>μόνο πολλαπλασιάσαμε</em>, δεν προσθέσαμε καμία σταθερά. Η φέρουσα είναι
+            «κατεσταλμένη» (suppressed) — αυτό ακριβώς λέει το <strong>SC</strong>.
+          </span>
+        </div>
+
         <p>
-          DSB-SC: <InlineMath>{'x(t) = m(t)\\cos(2\\pi f_c t)'}</InlineMath>.
-          FT: <InlineMath>{'X(f) = \\tfrac{1}{2}[M(f-f_c) + M(f+f_c)]'}</InlineMath>.
+          <strong>(0) Το φάσμα του μηνύματος — sinc στον χρόνο, rect στη συχνότητα.</strong>{' '}
+          Από το ζεύγος <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\mathrm{rect}'}</InlineMath>{' '}
+          του <strong>τυπολογίου</strong>, μια sinc στον χρόνο γίνεται καθαρό{' '}
+          <strong>rect</strong> (τούβλο) στη συχνότητα:
+        </p>
+        <BlockMath>{'m(t) = 2\\,\\mathrm{sinc}(2Wt) \\;\\longleftrightarrow\\; M(f) = \\frac{2}{2W}\\,\\Pi\\!\\left(\\frac{f}{2W}\\right) = \\frac{1}{W}\\,\\Pi\\!\\left(\\frac{f}{2W}\\right)'}</BlockMath>
+        <p className="-mt-1 text-sm text-fg-muted">
+          Δηλαδή ένα rect <strong>ύψους <InlineMath>{'1/W'}</InlineMath></strong> πάνω στο{' '}
+          <InlineMath>{'|f| \\le W'}</InlineMath> — <strong>μισό-εύρος{' '}
+          <InlineMath>{'W'}</InlineMath></strong> (πλήρες πλάτος{' '}
+          <InlineMath>{'2W'}</InlineMath>).
         </p>
         <p>
-          <InlineMath>{'M(f) = \\frac{2}{2W}\\Pi(f/(2W)) = \\frac{1}{W}\\Pi(f/(2W))'}</InlineMath>{' '}
-          (rect ύψους <InlineMath>{'1/W'}</InlineMath>, πλάτους{' '}
-          <InlineMath>{'\\pm W'}</InlineMath>).
+          <strong>Πρόσεξε τι κάνει το καθένα:</strong> το <InlineMath>{'2Wt'}</InlineMath>{' '}
+          <em>μέσα</em> στη sinc ορίζει το <strong>εύρος</strong> (μισό-εύρος{' '}
+          <InlineMath>{'W'}</InlineMath>)· το <strong>μπροστινό <InlineMath>{'2'}</InlineMath></strong>{' '}
+          είναι <em>μόνο πλάτος</em> — ανεβάζει το ύψος στο <InlineMath>{'1/W'}</InlineMath>, δεν{' '}
+          αλλάζει καθόλου το πλάτος ζώνης. <strong>Κλασική παγίδα:</strong> μην «πλαταίνεις»
+          τη ζώνη επειδή είδες το <InlineMath>{'2'}</InlineMath>.
+        </p>
+
+        <p>
+          <strong>(1) Διαμόρφωση — δύο αντίγραφα, μισό ύψος.</strong> Το DSB-SC είναι σκέτος
+          πολλαπλασιασμός, και το <strong>θεώρημα διαμόρφωσης</strong> (τυπολόγιο) λέει τι
+          κάνει αυτό στη συχνότητα:
+        </p>
+        <BlockMath>{'x(t) = m(t)\\cos(2\\pi f_c t) \\;\\longleftrightarrow\\; X(f) = \\tfrac{1}{2}\\big[\\,M(f - f_c) + M(f + f_c)\\,\\big]'}</BlockMath>
+        <p className="-mt-1 text-sm text-fg-muted">
+          (πολλαπλασιασμός με <InlineMath>{'\\cos(2\\pi f_c t)'}</InlineMath> ⇒{' '}
+          <em>μισό</em> αντίγραφο του <InlineMath>{'M'}</InlineMath> στο{' '}
+          <InlineMath>{'+f_c'}</InlineMath> κι ένα μισό στο <InlineMath>{'-f_c'}</InlineMath>).
         </p>
         <p>
-          Άρα <InlineMath>{'X(f)'}</InlineMath>: δύο rects ύψους{' '}
-          <InlineMath>{'1/(2W)'}</InlineMath> γύρω από τα{' '}
-          <InlineMath>{'\\pm f_c'}</InlineMath>, καθένα πλάτους{' '}
-          <InlineMath>{'\\pm W'}</InlineMath>.{' '}
-          <strong>Δεν υπάρχει impulse στον carrier</strong> (suppressed).
+          Πάρε λοιπόν το rect του <InlineMath>{'M(f)'}</InlineMath>, φτιάξε δύο αντίγραφα, σύρε
+          το ένα στο <InlineMath>{'+f_c'}</InlineMath> και το άλλο στο{' '}
+          <InlineMath>{'-f_c'}</InlineMath>, και κόψε το ύψος στο μισό:
         </p>
+        <BlockMath>{'X(f) = \\frac{1}{2W}\\,\\Pi\\!\\left(\\frac{f - f_c}{2W}\\right) + \\frac{1}{2W}\\,\\Pi\\!\\left(\\frac{f + f_c}{2W}\\right)'}</BlockMath>
+        <p className="-mt-1 text-sm text-fg-muted">
+          δηλ. <strong>δύο rect ύψους <InlineMath>{'1/(2W)'}</InlineMath></strong>, καθένα στο{' '}
+          <InlineMath>{'[f_c - W,\\, f_c + W]'}</InlineMath> (και το κατοπτρικό στο{' '}
+          <InlineMath>{'-f_c'}</InlineMath>), <strong>χωρίς καμία ακίδα στο φέρον</strong>.
+        </p>
+        <p>
+          <strong>Το εκπεμπόμενο εύρος ζώνης είναι <InlineMath>{'2W'}</InlineMath></strong> (η
+          ζώνη πιάνει από <InlineMath>{'f_c - W'}</InlineMath> ως{' '}
+          <InlineMath>{'f_c + W'}</InlineMath>) — <em>διπλάσιο</em> από το εύρος{' '}
+          <InlineMath>{'W'}</InlineMath> του ίδιου του μηνύματος. Κράτα τη διάκριση:{' '}
+          <strong>εύρος μηνύματος <InlineMath>{'W'}</InlineMath>, εκπεμπόμενο{' '}
+          <InlineMath>{'2W'}</InlineMath></strong> — το DSB-SC δεν γλιτώνει εύρος (το SSB το
+          γλιτώνει, βλ. Παραλλαγές).
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Γιατί το DSB-SC δεν έχει γραμμή-φέρουσα — η καρδιά του θέματος.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Μια <strong>γραμμή (ακίδα) στο φάσμα</strong> πάνω στα{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath> είναι μια{' '}
+            <InlineMath>{'\\delta'}</InlineMath>, και μια <InlineMath>{'\\delta'}</InlineMath>{' '}
+            βγαίνει <em>μόνο</em> από έναν <strong>καθαρό τόνο</strong> — δηλαδή από μια
+            σταθερά που πολλαπλασιάζει τη φέρουσα:
+          </span>
+          <div className="mt-2">
+            <BlockMath>{'A_c\\cos(2\\pi f_c t) \\;\\longleftrightarrow\\; \\tfrac{A_c}{2}\\big[\\,\\delta(f - f_c) + \\delta(f + f_c)\\,\\big]'}</BlockMath>
+          </div>
+          <span className="text-fg-muted">
+            Στο <strong>συμβατικό AM</strong>, <InlineMath>{'[A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath>,{' '}
+            ο όρος <InlineMath>{'A_c\\cos(2\\pi f_c t)'}</InlineMath> είναι ακριβώς τέτοιος
+            καθαρός τόνος ⇒ <strong>γραμμή-φέρουσα</strong> στα{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath>. Στο <strong>DSB-SC</strong>,{' '}
+            <InlineMath>{'m(t)\\cos(2\\pi f_c t)'}</InlineMath>, <em>δεν υπάρχει</em> τέτοια
+            σταθερά: πολλαπλασιάζεις με <InlineMath>{'m(t)'}</InlineMath> και <strong>μόνο</strong> —{' '}
+            καμία DC, κανένας τόνος, <strong>καμία γραμμή</strong>. Μόνο τα δύο μετατοπισμένα
+            αντίγραφα του μηνύματος (οι πλευρικές).{' '}
+            <strong>Ο μεταφέρσιμος κανόνας</strong> (κράτα αυτόν, όχι το νούμερο):{' '}
+            <strong>(α)</strong> ο πολλαπλασιασμός με τη φέρουσα <em>μετατοπίζει</em> το baseband
+            φάσμα στα <InlineMath>{'\\pm f_c'}</InlineMath>· <strong>(β)</strong> το{' '}
+            <em>σχήμα</em> της ζώνης δεν αλλάζει (rect → rect, sinc → sinc, τόνος → ακίδες)·{' '}
+            <strong>(γ)</strong> γραμμή-φέρουσα εμφανίζεται <em>αν και μόνο αν</em> προστέθηκε
+            σταθερά/DC <em>πριν</em> τον πολλαπλασιασμό. Δες γραμμή ⇒ συμβατικό AM· μόνο
+            πλευρικές ⇒ DSB-SC. (Ίδια ιδέα με το κανάλι-<InlineMath>{'k'}</InlineMath> στο{' '}
+            <Link
+              href="/practice#exercise:jun25-th2"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              Ιούν. 2025 ΘΕΜΑ 2
+            </Link>
+            , όπου το ένα κανάλι έχει γραμμή και το άλλο όχι.)
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Τίμια σημείωση — ιδανικεύσεις.</strong> Επειδή το{' '}
+          <InlineMath>{'M(f)'}</InlineMath> είναι <em>γνήσιο</em> rect, το μήνυμα είναι{' '}
+          <strong>αυστηρά bandlimited</strong> — οι ακμές στο σχέδιο είναι ακριβείς, δεν
+          υπάρχει ουρά που αποκόπτεται. Το σχέδιο είναι <strong>σχηματικό</strong>: το{' '}
+          <InlineMath>{'f_c'}</InlineMath> αυθαίρετο (σε σχετικές μονάδες του{' '}
+          <InlineMath>{'W'}</InlineMath>, με <InlineMath>{'f_c \\gg W'}</InlineMath> ώστε τα δύο
+          αντίγραφα στα <InlineMath>{'\\pm f_c'}</InlineMath> να μην ακουμπούν κοντά στο DC), και
+          τα ύψη σχεδιάζονται κανονικοποιημένα — οι πραγματικές τιμές{' '}
+          <InlineMath>{'1/W \\to 1/(2W)'}</InlineMath> είναι στο κείμενο.
+        </div>
+
+        <figure className="my-4">
+          <FdmCanonicalProblemViz numChannels={1} initialMod="dsb" mBW={1} />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η draw-απάντηση ζωντανή, σε σχετικές μονάδες του <InlineMath>{'W'}</InlineMath>.{' '}
+            <strong>Πάνω πάνελ:</strong> το baseband <InlineMath>{'M(f)'}</InlineMath> = το rect
+            του <InlineMath>{'m(t) = 2\\,\\mathrm{sinc}(2Wt)'}</InlineMath> στο{' '}
+            <InlineMath>{'[-W, W]'}</InlineMath> (το bracket «<InlineMath>{'2W'}</InlineMath>» =
+            πλήρες πλάτος). <strong>Δύο κάτω πάνελ:</strong> το διαμορφωμένο{' '}
+            <InlineMath>{'X(f)'}</InlineMath> = το <em>ίδιο</em> rect σε <strong>δύο
+            αντίγραφα</strong> γύρω από τα <InlineMath>{'\\pm f_c'}</InlineMath>, καθένα πλήρους
+            πλάτους <InlineMath>{'2W'}</InlineMath> (στο{' '}
+            <InlineMath>{'[f_c - W,\\, f_c + W]'}</InlineMath>) — και <strong>καμία ακίδα στο
+            φέρον</strong>: αυτή ακριβώς η <em>απουσία</em> γραμμής είναι η οπτική απάντηση. Ο
+            διακόπτης ξεκινά στο <strong>DSB-SC</strong>· γύρισέ τον στο <strong>USSB</strong>{' '}
+            και βλέπεις την παραλλαγή ενός-πλευρικού (μισό εύρος, <InlineMath>{'W'}</InlineMath>{' '}
+            αντί <InlineMath>{'2W'}</InlineMath>) — πάλι χωρίς γραμμή. Τα{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath> και τα ύψη είναι σχηματικά, όχι σε κλίμακα.
+          </figcaption>
+        </figure>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— μόλις δεις «σχεδίασε φάσμα DSB-SC», τρέξε τα ίδια τρία σήματα-κλειδιά:{' '}
+            <strong>(α)</strong> βρες το <InlineMath>{'M(f)'}</InlineMath> (το σχήμα στο
+            baseband — εδώ rect από τη sinc)· <strong>(β)</strong> δύο αντίγραφα στα{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath> με μισό ύψος (το <em>σχήμα</em> μένει ίδιο, μόνο
+            μετατοπίζεται)· <strong>(γ)</strong> <strong>καμία γραμμή</strong> στο φέρον — αφού
+            καθαρός πολλαπλασιασμός. Το μεταφέρσιμο κλειδί: <em>γραμμή ⇔ προστέθηκε σταθερά</em>.
+            Δες γραμμή ⇒ συμβατικό AM (υπάρχει <InlineMath>{'+A_c'}</InlineMath>)· μόνο πλευρικές
+            ⇒ DSB-SC. Και μην μπερδεύεις το <em>εύρος μηνύματος</em>{' '}
+            <InlineMath>{'W'}</InlineMath> με το <em>εκπεμπόμενο</em>{' '}
+            <InlineMath>{'2W'}</InlineMath>. Με αυτά μπορείς να σχεδιάσεις DSB-SC για{' '}
+            <em>οποιοδήποτε</em> μήνυμα ή φέρον, όχι μόνο για τούτο.
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted"> — ίδιος σκελετός, αλλαγμένη μία επιλογή:</span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Συμβατικό AM αντί για DSB-SC</strong> (ίδιο μήνυμα,{' '}
+              <InlineMath>{'x(t) = [A_c + 2\\,\\mathrm{sinc}(2Wt)]\\cos(2\\pi f_c t)'}</InlineMath>):
+              πρόσθεσε μια <strong>δ-ακίδα στα <InlineMath>{'\\pm f_c'}</InlineMath></strong>{' '}
+              βάρους <InlineMath>{'A_c/2'}</InlineMath> πάνω στις <em>ίδιες ακριβώς</em> δύο rect
+              ζώνες. Η μόνη διαφορά στο σχέδιο είναι αυτή η γραμμή — ακριβώς το «κόστος» του{' '}
+              <InlineMath>{'+A_c'}</InlineMath>. (Δες το κανάλι-<InlineMath>{'k'}</InlineMath> στο{' '}
+              <Link
+                href="/practice#exercise:jun25-th2"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Ιούν. 2025 ΘΕΜΑ 2
+              </Link>
+              .)
+            </li>
+            <li>
+              <strong>Άλλο σχήμα μηνύματος.</strong> Αν{' '}
+              <InlineMath>{'m(t) = \\cos(2\\pi f_m t)'}</InlineMath> (καθαρός τόνος), τότε{' '}
+              <InlineMath>{'M(f)'}</InlineMath> = δύο <em>ακίδες</em> στα{' '}
+              <InlineMath>{'\\pm f_m'}</InlineMath> ⇒ το DSB-SC δίνει <strong>ακίδες στα{' '}
+              <InlineMath>{'f_c \\pm f_m'}</InlineMath></strong> (το «τετράγραμμο» DSB-SC, πάλι
+              χωρίς κεντρική γραμμή). Αν <InlineMath>{'m(t) = \\Pi(t/T)'}</InlineMath> (rect στον
+              χρόνο), τότε <InlineMath>{'M(f)'}</InlineMath> = sinc ⇒ δύο <strong>sinc λοβοί</strong>{' '}
+              στα <InlineMath>{'\\pm f_c'}</InlineMath>. Ίδιο «shift + μισό ύψος», διαφορετικό{' '}
+              <em>σχήμα</em>.
+            </li>
+            <li>
+              <strong>SSB αντί για DSB-SC.</strong> Κράτα μόνο τη μία πλευρά (USSB:{' '}
+              <InlineMath>{'[f_c,\\, f_c + W]'}</InlineMath>): το εύρος <em>υποδιπλασιάζεται</em>{' '}
+              (<InlineMath>{'W'}</InlineMath> αντί <InlineMath>{'2W'}</InlineMath>), πάλι{' '}
+              <strong>καμία γραμμή</strong>. Αυτό ακριβώς ζητά το αδελφό{' '}
+              <Link
+                href="/practice#exercise:pb25-th2-3"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Πρόοδ. Β 2025 ΘΕΜΑ 2.3
+              </Link>{' '}
+              (LSSB με ίδιο <InlineMath>{'\\mathrm{sinc}'}</InlineMath>-μήνυμα).
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
