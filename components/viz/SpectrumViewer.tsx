@@ -225,7 +225,20 @@ function PhaseRecapForSquare() {
           <li><InlineMath>{'a_5 = +\\tfrac{1}{5\\pi}'}</InlineMath> → θετικό → <strong>φάση 0</strong></li>
           <li><InlineMath>{'a_7 = -\\tfrac{1}{7\\pi}'}</InlineMath> → αρνητικό → <strong>φάση π</strong></li>
         </ul>
-        <p>Στη <strong>cosine μορφή</strong> τα εναλλασσόμενα πρόσημα φαίνονται ολοκάθαρα:</p>
+        <p className="text-[0.9rem]">
+          (Από πού το <InlineMath>{'1/\\pi'}</InlineMath>; Είναι{' '}
+          <InlineMath>{'a_1 = \\tfrac12\\,\\mathrm{sinc}(\\tfrac12) = \\tfrac12\\cdot\\tfrac{2}{\\pi} = \\tfrac{1}{\\pi}'}</InlineMath>{' '}
+          — το <InlineMath>{'\\tfrac12'}</InlineMath> «κόβει» στη μέση το <InlineMath>{'2/\\pi'}</InlineMath> που δίνει το{' '}
+          <InlineMath>{'\\mathrm{sinc}(\\tfrac12)'}</InlineMath>.)
+        </p>
+        <p>
+          Στη <strong>cosine μορφή</strong> ο συντελεστής μπροστά σε κάθε αρμονική είναι{' '}
+          <InlineMath>{'2a_k'}</InlineMath> — όχι <InlineMath>{'a_k'}</InlineMath> — γιατί το ζεύγος{' '}
+          <InlineMath>{'+f'}</InlineMath> και <InlineMath>{'-f'}</InlineMath> ενώνεται σε ένα πραγματικό cosine.
+          Γι' αυτό μπροστά στο <InlineMath>{'\\cos\\omega_0 t'}</InlineMath> βλέπεις{' '}
+          <InlineMath>{'\\tfrac{2}{\\pi} = 2\\cdot\\tfrac{1}{\\pi}'}</InlineMath>, ενώ <InlineMath>{'a_1 = \\tfrac1\\pi'}</InlineMath>.
+          Τα εναλλασσόμενα πρόσημα πάντως μένουν τα ίδια:
+        </p>
         <p className="my-1.5 overflow-x-auto">
           <InlineMath>{'x(t) = \\tfrac12 + \\tfrac{2}{\\pi}\\left[\\cos\\omega_0 t - \\tfrac13\\cos 3\\omega_0 t + \\tfrac15\\cos 5\\omega_0 t - \\cdots\\right]'}</InlineMath>
         </p>
