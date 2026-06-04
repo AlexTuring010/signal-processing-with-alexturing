@@ -157,6 +157,12 @@ way:
   explain it or link where it's explained), every formula earns one
   plain-language sentence. This is the exact "stupid-student" bar the
   whole site is held to — apply it to your own fix before committing.
+- **Write the fix for a general reader, not as a reply to the
+  commenter.** The page teaches the fact to everyone; addressing the
+  asker ("η διαίσθησή σου ήταν σωστή", "όπως ρώτησες") is conversational
+  leakage that belongs only in the terse reply, never in the content.
+  If a reader's likely doubt is worth surfacing, pose it as a general
+  rhetorical question (FAQ-style callout) and then teach it.
 - **Still ground every word in the lecture material / `plans/`.** "Above
   and beyond" means teaching the *existing* material **better** — never
   inventing scope or content the course doesn't have. If a proper fix
