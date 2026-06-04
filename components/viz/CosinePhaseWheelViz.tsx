@@ -15,44 +15,62 @@ import { cn } from '@/lib/utils'
  * projection, and positive φ means "rotate counter-clockwise". The four
  * building blocks then sit at the four compass points:
  *
- *   East  (φ = 0)      cos θ
- *   North (φ = +90°)   −sin θ      = cos(θ + π/2)
- *   West  (φ = ±180°)  −cos θ      = cos(θ + π)
- *   South (φ = −90°)   +sin θ      = cos(θ − π/2)
+ *   East  (φ = 0)     cos θ
+ *   North (φ = π/2)   −sin θ      = cos(θ + π/2)
+ *   West  (φ = ±π)    −cos θ      = cos(θ + π)
+ *   South (φ = −π/2)  +sin θ      = cos(θ − π/2)
  *
  * So "+π/2 for −sin" is something you READ off the circle, not recall.
+ *
+ * Phase is carried in integer steps of π/12 (k ∈ [−12, 12]) so the
+ * readout shows clean fractions of π and the cardinals snap exactly.
  */
 
 const FREQ = 0.4 // rotation rate (rev/s) when "Περιστροφή" is on
 const WAVE_CYCLES = 2.4
+const STEP = Math.PI / 12 // one slider notch = 15° = π/12
 const PHASOR_COLOR = 'rgb(29, 78, 216)' // blue
 const VALUE_COLOR = 'rgb(217, 119, 6)' // amber — the horizontal projection (= value)
 
 const SNAPS = [
-  { deg: 0, label: 'cos θ' },
-  { deg: 90, label: '−sin θ' },
-  { deg: 180, label: '−cos θ' },
-  { deg: -90, label: 'sin θ' },
+  { k: 0, label: 'cos θ' },
+  { k: 6, label: '−sin θ' }, // +π/2
+  { k: 12, label: '−cos θ' }, // +π
+  { k: -6, label: 'sin θ' }, // −π/2
 ]
 
-function nameFor(deg: number): string | null {
-  const norm = ((((deg + 180) % 360) + 360) % 360) - 180 // → (−180, 180]
-  const near = (a: number, b: number) => Math.abs(a - b) < 3
-  if (near(norm, 0)) return 'cos θ'
-  if (near(norm, 90)) return '−sin θ'
-  if (near(Math.abs(norm), 180)) return '−cos θ'
-  if (near(norm, -90)) return 'sin θ'
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b)
+}
+
+/** Format k·(π/12) as a reduced multiple of π, e.g. "π/2", "−π/2", "2π/3", "0". */
+function fmtPi(k: number): string {
+  if (k === 0) return '0'
+  const sign = k < 0 ? '−' : ''
+  const a = Math.abs(k)
+  const g = gcd(a, 12)
+  const num = a / g
+  const den = 12 / g
+  const top = num === 1 ? 'π' : `${num}π`
+  return den === 1 ? `${sign}${top}` : `${sign}${top}/${den}`
+}
+
+function nameFor(k: number): string | null {
+  if (k === 0) return 'cos θ'
+  if (k === 6) return '−sin θ'
+  if (k === -6) return 'sin θ'
+  if (Math.abs(k) === 12) return '−cos θ'
   return null
 }
 
 export function CosinePhaseWheelViz() {
   const [running, setRunning] = useState(false)
-  const [deg, setDeg] = useState(90) // start at −sin: the classic trap
+  const [k, setK] = useState(6) // start at −sin (φ = +π/2): the classic trap
   const tRef = useRef(0)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const degRef = useRef(deg)
+  const kRef = useRef(k)
   const runRef = useRef(running)
-  degRef.current = deg
+  kRef.current = k
   runRef.current = running
 
   useEffect(() => {
@@ -64,8 +82,7 @@ export function CosinePhaseWheelViz() {
       if (runRef.current) tRef.current += dt
       const canvas = canvasRef.current
       const colors = getThemeColors()
-      if (canvas && colors)
-        draw(canvas, colors, (degRef.current * Math.PI) / 180, tRef.current, runRef.current)
+      if (canvas && colors) draw(canvas, colors, kRef.current * STEP, tRef.current, runRef.current)
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
@@ -79,7 +96,7 @@ export function CosinePhaseWheelViz() {
       return next
     })
 
-  const name = nameFor(deg)
+  const name = nameFor(k)
 
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
@@ -108,7 +125,7 @@ export function CosinePhaseWheelViz() {
       {/* Readout */}
       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
         <span className="rounded-full border border-border bg-bg-soft px-2.5 py-1 font-mono tabular-nums">
-          cos(θ + φ), φ = <span className="text-accent">{deg}°</span>
+          cos(θ + φ), φ = <span className="text-accent">{fmtPi(k)}</span>
         </span>
         {name && (
           <span className="rounded-full border border-accent/40 bg-accent-soft/40 px-2.5 py-1 font-mono">
@@ -121,15 +138,15 @@ export function CosinePhaseWheelViz() {
       <div className="mt-2 flex flex-wrap gap-1.5">
         {SNAPS.map((s) => (
           <button
-            key={s.deg}
+            key={s.k}
             type="button"
             onClick={() => {
-              setDeg(s.deg)
+              setK(s.k)
               tRef.current = 0
             }}
             className={cn(
               'rounded-full border px-2.5 py-0.5 text-[11px] font-mono transition-colors',
-              deg === s.deg
+              k === s.k
                 ? 'border-accent bg-accent text-accent-fg'
                 : 'border-border bg-bg-soft text-fg-muted hover:text-fg',
             )}
@@ -139,21 +156,21 @@ export function CosinePhaseWheelViz() {
         ))}
       </div>
 
-      {/* Phase slider */}
+      {/* Phase slider (in steps of π/12) */}
       <div className="mt-3">
         <label className="block text-xs text-fg-muted">
-          φ (φάση){' '}
-          <span className="font-mono text-fg tabular-nums">{deg}°</span>
+          φ (φάση, σε rad){' '}
+          <span className="font-mono text-fg tabular-nums">{fmtPi(k)}</span>
         </label>
         <input
           type="range"
-          min={-180}
-          max={180}
-          step={5}
-          value={deg}
-          onChange={(e) => setDeg(parseInt(e.target.value, 10))}
+          min={-12}
+          max={12}
+          step={1}
+          value={k}
+          onChange={(e) => setK(parseInt(e.target.value, 10))}
           className="mt-1 w-full accent-[rgb(var(--accent))]"
-          aria-label="Φάση φ σε μοίρες"
+          aria-label="Φάση φ σε ακέραια βήματα π/12"
         />
       </div>
 
@@ -164,8 +181,8 @@ export function CosinePhaseWheelViz() {
         <span className="font-mono">φ</span>· η <strong>οριζόντια προβολή</strong>{' '}
         (πορτοκαλί) είναι η <strong>τιμή</strong>, και θετική φ = στρίψε{' '}
         <strong>αριστερόστροφα</strong>. Πάτησε τα κουμπιά: το{' '}
-        <span className="font-mono">−sin</span> κάθεται στις{' '}
-        <span className="font-mono">+90°</span> (πάνω) — εκεί η προβολή ξεκινά στο 0
+        <span className="font-mono">−sin</span> κάθεται στο{' '}
+        <span className="font-mono">+π/2</span> (πάνω) — εκεί η προβολή ξεκινά στο 0
         και <strong>πέφτει</strong>. Έτσι το «+π/2 για το −sin» το{' '}
         <strong>διαβάζεις</strong>, δεν το αποστηθίζεις.
       </div>
@@ -246,14 +263,14 @@ function drawWheel(
   ctx.arc(cx, cy, R, 0, Math.PI * 2)
   ctx.stroke()
 
-  // Re / Im axis hints
+  // Im axis hint
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
   ctx.fillText('Im', cx + 9, y0 + 9)
 
-  // Four cardinal labels (the building blocks)
-  const active = nameFor((phi * 180) / Math.PI)
+  // Four cardinal labels (the building blocks), with φ in radians
+  const active = nameFor(Math.round(phi / STEP))
   const card = (
     label: string,
     sub: string,
@@ -271,9 +288,9 @@ function drawWheel(
     ctx.fillText(sub, px, py + 11)
   }
   card('cos θ', 'φ = 0', cx + R + 6, cy - 4, 'left')
-  card('−sin θ', 'φ = +90°', cx, cy - R - 12, 'center')
-  card('−cos θ', 'φ = 180°', cx - R - 6, cy - 4, 'right')
-  card('sin θ', 'φ = −90°', cx, cy + R + 22, 'center')
+  card('−sin θ', 'φ = π/2', cx, cy - R - 12, 'center')
+  card('−cos θ', 'φ = ±π', cx - R - 6, cy - 4, 'right')
+  card('sin θ', 'φ = −π/2', cx, cy + R + 22, 'center')
 
   // CCW hint arc (positive-φ direction)
   ctx.strokeStyle = colors.fgSubtle
