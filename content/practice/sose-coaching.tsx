@@ -313,23 +313,44 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'proodos26-11': {
     takeaway: (
       <p>
-        USSB διατηρεί <em>μόνο</em> την upper sideband — το φάσμα του
-        baseband «ανυψώνεται» γύρω από <InlineMath>{'f_c'}</InlineMath>{' '}
-        χωρίς να αντικατοπτρίζεται. Σχήμα: αν το baseband είναι rect
-        εύρους <InlineMath>{'W/2'}</InlineMath>, η USSB είναι rect από{' '}
-        <InlineMath>{'f_c'}</InlineMath> έως{' '}
-        <InlineMath>{'f_c+W/2'}</InlineMath>· αν είναι sinc² (τρίγωνο στη
-        συχνότητα), η USSB είναι τρίγωνο που πέφτει από{' '}
-        <InlineMath>{'f_c'}</InlineMath>.
+        <strong>USSB = κράτα μία πλευρική· το σχήμα της λοβής το ορίζει το baseband.</strong>{' '}
+        Η USSB «σηκώνει» το θετικό μισό του baseband φάσματος πάνω στο φέρον και κρατά{' '}
+        <em>μόνο</em> αυτό: η λοβή ξεκινά στο <InlineMath>{'f_c'}</InlineMath> και απλώνεται προς
+        τα πάνω κατά το bandwidth (το φάσμα έχει βέβαια πάντα και το κάτοπτρό του στις
+        αρνητικές). Άρα: <InlineMath>{'m = \\mathrm{sinc}(Wt)'}</InlineMath> → rect (μισό-εύρος{' '}
+        <InlineMath>{'W/2'}</InlineMath>) ⇒ USSB rect στο{' '}
+        <InlineMath>{'[f_1,\\, f_1 + W/2]'}</InlineMath>·{' '}
+        <InlineMath>{'k = \\mathrm{sinc}^2(Wt)'}</InlineMath> → τρίγωνο (μισό-εύρος{' '}
+        <InlineMath>{'W'}</InlineMath>, <em>διπλάσιο</em> — τετράγωνο στον χρόνο = συνέλιξη στη
+        συχνότητα) ⇒ USSB τρίγωνο με <strong>κορυφή στο <InlineMath>{'f_2'}</InlineMath></strong>{' '}
+        ως το <InlineMath>{'f_2 + W'}</InlineMath>.
       </p>
     ),
     examRadar: (
-      <p>
-        Όποτε σου ζητούν να σχεδιάσεις SSB, σκέψου «παίρνω το baseband
-        spectrum, το ανεβάζω γύρω από <InlineMath>{'\\pm f_c'}</InlineMath>,
-        και μετά κόβω είτε την upper είτε την lower». Πάντα να σχεδιάζεις
-        και τις αρνητικές συχνότητες — το φάσμα είναι συμμετρικό.
-      </p>
+      <>
+        <p>
+          «Αποτύπωσε σχηματικά το φάσμα πλάτους» SSB σήματος → η βαθμολογία πάει στο{' '}
+          <strong>σχήμα + εύρος + θέση</strong>, όχι στο ακριβές ύψος. Σκέψου «παίρνω το
+          baseband, κρατώ μόνο την πάνω (USSB) ή κάτω (LSSB) πλευρική γύρω από{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath>». Εδώ είναι 9% και καθαρά σχεδιαστικό —{' '}
+          <strong>χρόνος-στόχος ~8–10 λεπτά</strong> (3΄ να αναγνωρίσεις τα δύο σχήματα, 5΄ να
+          σχεδιάσεις τις 4 λοβές με τα κάτοπτρα).
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Τέσσερις παγίδες.</strong> (1){' '}
+          <strong>Σχεδιάζεις και τις δύο πλευρικές:</strong> αυτό είναι DSB-SC — η USSB κρατά{' '}
+          <strong>μία</strong>. (2) <strong>Λάθος προσανατολισμός τριγώνου:</strong> η κορυφή της
+          USSB λοβής του <InlineMath>{'k'}</InlineMath> είναι <em>κολλητά στο φέρον</em>{' '}
+          <InlineMath>{'f_2'}</InlineMath> (εκεί πέφτει η κορυφή{' '}
+          <InlineMath>{'f=0'}</InlineMath> του baseband) και πέφτει προς τα έξω — όχι ανάποδα. (3){' '}
+          <strong>Μπερδεύεις τα εύρη:</strong> το <InlineMath>{'\\mathrm{sinc}^2'}</InlineMath>{' '}
+          είναι <em>πιο πλατύ</em> (<InlineMath>{'W'}</InlineMath>) από το{' '}
+          <InlineMath>{'\\mathrm{sinc}'}</InlineMath> (<InlineMath>{'W/2'}</InlineMath>) — το
+          τετράγωνο στον χρόνο <strong>διπλασιάζει</strong> το φασματικό εύρος, δεν το αφήνει
+          ίδιο. (4) <strong>Ξεχνάς το κάτοπτρο</strong> στις αρνητικές συχνότητες — το φάσμα
+          πραγματικού σήματος είναι συμμετρικό.
+        </div>
+      </>
     ),
   },
 

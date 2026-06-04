@@ -1146,81 +1146,235 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα — τι κάνει στ' αλήθεια η USSB.</strong>{' '}
+          <span className="text-fg-muted">
+            Το φάσμα ενός πραγματικού σήματος είναι <em>συμμετρικό</em>: η πάνω και η κάτω
+            πλευρική κουβαλούν <strong>την ίδια</strong> πληροφορία. Το DSB-SC τις στέλνει και
+            τις δύο· η USSB πετάει τη μισή και κρατά <strong>μόνο την πάνω</strong> — μισό
+            bandwidth, ίδια πληροφορία. Το κλειδί όλου του θέματος:{' '}
+            <em>
+              το σχήμα του baseband καθορίζει το σχήμα της διαμορφωμένης λοβής — η διαμόρφωση
+              απλώς «σηκώνει» το θετικό μισό του φάσματος πάνω στο φέρον
+            </em>
+            . Άρα η μέθοδος είναι δύο βήματα: πρώτα βρίσκουμε τα δύο baseband φάσματα, μετά
+            κρατάμε το πάνω μισό του καθενός γύρω από το φέρον του (
+            <Link href="/am/ssb" className="text-accent underline-offset-2 hover:underline">
+              /am/ssb §2c, §3
+            </Link>
+            ).
+          </span>
+        </div>
+
         <p>
-          <strong>Baseband φάσματα:</strong>
-        </p>
-        <BlockMath>{'M(f) = \\tfrac{1}{W}\\,\\mathrm{rect}(f/W) \\quad\\Rightarrow\\quad |M(f)|\\text{ = ορθογώνιο πλάτος }1/W,\\; |f| < W/2'}</BlockMath>
-        <BlockMath>{'K(f) = \\tfrac{1}{W}\\,\\mathrm{tri}(f/W) \\quad\\Rightarrow\\quad |K(f)|\\text{ = τρίγωνο κορυφή }1/W,\\; |f| < W'}</BlockMath>
-        <p>
-          (Σημείωση: το <InlineMath>{'\\mathrm{sinc}^2(Wt)'}</InlineMath> έχει
-          <strong> διπλάσιο</strong> εύρος από το{' '}
-          <InlineMath>{'\\mathrm{sinc}(Wt)'}</InlineMath> — βλ. ΘΕΜΑ 8.)
-        </p>
-        <p>
-          <strong>USSB διαμόρφωση:</strong> κρατάμε <em>μόνο</em> την upper
-          sideband γύρω από κάθε φέρον. Για το{' '}
-          <InlineMath>{'m(t)'}</InlineMath> με carrier{' '}
-          <InlineMath>{'f_1'}</InlineMath>:
-        </p>
-        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
-          <li>
-            Στα θετικά <InlineMath>f</InlineMath>: rect από{' '}
-            <InlineMath>{'f_1'}</InlineMath> έως{' '}
-            <InlineMath>{'f_1 + W/2'}</InlineMath>, ύψος{' '}
-            <InlineMath>{'1/(2W)'}</InlineMath>.
-          </li>
-          <li>
-            Mirror στα αρνητικά: rect από{' '}
-            <InlineMath>{'-f_1 - W/2'}</InlineMath> έως{' '}
-            <InlineMath>{'-f_1'}</InlineMath>, ίδιο ύψος.
-          </li>
-        </ul>
-        <p>
-          Για το <InlineMath>{'k(t)'}</InlineMath> με carrier{' '}
-          <InlineMath>{'f_2'}</InlineMath>:
+          <strong>(1) Τα φάσματα βασικής ζώνης — και γιατί το ένα είναι rect και το άλλο τρίγωνο.</strong>{' '}
+          Τα δύο σήματα μοιάζουν στον χρόνο, αλλά το <InlineMath>{'k'}</InlineMath> είναι το{' '}
+          <em>τετράγωνο</em> του <InlineMath>{'m'}</InlineMath> — κι αυτό αλλάζει εντελώς το σχήμα
+          στη συχνότητα.
         </p>
         <ul className="ml-5 list-disc space-y-1 text-fg-muted">
           <li>
-            Στα θετικά: <em>τρίγωνο</em> από <InlineMath>{'f_2'}</InlineMath>{' '}
-            (κορυφή ύψους <InlineMath>{'1/(2W)'}</InlineMath>) πέφτοντας
-            γραμμικά στο 0 στο <InlineMath>{'f_2 + W'}</InlineMath>.
+            <strong>
+              <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath>
+            </strong>{' '}
+            — ένα sinc στον χρόνο έχει για μετασχηματισμό ένα <strong>καθαρό rect</strong> στη
+            συχνότητα (το ζεύγος{' '}
+            <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\mathrm{rect}'}</InlineMath> του
+            τυπολογίου):
+            <BlockMath>{'M(f) = \\tfrac{1}{W}\\,\\mathrm{rect}\\!\\left(\\tfrac{f}{W}\\right),\\qquad |f| < \\tfrac{W}{2}'}</BlockMath>
+            επίπεδο ύψος <InlineMath>{'1/W'}</InlineMath>, <strong>μισό-εύρος{' '}
+            <InlineMath>{'W/2'}</InlineMath></strong>.
           </li>
           <li>
-            Mirror στα αρνητικά γύρω από <InlineMath>{'-f_2'}</InlineMath>.
+            <strong>
+              <InlineMath>{'k(t) = \\mathrm{sinc}^2(Wt)'}</InlineMath>
+            </strong>{' '}
+            — εδώ είναι το <em>τετράγωνο</em>. Και πολλαπλασιασμός στον χρόνο σημαίνει{' '}
+            <strong>συνέλιξη στη συχνότητα</strong>: αφού{' '}
+            <InlineMath>{'\\mathrm{sinc}^2 = \\mathrm{sinc}\\cdot\\mathrm{sinc}'}</InlineMath>, το{' '}
+            <InlineMath>{'K(f) = M(f) * M(f) = \\mathrm{rect} * \\mathrm{rect}'}</InlineMath> — και
+            η συνέλιξη δύο rect δίνει <strong>τρίγωνο</strong>:
+            <BlockMath>{'K(f) = \\tfrac{1}{W}\\,\\mathrm{tri}\\!\\left(\\tfrac{f}{W}\\right),\\qquad |f| < W'}</BlockMath>
+            κορυφή <InlineMath>{'1/W'}</InlineMath> στο <InlineMath>{'f=0'}</InlineMath>, γραμμικά
+            στο 0 στα <InlineMath>{'|f| = W'}</InlineMath> — <strong>μισό-εύρος{' '}
+            <InlineMath>{'W'}</InlineMath></strong>.
           </li>
         </ul>
-        <svg
-          viewBox="0 0 480 140"
-          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
-          role="img"
-          aria-label="USSB φάσματα: rect στο [f_1, f_1+W/2] για το m(t) και τρίγωνο με κορυφή στο f_2 και βάση στο f_2+W για το k(t)"
-        >
-          {/* x-axis */}
-          <line x1="20" y1="100" x2="438" y2="100" stroke="currentColor" strokeOpacity="0.45" />
-          <polygon points="444,100 434,96 434,104" fill="currentColor" fillOpacity="0.5" />
-          <text x="448" y="104" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f</text>
-          {/* origin tick */}
-          <line x1="40" y1="97" x2="40" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <text x="40" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.75">0</text>
-          {/* USSB(m) — rect [f_1, f_1+W/2], height 1/(2W) */}
-          <rect x="120" y="70" width="60" height="30" fill="rgba(29, 78, 216, 0.20)" stroke="rgb(29, 78, 216)" strokeOpacity="0.9" />
-          <text x="150" y="62" textAnchor="middle" fontSize="10" fill="rgb(29, 78, 216)" fillOpacity="0.95">USSB(m)</text>
-          {/* USSB(k) — right triangle: peak at f_2, drops to 0 at f_2+W */}
-          <path d="M 260 70 L 260 100 L 400 100 Z" fill="rgba(220, 38, 38, 0.18)" stroke="rgb(220, 38, 38)" strokeOpacity="0.9" />
-          <text x="296" y="62" fontSize="10" fill="rgb(220, 38, 38)" fillOpacity="0.95">USSB(k)</text>
-          {/* tick marks */}
-          <line x1="120" y1="97" x2="120" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="180" y1="97" x2="180" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="260" y1="97" x2="260" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          <line x1="400" y1="97" x2="400" y2="103" stroke="currentColor" strokeOpacity="0.5" />
-          {/* tick labels */}
-          <text x="120" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_1</text>
-          <text x="180" y="116" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.8">f_1+W/2</text>
-          <text x="260" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_2</text>
-          <text x="400" y="116" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">f_2+W</text>
-          {/* note */}
-          <text x="240" y="132" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.6" fontStyle="italic">(+ καθρέφτης στις αρνητικές f γύρω από −f_1 και −f_2)</text>
-        </svg>
+        <p>
+          <strong>Με απλά λόγια — το τετράγωνο διπλασιάζει το εύρος.</strong> Συνελίσσοντας δύο
+          rect μισού-εύρους <InlineMath>{'W/2'}</InlineMath>, το αποτέλεσμα απλώνεται ως το{' '}
+          <InlineMath>{'\\tfrac{W}{2} + \\tfrac{W}{2} = W'}</InlineMath>: το{' '}
+          <InlineMath>{'k'}</InlineMath> έχει <strong>διπλάσιο</strong> φασματικό εύρος από το{' '}
+          <InlineMath>{'m'}</InlineMath> (
+          <Link
+            href="/practice#exercise:proodos26-8"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            βλ. ΘΕΜΑ 8
+          </Link>
+          ). Το μεταφερόμενο: <em>τετράγωνο στον χρόνο ⇒ αυτοσυνέλιξη στη συχνότητα ⇒ πιο πλατύ,
+          πιο ομαλό φάσμα</em>. Και τα δύο φάσματα είναι εδώ <strong>αυστηρά bandlimited</strong>{' '}
+          (rect και τρίγωνο έχουν πεπερασμένη υποστήριξη) — άρα το σχέδιο είναι <em>ακριβές</em>,
+          δεν έχουμε ουρές να κόψουμε.
+        </p>
+
+        <p>
+          <strong>(2) Τα διαμορφωμένα φάσματα — η USSB κρατά μόνο την πάνω πλευρική.</strong> Το
+          DSB-SC θα έβαζε <em>και τις δύο</em> πλευρικές γύρω από κάθε{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath>. Η USSB κρατά <strong>μόνο την πάνω</strong>: η
+          λοβή ξεκινά <em>πάνω στο φέρον</em> και απλώνεται προς τα πάνω κατά ακριβώς το bandwidth
+          του μηνύματος, με σχήμα <strong>το θετικό μισό του baseband</strong>.
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>
+              Το <InlineMath>{'m'}</InlineMath> στο <InlineMath>{'f_1'}</InlineMath>:
+            </strong>{' '}
+            το θετικό μισό του <InlineMath>{'M(f)'}</InlineMath> (επίπεδο στο{' '}
+            <InlineMath>{'[0,\\, W/2]'}</InlineMath>) σηκώνεται στο φέρον ⇒ <strong>rect</strong>{' '}
+            από <InlineMath>{'f_1'}</InlineMath> έως <InlineMath>{'f_1 + W/2'}</InlineMath> (πλάτος
+            ζώνης <InlineMath>{'W/2'}</InlineMath>), και κατοπτρικά{' '}
+            <InlineMath>{'[-f_1 - W/2,\\, -f_1]'}</InlineMath>.
+          </li>
+          <li>
+            <strong>
+              Το <InlineMath>{'k'}</InlineMath> στο <InlineMath>{'f_2'}</InlineMath>:
+            </strong>{' '}
+            το θετικό μισό του <InlineMath>{'K(f)'}</InlineMath> είναι η <em>κατηφόρα</em> του
+            τριγώνου (κορυφή στο <InlineMath>{'f=0'}</InlineMath>, μηδέν στο{' '}
+            <InlineMath>{'f=W'}</InlineMath>). Σηκωμένο στο φέρον γίνεται{' '}
+            <strong>ορθογώνιο τρίγωνο</strong> με <em>κορυφή πάνω στο{' '}
+            <InlineMath>{'f_2'}</InlineMath></em>, πέφτοντας γραμμικά στο 0 στο{' '}
+            <InlineMath>{'f_2 + W'}</InlineMath> (πλάτος ζώνης <InlineMath>{'W'}</InlineMath>), και
+            κατοπτρικά γύρω από <InlineMath>{'-f_2'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          <strong>Πρόσεξε πού πάει η κορυφή.</strong> Η κορυφή του τριγώνου είναι στο{' '}
+          <InlineMath>{'f=0'}</InlineMath> του baseband — και το{' '}
+          <InlineMath>{'f=0'}</InlineMath> αντιστοιχεί <em>ακριβώς στο φέρον</em>. Γι' αυτό η USSB
+          λοβή του <InlineMath>{'k'}</InlineMath> έχει την κορυφή της <strong>κολλητά στο{' '}
+          <InlineMath>{'f_2'}</InlineMath></strong> και πέφτει προς τα έξω — όχι ανάποδα. Το{' '}
+          <strong>σχήμα διατηρείται</strong>· απλώς επιζεί <strong>μία</strong> πλευρική αντί για
+          δύο. Αυτό είναι το μεταφερόμενο κλειδί: ξέροντάς το, σχεδιάζεις την USSB{' '}
+          <em>οποιουδήποτε</em> baseband, όχι μόνο αυτών των δύο.
+        </p>
+        <p className="text-sm text-fg-muted">
+          (Το ύψος κάθε διαμορφωμένης λοβής κλιμακώνεται με τη σταθερά διαμόρφωσης{' '}
+          <InlineMath>{'A_c'}</InlineMath>· στο «σχηματικά» μετράει το <strong>σχήμα</strong>, το{' '}
+          <strong>εύρος</strong> και η <strong>θέση</strong>, όχι η ακριβής τιμή του ύψους. Οι δύο
+          κορυφές βγαίνουν ίσες, όπως και τα δύο baseband — και τα δύο έχουν κορυφή{' '}
+          <InlineMath>{'1/W'}</InlineMath>.)
+        </p>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Τι ζητάει — και τι όχι — αυτό το θέμα.</strong> Το ΘΕΜΑ 11
+          ζητά <em>μόνο</em> τα τέσσερα φάσματα (δύο baseband + δύο διαμορφωμένα). Η{' '}
+          <em>συνθήκη</em> για τα <InlineMath>{'f_1, f_2'}</InlineMath> ώστε να μην επικαλύπτονται
+          είναι το{' '}
+          <Link
+            href="/practice#exercise:proodos26-12"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            ΘΕΜΑ 12
+          </Link>
+          , και το <em>πολυπλεγμένο</em> <InlineMath>{'G(f)'}</InlineMath> το{' '}
+          <Link
+            href="/practice#exercise:proodos26-13"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            ΘΕΜΑ 13
+          </Link>
+          . Το σχέδιο είναι <strong>σχηματικό</strong>: τα <InlineMath>{'f_1, f_2'}</InlineMath>{' '}
+          είναι αυθαίρετα φέροντα και οι άξονες μετριούνται σε σχετικές μονάδες του{' '}
+          <InlineMath>{'W'}</InlineMath>.
+        </div>
+
+        <figure className="my-4">
+          <FdmCanonicalProblemViz mBW={0.5} kBW={1} kShape="triangle" />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η draw-απάντηση ζωντανή, σε σχετικές μονάδες του <InlineMath>{'W'}</InlineMath>. Τα δύο
+            πάνω panels = τα baseband: <InlineMath>{'M(f)'}</InlineMath> = το rect μπλοκ στο{' '}
+            <InlineMath>{'[-W/2,\\, W/2]'}</InlineMath> (το bracket «<InlineMath>{'W'}</InlineMath>»
+            είναι το συνολικό πλάτος)· <InlineMath>{'K(f)'}</InlineMath> = το τρίγωνο στο{' '}
+            <InlineMath>{'[-W,\\, W]'}</InlineMath> (το bracket «<InlineMath>{'2W'}</InlineMath>»
+            είναι η βάση — διπλάσιο εύρος). Το panel «Modulated USSB»{' '}
+            <strong>είναι η απάντηση του ΘΕΜΑΤΟΣ 11</strong>: το <InlineMath>{'m'}</InlineMath>{' '}
+            γίνεται rect στο <InlineMath>{'[f_1,\\, f_1 + W/2]'}</InlineMath>, το{' '}
+            <InlineMath>{'k'}</InlineMath> γίνεται τρίγωνο με κορυφή στο{' '}
+            <InlineMath>{'f_2'}</InlineMath> και βάση ως το <InlineMath>{'f_2 + W'}</InlineMath> (+
+            κάτοπτρα στις αρνητικές). Το κάτω panel <InlineMath>{'G(f)'}</InlineMath> και ο
+            ολισθητής απόστασης <em>προεπισκοπούν</em> τα ΘΕΜΑΤΑ 12–13. Γύρισε τον διακόπτη σε{' '}
+            <strong>DSB-SC</strong> και δες κάθε λοβή να διπλασιάζεται (το τρίγωνο
+            ξανα-κεντράρεται στο <InlineMath>{'f_2'}</InlineMath>) — το κόστος που γλιτώνει η USSB.
+          </figcaption>
+        </figure>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— μόλις δεις «σχεδίασε το φάσμα ενός SSB σήματος», τρέξε τρία βήματα, ό,τι κι αν
+            είναι το μήνυμα: (1) <strong>βρες το baseband φάσμα</strong> — πρόσεξε το σχήμα: sinc
+            στον χρόνο → rect, <InlineMath>{'\\mathrm{sinc}^2'}</InlineMath> → τρίγωνο,
+            rect-στον-χρόνο → sinc (<em>πολλαπλασιασμός στον χρόνο = συνέλιξη στη συχνότητα</em>);
+            (2) <strong>USSB ⇒ κράτα μόνο την πάνω πλευρική</strong> ⇒ η λοβή ξεκινά στο φέρον και
+            απλώνεται <em>προς τα πάνω</em> κατά το bandwidth, με σχήμα το θετικό μισό του baseband
+            (η κορυφή του baseband πάει κολλητά στο φέρον); (3) <strong>σχεδίασε πάντα και το
+            κάτοπτρο</strong> στις αρνητικές. Για <strong>LSSB</strong> αλλάζει μόνο το βήμα (2):
+            κρατάς την κάτω πλευρική ⇒ η λοβή απλώνεται <em>προς τα κάτω</em> από το φέρον. Αυτά τα
+            τρία σε βγάζουν σε <em>οποιοδήποτε</em> σχήμα × USSB/LSSB χωρίς να θυμάσαι αυτό το
+            συγκεκριμένο σχέδιο.
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted"> — ίδιος σκελετός, αλλαγμένη μία επιλογή:</span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>LSSB αντί USSB.</strong> Κράτα την <em>κάτω</em> πλευρική: το{' '}
+              <InlineMath>{'m'}</InlineMath> γίνεται rect στο{' '}
+              <InlineMath>{'[f_1 - W/2,\\, f_1]'}</InlineMath>, το <InlineMath>{'k'}</InlineMath>{' '}
+              τρίγωνο με κορυφή πάλι στο <InlineMath>{'f_2'}</InlineMath> αλλά πέφτοντας{' '}
+              <em>προς τα κάτω</em> ως το <InlineMath>{'f_2 - W'}</InlineMath>. Ίδια σχήματα,
+              καθρεφτισμένη επιλογή πλευρικής. (Δες{' '}
+              <Link
+                href="/practice#exercise:pb25-th2-3"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Πρόοδ. Β 2025 ΘΕΜΑ 2.3
+              </Link>
+              , LSSB με sinc μήνυμα.)
+            </li>
+            <li>
+              <strong>DSB-SC αντί USSB.</strong> Κάθε κανάλι γίνεται διπλής πλευρικής ⇒ το{' '}
+              <InlineMath>{'m'}</InlineMath> πιάνει <InlineMath>{'W'}</InlineMath> (
+              <InlineMath>{'[f_1 - W/2,\\, f_1 + W/2]'}</InlineMath>), το{' '}
+              <InlineMath>{'k'}</InlineMath> πιάνει <InlineMath>{'2W'}</InlineMath> (πλήρες τρίγωνο
+              κεντραρισμένο στο <InlineMath>{'f_2'}</InlineMath>). Γύρισε τον διακόπτη του viz σε
+              DSB-SC και επιβεβαίωσέ το — η ελάχιστη απόσταση πηδά από{' '}
+              <InlineMath>{'W/2'}</InlineMath> στο{' '}
+              <InlineMath>{'\\tfrac{W}{2} + W = \\tfrac{3W}{2}'}</InlineMath> (άθροισμα των δύο
+              μισών-ευρών). (Η DSB-SC FDM με άνισα εύρη είναι ακριβώς το{' '}
+              <Link
+                href="/practice#exercise:pb25-th3-mux"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Πρόοδ. Β 2025 ΘΕΜΑ 3
+              </Link>
+              .)
+            </li>
+            <li>
+              <strong>Αντίστρεψε τα σχήματα.</strong> Αν ήταν{' '}
+              <InlineMath>{'m(t) = \\mathrm{sinc}^2(Wt)'}</InlineMath> (τρίγωνο, εύρος{' '}
+              <InlineMath>{'W'}</InlineMath>) και{' '}
+              <InlineMath>{'k(t) = \\mathrm{sinc}(Wt)'}</InlineMath> (rect, εύρος{' '}
+              <InlineMath>{'W/2'}</InlineMath>), οι δύο USSB λοβές απλώς <em>ανταλλάσσουν</em>{' '}
+              σχήμα — ξαναϋπολόγισε μόνο το βήμα (1). Καλό τεστ ότι κατάλαβες πως το σχήμα της
+              λοβής το ορίζει το baseband, όχι το φέρον.
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
