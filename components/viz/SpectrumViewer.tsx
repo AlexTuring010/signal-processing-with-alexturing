@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Lightbulb } from 'lucide-react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 import { cn } from '@/lib/utils'
+import { InlineMath } from '@/components/math'
 
 /**
  * Side-by-side: time signal + amplitude spectrum + phase spectrum.
@@ -29,6 +30,8 @@ type Preset = {
   id: string
   label: string
   description: string
+  /** Closed-form x(t) (cosine form), shown so each spectrum maps to a real signal equation. */
+  formula: string
   // returns a_k for k in [-K_MAX, K_MAX]; key is the integer k.
   coeffs: () => Map<number, Coeff>
 }
@@ -38,6 +41,7 @@ const PRESETS: Preset[] = [
     id: 'cosine',
     label: 'Καθαρό cosine',
     description: 'Δύο σπικς, στο +f₀ και −f₀, μέτρο 1/2.',
+    formula: 'x(t) = \\cos(\\omega_0 t)',
     coeffs: () => {
       const m = new Map<number, Coeff>()
       m.set(1, { mag: 0.5, phase: 0 })
@@ -49,6 +53,7 @@ const PRESETS: Preset[] = [
     id: 'cos-phase',
     label: 'Cosine με phase shift',
     description: 'Ίδια πλάτη, διαφορετικές φάσεις. Το σχήμα στον χρόνο μετατοπίζεται.',
+    formula: 'x(t) = \\cos(\\omega_0 t + \\pi/3)',
     coeffs: () => {
       const phi = Math.PI / 3
       const m = new Map<number, Coeff>()
@@ -61,6 +66,7 @@ const PRESETS: Preset[] = [
     id: 'two-cosines',
     label: 'cos + 3η αρμονική',
     description: 'Προστίθεται μια αρμονική στο 3f₀ — πολύ απλή «μη-cosine» κυματομορφή.',
+    formula: 'x(t) = \\cos\\omega_0 t + \\tfrac12\\cos 3\\omega_0 t',
     coeffs: () => {
       const m = new Map<number, Coeff>()
       m.set(1, { mag: 0.5, phase: 0 })
@@ -75,6 +81,8 @@ const PRESETS: Preset[] = [
     label: 'Τετραγωνικός παλμός 50%',
     description:
       'a_k = ½·sinc(k/2). Μόνο περιττές αρμονικές, μέτρα φθίνουν σαν 1/k. DC = 1/2.',
+    formula:
+      'x(t) = \\tfrac12 + \\tfrac{2}{\\pi}\\left[\\cos\\omega_0 t - \\tfrac13\\cos 3\\omega_0 t + \\tfrac15\\cos 5\\omega_0 t - \\cdots\\right]',
     coeffs: () => {
       const m = new Map<number, Coeff>()
       m.set(0, { mag: 0.5, phase: 0 })
@@ -118,6 +126,9 @@ export function SpectrumViewer() {
             Σήμα και φάσμα — δύο όψεις του ίδιου πράγματος
           </h4>
           <p className="text-xs text-fg-muted">{preset.description}</p>
+          <p className="mt-1 overflow-x-auto text-[13px] text-fg">
+            <InlineMath>{preset.formula}</InlineMath>
+          </p>
         </div>
         <label className="flex items-center gap-1.5 text-xs text-fg-muted">
           <input
@@ -199,58 +210,56 @@ function PhaseRecapForSquare() {
     <aside className="mt-3 rounded-lg border border-amber-300/60 bg-amber-50/70 px-4 py-3.5 text-amber-950 shadow-sm dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100">
       <div className="mb-2 flex items-center gap-2 text-sm font-semibold tracking-tight">
         <Lightbulb className="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span>Γιατί η φάση εδώ μοιάζει «επίπεδη»;</span>
+        <span>Γιατί η φάση βγαίνει μόνο 0 ή π — κι εναλλάξ;</span>
       </div>
-      <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-start">
-        <div className="text-[0.95rem] leading-relaxed [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+
+      <div className="text-[0.95rem] leading-relaxed [&>*:first-child]:mt-0">
+        <p>
+          Κοίτα τα <strong>πρόσημα</strong> των πρώτων συντελεστών. Το{' '}
+          <InlineMath>{'a_k = \\tfrac12\\,\\mathrm{sinc}(k/2)'}</InlineMath> <strong>εναλλάσσει πρόσημο</strong>{' '}
+          καθώς ανεβαίνεις αρμονικές (οι ζυγές μηδενίζονται):
+        </p>
+        <ul className="my-2 grid gap-0.5 pl-1">
+          <li><InlineMath>{'a_1 = +\\tfrac{1}{\\pi}'}</InlineMath> → θετικό → <strong>φάση 0</strong></li>
+          <li><InlineMath>{'a_3 = -\\tfrac{1}{3\\pi}'}</InlineMath> → αρνητικό → <strong>φάση π</strong></li>
+          <li><InlineMath>{'a_5 = +\\tfrac{1}{5\\pi}'}</InlineMath> → θετικό → <strong>φάση 0</strong></li>
+          <li><InlineMath>{'a_7 = -\\tfrac{1}{7\\pi}'}</InlineMath> → αρνητικό → <strong>φάση π</strong></li>
+        </ul>
+        <p>Στη <strong>cosine μορφή</strong> τα εναλλασσόμενα πρόσημα φαίνονται ολοκάθαρα:</p>
+        <p className="my-1.5 overflow-x-auto">
+          <InlineMath>{'x(t) = \\tfrac12 + \\tfrac{2}{\\pi}\\left[\\cos\\omega_0 t - \\tfrac13\\cos 3\\omega_0 t + \\tfrac15\\cos 5\\omega_0 t - \\cdots\\right]'}</InlineMath>
+        </p>
+        <p>
+          Και να το κλειδί: <strong>ένα «−» μπροστά από ένα cosine ΕΙΝΑΙ φάση π</strong>, αφού{' '}
+          <InlineMath>{'-\\cos\\theta = \\cos(\\theta + \\pi)'}</InlineMath>. Άρα τα πρόσημα{' '}
+          <InlineMath>{'+,-,+,-'}</InlineMath> του sinc <em>είναι</em> ακριβώς οι φάσεις{' '}
+          <InlineMath>{'0,\\,\\pi,\\,0,\\,\\pi'}</InlineMath>. Τίποτα ενδιάμεσο δεν εμφανίζεται γιατί τα{' '}
+          <InlineMath>{'a_k'}</InlineMath> είναι <strong>πραγματικοί</strong> αριθμοί (συμμετρικό σήμα).
+        </p>
+      </div>
+
+      <div className="mt-3 grid gap-3 border-t border-amber-300/40 pt-3 dark:border-amber-400/20 sm:grid-cols-[1fr_auto] sm:items-center">
+        <div className="text-[0.9rem] leading-relaxed [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
           <p>
-            <strong>Πριν προχωρήσουμε — γρήγορη υπενθύμιση:</strong> η{' '}
-            <strong>φάση</strong> ενός μιγαδικού <em>z</em> είναι η γωνία που
-            σχηματίζει το διάνυσμά του με τον θετικό real άξονα στο{' '}
-            <Link
-              href="/reference/complex-numbers#plane"
-              className="text-accent underline-offset-2 hover:underline"
-            >
+            <strong>Θύμησου τι σημαίνει φάση:</strong> η γωνία που σχηματίζει το διάνυσμα του{' '}
+            μιγαδικού <em>z</em> με τον θετικό real άξονα στο{' '}
+            <Link href="/reference/complex-numbers#plane" className="text-accent underline-offset-2 hover:underline">
               μιγαδικό επίπεδο
-            </Link>
-            . Για τα ειδικά σημεία:
-          </p>
-          <ul className="my-2 list-disc space-y-0.5 pl-5">
-            <li>
-              <em>z</em> καθαρά <strong>πραγματικός θετικός</strong> (π.χ.{' '}
-              <span className="font-mono">+5</span>) → στον θετικό real άξονα →{' '}
-              <strong>φάση = 0</strong>.
-            </li>
-            <li>
-              <em>z</em> καθαρά <strong>πραγματικός αρνητικός</strong> (π.χ.{' '}
-              <span className="font-mono">−5</span>) → στον αρνητικό real άξονα →{' '}
-              <strong>φάση = π</strong> (ή ισοδύναμα <span className="font-mono">−π</span>{' '}
-              — ίδιο σημείο στον μοναδιαίο κύκλο).
-            </li>
-            <li>
-              <em>z</em> καθαρά <strong>φανταστικός θετικός</strong> (π.χ.{' '}
-              <span className="font-mono">+5j</span>) → πάνω από τον real άξονα →{' '}
-              <strong>φάση = π/2</strong>.
-            </li>
-            <li>
-              <em>z</em> καθαρά <strong>φανταστικός αρνητικός</strong> (π.χ.{' '}
-              <span className="font-mono">−5j</span>) → κάτω από τον real άξονα →{' '}
-              <strong>φάση = −π/2</strong>.
-            </li>
-          </ul>
-          <p>
-            Με αυτό κατά νου: εδώ όλα τα <span className="font-mono">aₖ</span>{' '}
-            είναι <strong>πραγματικοί</strong> αριθμοί (η σειρά Fourier ενός
-            συμμετρικού square wave είναι πραγματική). Άρα οι φάσεις είναι ή{' '}
-            <strong>0</strong> (για θετικά <span className="font-mono">aₖ</span>) ή{' '}
-            <strong>π</strong> (για αρνητικά). Επειδή <span className="font-mono">+π</span>{' '}
-            και <span className="font-mono">−π</span> είναι το ίδιο σημείο στον μοναδιαίο
-            κύκλο, η αντισυμμετρία της φάσης δεν φαίνεται οπτικά. Δες το preset{' '}
-            <strong>«Cosine με phase shift»</strong> για να την δεις καθαρά.
+            </Link>. Ένας <strong>πραγματικός</strong> αριθμός δείχνει μόνο δεξιά ή αριστερά:{' '}
+            <span className="font-mono">+</span> → φάση 0, <span className="font-mono">−</span> → φάση π.
+            (Φανταστικός θα έδειχνε πάνω/κάτω → <InlineMath>{'\\pm\\pi/2'}</InlineMath> — εδώ δεν συμβαίνει.)
           </p>
         </div>
         <PhaseFourCasesSVG />
       </div>
+
+      <p className="mt-3 text-[0.9rem] leading-relaxed">
+        <strong>Και γιατί μοιάζει «επίπεδη»;</strong> Επειδή όλες οι φάσεις είναι 0 ή{' '}
+        <InlineMath>{'\\pm\\pi'}</InlineMath>, κι επειδή <InlineMath>{'+\\pi'}</InlineMath> και{' '}
+        <InlineMath>{'-\\pi'}</InlineMath> είναι το ίδιο σημείο στον κύκλο, η αντισυμμετρία της φάσης
+        δεν ξεχωρίζει οπτικά. Διάλεξε το preset <strong>«Cosine με phase shift»</strong> (φάσεις{' '}
+        <InlineMath>{'\\pm\\pi/3'}</InlineMath>) για να τη δεις καθαρά.
+      </p>
     </aside>
   )
 }
