@@ -100,6 +100,11 @@ to the lecture material; don't enrich a section just because a
 commenter asked. If the lecture doesn't say it, the site shouldn't
 either (without a strong reason).
 
+But be clear what this rule is: it governs **whether** you touch the
+content — *never* how well. The moment you decide a fix is warranted,
+the bar flips to "go above and beyond" (see §5). Picking "fix" and then
+doing a rushed, corner-cutting job is the worst of both worlds.
+
 ### 3. Verify against the actual file
 
 Before deciding a verdict, open the file the comment is about. Slug →
@@ -130,8 +135,38 @@ Reply rules:
 
 ### 5. Implement (only if verdict is "fix")
 
-Edit the file(s) per the verdict. Keep edits minimal. One commit per
-addressed comment, message in the form:
+Once you've decided to fix, the bar for **how** is the full
+NON-NEGOTIABLE teaching philosophy in `CLAUDE.md` — no rush, no corners
+cut. **A comment is a signal that the material failed a real student
+once;** the job is to make sure the *next* reader never hits that wall —
+not to do the smallest thing that closes the ticket.
+
+**Minimal in *scope*, not in *quality*.** Keep the blast radius tight:
+touch only what the comment is about — don't rewrite unrelated sections
+or enrich things nobody asked about. But *within* that scope, go all the
+way:
+
+- **A correct one-liner is not a finished fix.** If the topic deserves
+  intuition-first build-up, a *derivation* instead of an asserted
+  result, a worked example, a plain-language "τι σημαίνει αυτό" sentence
+  after the formula, or a small viz — then that is what the fix is.
+  Match the depth of the best sections on the site, not the minimum that
+  makes the comment go away.
+- **Teach the way the rest of the site teaches:** intuition before math,
+  derive don't assert, zero assumptions (if the reader forgot a term,
+  explain it or link where it's explained), every formula earns one
+  plain-language sentence. This is the exact "stupid-student" bar the
+  whole site is held to — apply it to your own fix before committing.
+- **Still ground every word in the lecture material / `plans/`.** "Above
+  and beyond" means teaching the *existing* material **better** — never
+  inventing scope or content the course doesn't have. If a proper fix
+  would need material that isn't built yet, that's a hard stop → leave
+  it pending and surface to the moderator.
+- **Verify it builds and renders** (KaTeX, MDX, the viz) before you
+  commit. A fix that breaks the page is worse than no fix.
+
+Keep the edit's *footprint* small and reviewable, but never let "small"
+become "shallow." One commit per addressed comment, message in the form:
 
 ```
 <short summary> (comment <8-char id prefix>)
