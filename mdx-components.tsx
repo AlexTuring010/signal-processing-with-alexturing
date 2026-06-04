@@ -69,6 +69,7 @@ import { ComplexMultiplicationViz } from '@/components/viz/ComplexMultiplication
 import { VectorDecomposition3D } from '@/components/viz/VectorDecomposition3D'
 import { HarmonicOrthogonalityCheck } from '@/components/viz/HarmonicOrthogonalityCheck'
 import { SpectrumViewer } from '@/components/viz/SpectrumViewer'
+import { CosineSuperpositionViz } from '@/components/viz/CosineSuperpositionViz'
 import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourier'
 import { SquareWaveBuilder } from '@/components/viz/SquareWaveBuilder'
 import { PeriodToInfinity } from '@/components/viz/PeriodToInfinity'
@@ -254,6 +255,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     VectorDecomposition3D,
     HarmonicOrthogonalityCheck,
     SpectrumViewer,
+    CosineSuperpositionViz,
     RectangularPulseFourier,
     SquareWaveBuilder,
     PeriodToInfinity,
