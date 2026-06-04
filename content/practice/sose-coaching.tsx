@@ -1243,20 +1243,53 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'jun25-th2': {
     takeaway: (
       <p>
-        DSB-SC + DSB συμβατικό σε FDM: το πρώτο χρειάζεται coherent demod,
-        το δεύτερο μπορεί να αποδιαμορφωθεί με envelope detector + BPF
-        (αρκεί <InlineMath>{'\\mu \\le 1'}</InlineMath>). Ο ολοκληρωμένος
-        δέκτης: BPF γύρω από το συγκεκριμένο carrier → envelope detector
-        → DC blocker.
+        <strong>Μικτό FDM — η γραμμή-φέρουσα τα λέει όλα.</strong> Το «AM-DSB-SC» δίνει{' '}
+        <em>δύο πλευρικές, καμία γραμμή</em> (κατεσταλμένη φέρουσα → αποδοτικό, αλλά θέλει{' '}
+        <em>σύμφωνη</em> αποδιαμόρφωση)· το «AM-DSB» (συμβατικό, <em>με</em> φέρουσα) δίνει{' '}
+        <em>δύο πλευρικές + μια ψηλή ακίδα-φέρουσα</em> στο <InlineMath>{'f_c'}</InlineMath>{' '}
+        (σπατάλη ισχύος, αλλά το διαβάζει φτηνός ανιχνευτής περιβάλλουσας, αρκεί{' '}
+        <InlineMath>{'\\mu \\le 1'}</InlineMath>). Μη-επικάλυψη: χτισμένη από τα{' '}
+        <em>πραγματικά</em> εύρη — εδώ <InlineMath>{'m \\to'}</InlineMath> μισό-εύρος{' '}
+        <InlineMath>{'W/2'}</InlineMath>, <InlineMath>{'k = \\mathrm{sinc}(6Wt) \\to'}</InlineMath>{' '}
+        rect μισό-εύρος <InlineMath>{'3W'}</InlineMath> (6× πλατύτερο) → ελάχιστο κενό{' '}
+        <InlineMath>{'\\tfrac{W}{2} + 3W = \\tfrac{7W}{2}'}</InlineMath>, δηλ.{' '}
+        <InlineMath>{'n \\ge 1 + \\tfrac{7W}{2 f_1}'}</InlineMath> —{' '}
+        <strong>όχι</strong> έτοιμο <InlineMath>{'2W'}</InlineMath>.{' '}
+        <strong>Μεταφερόμενο:</strong> γραμμή στο φάσμα = «αποδιαμορφώνεται με περιβάλλουσα» +
+        «εκεί κρύβεται η ισχύς» + «η ενέργεια απειρίζεται».
       </p>
     ),
     examRadar: (
-      <p>
-        Μεγάλο πρόβλημα 25% με 6 σκέλη → απάντησέ τα ένα-ένα. Το «ποιο
-        μπορεί να αποδιαμορφωθεί χωρίς coherent» είναι σχεδόν πάντα μέρος
-        της εκφώνησης σε mixed DSB-SC + AM problems — η απάντηση «μόνο το
-        AM με carrier» είναι κρίσιμη.
-      </p>
+      <>
+        <p>
+          Ολόκληρο θέμα ~25% με 6 σκέλη → απάντησέ τα ένα-ένα. Το διακριτικό που ψάχνει: ξεχωρίζεις
+          DSB-SC (χωρίς γραμμή) από συμβατικό AM (με γραμμή), και βγάζεις ότι{' '}
+          <em>μόνο</em> το κανάλι με τη φέρουσα σώζεται από έναν ανιχνευτή περιβάλλουσας. Ο δέκτης:
+          BPF στο <InlineMath>{'f_2'}</InlineMath> (εύρος <InlineMath>{'6W'}</InlineMath>) → ανιχνευτής
+          περιβάλλουσας → αποκοπή DC. Χρόνος-στόχος: <strong>~18–20 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Πέντε παγίδες.</strong> (1){' '}
+          <strong>
+            Γράφεις μηχανικά <InlineMath>{'\\Delta f \\ge 2W'}</InlineMath>:
+          </strong>{' '}
+          τα εύρη είναι πολύ άνισα (<InlineMath>{'W/2'}</InlineMath> και{' '}
+          <InlineMath>{'3W'}</InlineMath>) → σωστό <InlineMath>{'\\tfrac{7W}{2}'}</InlineMath>{' '}
+          (=<InlineMath>{'\\tfrac{W}{2}+3W'}</InlineMath>). (2){' '}
+          <strong>Ζωγραφίζεις γραμμή-φέρουσα στο DSB-SC κανάλι:</strong> το{' '}
+          <InlineMath>{'m'}</InlineMath> είναι suppressed-carrier → <strong>καμία</strong> γραμμή·
+          μόνο το <InlineMath>{'k'}</InlineMath> (συμβατικό AM) έχει ακίδα στα{' '}
+          <InlineMath>{'\\pm f_2'}</InlineMath>. (3) <strong>Λες ότι σώζονται και τα δύο:</strong>{' '}
+          μόνο το <InlineMath>{'k'}</InlineMath> (έχει φέρουσα)· το{' '}
+          <InlineMath>{'m'}</InlineMath> θέλει σύμφωνη. (4){' '}
+          <strong>Δίνεις πεπερασμένη «συνολική ενέργεια»:</strong> η φέρουσα είναι αιώνιος τόνος →
+          η ενέργεια <em>απειρίζεται</em>· πεπερασμένη είναι μόνο η πληροφοριακή{' '}
+          <InlineMath>{'\\tfrac{7}{12W}'}</InlineMath>. (5){' '}
+          <strong>Λες «BW <InlineMath>{'\\ge'}</InlineMath> Carson» για το BPF:</strong> ο Carson
+          είναι για FM· εδώ το εύρος είναι <InlineMath>{'6W'}</InlineMath> = το διπλό-πλευρικό
+          πλάτος του <InlineMath>{'k'}</InlineMath> (<InlineMath>{'2\\times 3W'}</InlineMath>).
+        </div>
+      </>
     ),
   },
 

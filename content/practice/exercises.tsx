@@ -4543,7 +4543,7 @@ export const EXERCISES: Exercise[] = [
     source: 'june-2025',
     problemNumber: 'ΘΕΜΑ 2',
     weight: 25,
-    title: 'AM Multiplexing — sinc(Wt) DSB-SC + sinc(6Wt) DSB',
+    title: 'AM Multiplexing — sinc(Wt) DSB-SC + sinc(6Wt) συμβατικό AM (μικτό FDM)',
     topic: 'am',
     difficulty: 'hard',
     prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/conventional', 'am/modulator-demodulator'],
@@ -4594,81 +4594,411 @@ export const EXERCISES: Exercise[] = [
     ),
     statement: (
       <p>
-        Έστω τα δύο βασικά σήματα πληροφορίας{' '}
+        Έστω τα δυο βασικά σήματα πληροφορίας{' '}
         <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και{' '}
         <InlineMath>{'k(t) = \\mathrm{sinc}(6Wt)'}</InlineMath>. Το{' '}
-        <InlineMath>m</InlineMath> διαμορφώνεται κατά AM-DSB-SC με φέρον{' '}
-        <InlineMath>{'f_1'}</InlineMath> και το <InlineMath>k</InlineMath>{' '}
-        κατά AM-DSB με φέρον <InlineMath>{'f_2 = n f_1'}</InlineMath>.{' '}
-        (1) Μαθηματική περιγραφή κάθε σήματος + φάσμα πλάτους. (2) n για
-        non-overlap. (3) Φασματική απόκριση πολυπλεγμένου. (4) Συνολική
-        ενέργεια. (5) Δυνατότητα detection με envelope detector + BPF
-        μόνο. (6) Σχεδιασμός κυκλώματος δέκτη.
+        <InlineMath>{'m(t)'}</InlineMath> διαμορφώνεται κατά{' '}
+        <strong>AM-DSB-SC</strong> με φέρον <InlineMath>{'f_1'}</InlineMath> και το{' '}
+        <InlineMath>{'k(t)'}</InlineMath> διαμορφώνεται κατά <strong>AM-DSB</strong> με φέρον{' '}
+        <InlineMath>{'f_2 = n f_1'}</InlineMath> αντίστοιχα.{' '}
+        <strong>(1)</strong> Διατυπώστε τη μαθηματική περιγραφή κάθε διαμορφωμένου σήματος
+        και <strong>αποτυπώστε σχηματικά</strong> το φάσμα πλάτους των διαμορφωμένων σημάτων.{' '}
+        <strong>(2)</strong> Τα δυο σήματα πολυπλέκονται (προστίθενται) σ' έναν πολυπλέκτη.
+        Πόσο πρέπει να είναι το <InlineMath>{'n'}</InlineMath> για να μην συμπέσουν φασματικά;{' '}
+        <strong>(3)</strong> <strong>Αποτυπώστε σχηματικά</strong> τη φασματική απόκριση του
+        πολυπλεγμένου σήματος. <strong>(4)</strong> Υπολογίστε τη συνολική ενέργεια του
+        πολυπλεγμένου σήματος. <strong>(5)</strong> Για την αποδιαμόρφωση, διατίθεται μόνο
+        ένας ανιχνευτής περιβάλλουσας και ένα ζωνοπερατό φίλτρο. Είναι δυνατόν να
+        ανιχνεύσουμε κάποιο από τα δύο σήματα; Αιτιολογήστε. <strong>(6)</strong>{' '}
+        <strong>Σχεδιάστε</strong> το σχετικό κύκλωμα στον δέκτη και περιγράψτε τα
+        χαρακτηριστικά του ζωνοπερατού φίλτρου.
       </p>
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — δύο μηνύματα, ένας δίαυλος, αλλά σταλμένα επίτηδες με δύο
+            διαφορετικούς τρόπους.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Το <InlineMath>{'m'}</InlineMath> πάει <strong>DSB-SC</strong> (κατεσταλμένο φέρον):
+            ξοδεύει <em>κάθε βατ σε πληροφορία</em>, αλλά απαιτεί έξυπνο («σύμφωνο») δέκτη. Το{' '}
+            <InlineMath>{'k'}</InlineMath> πάει <strong>συμβατικό AM</strong> (το «AM-DSB» χωρίς
+            το «SC» = <em>με</em> φέρουσα): κρατάει μια καθαρή φέρουσα-τόνο που{' '}
+            <em>δεν κουβαλά καμία πληροφορία</em> — σπατάλη ισχύος — αλλά σε αντάλλαγμα τον
+            διαβάζει <em>οποιοσδήποτε φτηνός ανιχνευτής περιβάλλουσας</em>. Αυτή η{' '}
+            <strong>γραμμή-φέρουσα</strong> στο φάσμα (μια ψηλή ακίδα στο{' '}
+            <InlineMath>{'f_2'}</InlineMath>) είναι το <em>ορατό δακτυλικό αποτύπωμα</em> αυτής
+            της ανταλλαγής: καθαρό κόστος, καθαρή ευκολία. Όλο το θέμα είναι να{' '}
+            <strong>διαβάσεις αυτό το αποτύπωμα στο φάσμα</strong>, να στοιβάξεις τα δύο κανάλια
+            ώστε να μην τέμνονται, και να παρατηρήσεις ότι <em>μόνο</em> το κανάλι με τη φέρουσα
+            επιβιώνει σε έναν «χαζό» δέκτη.
+          </span>
+        </div>
+
         <p>
-          <strong>Bandwidths:</strong>{' '}
-          <InlineMath>{'M(f) = (1/W)\\Pi(f/W)'}</InlineMath> →{' '}
-          <InlineMath>{'|f| \\leq W/2'}</InlineMath>.{' '}
-          <InlineMath>{'K(f) = (1/(6W))\\Pi(f/(6W))'}</InlineMath> →{' '}
-          <InlineMath>{'|f| \\leq 3W'}</InlineMath>.
+          <strong>(0) Τα δύο βασικά φάσματα — sinc στον χρόνο, rect στη συχνότητα.</strong> Και
+          τα δύο μηνύματα είναι <InlineMath>{'\\mathrm{sinc}'}</InlineMath> στον χρόνο, οπότε από
+          το ζεύγος <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\mathrm{rect}'}</InlineMath> του
+          τυπολογίου ο μετασχηματισμός τους είναι <strong>καθαρό rect</strong> (τούβλο):
         </p>
-        <p><strong>(1)</strong> Σήματα:</p>
-        <BlockMath>{'x_m(t) = m(t)\\cos(2\\pi f_1 t) \\quad \\text{(DSB-SC, χωρίς carrier)}'}</BlockMath>
-        <BlockMath>{'x_k(t) = [A_c + k(t)]\\cos(2\\pi f_2 t) \\quad \\text{(DSB συμβατικό, με carrier)}'}</BlockMath>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>
+              <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath>
+            </strong>{' '}
+            →{' '}
+            <InlineMath>{'M(f) = \\tfrac{1}{W}\\,\\Pi\\!\\left(\\tfrac{f}{W}\\right)'}</InlineMath>,
+            δηλ. rect στο <InlineMath>{'|f| \\le W/2'}</InlineMath> —{' '}
+            <strong>μισό-εύρος <InlineMath>{'W/2'}</InlineMath></strong>.
+          </li>
+          <li>
+            <strong>
+              <InlineMath>{'k(t) = \\mathrm{sinc}(6Wt)'}</InlineMath>
+            </strong>{' '}
+            →{' '}
+            <InlineMath>{'K(f) = \\tfrac{1}{6W}\\,\\Pi\\!\\left(\\tfrac{f}{6W}\\right)'}</InlineMath>,
+            δηλ. rect στο <InlineMath>{'|f| \\le 3W'}</InlineMath> —{' '}
+            <strong>μισό-εύρος <InlineMath>{'3W'}</InlineMath></strong>.
+          </li>
+        </ul>
         <p>
-          Φάσματα: rect γύρω από <InlineMath>{'\\pm f_1'}</InlineMath>{' '}
-          (πλάτους <InlineMath>{'W/2'}</InlineMath>· για DSB-SC χωρίς
-          impulse στον carrier), rect γύρω από{' '}
-          <InlineMath>{'\\pm f_2 = \\pm n f_1'}</InlineMath> (πλάτους{' '}
-          <InlineMath>{'3W'}</InlineMath>· για DSB με impulse στον
-          carrier).
+          <strong>Με απλά λόγια:</strong> το <InlineMath>{'k'}</InlineMath> είναι 6× πιο{' '}
+          <em>συμπιεσμένο στον χρόνο</em> (το <InlineMath>{'6Wt'}</InlineMath>), άρα 6× πιο{' '}
+          <em>πλατύ στη συχνότητα</em> — μισό-εύρος <InlineMath>{'3W'}</InlineMath> έναντι{' '}
+          <InlineMath>{'W/2'}</InlineMath>. Κράτα αυτή την <strong>ανισότητα των ευρών</strong>:
+          θα κρίνει τη συνθήκη μη-επικάλυψης στο (2). Πρόσεξε επίσης ότι, επειδή και τα δύο
+          είναι <em>γνήσια rect</em>, είναι <strong>αυστηρά bandlimited</strong> (καμία ουρά που
+          απλώνεται — οι ακμές στο σχέδιο είναι ακριβείς, όχι αποκοπή).
         </p>
+
         <p>
-          <strong>(2) Non-overlap:</strong> κανάλι 1 πιάνει από{' '}
-          <InlineMath>{'f_1 - W/2'}</InlineMath> έως{' '}
-          <InlineMath>{'f_1 + W/2'}</InlineMath>· κανάλι 2 από{' '}
-          <InlineMath>{'n f_1 - 3W'}</InlineMath> έως{' '}
-          <InlineMath>{'n f_1 + 3W'}</InlineMath>. Συνθήκη:
+          <strong>(1) Μαθηματική περιγραφή + φάσμα πλάτους — και η γραμμή-φέρουσα.</strong> Το
+          «AM-DSB-SC» και το «AM-DSB» διαφέρουν σε μία μόνο λέξη — το <em>SC</em> (suppressed
+          carrier) — και αυτή η λέξη είναι όλη η ουσία:
         </p>
-        <BlockMath>{'n f_1 - 3W \\geq f_1 + W/2 \\Rightarrow n \\geq 1 + \\frac{7W/2}{f_1}'}</BlockMath>
-        <p>
-          (Για <InlineMath>{'f_1 \\gg W'}</InlineMath>, αρκεί
-          <InlineMath>{'n \\geq 2'}</InlineMath> πρακτικά, αλλά ακριβώς
-          εξαρτάται από την σχέση <InlineMath>{'f_1 / W'}</InlineMath>.)
+        <BlockMath>{'x_m(t) = m(t)\\cos(2\\pi f_1 t)'}</BlockMath>
+        <p className="-mt-2 text-sm text-fg-muted">
+          DSB-SC: <em>κατεσταλμένη</em> φέρουσα — απλός πολλαπλασιασμός με{' '}
+          <InlineMath>{'\\cos'}</InlineMath>, χωρίς προστιθέμενη σταθερά.
         </p>
-        <p>
-          <strong>(3)</strong> <InlineMath>{'G(f) = X_m(f) + X_k(f)'}</InlineMath>{' '}
-          — δύο rect ζευγάρια στις <InlineMath>{'\\pm f_1, \\pm f_2'}</InlineMath>,
-          μαζί με carrier impulses στα <InlineMath>{'\\pm f_2'}</InlineMath>.
-        </p>
-        <p>
-          <strong>(4) Συνολική ενέργεια:</strong> Parseval. Για το{' '}
-          <InlineMath>{'x_m'}</InlineMath>:{' '}
-          <InlineMath>{'\\int |X_m|^2 df = (1/W^2)\\cdot 2\\cdot W/2 \\cdot 1/4 = ...'}</InlineMath>{' '}
-          (συγκεκριμένος υπολογισμός εξαρτάται από <InlineMath>{'A_c, A_m'}</InlineMath>).
-          Για παρόμοιο υπολογισμό για{' '}
-          <InlineMath>{'x_k'}</InlineMath> με τον carrier impulse να
-          συνεισφέρει <InlineMath>{'A_c^2/2'}</InlineMath>.
-        </p>
-        <p>
-          <strong>(5) Detection με envelope detector + BPF:</strong>{' '}
-          Μόνο το <InlineMath>{'x_k'}</InlineMath> (DSB συμβατικό AM) μπορεί,
-          γιατί έχει carrier και εφόσον <InlineMath>{'\\mu \\leq 1'}</InlineMath>{' '}
-          το envelope ταυτίζεται με το <InlineMath>{'A_c + k(t)'}</InlineMath>.
-          Το <InlineMath>{'x_m'}</InlineMath> (DSB-SC) <strong>δεν</strong>{' '}
-          μπορεί — απαιτεί coherent demod.
+        <BlockMath>{'x_k(t) = [A_c + k(t)]\\cos(2\\pi f_2 t)'}</BlockMath>
+        <p className="-mt-2 text-sm text-fg-muted">
+          Συμβατικό AM: το <InlineMath>{'+A_c'}</InlineMath> είναι ένα{' '}
+          <strong>σταθερό «βάθρο» (pedestal)</strong> πάνω στο μήνυμα — αυτό είναι όλη η διαφορά.
         </p>
         <p>
-          <strong>(6) Δέκτης</strong>: Antenna → BPF γύρω από{' '}
-          <InlineMath>{'f_2'}</InlineMath> (κεντρική συχνότητα{' '}
-          <InlineMath>{'f_2'}</InlineMath>, BW <InlineMath>{'6W'}</InlineMath>{' '}
-          ≥ Carson) → Envelope detector (διοδος + RC) → DC blocker → Output.
-          Το BPF πρέπει να αποκόπτει το <InlineMath>{'x_m'}</InlineMath>{' '}
-          εντελώς (καλά διαχωρισμένα φάσματα με non-overlap από βήμα 2).
+          Με το θεώρημα διαμόρφωσης (πολλαπλασιασμός με{' '}
+          <InlineMath>{'\\cos(2\\pi f_c t)'}</InlineMath> ⇒ <em>αντίγραφο</em> του φάσματος στα{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath> με μισό ύψος):
         </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>
+              <InlineMath>{'X_m(f)'}</InlineMath>:
+            </strong>{' '}
+            δύο rect στα <InlineMath>{'\\pm f_1'}</InlineMath>, μισό-εύρος{' '}
+            <InlineMath>{'W/2'}</InlineMath> (πλήρες πλάτος ζώνης{' '}
+            <InlineMath>{'W'}</InlineMath>), <strong>καμία γραμμή φέροντος</strong>.
+          </li>
+          <li>
+            <strong>
+              <InlineMath>{'X_k(f)'}</InlineMath>:
+            </strong>{' '}
+            δύο rect στα <InlineMath>{'\\pm f_2'}</InlineMath>, μισό-εύρος{' '}
+            <InlineMath>{'3W'}</InlineMath> (πλήρες πλάτος ζώνης{' '}
+            <InlineMath>{'6W'}</InlineMath>), <strong>συν μια κρουστική γραμμή (δ-ακίδα)</strong>{' '}
+            στα <InlineMath>{'\\pm f_2'}</InlineMath> βάρους <InlineMath>{'A_c/2'}</InlineMath>.
+          </li>
+        </ul>
+        <div className="my-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Γιατί το συμβατικό AM δείχνει γραμμή-φέρουσα και το DSB-SC όχι — η καρδιά του θέματος.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Η σταθερά <InlineMath>{'A_c'}</InlineMath> «καβαλάει» τη φέρουσα:{' '}
+            <InlineMath>{'A_c\\cos(2\\pi f_2 t)'}</InlineMath> είναι ένας <em>καθαρός τόνος</em>,
+            και ο μετασχηματισμός ενός τόνου είναι μια <strong>δ-ακίδα στα{' '}
+            <InlineMath>{'\\pm f_2'}</InlineMath></strong>. Το DSB-SC δεν έχει τέτοια σταθερά
+            (κατεσταλμένη) ⇒ <strong>καμία γραμμή</strong>. <strong>Πού πάει η ισχύς της
+            φέρουσας;</strong> Όλη σε αυτή τη γραμμή — μια φασματική ακίδα με{' '}
+            <em>μηδέν πληροφορία</em>. <strong>Τι κοστίζει;</strong> Στο συμβατικό AM η φέρουσα
+            τραβά συχνά το <em>μεγαλύτερο μέρος</em> της ισχύος (υπάρχει μόνο για να φτηναίνει τον
+            δέκτη). Το DSB-SC αρνείται να την πληρώσει — γι' αυτό είναι αποδοτικότερο, με κόστος
+            έναν πιο σύνθετο δέκτη. Όταν λοιπόν δεις <strong>ψηλή ακίδα στο φέρον</strong> ⇒
+            «συμβατικό AM, αποδιαμορφώνεται με περιβάλλουσα»· όταν δεις <strong>μόνο πλευρικές</strong>{' '}
+            ⇒ «DSB-SC, θέλει σύμφωνη αποδιαμόρφωση».
+          </span>
+        </div>
+
+        <p>
+          <strong>(2) Πόσο πρέπει να είναι το <InlineMath>{'n'}</InlineMath> — χτισμένο από τα
+          πραγματικά bands, όχι αποστηθισμένο.</strong> Πάρε{' '}
+          <InlineMath>{'f_1 < f_2'}</InlineMath> (το στενό <InlineMath>{'m'}</InlineMath> από
+          κάτω). Το κανάλι 1 πιάνει <InlineMath>{'[f_1 - \\tfrac{W}{2},\\, f_1 + \\tfrac{W}{2}]'}</InlineMath>·
+          το κανάλι 2 πιάνει <InlineMath>{'[f_2 - 3W,\\, f_2 + 3W] = [n f_1 - 3W,\\, n f_1 + 3W]'}</InlineMath>.{' '}
+          Η <strong>γραμμή-φέρουσα κάθεται ΑΚΡΙΒΩΣ στο <InlineMath>{'f_2'}</InlineMath></strong> —{' '}
+          <em>μέσα</em> στη ζώνη του <InlineMath>{'k'}</InlineMath>, οπότε <strong>δεν την
+          πλαταίνει</strong> (ένα σημείο μέσα στο rect). Μη-επικάλυψη = η{' '}
+          <em>δεξιά ακμή του κάτω</em> να μην περάσει την <em>αριστερή ακμή του πάνω</em>:
+        </p>
+        <BlockMath>{'f_1 + \\tfrac{W}{2} \\;\\le\\; n f_1 - 3W \\quad\\Longrightarrow\\quad (n-1)\\,f_1 \\ge \\tfrac{7W}{2} \\quad\\Longrightarrow\\quad \\boxed{\\,n \\ge 1 + \\dfrac{7W}{2 f_1}\\,}'}</BlockMath>
+        <p>
+          <strong>Γιατί <InlineMath>{'\\tfrac{7W}{2}'}</InlineMath> και όχι ένα έτοιμο{' '}
+          <InlineMath>{'2W'}</InlineMath>.</strong> Ο γενικός κανόνας είναι πάντα ο ίδιος:{' '}
+          <em>ελάχιστο κενό φερόντων = (μισό-εύρος κάτω) + (μισό-εύρος πάνω)</em>. Εδώ{' '}
+          <InlineMath>{'\\tfrac{W}{2} + 3W = \\tfrac{7W}{2}'}</InlineMath> — δηλαδή{' '}
+          <InlineMath>{'\\Delta f = f_2 - f_1 \\ge \\tfrac{7W}{2}'}</InlineMath>. Ο σχολικός{' '}
+          <InlineMath>{'2W'}</InlineMath> είναι <em>μόνο</em> η ισο-εύρη ειδική περίπτωση
+          (<InlineMath>{'W + W'}</InlineMath>)· εδώ τα εύρη είναι πολύ <em>άνισα</em> (το{' '}
+          <InlineMath>{'k'}</InlineMath> 6× πλατύτερο), άρα <InlineMath>{'\\tfrac{7W}{2}'}</InlineMath>.{' '}
+          <strong>Μην γράψεις μηχανικά <InlineMath>{'2W'}</InlineMath></strong> — χτίσε το από τα
+          δύο μισά-εύρη και θα έχεις δίκιο για οποιαδήποτε σήματα. Επειδή{' '}
+          <InlineMath>{'f_2 = n f_1'}</InlineMath>, η απάντηση είναι συνθήκη στο{' '}
+          <InlineMath>{'n'}</InlineMath> και <em>εξαρτάται από το <InlineMath>{'f_1/W'}</InlineMath></em>:
+          όσο μεγαλύτερο το <InlineMath>{'f_1'}</InlineMath> ως προς <InlineMath>{'W'}</InlineMath>,
+          τόσο πιο κοντά στο 1 αρκεί να είναι το <InlineMath>{'n'}</InlineMath>.
+        </p>
+        <p>
+          <strong>Και κάθε φέρον να μη διπλώσει στο DC.</strong> Το αντίγραφο στο{' '}
+          <InlineMath>{'+f_1'}</InlineMath> και το κατοπτρικό στο{' '}
+          <InlineMath>{'-f_1'}</InlineMath> δεν πρέπει να ακουμπήσουν στο μηδέν: χρειάζεται{' '}
+          <InlineMath>{'f_1 \\ge \\tfrac{W}{2}'}</InlineMath>. Για το{' '}
+          <InlineMath>{'k'}</InlineMath> αντίστοιχα <InlineMath>{'f_2 \\ge 3W'}</InlineMath>, που
+          ικανοποιείται <em>αυτόματα</em> (αν <InlineMath>{'f_1 \\ge \\tfrac{W}{2}'}</InlineMath>{' '}
+          τότε <InlineMath>{'f_2 \\ge f_1 + \\tfrac{7W}{2} \\ge 4W'}</InlineMath>). Άρα η{' '}
+          <em>δεσμευτική</em> απάντηση: <InlineMath>{'f_1 \\ge \\tfrac{W}{2}'}</InlineMath> και{' '}
+          <InlineMath>{'n \\ge 1 + \\tfrac{7W}{2 f_1}'}</InlineMath> (συν ~10–20% guard band για
+          τα μη-ιδανικά φίλτρα).
+        </p>
+
+        <p>
+          <strong>(3) Η φασματική απόκριση του πολυπλεγμένου{' '}
+          <InlineMath>{'G(f)'}</InlineMath>.</strong> Απλό άθροισμα{' '}
+          <InlineMath>{'G(f) = X_m(f) + X_k(f)'}</InlineMath>: το{' '}
+          <em>στενό rect-ζευγάρι</em> του <InlineMath>{'m'}</InlineMath> γύρω από{' '}
+          <InlineMath>{'\\pm f_1'}</InlineMath> (καμία γραμμή) και το{' '}
+          <em>πλατύ rect-ζευγάρι</em> του <InlineMath>{'k'}</InlineMath> γύρω από{' '}
+          <InlineMath>{'\\pm f_2'}</InlineMath> <strong>με τις δύο γραμμές-φέρουσες</strong> στα{' '}
+          <InlineMath>{'\\pm f_2'}</InlineMath>, δίπλα-δίπλα. Με{' '}
+          <InlineMath>{'\\Delta f \\ge \\tfrac{7W}{2}'}</InlineMath> δεν αγγίζονται ⇒ καθαρή
+          αποπολυπλεξία· κάτω από αυτό ⇒ επικάλυψη ⇒ crosstalk.
+        </p>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Τίμια σημείωση — ιδανικεύσεις.</strong> Εδώ{' '}
+          <em>και τα δύο</em> φάσματα είναι γνήσια rect, άρα <strong>αυστηρά bandlimited</strong>{' '}
+          (σε αντίθεση με μηνύματα τύπου <InlineMath>{'\\Pi'}</InlineMath>-στον-χρόνο, που δίνουν
+          sinc με ατέλειωτες ουρές) — οι ακμές στο σχέδιο είναι <em>ακριβείς</em>. Η{' '}
+          <strong>γραμμή-φέρουσα σχεδιάζεται ως ψηλό βέλος</strong>, αλλά παριστάνει μια{' '}
+          <InlineMath>{'\\delta'}</InlineMath> (κρουστική: μηδενικό πλάτος, πεπερασμένο εμβαδόν{' '}
+          <InlineMath>{'A_c/2'}</InlineMath>) — διάβασέ την ως <em>γραμμή</em>, όχι ως μπλοκ. Το
+          ότι η διαμόρφωση «μισεύει» καθαρά την ενέργεια ισχύει για{' '}
+          <InlineMath>{'f_1, f_2 \\gg W'}</InlineMath> (οι όροι διπλής συχνότητας σβήνουν) — το
+          ίδιο καθεστώς που ήδη υποθέτει το (2). Το σχέδιο είναι <strong>σχηματικό</strong>: τα{' '}
+          <InlineMath>{'f_1, f_2'}</InlineMath> αυθαίρετα, άξονες σε σχετικές μονάδες του{' '}
+          <InlineMath>{'W'}</InlineMath>, με <InlineMath>{'f_2 = n f_1'}</InlineMath>.
+        </div>
+
+        <figure className="my-4">
+          <FdmCanonicalProblemViz
+            mBW={0.5}
+            kBW={3}
+            kShape="rect"
+            kMod="am-conventional"
+            initialMod="dsb"
+          />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η draw-απάντηση ζωντανή, σε σχετικές μονάδες του <InlineMath>{'W'}</InlineMath>. Πάνω:{' '}
+            <InlineMath>{'M(f)'}</InlineMath> = το <strong>στενό</strong> rect στο{' '}
+            <InlineMath>{'[-W/2, W/2]'}</InlineMath> (bracket «<InlineMath>{'W'}</InlineMath>» = πλήρες
+            πλάτος)· από κάτω <InlineMath>{'K(f)'}</InlineMath> = το <strong>πλατύ</strong> rect στο{' '}
+            <InlineMath>{'[-3W, 3W]'}</InlineMath> (bracket «<InlineMath>{'6W'}</InlineMath>»). Στο
+            διαμορφωμένο, το <InlineMath>{'m'}</InlineMath> (DSB-SC) δίνει{' '}
+            <strong>δύο πλευρικές χωρίς γραμμή</strong> στα <InlineMath>{'\\pm f_1'}</InlineMath>, ενώ
+            το <InlineMath>{'k'}</InlineMath> (συμβατικό AM) δίνει δύο πλευρικές{' '}
+            <strong>συν μια ψηλή ακίδα-φέρουσα</strong> στα <InlineMath>{'\\pm f_2'}</InlineMath> — αυτό
+            ακριβώς το βέλος είναι η <InlineMath>{'\\delta'}</InlineMath> της φέρουσας, η οπτική
+            απάντηση του (1). Σύρε την απόσταση <InlineMath>{'\\Delta f'}</InlineMath>: η ένδειξη
+            «ελάχιστο» δείχνει <InlineMath>{'W_m + W_k = 3.5W'}</InlineMath> (δηλαδή{' '}
+            <InlineMath>{'\\tfrac{W}{2} + 3W = \\tfrac{7W}{2}'}</InlineMath>) — ακριβώς η συνθήκη{' '}
+            <InlineMath>{'\\Delta f = f_2 - f_1 \\ge \\tfrac{7W}{2}'}</InlineMath> του (2)· κάτω από
+            αυτό η ζώνη στο <InlineMath>{'G(f)'}</InlineMath> γίνεται κόκκινη (crosstalk). Σημείωση: το
+            κανάλι <InlineMath>{'k'}</InlineMath> κρατά τη γραμμή-φέρουσα{' '}
+            <em>ό,τι κι αν δείχνει ο διακόπτης</em> (το συμβατικό AM είναι εγγενώς φέρουσα + δύο
+            πλευρικές)· ο διακόπτης εναλλάσσει μόνο το <InlineMath>{'m'}</InlineMath> μεταξύ DSB-SC
+            και μιας υποθετικής USSB μορφής.
+          </figcaption>
+        </figure>
+
+        <p>
+          <strong>(4) Συνολική ενέργεια — και γιατί η φέρουσα την τινάζει στο άπειρο.</strong> Με
+          Parseval, ενέργεια = το εμβαδόν του <InlineMath>{'|G(f)|^2'}</InlineMath>. Οι{' '}
+          <em>τρεις</em> φασματικές περιοχές — τα rect του <InlineMath>{'m'}</InlineMath> γύρω από{' '}
+          <InlineMath>{'\\pm f_1'}</InlineMath>, τα rect του <InlineMath>{'k'}</InlineMath> γύρω από{' '}
+          <InlineMath>{'\\pm f_2'}</InlineMath>, και η δ-φέρουσα στα{' '}
+          <InlineMath>{'\\pm f_2'}</InlineMath> — είναι <strong>ξένες</strong>, οπότε οι ενέργειες{' '}
+          <em>προστίθενται</em> (με μοναδιαία πλάτη φερόντων):
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            κανάλι <InlineMath>{'m'}</InlineMath> (DSB-SC):{' '}
+            <InlineMath>{'\\mathcal{E}_m = \\tfrac{1}{2}\\!\\int \\mathrm{sinc}^2(Wt)\\,dt = \\tfrac{1}{2}\\cdot\\tfrac{1}{W} = \\tfrac{1}{2W}'}</InlineMath>{' '}
+            — πεπερασμένη, 100% πληροφορία.
+          </li>
+          <li>
+            πλευρικές του <InlineMath>{'k'}</InlineMath>:{' '}
+            <InlineMath>{'\\tfrac{1}{2}\\!\\int \\mathrm{sinc}^2(6Wt)\\,dt = \\tfrac{1}{2}\\cdot\\tfrac{1}{6W} = \\tfrac{1}{12W}'}</InlineMath>{' '}
+            — πεπερασμένη.
+          </li>
+          <li>
+            φέρουσα του <InlineMath>{'k'}</InlineMath>: μια δ στο φάσμα ⇒{' '}
+            <InlineMath>{'\\int|\\cdot|^2'}</InlineMath> <strong>αποκλίνει</strong>· ισοδύναμα ο
+            τόνος <InlineMath>{'A_c\\cos(2\\pi f_2 t)'}</InlineMath> είναι αιώνιος ⇒{' '}
+            <strong>άπειρη ενέργεια</strong>.
+          </li>
+        </ul>
+        <BlockMath>{'\\mathcal{E} = \\underbrace{\\tfrac{1}{2W} + \\tfrac{1}{12W}}_{=\\,7/12W} \\;+\\; \\underbrace{\\infty}_{\\text{carrier}} \\;=\\; \\infty'}</BlockMath>
+        <p>
+          <strong>Με απλά λόγια — και αυτό είναι το ποσοτικό πρόσωπο του «τι κοστίζει η
+          φέρουσα».</strong> Η συνολική ενέργεια είναι <em>τυπικά άπειρη</em>, και η μοναδική αιτία
+          είναι η φέρουσα: ένας τόνος που δεν σβήνει ποτέ. Η{' '}
+          <em>πληροφοριακή</em> ενέργεια είναι πεπερασμένη —{' '}
+          <InlineMath>{'\\tfrac{7}{12W}'}</InlineMath> — αλλά η αιώνια φέρουσα τινάζει το{' '}
+          κυριολεκτικό σύνολο στο άπειρο. Το DSB-SC κρατά την ενέργειά του πεπερασμένη και όλη
+          πληροφορία· το συμβατικό AM ξοδεύει απεριόριστη ενέργεια σε έναν τόνο, μόνο και μόνο για
+          να δουλεύει ένας φτηνός δέκτης (βλ. (5)). <strong>Τίμια:</strong> αν το θέμα περιμένει
+          έναν πεπερασμένο αριθμό, εννοεί την πληροφοριακή{' '}
+          <InlineMath>{'\\tfrac{7}{12W}'}</InlineMath>· η κυριολεκτική «συνολική ενέργεια» ενός
+          σήματος με φέρουσα είναι μη-φραγμένη — <em>ονόμασε τη φέρουσα ως την αιτία</em> αντί να
+          την κρύψεις.
+        </p>
+
+        <p>
+          <strong>(5) Με μόνο έναν ανιχνευτή περιβάλλουσας + BPF — ποιο σώζεται;</strong> Μόνο το{' '}
+          <InlineMath>{'x_k'}</InlineMath> (συμβατικό AM). Ο ανιχνευτής περιβάλλουσας βγάζει τη{' '}
+          <em>(θετική) περιβάλλουσα</em>· για το <InlineMath>{'x_k'}</InlineMath> αυτή είναι{' '}
+          <InlineMath>{'A_c + k(t)'}</InlineMath>, και <strong>εφόσον{' '}
+          <InlineMath>{'A_c \\ge \\max|k(t)|'}</InlineMath></strong> (δηλ.{' '}
+          <InlineMath>{'\\mu \\le 1'}</InlineMath>) μένει <InlineMath>{'\\ge 0'}</InlineMath> — οπότε
+          η περιβάλλουσα ταυτίζεται με το <InlineMath>{'A_c + k(t)'}</InlineMath> και ένα DC-block
+          αφαιρεί το <InlineMath>{'A_c'}</InlineMath> ⇒ ανακτάς το{' '}
+          <InlineMath>{'k(t)'}</InlineMath>.
+        </p>
+        <p>
+          Το <InlineMath>{'x_m'}</InlineMath> (DSB-SC) <strong>δεν</strong> ανιχνεύεται έτσι: χωρίς
+          φέρουσα-«πιλότο», η περιβάλλουσά του είναι <InlineMath>{'|m(t)|'}</InlineMath> — ο
+          ανορθωτής <em>διπλώνει</em> το αρνητικό μισό και <strong>χάνει το πρόσημο</strong> του{' '}
+          <InlineMath>{'m'}</InlineMath> ⇒ ανεπανόρθωτη παραμόρφωση. Χρειάζεται{' '}
+          <em>σύμφωνη (synchronous) αποδιαμόρφωση</em> (×<InlineMath>{'\\cos(2\\pi f_1 t)'}</InlineMath>{' '}
+          + LPF), που εδώ δεν διατίθεται. <strong>Αυτός ακριβώς είναι ο λόγος που θα πλήρωνες ποτέ
+          το κόστος της φέρουσας</strong> (1)/(4): η φέρουσα είναι ο πιλότος που «καβαλάει» ο
+          ανιχνευτής περιβάλλουσας. Άρα: ανακτάς το <strong><InlineMath>{'k'}</InlineMath></strong>,{' '}
+          <em>όχι</em> το <InlineMath>{'m'}</InlineMath>.
+        </p>
+
+        <p>
+          <strong>(6) Το κύκλωμα του δέκτη + το BPF.</strong> Αφού μόνο το{' '}
+          <InlineMath>{'k'}</InlineMath> σώζεται, ο δέκτης απομονώνει τη ζώνη του{' '}
+          <InlineMath>{'f_2'}</InlineMath> και βγάζει την περιβάλλουσα:
+        </p>
+        <div className="my-3 flex flex-wrap items-center gap-2 rounded-md border border-border bg-bg-soft/40 px-3 py-3 text-xs font-medium">
+          <span className="rounded border border-border bg-bg-elevated px-2 py-1">📡 Κεραία</span>
+          <span className="text-fg-subtle">→</span>
+          <span className="rounded border border-amber-500/40 bg-amber-500/10 px-2 py-1">
+            BPF: κέντρο <InlineMath>{'f_2'}</InlineMath>, BW <InlineMath>{'6W'}</InlineMath>
+          </span>
+          <span className="text-fg-subtle">→</span>
+          <span className="rounded border border-border bg-bg-elevated px-2 py-1">
+            Ανιχνευτής περιβάλλουσας (δίοδος + RC)
+          </span>
+          <span className="text-fg-subtle">→</span>
+          <span className="rounded border border-border bg-bg-elevated px-2 py-1">Αποκοπή DC</span>
+          <span className="text-fg-subtle">→</span>
+          <span className="rounded border border-emerald-500/40 bg-emerald-500/10 px-2 py-1">
+            <InlineMath>{'\\hat{k}(t)'}</InlineMath>
+          </span>
+        </div>
+        <p>
+          <strong>Χαρακτηριστικά του BPF:</strong> κεντρική συχνότητα{' '}
+          <InlineMath>{'f_2'}</InlineMath>, εύρος ζώνης <InlineMath>{'6W'}</InlineMath> — όσο{' '}
+          <em>όλη</em> η διπλή-πλευρική ζώνη του <InlineMath>{'k'}</InlineMath>{' '}
+          (<InlineMath>{'[f_2 - 3W,\\, f_2 + 3W]'}</InlineMath>), ώστε να περάσει και τις δύο
+          πλευρικές <em>και</em> τη φέρουσα. <strong>Όχι Carson</strong> — αυτό αφορά FM· εδώ το{' '}
+          <InlineMath>{'6W'}</InlineMath> είναι απλώς <InlineMath>{'2\\times 3W'}</InlineMath>, το
+          πλάτος του διπλού-πλευρικού AM. Πρέπει επίσης να <strong>απορρίπτει εντελώς το{' '}
+          <InlineMath>{'x_m'}</InlineMath></strong> — εφικτό ακριβώς επειδή το (2) εξασφαλίζει
+          καθαρό κενό. Η σταθερά χρόνου RC: αρκετά γρήγορη για να σβήνει τον κυματισμό της φέρουσας
+          αλλά αρκετά αργή για να ακολουθεί την περιβάλλουσα,{' '}
+          <InlineMath>{'\\tfrac{1}{f_2} \\ll RC \\ll \\tfrac{1}{3W}'}</InlineMath>.
+        </p>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— μόλις δεις «μικτό FDM: ένα κανάλι DSB-SC, ένα συμβατικό AM», τρέξε τα ίδια
+            σήματα-κλειδιά: <strong>(α)</strong> DSB-SC = δύο πλευρικές, <em>καμία</em> γραμμή·
+            συμβατικό AM = δύο πλευρικές <em>συν</em> γραμμή-φέρουσα στο{' '}
+            <InlineMath>{'f_c'}</InlineMath>. <strong>(β)</strong> Δες γραμμή ⇒ αυτό το κανάλι
+            αποδιαμορφώνεται με <em>περιβάλλουσα</em>· χωρίς γραμμή ⇒ θέλει{' '}
+            <em>σύμφωνη</em>. <strong>(γ)</strong> Μη-επικάλυψη = <em>πάντα</em> (μισό-εύρος κάτω) +
+            (μισό-εύρος πάνω), χτισμένη από τα πραγματικά bands — η γραμμή-φέρουσα κάθεται{' '}
+            <em>μέσα</em> στη ζώνη της και <em>δεν</em> την πλαταίνει. <strong>(δ)</strong> Γραμμή
+            στο φάσμα ⇒ άπειρη ενέργεια / κυρίαρχη ισχύς — αναγνώρισέ το όταν σου ζητούν
+            ενέργεια/ισχύ. Το μεταφέρσιμο κλειδί: η <strong>γραμμή-φέρουσα</strong> απαντά
+            ταυτόχρονα στο «ποιο διαβάζει ένας χαζός δέκτης», «πού πάει η ισχύς» και «γιατί δεν είναι
+            πεπερασμένη η ενέργεια».
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted"> — ίδιος σκελετός, αλλαγμένη μία επιλογή:</span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Και τα δύο DSB-SC</strong> (κατάστειλε και τη φέρουσα του{' '}
+              <InlineMath>{'k'}</InlineMath>): η γραμμή εξαφανίζεται, η συνολική ενέργεια γίνεται{' '}
+              <em>πεπερασμένη</em> (<InlineMath>{'\\tfrac{7}{12W}'}</InlineMath> εδώ), αλλά{' '}
+              <em>κανένα</em> κανάλι δεν αποδιαμορφώνεται με περιβάλλουσα — θέλεις σύμφωνη και για τα
+              δύο. Αυτό ακριβώς είναι το αδελφό{' '}
+              <Link
+                href="/practice#exercise:pb25-th3-mux"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Πρόοδ. Β 2025 ΘΕΜΑ 3
+              </Link>{' '}
+              (και τα δύο DSB-SC).
+            </li>
+            <li>
+              <strong>Και τα δύο συμβατικό AM:</strong> δύο γραμμές-φέρουσες, <em>και τα δύο</em>{' '}
+              αποδιαμορφώνονται με περιβάλλουσα — αλλά «πληρώνεις δύο φορές» τη φέρουσα. Καλό τεστ ότι
+              κατάλαβες την ανταλλαγή ισχύος ↔ απλότητας δέκτη.
+            </li>
+            <li>
+              <strong>Άλλαξε ποιο είναι πλατύτερο / το <InlineMath>{'n'}</InlineMath>:</strong> π.χ.{' '}
+              <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath> (μισό-εύρος{' '}
+              <InlineMath>{'W'}</InlineMath>) στο φέρον <InlineMath>{'f_1'}</InlineMath> και{' '}
+              <InlineMath>{'k(t) = \\mathrm{sinc}(Wt)'}</InlineMath> (μισό-εύρος{' '}
+              <InlineMath>{'W/2'}</InlineMath>) στο <InlineMath>{'f_2'}</InlineMath> — ξαναχτίσε τη
+              μη-επικάλυψη από τα <em>νέα</em> μισά-εύρη: <InlineMath>{'W + \\tfrac{W}{2} = \\tfrac{3W}{2}'}</InlineMath>.
+              Ίδιος κανόνας, διαφορετικό νούμερο.
+            </li>
+            <li>
+              <strong><InlineMath>{'\\mu > 1'}</InlineMath> στο AM κανάλι</strong> (overmodulation):
+              η περιβάλλουσα <InlineMath>{'A_c + k(t)'}</InlineMath> περνά στα αρνητικά, ο ανιχνευτής
+              τη διπλώνει ⇒ ο ανιχνευτής περιβάλλουσας <em>αποτυγχάνει ακόμη και στο{' '}
+              <InlineMath>{'k'}</InlineMath></em>. Συνδέεται με τα προβλήματα overmodulation (π.χ.{' '}
+              <Link
+                href="/practice#exercise:jan26-th2-7"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Ιαν. 2026 ΘΕΜΑ 2.7
+              </Link>
+              ).
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
