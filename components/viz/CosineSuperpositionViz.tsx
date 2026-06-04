@@ -57,9 +57,10 @@ export function CosineSuperpositionViz() {
         Πρόσθεσε cosines — δες τα ζεύγη lollipops να εμφανίζονται
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Άναψέ τα ένα-ένα. Κάθε cosine βάζει ένα <strong>ζευγάρι</strong> γραμμών στο{' '}
-        <span className="font-mono">±fᵢ</span> (ύψος <span className="font-mono">Aᵢ/2</span>) — το φάσμα του
-        αθροίσματος είναι απλώς η <strong>ένωση</strong> των επιμέρους ζευγών.
+        Άναψέ τα ένα-ένα. Κάθε cosine βάζει ένα <strong>ζευγάρι</strong> γραμμών στη συχνότητά του{' '}
+        (στο <span className="font-mono">±f</span>), με ύψος ίσο με το <strong>μισό του πλάτους του</strong>{' '}
+        (<span className="font-mono">A/2</span>) — το φάσμα του αθροίσματος είναι απλώς η{' '}
+        <strong>ένωση</strong> των επιμέρους ζευγών.
       </p>
 
       <div className="mb-3 flex flex-wrap gap-1.5">
