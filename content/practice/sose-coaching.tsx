@@ -1749,20 +1749,47 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'pb25-th3-mux': {
     takeaway: (
       <p>
-        DSB-SC FDM: κάθε κανάλι έχει BW = 2W₍baseband₎. Συνθήκη
-        non-overlap:{' '}
-        <InlineMath>{'f_2 \\ge f_1 + (W_1 + W_2)'}</InlineMath>{' '}
-        (συν guard band). Διαφορά από USSB FDM: τα BW εδώ είναι διπλά,
-        οπότε χρειάζεσαι μεγαλύτερη απόσταση μεταξύ φερόντων.
+        <strong>DSB-SC FDM — η απόσταση χτίζεται από τα εύρη, δεν αποστηθίζεται.</strong> Κάθε
+        DSB-SC κανάλι πιάνει ζώνη πλάτους <strong>2× το μισό-εύρος</strong> του μηνύματος (και
+        οι δύο πλευρικές, <em>καμία</em> γραμμή φέροντος). Εδώ τα δύο εύρη είναι{' '}
+        <em>άνισα</em>: <InlineMath>{'m = \\mathrm{sinc}(Wt)'}</InlineMath> → rect μισό-εύρος{' '}
+        <InlineMath>{'W/2'}</InlineMath>, ενώ <InlineMath>{'k = \\Pi(Wt)'}</InlineMath> → sinc
+        μισό-εύρος <InlineMath>{'W'}</InlineMath>. Με το στενό{' '}
+        <InlineMath>{'m'}</InlineMath> από κάτω, η μη-επικάλυψη δίνει{' '}
+        <InlineMath>{'\\Delta f \\ge \\tfrac{W}{2} + W = \\tfrac{3W}{2}'}</InlineMath> —{' '}
+        <strong>όχι</strong> το σχολικό <InlineMath>{'2W'}</InlineMath>.{' '}
+        <strong>Μεταφερόμενο:</strong> ελάχιστη απόσταση = άθροισμα των δύο μισών-ευρών· το{' '}
+        <InlineMath>{'2W'}</InlineMath> είναι μόνο η ισο-εύρη ειδική περίπτωση.
       </p>
     ),
     examRadar: (
-      <p>
-        DSB-SC vs USSB στο ίδιο FDM: η DSB-SC χρειάζεται 2× το spacing
-        γιατί κάθε κανάλι έχει 2× BW. Συχνά πέφτει για να δεις αν
-        ξεχωρίζεις τα δύο σχήματα. Πάντα σχεδίασε και το mirror στις
-        αρνητικές συχνότητες.
-      </p>
+      <>
+        <p>
+          Ολόκληρο θέμα ~25%: «σχεδίασε τα φάσματα + δώσε τη συνθήκη μη-επικάλυψης + σχεδίασε
+          το <InlineMath>{'G(f)'}</InlineMath>». Το διακριτικό που ψάχνει: ξεχωρίζεις DSB-SC
+          (διπλή πλευρική, χωρίς φέρον) από USSB, και χτίζεις τη συνθήκη από τα{' '}
+          <em>πραγματικά</em> εύρη — όχι ένα έτοιμο <InlineMath>{'2W'}</InlineMath>.
+          Χρόνος-στόχος: <strong>~15–20 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Τέσσερις παγίδες.</strong> (1){' '}
+          <strong>
+            Γράφεις μηχανικά <InlineMath>{'\\Delta f \\ge 2W'}</InlineMath>:
+          </strong>{' '}
+          ισχύει μόνο για <em>ίσα</em> εύρη· εδώ είναι άνισα (
+          <InlineMath>{'W/2'}</InlineMath> και <InlineMath>{'W'}</InlineMath>) → σωστό{' '}
+          <InlineMath>{'\\tfrac{3W}{2}'}</InlineMath>. (2) <strong>Παγίδα σχήματος:</strong> το{' '}
+          <InlineMath>{'k = \\Pi(Wt)'}</InlineMath> είναι rect στον <em>χρόνο</em> → sinc στη
+          συχνότητα (πρώτη ρίζα <InlineMath>{'W'}</InlineMath>), ενώ το{' '}
+          <InlineMath>{'m = \\mathrm{sinc}(Wt)'}</InlineMath> → rect (μισό-εύρος{' '}
+          <InlineMath>{'W/2'}</InlineMath>) — μεταμορφώνονται ανάποδα. (3){' '}
+          <strong>Ζωγραφίζεις γραμμή φέροντος:</strong> η DSB-SC είναι suppressed-carrier →{' '}
+          <strong>καμία</strong> κρούση στα <InlineMath>{'\\pm f_c'}</InlineMath> (αυτό είναι το
+          συμβατικό AM). (4) <strong>Ξεχνάς το mirror</strong> στις αρνητικές συχνότητες, ή ότι
+          το κάτω φέρον θέλει <InlineMath>{'f_1 \\ge W/2'}</InlineMath> για να μη διπλώσει το
+          κανάλι στο DC.
+        </div>
+      </>
     ),
   },
 

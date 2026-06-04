@@ -434,7 +434,7 @@ interactive viz.
 - `proodos26-12` — USSB FDM non-overlap interactive viz absent → static/text (inbox/080)
 - `proodos26-13` — draw combined G(f) → static SVG only (inbox/080)
 - ✅ `pa25-th3-mux` — DONE (viz-rework f4378fc: `FdmCanonicalProblemViz kBW={4}` USSB + full DRAW+TEACH rework) — was: text-only (inbox/081)
-- `pb25-th3-mux` — draw DSB-SC FDM spectra + G(f) → text-only (inbox/081)
+- ✅ `pb25-th3-mux` — DONE (viz-rework: `FdmCanonicalProblemViz mBW={0.5} kBW={1} initialMod="dsb"` DSB-SC FDM + full DRAW+TEACH rework; centerpiece = unequal-BW non-overlap → Δf≥3W/2, not the equal-BW 2W) — was: text-only (inbox/081)
 - `jun25-th2` — draw mixed DSB-SC + AM FDM spectra → text-only (inbox/078; inbox/081)
 
 **Planner action:** each item above is a focused Phase-2 exercise-rework step (T1 scope,

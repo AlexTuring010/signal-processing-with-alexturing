@@ -6280,25 +6280,290 @@ export const EXERCISES: Exercise[] = [
         </Link>.
       </>
     ),
-    statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(Wt)'}</InlineMath> διαμορφώνονται κατά DSB-SC με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) Σχέση f για non-overlap. (3) G(f).</p>,
+    statement: (
+      <p>
+        Έστω τα δύο σήματα βασικής ζώνης{' '}
+        <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και{' '}
+        <InlineMath>{'k(t) = \\Pi(Wt)'}</InlineMath>. Το κάθε σήμα διαμορφώνεται κατά{' '}
+        <strong>AM-DSB-SC</strong> με φέροντα <InlineMath>{'f_1'}</InlineMath> και{' '}
+        <InlineMath>{'f_2'}</InlineMath> αντίστοιχα. <strong>(1)</strong> Αποτυπώστε σχηματικά
+        το φάσμα πλάτους των δύο σημάτων <strong>βασικής ζώνης</strong> και των{' '}
+        <strong>διαμορφωμένων</strong> σημάτων. <strong>(2)</strong> Πόσο πρέπει να είναι τα
+        φέροντα <InlineMath>{'f_1, f_2'}</InlineMath> σε σχέση με το{' '}
+        <InlineMath>{'W'}</InlineMath> ώστε να μπορούμε να αποπολυμπλέξουμε τα δύο σήματα χωρίς
+        να επικαλύπτονται; <strong>(3)</strong> Αποτυπώστε σχηματικά το φάσμα του
+        πολυπλεγμένου σήματος <InlineMath>{'G(f)'}</InlineMath>.
+      </p>
+    ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — η μη-επικάλυψη είναι γεωμετρία, όχι έτοιμος τύπος.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Δύο μηνύματα, ένας δίαυλος. Το FDM τα <strong>στοιβάζει</strong> σε{' '}
+            <em>διαφορετικές</em> περιοχές συχνότητας — όπως δύο ραδιοσταθμοί που δεν
+            μπερδεύονται επειδή εκπέμπουν σε διαφορετικά κανάλια· στον δέκτη ένα bandpass
+            φίλτρο ξεχωρίζει το καθένα. Όλο το παιχνίδι είναι οι δύο ζώνες{' '}
+            <strong>να μην πατάει η μία πάνω στην άλλη</strong>.{' '}
+            <strong className="text-fg">Το κλειδί αυτού του θέματος:</strong> τα δύο μηνύματα
+            έχουν <em>διαφορετικό</em> bandwidth, οπότε η απάντηση{' '}
+            <strong>δεν</strong> είναι ο έτοιμος κανόνας «
+            <InlineMath>{'\\Delta f \\ge 2W'}</InlineMath>» — θα τη{' '}
+            <em>χτίσουμε</em> από τη ζώνη που πιάνει πραγματικά κάθε κανάλι. Ο μπούσουλας:{' '}
+            <em>
+              η ζώνη ενός DSB-SC καναλιού = ολόκληρο το φάσμα του μηνύματος (και οι δύο
+              πλευρικές) ανεβασμένο στο φέρον — δηλαδή πλάτος ίσο με{' '}
+              <strong>2× το μισό-εύρος</strong> του μηνύματος
+            </em>
+            . Μη-επικάλυψη = η <em>δεξιά ακμή του κάτω καναλιού</em> δεν περνά την{' '}
+            <em>αριστερή ακμή του πάνω</em>.
+          </span>
+        </div>
+
         <p>
-          <strong>BW</strong>:{' '}
-          <InlineMath>{'M(f) = (1/W)\\Pi(f/W) \\Rightarrow |f| \\leq W/2'}</InlineMath>.{' '}
-          <InlineMath>{'K(f) = (1/W)\\mathrm{sinc}(f/W) \\Rightarrow'}</InlineMath>{' '}
-          πρώτη ρίζα στα <InlineMath>{'|f| = W'}</InlineMath>.
+          <strong>(1α) Τα φάσματα βασικής ζώνης — και η παγίδα του σχήματος.</strong> Τα δύο
+          σήματα μοιάζουν στα σύμβολα, αλλά μεταμορφώνονται <em>ανάποδα</em> το ένα από το
+          άλλο.
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>
+              <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath>
+            </strong>{' '}
+            — ένα sinc στον <em>χρόνο</em> έχει για μετασχηματισμό ένα{' '}
+            <strong>καθαρό rect</strong> (τούβλο) στη συχνότητα· είναι το ζεύγος{' '}
+            <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\mathrm{rect}'}</InlineMath> του
+            τυπολογίου:
+            <BlockMath>{'M(f) = \\tfrac{1}{W}\\,\\Pi\\!\\left(\\tfrac{f}{W}\\right),\\qquad |f| \\le \\tfrac{W}{2}'}</BlockMath>
+            Μισό-εύρος του <InlineMath>{'m'}</InlineMath>: <InlineMath>{'W/2'}</InlineMath> (το
+            rect απλώνεται από <InlineMath>{'-W/2'}</InlineMath> ως{' '}
+            <InlineMath>{'+W/2'}</InlineMath>).
+          </li>
+          <li>
+            <strong>
+              <InlineMath>{'k(t) = \\Pi(Wt)'}</InlineMath>
+            </strong>{' '}
+            — εδώ το rect είναι στον <em>χρόνο</em> (μια απότομη «πύλη»). Απότομη ακμή στον
+            χρόνο ⇒ κυματισμοί στη συχνότητα ⇒ ο μετασχηματισμός είναι{' '}
+            <strong>sinc, όχι rect</strong> — το ίδιο ζεύγος διαβασμένο ανάποδα:
+            <BlockMath>{'K(f) = \\tfrac{1}{W}\\,\\mathrm{sinc}\\!\\left(\\tfrac{f}{W}\\right)'}</BlockMath>
+            με <strong>πρώτη ρίζα στα <InlineMath>{'|f| = W'}</InlineMath></strong>. Ενεργό
+            μισό-εύρος του <InlineMath>{'k'}</InlineMath>: <InlineMath>{'W'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          <strong>Με απλά λόγια:</strong> το <InlineMath>{'k'}</InlineMath> είναι{' '}
+          <strong>διπλάσια πλατύ</strong> από το <InlineMath>{'m'}</InlineMath> στη συχνότητα
+          (μισό-εύρος <InlineMath>{'W'}</InlineMath> έναντι <InlineMath>{'W/2'}</InlineMath>) —
+          και αυτή ακριβώς η <em>ανισότητα των ευρών</em> είναι που θα κάνει την απάντηση να
+          μην βγει ο σχολικός κανόνας <InlineMath>{'2W'}</InlineMath>. Κράτα την.
+        </p>
+
+        <p>
+          <strong>
+            (1β) Τα διαμορφωμένα φάσματα — DSB-SC = «και οι δύο πλευρικές, καμία γραμμή
+            φέροντος».
+          </strong>{' '}
+          Η DSB-SC πολλαπλασιάζει το μήνυμα με <InlineMath>{'\\cos(2\\pi f_c t)'}</InlineMath>,
+          οπότε από το{' '}
+          <Link href="/am/dsb-sc" className="text-accent underline-offset-2 hover:underline">
+            θεώρημα διαμόρφωσης
+          </Link>{' '}
+          το φάσμα <em>αντιγράφεται ακέραιο</em> στα <InlineMath>{'\\pm f_c'}</InlineMath> (με
+          μισό ύψος), <strong>χωρίς</strong> κρούση φέροντος (suppressed carrier — δεν
+          σπαταλάς ισχύ σε γραμμή που δεν κουβαλά πληροφορία):
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            το <InlineMath>{'m'}</InlineMath> στο <InlineMath>{'f_1'}</InlineMath> πιάνει{' '}
+            <InlineMath>{'[f_1 - \\tfrac{W}{2},\\, f_1 + \\tfrac{W}{2}]'}</InlineMath> (και
+            κατοπτρικά <InlineMath>{'[-f_1 - \\tfrac{W}{2},\\, -f_1 + \\tfrac{W}{2}]'}</InlineMath>)
+            — <strong>πλάτος ζώνης <InlineMath>{'W'}</InlineMath></strong> (= 2× το μισό-εύρος{' '}
+            <InlineMath>{'W/2'}</InlineMath>)·
+          </li>
+          <li>
+            το <InlineMath>{'k'}</InlineMath> στο <InlineMath>{'f_2'}</InlineMath> πιάνει{' '}
+            <InlineMath>{'[f_2 - W,\\, f_2 + W]'}</InlineMath> (και κατοπτρικά) —{' '}
+            <strong>πλάτος ζώνης <InlineMath>{'2W'}</InlineMath></strong> (= 2× το μισό-εύρος{' '}
+            <InlineMath>{'W'}</InlineMath>).
+          </li>
+        </ul>
+        <p>
+          <strong>Με απλά λόγια:</strong> το πλάτος μιας DSB-SC ζώνης είναι{' '}
+          <em>διπλάσιο</em> το μισό-εύρος του μηνύματος — εδώ <InlineMath>{'W'}</InlineMath> για
+          το <InlineMath>{'m'}</InlineMath>, <InlineMath>{'2W'}</InlineMath> για το{' '}
+          <InlineMath>{'k'}</InlineMath>. Δύο <em>διαφορετικά</em> πλάτη — αυτό είναι το όλο
+          ζουμί του θέματος.
+        </p>
+
+        <p>
+          <strong>(2) Η συνθήκη μη-επικάλυψης — το 12%, και το όλο νόημα του θέματος.</strong>{' '}
+          Πάρε <InlineMath>{'f_1 < f_2'}</InlineMath> (το στενό <InlineMath>{'m'}</InlineMath>{' '}
+          από κάτω). Για να ξεμπλέξει ο δέκτης τα δύο κανάλια με ένα BPF, οι δύο ζώνες δεν
+          πρέπει να αγγίζονται — δηλαδή η <strong>δεξιά ακμή του κάτω καναλιού</strong>{' '}
+          (<InlineMath>{'f_1 + W/2'}</InlineMath>) να μην περάσει την{' '}
+          <strong>αριστερή ακμή του πάνω</strong> (<InlineMath>{'f_2 - W'}</InlineMath>):
+        </p>
+        <BlockMath>{'f_1 + \\tfrac{W}{2} \\;\\le\\; f_2 - W \\quad\\Longrightarrow\\quad \\boxed{\\,f_2 - f_1 \\ge \\tfrac{3W}{2}\\,}'}</BlockMath>
+        <p>
+          <strong>Γιατί <InlineMath>{'\\tfrac{3W}{2}'}</InlineMath> και όχι{' '}
+          <InlineMath>{'2W'}</InlineMath> — η ανισότητα των ευρών, ρητά.</strong> Ο γενικός
+          κανόνας είναι πάντα ο ίδιος:{' '}
+          <em>
+            ελάχιστη απόσταση = (μισό-εύρος κάτω καναλιού) + (μισό-εύρος πάνω καναλιού)
+          </em>
+          . Στη σχολική, <strong>ισο-εύρη</strong> περίπτωση και τα δύο μηνύματα έχουν
+          μισό-εύρος <InlineMath>{'W'}</InlineMath>, οπότε{' '}
+          <InlineMath>{'\\Delta f \\ge W + W = 2W'}</InlineMath> — αυτός είναι ο κανόνας
+          μνήμης. Εδώ όμως το <InlineMath>{'m'}</InlineMath> είναι <em>στενότερο</em>{' '}
+          (<InlineMath>{'W/2'}</InlineMath>), άρα{' '}
+          <InlineMath>{'\\Delta f \\ge \\tfrac{W}{2} + W = \\tfrac{3W}{2}'}</InlineMath> —
+          λιγότερο από <InlineMath>{'2W'}</InlineMath>, ακριβώς επειδή το κάτω κανάλι πιάνει
+          λιγότερο χώρο. <strong>Μην γράψεις μηχανικά <InlineMath>{'2W'}</InlineMath>:</strong>{' '}
+          το <InlineMath>{'2W'}</InlineMath> είναι μόνο η ειδική περίπτωση «ίσα εύρη». Χτίσε το
+          νούμερο από τα δύο μισά-εύρη και θα έχεις δίκιο για <em>οποιαδήποτε</em> σήματα.
         </p>
         <p>
-          <strong>DSB-SC</strong>: rect γύρω από{' '}
-          <InlineMath>{'\\pm f_1'}</InlineMath> (πλάτος{' '}
-          <InlineMath>{'\\pm W/2'}</InlineMath>), sinc-shape γύρω από{' '}
-          <InlineMath>{'\\pm f_2'}</InlineMath> (πλάτος ~ <InlineMath>{'\\pm W'}</InlineMath>).
+          <strong>Και κάτι ακόμη — κάθε φέρον ξεχωριστά, να μη διπλώσει στο DC.</strong> Η ίδια
+          αρχή («ζώνες που δεν τέμνονται») ισχύει και για το <em>καθένα</em> κανάλι με το
+          κατοπτρικό του στα αρνητικά: το αντίγραφο του <InlineMath>{'m'}</InlineMath> στο{' '}
+          <InlineMath>{'+f_1'}</InlineMath> πιάνει{' '}
+          <InlineMath>{'[f_1 - \\tfrac{W}{2}, f_1 + \\tfrac{W}{2}]'}</InlineMath>, το κατοπτρικό
+          στο <InlineMath>{'-f_1'}</InlineMath> φτάνει ως{' '}
+          <InlineMath>{'-f_1 + \\tfrac{W}{2}'}</InlineMath>· για να μην ακουμπήσουν στο μηδέν
+          χρειάζεται <InlineMath>{'f_1 \\ge \\tfrac{W}{2}'}</InlineMath> — ο γνωστός όρος «το
+          φέρον ξεπερνά το μισό-εύρος» της DSB-SC (
+          <Link href="/am/dsb-sc" className="text-accent underline-offset-2 hover:underline">
+            /am/dsb-sc
+          </Link>
+          ). Για το <InlineMath>{'k'}</InlineMath> αντίστοιχα{' '}
+          <InlineMath>{'f_2 \\ge W'}</InlineMath>, αλλά αυτό ικανοποιείται{' '}
+          <em>αυτόματα</em>: η απόσταση ήδη απαιτεί{' '}
+          <InlineMath>{'f_2 \\ge f_1 + \\tfrac{3W}{2} \\ge 2W'}</InlineMath>. Άρα η{' '}
+          <em>δεσμευτική</em> απάντηση είναι:{' '}
+          <InlineMath>{'f_1 \\ge \\tfrac{W}{2}'}</InlineMath> και{' '}
+          <InlineMath>{'f_2 - f_1 \\ge \\tfrac{3W}{2}'}</InlineMath> (συν ~10–20% guard band
+          για τα μη-ιδανικά φίλτρα).
         </p>
+
         <p>
-          <strong>Non-overlap</strong>:{' '}
-          <InlineMath>{'f_2 - W \\geq f_1 + W/2 \\Rightarrow f_2 \\geq f_1 + 3W/2'}</InlineMath>.
+          <strong>
+            (3) Το πολυπλεγμένο <InlineMath>{'G(f)'}</InlineMath>.
+          </strong>{' '}
+          Απλώς το άθροισμα <InlineMath>{'G(f) = X_m(f) + X_k(f)'}</InlineMath> — η{' '}
+          <em>rect-DSB</em> ζώνη του <InlineMath>{'m'}</InlineMath> γύρω από{' '}
+          <InlineMath>{'\\pm f_1'}</InlineMath> και η <em>sinc-DSB</em> ζώνη του{' '}
+          <InlineMath>{'k'}</InlineMath> γύρω από <InlineMath>{'\\pm f_2'}</InlineMath>,
+          δίπλα-δίπλα (καμία γραμμή φέροντος σε καμία). Με{' '}
+          <InlineMath>{'\\Delta f \\ge \\tfrac{3W}{2}'}</InlineMath> δεν αγγίζονται ⇒ καθαρή
+          αποπολυπλεξία· κάτω από αυτό ⇒ επικάλυψη ⇒ crosstalk.
         </p>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Τίμια σημείωση — ιδανικεύσεις.</strong> Το{' '}
+          <InlineMath>{'K(f)'}</InlineMath> είναι sinc, που έχει{' '}
+          <strong>ουρές που δεν τελειώνουν ποτέ</strong>: αυστηρά το{' '}
+          <InlineMath>{'k'}</InlineMath> <em>δεν</em> είναι bandlimited, οπότε η DSB-SC του
+          απλώνεται (ολοένα φθίνοντας) πέρα από το <InlineMath>{'f_2 + W'}</InlineMath>. Όπως
+          κάθε εξεταστική, παίρνουμε την <strong>πρώτη ρίζα (<InlineMath>{'W'}</InlineMath>)</strong>{' '}
+          ως το ενεργό εύρος του <InlineMath>{'k'}</InlineMath> για το σχέδιο και τη συνθήκη.
+          Επίσης το σχέδιο είναι <strong>σχηματικό</strong>: τα{' '}
+          <InlineMath>{'f_1, f_2'}</InlineMath> είναι αυθαίρετα φέροντα και οι άξονες
+          μετριούνται σε σχετικές μονάδες του <InlineMath>{'W'}</InlineMath>.
+        </div>
+
+        <figure className="my-4">
+          <FdmCanonicalProblemViz mBW={0.5} kBW={1} initialMod="dsb" />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η draw-απάντηση ζωντανή, σε σχετικές μονάδες του <InlineMath>{'W'}</InlineMath>.
+            Πάνω: <InlineMath>{'M(f)'}</InlineMath> = το rect μπλοκ στο{' '}
+            <InlineMath>{'[-W/2, W/2]'}</InlineMath> (το bracket «<InlineMath>{'W'}</InlineMath>»
+            είναι το συνολικό πλάτος)· από κάτω <InlineMath>{'K(f)'}</InlineMath> = ο sinc
+            λοβός (το bracket «<InlineMath>{'2W_k = 2W'}</InlineMath> (πρώτο null)» σημαίνει
+            πρώτες ρίζες στα <InlineMath>{'\\pm W'}</InlineMath> — δηλ. ενεργό μισό-εύρος{' '}
+            <InlineMath>{'W'}</InlineMath>). Στο διαμορφωμένο, η <strong>DSB-SC</strong> κρατά{' '}
+            <strong>και τις δύο πλευρικές χωρίς γραμμή φέροντος</strong>: το{' '}
+            <InlineMath>{'m'}</InlineMath> στο{' '}
+            <InlineMath>{'[f_1 - W/2, f_1 + W/2]'}</InlineMath>, το{' '}
+            <InlineMath>{'k'}</InlineMath> στο <InlineMath>{'[f_2 - W, f_2 + W]'}</InlineMath>.
+            Σύρε την απόσταση <InlineMath>{'\\Delta f'}</InlineMath>: η ένδειξη «ελάχιστο»
+            δείχνει <InlineMath>{'W_m + W_k = 1.5W'}</InlineMath> (δηλαδή{' '}
+            <InlineMath>{'\\tfrac{3W}{2}'}</InlineMath>) — κάτω από αυτό η ζώνη στο{' '}
+            <InlineMath>{'G(f)'}</InlineMath> γίνεται κόκκινη (crosstalk), ακριβώς το
+            υποερώτημα (2). Γύρισε τον διακόπτη σε <strong>USSB</strong> και δες τις ζώνες να{' '}
+            <em>μισεύονται</em> και το «ελάχιστο» να πέφτει — αυτό ακριβώς γλιτώνει το SSB
+            (πβ.{' '}
+            <Link
+              href="/practice#exercise:pa25-th3-mux"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              Πρόοδ. Α 2025 ΘΕΜΑ 3
+            </Link>
+            , ένα ανάλογο USSB FDM πρόβλημα).
+          </figcaption>
+        </figure>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— μόλις δεις «δύο σήματα, δύο φέροντα, σχεδίασε / συνθήκη μη-επικάλυψης», τρέξε
+            τα <strong>ίδια τέσσερα βήματα</strong>, ό,τι κι αν είναι τα σχήματα: (1) βρες το
+            φάσμα <em>βασικής ζώνης</em> κάθε καναλιού (πρόσεξε ποιος είναι sinc και ποιος rect
+            — μεταμορφώνονται ανάποδα)· (2) εφάρμοσε τη διαμόρφωση —{' '}
+            <em>DSB-SC ⇒ κράτα και τις δύο πλευρικές, καμία γραμμή φέροντος ⇒ πλάτος ζώνης = 2×
+            μισό-εύρος</em>· (3) στοίβαξε στα φέροντα· (4) απαίτησε{' '}
+            <strong>
+              επόμενο φέρον ≥ προηγούμενο φέρον + (μισό-εύρος προηγ.) + (μισό-εύρος επόμ.)
+            </strong>
+            . Αυτή η τελευταία γραμμή είναι η συνθήκη μη-επικάλυψης σε <em>κάθε</em> FDM άσκηση
+            — <strong>χτισμένη από τα εύρη</strong>, ποτέ ένα αποστηθισμένο{' '}
+            <InlineMath>{'2W'}</InlineMath>.
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted"> — ίδιος σκελετός, αλλαγμένη μία επιλογή:</span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>Ίσα εύρη ⇒ επιστρέφει το <InlineMath>{'2W'}</InlineMath>.</strong> Αν και
+              τα δύο μηνύματα είχαν μισό-εύρος <InlineMath>{'W'}</InlineMath> (π.χ. και τα δύο
+              rect στη συχνότητα), η συνθήκη γίνεται{' '}
+              <InlineMath>{'\\Delta f \\ge W + W = 2W'}</InlineMath>. Δηλαδή ο «σχολικός»
+              κανόνας <InlineMath>{'2W'}</InlineMath> είναι απλώς η ισο-εύρη ειδική περίπτωση
+              της γενικής <InlineMath>{'(W_1 + W_2)'}</InlineMath> — καλό τεστ ότι κατάλαβες
+              από πού βγαίνει.
+            </li>
+            <li>
+              <strong>USSB αντί DSB-SC.</strong> Κάθε κανάλι κρατά <em>μία</em> πλευρική ⇒ το
+              πλάτος του <strong>μισεύεται</strong> (το <InlineMath>{'m'}</InlineMath> πιάνει{' '}
+              <InlineMath>{'W/2'}</InlineMath>, το <InlineMath>{'k'}</InlineMath> πιάνει{' '}
+              <InlineMath>{'W'}</InlineMath>) ⇒ μικρότερη απαιτούμενη απόσταση. Γύρισε τον
+              διακόπτη του διαγράμματος σε USSB και δες το «ελάχιστο» να πέφτει. Αυτό ακριβώς το
+              κέρδος χωρητικότητας δίνει το SSB (
+              <Link
+                href="/practice#exercise:pa25-th3-mux"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Πρόοδ. Α 2025 ΘΕΜΑ 3
+              </Link>
+              , ανάλογο USSB FDM με πλατύτερα σήματα —{' '}
+              <InlineMath>{'m{:}\\,\\mathrm{sinc}(2Wt)'}</InlineMath> (BW{' '}
+              <InlineMath>{'W'}</InlineMath>),{' '}
+              <InlineMath>{'k{:}\\,\\Pi(4Wt)'}</InlineMath> (πρώτη ρίζα{' '}
+              <InlineMath>{'4W'}</InlineMath>) — ίδια μέθοδος μη-επικάλυψης, διαφορετικό spacing).
+            </li>
+            <li>
+              <strong>Τρίτο κανάλι.</strong> Πρόσθεσε ένα <InlineMath>{'g(t)'}</InlineMath> στο
+              φέρον <InlineMath>{'f_3 > f_2'}</InlineMath>. Η ίδια αρχή αλυσιδωτά:{' '}
+              <InlineMath>{'f_3 - f_2 \\ge W_k + W_g'}</InlineMath> (το άθροισμα των μισών-ευρών
+              του ζεύγους γειτόνων). Κανένα νέο τρικ — μόνο η ίδια γραμμή, εφαρμοσμένη στο
+              επόμενο ζευγάρι.
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
