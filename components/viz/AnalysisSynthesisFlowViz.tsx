@@ -451,13 +451,19 @@ function drawSpectrum(
   }
   ctx.fillText('0', xOf(0), baselineY + 14)
 
-  // Stems: draw original (faded) AND current (solid) when perturbed
+  // Stems: draw the original amplitude as a faded grey "ghost" AND the current
+  // value (solid) when perturbed, so you can see where each harmonic moved.
+  // NB: colors.accent is an "rgb(r g b)" string — appending a hex-alpha suffix
+  // ('55'/'88') yields an invalid color the canvas silently ignores, so the
+  // ghost ends up inheriting the previous stroke (the amber). Use an explicit
+  // faded grey instead: it reads as a neutral "where it was" marker.
+  const ghost = 'rgba(100, 116, 139, 0.55)' // slate-500, faded
   for (const c of extracted) {
     if (c.k === 0) {
       // DC stem: render at k=0 with mag c.Aeff (no conjugate)
       drawStem(ctx, xOf(0), baselineY, yOf(c.Aeff / 2), '#0ea5e9', 3.5)
       if (perturbed && Math.abs(c.A - c.Aeff) > 1e-6)
-        drawStem(ctx, xOf(0) + 4, baselineY, yOf(c.A / 2), colors.accent + '88', 2)
+        drawStem(ctx, xOf(0) + 4, baselineY, yOf(c.A / 2), ghost, 2)
       continue
     }
     // Each cosine A·cos(2πk f0 t + φ) contributes |a_k| = A/2 at ±k
@@ -465,12 +471,12 @@ function drawSpectrum(
     const magOld = c.A / 2
     // +k
     if (perturbed && Math.abs(c.A - c.Aeff) > 1e-6) {
-      drawStem(ctx, xOf(c.k) + 2, baselineY, yOf(magOld), colors.accent + '55', 1.5)
+      drawStem(ctx, xOf(c.k) + 2, baselineY, yOf(magOld), ghost, 1.5)
     }
     drawStem(ctx, xOf(c.k), baselineY, yOf(magNew), perturbed ? '#f59e0b' : colors.accent, 3.5)
     // -k (conjugate)
     if (perturbed && Math.abs(c.A - c.Aeff) > 1e-6) {
-      drawStem(ctx, xOf(-c.k) + 2, baselineY, yOf(magOld), colors.accent + '55', 1.5)
+      drawStem(ctx, xOf(-c.k) + 2, baselineY, yOf(magOld), ghost, 1.5)
     }
     drawStem(ctx, xOf(-c.k), baselineY, yOf(magNew), perturbed ? '#f59e0b' : colors.accent, 3.5)
   }
