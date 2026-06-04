@@ -60,7 +60,13 @@ const SIGNAL_PRESETS: SignalPreset[] = [
     components: (() => {
       const arr = [{ k: 0, A: 0.5, phi: 0 }]
       for (let k = 1; k <= 9; k += 2) {
-        arr.push({ k, A: 2 / (k * Math.PI), phi: 0 })
+        // a_k = ½·sinc(k/2): magnitude 2/(kπ), but the sign ALTERNATES for the
+        // centred 50% pulse — sin(kπ/2) = +1 for k≡1 (mod 4), −1 for k≡3 (mod 4).
+        // A negative coefficient is a phase of π (−cos θ = cos(θ+π)). Without it,
+        // every harmonic peaks at t=0 and the sum spikes instead of being a
+        // flat-topped square.
+        const phi = Math.sin((k * Math.PI) / 2) > 0 ? 0 : Math.PI
+        arr.push({ k, A: 2 / (k * Math.PI), phi })
       }
       return arr
     })(),
