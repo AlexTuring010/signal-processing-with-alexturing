@@ -286,7 +286,7 @@ export function LtiThroughFourierSeriesViz() {
       <div className="mt-3">
         <Panel
           title="|H(f)| — φάσμα του συστήματος"
-          subtitle="Τιμή σε κάθε k·f₀ → πολλαπλασιαστής για την αρμονική k"
+          subtitle="Τιμή σε κάθε ±k·f₀ → πολλαπλασιαστής της αρμονικής k"
         >
           <canvas
             ref={hMagRef}
@@ -555,25 +555,30 @@ function drawHResponse(
   }
   ctx.stroke()
 
-  // Sampling dots at each k·f₀
+  // Sampling dots at each ±k·f₀. A real periodic signal has harmonics at
+  // BOTH ±k·f₀ (conjugate pairs), and |H| is even here, so the samples are
+  // symmetric — draw the mirror dot too (matches the two-sided spectra below).
   for (const f of sampleFreqs) {
-    if (Math.abs(f) > fmax) continue
-    const mag = system.H(f, cutoff).mag
-    const x = xOf(f)
-    const y = yOf(mag)
-    // Vertical guide
-    ctx.strokeStyle = colors.border
-    ctx.setLineDash([1, 3])
-    ctx.beginPath()
-    ctx.moveTo(x, baselineY)
-    ctx.lineTo(x, y)
-    ctx.stroke()
-    ctx.setLineDash([])
-    // Dot
-    ctx.fillStyle = '#f59e0b'
-    ctx.beginPath()
-    ctx.arc(x, y, 3.5, 0, 2 * Math.PI)
-    ctx.fill()
+    const mirrored = f === 0 ? [0] : [f, -f]
+    for (const ff of mirrored) {
+      if (Math.abs(ff) > fmax) continue
+      const mag = system.H(ff, cutoff).mag
+      const x = xOf(ff)
+      const y = yOf(mag)
+      // Vertical guide
+      ctx.strokeStyle = colors.border
+      ctx.setLineDash([1, 3])
+      ctx.beginPath()
+      ctx.moveTo(x, baselineY)
+      ctx.lineTo(x, y)
+      ctx.stroke()
+      ctx.setLineDash([])
+      // Dot
+      ctx.fillStyle = '#f59e0b'
+      ctx.beginPath()
+      ctx.arc(x, y, 3.5, 0, 2 * Math.PI)
+      ctx.fill()
+    }
   }
 
   // f-axis labels (integer multiples of f₀)
