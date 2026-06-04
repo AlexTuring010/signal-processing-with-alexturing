@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TableOfContents } from '@/components/layout/TableOfContents'
 import { PageComments } from '@/components/layout/PageComments'
+import { BottomCompleteToggle } from '@/components/layout/BottomCompleteToggle'
 import { SectionCommentsProvider } from '@/components/layout/section-comments-context'
 import { SoseReturnBanner } from '@/components/sose/SoseReturnBanner'
 
@@ -37,6 +38,7 @@ export default function ContentLayout({
           <SoseReturnBanner />
         </Suspense>
         <SectionCommentsProvider>{children}</SectionCommentsProvider>
+        <BottomCompleteToggle />
         <div className="print:hidden">
           <PageComments />
         </div>
