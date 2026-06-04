@@ -49,6 +49,7 @@ import {
   SystemBoxDiagram,
   CascadeDiagram,
   ParallelDiagram,
+  ConvolutionExerciseDiagram,
 } from '@/components/viz/SystemDiagrams'
 import { LinearityChecker } from '@/components/viz/LinearityChecker'
 import { TimeInvarianceChecker } from '@/components/viz/TimeInvarianceChecker'
@@ -232,6 +233,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SystemBoxDiagram,
     CascadeDiagram,
     ParallelDiagram,
+    ConvolutionExerciseDiagram,
     LinearityChecker,
     TimeInvarianceChecker,
     ImpulseResponseDemo,
