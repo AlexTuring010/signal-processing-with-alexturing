@@ -32,6 +32,8 @@ type Preset = {
   description: string
   /** Closed-form x(t) (cosine form), shown so each spectrum maps to a real signal equation. */
   formula: string
+  /** x(t) rewritten via Euler as Σ aₖ e^{jkω₀t}, so the reader sees the terms become the aₖ. */
+  expForm: string
   // returns a_k for k in [-K_MAX, K_MAX]; key is the integer k.
   coeffs: () => Map<number, Coeff>
 }
@@ -42,6 +44,7 @@ const PRESETS: Preset[] = [
     label: 'Καθαρό cosine',
     description: 'Δύο σπικς, στο +f₀ και −f₀, μέτρο 1/2.',
     formula: 'x(t) = \\cos(\\omega_0 t)',
+    expForm: 'x(t) = \\underbrace{\\tfrac12}_{a_1}e^{j\\omega_0 t} + \\underbrace{\\tfrac12}_{a_{-1}}e^{-j\\omega_0 t}',
     coeffs: () => {
       const m = new Map<number, Coeff>()
       m.set(1, { mag: 0.5, phase: 0 })
@@ -54,6 +57,8 @@ const PRESETS: Preset[] = [
     label: 'Cosine με phase shift',
     description: 'Ίδια πλάτη, διαφορετικές φάσεις. Το σχήμα στον χρόνο μετατοπίζεται.',
     formula: 'x(t) = \\cos(\\omega_0 t + \\pi/3)',
+    expForm:
+      'x(t) = \\underbrace{\\tfrac12 e^{j\\pi/3}}_{a_1}e^{j\\omega_0 t} + \\underbrace{\\tfrac12 e^{-j\\pi/3}}_{a_{-1}}e^{-j\\omega_0 t}',
     coeffs: () => {
       const phi = Math.PI / 3
       const m = new Map<number, Coeff>()
@@ -67,6 +72,8 @@ const PRESETS: Preset[] = [
     label: 'cos + 3η αρμονική',
     description: 'Προστίθεται μια αρμονική στο 3f₀ — πολύ απλή «μη-cosine» κυματομορφή.',
     formula: 'x(t) = \\cos\\omega_0 t + \\tfrac12\\cos 3\\omega_0 t',
+    expForm:
+      'x(t) = \\underbrace{\\tfrac12}_{a_1}e^{j\\omega_0 t} + \\underbrace{\\tfrac12}_{a_{-1}}e^{-j\\omega_0 t} + \\underbrace{\\tfrac14}_{a_3}e^{j3\\omega_0 t} + \\underbrace{\\tfrac14}_{a_{-3}}e^{-j3\\omega_0 t}',
     coeffs: () => {
       const m = new Map<number, Coeff>()
       m.set(1, { mag: 0.5, phase: 0 })
@@ -83,6 +90,8 @@ const PRESETS: Preset[] = [
       'a_k = ½·sinc(k/2). Μόνο περιττές αρμονικές, μέτρα φθίνουν σαν 1/k. DC = 1/2.',
     formula:
       'x(t) = \\tfrac12 + \\tfrac{2}{\\pi}\\left[\\cos\\omega_0 t - \\tfrac13\\cos 3\\omega_0 t + \\tfrac15\\cos 5\\omega_0 t - \\cdots\\right]',
+    expForm:
+      'x(t) = \\tfrac12 + \\tfrac1\\pi e^{j\\omega_0 t} + \\tfrac1\\pi e^{-j\\omega_0 t} - \\tfrac{1}{3\\pi}e^{j3\\omega_0 t} - \\tfrac{1}{3\\pi}e^{-j3\\omega_0 t} + \\cdots',
     coeffs: () => {
       const m = new Map<number, Coeff>()
       m.set(0, { mag: 0.5, phase: 0 })
@@ -161,6 +170,13 @@ export function SpectrumViewer() {
             {p.label}
           </button>
         ))}
+      </div>
+
+      <div className="mb-3 overflow-x-auto rounded-md border border-border bg-bg-soft/40 px-3 py-2">
+        <div className="mb-1 text-[10px] uppercase tracking-wide text-fg-subtle">
+          Με Euler → άθροισμα <InlineMath>{'e^{jk\\omega_0 t}'}</InlineMath> · οι συντελεστές είναι τα aₖ (= τα lollipops κάτω)
+        </div>
+        <InlineMath>{preset.expForm}</InlineMath>
       </div>
 
       <div className="grid gap-3 lg:grid-cols-[1fr_1fr]">
