@@ -830,21 +830,55 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'jan26-th2-7': {
     takeaway: (
       <p>
-        Όταν <InlineMath>{'\\mu > 1'}</InlineMath> έχεις overmodulation
-        και το envelope αλλάζει πρόσημο — πάντα σχεδίασε με phase reversal
-        στις στιγμές που η περιβάλλουσα γίνεται αρνητική. Στο φάσμα η AM
-        παραμένει «κανονική» (carrier + 2 sidebands), η παραμόρφωση είναι
-        μόνο στον envelope detector.
+        <strong>Σχεδίασε AM = διάβασε παραμέτρους, έλεγξε{' '}
+        <InlineMath>{'\\mu'}</InlineMath>, μετά δύο σχέδια.</strong> Από το φέρον παίρνεις{' '}
+        <InlineMath>{'A_c, f_c'}</InlineMath>, από το message{' '}
+        <InlineMath>{'A_m, f_m'}</InlineMath>· το{' '}
+        <InlineMath>{'\\mu = A_m/A_c'}</InlineMath> αποφασίζει το σχήμα.{' '}
+        <strong>Χρόνος:</strong> carrier «γεμισμένο» από την περιβάλλουσα{' '}
+        <InlineMath>{'A_c + m(t)'}</InlineMath>· εδώ{' '}
+        <InlineMath>{'\\mu = 2 > 1'}</InlineMath>, άρα phase reversals στις στιγμές που{' '}
+        <InlineMath>{'A_c + m(t) = 0'}</InlineMath> (<InlineMath>{'t = 7/12, 11/12'}</InlineMath>{' '}
+        s) — όχι clipping, ο carrier γυρίζει <InlineMath>{'180^\\circ'}</InlineMath>.{' '}
+        <strong>Φάσμα</strong> (product-to-sum): carrier στα{' '}
+        <InlineMath>{'\\pm 10'}</InlineMath> Hz + ένα ζεύγος πλευρικών στα{' '}
+        <InlineMath>{'\\pm 9, \\pm 11'}</InlineMath> Hz, και τα τρία μέτρα{' '}
+        <strong><InlineMath>{'1/2'}</InlineMath></strong> (λόγος πλευρικής/carrier{' '}
+        <InlineMath>{'= \\mu/2 = 1'}</InlineMath>), <InlineMath>{'BW = 2'}</InlineMath> Hz. Το
+        μοτίβο που κουβαλάς: <strong>η υπερδιαμόρφωση είναι ιστορία του χρόνου — το φάσμα
+        single-tone μένει πάντα carrier + ένα ζεύγος, ό,τι κι αν είναι το{' '}
+        <InlineMath>{'\\mu'}</InlineMath>.</strong>
       </p>
     ),
     examRadar: (
-      <p>
-        «Σχεδιάστε x(t) και X(f) AM» με <InlineMath>{'A_m > A_c'}</InlineMath>{' '}
-        → πρέπει να υπογραμμίσεις overmodulation. Στην πράξη η εξέταση
-        συχνά διαλέγει νούμερα όπου <InlineMath>{'\\mu = 2'}</InlineMath>{' '}
-        ή <InlineMath>{'\\mu = 0.5'}</InlineMath> για να ελέγξει αν
-        αναγνωρίζεις τη διαφορά.
-      </p>
+      <>
+        <p>
+          «Σχεδιάστε <InlineMath>{'x(t)'}</InlineMath> και{' '}
+          <InlineMath>{'X(f)'}</InlineMath> AM» με single-tone message → δύο καθαρά σχέδια
+          με labels (θέσεις γραμμών, ύψη, BW, σημαία υπερδιαμόρφωσης). Ελαφρύ algebra· η αξία
+          είναι στην ακρίβεια και στη σημαία <InlineMath>{'\\mu > 1'}</InlineMath>. Η εξέταση
+          συχνά διαλέγει νούμερα όπου <InlineMath>{'\\mu = 2'}</InlineMath> (ή{' '}
+          <InlineMath>{'\\mu = 0.5'}</InlineMath>) για να δει αν ξεχωρίζεις καθαρή AM από
+          υπερδιαμόρφωση. Χρόνος-στόχος: <strong>~5 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Τέσσερις παγίδες.</strong> (1) <strong>Ξεχνάς τον έλεγχο{' '}
+          <InlineMath>{'\\mu'}</InlineMath> ως προς το{' '}
+          <InlineMath>{'1'}</InlineMath>:</strong> σχεδιάζεις καθαρή θετική περιβάλλουσα ενώ{' '}
+          <InlineMath>{'\\mu = 2'}</InlineMath> — χάνεις τις αναστροφές φάσης που ψαρεύει το
+          θέμα. (2) <strong>Λάθος ύψος πλευρικών:</strong> εδώ και οι τρεις γραμμές είναι
+          ίσες στο <InlineMath>{'1/2'}</InlineMath> (επειδή{' '}
+          <InlineMath>{'\\mu/2 = 1'}</InlineMath>) — όχι <InlineMath>{'1'}</InlineMath>· κοινό
+          λάθος είναι να πάρεις το ύψος του <InlineMath>{'M(f)'}</InlineMath> χωρίς τον
+          παράγοντα <InlineMath>{'1/2'}</InlineMath> της διαμόρφωσης. (3) <strong>Νομίζεις
+          ότι η υπερδιαμόρφωση προσθέτει φασματικές γραμμές:</strong> ΟΧΙ — single tone =
+          carrier + ένα ζεύγος πλευρικών· η υπερδιαμόρφωση φαίνεται μόνο στον χρόνο. (4){' '}
+          <strong>«Ο envelope detector δουλεύει» για{' '}
+          <InlineMath>{'\\mu = 2'}</InlineMath>:</strong> ΟΧΙ — βγάζει{' '}
+          <InlineMath>{'|1 + 2\\sin(2\\pi t)|'}</InlineMath>, όχι το message· χρειάζεσαι
+          σύμφωνη αποδιαμόρφωση.
+        </div>
+      </>
     ),
   },
 
