@@ -944,20 +944,67 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'jan26-th3-mux': {
     takeaway: (
       <p>
-        USSB FDM δύο σημάτων: (1) υπολόγισε το BW κάθε baseband (sinc έχει
-        BW στη ρίζα του sinc, sinc² διπλάσιο), (2) τοποθέτησε κάθε USSB
-        γύρω από το αντίστοιχο carrier, (3) ελέγξε non-overlap. Στον
-        receiver, BPF + coherent demod ανά κανάλι.
+        <strong>Συνταγή USSB-FDM (δύο κανάλια):</strong> (1) σχήμα φάσματος κάθε
+        baseband — <em>sinc στον χρόνο ⇒ rect</em> (εύρος{' '}
+        <InlineMath>{'W'}</InlineMath>)·{' '}
+        <em>
+          στενό rect στον χρόνο <InlineMath>{'\\Pi(4Wt)'}</InlineMath> ⇒ πλατύ sinc
+        </em>{' '}
+        (πρώτη ρίζα <InlineMath>{'4W'}</InlineMath>: στενό στον χρόνο ⇒ πλατύ στη
+        συχνότητα)· (2) USSB ⇒ κράτα <strong>μόνο την πάνω πλευρική</strong>, που{' '}
+        <strong>ξεκινά στο φέρον και απλώνεται προς τα πάνω</strong> κατά το bandwidth
+        του μηνύματος (<em>όχι</em> συμμετρικά «γύρω» από το φέρον — αυτό είναι DSB)·
+        (3) στοίβαξε στα φέροντα + κατοπτρικά στις αρνητικές· (4) μη-επικάλυψη:{' '}
+        <strong>
+          επόμενο φέρον ≥ προηγούμενο + πλάτος του προηγούμενου (κάτω) καναλιού
+        </strong>{' '}
+        — εδώ <InlineMath>{'\\Delta f \\ge W'}</InlineMath> (το{' '}
+        <InlineMath>{'W'}</InlineMath> του <InlineMath>{'m'}</InlineMath>, όχι το{' '}
+        <InlineMath>{'4W'}</InlineMath> του <InlineMath>{'k'}</InlineMath>).{' '}
+        <strong>Μεταφερόμενο κλειδί:</strong> η ζώνη ενός USSB καναλιού = το bandwidth
+        του μηνύματος, ανεβασμένο στο φέρον.
       </p>
     ),
     examRadar: (
-      <p>
-        Σύνθετο πρόβλημα FDM (πολλά σημεία, μεγάλο βάρος ~20%) →
-        διαχώρισέ το σε στάδια: bandwidth analysis → modulation per
-        channel → multiplex spectrum → demod chain. Σχέδια στο φάσμα
-        φέρνουν εύκολους βαθμούς — μην παραλείψεις τα mirrors στις
-        αρνητικές συχνότητες.
-      </p>
+      <>
+        <p>
+          Ολόκληρο ΘΕΜΑ (~20%, δύο υποερωτήματα από 10%) και καθαρά «αποτύπωσε
+          σχηματικά» → εύκολοι βαθμοί <em>αν</em> ζωγραφίσεις σωστά τα σχήματα.
+          Χρόνος-στόχος <strong>~15-20 min</strong>· τα μισά λεπτά πάνε στο να βρεις
+          σωστά τα δύο σχήματα baseband. Δεν ζητάει αποδιαμόρφωση — μην τη γράψεις.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Παγίδες που ψαρεύει η εξέταση:</strong>
+          <ul className="ml-4 mt-1 list-disc space-y-1">
+            <li>
+              Ζωγραφίζεις το <InlineMath>{'k'}</InlineMath> (sinc) <em>στενότερο</em>{' '}
+              από το <InlineMath>{'m'}</InlineMath> (rect). Ανάποδα: το{' '}
+              <InlineMath>{'\\Pi(4Wt)'}</InlineMath> είναι{' '}
+              <strong>στενό στον χρόνο</strong> ⇒ <strong>πλατύ</strong> στη συχνότητα
+              (<InlineMath>{'4W'}</InlineMath>, τέσσερις φορές το{' '}
+              <InlineMath>{'m'}</InlineMath>).
+            </li>
+            <li>
+              Σχεδιάζεις το USSB <strong>συμμετρικά γύρω από το φέρον</strong> (σαν
+              DSB). Το USSB είναι <strong>μόνο η πάνω πλευρική</strong>: ξεκινά στο
+              φέρον, απλώνεται προς τα πάνω, πλάτους = bandwidth μηνύματος.
+            </li>
+            <li>
+              Βάζεις για ελάχιστη απόσταση το <InlineMath>{'4W'}</InlineMath> ή το{' '}
+              <InlineMath>{'5W'}</InlineMath>. Με USSB και το{' '}
+              <InlineMath>{'m'}</InlineMath> χαμηλά, η συνθήκη είναι{' '}
+              <InlineMath>{'\\Delta f \\ge W'}</InlineMath> — την ορίζει το πλάτος του{' '}
+              <em>κάτω</em> καναλιού. (Το <InlineMath>{'5W'}</InlineMath> θα ήταν για
+              DSB-SC.)
+            </li>
+            <li>
+              Ξεχνάς τα <strong>κατοπτρικά αντίγραφα</strong> στις αρνητικές
+              συχνότητες — το φάσμα πλάτους είναι πάντα συμμετρικό ως προς το{' '}
+              <InlineMath>{'f=0'}</InlineMath>.
+            </li>
+          </ul>
+        </div>
+      </>
     ),
   },
 

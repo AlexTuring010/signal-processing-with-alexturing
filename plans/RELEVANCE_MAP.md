@@ -433,7 +433,7 @@ interactive viz.
 - `proodos26-11` — draw USSB spectra for rect + tri baseband → static SVG only (inbox/080)
 - `proodos26-12` — USSB FDM non-overlap interactive viz absent → static/text (inbox/080)
 - `proodos26-13` — draw combined G(f) → static SVG only (inbox/080)
-- `pa25-th3-mux` — draw USSB FDM spectra + G(f) → text-only (inbox/081)
+- ✅ `pa25-th3-mux` — DONE (viz-rework f4378fc: `FdmCanonicalProblemViz kBW={4}` USSB + full DRAW+TEACH rework) — was: text-only (inbox/081)
 - `pb25-th3-mux` — draw DSB-SC FDM spectra + G(f) → text-only (inbox/081)
 - `jun25-th2` — draw mixed DSB-SC + AM FDM spectra → text-only (inbox/078; inbox/081)
 
@@ -449,12 +449,11 @@ scheduled as paired steps (T2 viz build → T1 wire-up).  The USSB/FDM cluster
 
 Two additional «Σχεδιάστε» / draw-waveform problems not yet on the existing filed list:
 
-1. **`jan26-th3-mux`** — statement says «Αποτυπώστε σχηματικά το φάσμα πλάτους» (draw
-   the amplitude spectrum schematically) for a two-channel USSB FDM problem
-   (sinc(2Wt) on f₁=100kHz, Π(4Wt) on f₂=1MHz).  Current solution (verified from
-   `exercises.tsx`) is prose-only — describes spectrum structure in words with no
-   interactive viz.  Same family as the proodos26-11/12/13 USSB cluster and the pa/pb25
-   multiplexing viz-gaps.  **Primary home: am/multiplexing §4.**
+1. ✅ **`jan26-th3-mux`** (DONE — viz-rework, this step: `FdmCanonicalProblemViz kBW={4}`
+   wired + full DRAW+TEACH solution rework + corrected non-overlap derivation + 10×
+   schematic figcaption caveat + latent-coaching-error fix) — was: prose-only «Αποτυπώστε
+   σχηματικά το φάσμα πλάτους» two-channel USSB FDM (sinc(2Wt) on f₁=100kHz, Π(4Wt) on
+   f₂=1MHz).  **Primary home: am/multiplexing §4.**
 
 2. ✅ **`pa25-th2-2`** (DONE — viz-rework, inbox/275) — statement says «Σχεδιάστε το διαμορφωμένο κατά AM σήμα» (draw
    the AM signal).  Current solution (verified from `exercises.tsx`) is text + formulas
@@ -463,8 +462,7 @@ Two additional «Σχεδιάστε» / draw-waveform problems not yet on the ex
    `pa25-th2-2` as a sibling, but `pa25-th2-2` was not placed on the filed list.
    **Primary home: am/conventional §3 (overmodulation, μ=2>1).**
 
-**Planner action:** add `jan26-th3-mux` to the USSB/FDM viz-rework batch and
-`pa25-th2-2` to the overmodulated-waveform viz-rework batch (sibling of `pb25-th2-2`) — ✅ DONE (inbox/275). **The overmod-waveform DRAW cluster (`proodos26-9`, `pa25-th2-2`, `pb25-th2-2`, `jan26-th2-7`) is now fully closed; the §3.G overmod-waveform viz-rework recommendation is DONE.**
+**Planner action:** `jan26-th3-mux` ✅ DONE (USSB/FDM viz-rework, this step — `FdmCanonicalProblemViz kBW={4}`); `pa25-th2-2` ✅ DONE (inbox/275, overmod-waveform). **The overmod-waveform DRAW cluster (`proodos26-9`, `pa25-th2-2`, `pb25-th2-2`, `jan26-th2-7`) is now fully closed; the §3.G overmod-waveform viz-rework recommendation is DONE.**
 
 ---
 
