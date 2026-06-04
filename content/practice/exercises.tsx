@@ -27,6 +27,7 @@ import { NonlinearModulatorSpectrumViz } from '@/components/viz/NonlinearModulat
 import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
 import { OvermodulationPhaseReversalViz } from '@/components/viz/OvermodulationPhaseReversalViz'
+import { FdmCanonicalProblemViz } from '@/components/viz/FdmCanonicalProblemViz'
 import type { Exercise } from './types'
 
 export const EXERCISES: Exercise[] = [
@@ -5162,27 +5163,250 @@ export const EXERCISES: Exercise[] = [
         </Link>.
       </>
     ),
-    statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(4Wt)'}</InlineMath>. Διαμορφώνονται κατά AM-USSB με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath>. (1) Φάσματα. (2) <InlineMath>{'f_1, f_2'}</InlineMath> σχέση με W για non-overlap. (3) Σχεδιασμός G(f).</p>,
+    statement: <p>Έστω <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath> και <InlineMath>{'k(t) = \\Pi(4Wt)'}</InlineMath>. Διαμορφώνονται κατά AM-USSB με φέροντα <InlineMath>{'f_1, f_2'}</InlineMath> αντίστοιχα. (1) Αποτύπωσε σχηματικά τα φάσματα πλάτους — <strong>βασικής ζώνης και διαμορφωμένων</strong>. (2) Πόσο πρέπει να είναι τα <InlineMath>{'f_1, f_2'}</InlineMath> σε σχέση με το <InlineMath>{'W'}</InlineMath> για αποπολυπλεξία χωρίς επικάλυψη; (3) Σχεδίασε το πολυπλεγμένο <InlineMath>{'G(f)'}</InlineMath>.</p>,
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα — γιατί FDM, και γιατί USSB.</strong>{' '}
+          <span className="text-fg-muted">
+            Δύο μηνύματα, ένας δίαυλος. Το FDM τα <strong>στοιβάζει</strong> σε{' '}
+            <em>διαφορετικές</em> περιοχές συχνοτήτων — όπως δύο ραδιοσταθμοί που δεν
+            μπερδεύονται επειδή εκπέμπουν σε διαφορετικά κανάλια· στον δέκτη ένα bandpass
+            φίλτρο ξεχωρίζει το καθένα. Όλο το παιχνίδι είναι να μην «πατάει» το ένα κανάλι
+            πάνω στο άλλο.{' '}
+            <strong className="text-fg">Και γιατί USSB;</strong> Το φάσμα ενός πραγματικού
+            μηνύματος είναι συμμετρικό — οι δύο πλευρικές ζώνες κουβαλούν <em>την ίδια</em>{' '}
+            πληροφορία. Το DSB τις στέλνει και τις δύο ⇒ κάθε κανάλι πιάνει{' '}
+            <InlineMath>{'2W'}</InlineMath>· το USSB πετάει την περιττή ⇒ κάθε κανάλι πιάνει{' '}
+            <strong>μόνο το δικό του bandwidth</strong> ⇒ χωράς <strong>διπλάσια</strong>{' '}
+            κανάλια στο ίδιο φάσμα (
+            <Link href="/am/ssb" className="text-accent underline-offset-2 hover:underline">
+              /am/ssb §1
+            </Link>
+            ). Αυτός είναι όλος ο λόγος που το mux αγαπά το USSB. Ο μπούσουλας:{' '}
+            <em>
+              η ζώνη που πιάνει ένα κανάλι = το bandwidth του μηνύματος, ανεβασμένο στο φέρον
+            </em>
+            .
+          </span>
+        </div>
+
         <p>
-          <strong>BW</strong>: <InlineMath>{'M(f) = (1/(2W))\\Pi(f/(2W))'}</InlineMath> →{' '}
-          <InlineMath>{'|f| \\leq W'}</InlineMath>. <InlineMath>{'K(f) = (1/(4W))\\mathrm{sinc}(f/(4W))'}</InlineMath>{' '}
-          → πρώτη ρίζα στα <InlineMath>{'|f| = 4W'}</InlineMath>.
+          <strong>(1) Πρώτα τα φάσματα βασικής ζώνης — και η παγίδα του σχήματος.</strong>{' '}
+          Τα δύο σήματα μοιάζουν, αλλά μεταμορφώνονται <em>ανάποδα</em> το ένα από το άλλο.
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>
+              <InlineMath>{'m(t) = \\mathrm{sinc}(2Wt)'}</InlineMath>
+            </strong>{' '}
+            — ένα sinc στον <em>χρόνο</em> έχει για μετασχηματισμό ένα{' '}
+            <strong>καθαρό rect</strong> (τούβλο) στη συχνότητα· είναι το ζεύγος{' '}
+            <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\mathrm{rect}'}</InlineMath> του
+            τυπολογίου:
+            <BlockMath>{'M(f) = \\tfrac{1}{2W}\\,\\Pi\\!\\left(\\tfrac{f}{2W}\\right),\\qquad |f|\\le W'}</BlockMath>
+            Bandwidth του <InlineMath>{'m'}</InlineMath>: <InlineMath>{'W'}</InlineMath>.
+          </li>
+          <li>
+            <strong>
+              <InlineMath>{'k(t) = \\Pi(4Wt)'}</InlineMath>
+            </strong>{' '}
+            — εδώ το rect είναι στον <em>χρόνο</em> (μια απότομη «πύλη»). Απότομη ακμή στον
+            χρόνο ⇒ κυματισμοί στη συχνότητα ⇒ ο μετασχηματισμός είναι{' '}
+            <strong>sinc, όχι rect</strong> — το ίδιο ζεύγος διαβασμένο ανάποδα:
+            <BlockMath>{'K(f) = \\tfrac{1}{4W}\\,\\mathrm{sinc}\\!\\left(\\tfrac{f}{4W}\\right)'}</BlockMath>
+            με <strong>πρώτη ρίζα στα <InlineMath>{'|f| = 4W'}</InlineMath></strong>.
+          </li>
+        </ul>
+        <p>
+          <strong>Πρόσεξε — η παγίδα του εύρους.</strong> Μη μπεις στον πειρασμό «
+          <InlineMath>{'\\mathrm{sinc}(2Wt)\\to W'}</InlineMath>, άρα{' '}
+          <InlineMath>{'\\Pi(4Wt)\\to 2W'}</InlineMath>»: τα δύο σήματα πάνε{' '}
+          <em>αντίθετες</em> κατευθύνσεις. Για rect στον χρόνο{' '}
+          <InlineMath>{'\\Pi(at)'}</InlineMath>, το sinc στη συχνότητα έχει πρώτη ρίζα{' '}
+          <strong>στο <InlineMath>{'a'}</InlineMath></strong> (εδώ{' '}
+          <InlineMath>{'a = 4W'}</InlineMath>), όχι στο <InlineMath>{'a/2'}</InlineMath>. Άρα
+          το ενεργό εύρος του <InlineMath>{'k'}</InlineMath> είναι{' '}
+          <InlineMath>{'4W'}</InlineMath> — <strong>τέσσερις</strong> φορές το{' '}
+          <InlineMath>{'W'}</InlineMath>, όχι δύο.
+        </p>
+
+        <p>
+          <strong>(1, συνέχεια) Τα διαμορφωμένα φάσματα — USSB κρατά μόνο την πάνω πλευρική.</strong>{' '}
+          Το DSB-SC θα έβαζε <em>και τις δύο</em> πλευρικές γύρω από κάθε{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath>. Το USSB κρατά <strong>μόνο την πάνω</strong> ⇒
+          κάθε κανάλι απλώνεται προς τα <em>πάνω</em> από το φέρον του, κατά ακριβώς το
+          bandwidth του μηνύματος:
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            το <InlineMath>{'m'}</InlineMath> στο <InlineMath>{'f_1'}</InlineMath> πιάνει{' '}
+            <InlineMath>{'[f_1,\\, f_1 + W]'}</InlineMath> (και κατοπτρικά{' '}
+            <InlineMath>{'[-f_1 - W,\\, -f_1]'}</InlineMath>) — πλάτος ζώνης{' '}
+            <InlineMath>{'W'}</InlineMath>·
+          </li>
+          <li>
+            το <InlineMath>{'k'}</InlineMath> στο <InlineMath>{'f_2'}</InlineMath> πιάνει{' '}
+            <InlineMath>{'[f_2,\\, f_2 + 4W]'}</InlineMath> (και κατοπτρικά) — πλάτος ζώνης{' '}
+            <InlineMath>{'4W'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          <strong>Με απλά λόγια:</strong> η ζώνη ενός USSB καναλιού φτάνει από το φέρον ως το
+          φέρον <em>συν</em> το bandwidth του μηνύματος — το πλάτος της είναι το bandwidth,{' '}
+          <em>όχι</em> το διπλάσιο. Αυτό είναι το μεταφερόμενο κλειδί όλου του προβλήματος.
+        </p>
+
+        <p>
+          <strong>(2) Η συνθήκη μη-επικάλυψης — το 12% του θέματος.</strong> Για να ξεμπλέξει
+          ο δέκτης τα δύο κανάλια, το BPF του πρέπει να πιάσει το ένα <em>χωρίς</em> ίχνος του
+          άλλου — άρα οι δύο ζώνες δεν πρέπει να αγγίζονται. Με{' '}
+          <InlineMath>{'f_1 < f_2'}</InlineMath> (το <InlineMath>{'m'}</InlineMath> από κάτω):
+          στον θετικό άξονα το <InlineMath>{'m'}</InlineMath> τελειώνει στο{' '}
+          <InlineMath>{'f_1 + W'}</InlineMath>, το <InlineMath>{'k'}</InlineMath> ξεκινά στο{' '}
+          <InlineMath>{'f_2'}</InlineMath>:
+        </p>
+        <BlockMath>{'f_2 \\ge f_1 + W \\quad\\Longleftrightarrow\\quad \\boxed{\\,\\Delta f = f_2 - f_1 \\ge W\\,}'}</BlockMath>
+        <p>
+          <strong>Το λεπτό σημείο (μεταφερόμενο):</strong> η ελάχιστη απόσταση ισούται με το
+          bandwidth του <em>κάτω</em> καναλιού — εδώ το <InlineMath>{'W'}</InlineMath> του{' '}
+          <InlineMath>{'m'}</InlineMath>, <strong>όχι</strong> το{' '}
+          <InlineMath>{'4W'}</InlineMath> του <InlineMath>{'k'}</InlineMath>. Αφού κάθε USSB
+          κανάλι απλώνεται προς τα πάνω, μόνο η <em>πάνω ακμή του κάτω καναλιού</em>{' '}
+          ανταγωνίζεται το επόμενο φέρον· το <InlineMath>{'4W'}</InlineMath> του{' '}
+          <InlineMath>{'k'}</InlineMath> μετράει μόνο για ό,τι μπει <em>πάνω</em> από το{' '}
+          <InlineMath>{'k'}</InlineMath>.
         </p>
         <p>
-          <strong>USSB</strong>: κρατά μόνο upper sideband. Κάθε καναλιού:{' '}
-          <InlineMath>{'X_1'}</InlineMath> πιάνει <InlineMath>{'[f_1, f_1 + W]'}</InlineMath>,{' '}
-          <InlineMath>{'X_2'}</InlineMath> πιάνει <InlineMath>{'[f_2, f_2 + 4W]'}</InlineMath>.
+          <strong>
+            Πρόσεξε — εδώ <em>δεν</em> χρειάζεται <InlineMath>{'f_1 \\ge W'}</InlineMath>.
+          </strong>{' '}
+          Ο κανόνας «<InlineMath>{'f_c \\ge W'}</InlineMath>» είναι του{' '}
+          <strong>DSB / συμβατικού AM</strong>: εκεί η ζώνη είναι{' '}
+          <InlineMath>{'[f_c - W,\\, f_c + W]'}</InlineMath>, οπότε το{' '}
+          <InlineMath>{'f_c'}</InlineMath> πρέπει να ξεπερνά το <InlineMath>{'W'}</InlineMath>{' '}
+          ώστε η κάτω πλευρική να μην πέσει στο μηδέν (και να μη συγκρουστεί με το κατοπτρικό
+          της). Στο <strong>USSB</strong> η ζώνη ξεκινά <em>στο</em>{' '}
+          <InlineMath>{'f_1'}</InlineMath> και πάει προς τα πάνω — δεν φτάνει ποτέ στο DC, άρα
+          αρκεί <em>οποιοδήποτε</em> θετικό <InlineMath>{'f_1'}</InlineMath> (στην πράξη{' '}
+          <InlineMath>{'f_1 \\gg W'}</InlineMath> για πραγματικό φέρον, αλλά αυτό είναι θέμα
+          hardware, όχι επικάλυψης φάσματος). Η <em>μόνη</em> ανισότητα που γράφεις είναι{' '}
+          <InlineMath>{'\\Delta f \\ge W'}</InlineMath> (
+          <Link
+            href="/am/multiplexing"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /am/multiplexing §3
+          </Link>{' '}
+          — ο πίνακας ανά σχήμα δίνει για SSB:{' '}
+          <InlineMath>{'\\Delta f \\ge W'}</InlineMath> ανά κανάλι). Πρακτικά προσθέτεις
+          ~10–20% guard band για τα μη-ιδανικά φίλτρα του δέκτη.
         </p>
+
         <p>
-          <strong>Non-overlap</strong>:{' '}
-          <InlineMath>{'f_2 \\geq f_1 + W'}</InlineMath>. Πιο αυστηρά για
-          guard band: <InlineMath>{'f_2 \\geq f_1 + W + \\text{guard}'}</InlineMath>.
-          Ελάχιστο: <InlineMath>{'f_1 \\geq W'}</InlineMath> (για να μην
-          πέσει στα αρνητικά). Πρακτικά:{' '}
-          <InlineMath>{'f_1 \\gg W, f_2 \\gg f_1 + W'}</InlineMath>.
+          <strong>
+            (3) Το πολυπλεγμένο <InlineMath>{'G(f)'}</InlineMath>.
+          </strong>{' '}
+          Απλώς το άθροισμα <InlineMath>{'G(f) = X_m(f) + X_k(f)'}</InlineMath> — οι δύο USSB
+          ζώνες δίπλα-δίπλα. Με <InlineMath>{'\\Delta f \\ge W'}</InlineMath> δεν αγγίζονται ⇒
+          καθαρή αποπολυπλεξία· κάτω από <InlineMath>{'W'}</InlineMath> ⇒ επικάλυψη ⇒ crosstalk.
         </p>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Τίμια σημείωση — ιδανικεύσεις.</strong> Το{' '}
+          <InlineMath>{'K(f)'}</InlineMath> είναι sinc, που έχει <strong>ουρές που δεν
+          τελειώνουν ποτέ</strong>: αυστηρά το <InlineMath>{'k'}</InlineMath> <em>δεν</em>{' '}
+          είναι bandlimited, οπότε το USSB του προϋποθέτει ένα φίλτρο που το κόβει. Όπως κάθε
+          εξεταστική, παίρνουμε την <strong>πρώτη ρίζα (<InlineMath>{'4W'}</InlineMath>)</strong>{' '}
+          ως το ενεργό bandwidth για το σχέδιο. Επίσης το σχέδιο είναι{' '}
+          <strong>σχηματικό</strong>: τα <InlineMath>{'f_1, f_2'}</InlineMath> είναι αυθαίρετα
+          φέροντα και οι άξονες μετριούνται σε σχετικές μονάδες του{' '}
+          <InlineMath>{'W'}</InlineMath>.
+        </div>
+
+        <figure className="my-4">
+          <FdmCanonicalProblemViz kBW={4} />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η draw-απάντηση ζωντανή, σε σχετικές μονάδες του <InlineMath>{'W'}</InlineMath>.
+            Πάνω: <InlineMath>{'M(f)'}</InlineMath> = το rect μπλοκ στο{' '}
+            <InlineMath>{'[-W, W]'}</InlineMath>· από κάτω <InlineMath>{'K(f)'}</InlineMath> = ο
+            sinc λοβός (το bracket «<InlineMath>{'2W_k = 8W'}</InlineMath> (πρώτο null)»
+            σημαίνει πρώτες ρίζες στα <InlineMath>{'\\pm 4W'}</InlineMath> — δηλ. ενεργό εύρος{' '}
+            <InlineMath>{'4W'}</InlineMath>). Στο διαμορφωμένο, το USSB κρατά{' '}
+            <strong>μόνο την πάνω πλευρική</strong>: το <InlineMath>{'m'}</InlineMath> στο{' '}
+            <InlineMath>{'[f_1, f_1 + W]'}</InlineMath>, το <InlineMath>{'k'}</InlineMath> στο{' '}
+            <InlineMath>{'[f_2, f_2 + 4W]'}</InlineMath>. Σύρε την απόσταση{' '}
+            <InlineMath>{'\\Delta f'}</InlineMath>: η ένδειξη «ελάχιστο» δείχνει{' '}
+            <InlineMath>{'W'}</InlineMath> — κάτω από αυτό η ζώνη στο{' '}
+            <InlineMath>{'G(f)'}</InlineMath> γίνεται κόκκινη (crosstalk), ακριβώς το
+            υποερώτημα (2). Γύρισε τον διακόπτη σε <strong>DSB-SC</strong> και δες τις ζώνες να
+            διπλασιάζονται και το «ελάχιστο» να πηδά στο{' '}
+            <InlineMath>{'W + 4W = 5W'}</InlineMath>. (<InlineMath>{'f_1, f_2'}</InlineMath>{' '}
+            αυθαίρετα φέροντα — σχηματικό.)
+          </figcaption>
+        </figure>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— μόλις δεις «δύο σήματα, δύο φέροντα, σχεδίασε / συνθήκη μη-επικάλυψης»,
+            τρέξε τα <strong>ίδια τέσσερα βήματα</strong>, ό,τι κι αν είναι τα σχήματα: (1)
+            βρες το φάσμα <em>βασικής ζώνης</em> κάθε καναλιού (πρόσεξε ποιος είναι sinc και
+            ποιος rect — μεταμορφώνονται ανάποδα)· (2) εφάρμοσε τη διαμόρφωση —{' '}
+            <em>USSB ⇒ κράτα μόνο την πάνω πλευρική ⇒ πλάτος = bandwidth μηνύματος</em>· (3)
+            στοίβαξε στα φέροντα· (4) απαίτησε{' '}
+            <strong>
+              επόμενο φέρον ≥ προηγούμενο φέρον + πλάτος του προηγούμενου καναλιού
+            </strong>
+            . Αυτή η τελευταία γραμμή είναι η συνθήκη μη-επικάλυψης σε <em>κάθε</em> FDM
+            άσκηση.
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🎯 Παραλλαγές για εξάσκηση</strong>
+          <span className="text-fg-muted"> — ίδιος σκελετός, αλλαγμένη μία επιλογή:</span>
+          <ul className="ml-5 mt-1.5 list-disc space-y-1 text-fg-muted">
+            <li>
+              <strong>DSB-SC αντί USSB.</strong> Κάθε κανάλι γίνεται διπλής πλευρικής ⇒ το{' '}
+              <InlineMath>{'m'}</InlineMath> πιάνει <InlineMath>{'2W'}</InlineMath>, το{' '}
+              <InlineMath>{'k'}</InlineMath> πιάνει <InlineMath>{'8W'}</InlineMath>· η ελάχιστη
+              απόσταση γίνεται <InlineMath>{'W + 4W = 5W'}</InlineMath> (άθροισμα των δύο
+              μισών-ευρών) αντί <InlineMath>{'W'}</InlineMath> — <strong>πενταπλάσια</strong>{' '}
+              εδώ. Γύρισε τον διακόπτη του viz σε DSB-SC και επιβεβαίωσε το «ελάχιστο = 5W».
+              Αυτό ακριβώς το κόστος γλιτώνει το USSB. (Δες{' '}
+              <Link
+                href="/practice#exercise:pb25-th3-mux"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Πρόοδ. Β 2025 ΘΕΜΑ 3
+              </Link>
+              , DSB-SC FDM.)
+            </li>
+            <li>
+              <strong>Αντίστρεψε ποιο σήμα μπαίνει χαμηλά.</strong> Βάλε το{' '}
+              <InlineMath>{'k'}</InlineMath> (εύρος <InlineMath>{'4W'}</InlineMath>) στο{' '}
+              <em>κάτω</em> φέρον· τώρα η ελάχιστη απόσταση πηδά στα{' '}
+              <InlineMath>{'4W'}</InlineMath> — γιατί τη συνθήκη την ορίζει πάντα το{' '}
+              <em>κάτω</em> κανάλι. Καλό τεστ ότι κατάλαβες το κλειδί.
+            </li>
+            <li>
+              <strong>
+                Άλλαξε το σχήμα του <InlineMath>{'k'}</InlineMath>.
+              </strong>{' '}
+              Αν ήταν <InlineMath>{'k(t) = \\mathrm{sinc}^2(Wt)'}</InlineMath> (τρίγωνο στη
+              συχνότητα, εύρος <InlineMath>{'W'}</InlineMath>) ή άλλος ρυθμός rect,
+              ξαναϋπολόγισε μόνο το εύρος — τα τέσσερα βήματα μένουν ίδια. (Δες{' '}
+              <Link
+                href="/practice#exercise:proodos26-11"
+                className="text-accent underline-offset-2 hover:underline"
+              >
+                Πρόοδ. Απρ. 2026 ΘΕΜΑ 11
+              </Link>
+              .)
+            </li>
+          </ul>
+        </div>
       </>
     ),
   },
