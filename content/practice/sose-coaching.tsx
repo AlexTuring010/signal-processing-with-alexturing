@@ -1444,18 +1444,44 @@ export const SOSE_COACHING: Record<string, ExerciseCoaching> = {
   'pa25-th3-mux': {
     takeaway: (
       <p>
-        USSB FDM δύο σημάτων: το BW του USSB είναι ίσο με το BW του
-        baseband (όχι 2W όπως στο DSB). Συνθήκη non-overlap:{' '}
-        <InlineMath>{'f_2 \\ge f_1 + W_1'}</InlineMath> + ασφάλεια από το
-        zero με <InlineMath>{'f_1 \\ge W_1/2'}</InlineMath>.
+        <strong>USSB FDM = στοίβαξε την πάνω πλευρική κάθε μηνύματος στο φέρον του.</strong>{' '}
+        Συνταγή 4 βημάτων: (1) bandwidth ανά κανάλι από το baseband — εδώ{' '}
+        <InlineMath>{'m=\\mathrm{sinc}(2Wt)\\to W'}</InlineMath>, ενώ το{' '}
+        <InlineMath>{'k=\\Pi(4Wt)\\to'}</InlineMath> sinc με{' '}
+        <strong>πρώτη ρίζα 4W</strong> (rect στον χρόνο → sinc στη συχνότητα, ΟΧΙ 2W)· (2)
+        USSB ⇒ κάθε κανάλι πιάνει <em>ακριβώς</em> το BW του (όχι 2W)· (3) στοίβαξε στα
+        φέροντα· (4) μη-επικάλυψη:{' '}
+        <strong>επόμενο φέρον ≥ προηγούμενο + πλάτος του προηγούμενου</strong>. Με το{' '}
+        <InlineMath>{'m'}</InlineMath> χαμηλά:{' '}
+        <InlineMath>{'\\Delta f = f_2 - f_1 \\ge W'}</InlineMath> — το πλάτος του{' '}
+        <em>κάτω</em> καναλιού ορίζει το κενό (το <InlineMath>{'4W'}</InlineMath> του{' '}
+        <InlineMath>{'k'}</InlineMath> μετράει μόνο για ό,τι μπει πάνω του). <strong>Όχι</strong>{' '}
+        «<InlineMath>{'f_1 \\ge W'}</InlineMath>»: αυτός είναι ο κανόνας του DSB· το USSB
+        απλώνεται προς τα πάνω και δεν φτάνει ποτέ στο DC.
       </p>
     ),
     examRadar: (
-      <p>
-        FDM σύνθετο πρόβλημα ~25%: σπάσε σε στάδια — bandwidth ανάλυση,
-        modulation per channel, multiplex spectrum, non-overlap conditions.
-        Διαγράμματα φάσματος είναι σχεδόν πάντα μέρος της απάντησης.
-      </p>
+      <>
+        <p>
+          Η <strong>πιο εξεταζόμενη</strong> FDM άσκηση — σχεδόν αυτολεξεί σε{' '}
+          <strong>5+</strong> περιόδους (Πρόοδος Α/Β 2025, Ιαν. 2026, Ιούν. 2025, Πρόοδος
+          Απρ. 2026). Βάρος ~25%, και το <em>μεγαλύτερο</em> κομμάτι (εδώ το 12%) είναι η
+          συνθήκη μη-επικάλυψης. Σπάσ&apos; το στα ίδια 4 βήματα — το σχέδιο φάσματος είναι
+          σχεδόν πάντα μέρος της απάντησης. Χρόνος-στόχος: <strong>~15–20 λεπτά</strong>.
+        </p>
+        <div className="my-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Τρεις παγίδες.</strong> (1) <strong>Ξεχνάς ότι USSB = μία πλευρική:</strong>{' '}
+          σχεδιάζεις ζώνες πλάτους <InlineMath>{'2W'}</InlineMath> (σαν DSB) αντί{' '}
+          <InlineMath>{'W'}</InlineMath> → λάθος εύρος, λάθος αριθμός καναλιών. (2){' '}
+          <strong>Εύρος του <InlineMath>{'k'}</InlineMath>:</strong> το{' '}
+          <InlineMath>{'\\Pi(4Wt)'}</InlineMath> είναι rect στον χρόνο ⇒ sinc στη συχνότητα με
+          πρώτη ρίζα <InlineMath>{'4W'}</InlineMath> — όχι <InlineMath>{'2W'}</InlineMath>. (3){' '}
+          <strong>Λάθος guard:</strong> γράφεις <InlineMath>{'\\Delta f \\ge 4W'}</InlineMath>{' '}
+          (το εύρος του <InlineMath>{'k'}</InlineMath>) αντί <InlineMath>{'W'}</InlineMath> (του{' '}
+          <em>κάτω</em> καναλιού <InlineMath>{'m'}</InlineMath>), ή κουβαλάς το{' '}
+          «<InlineMath>{'f_1 \\ge W'}</InlineMath>» του DSB που το USSB δεν το χρειάζεται.
+        </div>
+      </>
     ),
   },
 
