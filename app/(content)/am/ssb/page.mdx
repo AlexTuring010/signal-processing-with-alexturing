@@ -761,8 +761,12 @@ $$
 
 **Σκέψη:** ίδια αλυσίδα με DSB-SC coherent demod — multiply με τοπικό cosine + LPF. Εδώ έχουμε επιπλέον τον όρο $\hat m\sin$ που πρέπει να ξετυλίξουμε.
 
-$$2x\cos\omega_c t = 2m\cos^2\omega_c t - 2\hat{m}\sin\omega_c t\cos\omega_c t$$
-$$= m[1 + \cos 2\omega_c t] - \hat{m}\sin 2\omega_c t$$
+$$
+\begin{aligned}
+2x\cos\omega_c t &= 2m\cos^2\omega_c t - 2\hat{m}\sin\omega_c t\cos\omega_c t \\[6pt]
+&= m[1 + \cos 2\omega_c t] - \hat{m}\sin 2\omega_c t
+\end{aligned}
+$$
 
 Μετά από LPF (κρατάει μόνο τους baseband όρους):
 $$y(t) = m(t)$$

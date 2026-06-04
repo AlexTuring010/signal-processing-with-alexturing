@@ -641,9 +641,13 @@ $$R_Z(\tau) = (A^2/2)\cos(2\pi f\tau)$$
 <Example title="Πλήρης λύση (slide 27)" defaultOpen={false}>
 Έστω $N(t) = X(t) - m_X$. Τότε $E[N(t)] = 0$ και $X(t) = m_X + N(t)$. Αντικαθιστώντας:
 
-$$R_X(\tau) = E[(m_X + N(t))(m_X + N(t + \tau))]$$
-$$= E[m_X^2 + m_X N(t) + m_X N(t + \tau) + N(t)N(t + \tau)]$$
-$$= m_X^2 + m_X \cdot 0 + m_X \cdot 0 + R_N(\tau) = m_X^2 + R_N(\tau)$$
+$$
+\begin{aligned}
+R_X(\tau) &= E[(m_X + N(t))(m_X + N(t + \tau))] \\[6pt]
+&= E[m_X^2 + m_X N(t) + m_X N(t + \tau) + N(t)N(t + \tau)] \\[6pt]
+&= m_X^2 + m_X \cdot 0 + m_X \cdot 0 + R_N(\tau) = m_X^2 + R_N(\tau)
+\end{aligned}
+$$
 
 Ο σταθερός όρος $m_X^2$ δεν εξαρτάται από $\tau$. ∎
 
@@ -668,8 +672,12 @@ $$E[z_i(t)] = A\lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2}\cos(2\pi f t + \the
 (αριθμητής φραγμένος, παρονομαστής $\to \infty$). Ταυτίζεται με $m_Z = 0$. ✓
 
 **Μέρος 2 — Ergodic στην R_X:** Product-to-sum:
-$$R_{z_i}(\tau) = (A^2/2)\cos(2\pi f\tau)\cdot 1 + (A^2/2)\lim\underbrace{\frac{1}{T}\int\cos(2\pi f(2t + \tau) + 2\theta_i)dt}_{\to\,0}$$
-$$= (A^2/2)\cos(2\pi f\tau) = R_Z(\tau).\;\checkmark$$
+$$
+\begin{aligned}
+R_{z_i}(\tau) &= (A^2/2)\cos(2\pi f\tau)\cdot 1 + (A^2/2)\lim\underbrace{\frac{1}{T}\int\cos(2\pi f(2t + \tau) + 2\theta_i)dt}_{\to\,0} \\[6pt]
+&= (A^2/2)\cos(2\pi f\tau) = R_Z(\tau).\;\checkmark
+\end{aligned}
+$$
 
 **Συμπέρασμα:** WSS **και** ergodic — μπορούμε να εκτιμήσουμε $m_Z, R_Z$ από μία μόνο realization.
 
