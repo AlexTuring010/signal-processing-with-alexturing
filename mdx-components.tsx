@@ -55,6 +55,7 @@ import { TimeInvarianceChecker } from '@/components/viz/TimeInvarianceChecker'
 import { ImpulseResponseDemo } from '@/components/viz/ImpulseResponseDemo'
 import { ConvolutionFlipAndSlide } from '@/components/viz/ConvolutionFlipAndSlide'
 import { AskisiFourConvolutionViz } from '@/components/viz/AskisiFourConvolutionViz'
+import { RectRectConvolutionViz } from '@/components/viz/RectRectConvolutionViz'
 import { ComplexExpThroughLtiViz } from '@/components/viz/ComplexExpThroughLtiViz'
 import { EigenfunctionDemo } from '@/components/viz/EigenfunctionDemo'
 import { TransformationDemo } from '@/components/viz/TransformationDemo'
@@ -236,6 +237,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ImpulseResponseDemo,
     ConvolutionFlipAndSlide,
     AskisiFourConvolutionViz,
+    RectRectConvolutionViz,
     ComplexExpThroughLtiViz,
     EigenfunctionDemo,
     TransformationDemo,
