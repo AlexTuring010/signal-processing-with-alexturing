@@ -76,6 +76,7 @@ import { PeriodToInfinity } from '@/components/viz/PeriodToInfinity'
 import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlowViz'
 import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
 import { ConjugatePhasorPairViz } from '@/components/viz/ConjugatePhasorPairViz'
+import { CosinePhaseWheelViz } from '@/components/viz/CosinePhaseWheelViz'
 import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSeriesViz'
 import { RectToSincViz } from '@/components/viz/RectToSincViz'
 import { ScalingDualityViz } from '@/components/viz/ScalingDualityViz'
@@ -263,6 +264,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     AnalysisSynthesisFlowViz,
     DualFormExplorerViz,
     ConjugatePhasorPairViz,
+    CosinePhaseWheelViz,
     LtiThroughFourierSeriesViz,
 
     // Visualizations — foundations / fourier-transform

@@ -427,7 +427,7 @@ interactive viz.
 - `pb25-th2-3` — draw LSSB spectrum for sinc message → text-only (inbox/081)
 
 **Nonlinear modulator spectrum:**
-- `pb25-th4-nonlinear` — draw spectrum of y = x²(t) (all components + BPF) → text-only (inbox/077)
+- ✅ `pb25-th4-nonlinear` — DONE (viz-rework iter 96: NonlinearModulatorSpectrumViz wired + full solution rework) — was: text-only (inbox/077)
 
 **USSB/FDM spectrum cluster (static SVG or text-only):**
 - `proodos26-11` — draw USSB spectra for rect + tri baseband → static SVG only (inbox/080)
