@@ -98,6 +98,13 @@ export function PeriodToInfinity() {
         <span className="font-mono">T₀ → ∞</span>, το «δειγματοληψία» γίνεται
         «συνεχές» — αυτή είναι η μετάβαση από <strong>Fourier series</strong> σε{' '}
         <strong>Fourier transform</strong>.
+        <span className="mt-1.5 block text-fg-muted">
+          Λεπτομέρεια που μπερδεύει: το ύψος κάθε γραμμής εδώ είναι η τιμή της περιβάλλουσας — η
+          «πυκνότητα» <span className="font-mono">T₀·aₖ</span> — <strong>όχι</strong> ο σκέτος
+          συντελεστής <span className="font-mono">aₖ</span>, που στην πραγματικότητα{' '}
+          <strong>μικραίνει</strong> καθώς το <span className="font-mono">T₀</span> μεγαλώνει. Το
+          ξεκαθαρίζουμε στο §2.1.
+        </span>
       </div>
     </figure>
   )
