@@ -4,20 +4,24 @@ import { useEffect, useRef, useState } from 'react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 
 /**
- * FS → FT bridge: time-domain pulse train + frequency-domain line spectrum,
+ * FS → FT bridge: time-domain pulse train + frequency-domain aₖ spectrum,
  * driven by a single T₀ slider.
  *
  * Left panel: periodic rectangular pulse train. Pulse shape (width τ = 1) is
  * fixed; only the period T₀ changes — pulses get pushed apart as T₀ grows.
  *
- * Right panel: discrete line spectrum on a *fixed* sinc envelope (the FT of
- * one rectangle). Lines sit at f = k/T₀, with height equal to the envelope
- * value at that frequency. As T₀ grows the lines bunch closer together; the
- * envelope itself does not change shape — that's the whole pedagogical point.
+ * Right panel: the coefficient spectrum aₖ (the SAME quantity stem-plotted
+ * everywhere else in the chapter), as solid stems at f = k/T₀ with height
+ * aₖ = sinc(k/T₀)/T₀. As T₀ grows the stems both BUNCH UP and SHRINK — the
+ * shrinking is the averaging (a₀ is the signal's mean, and a lone pulse spread
+ * over a longer period averages to less). A fixed dashed curve shows the
+ * single-pulse shape sinc(f); that shape is aₖ scaled back up by T₀, and its
+ * limit is the continuous X(f).
  *
- * In the limit T₀ → ∞: line spacing 1/T₀ → 0, the discrete lines fill the
- * envelope continuously, and we have the Fourier transform of the single
- * non-periodic pulse.
+ * The pedagogical point (this is exactly where students misread the page): a
+ * stem ALWAYS means aₖ, here too — so the stems shrink to 0; it is the fixed
+ * shape behind them (the rescaled T₀·aₖ) that fills in X(f), NOT the stems.
+ * Fully unpacked as "average vs total" in the FT chapter §2.1.
  */
 
 const T_MIN = 1.5
@@ -43,10 +47,16 @@ export function PeriodToInfinity() {
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
         Αριστερά ο periodic παλμός — σταθερό σχήμα <span className="font-mono">τ = 1</span>,
-        μεταβλητή περίοδος <span className="font-mono">T₀</span>. Δεξιά το διακριτό
-        φάσμα του πάνω σε μια <strong>σταθερή</strong> sinc περιβάλλουσα — τον FT του
-        ενός παλμού. Σύρε το <span className="font-mono">T₀</span> και παρακολούθησε
-        πώς αλλάζει η πυκνότητα των γραμμών χωρίς να αλλάζει η περιβάλλουσα.
+        μεταβλητή περίοδος <span className="font-mono">T₀</span>. Δεξιά οι συντελεστές{' '}
+        <span className="font-mono">aₖ</span> — το φάσμα που σχεδιάζαμε σε όλο το κεφάλαιο.
+        Σύρε το <span className="font-mono">T₀</span>: οι γραμμές{' '}
+        <span className="font-mono">aₖ</span> και <strong>πυκνώνουν</strong> και{' '}
+        <strong>χαμηλώνουν</strong> (ο μέσος όρος ενός μοναχικού παλμού, απλωμένου σε ολοένα
+        μεγαλύτερη περίοδο, μικραίνει). Η διακεκομμένη καμπύλη είναι το{' '}
+        <strong>σταθερό σχήμα</strong> του ενός παλμού· δεν κουνιέται ποτέ, και είναι το{' '}
+        <span className="font-mono">aₖ</span> ξανα-μεγεθυσμένο κατά{' '}
+        <span className="font-mono">T₀</span> — στο όριο γίνεται η συνεχής{' '}
+        <span className="font-mono">X(f)</span>.
       </p>
 
       <div className="grid gap-3 lg:grid-cols-2">
@@ -58,7 +68,7 @@ export function PeriodToInfinity() {
             aria-label="Periodic rectangular pulse train"
           />
         </Panel>
-        <Panel title="Στη συχνότητα" subtitle="γραμμές στις k/T₀ πάνω σε sinc envelope">
+        <Panel title="Στη συχνότητα" subtitle="aₖ: πυκνώνουν + χαμηλώνουν · σχήμα σταθερό">
           <canvas
             ref={freqRef}
             style={{ height: 180 }}
@@ -91,19 +101,17 @@ export function PeriodToInfinity() {
       </div>
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
-        Παρατήρησε ότι η περιβάλλουσα στο φάσμα <strong>δεν αλλάζει σχήμα</strong>{' '}
-        — εξαρτάται μόνο από το σχήμα του ενός παλμού. Αυτό που αλλάζει με το{' '}
-        <span className="font-mono">T₀</span> είναι <strong>πόσο πυκνά</strong>{' '}
-        δειγματοληπτούμε αυτή την περιβάλλουσα. Στο όριο{' '}
-        <span className="font-mono">T₀ → ∞</span>, το «δειγματοληψία» γίνεται
-        «συνεχές» — αυτή είναι η μετάβαση από <strong>Fourier series</strong> σε{' '}
-        <strong>Fourier transform</strong>.
+        Το κλειδί — <strong>η γραμμή είναι ο συντελεστής <span className="font-mono">aₖ</span></strong>,
+        όχι η περιβάλλουσα. Καθώς <span className="font-mono">T₀ → ∞</span> οι γραμμές{' '}
+        <span className="font-mono">aₖ</span> πέφτουν προς το μηδέν (ο μέσος όρος σβήνει),
+        κρατώντας όμως το <strong>σχήμα</strong> τους και πυκνώνοντας. Αυτό που «γεμίζει» τη
+        συνεχή <span className="font-mono">X(f)</span> <strong>δεν</strong> είναι οι γραμμές —
+        αυτές εξαφανίζονται — αλλά το σταθερό σχήμα από πίσω, δηλαδή το{' '}
+        <span className="font-mono">aₖ</span> επί <span className="font-mono">T₀</span>.
         <span className="mt-1.5 block text-fg-muted">
-          Λεπτομέρεια που μπερδεύει: το ύψος κάθε γραμμής εδώ είναι η τιμή της περιβάλλουσας — η
-          «πυκνότητα» <span className="font-mono">T₀·aₖ</span> — <strong>όχι</strong> ο σκέτος
-          συντελεστής <span className="font-mono">aₖ</span>, που στην πραγματικότητα{' '}
-          <strong>μικραίνει</strong> καθώς το <span className="font-mono">T₀</span> μεγαλώνει. Το
-          ξεκαθαρίζουμε στο §2.1.
+          Γι' αυτό το σωστό όριο είναι <span className="font-mono">T₀·aₖ → X(f)</span>, όχι{' '}
+          <span className="font-mono">aₖ → X(f)</span>. Η πλήρης εξήγηση —{' '}
+          <strong>μέσος όρος vs σύνολο</strong> — έρχεται αμέσως στο §2.1 του επόμενου κεφαλαίου.
         </span>
       </div>
     </figure>
@@ -264,15 +272,18 @@ function drawFreq(
   ctx.stroke()
   ctx.setLineDash([])
 
-  // Discrete lines at f = k/T₀ with height = envelope(k/T₀) = sinc(k/T₀).
+  // Solid stems = aₖ = sinc(k/T₀)/T₀ — the coefficient spectrum, same quantity
+  // as every other plot in the chapter. These SHRINK as T₀ grows (averaging)
+  // while bunching closer — they do NOT trace the fixed envelope above.
   const kMax = Math.ceil(fMax * T0) + 1
   const lineColor = colors.accent
   for (let k = -kMax; k <= kMax; k++) {
     const f = k / T0
     if (f < fMin || f > fMax) continue
     const env = f === 0 ? 1 : Math.sin(Math.PI * f) / (Math.PI * f)
+    const ak = env / T0
     const x = xt(f)
-    const y = yv(env)
+    const y = yv(ak)
     ctx.strokeStyle = lineColor
     ctx.lineWidth = T0 > 8 ? 1 : 1.5
     ctx.beginPath()
@@ -300,9 +311,9 @@ function drawFreq(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('· · ·  σταθερή sinc(f) envelope', PAD_X + 6, PAD_Y + 12)
+  ctx.fillText('· · ·  σταθερό σχήμα  (×T₀ = X(f))', PAD_X + 6, PAD_Y + 12)
   ctx.fillStyle = lineColor
-  ctx.fillText('| · γραμμές στις k/T₀', PAD_X + 6, PAD_Y + 26)
+  ctx.fillText('|  aₖ — χαμηλώνουν με T₀ ↑', PAD_X + 6, PAD_Y + 26)
 }
 
 function getRGB(rgb: string): string {
