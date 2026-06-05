@@ -84,6 +84,7 @@ import { SincPhaseFlipViz } from '@/components/viz/SincPhaseFlipViz'
 import { SpectrumDualViewViz } from '@/components/viz/SpectrumDualViewViz'
 import { FtCosineSynthesisViz } from '@/components/viz/FtCosineSynthesisViz'
 import { PhaseCircleViz } from '@/components/viz/PhaseCircleViz'
+import { FsFtCompareViz } from '@/components/viz/FsFtCompareViz'
 import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
 import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
@@ -278,6 +279,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SpectrumDualViewViz,
     FtCosineSynthesisViz,
     PhaseCircleViz,
+    FsFtCompareViz,
     FtAsSampledFsEnvelope,
     CrossCorrelationPlayground,
     ModulationTheoremViz,
