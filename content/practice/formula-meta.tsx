@@ -675,7 +675,7 @@ export const FORMULA_META: Record<string, FormulaMeta> = {
         Αν <InlineMath>{'x(t) = \\sum_k x_0(t - kT_0)'}</InlineMath> με{' '}
         <InlineMath>{'\\mathcal{F}\\{x_0\\} = X(f)'}</InlineMath>, τότε ο τύπος των FS
         συντελεστών συμπτύσσεται σε <InlineMath>{'x_k = X(k/T_0)/T_0'}</InlineMath> με αλλαγή
-        μεταβλητής (δες <Link href="/foundations/fourier-transform#61-η-αντίστροφη-γέφυρα--οι-fs-συντελεστές-είναι-το-ft-envelope-δειγματισμένο-στο-1t-">Section 6.1</Link>).
+        μεταβλητής (δες <Link href="/foundations/fourier-transform#21-οι-fs-συντελεστές-ως-samples-του-ft">Section 2.1</Link>).
       </>
     ),
   },
