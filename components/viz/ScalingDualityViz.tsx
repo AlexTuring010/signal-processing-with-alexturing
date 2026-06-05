@@ -379,10 +379,11 @@ function drawPhase(
     ctx.lineWidth = 2.0
     ctx.fillStyle = p.color
     // For real symmetric x(t) = A·rect(t/T), X(f) is real-valued sinc.
-    // Phase is 0 on positive lobes, ±π on negative lobes.
-    // We split into segments to avoid drawing vertical lines at the zeros.
+    // Phase is 0 on positive lobes, ±π on negative lobes — a square wave that
+    // jumps by π at every zero. Connect consecutive valid samples (including
+    // across each zero) so the jump renders as a vertical side on BOTH halves
+    // of the axis; the −π for f>0 / +π for f<0 convention keeps θ(f) odd.
     const samples = 1200
-    let prevSign = 0
     let prevPx = -1
     let prevPy = -1
 
@@ -392,13 +393,12 @@ function drawPhase(
       let theta = 0
       if (X > 1e-6) theta = 0
       else if (X < -1e-6) theta = f > 0 ? -Math.PI : Math.PI
-      else continue // undefined at zero crossings
+      else continue // undefined exactly at a zero — keep prev so the jump connects across
 
-      const sign = Math.sign(theta) || 1e-6
       const px = w / 2 + (f / F_DOMAIN) * (w / 2 - pad)
       const py = h / 2 - (theta / Math.PI) * piHeight
 
-      if (prevPx >= 0 && Math.sign(prevSign) === Math.sign(sign)) {
+      if (prevPx >= 0) {
         ctx.beginPath()
         ctx.moveTo(prevPx, prevPy)
         ctx.lineTo(px, py)
@@ -406,7 +406,6 @@ function drawPhase(
       }
       prevPx = px
       prevPy = py
-      prevSign = sign
     }
   })
 

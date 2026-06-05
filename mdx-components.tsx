@@ -80,6 +80,7 @@ import { CosinePhaseWheelViz } from '@/components/viz/CosinePhaseWheelViz'
 import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSeriesViz'
 import { RectToSincViz } from '@/components/viz/RectToSincViz'
 import { ScalingDualityViz } from '@/components/viz/ScalingDualityViz'
+import { SincPhaseFlipViz } from '@/components/viz/SincPhaseFlipViz'
 import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
 import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
@@ -270,6 +271,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — foundations / fourier-transform
     RectToSincViz,
     ScalingDualityViz,
+    SincPhaseFlipViz,
     FtAsSampledFsEnvelope,
     CrossCorrelationPlayground,
     ModulationTheoremViz,
