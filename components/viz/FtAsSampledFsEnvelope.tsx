@@ -17,9 +17,10 @@ import { getThemeColors, setupCanvas, type ThemeColors } from '@/lib/canvas'
  * Viz layout:
  *   - Left  : time domain. Top half shows the single rect pulse (T=1).
  *             Bottom half shows the periodic train with adjustable T₀.
- *   - Right : frequency domain. Continuous sinc envelope (the FT of the single
- *             rect) drawn faintly, with stem-like dots overlaid at f = k/T₀
- *             showing the FS coefficients of the periodic train.
+ *   - Right : frequency domain. The single-pulse FT X₀(f) (faint dotted — only
+ *             the SHAPE), the real coefficient envelope X₀(f)/T₀, and stems
+ *             aₖ = X₀(k/T₀)/T₀ sitting on that lower curve. The aₖ do NOT land
+ *             on X₀ itself — they sit on X₀ scaled down by 1/T₀.
  *
  *   T₀ slider controls how close together those samples are. As T₀ → ∞ the
  *   samples become dense and recover the continuous envelope (PeriodToInfinity
@@ -55,16 +56,18 @@ export function FtAsSampledFsEnvelope() {
       <p className="mb-3 text-xs text-fg-muted">
         Ίδιος παλμός <span className="font-mono">rect(t/T)</span> με{' '}
         <span className="font-mono">T = 1</span>, μία φορά (πάνω) και σαν periodic με περίοδο{' '}
-        <span className="font-mono">T₀</span> (κάτω). Το FT envelope{' '}
-        <span className="font-mono">X(f) = T · sinc(fT)</span> είναι το ίδιο και στις δύο
-        περιπτώσεις (γκρί καμπύλη δεξιά). Η σχέση{' '}
-        <span className="font-mono">x_k = (1/T₀) · X(k/T₀)</span> λέει: οι FS συντελεστές του
-        periodic εκδοχή είναι αυτό το envelope δειγματισμένο στις αρμονικές{' '}
-        <span className="font-mono">k/T₀</span>, διαιρεμένο με <span className="font-mono">T₀</span>.
-        Στο default <span className="font-mono">T₀ = 2</span> έχεις ακριβώς{' '}
-        <strong>50% duty cycle</strong> (το square wave των Σειρών): οι <strong>ζυγές</strong>{' '}
-        αρμονικές πέφτουν στα μηδενικά της sinc και χάνονται —{' '}
-        <span style={{ color: 'rgb(var(--danger))' }}>κόκκινοι κύκλοι</span> στον άξονα.
+        <span className="font-mono">T₀</span> (κάτω). Δεξιά, η <strong>γκρι διακεκομμένη</strong>{' '}
+        είναι ο FT ενός μόνο παλμού <span className="font-mono">X₀(f) = T · sinc(fT)</span> —
+        μόνο το <strong>σχήμα</strong>. Τα πραγματικά <span className="font-mono">aₖ</span>{' '}
+        όμως <strong>δεν</strong> κάθονται εκεί: κάθονται στη{' '}
+        <span style={{ color: '#7c3aed' }} className="font-semibold">μωβ</span> καμπύλη{' '}
+        <span className="font-mono">X₀(f)/T₀</span> (η σχέση{' '}
+        <span className="font-mono">aₖ = (1/T₀) · X₀(k/T₀)</span>). Αύξησε το{' '}
+        <span className="font-mono">T₀</span> και η μωβ περιβάλλουσα <strong>κατεβαίνει</strong>{' '}
+        κατά <span className="font-mono">1/T₀</span> ενώ τα δείγματα πυκνώνουν. Στο default{' '}
+        <span className="font-mono">T₀ = 2</span> (50% duty, το square wave των Σειρών) οι{' '}
+        <strong>ζυγές</strong> αρμονικές πέφτουν στα μηδενικά της sinc —{' '}
+        <span style={{ color: 'rgb(var(--danger))' }}>κόκκινοι κύκλοι</span>.
       </p>
 
       <div className="grid gap-3 lg:grid-cols-2">
@@ -81,7 +84,7 @@ export function FtAsSampledFsEnvelope() {
         </Panel>
         <Panel
           title="Συχνότητα"
-          subtitle="γκρί envelope = FT μοναδικού παλμού · στίγματα = FS του periodic"
+          subtitle="γκρι διακεκ. = X₀ (σχήμα) · μωβ = X₀/T₀ με τα aₖ"
         >
           <canvas
             ref={freqRef}
@@ -298,17 +301,20 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.fillText('f', w - pad / 2 - 8, h - pad - 4)
-  ctx.fillText('X(f) / x_k · T₀', w / 2 + 6, pad / 2 + 8)
+  ctx.fillText('X₀(f),  aₖ', w / 2 + 6, pad / 2 + 8)
 
-  // y scale: max envelope = T_PULSE
+  // y scale: keep the single-pulse FT X₀ at full height; the real coefficient
+  // envelope X₀/T₀ then sits visibly LOWER by the factor 1/T₀.
   const maxAmp = T_PULSE
   const yScale = (h - 2 * pad) / maxAmp / 1.2
   const samples = 700
 
-  // sinc envelope (light grey curve, plus filled area mostly above zero for clarity)
+  // (1) Single-pulse FT X₀(f) = T·sinc(fT) — faint dotted. This is only the SHAPE;
+  // the actual coefficients do NOT sit on this curve.
   ctx.strokeStyle = colors.fgSubtle
-  ctx.lineWidth = 1.4
-  ctx.setLineDash([4, 3])
+  ctx.lineWidth = 1.2
+  ctx.globalAlpha = 0.55
+  ctx.setLineDash([2, 3])
   ctx.beginPath()
   for (let i = 0; i < samples; i++) {
     const f = -fDomain + (2 * fDomain * i) / (samples - 1)
@@ -320,27 +326,44 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   }
   ctx.stroke()
   ctx.setLineDash([])
+  ctx.globalAlpha = 1
 
-  // labels for the envelope
-  ctx.fillStyle = colors.fgSubtle
+  // (2) The REAL envelope of the coefficients: X₀(f)/T₀. The aₖ sit on THIS curve.
+  ctx.strokeStyle = '#7c3aed'
+  ctx.lineWidth = 1.5
+  ctx.globalAlpha = 0.45
+  ctx.beginPath()
+  for (let i = 0; i < samples; i++) {
+    const f = -fDomain + (2 * fDomain * i) / (samples - 1)
+    const X = (T_PULSE * sinc(f * T_PULSE)) / T0
+    const px = w / 2 + (f / fDomain) * (w / 2 - pad)
+    const py = h - pad - X * yScale
+    if (i === 0) ctx.moveTo(px, py)
+    else ctx.lineTo(px, py)
+  }
+  ctx.stroke()
+  ctx.globalAlpha = 1
+
+  // curve labels
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
-  ctx.fillText('X(f) = T · sinc(fT)', pad + 4, pad / 2 + 8)
-  ctx.fillText('(envelope)', pad + 4, pad / 2 + 20)
+  ctx.fillStyle = colors.fgSubtle
+  ctx.fillText('X₀(f) = T·sinc(fT) — μόνο το σχήμα', pad + 4, pad / 2 + 8)
+  ctx.fillStyle = '#7c3aed'
+  ctx.fillText('aₖ κάθονται στο X₀/T₀', pad + 4, pad / 2 + 20)
 
-  // stems at multiples of 1/T0
+  // (3) stems at multiples of 1/T0, height aₖ = X₀(k/T₀)/T₀ — on curve (2).
+  // A harmonic on a sinc zero has aₖ = 0 → open red ring on the axis.
   const df = 1 / T0
   const kMax = Math.ceil(fDomain / df) + 1
   ctx.lineWidth = 1.6
   for (let k = -kMax; k <= kMax; k++) {
     const f = k * df
     if (Math.abs(f) > fDomain) continue
-    // Plot the envelope sample value X(k/T0) so the stems sit ON the dashed
-    // envelope (the real FS coefficient is this ÷ T0). A harmonic that lands on
-    // a sinc zero has coefficient 0 — flag it with an open red ring on the axis.
-    const X = T_PULSE * sinc(f * T_PULSE)
+    const sincVal = sinc(f * T_PULSE)
+    const ak = (T_PULSE * sincVal) / T0
     const px = w / 2 + (f / fDomain) * (w / 2 - pad)
-    const py = h - pad - X * yScale
-    if (Math.abs(X) < 0.015 && k !== 0) {
+    const py = h - pad - ak * yScale
+    if (Math.abs(sincVal) < 0.015 && k !== 0) {
       ctx.strokeStyle = colors.danger
       ctx.beginPath()
       ctx.arc(px, h - pad, 4, 0, 2 * Math.PI)
