@@ -4,24 +4,24 @@ import { useEffect, useRef, useState } from 'react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 
 /**
- * FS → FT bridge: time-domain pulse train + frequency-domain aₖ spectrum,
- * driven by a single T₀ slider.
+ * FS → FT bridge: time-domain pulse train + frequency-domain spectrum showing
+ * BOTH heights of each harmonic, driven by a single T₀ slider.
  *
  * Left panel: periodic rectangular pulse train. Pulse shape (width τ = 1) is
  * fixed; only the period T₀ changes — pulses get pushed apart as T₀ grows.
  *
- * Right panel: the coefficient spectrum aₖ (the SAME quantity stem-plotted
- * everywhere else in the chapter), as solid stems at f = k/T₀ with height
- * aₖ = sinc(k/T₀)/T₀. As T₀ grows the stems both BUNCH UP and SHRINK — the
- * shrinking is the averaging (a₀ is the signal's mean, and a lone pulse spread
- * over a longer period averages to less). A fixed dashed curve shows the
- * single-pulse shape sinc(f); that shape is aₖ scaled back up by T₀, and its
- * limit is the continuous X(f).
+ * Right panel (slide-13 style + the raw coefficient marked): at each harmonic
+ * f = k/T₀ a stem rises to the fixed envelope X₀(f) = sinc(f) — its tip is the
+ * TOTAL T₀·aₖ, which stays at constant height and "fills in" the continuous
+ * X(f) as the lines densify (exactly what lecture slide 13 draws). A lower
+ * mauve dot marks the RAW coefficient aₖ = X₀(k/T₀)/T₀, which SINKS toward the
+ * axis as T₀ grows — the averaging (a₀ is the signal's mean; a lone pulse
+ * spread over a longer period averages to less).
  *
- * The pedagogical point (this is exactly where students misread the page): a
- * stem ALWAYS means aₖ, here too — so the stems shrink to 0; it is the fixed
- * shape behind them (the rescaled T₀·aₖ) that fills in X(f), NOT the stems.
- * Fully unpacked as "average vs total" in the FT chapter §2.1.
+ * The pedagogical point (this is exactly where students misread the page):
+ * both quantities live at the same harmonic but at DIFFERENT heights. The
+ * constant-height tips (totals) fill X(f); the raw aₖ (mauve, sinking) do not.
+ * Hence T₀·aₖ → X(f), not aₖ → X(f). Unpacked as "average vs total" in §2.1.
  */
 
 const T_MIN = 1.5
@@ -47,16 +47,16 @@ export function PeriodToInfinity() {
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
         Αριστερά ο periodic παλμός — σταθερό σχήμα <span className="font-mono">τ = 1</span>,
-        μεταβλητή περίοδος <span className="font-mono">T₀</span>. Δεξιά οι συντελεστές{' '}
-        <span className="font-mono">aₖ</span> — το φάσμα που σχεδιάζαμε σε όλο το κεφάλαιο.
-        Σύρε το <span className="font-mono">T₀</span>: οι γραμμές{' '}
-        <span className="font-mono">aₖ</span> και <strong>πυκνώνουν</strong> και{' '}
-        <strong>χαμηλώνουν</strong> (ο μέσος όρος ενός μοναχικού παλμού, απλωμένου σε ολοένα
-        μεγαλύτερη περίοδο, μικραίνει). Η διακεκομμένη καμπύλη είναι το{' '}
-        <strong>σταθερό σχήμα</strong> του ενός παλμού· δεν κουνιέται ποτέ, και είναι το{' '}
-        <span className="font-mono">aₖ</span> ξανα-μεγεθυσμένο κατά{' '}
-        <span className="font-mono">T₀</span> — στο όριο γίνεται η συνεχής{' '}
-        <span className="font-mono">X(f)</span>.
+        μεταβλητή περίοδος <span className="font-mono">T₀</span>. Δεξιά το φάσμα, με τα{' '}
+        <strong>δύο ύψη</strong> κάθε αρμονικής. Σύρε το <span className="font-mono">T₀</span>:
+        οι <strong>κορυφές</strong> των γραμμών μένουν πάνω σε μια σταθερή καμπύλη και απλώς
+        πυκνώνουν — αυτά είναι τα <strong>σύνολα</strong> (το{' '}
+        <span className="font-mono">T₀·aₖ</span>) που «γεμίζουν» την{' '}
+        <span className="font-mono">X(f)</span>, ακριβώς όπως στη διάλεξη. Η χαμηλή{' '}
+        <span style={{ color: '#7c3aed' }} className="font-semibold">μωβ κουκκίδα</span> σε κάθε
+        γραμμή είναι ο σκέτος συντελεστής <span className="font-mono">aₖ</span> — κι αυτός{' '}
+        <strong>χαμηλώνει</strong> προς το μηδέν (ο μέσος όρος ενός μοναχικού παλμού,
+        απλωμένου σε ολοένα μεγαλύτερη περίοδο, μικραίνει).
       </p>
 
       <div className="grid gap-3 lg:grid-cols-2">
@@ -68,7 +68,7 @@ export function PeriodToInfinity() {
             aria-label="Periodic rectangular pulse train"
           />
         </Panel>
-        <Panel title="Στη συχνότητα" subtitle="aₖ: πυκνώνουν + χαμηλώνουν · σχήμα σταθερό">
+        <Panel title="Στη συχνότητα" subtitle="κορυφές = σύνολα (γεμίζουν) · μωβ = aₖ">
           <canvas
             ref={freqRef}
             style={{ height: 180 }}
@@ -101,15 +101,16 @@ export function PeriodToInfinity() {
       </div>
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
-        Το κλειδί — <strong>η γραμμή είναι ο συντελεστής <span className="font-mono">aₖ</span></strong>,
-        όχι η περιβάλλουσα. Καθώς <span className="font-mono">T₀ → ∞</span> οι γραμμές{' '}
-        <span className="font-mono">aₖ</span> πέφτουν προς το μηδέν (ο μέσος όρος σβήνει),
-        κρατώντας όμως το <strong>σχήμα</strong> τους και πυκνώνοντας. Αυτό που «γεμίζει» τη
-        συνεχή <span className="font-mono">X(f)</span> <strong>δεν</strong> είναι οι γραμμές —
-        αυτές εξαφανίζονται — αλλά το σταθερό σχήμα από πίσω, δηλαδή το{' '}
-        <span className="font-mono">aₖ</span> επί <span className="font-mono">T₀</span>.
+        Το κλειδί — κάθε αρμονική έχει <strong>δύο ύψη</strong>. Η <strong>κορυφή</strong>{' '}
+        (σύνολο, <span className="font-mono">T₀·aₖ</span>) μένει πάνω στη σταθερή καμπύλη και τη
+        «γεμίζει» καθώς οι γραμμές πυκνώνουν — αυτό το σταθερό σχήμα είναι η{' '}
+        <span className="font-mono">X(f)</span>. Η{' '}
+        <span style={{ color: '#7c3aed' }} className="font-semibold">μωβ κουκκίδα</span> (ο σκέτος{' '}
+        <span className="font-mono">aₖ</span>) χαμηλώνει προς το μηδέν, γιατί είναι μέσος όρος —
+        κι ο μέσος όρος ενός σπάνιου παλμού σβήνει.
         <span className="mt-1.5 block text-fg-muted">
-          Γι' αυτό το σωστό όριο είναι <span className="font-mono">T₀·aₖ → X(f)</span>, όχι{' '}
+          Άρα αυτό που «γεμίζει» την <span className="font-mono">X(f)</span> είναι τα σύνολα:{' '}
+          <span className="font-mono">T₀·aₖ → X(f)</span>, όχι{' '}
           <span className="font-mono">aₖ → X(f)</span>. Η πλήρης εξήγηση —{' '}
           <strong>μέσος όρος vs σύνολο</strong> — έρχεται αμέσως στο §2.1 του επόμενου κεφαλαίου.
         </span>
@@ -272,27 +273,39 @@ function drawFreq(
   ctx.stroke()
   ctx.setLineDash([])
 
-  // Solid stems = aₖ = sinc(k/T₀)/T₀ — the coefficient spectrum, same quantity
-  // as every other plot in the chapter. These SHRINK as T₀ grows (averaging)
-  // while bunching closer — they do NOT trace the fixed envelope above.
+  // Per harmonic at f = k/T₀, show BOTH heights (slide-13 style + the raw aₖ):
+  //  - stem from axis up to the envelope X₀(kf₀) = the TOTAL (T₀·aₖ); its tip
+  //    sits on the fixed curve and "fills in" X(f) as the lines densify.
+  //  - a lower mauve dot at aₖ = X₀(kf₀)/T₀ = the raw coefficient, which SINKS
+  //    toward the axis as T₀ grows (averaging). Same mauve as FtAsSampledFsEnvelope.
   const kMax = Math.ceil(fMax * T0) + 1
-  const lineColor = colors.accent
+  const totalColor = colors.accent
+  const akColor = '#7c3aed'
+  const dotR = T0 > 8 ? 1.4 : 2
   for (let k = -kMax; k <= kMax; k++) {
     const f = k / T0
     if (f < fMin || f > fMax) continue
-    const env = f === 0 ? 1 : Math.sin(Math.PI * f) / (Math.PI * f)
+    const env = f === 0 ? 1 : Math.sin(Math.PI * f) / (Math.PI * f) // X₀(kf₀) = T₀·aₖ
     const ak = env / T0
     const x = xt(f)
-    const y = yv(ak)
-    ctx.strokeStyle = lineColor
-    ctx.lineWidth = T0 > 8 ? 1 : 1.5
+    const yTot = yv(env)
+    const yAk = yv(ak)
+    // stem to the total (its tip fills the fixed envelope)
+    ctx.strokeStyle = totalColor
+    ctx.lineWidth = T0 > 8 ? 0.8 : 1.2
     ctx.beginPath()
     ctx.moveTo(x, yZero)
-    ctx.lineTo(x, y)
+    ctx.lineTo(x, yTot)
     ctx.stroke()
-    ctx.fillStyle = lineColor
+    // tip dot = total T₀·aₖ (on the envelope)
+    ctx.fillStyle = totalColor
     ctx.beginPath()
-    ctx.arc(x, y, T0 > 8 ? 1.5 : 2, 0, Math.PI * 2)
+    ctx.arc(x, yTot, dotR, 0, Math.PI * 2)
+    ctx.fill()
+    // lower dot = raw coefficient aₖ (÷T₀), sinks as T₀ grows
+    ctx.fillStyle = akColor
+    ctx.beginPath()
+    ctx.arc(x, yAk, dotR, 0, Math.PI * 2)
     ctx.fill()
   }
 
@@ -311,9 +324,11 @@ function drawFreq(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('· · ·  σταθερό σχήμα  (×T₀ = X(f))', PAD_X + 6, PAD_Y + 12)
-  ctx.fillStyle = lineColor
-  ctx.fillText('|  aₖ — χαμηλώνουν με T₀ ↑', PAD_X + 6, PAD_Y + 26)
+  ctx.fillText('· · ·  σχήμα = X(f)', PAD_X + 6, PAD_Y + 12)
+  ctx.fillStyle = colors.accent
+  ctx.fillText('●| κορυφή = T₀·aₖ (σύνολα, γεμίζουν)', PAD_X + 6, PAD_Y + 26)
+  ctx.fillStyle = '#7c3aed'
+  ctx.fillText('● aₖ = ÷T₀ (χαμηλώνουν)', PAD_X + 6, PAD_Y + 40)
 }
 
 function getRGB(rgb: string): string {
