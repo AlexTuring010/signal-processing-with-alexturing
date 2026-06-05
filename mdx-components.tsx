@@ -91,6 +91,7 @@ import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPla
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
+import { MultiplicationConvolutionViz } from '@/components/viz/MultiplicationConvolutionViz'
 import { CounterRotatingPhasors } from '@/components/viz/CounterRotatingPhasors'
 import { TwoSidedVsOneSidedCosine } from '@/components/viz/TwoSidedVsOneSidedCosine'
 import { TriToSincSquaredViz } from '@/components/viz/TriToSincSquaredViz'
@@ -287,6 +288,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ModulationTheoremViz,
     TransformPairsGallery,
     ConvolutionInFrequency,
+    MultiplicationConvolutionViz,
 
     // Visualizations — reference / fourier-pairs
     TriToSincSquaredViz,
