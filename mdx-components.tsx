@@ -87,6 +87,7 @@ import { PhaseCircleViz } from '@/components/viz/PhaseCircleViz'
 import { FsFtCompareViz } from '@/components/viz/FsFtCompareViz'
 import { TimeFreqPairViz } from '@/components/viz/TimeFreqPairViz'
 import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
+import { EnvelopeConceptViz } from '@/components/viz/EnvelopeConceptViz'
 import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
@@ -284,6 +285,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     FsFtCompareViz,
     TimeFreqPairViz,
     FtAsSampledFsEnvelope,
+    EnvelopeConceptViz,
     CrossCorrelationPlayground,
     ModulationTheoremViz,
     TransformPairsGallery,
