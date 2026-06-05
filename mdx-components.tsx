@@ -81,6 +81,7 @@ import { LtiThroughFourierSeriesViz } from '@/components/viz/LtiThroughFourierSe
 import { RectToSincViz } from '@/components/viz/RectToSincViz'
 import { ScalingDualityViz } from '@/components/viz/ScalingDualityViz'
 import { SincPhaseFlipViz } from '@/components/viz/SincPhaseFlipViz'
+import { SpectrumDualViewViz } from '@/components/viz/SpectrumDualViewViz'
 import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
 import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
@@ -272,6 +273,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RectToSincViz,
     ScalingDualityViz,
     SincPhaseFlipViz,
+    SpectrumDualViewViz,
     FtAsSampledFsEnvelope,
     CrossCorrelationPlayground,
     ModulationTheoremViz,
