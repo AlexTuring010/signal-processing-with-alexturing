@@ -36,7 +36,7 @@ const T0_MIN = 1.5
 const T0_MAX = 8.0
 
 export function FtAsSampledFsEnvelope() {
-  const [T0, setT0] = useState(3.0)
+  const [T0, setT0] = useState(2.0) // default = 2·T_PULSE → 50% duty cycle (the FS square-wave case)
   const timeRef = useRef<HTMLCanvasElement | null>(null)
   const freqRef = useRef<HTMLCanvasElement | null>(null)
 
@@ -61,6 +61,10 @@ export function FtAsSampledFsEnvelope() {
         <span className="font-mono">x_k = (1/T₀) · X(k/T₀)</span> λέει: οι FS συντελεστές του
         periodic εκδοχή είναι αυτό το envelope δειγματισμένο στις αρμονικές{' '}
         <span className="font-mono">k/T₀</span>, διαιρεμένο με <span className="font-mono">T₀</span>.
+        Στο default <span className="font-mono">T₀ = 2</span> έχεις ακριβώς{' '}
+        <strong>50% duty cycle</strong> (το square wave των Σειρών): οι <strong>ζυγές</strong>{' '}
+        αρμονικές πέφτουν στα μηδενικά της sinc και χάνονται —{' '}
+        <span style={{ color: 'rgb(var(--danger))' }}>κόκκινοι κύκλοι</span> στον άξονα.
       </p>
 
       <div className="grid gap-3 lg:grid-cols-2">
@@ -326,26 +330,32 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   // stems at multiples of 1/T0
   const df = 1 / T0
   const kMax = Math.ceil(fDomain / df) + 1
-  ctx.fillStyle = '#7c3aed'
-  ctx.strokeStyle = '#7c3aed'
   ctx.lineWidth = 1.6
   for (let k = -kMax; k <= kMax; k++) {
     const f = k * df
     if (Math.abs(f) > fDomain) continue
-    // x_k = (1/T0) X(k/T0). For the plot we draw the *envelope sample value* X(k/T0)
-    // (so it lines up visually with the dashed envelope), and label it as x_k·T₀
-    // for clarity. The actual FS coefficient is x_k = X(k/T0)/T0, but plotting the
-    // envelope value makes the geometric "sampling" idea immediate.
+    // Plot the envelope sample value X(k/T0) so the stems sit ON the dashed
+    // envelope (the real FS coefficient is this ÷ T0). A harmonic that lands on
+    // a sinc zero has coefficient 0 — flag it with an open red ring on the axis.
     const X = T_PULSE * sinc(f * T_PULSE)
     const px = w / 2 + (f / fDomain) * (w / 2 - pad)
     const py = h - pad - X * yScale
-    ctx.beginPath()
-    ctx.moveTo(px, h - pad)
-    ctx.lineTo(px, py)
-    ctx.stroke()
-    ctx.beginPath()
-    ctx.arc(px, py, 3.5, 0, 2 * Math.PI)
-    ctx.fill()
+    if (Math.abs(X) < 0.015 && k !== 0) {
+      ctx.strokeStyle = colors.danger
+      ctx.beginPath()
+      ctx.arc(px, h - pad, 4, 0, 2 * Math.PI)
+      ctx.stroke()
+    } else {
+      ctx.fillStyle = '#7c3aed'
+      ctx.strokeStyle = '#7c3aed'
+      ctx.beginPath()
+      ctx.moveTo(px, h - pad)
+      ctx.lineTo(px, py)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(px, py, 3.5, 0, 2 * Math.PI)
+      ctx.fill()
+    }
   }
 
   // annotation: 1/T0 marker
