@@ -11,7 +11,7 @@ import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canva
  * and in the limit it merges into a continuous curve — the Fourier transform.
  *
  * NO height semantics here (no aₖ vs T₀·aₖ, no "totals/averages"). Those belong
- * to the Fourier-transform chapter (PeriodToInfinity + §2.1). On the Series page
+ * to the Fourier-transform chapter (§1 + §2.1). On the Series page
  * the reader does not even know what X(f) is yet, so the star is purely the
  * SPACING shrinking: discrete spectrum → continuous spectrum.
  */

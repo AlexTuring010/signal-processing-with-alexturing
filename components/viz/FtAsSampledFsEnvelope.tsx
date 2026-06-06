@@ -23,13 +23,11 @@ import { getThemeColors, setupCanvas, type ThemeColors } from '@/lib/canvas'
  *             on X₀ itself — they sit on X₀ scaled down by 1/T₀.
  *
  *   T₀ slider controls how close together those samples are. As T₀ → ∞ the
- *   samples become dense and recover the continuous envelope (PeriodToInfinity
- *   shows the same thing from the reverse direction).
+ *   samples become dense and recover the continuous envelope.
  *
- * Pedagogical role: closes the FS↔FT loop in BOTH directions on the page. The
- * existing `PeriodToInfinity` shows what happens as T₀ grows; this viz shows
- * the dual direction — the FT exists FIRST as the envelope, and the FS is just
- * a sampling of it.
+ * Pedagogical role (FT §2.1): the FT exists FIRST as the envelope X₀ (the FT of
+ * one pulse), and the FS coefficients are just samples of it at step 1/T₀,
+ * scaled by 1/T₀ — the "average vs total" picture made concrete on a rect.
  */
 
 const T_PULSE = 1.0 // single-rect width (fixed)
@@ -127,9 +125,11 @@ export function FtAsSampledFsEnvelope() {
       </div>
 
       <figcaption className="mt-3 text-xs text-fg-muted">
-        Αντιστροφή του <code>PeriodToInfinity</code>: εκεί ξεκινάς από periodic και αφήνεις{' '}
-        <span className="font-mono">T₀ → ∞</span> για να φτάσεις στο FT. Εδώ ξεκινάς από το FT
-        envelope και βλέπεις τους FS συντελεστές σαν δείγματα του.
+        Δύο όψεις της ίδιας σχέσης: η συνεχής καμπύλη είναι το envelope (ο FT ενός μόνο
+        παλμού)· οι FS συντελεστές είναι <strong>δείγματά</strong> του, στο βήμα{' '}
+        <span className="font-mono">1/T₀</span>. Όσο μεγαλώνει το{' '}
+        <span className="font-mono">T₀</span>, τα δείγματα πυκνώνουν και ανακτούν τη συνεχή
+        καμπύλη.
       </figcaption>
     </figure>
   )
