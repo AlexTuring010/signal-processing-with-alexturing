@@ -33,8 +33,10 @@ function XN(f: number, N: number) {
   return (N / 2) * (sinc(N * (f - 1)) + sinc(N * (f + 1)))
 }
 
-export function CyclesToImpulse() {
-  const [N, setN] = useState(3)
+export function CyclesToImpulse({ fixedN }: { fixedN?: number } = {}) {
+  const [nState, setN] = useState(3)
+  const N = fixedN ?? nState
+  const interactive = fixedN === undefined
   const timeRef = useRef<HTMLCanvasElement | null>(null)
   const freqRef = useRef<HTMLCanvasElement | null>(null)
 
@@ -45,70 +47,59 @@ export function CyclesToImpulse() {
     if (freqRef.current) drawFreq(freqRef.current, colors, N)
   }, [N])
 
-  const peak = (N * A1).toFixed(2)
+  const peak = (N * A1).toFixed(2) // = ½·N·T₀ with T₀ = 1
   const width = (1 / N).toFixed(2)
+  const cyc = N === 1 ? 'κύκλος' : 'κύκλοι'
 
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
       <h4 className="mb-1 text-sm font-semibold tracking-tight">
-        Ν κύκλοι → κρούση: το φάσμα ενός cosine καθώς προσθέτεις κύκλους
+        {interactive
+          ? 'Ν κύκλοι → κρούση: το φάσμα ενός cosine καθώς προσθέτεις κύκλους'
+          : `${N} ${cyc} του cosine — το «καμπανάκι» X_${N}(f)`}
       </h4>
-      <p className="mb-3 text-xs text-fg-muted">
-        Αριστερά: <span className="font-mono">cos(2πf₀t)</span> κομμένο σε{' '}
-        <span className="font-mono">N</span> κύκλους (πεπερασμένο σήμα). Δεξιά: το φάσμα του —
-        ένα «καμπανάκι» στα <span className="font-mono">±f₀</span>. Σύρε το{' '}
-        <span className="font-mono">N</span>: το καμπανάκι <strong>ψηλώνει</strong> και{' '}
-        <strong>στενεύει</strong>, αλλά το <strong>εμβαδόν</strong> του (το σκιασμένο) μένει{' '}
-        <strong>σταθερό = aₖ</strong>. Στο όριο → μια <strong>κρούση βάρους aₖ</strong>.
-      </p>
+      {interactive ? (
+        <p className="mb-3 text-xs text-fg-muted">
+          Αριστερά: <span className="font-mono">cos(2πf₀t)</span> κομμένο σε{' '}
+          <span className="font-mono">N</span> κύκλους. Δεξιά: το φάσμα του — ένα «καμπανάκι» στα{' '}
+          <span className="font-mono">±f₀</span>. Σύρε το <span className="font-mono">N</span>: το
+          καμπανάκι <strong>ψηλώνει</strong> και <strong>στενεύει</strong>, αλλά το{' '}
+          <strong>εμβαδόν</strong> του (το σκιασμένο) μένει <strong>σταθερό = aₖ</strong>. Στο όριο
+          → μια <strong>κρούση βάρους aₖ</strong>.
+        </p>
+      ) : (
+        <p className="mb-3 text-xs text-fg-muted">
+          Το cosine κομμένο σε <span className="font-mono">{N}</span> {cyc} (διάρκεια{' '}
+          <span className="font-mono">{N}·T₀</span>), και δεξιά το φάσμα του. Το{' '}
+          <strong>σκιασμένο εμβαδόν</strong> είναι ο συντελεστής <span className="font-mono">aₖ</span>.
+        </p>
+      )}
 
       <div className="grid gap-3 lg:grid-cols-2">
-        <Panel title="Στον χρόνο" subtitle="N κύκλοι του cosine (διάρκεια N·T₀)">
-          <canvas
-            ref={timeRef}
-            style={{ height: 190 }}
-            className="block h-[190px] w-full"
-            aria-label="N cycles of a cosine burst in the time domain"
-          />
+        <Panel title="Στον χρόνο" subtitle={`${N} ${cyc} (διάρκεια ${N}·T₀)`}>
+          <canvas ref={timeRef} style={{ height: 190 }} className="block h-[190px] w-full" aria-label="Cosine burst in the time domain" />
         </Panel>
-        <Panel title="Στη συχνότητα" subtitle="X_N(f): καμπανάκι που γίνεται κρούση">
-          <canvas
-            ref={freqRef}
-            style={{ height: 190 }}
-            className="block h-[190px] w-full"
-            aria-label="Spectrum of the N-cycle cosine, a bump sharpening into an impulse"
-          />
+        <Panel title="Στη συχνότητα" subtitle="το «καμπανάκι» γύρω από τα ±f₀">
+          <canvas ref={freqRef} style={{ height: 190 }} className="block h-[190px] w-full" aria-label="Spectrum of the cosine burst" />
         </Panel>
       </div>
 
-      <div className="mt-3">
-        <label className="block text-xs text-fg-muted">
-          N = <span className="font-mono text-fg tabular-nums">{N}</span> κύκλοι
-        </label>
-        <input
-          type="range"
-          min={N_MIN}
-          max={N_MAX}
-          step={1}
-          value={N}
-          onChange={(e) => setN(parseInt(e.target.value, 10))}
-          className="mt-1 w-full accent-[rgb(var(--accent))]"
-          aria-label="Number of cycles N"
-        />
-      </div>
+      {interactive && (
+        <div className="mt-3">
+          <label className="block text-xs text-fg-muted">
+            N = <span className="font-mono text-fg tabular-nums">{N}</span> κύκλοι
+          </label>
+          <input type="range" min={N_MIN} max={N_MAX} step={1} value={nState} onChange={(e) => setN(parseInt(e.target.value, 10))} className="mt-1 w-full accent-[rgb(var(--accent))]" aria-label="Number of cycles N" />
+        </div>
+      )}
 
       <div className="mt-3 grid gap-2 text-xs sm:grid-cols-3">
         <div className="rounded-md border border-border bg-bg p-2">
-          κορυφή <span className="font-mono">= N·T₀·aₖ = </span>
-          <span
-            className="font-mono font-semibold tabular-nums"
-            style={{ color: 'rgb(var(--accent))' }}
-          >
-            {peak}
-          </span>
+          κορυφή στο f₀ <span className="font-mono">= ½·{N}·T₀ = </span>
+          <span className="font-mono font-semibold tabular-nums" style={{ color: 'rgb(var(--accent))' }}>{peak}</span>
         </div>
         <div className="rounded-md border border-border bg-bg p-2">
-          πλάτος <span className="font-mono">≈ 1/(N·T₀) = </span>
+          πλάτος <span className="font-mono">≈ 1/({N}·T₀) = </span>
           <span className="font-mono font-semibold tabular-nums">{width}</span>
         </div>
         <div className="rounded-md border border-border bg-bg p-2">
@@ -118,14 +109,16 @@ export function CyclesToImpulse() {
         </div>
       </div>
 
-      <div className="mt-2 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
-        Η κορυφή μεγαλώνει (<span className="font-mono">N·T₀·aₖ</span>) και το πλάτος μικραίνει
-        (<span className="font-mono">1/N·T₀</span>), αλλά το γινόμενό τους — το{' '}
-        <strong>εμβαδόν</strong> — μένει <span className="font-mono">aₖ</span>. Στους{' '}
-        <strong>άπειρους κύκλους</strong> (το πλήρες periodic σήμα) το καμπανάκι γίνεται{' '}
-        <strong>κρούση βάρους <span className="font-mono">aₖ</span></strong> — γι' αυτό ο FT ενός
-        periodic σήματος έχει βάρη κρούσεων ακριβώς τα <span className="font-mono">aₖ</span>.
-      </div>
+      {interactive && (
+        <div className="mt-2 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
+          Η κορυφή μεγαλώνει (<span className="font-mono">½·N·T₀</span>) και το πλάτος μικραίνει
+          (<span className="font-mono">1/N·T₀</span>), αλλά το γινόμενό τους — το{' '}
+          <strong>εμβαδόν</strong> — μένει <span className="font-mono">aₖ</span>. Στους{' '}
+          <strong>άπειρους κύκλους</strong> το καμπανάκι γίνεται{' '}
+          <strong>κρούση βάρους <span className="font-mono">aₖ</span></strong>.
+        </div>
+      )}
+      <p className="mt-1 text-[10px] text-fg-subtle">μονάδες: f₀ = 1, T₀ = 1 (άρα aₖ = ½)</p>
     </figure>
   )
 }
