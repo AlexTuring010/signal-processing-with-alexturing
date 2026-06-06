@@ -73,6 +73,7 @@ import { CosineSuperpositionViz } from '@/components/viz/CosineSuperpositionViz'
 import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourier'
 import { SquareWaveBuilder } from '@/components/viz/SquareWaveBuilder'
 import { PeriodToInfinity } from '@/components/viz/PeriodToInfinity'
+import { SpectrumDensifies } from '@/components/viz/SpectrumDensifies'
 import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlowViz'
 import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
 import { ConjugatePhasorPairViz } from '@/components/viz/ConjugatePhasorPairViz'
@@ -269,6 +270,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RectangularPulseFourier,
     SquareWaveBuilder,
     PeriodToInfinity,
+    SpectrumDensifies,
     AnalysisSynthesisFlowViz,
     DualFormExplorerViz,
     ConjugatePhasorPairViz,
