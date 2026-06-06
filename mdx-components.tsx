@@ -76,6 +76,8 @@ import { SpectrumDensifies } from '@/components/viz/SpectrumDensifies'
 import { RiemannSumToIntegral } from '@/components/viz/RiemannSumToIntegral'
 import { PeriodicSpectrumFsVsFt } from '@/components/viz/PeriodicSpectrumFsVsFt'
 import { CyclesToImpulse } from '@/components/viz/CyclesToImpulse'
+import { BurstPositionPhase } from '@/components/viz/BurstPositionPhase'
+import { OneSidedVsTwoSided } from '@/components/viz/OneSidedVsTwoSided'
 import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlowViz'
 import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
 import { ConjugatePhasorPairViz } from '@/components/viz/ConjugatePhasorPairViz'
@@ -275,6 +277,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RiemannSumToIntegral,
     PeriodicSpectrumFsVsFt,
     CyclesToImpulse,
+    BurstPositionPhase,
+    OneSidedVsTwoSided,
     AnalysisSynthesisFlowViz,
     DualFormExplorerViz,
     ConjugatePhasorPairViz,
