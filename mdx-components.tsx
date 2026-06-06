@@ -78,6 +78,7 @@ import { PeriodicSpectrumFsVsFt } from '@/components/viz/PeriodicSpectrumFsVsFt'
 import { CyclesToImpulse } from '@/components/viz/CyclesToImpulse'
 import { BurstPositionPhase } from '@/components/viz/BurstPositionPhase'
 import { OneSidedVsTwoSided } from '@/components/viz/OneSidedVsTwoSided'
+import { SinglePulseToCoefficients } from '@/components/viz/SinglePulseToCoefficients'
 import { AnalysisSynthesisFlowViz } from '@/components/viz/AnalysisSynthesisFlowViz'
 import { DualFormExplorerViz } from '@/components/viz/DualFormExplorerViz'
 import { ConjugatePhasorPairViz } from '@/components/viz/ConjugatePhasorPairViz'
@@ -279,6 +280,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     CyclesToImpulse,
     BurstPositionPhase,
     OneSidedVsTwoSided,
+    SinglePulseToCoefficients,
     AnalysisSynthesisFlowViz,
     DualFormExplorerViz,
     ConjugatePhasorPairViz,
