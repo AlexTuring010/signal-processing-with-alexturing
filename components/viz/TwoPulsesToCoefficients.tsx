@@ -4,25 +4,22 @@ import { useEffect, useRef } from 'react'
 import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canvas'
 
 /**
- * FT §2.1 (coda) — confirm X₂/(2T₀) = X₀/T₀ by OVERLAYING the two coefficient
- * sets on one frequency axis (static — no slider; the point is the equality).
+ * FT §2.1 (coda) — two Slide-33-style cases (static).
  *
- * Time: one rect-train, shown with a T₀ cell (one rect) and a 2T₀ cell (two
- * rects) — the same signal, two ways to choose the period.
+ * Case 1: one rect (FT = X₀, a smooth sinc) → periodic, period T₀.
+ *         aₖ = |X₀|/T₀, samples of X₀ at k/T₀.
+ * Case 2: two copies (FT = X₂, a RIPPLED sinc — a different envelope) → periodic,
+ *         period 2T₀, shown grouped in PAIRS. aₖ = |X₂|/2T₀, samples at k/2T₀.
  *
- * Frequency (overlaid):
- *   - one-copy coefficients |X₀(k/T₀)|/T₀ at k/T₀  → hollow accent RINGS
- *   - two-copy coefficients |X₂(k/2T₀)|/2T₀ at k/2T₀ → filled purple DOTS
- * Each purple dot sits exactly inside an accent ring (equal); the extra (odd)
- * purple dots are on the axis (zeros — the two copies cancel there).
- *
- * Magnitudes |X| are plotted (placement only affects phase). Width matches the
- * single-rect "Slide 33" viz (τ = 1, T₀ = 2).
+ * The two envelopes differ (X₂ = 2X₀ at the harmonics, and rippled), yet the
+ * coefficients come out equal: dividing X₂ by the doubled period 2T₀ cancels the
+ * factor 2. Both freq plots share the y-scale, so the aₖ stems sit at the same
+ * heights in both. Magnitudes |X| are plotted; τ = 1, T₀ = 2 (as in Slide 33).
  */
 
 const TAU = 1
 const T0 = 2
-const C2 = '#7c3aed' // two-copy colour (purple)
+const C2 = '#7c3aed' // two-copy accent (purple)
 
 function sinc(x: number) {
   if (Math.abs(x) < 1e-9) return 1
@@ -36,15 +33,19 @@ function X2(f: number) {
 }
 
 export function TwoPulsesToCoefficients() {
-  const timeRef = useRef<HTMLCanvasElement | null>(null)
-  const freqRef = useRef<HTMLCanvasElement | null>(null)
+  const t1 = useRef<HTMLCanvasElement | null>(null)
+  const f1 = useRef<HTMLCanvasElement | null>(null)
+  const t2 = useRef<HTMLCanvasElement | null>(null)
+  const f2 = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
     const draw = () => {
       const colors = getThemeColors()
       if (!colors) return
-      if (timeRef.current) drawTime(timeRef.current, colors)
-      if (freqRef.current) drawFreq(freqRef.current, colors)
+      if (t1.current) drawTimeCase(t1.current, colors, 'one')
+      if (f1.current) drawFreqCase(f1.current, colors, X0, T0, '|X₀|', '|X₀|/T₀')
+      if (t2.current) drawTimeCase(t2.current, colors, 'two')
+      if (f2.current) drawFreqCase(f2.current, colors, X2, 2 * T0, '|X₂|', '|X₂|/2T₀')
     }
     draw()
     const obs = new MutationObserver(draw)
@@ -59,36 +60,45 @@ export function TwoPulsesToCoefficients() {
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
       <h4 className="mb-1 text-sm font-semibold tracking-tight">
-        Δύο αντίγραφα (÷2T₀) δίνουν τους ίδιους συντελεστές με έναν (÷T₀)
+        Διαφορετική περιβάλλουσα, ίδιοι συντελεστές
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Το <strong>ίδιο</strong> rect-train, δύο επιλογές περιόδου. Στο φάσμα, οι συντελεστές των δύο
-        περιγραφών μπαίνουν στον <strong>ίδιο άξονα</strong>:{' '}
-        <span style={{ color: 'rgb(var(--accent))' }}>κύκλοι</span> για τον έναν (
-        <span className="font-mono">÷T₀</span>),{' '}
-        <span style={{ color: C2 }} className="font-semibold">μωβ τελείες</span> για τους δύο (
-        <span className="font-mono">÷2T₀</span>). Κάθε μωβ τελεία κάθεται <strong>μέσα</strong> σε έναν
-        κύκλο — ίδιοι συντελεστές.
+        Κάθε περίπτωση όπως στη Slide 33: το κομμάτι, από κάτω το periodic, και δεξιά η περιβάλλουσά
+        του δειγματισμένη ÷ περίοδο. Οι δύο περιβάλλουσες είναι <strong>διαφορετικές</strong> —{' '}
+        <span className="font-mono">X₂</span> είναι διπλάσια κι έχει κυματισμό — όμως οι{' '}
+        <span className="font-mono">aₖ</span> βγαίνουν στο <strong>ίδιο ύψος</strong> (ίδιος κάθετος
+        άξονας στα δύο φάσματα).
       </p>
 
-      <Panel title="Στον χρόνο — το ίδιο σήμα, ομαδοποιημένο δύο τρόπους" subtitle="πάνω: μονάδα 1 παλμός (T₀) · κάτω: μονάδα 2 αντίγραφα (2T₀)">
-        <canvas ref={timeRef} style={{ height: 152 }} className="block h-[152px] w-full" aria-label="The same rect train grouped into single rects (period T0) and into pairs (period 2T0)" />
-      </Panel>
-      <div className="mt-3">
-        <Panel title="Στη συχνότητα — οι δύο σειρές συντελεστών μαζί" subtitle="μωβ τελείες μέσα στους κύκλους = ίσοι (άξονας: |X|)">
-          <canvas ref={freqRef} style={{ height: 200 }} className="block h-[200px] w-full" aria-label="Both coefficient sets overlaid; purple dots inside the rings" />
+      <div className="mb-1 text-xs font-semibold text-fg">Περίπτωση 1 — ένας παλμός (περίοδος T₀)</div>
+      <div className="grid gap-3 lg:grid-cols-2">
+        <Panel title="Στον χρόνο" subtitle="η μονάδα / periodic ανά T₀">
+          <canvas ref={t1} style={{ height: 168 }} className="block h-[168px] w-full" aria-label="One rect and its periodic train" />
+        </Panel>
+        <Panel title="Στη συχνότητα" subtitle="X₀ (λείο sinc) · aₖ = X₀/T₀">
+          <canvas ref={f1} style={{ height: 168 }} className="block h-[168px] w-full" aria-label="Envelope X0 and its samples" />
+        </Panel>
+      </div>
+
+      <div className="mb-1 mt-3 text-xs font-semibold text-fg">Περίπτωση 2 — δύο αντίγραφα (περίοδος 2T₀)</div>
+      <div className="grid gap-3 lg:grid-cols-2">
+        <Panel title="Στον χρόνο" subtitle="η μονάδα (2) / periodic σε ζευγάρια ανά 2T₀">
+          <canvas ref={t2} style={{ height: 168 }} className="block h-[168px] w-full" aria-label="Two rects and their periodic train, grouped in pairs" />
+        </Panel>
+        <Panel title="Στη συχνότητα" subtitle="X₂ (διπλάσια, με κυματισμό) · aₖ = X₂/2T₀">
+          <canvas ref={f2} style={{ height: 168 }} className="block h-[168px] w-full" aria-label="Envelope X2 (rippled) and its samples" />
         </Panel>
       </div>
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
-        <strong>Γιατί ίσοι;</strong> Στις αρμονικές τα δύο αντίγραφα <strong>προστίθενται</strong>, άρα{' '}
-        <span className="font-mono">X₂ = 2X₀</span> εκεί· διαιρείς όμως με <strong>διπλάσια</strong>{' '}
-        περίοδο, <span className="font-mono">2T₀</span> — το <span className="font-mono">×2</span> και το{' '}
-        <span className="font-mono">÷2</span> φεύγουν, και μένει <span className="font-mono">X₀/T₀</span>.
-        Ανάμεσα, τα αντίγραφα <strong>αλληλοαναιρούνται</strong> (<span className="font-mono">X₂ = 0</span>):
-        οι ενδιάμεσες μωβ τελείες είναι μηδέν.
+        Πρόσεξε: η περιβάλλουσα <span className="font-mono">X₂</span> είναι <strong>διπλάσια</strong> της{' '}
+        <span className="font-mono">X₀</span> στις αρμονικές (τα δύο αντίγραφα προστίθενται) — αλλά
+        διαιρείται με <strong>διπλάσια</strong> περίοδο. Το <span className="font-mono">×2</span> και το{' '}
+        <span className="font-mono">÷2</span> αναιρούνται, κι έτσι τα <span className="font-mono">aₖ</span>{' '}
+        πέφτουν στο ίδιο ύψος και στα δύο. (Ανάμεσα, η <span className="font-mono">X₂</span> μηδενίζεται →
+        τα ενδιάμεσα δείγματα είναι μηδέν.)
       </div>
-      <p className="mt-1 text-[10px] text-fg-subtle">σταθερά: πλάτος rect, εσωτερική απόσταση T₀ · το γράφημα δείχνει το μέτρο |X|</p>
+      <p className="mt-1 text-[10px] text-fg-subtle">σταθερά: πλάτος rect, εσωτερική απόσταση T₀ · τα φάσματα δείχνουν το μέτρο |X|</p>
     </figure>
   )
 }
@@ -105,8 +115,8 @@ function Panel({ title, subtitle, children }: { title: string; subtitle: string;
   )
 }
 
-const PAD_X = 32
-const PAD_Y = 14
+const PAD_X = 30
+const PAD_Y = 13
 
 function getRGB(rgb: string): string {
   const m = rgb.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/)
@@ -114,89 +124,122 @@ function getRGB(rgb: string): string {
   return `${m[1]}, ${m[2]}, ${m[3]}`
 }
 
-function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors) {
-  const { ctx, w, h } = setupCanvas(canvas)
-  ctx.clearRect(0, 0, w, h)
-  const tDom = 5.5
-  const bandH = (h - 3 * PAD_Y) / 2
-  const top = { t: PAD_Y, b: PAD_Y + bandH }
-  const bot = { t: 2 * PAD_Y + bandH, b: 2 * PAD_Y + 2 * bandH }
-  drawGroupedTrain(ctx, colors, w, top, tDom, T0, getRGB(colors.accent), 'μονάδα: 1 παλμός — επανάληψη ανά T₀')
-  drawGroupedTrain(ctx, colors, w, bot, tDom, 2 * T0, getRGB(C2), 'μονάδα: 2 αντίγραφα — επανάληψη ανά 2T₀')
-}
-
-// the same rect-train, with tiling "unit" boxes of width cellPeriod (each box
-// holds 1 rect when cellPeriod = T₀, a PAIR when cellPeriod = 2T₀)
-function drawGroupedTrain(
+function drawRectsAt(
   ctx: CanvasRenderingContext2D,
   colors: ThemeColors,
-  w: number,
-  band: { t: number; b: number },
+  xt: (t: number) => number,
+  centers: number[],
+  yTopR: number,
+  yBase: number,
   tDom: number,
-  cellPeriod: number,
-  boxRgb: string,
-  label: string,
 ) {
-  const xt = (t: number) => lerp(t, -tDom, tDom, PAD_X, w - PAD_X)
-  const yBase = band.b - 14
-  const yTopR = band.t + 14
-  const yBoxTop = band.t + 6
-  const accentRgb = getRGB(colors.accent)
-
-  // grouping boxes: cell j = [j·cellPeriod − T₀/2 , +cellPeriod]
-  const jMax = Math.ceil((tDom + T0) / cellPeriod) + 1
-  for (let j = -jMax; j <= jMax; j++) {
-    const cl = j * cellPeriod - T0 / 2
-    const cr = cl + cellPeriod
-    if (cr < -tDom || cl > tDom) continue
-    const bx = xt(Math.max(cl, -tDom))
-    const bxR = xt(Math.min(cr, tDom))
-    ctx.fillStyle = `rgba(${boxRgb}, 0.10)`
-    ctx.fillRect(bx, yBoxTop, bxR - bx, yBase - yBoxTop)
-    ctx.strokeStyle = `rgba(${boxRgb}, 0.65)`
-    ctx.lineWidth = 1.2
-    ctx.strokeRect(bx, yBoxTop, bxR - bx, yBase - yBoxTop)
-  }
-
-  // axis
-  ctx.strokeStyle = colors.border
-  ctx.lineWidth = 1
-  ctx.beginPath()
-  ctx.moveTo(PAD_X - 4, yBase)
-  ctx.lineTo(w - PAD_X + 4, yBase)
-  ctx.stroke()
-
-  // train rects at multiples of T₀
-  ctx.fillStyle = `rgba(${accentRgb}, 0.32)`
+  ctx.fillStyle = `rgba(${getRGB(colors.accent)}, 0.32)`
   ctx.strokeStyle = colors.accent
   ctx.lineWidth = 1.5
-  for (let c = -4; c <= 4; c += T0) {
+  for (const c of centers) {
     const a = c - TAU / 2
     const b = c + TAU / 2
+    if (b < -tDom || a > tDom) continue
     const xL = xt(Math.max(a, -tDom))
     const xR = xt(Math.min(b, tDom))
     ctx.fillRect(xL, yTopR, xR - xL, yBase - yTopR)
     ctx.strokeRect(xL, yTopR, xR - xL, yBase - yTopR)
   }
-
-  // label
-  ctx.fillStyle = colors.fgMuted
-  ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
-  ctx.textAlign = 'left'
-  ctx.fillText(label, PAD_X + 2, band.b - 2)
 }
 
-function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors) {
+function drawTimeCase(canvas: HTMLCanvasElement, colors: ThemeColors, kind: 'one' | 'two') {
+  const { ctx, w, h } = setupCanvas(canvas)
+  ctx.clearRect(0, 0, w, h)
+  const tDom = 5.5
+  const xt = (t: number) => lerp(t, -tDom, tDom, PAD_X, w - PAD_X)
+  const cellPeriod = kind === 'one' ? T0 : 2 * T0
+  const boxRgb = kind === 'one' ? getRGB(colors.accent) : getRGB(C2)
+  const bandH = (h - 3 * PAD_Y) / 2
+  const top = { t: PAD_Y, b: PAD_Y + bandH }
+  const bot = { t: 2 * PAD_Y + bandH, b: 2 * PAD_Y + 2 * bandH }
+
+  // --- top sub-axis: the unit, boxed ---
+  {
+    const yBase = top.b - 11
+    const yTopR = top.t + 21
+    const yBoxTop = top.t + 15
+    const cl = -T0 / 2
+    const cr = cl + cellPeriod
+    ctx.fillStyle = `rgba(${boxRgb}, 0.10)`
+    ctx.fillRect(xt(cl), yBoxTop, xt(cr) - xt(cl), yBase - yBoxTop)
+    ctx.strokeStyle = `rgba(${boxRgb}, 0.65)`
+    ctx.lineWidth = 1.2
+    ctx.strokeRect(xt(cl), yBoxTop, xt(cr) - xt(cl), yBase - yBoxTop)
+
+    ctx.strokeStyle = colors.border
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(PAD_X - 4, yBase)
+    ctx.lineTo(w - PAD_X + 4, yBase)
+    ctx.stroke()
+
+    drawRectsAt(ctx, colors, xt, kind === 'one' ? [0] : [0, T0], yTopR, yBase, tDom)
+
+    ctx.fillStyle = colors.fgMuted
+    ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText(kind === 'one' ? 'η μονάδα: 1 παλμός  (FT = X₀)' : 'η μονάδα: 2 αντίγραφα  (FT = X₂)', PAD_X + 2, top.t + 9)
+  }
+
+  // --- bottom sub-axis: periodic, grouped into cells of width cellPeriod ---
+  {
+    const yBase = bot.b - 11
+    const yTopR = bot.t + 21
+    const yBoxTop = bot.t + 15
+    const jMax = Math.ceil((tDom + T0) / cellPeriod) + 1
+    for (let j = -jMax; j <= jMax; j++) {
+      const cl = j * cellPeriod - T0 / 2
+      const cr = cl + cellPeriod
+      if (cr < -tDom || cl > tDom) continue
+      const bx = xt(Math.max(cl, -tDom))
+      const bxR = xt(Math.min(cr, tDom))
+      ctx.fillStyle = `rgba(${boxRgb}, 0.10)`
+      ctx.fillRect(bx, yBoxTop, bxR - bx, yBase - yBoxTop)
+      ctx.strokeStyle = `rgba(${boxRgb}, 0.6)`
+      ctx.lineWidth = 1.2
+      ctx.strokeRect(bx, yBoxTop, bxR - bx, yBase - yBoxTop)
+    }
+
+    ctx.strokeStyle = colors.border
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(PAD_X - 4, yBase)
+    ctx.lineTo(w - PAD_X + 4, yBase)
+    ctx.stroke()
+
+    const centers: number[] = []
+    for (let c = -6; c <= 6; c += T0) centers.push(c)
+    drawRectsAt(ctx, colors, xt, centers, yTopR, yBase, tDom)
+
+    ctx.fillStyle = colors.fgMuted
+    ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText(kind === 'one' ? 'periodic — επανάληψη ανά T₀' : 'periodic — επανάληψη του ζεύγους ανά 2T₀', PAD_X + 2, bot.t + 9)
+  }
+}
+
+function drawFreqCase(
+  canvas: HTMLCanvasElement,
+  colors: ThemeColors,
+  envFn: (f: number) => number,
+  period: number,
+  envLabel: string,
+  coeffLabel: string,
+) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
   const fDom = 3
-  const yMax = (1 / T0) * 1.3 // a₀ = 1/T₀ = 0.5
+  const yMax = 2 * TAU * 1.15 // shared by both freq plots; fits the taller X₂ envelope
   const xt = (f: number) => lerp(f, -fDom, fDom, PAD_X, w - PAD_X)
-  const yv = (v: number) => lerp(v, yMax, -0.16 * yMax, PAD_Y + 6, h - PAD_Y - 8)
+  const yv = (v: number) => lerp(v, yMax, -0.1 * yMax, PAD_Y + 22, h - PAD_Y)
   const yZero = yv(0)
   const accentRgb = getRGB(colors.accent)
 
-  // axis
   ctx.strokeStyle = colors.border
   ctx.lineWidth = 1
   ctx.beginPath()
@@ -204,16 +247,16 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors) {
   ctx.lineTo(w - PAD_X + 4, yZero)
   ctx.stroke()
 
-  // faint reference: the one-copy coefficient envelope |X₀|/T₀
-  ctx.strokeStyle = colors.accent
-  ctx.globalAlpha = 0.3
+  // envelope |X| (gray dashed) — the total / shape
+  ctx.strokeStyle = colors.fgSubtle
   ctx.lineWidth = 1.2
+  ctx.globalAlpha = 0.6
   ctx.setLineDash([2, 3])
   ctx.beginPath()
   const STEPS = 600
   for (let i = 0; i <= STEPS; i++) {
     const f = lerp(i, 0, STEPS, -fDom, fDom)
-    const y = yv(X0(f) / T0)
+    const y = yv(envFn(f))
     if (i === 0) ctx.moveTo(xt(f), y)
     else ctx.lineTo(xt(f), y)
   }
@@ -221,72 +264,46 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors) {
   ctx.setLineDash([])
   ctx.globalAlpha = 1
 
-  // two-copy dots at k/2T₀ (purple), under the rings
-  const k2 = Math.ceil(fDom * 2 * T0) + 1
-  for (let k = -k2; k <= k2; k++) {
-    const f = k / (2 * T0)
+  // |X|/period curve (accent faint) — where the aₖ sit
+  ctx.strokeStyle = colors.accent
+  ctx.lineWidth = 1.3
+  ctx.globalAlpha = 0.4
+  ctx.beginPath()
+  for (let i = 0; i <= STEPS; i++) {
+    const f = lerp(i, 0, STEPS, -fDom, fDom)
+    const y = yv(envFn(f) / period)
+    if (i === 0) ctx.moveTo(xt(f), y)
+    else ctx.lineTo(xt(f), y)
+  }
+  ctx.stroke()
+  ctx.globalAlpha = 1
+
+  // aₖ stems at f = k/period
+  const kMax = Math.ceil(fDom * period) + 1
+  for (let k = -kMax; k <= kMax; k++) {
+    const f = k / period
     if (Math.abs(f) > fDom) continue
-    const v = X2(f) / (2 * T0)
+    const v = envFn(f) / period
     const x = xt(f)
-    ctx.strokeStyle = C2
-    ctx.globalAlpha = 0.5
-    ctx.lineWidth = 1.4
+    ctx.strokeStyle = colors.accent
+    ctx.lineWidth = 1.7
     ctx.beginPath()
     ctx.moveTo(x, yZero)
     ctx.lineTo(x, yv(v))
     ctx.stroke()
-    ctx.globalAlpha = 1
-    ctx.fillStyle = C2
+    ctx.fillStyle = colors.accent
     ctx.beginPath()
-    ctx.arc(x, yv(v), 2.8, 0, Math.PI * 2)
+    ctx.arc(x, yv(v), 2.4, 0, Math.PI * 2)
     ctx.fill()
   }
 
-  // one-copy rings at k/T₀ (accent), on top
-  const k1 = Math.ceil(fDom * T0) + 1
-  for (let k = -k1; k <= k1; k++) {
-    const f = k / T0
-    if (Math.abs(f) > fDom) continue
-    const v = X0(f) / T0
-    const x = xt(f)
-    ctx.strokeStyle = colors.accent
-    ctx.globalAlpha = 0.4
-    ctx.lineWidth = 1.2
-    ctx.beginPath()
-    ctx.moveTo(x, yZero)
-    ctx.lineTo(x, yv(v))
-    ctx.stroke()
-    ctx.globalAlpha = 1
-    ctx.lineWidth = 1.6
-    ctx.beginPath()
-    ctx.arc(x, yv(v), 4.6, 0, Math.PI * 2)
-    ctx.stroke()
-  }
-
-  // legend (magnitudes plotted)
+  // labels
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.strokeStyle = colors.accent
-  ctx.lineWidth = 1.6
-  ctx.beginPath()
-  ctx.arc(PAD_X + 6, PAD_Y + 6, 4.2, 0, Math.PI * 2)
-  ctx.stroke()
-  ctx.fillStyle = colors.fgMuted
-  ctx.fillText('ένας παλμός:  |X₀| / T₀', PAD_X + 16, PAD_Y + 9)
-  ctx.fillStyle = C2
-  ctx.beginPath()
-  ctx.arc(PAD_X + 6, PAD_Y + 20, 2.8, 0, Math.PI * 2)
-  ctx.fill()
-  ctx.fillText('δύο αντίγραφα:  |X₂| / 2T₀', PAD_X + 16, PAD_Y + 23)
-
-  // y-axis quantity + f label
-  ctx.save()
-  ctx.translate(PAD_X - 20, (PAD_Y + yZero) / 2 + 6)
-  ctx.rotate(-Math.PI / 2)
   ctx.fillStyle = colors.fgSubtle
-  ctx.textAlign = 'center'
-  ctx.fillText('|X| / περίοδο', 0, 0)
-  ctx.restore()
+  ctx.fillText(`περιβάλλουσα ${envLabel}`, PAD_X + 2, PAD_Y + 8)
+  ctx.fillStyle = colors.accent
+  ctx.fillText(`στήλες aₖ = ${coeffLabel}`, PAD_X + 2, PAD_Y + 19)
   ctx.fillStyle = colors.fgSubtle
   ctx.textAlign = 'center'
   ctx.fillText('f', w - PAD_X + 2, yZero - 4)
