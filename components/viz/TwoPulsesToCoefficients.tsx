@@ -4,24 +4,21 @@ import { useEffect, useRef, useState } from 'react'
 import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canvas'
 
 /**
- * FT §2.1 (coda) — "the generator can be anything".
+ * FT §2.1 (coda) — "the repeated piece is your choice".
  *
- * Same recipe as SinglePulseToCoefficients, but the generator is now TWO rects
- * (a double pulse, separation d). Two copies interfere, so the envelope is the
- * single-rect sinc wearing a cosine ripple:
- *      X₀(f) = 2τ · sinc(fτ) · cos(πf·d).
- * The ripple makes "bumps" start to appear — the seed of the impulses §2.2 builds.
- * The recipe is unchanged: repeat every T₀, and aₖ = X₀(k/T₀)/T₀.
+ * Same recipe as SinglePulseToCoefficients, but the piece you repeat is now TWO
+ * copies of the rect (a fixed double pulse). Its FT X₀ is a different envelope,
+ * yet the recipe is unchanged: repeat every T₀, sample at k/T₀, divide by T₀.
  *
- * Two knobs:
- *   - d  (separation): sets the ripple — bigger d → finer ripple (more bumps).
- *   - T₀ (period): sets the sampling step 1/T₀ and the ÷T₀ scaling.
+ * Only ONE knob — T₀ (the period). The two copies are a FIXED shape (separation
+ * D): changing their spacing would make it a different signal, so it is not a
+ * control here. The point is simply: a different repeated piece → a different
+ * envelope, same recipe.
  */
 
 const TAU = 0.7 // each rect's width (fixed)
-const D_MIN = 1.0
-const D_MAX = 2.6
-const T0_MIN = 3.4
+const D = 2 // separation between the two copies (fixed)
+const T0_MIN = 3
 const T0_MAX = 8
 
 function sinc(x: number) {
@@ -29,13 +26,12 @@ function sinc(x: number) {
   return Math.sin(Math.PI * x) / (Math.PI * x)
 }
 
-// FT of two rects of width τ centered at ±d/2 — a rippled sinc.
-function X0(f: number, d: number) {
-  return 2 * TAU * sinc(f * TAU) * Math.cos(Math.PI * f * d)
+// FT of two rects of width τ centered at ±D/2
+function X0(f: number) {
+  return 2 * TAU * sinc(f * TAU) * Math.cos(Math.PI * f * D)
 }
 
 export function TwoPulsesToCoefficients() {
-  const [d, setD] = useState(1.8)
   const [T0, setT0] = useState(4)
   const timeRef = useRef<HTMLCanvasElement | null>(null)
   const freqRef = useRef<HTMLCanvasElement | null>(null)
@@ -43,58 +39,45 @@ export function TwoPulsesToCoefficients() {
   useEffect(() => {
     const colors = getThemeColors()
     if (!colors) return
-    if (timeRef.current) drawTime(timeRef.current, colors, d, T0)
-    if (freqRef.current) drawFreq(freqRef.current, colors, d, T0)
-  }, [d, T0])
+    if (timeRef.current) drawTime(timeRef.current, colors, T0)
+    if (freqRef.current) drawFreq(freqRef.current, colors, T0)
+  }, [T0])
 
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
       <h4 className="mb-1 text-sm font-semibold tracking-tight">
-        Δύο rect → FT → δειγματοληψία ÷ T₀: η ίδια συνταγή για άλλον γεννήτορα
+        Δύο αντίγραφα ενός rect → δειγματοληψία ÷ T₀: η ίδια συνταγή
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Ο γεννήτορας τώρα είναι <strong>δύο</strong> rect (απόσταση{' '}
-        <span className="font-mono">d</span>). Τα δύο αντίγραφα{' '}
-        <strong>συμβάλλουν</strong>, οπότε ο FT τους είναι το γνωστό sinc{' '}
-        <strong>με κυματισμό</strong>: <span className="font-mono">X₀(f) = 2τ·sinc(fτ)·cos(πfd)</span>{' '}
-        — εμφανίζονται «καμπανάκια». Η συνταγή όμως δεν αλλάζει:{' '}
-        <span className="font-mono">aₖ = X₀(k/T₀)/T₀</span> (ανοιχτές κουκκίδες ÷ T₀ = γεμάτες στήλες).
+        Τώρα το κομμάτι που επαναλαμβάνεται είναι <strong>δύο αντίγραφα</strong> του rect. Ο FT τους —
+        η περιβάλλουσα <span className="font-mono">X₀(f)</span> — έχει άλλο σχήμα, αλλά η συνταγή είναι
+        ίδια: δείγματα στα <span className="font-mono">k/T₀</span> (ανοιχτές κουκκίδες),{' '}
+        <strong>διά T₀</strong> = οι <strong>γεμάτες στήλες</strong> <span className="font-mono">aₖ</span>.
       </p>
 
       <div className="grid gap-3 lg:grid-cols-2">
-        <Panel title="Στον χρόνο" subtitle="δύο rect (+ αχνά periodic αντίγραφα ανά T₀)">
-          <canvas ref={timeRef} style={{ height: 188 }} className="block h-[188px] w-full" aria-label="A two-rect generator and its faint periodic repetitions" />
+        <Panel title="Στον χρόνο" subtitle="δύο αντίγραφα (+ αχνά periodic αντίγραφα ανά T₀)">
+          <canvas ref={timeRef} style={{ height: 188 }} className="block h-[188px] w-full" aria-label="A fixed double pulse and its faint periodic repetitions" />
         </Panel>
-        <Panel title="Στη συχνότητα" subtitle="X₀(f) με κυματισμό, δειγματισμένη ÷ T₀">
-          <canvas ref={freqRef} style={{ height: 188 }} className="block h-[188px] w-full" aria-label="Rippled envelope X0(f) sampled at the harmonics and divided by T0" />
+        <Panel title="Στη συχνότητα" subtitle="X₀(f) δειγματισμένη στα k/T₀, ÷ T₀">
+          <canvas ref={freqRef} style={{ height: 188 }} className="block h-[188px] w-full" aria-label="Envelope X0(f) sampled at the harmonics and divided by T0" />
         </Panel>
       </div>
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <div>
-          <label className="block text-xs text-fg-muted">
-            απόσταση d = <span className="font-mono text-fg tabular-nums">{d.toFixed(2)}</span>{' '}
-            <span className="text-fg-subtle">(σχηματίζει τον κυματισμό)</span>
-          </label>
-          <input type="range" min={D_MIN} max={D_MAX} step={0.05} value={d} onChange={(e) => setD(parseFloat(e.target.value))} className="mt-1 w-full accent-[rgb(var(--accent))]" aria-label="Separation d" />
-        </div>
-        <div>
-          <label className="block text-xs text-fg-muted">
-            περίοδος T₀ = <span className="font-mono text-fg tabular-nums">{T0.toFixed(1)}</span>{' '}
-            <span className="text-fg-subtle">(βήμα δειγμάτων 1/T₀ = {(1 / T0).toFixed(2)})</span>
-          </label>
-          <input type="range" min={T0_MIN} max={T0_MAX} step={0.1} value={T0} onChange={(e) => setT0(parseFloat(e.target.value))} className="mt-1 w-full accent-[rgb(var(--accent))]" aria-label="Period T0" />
-        </div>
+      <div className="mt-3">
+        <label className="block text-xs text-fg-muted">
+          περίοδος T₀ = <span className="font-mono text-fg tabular-nums">{T0.toFixed(1)}</span>{' '}
+          <span className="text-fg-subtle">(βήμα δειγμάτων 1/T₀ = {(1 / T0).toFixed(2)})</span>
+        </label>
+        <input type="range" min={T0_MIN} max={T0_MAX} step={0.1} value={T0} onChange={(e) => setT0(parseFloat(e.target.value))} className="mt-1 w-full accent-[rgb(var(--accent))]" aria-label="Period T0" />
       </div>
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
-        Άλλαξε το <span className="font-mono">d</span>: ο <strong>κυματισμός</strong> της{' '}
-        <span className="font-mono">X₀</span> πυκνώνει (μακρύτερα τα rect → πιο στενά «καμπανάκια»).
-        Άλλαξε το <span className="font-mono">T₀</span>: μετακινούνται τα δείγματα (στα{' '}
-        <span className="font-mono">k/T₀</span>) και αλλάζει το <span className="font-mono">÷T₀</span>.
-        Συμπέρασμα: ο γεννήτορας μπορεί να είναι <strong>ο,τιδήποτε</strong> — η περιβάλλουσα{' '}
-        <span className="font-mono">X₀</span> είναι απλώς ο FT του, και διαιρείς με την{' '}
-        <strong>περίοδο που εσύ διάλεξες</strong>.
+        Σύρε το <span className="font-mono">T₀</span>: τα δείγματα μετακινούνται (στα{' '}
+        <span className="font-mono">k/T₀</span>) και το <span className="font-mono">÷T₀</span> τα
+        χαμηλώνει — ακριβώς όπως με έναν παλμό. Το μόνο που άλλαξε είναι το{' '}
+        <strong>σχήμα</strong> της <span className="font-mono">X₀</span>, επειδή άλλαξε το κομμάτι που
+        επαναλαμβάνεις.
       </div>
     </figure>
   )
@@ -121,7 +104,7 @@ function getRGB(rgb: string): string {
   return `${m[1]}, ${m[2]}, ${m[3]}`
 }
 
-function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors, d: number, T0: number) {
+function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
   const tDom = 7
@@ -157,35 +140,25 @@ function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors, d: number, T0:
     ctx.strokeRect(xL, yT, xR - xL, yZero - yT)
   }
 
-  // faint periodic copies of the whole double-pulse cell, every T₀
+  // faint periodic copies of the double-pulse cell, every T₀
   for (let k = -3; k <= 3; k++) {
     if (k === 0) continue
-    drawRect(-d / 2 + k * T0, true)
-    drawRect(d / 2 + k * T0, true)
+    drawRect(-D / 2 + k * T0, true)
+    drawRect(D / 2 + k * T0, true)
   }
-  // the generator: two rects at ±d/2
-  drawRect(-d / 2, false)
-  drawRect(d / 2, false)
+  // the repeated piece: two copies at ±D/2
+  drawRect(-D / 2, false)
+  drawRect(D / 2, false)
 
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  // d brace between the two centers
-  if (d / 2 <= tDom) {
-    ctx.fillText('d', 0 + xt(0), yv(1) - 5)
-    ctx.strokeStyle = colors.fgSubtle
-    ctx.lineWidth = 1
-    ctx.beginPath()
-    ctx.moveTo(xt(-d / 2), yv(1.12))
-    ctx.lineTo(xt(d / 2), yv(1.12))
-    ctx.stroke()
-  }
   if (T0 <= tDom) {
-    ctx.fillText('T₀', (xt(d / 2) + xt(d / 2 + T0)) / 2, yZero + 12)
+    ctx.fillText('T₀', (xt(D / 2) + xt(D / 2 + T0)) / 2, yZero + 12)
   }
 }
 
-function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, d: number, T0: number) {
+function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
   const fDom = 6
@@ -202,7 +175,7 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, d: number, T0:
   ctx.lineTo(w - PAD_X + 4, yZero)
   ctx.stroke()
 
-  // X₀(f) rippled-sinc envelope
+  // X₀(f) envelope
   ctx.strokeStyle = colors.fgMuted
   ctx.lineWidth = 1.4
   ctx.beginPath()
@@ -210,7 +183,7 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, d: number, T0:
   for (let i = 0; i <= STEPS; i++) {
     const f = lerp(i, 0, STEPS, -fDom, fDom)
     const x = xt(f)
-    const y = yv(X0(f, d))
+    const y = yv(X0(f))
     if (i === 0) ctx.moveTo(x, y)
     else ctx.lineTo(x, y)
   }
@@ -218,7 +191,7 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, d: number, T0:
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('X₀(f)', xt(0) + 4, yv(X0(0, d)) - 3)
+  ctx.fillText('X₀(f)', xt(0) + 4, yv(X0(0)) - 3)
 
   // samples at f = k/T₀: open dot on X₀, dashed ÷T₀ drop, filled aₖ stem
   const kMax = Math.ceil(fDom * T0) + 1
@@ -226,7 +199,7 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, d: number, T0:
     const f = k / T0
     if (Math.abs(f) > fDom) continue
     const x = xt(f)
-    const samp = X0(f, d)
+    const samp = X0(f)
     const ak = samp / T0
     ctx.strokeStyle = `rgba(${accentRgb}, 0.4)`
     ctx.setLineDash([2, 2])
