@@ -64,7 +64,7 @@ export function PulseTrainToImpulses() {
         Από γραμμές σε κρούσεις: χτίζοντας το rect-train αντίγραφο-αντίγραφο
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Όχι μία στήλη, αλλά ο <strong>έντιμος</strong> FT: κράτα{' '}
+        Ας δούμε τι δίνει στ' αλήθεια ο FT — όχι λεπτές γραμμές: κράτα{' '}
         <span className="font-mono">N</span> μόνο περιόδους του rect-train (πεπερασμένο σήμα) και
         δες το φάσμα του — μια <strong>λεία</strong> καμπύλη. Σύρε το{' '}
         <span className="font-mono">N</span>: στις αρμονικές <span className="font-mono">k/T₀</span>{' '}
@@ -107,7 +107,7 @@ export function PulseTrainToImpulses() {
 
       <div className="mt-2 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
         Με λίγα αντίγραφα το φάσμα είναι λείο· με περισσότερα οξύνεται σε αιχμές στις{' '}
-        <span className="font-mono">k/T₀</span>. Οι «στήλες» <span className="font-mono">aₖ</span> που
+        <span className="font-mono">k/T₀</span>. Οι λεπτές γραμμές <span className="font-mono">aₖ</span> που
         ζωγραφίζαμε ήταν αυτό το όριο: <strong>κρούσεις</strong>, με βάρος το{' '}
         <strong>εμβαδόν</strong> κάθε αιχμής. Ακριβώς αυτό το όριο χτίζει καθαρά η{' '}
         <strong>§2.2</strong> με ένα cosine.
