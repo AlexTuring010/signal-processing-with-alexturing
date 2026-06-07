@@ -10,9 +10,9 @@ import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canva
  * aₖ = ½. One-sided cos(2πf₀t)·u(t) (the cosine "switched on" at t=0) is NOT
  * periodic — it has a beginning — and its transform is:
  *     X(f) = ¼δ(f−f₀) + ¼δ(f+f₀) + (a smooth continuous part).
- * The impulses HALVE (¼) and a continuous spectrum appears (from the onset edge;
- * u = ½ + ½·sgn → "half a cosine" + an edge). The exact 1/(j2πf)-type smooth
- * part is built with u(t) in §4; here we show it qualitatively as a skirt.
+ * The impulses HALVE (¼) and a continuous part appears: u(t) ↔ ½δ(f)+1/(j2πf)
+ * shifted to ±f₀ gives the ¼ deltas plus the smooth term f/(j2π(f²−f₀²)). We draw
+ * its real magnitude |f|/(2π|f²−f₀²|) (clamped near the poles at ±f₀).
  */
 
 type Mode = 'two' | 'one'
@@ -83,8 +83,9 @@ export function OneSidedVsTwoSided() {
         είναι η <strong>ακμή του ανάμματος</strong> στο <span className="font-mono">t = 0</span>, και
         αυτή απλώνει ενέργεια σε ένα <strong>συνεχές</strong> φάσμα. Καθαρό «γραμμικό» φάσμα (μόνο
         κρούσεις βάρους <span className="font-mono">aₖ</span>) παίρνεις <strong>μόνο</strong> όταν οι
-        κύκλοι τρέχουν στο <span className="font-mono">±∞</span>. (Ο ακριβής τύπος του συνεχούς
-        μέρους χτίζεται μαζί με το <span className="font-mono">u(t)</span> στη §4.)
+        κύκλοι τρέχουν στο <span className="font-mono">±∞</span>. (Το συνεχές μέρος είναι ο FT του{' '}
+        <span className="font-mono">u(t)</span> μετατοπισμένος στις ±f₀· εδώ φαίνεται το μέτρο του,{' '}
+        <span className="font-mono">|f|/(2π|f²−f₀²|)</span>.)
       </div>
     </figure>
   )
@@ -179,24 +180,34 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, mode: Mode) {
   ctx.lineTo(w - PAD_X + 4, yZero)
   ctx.stroke()
 
-  // continuous "skirt" (one-sided only)
+  // continuous part — the real magnitude |f / (2π(f²−f₀²))| (one-sided only)
   if (mode === 'one') {
-    ctx.fillStyle = `rgba(${accentRgb}, 0.16)`
+    const S = 480
+    const clampV = 0.34
+    ctx.fillStyle = `rgba(${accentRgb}, 0.10)`
     ctx.beginPath()
     ctx.moveTo(xt(-F_DOM), yZero)
-    const S = 240
     for (let i = 0; i <= S; i++) {
       const f = lerp(i, 0, S, -F_DOM, F_DOM)
-      const v = Math.min(smooth(f) * 0.6, 0.3)
-      ctx.lineTo(xt(f), yv(v))
+      ctx.lineTo(xt(f), yv(Math.min(smooth(f), clampV)))
     }
     ctx.lineTo(xt(F_DOM), yZero)
     ctx.closePath()
     ctx.fill()
+    ctx.strokeStyle = `rgba(${accentRgb}, 0.8)`
+    ctx.lineWidth = 1.5
+    ctx.beginPath()
+    for (let i = 0; i <= S; i++) {
+      const f = lerp(i, 0, S, -F_DOM, F_DOM)
+      const y = yv(Math.min(smooth(f), clampV))
+      if (i === 0) ctx.moveTo(xt(f), y)
+      else ctx.lineTo(xt(f), y)
+    }
+    ctx.stroke()
     ctx.fillStyle = colors.fgMuted
     ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('συνεχές μέρος', xt(0), yv(0.05))
+    ctx.fillText('|f| / (2π|f²−f₀²|)', xt(0), yv(0.14))
   }
 
   // impulses at ±1
