@@ -189,7 +189,10 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, mode: Mode) {
   // never capped to a misleading flat top.
   if (mode === 'one') {
     const S = 900
-    const TOP = 0.8 // display height where a branch is cut off as it shoots toward ±f₀
+    // Cut each branch at ~the impulse height so the curve doesn't TOWER over the
+    // ¼ arrow (the arrow's height encodes the delta's *weight*, not a magnitude you
+    // can compare to this density). The dashed asymptote below carries the "→∞".
+    const TOP = 0.4 // display height where a branch is cut off as it shoots toward ±f₀
     // split the curve into segments wherever it shoots past TOP (around ±f₀)
     const segments: Array<Array<[number, number]>> = []
     let seg: Array<[number, number]> = []
