@@ -75,6 +75,8 @@ import { SquareWaveBuilder } from '@/components/viz/SquareWaveBuilder'
 import { SpectrumDensifies } from '@/components/viz/SpectrumDensifies'
 import { RiemannSumToIntegral } from '@/components/viz/RiemannSumToIntegral'
 import { PulseFromTones } from '@/components/viz/PulseFromTones'
+import { PeriodGrowsSpectrumCollapses } from '@/components/viz/PeriodGrowsSpectrumCollapses'
+import { HistogramToDensity } from '@/components/viz/HistogramToDensity'
 import { CoefficientsToDensity } from '@/components/viz/CoefficientsToDensity'
 import { PeriodicSpectrumFsVsFt } from '@/components/viz/PeriodicSpectrumFsVsFt'
 import { CyclesToImpulse } from '@/components/viz/CyclesToImpulse'
@@ -282,6 +284,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SpectrumDensifies,
     RiemannSumToIntegral,
     PulseFromTones,
+    PeriodGrowsSpectrumCollapses,
+    HistogramToDensity,
     CoefficientsToDensity,
     PeriodicSpectrumFsVsFt,
     CyclesToImpulse,
