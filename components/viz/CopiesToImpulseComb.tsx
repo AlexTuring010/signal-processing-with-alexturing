@@ -26,7 +26,7 @@ import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canva
  */
 
 const N_MIN = 1
-const N_MAX = 24
+const N_MAX = 12
 const TAU = 1
 const T0 = 2
 const F_DOM = 3
@@ -45,7 +45,7 @@ function XN(f: number, N: number) {
 }
 
 export function CopiesToImpulseComb() {
-  const [N, setN] = useState(3)
+  const [N, setN] = useState(1)
   const tRef = useRef<HTMLCanvasElement | null>(null)
   const sRef = useRef<HTMLCanvasElement | null>(null)
   const cRef = useRef<HTMLCanvasElement | null>(null)
