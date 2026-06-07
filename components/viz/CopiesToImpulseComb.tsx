@@ -30,7 +30,6 @@ const N_MAX = 24
 const TAU = 1
 const T0 = 2
 const F_DOM = 3
-const Y_SPEC = 2.5 // fixed scale that shows the X₀/T₀ envelope; |X_N| peaks shoot past it for N≳3
 
 function sinc(x: number) {
   if (Math.abs(x) < 1e-9) return 1
@@ -79,10 +78,10 @@ export function CopiesToImpulseComb() {
           <canvas ref={tRef} style={{ height: 92 }} className="block h-[92px] w-full" aria-label="Burst of N rectangles" />
         </Panel>
         <Panel title="2 · Φάσμα |X_N|" subtitle="κορυφές ∝N → οι γκρι κρούσεις (βάρη aₖ)">
-          <canvas ref={sRef} style={{ height: 150 }} className="block h-[150px] w-full" aria-label="Spectrum of N rectangles, peaks growing toward target impulses" />
+          <canvas ref={sRef} style={{ height: 140 }} className="block h-[140px] w-full" aria-label="Spectrum of N rectangles, peaks growing toward target impulses" />
         </Panel>
         <Panel title="3 · Συντελεστές aₖ = |X_N| ÷ (N·T₀)" subtitle="πέφτουν στα δείγματα της X₀/T₀ (ίδια με 1 παλμό)">
-          <canvas ref={cRef} style={{ height: 130 }} className="block h-[130px] w-full" aria-label="Coefficients landing on the single-rect envelope plus extra zeros" />
+          <canvas ref={cRef} style={{ height: 140 }} className="block h-[140px] w-full" aria-label="Coefficients landing on the single-rect envelope plus extra zeros" />
         </Panel>
       </div>
 
@@ -177,10 +176,11 @@ function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors, N: number) {
 function drawSpectrum(canvas: HTMLCanvasElement, colors: ThemeColors, N: number) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
+  const yMax = (X0(0) / T0) * 1.3 // SAME scale as panel 3 → X₀/T₀ renders identically
   const xt = (f: number) => lerp(f, -F_DOM, F_DOM, PAD_X, w - PAD_X)
-  const yv = (v: number) => lerp(v, Y_SPEC, -0.1 * Y_SPEC, PAD_Y + 4, h - PAD_Y)
+  const yv = (v: number) => lerp(v, yMax, -0.12 * yMax, PAD_Y + 4, h - PAD_Y)
   const yZero = yv(0)
-  const STEPS = 800
+  const STEPS = 900
 
   // axis
   ctx.strokeStyle = colors.border
@@ -190,10 +190,22 @@ function drawSpectrum(canvas: HTMLCanvasElement, colors: ThemeColors, N: number)
   ctx.lineTo(w - PAD_X + 4, yZero)
   ctx.stroke()
 
+  // |X_N| bells (behind) — peaks ∝N shoot straight up and off the top of the panel
+  ctx.strokeStyle = colors.accent
+  ctx.lineWidth = 1.8
+  ctx.beginPath()
+  for (let i = 0; i <= STEPS; i++) {
+    const f = lerp(i, 0, STEPS, -F_DOM, F_DOM)
+    const y = Math.max(yv(XN(f, N)), -10) // clamp just above the canvas so it exits cleanly
+    if (i === 0) ctx.moveTo(xt(f), y)
+    else ctx.lineTo(xt(f), y)
+  }
+  ctx.stroke()
+
   // dashed grey single-rect envelope |X₀|/T₀ — the delta weights lie on it
   ctx.strokeStyle = colors.fgSubtle
   ctx.lineWidth = 1.1
-  ctx.globalAlpha = 0.75
+  ctx.globalAlpha = 0.8
   ctx.setLineDash([3, 3])
   ctx.beginPath()
   for (let i = 0; i <= STEPS; i++) {
@@ -206,8 +218,7 @@ function drawSpectrum(canvas: HTMLCanvasElement, colors: ThemeColors, N: number)
   ctx.setLineDash([])
   ctx.globalAlpha = 1
 
-  // grey target δ arrows — height = weight aₘ, so the tips sit ON the X₀/T₀
-  // envelope; weights labelled.
+  // grey target δ arrows — tip apex sits EXACTLY on the X₀/T₀ envelope (height aₘ)
   const mMax = Math.ceil(F_DOM * T0)
   for (let m = -mMax; m <= mMax; m++) {
     const f = m / T0
@@ -224,34 +235,17 @@ function drawSpectrum(canvas: HTMLCanvasElement, colors: ThemeColors, N: number)
     ctx.lineTo(x, yT)
     ctx.stroke()
     ctx.beginPath()
-    ctx.moveTo(x, yT - 6)
-    ctx.lineTo(x - 3.5, yT + 1)
-    ctx.lineTo(x + 3.5, yT + 1)
+    ctx.moveTo(x, yT) // apex on the envelope
+    ctx.lineTo(x - 3.5, yT + 7)
+    ctx.lineTo(x + 3.5, yT + 7)
     ctx.closePath()
     ctx.fill()
-    if (m >= 0 && wgt >= 0.1) {
-      ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-      ctx.textAlign = 'left'
-      ctx.fillText(wgt.toFixed(2), x + 4, yT + 3)
-    }
   }
-
-  // |X_N| bells: grow ∝N and narrow; clamped just above the top so they shoot off
-  ctx.strokeStyle = colors.accent
-  ctx.lineWidth = 1.8
-  ctx.beginPath()
-  for (let i = 0; i <= STEPS; i++) {
-    const f = lerp(i, 0, STEPS, -F_DOM, F_DOM)
-    const y = yv(Math.min(XN(f, N), Y_SPEC + 0.4))
-    if (i === 0) ctx.moveTo(xt(f), y)
-    else ctx.lineTo(xt(f), y)
-  }
-  ctx.stroke()
 
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('διακεκ. γκρι: X₀/T₀ · γκρι κρούσεις = βάρη aₖ', PAD_X + 2, h - PAD_Y - 1)
+  ctx.fillText('διακεκ. γκρι: X₀/T₀ · γκρι κρούσεις στα aₖ', PAD_X + 2, h - PAD_Y - 1)
   ctx.textAlign = 'right'
   ctx.fillText('f', w - PAD_X + 2, yZero - 4)
 }
