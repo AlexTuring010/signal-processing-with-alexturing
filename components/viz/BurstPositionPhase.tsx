@@ -56,7 +56,7 @@ export function BurstPositionPhase() {
         <span className="font-mono">N</span>: το <strong>μέτρο</strong>{' '}
         <span className="font-mono">|X(f)|</span> ψηλώνει και στενεύει (→ κρούση). Σύρε τη{' '}
         <strong>θέση</strong> <span className="font-mono">t₀</span>: το μέτρο{' '}
-        <strong>δεν κουνιέται καθόλου</strong> — αλλάζει μόνο η <strong>φάση</strong>, που είναι μια
+        <strong>δεν κουνιέται καθόλου</strong> — αλλάζει μόνο η <strong>φάση</strong>, που είναι μια{' '}
         <strong>συνεχής ευθεία</strong> <span className="font-mono">∠X(f) = −2πf·t₀</span> και{' '}
         <strong>γέρνει</strong> όλο και πιο απότομα με τη θέση. (Στις <span className="font-mono">±f₀</span>,
         όπου ζει το σήμα, η φάση φτάνει το <span className="font-mono">∓π</span> στη μισή περίοδο.)
