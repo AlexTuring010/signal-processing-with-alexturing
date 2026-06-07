@@ -4,52 +4,37 @@ import { useEffect, useRef, useState } from 'react'
 import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canvas'
 
 /**
- * "Frequency without repetition", for FT §1.
+ * "Frequency without repetition", for FT §1 — shows the cosines themselves.
  *
- * The conceptual blocker the page opens with: how can a signal that never
- * repeats have a "frequency"? Answer: frequency lives in the INGREDIENTS, not
- * in the whole. A pure cosine is eternal (runs from −∞ to +∞); but a weighted
- * blend of many eternal cosines can REINFORCE in one spot and CANCEL everywhere
- * else, building a one-shot pulse out of never-ending waves.
+ * Overlays the ACTUAL component cosines and their sum on one axis, so the
+ * cancellation mechanism is visible instead of hidden:
+ *   - At t = 0 every cosine equals 1 (all crest together) → they pile up → the
+ *     sum spikes.
+ *   - Away from t = 0 the different frequencies fall out of phase, the faint
+ *     cosines fan out to fill the [-1, 1] band, and their sum averages to ~0.
+ * So a one-shot pulse emerges from eternal waves — not by hand-tuning them to
+ * cancel, but because they automatically AGREE at t = 0 and SCATTER elsewhere.
  *
- * Target pulse: a Gaussian p(t) = e^{−πt²} (real, even, smooth) whose Fourier
- * transform is the Gaussian density P(f) = e^{−πf²}. We rebuild it as a discrete
- * inverse-FT Riemann sum over tones spaced Δf:
- *     recon(t) = Σ_{k=−N}^{N} P(kΔf)·cos(2π·kΔf·t)·Δf
- * The slider adds tones (raises N). At low N the partial sum is wavy across the
- * WHOLE window — you literally see the constituent cosines showing through; as N
- * grows the sides cancel flat and only the central bump survives.
- *
- * Deliberately ONE idea: eternal tones → localized pulse. No spectrum/height
- * bookkeeping (that is the next viz). One faint, schematic full-width cosine is
- * drawn purely to anchor "the ingredients never stop".
+ * Equal weights (honest: the cosines drawn ARE the cosines summed). The sum is
+ * normalised by N so its t = 0 peak is 1; as N grows the relative side ripples
+ * flatten — more tones ⇒ sharper, cleaner pulse. At N = 1 the "sum" is just the
+ * single eternal cosine: no localisation, which is exactly the point.
  */
 
 const N_MIN = 1
-const N_MAX = 16
-const DF = 0.12 // tone spacing (fixed); reconstruction period 1/Δf ≈ 8.3 > window
-const T_WIN = 3.2
+const N_MAX = 9
+const DF = 0.22 // frequency spacing; period 1/Δf ≈ 4.5 > window ⇒ one isolated peak
+const T_WIN = 2.0
 
-function gaussTime(t: number) {
-  return Math.exp(-Math.PI * t * t)
-}
-function gaussFreq(f: number) {
-  return Math.exp(-Math.PI * f * f)
-}
-
-function recon(t: number, N: number) {
-  let s = gaussFreq(0) * DF // k = 0 term
-  for (let k = 1; k <= N; k++) {
-    const f = k * DF
-    s += 2 * gaussFreq(f) * Math.cos(2 * Math.PI * f * t) * DF
-  }
-  return s
+function sumNorm(t: number, N: number) {
+  let s = 0
+  for (let k = 1; k <= N; k++) s += Math.cos(2 * Math.PI * k * DF * t)
+  return s / N
 }
 
 export function PulseFromTones() {
-  const [N, setN] = useState(5)
+  const [N, setN] = useState(4)
   const ref = useRef<HTMLCanvasElement | null>(null)
-  const fMax = N * DF
 
   useEffect(() => {
     const colors = getThemeColors()
@@ -63,28 +48,35 @@ export function PulseFromTones() {
         Αιώνια cosines φτιάχνουν έναν μοναχικό παλμό
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Στόχος (διακεκομμένη): ένας <strong>μονήρης παλμός</strong> που{' '}
-        <strong>δεν επαναλαμβάνεται</strong>. Τον χτίζουμε ανακατεύοντας καθαρά{' '}
-        <span className="font-mono">cos(2πft)</span> — που το καθένα{' '}
-        <strong>τρέχει αιώνια</strong>. Σύρε για να προσθέσεις συχνότητες: με λίγες, το
-        άθροισμα κυματίζει σε όλο τον άξονα· με περισσότερες, τα κύματα{' '}
-        <strong>αλληλοαναιρούνται στα πλάγια</strong> και <strong>συμφωνούν στο κέντρο</strong>{' '}
-        — μένει ο παλμός.
+        Οι <span className="font-semibold text-fg-muted">αχνές</span> καμπύλες είναι τα{' '}
+        <strong>πραγματικά συστατικά cosines</strong> — το καθένα{' '}
+        <strong>τρέχει αιώνια</strong> σε όλο τον άξονα. Η{' '}
+        <span className="font-semibold" style={{ color: 'rgb(var(--accent))' }}>
+          έντονη
+        </span>{' '}
+        καμπύλη είναι το <strong>άθροισμά τους</strong>. Στο{' '}
+        <span className="font-mono">t = 0</span> κάθε cosine ισούται με{' '}
+        <span className="font-mono">1</span> — όλα στοιβάζονται και το άθροισμα{' '}
+        <strong>εκτοξεύεται</strong>· παραέξω ξεσυγχρονίζονται, απλώνονται σε όλη τη ζώνη
+        και <strong>αλληλοαναιρούνται</strong> (το άθροισμα πέφτει στο ~0).
       </p>
 
       <canvas
         ref={ref}
-        style={{ height: 240 }}
-        className="block h-[240px] w-full"
-        aria-label="A localized pulse rebuilt as a sum of eternal cosines; more tones sharpen it"
+        style={{ height: 250 }}
+        className="block h-[250px] w-full"
+        aria-label="Several eternal cosines overlaid with their sum; they align at t=0 and cancel on the sides"
       />
 
       <div className="mt-3">
         <label className="block text-xs text-fg-muted">
-          αριθμός συχνοτήτων (tones) N ={' '}
+          αριθμός συχνοτήτων (cosines) N ={' '}
           <span className="font-mono text-fg tabular-nums">{N}</span>
-          {' · '}μέγιστη συχνότητα στο μείγμα ={' '}
-          <span className="font-mono text-fg tabular-nums">{fMax.toFixed(2)}</span> Hz
+          {N === 1 && (
+            <span className="ml-2 text-fg-subtle">
+              — ένα μόνο cosine: κανένας παλμός, μόνο ένα αιώνιο κύμα
+            </span>
+          )}
         </label>
         <input
           type="range"
@@ -94,24 +86,27 @@ export function PulseFromTones() {
           value={N}
           onChange={(e) => setN(parseInt(e.target.value, 10))}
           className="mt-1 w-full accent-[rgb(var(--accent))]"
-          aria-label="Number of tones N"
+          aria-label="Number of cosines N"
         />
       </div>
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
-        Η συχνότητα δεν ζει στο <strong>όλο</strong> σήμα — ζει στα{' '}
-        <strong>συστατικά</strong> του. Κάθε cosine επαναλαμβάνεται για πάντα· το{' '}
-        <strong>μείγμα</strong> τους όχι. Γι' αυτό «ο παλμός έχει μέσα του τη συχνότητα{' '}
-        <span className="font-mono">f</span>» σημαίνει απλώς «το cosine της{' '}
-        <span className="font-mono">f</span> είναι ένα από τα συστατικά του, με κάποιο
-        βάρος» — και δεν χρειάζεται καμία επανάληψη του ίδιου του σήματος.
+        Δεν τα «διαλέγουμε» ένα-ένα για να αναιρεθούν. Στο{' '}
+        <span className="font-mono">t = 0</span> κάθε cosine ισούται με{' '}
+        <span className="font-mono">1</span>, οπότε στοιβάζονται <strong>αναγκαστικά</strong> →
+        κορυφή. Σε κάθε άλλο <span className="font-mono">t</span>, οι διαφορετικές συχνότητες
+        είναι σε <strong>διαφορετική φάση</strong>, γεμίζουν όλη τη ζώνη{' '}
+        <span className="font-mono">[−1, 1]</span> και ο μέσος τους πέφτει στο ~0. Τα{' '}
+        <strong>βάρη</strong> (το <span className="font-mono">X(f)</span>) απλώς καθορίζουν το{' '}
+        <strong>σχήμα</strong>· η εντόπιση βγαίνει μόνη της, επειδή στο{' '}
+        <span className="font-mono">t = 0</span> συμφωνούν όλες οι συχνότητες.
       </div>
     </figure>
   )
 }
 
 const PAD_X = 30
-const PAD_Y = 16
+const PAD_Y = 20
 
 function getRGB(rgb: string): string {
   const m = rgb.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/)
@@ -123,81 +118,70 @@ function draw(canvas: HTMLCanvasElement, colors: ThemeColors, N: number) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
 
-  const yMax = 1.28
-  const yMin = -0.5
+  const yA = 1.18
   const xt = (t: number) => lerp(t, -T_WIN, T_WIN, PAD_X, w - PAD_X)
-  const yv = (v: number) => lerp(v, yMax, yMin, PAD_Y, h - PAD_Y)
+  const yv = (v: number) => lerp(v, yA, -yA, PAD_Y, h - PAD_Y)
   const yZero = yv(0)
   const accentRgb = getRGB(colors.accent)
-  const STEPS = 480
+  const STEPS = 520
 
-  // Axis.
+  // Zero axis.
   ctx.strokeStyle = colors.border
   ctx.lineWidth = 1
   ctx.beginPath()
   ctx.moveTo(PAD_X - 6, yZero)
   ctx.lineTo(w - PAD_X + 6, yZero)
   ctx.stroke()
-  ctx.beginPath()
-  ctx.moveTo(xt(0), PAD_Y - 4)
-  ctx.lineTo(xt(0), h - PAD_Y)
-  ctx.stroke()
 
-  // One faint, schematic full-width cosine: the highest tone currently included,
-  // drawn at a visible (not weight-scaled) amplitude to anchor "ingredients are
-  // eternal, oscillating waves that span the whole axis".
-  const fRep = N * DF
-  ctx.strokeStyle = `rgba(${accentRgb}, 0.30)`
+  // t = 0 guide (vertical) — where all cosines agree.
+  ctx.strokeStyle = `rgba(${accentRgb}, 0.40)`
+  ctx.setLineDash([4, 3])
   ctx.lineWidth = 1
   ctx.beginPath()
-  for (let i = 0; i <= STEPS; i++) {
-    const t = lerp(i, 0, STEPS, -T_WIN, T_WIN)
-    const y = yv(0.26 * Math.cos(2 * Math.PI * fRep * t))
-    if (i === 0) ctx.moveTo(xt(t), y)
-    else ctx.lineTo(xt(t), y)
-  }
-  ctx.stroke()
-
-  // Target pulse (dashed).
-  ctx.strokeStyle = colors.fgMuted
-  ctx.lineWidth = 1.4
-  ctx.setLineDash([4, 3])
-  ctx.beginPath()
-  for (let i = 0; i <= STEPS; i++) {
-    const t = lerp(i, 0, STEPS, -T_WIN, T_WIN)
-    const y = yv(gaussTime(t))
-    if (i === 0) ctx.moveTo(xt(t), y)
-    else ctx.lineTo(xt(t), y)
-  }
+  ctx.moveTo(xt(0), PAD_Y - 6)
+  ctx.lineTo(xt(0), h - PAD_Y + 4)
   ctx.stroke()
   ctx.setLineDash([])
 
-  // Partial reconstruction (bold) — the sum of N tones, to scale.
+  // The actual component cosines, faint — they fill the band where they scatter.
+  ctx.strokeStyle = `rgba(${accentRgb}, 0.22)`
+  ctx.lineWidth = 1
+  for (let k = 1; k <= N; k++) {
+    ctx.beginPath()
+    for (let i = 0; i <= STEPS; i++) {
+      const t = lerp(i, 0, STEPS, -T_WIN, T_WIN)
+      const y = yv(Math.cos(2 * Math.PI * k * DF * t))
+      if (i === 0) ctx.moveTo(xt(t), y)
+      else ctx.lineTo(xt(t), y)
+    }
+    ctx.stroke()
+  }
+
+  // Their sum (bold, normalised so the t = 0 peak is 1).
   ctx.strokeStyle = colors.accent
-  ctx.lineWidth = 2.2
+  ctx.lineWidth = 2.6
   ctx.beginPath()
   for (let i = 0; i <= STEPS; i++) {
     const t = lerp(i, 0, STEPS, -T_WIN, T_WIN)
-    const y = yv(recon(t, N))
+    const y = yv(sumNorm(t, N))
     if (i === 0) ctx.moveTo(xt(t), y)
     else ctx.lineTo(xt(t), y)
   }
   ctx.stroke()
 
-  // Legend.
+  // Legend (top-left).
   ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
   ctx.fillStyle = colors.accent
-  ctx.fillText('άθροισμα N tones', PAD_X + 4, PAD_Y + 4)
-  ctx.fillStyle = colors.fgMuted
-  ctx.fillText('στόχος: ο παλμός', PAD_X + 4, PAD_Y + 18)
-  ctx.fillStyle = `rgba(${accentRgb}, 0.6)`
-  ctx.fillText('ένα συστατικό cosine (σχηματικά)', PAD_X + 4, PAD_Y + 32)
+  ctx.fillText('άθροισμα', PAD_X + 4, PAD_Y - 4)
+  ctx.fillStyle = `rgba(${accentRgb}, 0.55)`
+  ctx.fillText('συστατικά cosines', PAD_X + 70, PAD_Y - 4)
 
-  // t ticks.
+  // t = 0 label + axis ticks.
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  ctx.fillText('0', xt(0), h - 2)
-  ctx.fillText('t', w - PAD_X + 2, yZero - 4)
+  ctx.fillText('t = 0', xt(0), h - 4)
+  ctx.textAlign = 'right'
+  ctx.fillText('t', w - PAD_X + 4, yZero - 4)
 }
