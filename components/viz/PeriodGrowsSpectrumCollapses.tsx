@@ -6,8 +6,9 @@ import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canva
 /**
  * The limit OBSERVATION (the puzzle), for FT §1.
  *
- * Concrete periodic signal: one smooth pulse p(t) = e^{-πt²} repeated every T₀.
- * Drag T₀ and watch the two things the prose claims happen at once:
+ * Concrete periodic signal: one narrow Gaussian pulse repeated every T₀ (kept
+ * narrow so neighbouring copies don't overlap). Drag T₀ and watch the two
+ * things the prose claims happen at once:
  *   - TIME (left): the copies spread apart. The central pulse is UNCHANGED — the
  *     signal is not vanishing, it's just getting lonelier.
  *   - FREQ (right): the lines at fₖ = k/T₀ crowd together (Δf = 1/T₀ → 0) AND
@@ -17,21 +18,21 @@ import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canva
  * time, so the shrinking heights can't mean "the signal disappeared". What
  * actually survives (the density T₀·aₖ) is the next viz, CoefficientsToDensity.
  *
- * One pulse p(t) = e^{-πt²} ⇒ its FT is the Gaussian X(f) = e^{-πf²}, so the
- * coefficients are aₖ = (1/T₀)·e^{-π(k/T₀)²} (real, positive — clean stems).
+ * The pulse is a Gaussian ⇒ its FT X(f) is a Gaussian too, so the coefficients
+ * aₖ = X(k/T₀)/T₀ are real and positive (clean stems).
  */
 
 const T0_MIN = 1.5
 const T0_MAX = 10
-const TAU = 1 // pulse width parameter (fixed)
+const TAU = 0.5 // pulse half-width — narrow so the copies stay isolated even at small T₀
 
 function pulse(t: number) {
   return Math.exp(-Math.PI * (t / TAU) * (t / TAU))
 }
-// aₖ = X(k/T₀)/T₀, with X(f) = e^{-πf²}
+// aₖ = X(k/T₀)/T₀, with X(f) = τ·e^{-π τ² f²} (the FT of the Gaussian pulse)
 function coeff(k: number, T0: number) {
   const f = k / T0
-  return Math.exp(-Math.PI * f * f) / T0
+  return (TAU * Math.exp(-Math.PI * TAU * TAU * f * f)) / T0
 }
 
 export function PeriodGrowsSpectrumCollapses() {
@@ -86,8 +87,8 @@ export function PeriodGrowsSpectrumCollapses() {
           <span className="font-mono text-fg tabular-nums">{T0.toFixed(1)}</span>
           {' · '}απόσταση γραμμών Δf = 1/T₀ ={' '}
           <span className="font-mono text-fg tabular-nums">{(1 / T0).toFixed(3)}</span> Hz
-          {' · '}ύψος <span className="font-mono">a₀ = 1/T₀</span> ={' '}
-          <span className="font-mono text-fg tabular-nums">{(1 / T0).toFixed(3)}</span>
+          {' · '}ύψος <span className="font-mono">a₀</span> ={' '}
+          <span className="font-mono text-fg tabular-nums">{(TAU / T0).toFixed(3)}</span>
         </label>
         <input
           type="range"
@@ -143,7 +144,7 @@ function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
 
-  const tMax = 7
+  const tMax = 5
   const yLim = 1.25
   const xt = (t: number) => lerp(t, -tMax, tMax, PAD_X, w - PAD_X)
   const yv = (v: number) => lerp(v, yLim, -0.25, PAD_Y, h - PAD_Y)
@@ -217,7 +218,7 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   ctx.clearRect(0, 0, w, h)
 
   const fMax = 3
-  const yMax = 1 / T0_MIN // largest a₀ (at T₀ = T0_MIN) → fixed scale shows the drop
+  const yMax = TAU / T0_MIN // largest a₀ (at T₀ = T0_MIN) → fixed scale shows the drop
   const xt = (f: number) => lerp(f, -fMax, fMax, PAD_X, w - PAD_X)
   const yv = (v: number) => lerp(v, yMax * 1.08, -yMax * 0.12, PAD_Y, h - PAD_Y)
   const yZero = yv(0)
@@ -277,7 +278,7 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, T0: number) {
   // a₀ height marker.
   ctx.fillStyle = colors.fgSubtle
   ctx.textAlign = 'left'
-  ctx.fillText('a₀ = 1/T₀', xt(0) + 4, yv(coeff(0, T0)) - 4)
+  ctx.fillText('a₀', xt(0) + 4, yv(coeff(0, T0)) - 4)
   ctx.textAlign = 'right'
   ctx.fillText('f', w - PAD_X + 2, yZero - 4)
 }
