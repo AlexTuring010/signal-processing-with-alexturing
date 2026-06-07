@@ -96,6 +96,7 @@ import { TimeFreqPairViz } from '@/components/viz/TimeFreqPairViz'
 import { FtAsSampledFsEnvelope } from '@/components/viz/FtAsSampledFsEnvelope'
 import { EnvelopeConceptViz } from '@/components/viz/EnvelopeConceptViz'
 import { TwoPulsesToCoefficients } from '@/components/viz/TwoPulsesToCoefficients'
+import { TwoPulsesSamplesOverlay } from '@/components/viz/TwoPulsesSamplesOverlay'
 import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
@@ -302,6 +303,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     FtAsSampledFsEnvelope,
     EnvelopeConceptViz,
     TwoPulsesToCoefficients,
+    TwoPulsesSamplesOverlay,
     CrossCorrelationPlayground,
     ModulationTheoremViz,
     TransformPairsGallery,
