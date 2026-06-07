@@ -74,6 +74,8 @@ import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourie
 import { SquareWaveBuilder } from '@/components/viz/SquareWaveBuilder'
 import { SpectrumDensifies } from '@/components/viz/SpectrumDensifies'
 import { RiemannSumToIntegral } from '@/components/viz/RiemannSumToIntegral'
+import { PulseFromTones } from '@/components/viz/PulseFromTones'
+import { CoefficientsToDensity } from '@/components/viz/CoefficientsToDensity'
 import { PeriodicSpectrumFsVsFt } from '@/components/viz/PeriodicSpectrumFsVsFt'
 import { CyclesToImpulse } from '@/components/viz/CyclesToImpulse'
 import { CyclesToImpulseLimit } from '@/components/viz/CyclesToImpulseLimit'
@@ -279,6 +281,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SquareWaveBuilder,
     SpectrumDensifies,
     RiemannSumToIntegral,
+    PulseFromTones,
+    CoefficientsToDensity,
     PeriodicSpectrumFsVsFt,
     CyclesToImpulse,
     CyclesToImpulseLimit,
