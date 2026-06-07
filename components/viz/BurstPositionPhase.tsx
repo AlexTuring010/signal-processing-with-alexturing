@@ -47,7 +47,7 @@ export function BurstPositionPhase() {
     if (!colors) return
     if (timeRef.current) drawTime(timeRef.current, colors, N, t0)
     if (magRef.current) drawMag(magRef.current, colors, N)
-    if (phaseRef.current) drawPhase(phaseRef.current, colors, N, t0)
+    if (phaseRef.current) drawPhase(phaseRef.current, colors, t0)
   }, [N, t0])
 
   return (
@@ -73,7 +73,7 @@ export function BurstPositionPhase() {
           <Panel title="Μέτρο |X(f)|" subtitle="σταθερό — δεν κουνιέται με το t₀">
             <canvas ref={magRef} style={{ height: 150 }} className="block h-[150px] w-full" aria-label="Magnitude spectrum, fixed under shift" />
           </Panel>
-          <Panel title="Φάση ∠X(f)" subtitle="γραμμική ράμπα — γέρνει όσο μεγαλώνει το t₀">
+          <Panel title="Φάση ∠X(f)" subtitle="γραμμική φάση −2πf·t₀, τυλιγμένη στο [−π, π]">
             <canvas ref={phaseRef} style={{ height: 150 }} className="block h-[150px] w-full" aria-label="Phase spectrum: a linear ramp that steepens with the shift" />
           </Panel>
         </div>
@@ -100,8 +100,10 @@ export function BurstPositionPhase() {
         Μια μετατόπιση στον χρόνο πολλαπλασιάζει τον FT με{' '}
         <span className="font-mono">e^(−j2πf·t₀)</span> (ιδιότητα time-shift, §5d): το{' '}
         <strong>μέτρο</strong> μένει ίδιο, ενώ η <strong>φάση</strong> αποκτά τον γραμμικό όρο{' '}
-        <span className="font-mono">−2πf·t₀</span> — γι' αυτό το γράφημα φάσης είναι ευθεία που
-        γέρνει με το <span className="font-mono">t₀</span>. Άρα ο <strong>αριθμός των κύκλων</strong>{' '}
+        <span className="font-mono">−2πf·t₀</span> — γι' αυτό το γράφημα φάσης είναι μια ράμπα που
+        γέρνει όλο και πιο πολύ με το <span className="font-mono">t₀</span> (τυλιγμένη στο{' '}
+        <span className="font-mono">[−π, π]</span>, γι' αυτό «σπάει» σε δόντια). Άρα ο{' '}
+        <strong>αριθμός των κύκλων</strong>{' '}
         ορίζει το «καμπανάκι → κρούση βάρους <span className="font-mono">|aₖ|</span>», και η{' '}
         <strong>θέση</strong> ορίζει μόνο τη φάση του <span className="font-mono">aₖ</span>.
       </div>
@@ -211,12 +213,11 @@ function drawMag(canvas: HTMLCanvasElement, colors: ThemeColors, N: number) {
   ctx.fillText('−f₀', xt(-1), yZero + 12)
 }
 
-function drawPhase(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0: number) {
+function drawPhase(canvas: HTMLCanvasElement, colors: ThemeColors, t0: number) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
   const xt = (f: number) => lerp(f, -F_DOM, F_DOM, PAD_X, w - PAD_X)
   const yv = (v: number) => lerp(v, Math.PI * 1.15, -Math.PI * 1.15, PAD_Y, h - PAD_Y)
-  const yZero = yv(0)
   const STEPS = 900
 
   // gridlines at +π, 0, −π
@@ -235,49 +236,41 @@ function drawPhase(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0
   ctx.fillText('0', PAD_X - 6, yv(0) + 3)
   ctx.fillText('−π', PAD_X - 6, yv(-Math.PI) + 3)
 
-  // faint guide: the full linear-phase ramp −2πf·t₀ (wrapped), broken at wraps
+  // faint markers at ±f₀ (where the magnitude lobes sit)
   ctx.strokeStyle = colors.fgSubtle
-  ctx.globalAlpha = 0.45
-  ctx.setLineDash([3, 3])
+  ctx.globalAlpha = 0.4
+  ctx.setLineDash([2, 3])
   ctx.lineWidth = 1
-  let started = false
-  let prev = 0
-  ctx.beginPath()
-  for (let i = 0; i <= STEPS; i++) {
-    const f = lerp(i, 0, STEPS, -F_DOM, F_DOM)
-    const ph = wrap(-2 * Math.PI * f * t0)
-    if (started && Math.abs(ph - prev) > Math.PI) started = false
-    if (!started) {
-      ctx.moveTo(xt(f), yv(ph))
-      started = true
-    } else ctx.lineTo(xt(f), yv(ph))
-    prev = ph
+  for (const c of [1, -1]) {
+    ctx.beginPath()
+    ctx.moveTo(xt(c), yv(Math.PI * 1.15))
+    ctx.lineTo(xt(c), yv(-Math.PI * 1.15))
+    ctx.stroke()
   }
-  ctx.stroke()
   ctx.setLineDash([])
   ctx.globalAlpha = 1
 
-  // ∠X(f), drawn only where |X| is non-negligible (phase is meaningless elsewhere)
-  const thr = 0.06 * (N / 2)
+  // ∠X(f) = −2πf·t₀ : the linear phase the shift imposes, wrapped to (−π, π].
+  // One continuous sawtooth — a real function of f — stroked tooth-by-tooth so the
+  // ±π wraps don't draw vertical connectors. (Independent of N: only t₀ tilts it.)
   ctx.strokeStyle = colors.accent
   ctx.lineWidth = 2
-  started = false
-  prev = 0
-  ctx.beginPath()
+  let started = false
+  let prev = 0
   for (let i = 0; i <= STEPS; i++) {
     const f = lerp(i, 0, STEPS, -F_DOM, F_DOM)
-    if (magX(f, N) < thr) {
+    const ph = wrap(-2 * Math.PI * f * t0)
+    if (started && Math.abs(ph - prev) > Math.PI) {
+      ctx.stroke()
       started = false
-      continue
     }
-    const re = XNreal(f, N) * Math.cos(-2 * Math.PI * f * t0)
-    const im = XNreal(f, N) * Math.sin(-2 * Math.PI * f * t0)
-    const ph = Math.atan2(im, re)
-    if (started && Math.abs(ph - prev) > Math.PI) started = false
     if (!started) {
+      ctx.beginPath()
       ctx.moveTo(xt(f), yv(ph))
       started = true
-    } else ctx.lineTo(xt(f), yv(ph))
+    } else {
+      ctx.lineTo(xt(f), yv(ph))
+    }
     prev = ph
   }
   ctx.stroke()
