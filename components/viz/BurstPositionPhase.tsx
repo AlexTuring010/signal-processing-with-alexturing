@@ -6,14 +6,16 @@ import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canva
 /**
  * FT §2.3 — "number of cycles sets the magnitude, position sets the phase".
  *
- * An N-cycle cosine packet, slid in time by t₀. Two controls:
- *   - N   → the magnitude bump |X(f)| gets taller and narrower (→ impulse).
- *   - t₀  → the packet slides; |X(f)| does NOT move at all (time-shift only
- *           multiplies X by e^{-j2πft₀}); only the PHASE rotates. Shown as a
- *           little phasor at f₀ that spins as you drag t₀.
+ * An N-cycle cosine packet, slid in time by t₀. Three panels:
+ *   - time:      the packet, centred at t₀.
+ *   - |X(f)|:    magnitude — taller/narrower with N, and DEAD STILL under t₀.
+ *   - ∠X(f):     phase — a LINEAR RAMP −2πf·t₀ whose slope steepens with t₀; this
+ *                is the real signature of a time-shift (X·e^{−j2πft₀}). Drawn only
+ *                where the magnitude is non-negligible (phase is meaningless in
+ *                the gaps), over a faint guide showing the full −2πf·t₀ ramp.
  *
  * Units: f₀ = 1, T₀ = 1. Centered-packet transform is real:
- *   X_N(f) = (N/2)[sinc(N(f−1)) + sinc(N(f+1))];  the slid packet is X_N·e^{-j2πft₀}.
+ *   X_N(f) = (N/2)[sinc(N(f−1)) + sinc(N(f+1))];  the slid packet is X_N·e^{−j2πft₀}.
  */
 
 const N_MIN = 1
@@ -23,22 +25,29 @@ function sinc(x: number) {
   if (Math.abs(x) < 1e-9) return 1
   return Math.sin(Math.PI * x) / (Math.PI * x)
 }
-
+function XNreal(f: number, N: number) {
+  return (N / 2) * (sinc(N * (f - 1)) + sinc(N * (f + 1)))
+}
 function magX(f: number, N: number) {
-  return Math.abs((N / 2) * (sinc(N * (f - 1)) + sinc(N * (f + 1))))
+  return Math.abs(XNreal(f, N))
+}
+function wrap(a: number) {
+  return ((((a + Math.PI) % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) - Math.PI
 }
 
 export function BurstPositionPhase() {
   const [N, setN] = useState(4)
   const [t0, setT0] = useState(0)
   const timeRef = useRef<HTMLCanvasElement | null>(null)
-  const freqRef = useRef<HTMLCanvasElement | null>(null)
+  const magRef = useRef<HTMLCanvasElement | null>(null)
+  const phaseRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
     const colors = getThemeColors()
     if (!colors) return
     if (timeRef.current) drawTime(timeRef.current, colors, N, t0)
-    if (freqRef.current) drawFreq(freqRef.current, colors, N, t0)
+    if (magRef.current) drawMag(magRef.current, colors, N)
+    if (phaseRef.current) drawPhase(phaseRef.current, colors, N, t0)
   }, [N, t0])
 
   return (
@@ -51,17 +60,23 @@ export function BurstPositionPhase() {
         <span className="font-mono">N</span>: το <strong>μέτρο</strong>{' '}
         <span className="font-mono">|X(f)|</span> ψηλώνει και στενεύει (→ κρούση). Σύρε τη{' '}
         <strong>θέση</strong> <span className="font-mono">t₀</span>: το μέτρο{' '}
-        <strong>δεν κουνιέται καθόλου</strong> — αλλάζει μόνο η <strong>φάση</strong> (ο
-        δείκτης-φασόρι στο <span className="font-mono">f₀</span> γυρίζει).
+        <strong>δεν κουνιέται καθόλου</strong> — αλλάζει μόνο η <strong>φάση</strong>{' '}
+        <span className="font-mono">∠X(f)</span>, που γίνεται μια <strong>γραμμική ράμπα</strong>{' '}
+        <span className="font-mono">−2πf·t₀</span> με όλο και μεγαλύτερη κλίση.
       </p>
 
-      <div className="grid gap-3 lg:grid-cols-2">
+      <div className="space-y-3">
         <Panel title="Στον χρόνο" subtitle="πακέτο N κύκλων, μετατοπισμένο κατά t₀">
-          <canvas ref={timeRef} style={{ height: 180 }} className="block h-[180px] w-full" aria-label="An N-cycle cosine packet shifted in time" />
+          <canvas ref={timeRef} style={{ height: 150 }} className="block h-[150px] w-full" aria-label="An N-cycle cosine packet shifted in time" />
         </Panel>
-        <Panel title="Στη συχνότητα" subtitle="μέτρο |X(f)| + φασόρι φάσης στο f₀">
-          <canvas ref={freqRef} style={{ height: 180 }} className="block h-[180px] w-full" aria-label="Magnitude spectrum, fixed under shift, with a rotating phase phasor" />
-        </Panel>
+        <div className="grid gap-3 lg:grid-cols-2">
+          <Panel title="Μέτρο |X(f)|" subtitle="σταθερό — δεν κουνιέται με το t₀">
+            <canvas ref={magRef} style={{ height: 150 }} className="block h-[150px] w-full" aria-label="Magnitude spectrum, fixed under shift" />
+          </Panel>
+          <Panel title="Φάση ∠X(f)" subtitle="γραμμική ράμπα — γέρνει όσο μεγαλώνει το t₀">
+            <canvas ref={phaseRef} style={{ height: 150 }} className="block h-[150px] w-full" aria-label="Phase spectrum: a linear ramp that steepens with the shift" />
+          </Panel>
+        </div>
       </div>
 
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -83,10 +98,12 @@ export function BurstPositionPhase() {
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
         Μια μετατόπιση στον χρόνο πολλαπλασιάζει τον FT με{' '}
-        <span className="font-mono">e^(−j2πf·t₀)</span> (ιδιότητα time-shift, §5d): γυρίζει τη
-        φάση, αφήνει το μέτρο ίδιο. Άρα ο <strong>αριθμός των κύκλων</strong> καθορίζει το{' '}
-        «καμπανάκι → κρούση βάρους <span className="font-mono">|aₖ|</span>»· η{' '}
-        <strong>θέση</strong> καθορίζει μόνο τη φάση του <span className="font-mono">aₖ</span>.
+        <span className="font-mono">e^(−j2πf·t₀)</span> (ιδιότητα time-shift, §5d): το{' '}
+        <strong>μέτρο</strong> μένει ίδιο, ενώ η <strong>φάση</strong> αποκτά τον γραμμικό όρο{' '}
+        <span className="font-mono">−2πf·t₀</span> — γι' αυτό το γράφημα φάσης είναι ευθεία που
+        γέρνει με το <span className="font-mono">t₀</span>. Άρα ο <strong>αριθμός των κύκλων</strong>{' '}
+        ορίζει το «καμπανάκι → κρούση βάρους <span className="font-mono">|aₖ|</span>», και η{' '}
+        <strong>θέση</strong> ορίζει μόνο τη φάση του <span className="font-mono">aₖ</span>.
       </div>
     </figure>
   )
@@ -104,8 +121,9 @@ function Panel({ title, subtitle, children }: { title: string; subtitle: string;
   )
 }
 
-const PAD_X = 28
+const PAD_X = 30
 const PAD_Y = 16
+const F_DOM = 2.3
 
 function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0: number) {
   const { ctx, w, h } = setupCanvas(canvas)
@@ -159,12 +177,11 @@ function drawTime(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0:
   ctx.fillText('t₀', xt(t0), h - 3)
 }
 
-function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0: number) {
+function drawMag(canvas: HTMLCanvasElement, colors: ThemeColors, N: number) {
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
-  const fDom = 2.3
   const yMax = N_MAX / 2 + 0.4
-  const xt = (f: number) => lerp(f, -fDom, fDom, PAD_X, w - PAD_X)
+  const xt = (f: number) => lerp(f, -F_DOM, F_DOM, PAD_X, w - PAD_X)
   const yv = (v: number) => lerp(v, yMax, -0.25, PAD_Y, h - PAD_Y)
   const yZero = yv(0)
 
@@ -175,17 +192,15 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0:
   ctx.lineTo(w - PAD_X + 4, yZero)
   ctx.stroke()
 
-  // |X_N(f)| — fixed under t₀
   ctx.strokeStyle = colors.accent
   ctx.lineWidth = 2
   ctx.beginPath()
   const STEPS = 720
   for (let i = 0; i <= STEPS; i++) {
-    const f = lerp(i, 0, STEPS, -fDom, fDom)
-    const x = xt(f)
+    const f = lerp(i, 0, STEPS, -F_DOM, F_DOM)
     const y = yv(magX(f, N))
-    if (i === 0) ctx.moveTo(x, y)
-    else ctx.lineTo(x, y)
+    if (i === 0) ctx.moveTo(xt(f), y)
+    else ctx.lineTo(xt(f), y)
   }
   ctx.stroke()
 
@@ -194,32 +209,82 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0:
   ctx.textAlign = 'center'
   ctx.fillText('f₀', xt(1), yZero + 12)
   ctx.fillText('−f₀', xt(-1), yZero + 12)
-  ctx.fillText('|X(f)|', xt(-1.4), yv(yMax) + 8)
+}
 
-  // phase phasor at f₀: angle = −2π·t₀ (math angle), drawn top-right
-  const cx = w - PAD_X - 26
-  const cy = PAD_Y + 24
-  const r = 18
+function drawPhase(canvas: HTMLCanvasElement, colors: ThemeColors, N: number, t0: number) {
+  const { ctx, w, h } = setupCanvas(canvas)
+  ctx.clearRect(0, 0, w, h)
+  const xt = (f: number) => lerp(f, -F_DOM, F_DOM, PAD_X, w - PAD_X)
+  const yv = (v: number) => lerp(v, Math.PI * 1.15, -Math.PI * 1.15, PAD_Y, h - PAD_Y)
+  const yZero = yv(0)
+  const STEPS = 900
+
+  // gridlines at +π, 0, −π
   ctx.strokeStyle = colors.border
   ctx.lineWidth = 1
+  for (const v of [Math.PI, 0, -Math.PI]) {
+    ctx.beginPath()
+    ctx.moveTo(PAD_X - 4, yv(v))
+    ctx.lineTo(w - PAD_X + 4, yv(v))
+    ctx.stroke()
+  }
+  ctx.fillStyle = colors.fgSubtle
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'right'
+  ctx.fillText('π', PAD_X - 6, yv(Math.PI) + 3)
+  ctx.fillText('0', PAD_X - 6, yv(0) + 3)
+  ctx.fillText('−π', PAD_X - 6, yv(-Math.PI) + 3)
+
+  // faint guide: the full linear-phase ramp −2πf·t₀ (wrapped), broken at wraps
+  ctx.strokeStyle = colors.fgSubtle
+  ctx.globalAlpha = 0.45
+  ctx.setLineDash([3, 3])
+  ctx.lineWidth = 1
+  let started = false
+  let prev = 0
   ctx.beginPath()
-  ctx.arc(cx, cy, r, 0, Math.PI * 2)
+  for (let i = 0; i <= STEPS; i++) {
+    const f = lerp(i, 0, STEPS, -F_DOM, F_DOM)
+    const ph = wrap(-2 * Math.PI * f * t0)
+    if (started && Math.abs(ph - prev) > Math.PI) started = false
+    if (!started) {
+      ctx.moveTo(xt(f), yv(ph))
+      started = true
+    } else ctx.lineTo(xt(f), yv(ph))
+    prev = ph
+  }
   ctx.stroke()
-  const theta = -2 * Math.PI * t0
-  const tx = cx + r * 0.85 * Math.cos(theta)
-  const ty = cy - r * 0.85 * Math.sin(theta)
+  ctx.setLineDash([])
+  ctx.globalAlpha = 1
+
+  // ∠X(f), drawn only where |X| is non-negligible (phase is meaningless elsewhere)
+  const thr = 0.06 * (N / 2)
   ctx.strokeStyle = colors.accent
   ctx.lineWidth = 2
+  started = false
+  prev = 0
   ctx.beginPath()
-  ctx.moveTo(cx, cy)
-  ctx.lineTo(tx, ty)
+  for (let i = 0; i <= STEPS; i++) {
+    const f = lerp(i, 0, STEPS, -F_DOM, F_DOM)
+    if (magX(f, N) < thr) {
+      started = false
+      continue
+    }
+    const re = XNreal(f, N) * Math.cos(-2 * Math.PI * f * t0)
+    const im = XNreal(f, N) * Math.sin(-2 * Math.PI * f * t0)
+    const ph = Math.atan2(im, re)
+    if (started && Math.abs(ph - prev) > Math.PI) started = false
+    if (!started) {
+      ctx.moveTo(xt(f), yv(ph))
+      started = true
+    } else ctx.lineTo(xt(f), yv(ph))
+    prev = ph
+  }
   ctx.stroke()
-  ctx.fillStyle = colors.accent
-  ctx.beginPath()
-  ctx.arc(tx, ty, 2.5, 0, Math.PI * 2)
-  ctx.fill()
-  ctx.fillStyle = colors.fgMuted
-  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+
+  ctx.fillStyle = colors.fgSubtle
+  ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  ctx.fillText('φάση', cx, cy + r + 9)
+  ctx.fillText('f₀', xt(1), yv(0) + 12)
+  ctx.fillText('−f₀', xt(-1), yv(0) + 12)
 }
