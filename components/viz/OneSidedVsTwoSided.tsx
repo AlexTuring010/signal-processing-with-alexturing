@@ -85,7 +85,9 @@ export function OneSidedVsTwoSided() {
         κρούσεις βάρους <span className="font-mono">aₖ</span>) παίρνεις <strong>μόνο</strong> όταν οι
         κύκλοι τρέχουν στο <span className="font-mono">±∞</span>. (Το συνεχές μέρος είναι ο FT του{' '}
         <span className="font-mono">u(t)</span> μετατοπισμένος στις ±f₀· εδώ φαίνεται το μέτρο του,{' '}
-        <span className="font-mono">|f|/(2π|f²−f₀²|)</span>.)
+        <span className="font-mono">|f|/(2π|f²−f₀²|)</span> — <strong>μηδέν</strong> στο{' '}
+        <span className="font-mono">f = 0</span> και <strong>απειρίζεται</strong> καθώς{' '}
+        <span className="font-mono">f → ±f₀</span>, γι' αυτό η καμπύλη «σπάει» κι ανεβαίνει κατακόρυφα εκεί.)
       </div>
     </figure>
   )
@@ -180,34 +182,65 @@ function drawFreq(canvas: HTMLCanvasElement, colors: ThemeColors, mode: Mode) {
   ctx.lineTo(w - PAD_X + 4, yZero)
   ctx.stroke()
 
-  // continuous part — the real magnitude |f / (2π(f²−f₀²))| (one-sided only)
+  // continuous part — the real magnitude |f / (2π(f²−f₀²))| (one-sided only).
+  // This curve is ZERO at f=0, DECAYS in the tails, and DIVERGES (vertical
+  // asymptote) at f = ±f₀ — it has a pole there. So we draw it BROKEN at the
+  // poles: each branch rises steeply and gets cut where it leaves the panel,
+  // never capped to a misleading flat top.
   if (mode === 'one') {
-    const S = 480
-    const clampV = 0.34
-    ctx.fillStyle = `rgba(${accentRgb}, 0.10)`
-    ctx.beginPath()
-    ctx.moveTo(xt(-F_DOM), yZero)
+    const S = 900
+    const TOP = 0.8 // display height where a branch is cut off as it shoots toward ±f₀
+    // split the curve into segments wherever it shoots past TOP (around ±f₀)
+    const segments: Array<Array<[number, number]>> = []
+    let seg: Array<[number, number]> = []
     for (let i = 0; i <= S; i++) {
       const f = lerp(i, 0, S, -F_DOM, F_DOM)
-      ctx.lineTo(xt(f), yv(Math.min(smooth(f), clampV)))
+      const v = smooth(f)
+      if (v >= TOP) {
+        if (seg.length > 1) segments.push(seg)
+        seg = []
+      } else {
+        seg.push([xt(f), yv(v)])
+      }
     }
-    ctx.lineTo(xt(F_DOM), yZero)
-    ctx.closePath()
-    ctx.fill()
+    if (seg.length > 1) segments.push(seg)
+
+    // dashed vertical asymptotes at ±f₀ (muted, behind the impulses) — they tell
+    // the reader the continuous part runs off to ∞ here, it isn't cut arbitrarily
+    ctx.strokeStyle = `rgba(${accentRgb}, 0.28)`
+    ctx.setLineDash([3, 3])
+    ctx.lineWidth = 1
+    for (const c of [1, -1]) {
+      ctx.beginPath()
+      ctx.moveTo(xt(c), yZero)
+      ctx.lineTo(xt(c), PAD_Y)
+      ctx.stroke()
+    }
+    ctx.setLineDash([])
+
+    // soft fill under each segment
+    ctx.fillStyle = `rgba(${accentRgb}, 0.10)`
+    for (const s of segments) {
+      ctx.beginPath()
+      ctx.moveTo(s[0][0], yZero)
+      for (const [x, y] of s) ctx.lineTo(x, y)
+      ctx.lineTo(s[s.length - 1][0], yZero)
+      ctx.closePath()
+      ctx.fill()
+    }
+    // stroke each segment
     ctx.strokeStyle = `rgba(${accentRgb}, 0.8)`
     ctx.lineWidth = 1.5
-    ctx.beginPath()
-    for (let i = 0; i <= S; i++) {
-      const f = lerp(i, 0, S, -F_DOM, F_DOM)
-      const y = yv(Math.min(smooth(f), clampV))
-      if (i === 0) ctx.moveTo(xt(f), y)
-      else ctx.lineTo(xt(f), y)
+    for (const s of segments) {
+      ctx.beginPath()
+      s.forEach(([x, y], idx) => (idx === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)))
+      ctx.stroke()
     }
-    ctx.stroke()
+
     ctx.fillStyle = colors.fgMuted
     ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('|f| / (2π|f²−f₀²|)', xt(0), yv(0.14))
+    ctx.fillText('|f| / (2π|f²−f₀²|)', xt(0), yv(0.16))
   }
 
   // impulses at ±1
