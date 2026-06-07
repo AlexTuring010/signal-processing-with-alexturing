@@ -301,6 +301,8 @@ $$
 \int_{-T_0/2}^{T_0/2} e^{-j2\pi \alpha t}\,dt = \frac{e^{-j\pi\alpha T_0} - e^{j\pi\alpha T_0}}{-j2\pi\alpha} = \frac{\sin(\pi \alpha T_0)}{\pi \alpha} = T_0\,\mathrm{sinc}(\alpha T_0),
 $$
 
+Στο μεσαίο βήμα μπήκε η ταυτότητα Euler $e^{jx} - e^{-jx} = 2j\sin x$: εδώ ο αριθμητής είναι στην ανάποδη σειρά, $e^{-jx} - e^{jx} = -2j\sin x$ (με $x = \pi\alpha T_0$), και ο παράγοντας $-2j$ απλοποιείται με τον παρονομαστή $-j2\pi\alpha$, αφήνοντας $\sin(\pi\alpha T_0)/(\pi\alpha)$. (Είναι στο **τυπολόγιο** ως $\sin x = \tfrac{1}{2j}\big(e^{jx} - e^{-jx}\big)$, και την αποδεικνύουμε από τον Euler στις [τριγωνομετρικές ταυτότητες](/reference/trig-identities#complex-exp).)
+
 με $\mathrm{sinc}(x) = \sin(\pi x)/(\pi x)$. Με $\alpha = f-f_0$ και $\alpha = f+f_0$:
 
 $$
