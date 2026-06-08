@@ -108,6 +108,7 @@ import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
 import { MultiplicationConvolutionViz } from '@/components/viz/MultiplicationConvolutionViz'
 import { DifferentiationSpectrumViz } from '@/components/viz/DifferentiationSpectrumViz'
+import { ConjugateSymmetrySpectrumViz } from '@/components/viz/ConjugateSymmetrySpectrumViz'
 import { CounterRotatingPhasors } from '@/components/viz/CounterRotatingPhasors'
 import { TwoSidedVsOneSidedCosine } from '@/components/viz/TwoSidedVsOneSidedCosine'
 import { TriToSincSquaredViz } from '@/components/viz/TriToSincSquaredViz'
@@ -321,6 +322,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ConvolutionInFrequency,
     MultiplicationConvolutionViz,
     DifferentiationSpectrumViz,
+    ConjugateSymmetrySpectrumViz,
 
     // Visualizations — reference / fourier-pairs
     TriToSincSquaredViz,
