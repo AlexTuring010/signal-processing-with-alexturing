@@ -421,6 +421,15 @@ export function SonarRangingGame() {
         </div>
       </div>
 
+      {/* color legend — what every line / dot means across all panels */}
+      <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-md border border-border bg-bg px-3 py-2 text-[11px]">
+        <span className="font-semibold text-fg">Τι σημαίνει κάθε χρώμα:</span>
+        <LegendItem color={COL.guess} label="μάτι — η εκτίμησή σου" />
+        <LegendItem color={COL.corr} label="cross-correlation" />
+        <LegendItem color={COL.truth} label="πραγματικός στόχος" />
+        <LegendItem color={COL.pulse} label="ο γνωστός παλμός (template)" />
+      </div>
+
       {/* transmitted pulse */}
       <Panel
         title="Ο παλμός που εκπέμπεις — x(t)"
@@ -438,7 +447,7 @@ export function SonarRangingGame() {
       <div className="mt-3">
         <Panel
           title="Τι γυρίζει πίσω — y(t) = ηχώ + θόρυβος"
-          subtitle="σύρε τον κόκκινο δείκτη: η εκτίμησή σου με το μάτι"
+          subtitle="κόκκινη γραμμή = η εκτίμησή σου · ρύθμισέ τη με το slider ↓"
         >
           <canvas
             ref={receivedRef}
@@ -447,6 +456,35 @@ export function SonarRangingGame() {
             aria-label="Received signal with buried echo"
           />
         </Panel>
+      </div>
+
+      {/* eyeball-guess slider — makes it obvious the red marker is movable */}
+      <div className="mt-2 rounded-md border border-border bg-bg px-3 py-2">
+        <label className="flex flex-wrap items-center gap-x-2 text-xs">
+          <span
+            className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{ background: COL.guess }}
+          />
+          <span className="font-semibold" style={{ color: COL.guess }}>
+            Η εκτίμησή σου με το μάτι
+          </span>
+          <span className="text-fg-muted">— πού νομίζεις ότι κρύβεται η ηχώ;</span>
+          <span className="ml-auto font-mono tabular-nums text-fg">
+            d̂ = {Math.round(guessDist)} m
+          </span>
+        </label>
+        <input
+          type="range"
+          min={0}
+          max={Math.round(D_MAX)}
+          step={5}
+          value={Math.round(guessDist)}
+          disabled={revealed}
+          onChange={(e) => setGuessT((2 * Number(e.target.value)) / C)}
+          aria-label="Eyeball range guess"
+          className="mt-1.5 w-full disabled:opacity-40"
+          style={{ accentColor: COL.guess }}
+        />
       </div>
 
       {/* correlation curve */}
@@ -463,13 +501,24 @@ export function SonarRangingGame() {
 
       {/* tactical top-down range view */}
       <div className="mt-3">
-        <Panel title="Κάτοψη — πού είναι ο στόχος" subtitle="🚢 εσύ · κατά μήκος = απόσταση (m)">
+        <Panel
+          title="Κάτοψη της θάλασσας — πού βρίσκεται ο στόχος;"
+          subtitle="θέα από ψηλά · δεξιά = πιο μακριά"
+        >
           <canvas
             ref={tacticalRef}
             style={{ height: 76 }}
             className="block h-[76px] w-full"
             aria-label="Top-down tactical range view"
           />
+          <p className="mt-1 px-1 text-[10px] leading-snug text-fg-subtle">
+            Σαν να κοιτάς τη θάλασσα από ψηλά: το <strong>🚢 πλοίο σου</strong> είναι αριστερά
+            (απόσταση 0) και στέλνει το ping προς τα δεξιά. Κάθε κουκκίδα δείχνει σε πόση απόσταση
+            λέει ο καθένας ότι είναι ο στόχος —{' '}
+            <span style={{ color: COL.guess }}>μάτι</span>,{' '}
+            <span style={{ color: COL.corr }}>cross-correlation</span>,{' '}
+            <span style={{ color: COL.truth }}>πραγματικός στόχος</span>.
+          </p>
         </Panel>
       </div>
 
@@ -591,6 +640,18 @@ function Panel({
       </div>
       {children}
     </div>
+  )
+}
+
+function LegendItem({ color, label }: { color: string; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-fg-muted">
+      <span
+        className="inline-block h-2.5 w-3.5 shrink-0 rounded-sm"
+        style={{ background: color }}
+      />
+      {label}
+    </span>
   )
 }
 
@@ -780,7 +841,16 @@ function drawReceived(
     vMarker(ctx, xOfDist(s.estDist, w), pad / 2, h - pad / 2, COL.corr, 'συσχέτιση', false, h - 4)
   }
   if (!s.revealed) {
-    vMarker(ctx, xOfDist(s.guessDist, w), pad / 2, h - pad / 2, COL.guess, 'εσύ ▲', true, 12)
+    const gx = xOfDist(s.guessDist, w)
+    vMarker(ctx, gx, pad / 2, h - pad / 2, COL.guess, 'μάτι', true, 12)
+    // grab handle so the line reads as a draggable control
+    ctx.fillStyle = COL.guess
+    ctx.beginPath()
+    ctx.moveTo(gx - 5, pad / 2 - 1)
+    ctx.lineTo(gx + 5, pad / 2 - 1)
+    ctx.lineTo(gx, pad / 2 + 6)
+    ctx.closePath()
+    ctx.fill()
   }
   if (s.revealed) {
     vMarker(ctx, xOfDist(s.trueDist, w), pad / 2, h - pad / 2, COL.truth, 'στόχος', false, 12)
@@ -907,10 +977,13 @@ function drawTactical(canvas: HTMLCanvasElement, colors: ThemeColors, s: Scene, 
     ctx.fillText(`${d}`, px + 2, lane + 15)
   }
 
-  // ship at range 0
+  // ship at range 0 = you, the operator
   const shipX = xOfDist(0, w)
   ctx.font = '15px ui-sans-serif, system-ui, sans-serif'
   ctx.fillText('🚢', shipX - 4, lane + 5)
+  ctx.font = '600 9px ui-sans-serif, system-ui, sans-serif'
+  ctx.fillStyle = colors.fgMuted
+  ctx.fillText('εσύ', shipX - 1, lane - 9)
 
   const blip = (d: number, color: string, label: string, up: boolean) => {
     const px = xOfDist(d, w)
@@ -933,5 +1006,5 @@ function drawTactical(canvas: HTMLCanvasElement, colors: ThemeColors, s: Scene, 
 
   if (s.revealed) blip(s.trueDist, COL.truth, 'στόχος', true)
   if (s.correlationShown && (!s.revealed || progress >= 1)) blip(s.estDist, COL.corr, 'συσχέτιση', s.revealed)
-  if (!s.revealed) blip(s.guessDist, COL.guess, 'εσύ', false)
+  if (!s.revealed) blip(s.guessDist, COL.guess, 'μάτι', false)
 }
