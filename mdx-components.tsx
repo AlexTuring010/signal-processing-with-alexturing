@@ -103,6 +103,7 @@ import { EnvelopeConceptViz } from '@/components/viz/EnvelopeConceptViz'
 import { TwoPulsesToCoefficients } from '@/components/viz/TwoPulsesToCoefficients'
 import { TwoPulsesSamplesOverlay } from '@/components/viz/TwoPulsesSamplesOverlay'
 import { CrossCorrelationPlayground } from '@/components/viz/CrossCorrelationPlayground'
+import { SonarRangingGame } from '@/components/viz/SonarRangingGame'
 import { ModulationTheoremViz } from '@/components/viz/ModulationTheoremViz'
 import { TransformPairsGallery } from '@/components/viz/TransformPairsGallery'
 import { ConvolutionInFrequency } from '@/components/viz/ConvolutionInFrequency'
@@ -317,6 +318,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TwoPulsesToCoefficients,
     TwoPulsesSamplesOverlay,
     CrossCorrelationPlayground,
+    SonarRangingGame,
     ModulationTheoremViz,
     TransformPairsGallery,
     ConvolutionInFrequency,
