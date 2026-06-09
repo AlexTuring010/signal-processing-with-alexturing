@@ -4,18 +4,22 @@ import { useEffect, useRef, useState } from 'react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 
 /**
- * Ideal vs real LP filter — three panels:
+ * Ideal vs real LP filter — two panels side by side (the §7 trade-off capstone):
  *
- *   Top-left:  ideal LP |H(f)| brick wall, with fp/fs labels
- *   Top-right: real LP |H(f)| with passband ripple δ_p, transition band,
- *              stopband ripple δ_s. Slider for "filter order" morphs
- *              the real curve from coarse to sharp.
- *   Bottom:    ideal LP impulse response h(t) — a sinc that extends to
- *              −∞ and +∞. The reader sees the non-causality directly.
+ *   Left:  ideal LP |H(f)| brick wall, with ±f_c labels
+ *   Right: real LP |H(f)| with passband ripple δ_p, transition band, stopband
+ *          ripple δ_s, and ±f_p/±f_s labels. The "sharpness" slider morphs the
+ *          real curve from a wide transition to a sharp one.
  *
- * The "filter order" slider controls the transition-band width via a
- * cosine roll-off (cleaner visual than a true Butterworth/Chebyshev curve
- * and conveys the sharpness/ripple trade-off well enough for pedagogy).
+ * The point of the slider: a sharper cutoff (right panel approaching the left)
+ * costs a narrower transition band — and (from §5) a longer impulse response.
+ * The ideal LP's sinc impulse response itself lives in §4's
+ * <IdealSincResponseViz />; every quantity labelled here (δ_p, δ_s, f_p, f_s,
+ * the trade-off) has been introduced by the time the reader reaches §7.
+ *
+ * The "sharpness" slider controls the transition-band width via a cosine
+ * roll-off (cleaner visual than a true Butterworth/Chebyshev curve and conveys
+ * the sharpness/ripple trade-off well enough for pedagogy).
  */
 
 const FP = 1.0 // passband edge
@@ -37,22 +41,22 @@ export function IdealVsRealFilterViz() {
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
       <h4 className="mb-1 text-sm font-semibold tracking-tight">
-        Ideal vs real LP filter — και η μη-αιτιατή sinc του ιδανικού
+        Ideal vs real LP filter — το trade-off του απότομου cutoff
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Πάνω: το brick-wall ideal LP δίπλα στο real LP με ripple, transition
-        band, stopband ripple. Σύρε το slider «sharpness» για να δεις το
-        trade-off μεταξύ απότομου cutoff και πολυπλοκότητας. Κάτω: η κρουστική
-        απόκριση του ιδανικού — μια sinc που εκτείνεται μέχρι το{' '}
-        <span className="font-mono">−∞</span> και το <span className="font-mono">+∞</span>.
-        Αυτή ακριβώς είναι η μη-αιτιατότητα.
+        Αριστερά: το brick-wall ideal LP. Δεξιά: το real LP με passband ripple{' '}
+        <span className="font-mono">δ_p</span>, ζώνη μετάβασης, και stopband
+        ripple <span className="font-mono">δ_s</span>. Σύρε το slider «sharpness»:
+        όσο πιο απότομο θέλεις το cutoff, τόσο στενότερη γίνεται η ζώνη μετάβασης
+        — και (όπως είδαμε με την αποκοπή του sinc) τόσο πιο μακριά η κρουστική
+        απόκριση πίσω από αυτό.
       </p>
 
       <canvas
         ref={canvasRef}
-        style={{ height: 320 }}
-        className="block h-[320px] w-full rounded-md border border-border bg-bg-soft/30"
-        aria-label="Ideal vs real LP filter response and ideal sinc impulse response"
+        style={{ height: 240 }}
+        className="block h-[240px] w-full rounded-md border border-border bg-bg-soft/30"
+        aria-label="Ideal brick-wall LP next to a real LP with passband ripple, a transition band and stopband ripple"
       />
 
       <div className="mt-3">
@@ -85,7 +89,6 @@ export function IdealVsRealFilterViz() {
 
 const IDEAL_C = 'rgb(29, 78, 216)' // accent
 const REAL_C = 'rgb(217, 119, 6)' // amber
-const SINC_C = 'rgb(168, 85, 247)' // violet
 
 function drawScene(
   canvas: HTMLCanvasElement,
@@ -96,14 +99,10 @@ function drawScene(
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
 
-  // Top row: two filter responses side by side. Bottom row: sinc impulse response
-  const topH = h * 0.55
-  const botH = h - topH
+  // Two filter responses side by side, each using the full canvas height.
   const splitX = w / 2
-
-  drawIdealResponse(ctx, colors, 0, 0, splitX, topH)
-  drawRealResponse(ctx, colors, splitX, 0, w - splitX, topH, order)
-  drawIdealSinc(ctx, colors, 0, topH, w, botH)
+  drawIdealResponse(ctx, colors, 0, 0, splitX, h)
+  drawRealResponse(ctx, colors, splitX, 0, w - splitX, h, order)
 }
 
 const PAD = 18
@@ -261,79 +260,6 @@ function drawRealResponse(
   ctx.textAlign = 'left'
   ctx.fillText(`δ_p ≈ ${DELTA_P.toFixed(2)}`, x0 + PAD + 4, yv(1) - 4)
   ctx.fillText(`δ_s ≈ ${DELTA_S.toFixed(2)}`, x0 + PAD + 4, yZero - 6)
-}
-
-function drawIdealSinc(
-  ctx: CanvasRenderingContext2D,
-  colors: ReturnType<typeof getThemeColors>,
-  x0: number,
-  y0: number,
-  pw: number,
-  ph: number,
-) {
-  if (!colors) return
-  const tMin = -10
-  const tMax = 10
-  const yLim = 0.45
-
-  const xt = (t: number) => lerp(t, tMin, tMax, x0 + PAD, x0 + pw - PAD)
-  const yv = (v: number) => lerp(v, yLim, -yLim * 0.6, y0 + PAD + 16, y0 + ph - PAD)
-  const yZero = yv(0)
-
-  ctx.fillStyle = colors.fgMuted
-  ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
-  ctx.textAlign = 'left'
-  ctx.fillText('Κρουστική απόκριση του ideal LP — h(t) = 2 f_c · sinc(2 f_c t)', x0 + PAD, y0 + 14)
-
-  // baseline
-  ctx.strokeStyle = colors.border
-  ctx.lineWidth = 1
-  ctx.beginPath()
-  ctx.moveTo(x0 + PAD, yZero)
-  ctx.lineTo(x0 + pw - PAD, yZero)
-  ctx.stroke()
-  // y-axis at t = 0
-  ctx.beginPath()
-  ctx.moveTo(xt(0), y0 + PAD + 16)
-  ctx.lineTo(xt(0), y0 + ph - PAD)
-  ctx.stroke()
-
-  // sinc curve: 2 f_c · sinc(2 f_c t), with 2 f_c = 2 to keep peak at h(0) = 2
-  // Use FP as the cutoff for the ideal LP
-  const fc = FP
-  const STEPS = 800
-  ctx.strokeStyle = SINC_C
-  ctx.lineWidth = 1.6
-  ctx.beginPath()
-  for (let i = 0; i <= STEPS; i++) {
-    const t = lerp(i, 0, STEPS, tMin, tMax)
-    const x = 2 * fc * t
-    const v = x === 0 ? 2 * fc : 2 * fc * (Math.sin(Math.PI * x) / (Math.PI * x))
-    // normalise so peak is ~0.4 (visual scale)
-    const px = xt(t)
-    const py = yv(v / 5)
-    if (i === 0) ctx.moveTo(px, py)
-    else ctx.lineTo(px, py)
-  }
-  ctx.stroke()
-
-  // shade t < 0 region to highlight non-causality
-  ctx.fillStyle = `rgba(${getRGB(SINC_C)}, 0.08)`
-  ctx.fillRect(x0 + PAD, y0 + PAD + 16, xt(0) - (x0 + PAD), ph - PAD * 2 - 16)
-  ctx.fillStyle = colors.fgMuted
-  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText('μη-αιτιατό — ζει για t < 0', xt(-5), y0 + PAD + 30)
-
-  // tick labels
-  ctx.fillStyle = colors.fgSubtle
-  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText('0', xt(0), yZero + 12)
-  ctx.fillText('+5', xt(5), yZero + 12)
-  ctx.fillText('−5', xt(-5), yZero + 12)
-  ctx.fillText('+10', xt(10), yZero + 12)
-  ctx.fillText('−10', xt(-10), yZero + 12)
 }
 
 function baseAxes(
