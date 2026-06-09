@@ -186,6 +186,7 @@ import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
 import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
+import { IdealSincResponseViz } from '@/components/viz/IdealSincResponseViz'
 import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
 import { FilterSpectralMaskViz } from '@/components/viz/FilterSpectralMaskViz'
 import { SincTruncationToRealFilterViz } from '@/components/viz/SincTruncationToRealFilterViz'
@@ -341,6 +342,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — foundations / filters
     FilterTypeViewer,
+    IdealSincResponseViz,
     IdealVsRealFilterViz,
     FilterSpectralMaskViz,
     SincTruncationToRealFilterViz,
