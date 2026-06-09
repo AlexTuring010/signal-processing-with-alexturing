@@ -4,39 +4,87 @@ import { useEffect, useRef, useState } from 'react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 
 /**
- * Ideal vs real LP filter — two panels side by side (the §7 trade-off capstone):
+ * Ideal vs real LP filter — the §7 trade-off capstone, driven by the HONEST
+ * mechanism (the same truncation picture as §5's viz) instead of an abstract
+ * "sharpness" knob.
  *
- *   Left:  ideal LP |H(f)| brick wall, with ±f_c labels
- *   Right: real LP |H(f)| with passband ripple δ_p, transition band, stopband
- *          ripple δ_s, and ±f_p/±f_s labels. The "sharpness" slider morphs the
- *          real curve from a wide transition to a sharp one.
+ *   Left:  ideal LP impulse response h(t) = 2·f_c·sinc(2·f_c·t), with the kept
+ *          window ±T shaded; everything outside ±T is thrown away. The width of
+ *          what we keep IS the cost — impulse-response length = memory + delay.
+ *   Right: |H(f)| of the truncated sinc (numerical), drawn against the ideal
+ *          brick wall (dashed). As T grows the real curve sharpens toward the
+ *          ideal; as T shrinks the cutoff softens and ripple grows.
  *
- * The point of the slider: a sharper cutoff (right panel approaching the left)
- * costs a narrower transition band — and (from §5) a longer impulse response.
- * The ideal LP's sinc impulse response itself lives in §4's
- * <IdealSincResponseViz />; every quantity labelled here (δ_p, δ_s, f_p, f_s,
- * the trade-off) has been introduced by the time the reader reaches §7.
+ * So the slider is not a made-up "sharpness" parameter — it is literally how
+ * much of the impulse response we can afford to keep, and the cutoff sharpness
+ * is the payoff. That is the §7 trade-off: sharper cutoff ⇔ longer (costlier)
+ * h(t). The readouts make both sides numeric: impulse length 2T (cost) vs the
+ * transition-band width f_s − f_p (benefit).
  *
- * The "sharpness" slider controls the transition-band width via a cosine
- * roll-off (cleaner visual than a true Butterworth/Chebyshev curve and conveys
- * the sharpness/ripple trade-off well enough for pedagogy).
+ * §5's <SincTruncationToRealFilterViz /> uses the same picture to make a
+ * different point (where δ_p/δ_s/f_p/f_s come from); here the framing and
+ * readouts are the cost-vs-sharpness trade-off.
  */
 
-const FP = 1.0 // passband edge
-const FS_BASE = 1.6 // stopband edge at order = 0 (widest transition)
-const FS_TIGHT = 1.1 // stopband edge at order = 1 (sharpest)
-const DELTA_P = 0.06 // passband ripple amplitude
-const DELTA_S = 0.05 // stopband ripple amplitude
+const FC = 1.0 // ideal LP cutoff
+const F_MIN = -2.5
+const F_MAX = 2.5
+const T_MIN = -8
+const T_MAX = 8
+const STEPS_F = 300
+const STEPS_T = 800
+
+const SINC_C = 'rgb(168, 85, 247)' // violet
+const IDEAL_C = 'rgb(29, 78, 216)' // accent blue
+const REAL_C = 'rgb(217, 119, 6)' // amber
+
+const PAD = 22
+
+function sincNorm(x: number): number {
+  if (Math.abs(x) < 1e-9) return 1
+  return Math.sin(Math.PI * x) / (Math.PI * x)
+}
 
 export function IdealVsRealFilterViz() {
-  const [order, setOrder] = useState(0.4)
+  const [halfT, setHalfT] = useState(2.5)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
     const colors = getThemeColors()
-    if (canvas && colors) drawScene(canvas, colors, order)
-  }, [order])
+    if (canvas && colors) drawScene(canvas, colors, halfT)
+  }, [halfT])
+
+  // Numerically evaluate |H(f)| of the truncated sinc at a single f.
+  const Htrunc = (f: number) => {
+    let s = 0
+    const dt = (T_MAX - T_MIN) / STEPS_T
+    for (let i = 0; i <= STEPS_T; i++) {
+      const t = lerp(i, 0, STEPS_T, T_MIN, T_MAX)
+      if (Math.abs(t) > halfT) continue
+      const h = 2 * FC * sincNorm(2 * FC * t)
+      s += h * Math.cos(2 * Math.PI * f * t) * dt
+    }
+    return Math.abs(s)
+  }
+
+  // Transition width: gap between the |H| = 0.9 and |H| = 0.1 crossings near the
+  // cutoff. Shrinks as T grows (sharper cutoff). One scan, derive both edges.
+  let fp = 0
+  let fs = F_MAX
+  let foundFs = false
+  const NPROBE = 100
+  for (let i = 0; i <= NPROBE; i++) {
+    const f = lerp(i, 0, NPROBE, 0, F_MAX)
+    const v = Htrunc(f)
+    if (v >= 0.9) fp = f
+    if (!foundFs && f > 0.25 && v <= 0.1) {
+      fs = f
+      foundFs = true
+    }
+  }
+  const transitionW = Math.max(0, fs - fp)
+  const impulseLen = 2 * halfT
 
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
@@ -44,235 +92,105 @@ export function IdealVsRealFilterViz() {
         Ideal vs real LP filter — το trade-off του απότομου cutoff
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Αριστερά: το brick-wall ideal LP. Δεξιά: το real LP με passband ripple{' '}
-        <span className="font-mono">δ_p</span>, ζώνη μετάβασης, και stopband
-        ripple <span className="font-mono">δ_s</span>. Σύρε το slider «sharpness»:
-        όσο πιο απότομο θέλεις το cutoff, τόσο στενότερη γίνεται η ζώνη μετάβασης
-        — και (όπως είδαμε με την αποκοπή του sinc) τόσο πιο μακριά η κρουστική
-        απόκριση πίσω από αυτό.
+        Το ίδιο φίλτρο σε δύο όψεις: αριστερά η ιδανική κρουστική απόκριση{' '}
+        <span className="font-mono">h(t) = 2 f_c · sinc(2 f_c t)</span> — κρατάμε
+        μόνο το κομμάτι μέσα στο <span className="font-mono">±T</span> και πετάμε
+        το υπόλοιπο. Δεξιά, το <span className="font-mono">|H(f)|</span> που
+        προκύπτει, δίπλα στο ιδανικό brick wall (διακεκομμένο). Σύρε το{' '}
+        <span className="font-mono">T</span> — δηλαδή <em>πόσο sinc κρατάς</em>.
       </p>
 
       <canvas
         ref={canvasRef}
-        style={{ height: 240 }}
-        className="block h-[240px] w-full rounded-md border border-border bg-bg-soft/30"
-        aria-label="Ideal brick-wall LP next to a real LP with passband ripple, a transition band and stopband ripple"
+        style={{ height: 280 }}
+        className="block h-[280px] w-full rounded-md border border-border bg-bg-soft/30"
+        aria-label="Truncated ideal sinc next to the resulting |H(f)| against the ideal brick wall"
       />
 
       <div className="mt-3">
         <label className="block text-xs text-fg-muted">
-          Sharpness ={' '}
-          <span className="font-mono text-fg tabular-nums">{order.toFixed(2)}</span>
-          <span className="ml-2 text-fg-subtle">(0 = πιο πλατύ transition · 1 = πιο απότομο)</span>
+          Πόσο sinc κρατάμε: ±T ={' '}
+          <span className="font-mono text-fg tabular-nums">{halfT.toFixed(2)}</span>
+          <span className="ml-2 text-fg-subtle">
+            (μεγάλο T = πιο απότομο cutoff, αλλά μακρύτερη + πιο ακριβή κρουστική απόκριση)
+          </span>
         </label>
         <input
           type="range"
-          min={0}
-          max={1}
-          step={0.02}
-          value={order}
-          onChange={(e) => setOrder(parseFloat(e.target.value))}
+          min={0.5}
+          max={6}
+          step={0.05}
+          value={halfT}
+          onChange={(e) => setHalfT(parseFloat(e.target.value))}
           className="mt-1 w-full accent-[rgb(var(--accent))]"
-          aria-label="Filter sharpness"
+          aria-label="How much of the sinc to keep (truncation half-width T)"
         />
+      </div>
+
+      <div className="mt-3 grid gap-2 text-[11px] text-fg-muted sm:grid-cols-2">
+        <div className="rounded-md border border-border bg-bg-soft/50 px-3 py-2">
+          <div className="text-[10px] uppercase tracking-wider text-fg-subtle">
+            Το κόστος → μήκος κρουστικής ≈ 2T
+          </div>
+          <div className="font-mono text-fg tabular-nums">
+            2T = {impulseLen.toFixed(1)} (μνήμη + καθυστέρηση)
+          </div>
+        </div>
+        <div className="rounded-md border border-border bg-bg-soft/50 px-3 py-2">
+          <div className="text-[10px] uppercase tracking-wider text-fg-subtle">
+            Το όφελος → ζώνη μετάβασης (cutoff)
+          </div>
+          <div className="font-mono text-fg tabular-nums">
+            f_s − f_p ≈ {transitionW.toFixed(2)} (πιο στενή = πιο απότομο)
+          </div>
+        </div>
       </div>
 
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
         Πιο απότομο cutoff = πιο μακριά κρουστική απόκριση (περισσότερη μνήμη,
-        περισσότερη καθυστέρηση). Πιο μικρό ripple = πιο πολύπλοκο φίλτρο.
-        Είναι το θεμελιώδες σχεδιαστικό trade-off — δεν παίρνεις «ιδανικό»
-        χωρίς κόστος.
+        περισσότερη καθυστέρηση). Πιο μικρό ripple = πιο πολύπλοκο φίλτρο. Είναι
+        το θεμελιώδες σχεδιαστικό trade-off — δεν παίρνεις «ιδανικό» χωρίς κόστος.
       </div>
     </figure>
   )
 }
 
-const IDEAL_C = 'rgb(29, 78, 216)' // accent
-const REAL_C = 'rgb(217, 119, 6)' // amber
-
 function drawScene(
   canvas: HTMLCanvasElement,
   colors: ReturnType<typeof getThemeColors>,
-  order: number,
+  halfT: number,
 ) {
   if (!colors) return
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
 
-  // Two filter responses side by side, each using the full canvas height.
   const splitX = w / 2
-  drawIdealResponse(ctx, colors, 0, 0, splitX, h)
-  drawRealResponse(ctx, colors, splitX, 0, w - splitX, h, order)
+  drawTimeDomain(ctx, colors, 0, 0, splitX, h, halfT)
+  drawFreqDomain(ctx, colors, splitX, 0, w - splitX, h, halfT)
 }
 
-const PAD = 18
-
-function drawIdealResponse(
+function drawTimeDomain(
   ctx: CanvasRenderingContext2D,
   colors: ReturnType<typeof getThemeColors>,
   x0: number,
   y0: number,
   pw: number,
   ph: number,
+  halfT: number,
 ) {
   if (!colors) return
-  const fMin = -2.5
-  const fMax = 2.5
-  const yMax = 1.3
+  const yLim = 2.4
 
-  const xt = (f: number) => lerp(f, fMin, fMax, x0 + PAD, x0 + pw - PAD)
-  const yv = (v: number) => lerp(v, yMax, -0.2, y0 + PAD + 16, y0 + ph - PAD)
+  const xt = (t: number) => lerp(t, T_MIN, T_MAX, x0 + PAD, x0 + pw - PAD)
+  const yv = (v: number) => lerp(v, yLim, -yLim * 0.35, y0 + PAD + 16, y0 + ph - PAD)
   const yZero = yv(0)
 
   ctx.fillStyle = colors.fgMuted
   ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('Ideal LP — brick wall', x0 + PAD, y0 + 14)
+  ctx.fillText('h(t) — κρατάμε μόνο το ±T', x0 + PAD, y0 + 14)
 
-  baseAxes(ctx, colors, x0, y0, pw, ph, xt, yZero)
-
-  // Brick wall curve
-  ctx.strokeStyle = IDEAL_C
-  ctx.lineWidth = 2
-  ctx.beginPath()
-  ctx.moveTo(xt(fMin), yZero)
-  ctx.lineTo(xt(-FP), yZero)
-  ctx.lineTo(xt(-FP), yv(1))
-  ctx.lineTo(xt(FP), yv(1))
-  ctx.lineTo(xt(FP), yZero)
-  ctx.lineTo(xt(fMax), yZero)
-  ctx.stroke()
-
-  ctx.fillStyle = `rgba(${getRGB(IDEAL_C)}, 0.18)`
-  ctx.beginPath()
-  ctx.moveTo(xt(-FP), yZero)
-  ctx.lineTo(xt(-FP), yv(1))
-  ctx.lineTo(xt(FP), yv(1))
-  ctx.lineTo(xt(FP), yZero)
-  ctx.closePath()
-  ctx.fill()
-
-  // labels
-  ctx.fillStyle = colors.fgSubtle
-  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText('+f_c', xt(FP), yZero + 12)
-  ctx.fillText('−f_c', xt(-FP), yZero + 12)
-  ctx.textAlign = 'right'
-  ctx.fillText('1', x0 + PAD - 3, yv(1) + 3)
-  ctx.fillText('0', x0 + PAD - 3, yZero + 3)
-}
-
-function drawRealResponse(
-  ctx: CanvasRenderingContext2D,
-  colors: ReturnType<typeof getThemeColors>,
-  x0: number,
-  y0: number,
-  pw: number,
-  ph: number,
-  order: number,
-) {
-  if (!colors) return
-  const fMin = -2.5
-  const fMax = 2.5
-  const yMax = 1.3
-
-  const xt = (f: number) => lerp(f, fMin, fMax, x0 + PAD, x0 + pw - PAD)
-  const yv = (v: number) => lerp(v, yMax, -0.2, y0 + PAD + 16, y0 + ph - PAD)
-  const yZero = yv(0)
-
-  ctx.fillStyle = colors.fgMuted
-  ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
-  ctx.textAlign = 'left'
-  ctx.fillText('Real LP — με ripple + transition', x0 + PAD, y0 + 14)
-
-  baseAxes(ctx, colors, x0, y0, pw, ph, xt, yZero)
-
-  // Real-filter curve: cosine roll-off in transition, with ripple in pass/stop.
-  const fs = lerp(order, 0, 1, FS_BASE, FS_TIGHT)
-  const responseAt = (f: number) => {
-    const a = Math.abs(f)
-    if (a <= FP) {
-      // passband: 1 + small ripple
-      return 1 + DELTA_P * Math.cos(2 * Math.PI * 3 * a)
-    }
-    if (a >= fs) {
-      // stopband: small ripple around 0
-      return Math.max(0, DELTA_S * Math.cos(2 * Math.PI * 2 * a))
-    }
-    // transition: smooth cosine roll-off
-    const u = (a - FP) / (fs - FP)
-    return 0.5 * (1 + Math.cos(Math.PI * u))
-  }
-
-  const STEPS = 600
-  ctx.strokeStyle = REAL_C
-  ctx.lineWidth = 2
-  ctx.beginPath()
-  for (let i = 0; i <= STEPS; i++) {
-    const f = lerp(i, 0, STEPS, fMin, fMax)
-    const v = responseAt(f)
-    const px = xt(f)
-    const py = yv(v)
-    if (i === 0) ctx.moveTo(px, py)
-    else ctx.lineTo(px, py)
-  }
-  ctx.stroke()
-
-  ctx.fillStyle = `rgba(${getRGB(REAL_C)}, 0.16)`
-  ctx.beginPath()
-  ctx.moveTo(xt(fMin), yZero)
-  for (let i = 0; i <= STEPS; i++) {
-    const f = lerp(i, 0, STEPS, fMin, fMax)
-    const v = responseAt(f)
-    ctx.lineTo(xt(f), yv(v))
-  }
-  ctx.lineTo(xt(fMax), yZero)
-  ctx.closePath()
-  ctx.fill()
-
-  // dashed lines at f_p and f_s
-  ctx.strokeStyle = colors.fgMuted
-  ctx.setLineDash([3, 3])
-  ctx.lineWidth = 1
-  for (const f of [FP, -FP, fs, -fs]) {
-    ctx.beginPath()
-    ctx.moveTo(xt(f), yv(1.2))
-    ctx.lineTo(xt(f), yZero + 10)
-    ctx.stroke()
-  }
-  ctx.setLineDash([])
-
-  // labels
-  ctx.fillStyle = colors.fgSubtle
-  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-  ctx.textAlign = 'center'
-  ctx.fillText('+f_p', xt(FP), yZero + 12)
-  ctx.fillText('+f_s', xt(fs), yZero + 12)
-  ctx.fillText('−f_p', xt(-FP), yZero + 12)
-  ctx.fillText('−f_s', xt(-fs), yZero + 12)
-  ctx.textAlign = 'right'
-  ctx.fillText('1', x0 + PAD - 3, yv(1) + 3)
-  ctx.fillText('0', x0 + PAD - 3, yZero + 3)
-
-  // ripple annotation
-  ctx.fillStyle = colors.fgMuted
-  ctx.textAlign = 'left'
-  ctx.fillText(`δ_p ≈ ${DELTA_P.toFixed(2)}`, x0 + PAD + 4, yv(1) - 4)
-  ctx.fillText(`δ_s ≈ ${DELTA_S.toFixed(2)}`, x0 + PAD + 4, yZero - 6)
-}
-
-function baseAxes(
-  ctx: CanvasRenderingContext2D,
-  colors: ReturnType<typeof getThemeColors>,
-  x0: number,
-  y0: number,
-  pw: number,
-  ph: number,
-  xt: (f: number) => number,
-  yZero: number,
-) {
-  if (!colors) return
+  // baseline + y-axis
   ctx.strokeStyle = colors.border
   ctx.lineWidth = 1
   ctx.beginPath()
@@ -283,6 +201,197 @@ function baseAxes(
   ctx.moveTo(xt(0), y0 + PAD + 16)
   ctx.lineTo(xt(0), y0 + ph - PAD)
   ctx.stroke()
+
+  // Shade the "kept" region inside ±T
+  ctx.fillStyle = `rgba(${getRGB(SINC_C)}, 0.08)`
+  ctx.fillRect(xt(-halfT), y0 + PAD + 16, xt(halfT) - xt(-halfT), ph - PAD * 2 - 16)
+
+  // Full ideal sinc as faint dashed reference (what we are forced to throw away)
+  ctx.strokeStyle = colors.fgMuted
+  ctx.setLineDash([3, 3])
+  ctx.lineWidth = 1
+  ctx.beginPath()
+  for (let i = 0; i <= STEPS_T; i++) {
+    const t = lerp(i, 0, STEPS_T, T_MIN, T_MAX)
+    const v = 2 * FC * sincNorm(2 * FC * t)
+    const py = yv(v)
+    if (i === 0) ctx.moveTo(xt(t), py)
+    else ctx.lineTo(xt(t), py)
+  }
+  ctx.stroke()
+  ctx.setLineDash([])
+
+  // Truncated sinc (only inside ±T) — solid violet
+  ctx.strokeStyle = SINC_C
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  let started = false
+  for (let i = 0; i <= STEPS_T; i++) {
+    const t = lerp(i, 0, STEPS_T, T_MIN, T_MAX)
+    if (Math.abs(t) > halfT) {
+      started = false
+      continue
+    }
+    const v = 2 * FC * sincNorm(2 * FC * t)
+    const py = yv(v)
+    if (!started) {
+      ctx.moveTo(xt(t), py)
+      started = true
+    } else {
+      ctx.lineTo(xt(t), py)
+    }
+  }
+  ctx.stroke()
+
+  // Window boundaries
+  ctx.strokeStyle = REAL_C
+  ctx.setLineDash([4, 3])
+  ctx.lineWidth = 1.4
+  for (const tBound of [halfT, -halfT]) {
+    ctx.beginPath()
+    ctx.moveTo(xt(tBound), y0 + PAD + 16)
+    ctx.lineTo(xt(tBound), y0 + ph - PAD)
+    ctx.stroke()
+  }
+  ctx.setLineDash([])
+
+  // "length = cost" span arrow under the kept window
+  const yArrow = y0 + ph - PAD - 4
+  ctx.strokeStyle = REAL_C
+  ctx.fillStyle = REAL_C
+  ctx.lineWidth = 1.2
+  ctx.beginPath()
+  ctx.moveTo(xt(-halfT), yArrow)
+  ctx.lineTo(xt(halfT), yArrow)
+  ctx.stroke()
+  for (const [tx, dir] of [[halfT, -1], [-halfT, 1]] as const) {
+    ctx.beginPath()
+    ctx.moveTo(xt(tx), yArrow)
+    ctx.lineTo(xt(tx) + dir * 4, yArrow - 3)
+    ctx.lineTo(xt(tx) + dir * 4, yArrow + 3)
+    ctx.closePath()
+    ctx.fill()
+  }
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'center'
+  ctx.fillText('μήκος ≈ 2T = κόστος', xt(0), yArrow - 4)
+
+  // window labels
+  ctx.fillStyle = REAL_C
+  ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'center'
+  ctx.fillText('+T', xt(halfT), y0 + PAD + 14)
+  ctx.fillText('−T', xt(-halfT), y0 + PAD + 14)
+
+  ctx.fillStyle = colors.fgSubtle
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.fillText('0', xt(0), yZero + 12)
+}
+
+function drawFreqDomain(
+  ctx: CanvasRenderingContext2D,
+  colors: ReturnType<typeof getThemeColors>,
+  x0: number,
+  y0: number,
+  pw: number,
+  ph: number,
+  halfT: number,
+) {
+  if (!colors) return
+  const yLim = 1.4
+
+  const xt = (f: number) => lerp(f, F_MIN, F_MAX, x0 + PAD, x0 + pw - PAD)
+  const yv = (v: number) => lerp(v, yLim, -0.18, y0 + PAD + 16, y0 + ph - PAD)
+  const yZero = yv(0)
+
+  ctx.fillStyle = colors.fgMuted
+  ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'left'
+  ctx.fillText('|H(f)| — ιδανικό vs αυτό που βγαίνει', x0 + PAD, y0 + 14)
+
+  // axes
+  ctx.strokeStyle = colors.border
+  ctx.lineWidth = 1
+  ctx.beginPath()
+  ctx.moveTo(x0 + PAD, yZero)
+  ctx.lineTo(x0 + pw - PAD, yZero)
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.moveTo(xt(0), y0 + PAD + 16)
+  ctx.lineTo(xt(0), y0 + ph - PAD)
+  ctx.stroke()
+
+  // Ideal rect — dashed reference (the brick wall we are aiming at)
+  ctx.strokeStyle = IDEAL_C
+  ctx.setLineDash([4, 3])
+  ctx.lineWidth = 1.3
+  ctx.beginPath()
+  ctx.moveTo(xt(F_MIN), yZero)
+  ctx.lineTo(xt(-FC), yZero)
+  ctx.lineTo(xt(-FC), yv(1))
+  ctx.lineTo(xt(FC), yv(1))
+  ctx.lineTo(xt(FC), yZero)
+  ctx.lineTo(xt(F_MAX), yZero)
+  ctx.stroke()
+  ctx.setLineDash([])
+
+  // Compute |H(f)| of truncated sinc numerically
+  const dt = (T_MAX - T_MIN) / STEPS_T
+  const values: number[] = []
+  for (let i = 0; i <= STEPS_F; i++) {
+    const f = lerp(i, 0, STEPS_F, F_MIN, F_MAX)
+    let re = 0
+    for (let j = 0; j <= STEPS_T; j++) {
+      const t = lerp(j, 0, STEPS_T, T_MIN, T_MAX)
+      if (Math.abs(t) > halfT) continue
+      const h = 2 * FC * sincNorm(2 * FC * t)
+      re += h * Math.cos(2 * Math.PI * f * t) * dt
+    }
+    values.push(Math.abs(re))
+  }
+
+  // Filled area
+  ctx.fillStyle = `rgba(${getRGB(REAL_C)}, 0.18)`
+  ctx.beginPath()
+  ctx.moveTo(xt(F_MIN), yZero)
+  for (let i = 0; i <= STEPS_F; i++) {
+    const f = lerp(i, 0, STEPS_F, F_MIN, F_MAX)
+    ctx.lineTo(xt(f), yv(values[i]))
+  }
+  ctx.lineTo(xt(F_MAX), yZero)
+  ctx.closePath()
+  ctx.fill()
+
+  // Real curve
+  ctx.strokeStyle = REAL_C
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  for (let i = 0; i <= STEPS_F; i++) {
+    const f = lerp(i, 0, STEPS_F, F_MIN, F_MAX)
+    const py = yv(values[i])
+    if (i === 0) ctx.moveTo(xt(f), py)
+    else ctx.lineTo(xt(f), py)
+  }
+  ctx.stroke()
+
+  // f_c labels
+  ctx.fillStyle = colors.fgSubtle
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'center'
+  ctx.fillText('+f_c', xt(FC), yZero + 12)
+  ctx.fillText('−f_c', xt(-FC), yZero + 12)
+
+  ctx.textAlign = 'right'
+  ctx.fillText('1', x0 + PAD - 3, yv(1) + 3)
+  ctx.fillText('0', x0 + PAD - 3, yZero + 3)
+
+  // Legend
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'right'
+  ctx.fillStyle = IDEAL_C
+  ctx.fillText('ideal brick wall', x0 + pw - PAD, y0 + 28)
+  ctx.fillStyle = REAL_C
+  ctx.fillText('αυτό που βγαίνει', x0 + pw - PAD, y0 + 40)
 }
 
 function getRGB(rgb: string): string {
