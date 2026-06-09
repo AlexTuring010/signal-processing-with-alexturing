@@ -198,7 +198,11 @@ function drawScene(
   ctx.lineTo(xt(0), h - PAD - 28)
   ctx.stroke()
 
-  // dB mode: grid lines at -20, -40, -60
+  // dB mode: dashed grid lines at -20/-40/-60, plus a 0 dB label on the
+  // reference line. Labels are left-aligned just inside the left edge and sit
+  // just above each line, so the leading minus sign is never clipped. (They
+  // used to be right-aligned at PAD-3, where "-60 dB" overflowed past the left
+  // canvas edge and hid the minus sign off-screen.)
   if (dbMode) {
     ctx.strokeStyle = colors.border
     ctx.setLineDash([2, 4])
@@ -208,12 +212,21 @@ function drawScene(
       ctx.moveTo(PAD, yv(db))
       ctx.lineTo(w - PAD, yv(db))
       ctx.stroke()
-      ctx.fillStyle = colors.fgSubtle
-      ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-      ctx.textAlign = 'right'
-      ctx.fillText(`${db} dB`, PAD - 3, yv(db) + 3)
     }
     ctx.setLineDash([])
+    ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+    ctx.textAlign = 'left'
+    // negative attenuation gridlines — subtle grey
+    ctx.fillStyle = colors.fgSubtle
+    for (const db of [-20, -40, -60]) {
+      ctx.fillText(`${db} dB`, PAD + 3, yv(db) - 3)
+    }
+    // 0 dB reference — bold and coloured like the dashed reference line it sits
+    // on, so it reads clearly as THE 0 dB level (where the passband sits), not
+    // just another gridline tick
+    ctx.fillStyle = IDEAL_C
+    ctx.font = 'bold 9px ui-sans-serif, system-ui, sans-serif'
+    ctx.fillText('0 dB', PAD + 3, yv(0) - 3)
   } else {
     ctx.fillStyle = colors.fgSubtle
     ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
