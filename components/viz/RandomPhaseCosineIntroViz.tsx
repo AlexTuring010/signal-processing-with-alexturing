@@ -53,19 +53,24 @@ export function RandomPhaseCosineIntroViz() {
         X(t) = A cos(2π f₀ t + φ), φ ∈ &#123;0, π/4, π/2, 3π/4&#125; — realizations &amp; time-slice
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Πάνω: οι <strong>4 realizations</strong> — οι 4 σταθερές φάσεις, καθεμία ένα
-        ντετερμινιστικό cosine. Κάθε γραμμή διαβάζεται οριζόντια = μία καταγραφή.
-        Σύρε την κάθετη <strong>«time-slice»</strong>: σε κάθε στιγμή t, οι 4
-        realizations δίνουν 4 τιμές — αυτές οι τιμές μαζί είναι η{' '}
-        <em>τυχαία μεταβλητή</em> X(t). Κάτω: η κατανομή αυτών των τιμών (4 πιθανές
-        τιμές, καθεμία με πιθανότητα ¼). Άλλη στιγμή ⇒ άλλες τιμές — αλλά πάντα μια
-        τυχαία μεταβλητή.
+        <strong>Πάνω</strong> (σήμα στον χρόνο): οι <strong>4 realizations</strong> —
+        οι 4 σταθερές φάσεις, καθεμία ένα ντετερμινιστικό cosine. Κάθε γραμμή
+        διαβάζεται οριζόντια = μία καταγραφή. Σύρε την κάθετη{' '}
+        <strong>«time-slice»</strong>: σε κάθε στιγμή t, οι 4 realizations δίνουν 4
+        τιμές — αυτές μαζί είναι η <em>τυχαία μεταβλητή</em> X(t).
+        <br />
+        <strong>Κάτω</strong> — προσοχή, <em>νέου τύπου</em> διάγραμμα: <strong>δεν</strong>{' '}
+        είναι σήμα στον χρόνο. Ο οριζόντιος άξονας είναι οι <strong>πιθανές τιμές</strong>{' '}
+        του X(t) (από −A έως +A) και το <strong>ύψος κάθε στύλου είναι η πιθανότητα</strong>{' '}
+        εκείνης της τιμής. Εδώ 4 τιμές, καθεμία με πιθανότητα ¼. Αυτό λέγεται{' '}
+        <strong>κατανομή</strong> (distribution): πώς μοιράζεται η πιθανότητα στις
+        δυνατές τιμές. Άλλη στιγμή ⇒ άλλες τιμές — αλλά πάντα μια τυχαία μεταβλητή.
       </p>
       <canvas
         ref={canvasRef}
-        style={{ height: 340 }}
-        className="block h-[340px] w-full rounded-md border border-border bg-bg-soft/30"
-        aria-label="Four random-phase cosine realizations and the discrete distribution of their values at a time-slice"
+        style={{ height: 360 }}
+        className="block h-[360px] w-full rounded-md border border-border bg-bg-soft/30"
+        aria-label="Top: four random-phase cosine realizations versus time. Bottom: the probability distribution of their values at the time-slice (value on the horizontal axis, probability as bar height)."
       />
       <div className="mt-3">
         <label className="block text-xs text-fg-muted">
@@ -98,7 +103,7 @@ function drawScene(
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
 
-  const topH = h * 0.66
+  const topH = h * 0.58
   drawRealizations(ctx, colors, 0, 0, w, topH, tSlice)
   drawDistribution(ctx, colors, 0, topH + 4, w, h - topH - 4, tSlice)
 }
@@ -203,18 +208,22 @@ function drawDistribution(
 ) {
   if (!colors) return
   const PAD_X = 52
-  const PAD_TOP = 18
-  const PAD_BOTTOM = 18
+  const PAD_TOP = 30
+  const PAD_BOTTOM = 30
   const PROB_TOP = 0.7 // y headroom (max stem is ½ for this example)
 
   const xv = (v: number) => lerp(v, -A * 1.25, A * 1.25, x0 + PAD_X, x0 + pw - PAD_X)
   const yp = (p: number) => lerp(p, 0, PROB_TOP, y0 + ph - PAD_BOTTOM, y0 + PAD_TOP)
   const yBase = yp(0)
 
+  // title + axis meanings — this is a probability picture, not a time signal
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('Κατανομή τιμών του X(t) τώρα — η τυχαία μεταβλητή', x0 + PAD_X, y0 + 11)
+  ctx.fillText('Κατανομή πιθανότητας του X(t)', x0 + PAD_X, y0 + 12)
+  ctx.fillStyle = colors.fgSubtle
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.fillText('↑ πιθανότητα', x0 + PAD_X, y0 + 24)
 
   // value axis
   ctx.strokeStyle = colors.border
@@ -265,15 +274,16 @@ function drawDistribution(
     ctx.fillText(fracLabel(g.p), x, yp(g.p) - 5)
   }
 
-  // value-axis ticks
+  // value-axis ticks (the horizontal axis = possible VALUES of X(t))
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
   ctx.fillText('−A', xv(-A), yBase + 12)
   ctx.fillText('0', xv(0), yBase + 12)
   ctx.fillText('+A', xv(A), yBase + 12)
-  ctx.textAlign = 'right'
-  ctx.fillText('τιμή του X(t) →', x0 + pw - PAD_X, yBase + 12)
+  // x-axis caption on its own line, centred — no longer overlapping the +A tick
+  ctx.fillStyle = colors.fgMuted
+  ctx.fillText('πιθανές τιμές του X(t)', (x0 + PAD_X + (x0 + pw - PAD_X)) / 2, yBase + 24)
 }
 
 function fracLabel(p: number): string {
