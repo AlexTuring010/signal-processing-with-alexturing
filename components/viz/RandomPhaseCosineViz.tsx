@@ -62,7 +62,7 @@ export function RandomPhaseCosineViz() {
         διαβάσεις την τιμή κάθε realization, παίρνεις μια <em>τυχαία
         μεταβλητή</em> X(t). Σύρε τη γραμμή και δες πώς η ραβδόγραμμα
         αλλάζει — αλλά το <strong>σχήμα της κατανομής μένει ίδιο</strong>{' '}
-        (ομοιόμορφη στο [-A, A]) — ένδειξη ότι το process είναι{' '}
+        (η arcsine, μαζεμένη στα άκρα ±A) — ένδειξη ότι το process είναι{' '}
         <strong>stationary</strong>.
       </p>
       <canvas
