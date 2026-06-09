@@ -91,7 +91,7 @@ export function DistributionExplorerViz() {
               label="a (lower bound)"
               value={uA}
               min={-3}
-              max={uB - 0.1}
+              max={uB - 0.5}
               step={0.1}
               onChange={setUA}
               fmt={(v) => v.toFixed(1)}
@@ -99,7 +99,7 @@ export function DistributionExplorerViz() {
             <SliderBlock
               label="b (upper bound)"
               value={uB}
-              min={uA + 0.1}
+              min={uA + 0.5}
               max={3}
               step={0.1}
               onChange={setUB}
@@ -254,14 +254,14 @@ function drawScene(
     xMin = Math.min(p.uA, -3)
     xMax = Math.max(p.uB, 3)
     const height = p.uB > p.uA ? 1 / (p.uB - p.uA) : 0
-    peakY = Math.max(height * 1.15, 0.05)
+    peakY = 2.2 // FIXED y-scale: so the bar visibly drops as [a,b] widens
     pdf = (x) => (x >= p.uA && x <= p.uB ? height : 0)
     mean = (p.uA + p.uB) / 2
     sigma = (p.uB - p.uA) / Math.sqrt(12)
   } else if (kind === 'gaussian') {
     xMin = Math.min(p.gMu - 3.5 * p.gSigma, -3)
     xMax = Math.max(p.gMu + 3.5 * p.gSigma, 3)
-    peakY = (1 / (p.gSigma * Math.sqrt(2 * Math.PI))) * 1.1
+    peakY = 2.1 // FIXED y-scale: so the peak visibly halves when σ doubles
     pdf = (x) =>
       (1 / (p.gSigma * Math.sqrt(2 * Math.PI))) *
       Math.exp(-((x - p.gMu) ** 2) / (2 * p.gSigma ** 2))
@@ -270,14 +270,14 @@ function drawScene(
   } else {
     xMin = -0.5
     xMax = Math.max(6, 5 / p.eLambda)
-    peakY = p.eLambda * 1.15
+    peakY = 3.2 // FIXED y-scale: so the peak (= λ) visibly rises with λ
     pdf = (x) => (x >= 0 ? p.eLambda * Math.exp(-p.eLambda * x) : 0)
     mean = 1 / p.eLambda
     sigma = 1 / p.eLambda
   }
 
   // Coordinate transforms
-  const padL = 36
+  const padL = 46
   const padR = 14
   const padT = 14
   const padB = 30
@@ -294,6 +294,30 @@ function drawScene(
   ctx.lineTo(padL, padT + plotH)
   ctx.lineTo(padL + plotW, padT + plotH)
   ctx.stroke()
+
+  // Horizontal height-gridlines on a FIXED y-scale — this is what makes the
+  // peak-height change visible as you drag (wider ⇒ shorter). The y = 1 line is
+  // emphasized so you can see a PDF peak go ABOVE 1 (density, not probability).
+  {
+    const yStep = peakY > 2.6 ? 1 : 0.5
+    ctx.font = '10px ui-sans-serif, system-ui'
+    ctx.textAlign = 'right'
+    for (let yv = yStep; yv <= peakY + 1e-9; yv += yStep) {
+      const py = yTo(yv)
+      const isOne = Math.abs(yv - 1) < 1e-9
+      ctx.strokeStyle = isOne ? colors.fgMuted : colors.border
+      ctx.globalAlpha = isOne ? 0.7 : 0.4
+      ctx.setLineDash([2, 3])
+      ctx.beginPath()
+      ctx.moveTo(padL, py)
+      ctx.lineTo(padL + plotW, py)
+      ctx.stroke()
+      ctx.setLineDash([])
+      ctx.globalAlpha = 1
+      ctx.fillStyle = isOne ? colors.fgMuted : colors.fgSubtle
+      ctx.fillText(yv.toFixed(yStep < 1 ? 1 : 0), padL - 5, py + 3)
+    }
+  }
 
   // x-axis ticks (5 evenly-spaced)
   ctx.fillStyle = colors.fgSubtle
