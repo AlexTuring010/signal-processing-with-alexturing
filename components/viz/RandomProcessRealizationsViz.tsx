@@ -108,7 +108,24 @@ export function RandomProcessRealizationsViz() {
   )
 }
 
-const REAL_C = 'rgb(29, 78, 216)'
+const REAL_C = 'rgb(29, 78, 216)' // blue — realizations
+const MEAN_C = 'rgb(220, 38, 38)' // red — ensemble mean m_X(t)
+
+// Ensemble mean m_X(t) = E[X(t)], exact per preset — the average over ALL
+// realizations (not just the handful drawn). White / rand-amp / rand-phase all
+// have E[·] = 0 at every t (constant mean); rand-freq starts at 1 and varies.
+function meanAt(preset: PresetId, t: number): number {
+  if (preset === 'rand-freq') {
+    // E[cos(2π F t)], F ~ U[0.5, 1.5] = (sin 3πt − sin πt) / (2π t), → 1 as t→0
+    if (Math.abs(t) < 1e-6) return 1
+    return (Math.sin(3 * Math.PI * t) - Math.sin(Math.PI * t)) / (2 * Math.PI * t)
+  }
+  return 0
+}
+
+function clampV(v: number, lim: number): number {
+  return Math.max(-lim, Math.min(lim, v))
+}
 
 function drawScene(
   canvas: HTMLCanvasElement,
@@ -121,51 +138,69 @@ function drawScene(
   ctx.clearRect(0, 0, w, h)
 
   const PAD_X = 50
-  const PAD_TOP = 14
+  const PAD_TOP = 18
   const PAD_BOTTOM = 22
-  const yScale = 1.6
+  const yLim = 2.6
 
   const xt = (t: number) => lerp(t, 0, T_SPAN, PAD_X, w - PAD_X)
-  const stripH = (h - PAD_TOP - PAD_BOTTOM) / NUM_REALIZATIONS
-  const yForReal = (i: number, v: number) => {
-    const stripCenter = PAD_TOP + (i + 0.5) * stripH
-    return stripCenter - (v / yScale) * (stripH * 0.4)
-  }
+  const yv = (v: number) => lerp(v, yLim, -yLim, PAD_TOP, h - PAD_BOTTOM)
+  const yZero = yv(0)
 
+  // x-axis ticks
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  for (let t = 0; t <= T_SPAN; t++) {
-    ctx.fillText(`${t}s`, xt(t), h - 5)
-  }
+  for (let t = 0; t <= T_SPAN; t++) ctx.fillText(`${t}s`, xt(t), h - 5)
 
+  // zero baseline
+  ctx.strokeStyle = colors.border
+  ctx.lineWidth = 0.5
+  ctx.beginPath()
+  ctx.moveTo(PAD_X, yZero)
+  ctx.lineTo(w - PAD_X, yZero)
+  ctx.stroke()
+
+  // overlaid realizations (faint blue) — a whole family of signals on one axis
   for (let i = 0; i < NUM_REALIZATIONS; i++) {
-    const realization = generateRealization(preset, seed, i, SAMPLES_PER_REAL)
-    // Strip baseline
-    ctx.strokeStyle = colors.border
-    ctx.lineWidth = 0.5
-    ctx.beginPath()
-    ctx.moveTo(PAD_X, yForReal(i, 0))
-    ctx.lineTo(w - PAD_X, yForReal(i, 0))
-    ctx.stroke()
-
+    const r = generateRealization(preset, seed, i, SAMPLES_PER_REAL)
     ctx.strokeStyle = REAL_C
-    ctx.lineWidth = 1.2
+    ctx.globalAlpha = 0.4
+    ctx.lineWidth = 1
     ctx.beginPath()
-    for (let s = 0; s < realization.length; s++) {
-      const t = (s / (realization.length - 1)) * T_SPAN
+    for (let s = 0; s < r.length; s++) {
+      const t = (s / (r.length - 1)) * T_SPAN
       const x = xt(t)
-      const y = yForReal(i, realization[s])
+      const y = yv(clampV(r[s], yLim))
       if (s === 0) ctx.moveTo(x, y)
       else ctx.lineTo(x, y)
     }
     ctx.stroke()
-
-    ctx.fillStyle = colors.fgSubtle
-    ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
-    ctx.textAlign = 'right'
-    ctx.fillText(`X${subscript(i + 1)}`, PAD_X - 4, yForReal(i, 0) + 3)
   }
+  ctx.globalAlpha = 1
+
+  // ensemble mean curve m_X(t) — bold red, the average across the family
+  const MEAN_STEPS = 200
+  ctx.strokeStyle = MEAN_C
+  ctx.lineWidth = 2.2
+  ctx.beginPath()
+  for (let s = 0; s <= MEAN_STEPS; s++) {
+    const t = (s / MEAN_STEPS) * T_SPAN
+    const y = yv(meanAt(preset, t))
+    const x = xt(t)
+    if (s === 0) ctx.moveTo(x, y)
+    else ctx.lineTo(x, y)
+  }
+  ctx.stroke()
+
+  // legend (with a small background so it stays readable over the curves)
+  ctx.fillStyle = colors.bg
+  ctx.fillRect(PAD_X, PAD_TOP - 5, 104, 26)
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'left'
+  ctx.fillStyle = REAL_C
+  ctx.fillText('— realizations', PAD_X + 3, PAD_TOP + 4)
+  ctx.fillStyle = MEAN_C
+  ctx.fillText('— μέσος m_X(t)', PAD_X + 3, PAD_TOP + 15)
 }
 
 function generateRealization(
