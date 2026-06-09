@@ -175,6 +175,7 @@ import { FmSnrGainViz } from '@/components/viz/FmSnrGainViz'
 import { FmThresholdEffectViz } from '@/components/viz/FmThresholdEffectViz'
 import { CaptureEffectViz } from '@/components/viz/CaptureEffectViz'
 import { RandomPhaseCosineViz } from '@/components/viz/RandomPhaseCosineViz'
+import { RandomPhaseCosineIntroViz } from '@/components/viz/RandomPhaseCosineIntroViz'
 import { RandomProcessRealizationsViz } from '@/components/viz/RandomProcessRealizationsViz'
 import { DistributionExplorerViz } from '@/components/viz/DistributionExplorerViz'
 import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
@@ -435,6 +436,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — randomness
     RandomPhaseCosineViz,
+    RandomPhaseCosineIntroViz,
     RandomProcessRealizationsViz,
     AutocorrelationViz,
     ErgodicityViz,
