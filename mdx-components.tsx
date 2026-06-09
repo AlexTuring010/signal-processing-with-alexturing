@@ -11,6 +11,7 @@ import { ExamProblem } from '@/components/content/ExamProblem'
 import { ExerciseProgress } from '@/components/content/ExerciseProgress'
 import { Timeline } from '@/components/content/Timeline'
 import { SourceDoc } from '@/components/content/SourceDoc'
+import { OptionalResource } from '@/components/content/OptionalResource'
 import { RecallCard } from '@/components/content/RecallCard'
 import { RecallDrill } from '@/components/content/RecallDrill'
 import { ClozeDrill } from '@/components/content/ClozeDrill'
@@ -210,6 +211,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ExerciseProgress,
     Timeline,
     SourceDoc,
+    OptionalResource,
 
     // 5-stage learning loop kit (Συμπύκνωσε / Ανακάλεσε / Αναγνώρισε)
     RecallCard,
