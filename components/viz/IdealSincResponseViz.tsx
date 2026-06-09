@@ -6,17 +6,17 @@ import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 /**
  * Ideal LP in two stacked domains — the §4 FT-pair visual:
  *
- *   Top:    frequency domain. H(f) = rect(f / 2f_c): the ideal LP brick wall,
- *           1 inside the passband, 0 outside.
- *   Bottom: time domain. h(t) = 2 f_c · sinc(2 f_c t), the inverse Fourier
- *           transform of that rect — a sinc that extends to −∞ and +∞, with the
+ *   Top:    time domain. h(t) = 2 f_c · sinc(2 f_c t), the inverse Fourier
+ *           transform of the rect — a sinc that extends to −∞ and +∞, with the
  *           t < 0 half shaded so the non-causality is visible directly.
+ *   Bottom: frequency domain. H(f) = rect(f / 2f_c): the ideal LP brick wall,
+ *           1 inside the passband, 0 outside.
  *
- * Stacking them one under the other makes the derivation in §4 literal: the
- * brick wall on top inverse-transforms into the infinite sinc below. The
- * ideal-vs-real trade-off comparison (ripple, transition band, sharpness
- * slider) lives separately in §7's <IdealVsRealFilterViz />, after those
- * quantities have actually been introduced (§5–§6).
+ * Time on top, frequency below — the usual convention for an FT pair. Stacking
+ * them makes the §4 derivation visible: the brick wall below inverse-transforms
+ * into the infinite sinc on top. The ideal-vs-real trade-off comparison
+ * (ripple, transition band, sharpness slider) lives separately in §7's
+ * <IdealVsRealFilterViz />, after those quantities are introduced (§5–§6).
  */
 
 const FC = 1.0 // cutoff f_c (so the rect spans |f| < 1, i.e. width 2 f_c)
@@ -34,19 +34,19 @@ export function IdealSincResponseViz() {
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
       <h4 className="mb-1 text-sm font-semibold tracking-tight">
-        Η κρουστική απόκριση του ιδανικού LP — από το rect H(f) στη sinc h(t)
+        Η κρουστική απόκριση του ιδανικού LP — h(t) sinc (χρόνος) ↔ H(f) rect (συχνότητα)
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Πάνω, στη <strong>συχνότητα</strong>: το ideal LP είναι ένα brick wall,{' '}
-        <span className="font-mono">H(f) = rect(f / 2f_c)</span> — 1 μέσα στην
-        passband, 0 έξω. Κάτω, στον <strong>χρόνο</strong>: ο inverse Fourier
-        transform αυτού του rect είναι{' '}
+        Πάνω, στον <strong>χρόνο</strong>: η κρουστική απόκριση{' '}
         <span className="font-mono">h(t) = 2 f_c · sinc(2 f_c t)</span> — μια sinc
         που εκτείνεται μέχρι το <span className="font-mono">−∞</span> και το{' '}
         <span className="font-mono">+∞</span> και δεν μηδενίζεται ποτέ. Η
         σκιαγραφημένη ζώνη (<span className="font-mono">t &lt; 0</span>) είναι
         ακριβώς η μη-αιτιατότητα: για να βγάλεις την έξοδο τώρα θα χρειαζόσουν
-        μελλοντικές τιμές του input.
+        μελλοντικές τιμές του input. Κάτω, στη <strong>συχνότητα</strong>: το
+        ideal LP είναι ένα brick wall,{' '}
+        <span className="font-mono">H(f) = rect(f / 2f_c)</span> — και η sinc από
+        πάνω είναι ακριβώς ο inverse Fourier transform του.
       </p>
 
       <canvas
@@ -70,11 +70,11 @@ function drawScene(
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
 
-  // Frequency on top, time below — one under the other.
-  const topH = h * 0.44
+  // Time on top, frequency below — the usual FT-pair convention.
+  const topH = h * 0.56
   const botH = h - topH
-  drawFreqRect(ctx, colors, 0, 0, w, topH)
-  drawTimeSinc(ctx, colors, 0, topH, w, botH)
+  drawTimeSinc(ctx, colors, 0, 0, w, topH)
+  drawFreqRect(ctx, colors, 0, topH, w, botH)
 }
 
 function drawFreqRect(
