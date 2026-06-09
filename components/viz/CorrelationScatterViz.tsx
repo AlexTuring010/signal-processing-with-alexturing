@@ -308,9 +308,10 @@ function drawScene(
   }
 
   // Points, colored by sign of (x−x̄)(y−ȳ) — the term Cov averages.
+  // success (green) = the two agree; danger (red) = they disagree.
   for (const p of pts) {
     const prod = (p.x - mx) * (p.y - my)
-    ctx.fillStyle = prod >= 0 ? colors.accent : colors.danger
+    ctx.fillStyle = prod >= 0 ? colors.success : colors.danger
     ctx.globalAlpha = 0.78
     ctx.beginPath()
     ctx.arc(xTo(p.x), yTo(p.y), 2.6, 0, 2 * Math.PI)
