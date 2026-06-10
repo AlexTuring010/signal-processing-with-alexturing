@@ -2784,6 +2784,29 @@ export const EXERCISES: Exercise[] = [
         </p>
         <BlockMath>{'P = \\lim_{T\\to\\infty}\\frac{1}{2T}\\int_{-T}^{T} \\cos^2(2\\pi t)\\,dt = \\frac{1}{2}'}</BlockMath>
         <p>Άρα σήμα ισχύος. Κάθε μη-μηδενικό περιοδικό είναι σήμα ισχύος.</p>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Γιατί «μη-μηδενικό»;</strong>{' '}
+          <span className="text-fg-muted">
+            Υπάρχει ακριβώς <strong>ένα</strong> περιοδικό σήμα που ξεφεύγει: το
+            ταυτοτικά μηδενικό <InlineMath>{'m(t) = 0'}</InlineMath> (περιοδικό
+            με κάθε περίοδο, trivially). Έχει{' '}
+            <InlineMath>{'\\mathcal{E} = 0'}</InlineMath> και{' '}
+            <InlineMath>{'\\mathcal{P} = 0'}</InlineMath> — και επειδή «σήμα
+            ισχύος» σημαίνει <InlineMath>{'0 < \\mathcal{P} < \\infty'}</InlineMath>{' '}
+            (γνήσια <em>θετική</em> ισχύ), η μηδενική ισχύς δεν περνά το τεστ.
+            Άρα το μηδενικό σήμα πέφτει στο «ούτε-ούτε», όπως η ράμπα{' '}
+            <InlineMath>{'t\\,u(t)'}</InlineMath> στο{' '}
+            <Link
+              href="/foundations/signals"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              /foundations/signals
+            </Link>{' '}
+            — μόνο που η ράμπα κόβεται από <em>πάνω</em> (άπειρη ισχύς) ενώ το
+            μηδενικό από <em>κάτω</em> (μηδενική). Γι' αυτό η πρόταση γράφει ρητά
+            «μη-μηδενικό»: είναι η μοναδική εξαίρεση.
+          </span>
+        </div>
       </>
     ),
   },
@@ -4475,18 +4498,122 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>Χρόνος:</strong> Π-παλμοί ύψους 1, διάρκειας 1s, κάθε 10s.
-          Duty cycle <InlineMath>{'\\tau/T = 0.1'}</InlineMath>.
+          <strong>(1) Σήμα στον χρόνο:</strong> τετραγωνικοί παλμοί ύψους{' '}
+          <InlineMath>{'1'}</InlineMath>, διάρκειας{' '}
+          <InlineMath>{'\\tau = 1'}</InlineMath> s, που επαναλαμβάνονται κάθε{' '}
+          <InlineMath>{'T = 10'}</InlineMath> s (duty cycle{' '}
+          <InlineMath>{'\\tau/T = 0.1'}</InlineMath> — στενοί παλμοί, μεγάλα
+          κενά):
         </p>
+        <svg
+          viewBox="0 0 380 170"
+          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+          role="img"
+          aria-label="Χρόνος: τετραγωνικοί παλμοί ύψους 1, διάρκειας 1 s, με περίοδο 10 s"
+        >
+          {/* dashed reference at height 1 */}
+          <line x1="50" y1="48" x2="350" y2="48" stroke="currentColor" strokeOpacity="0.2" strokeDasharray="3 3" />
+          {/* period T double-arrow above pulses (t=0 → t=10) */}
+          <line x1="50" y1="36" x2="186" y2="36" stroke="rgb(217, 119, 6)" strokeOpacity="0.85" strokeWidth="1" />
+          <polygon points="50,36 57,33 57,39" fill="rgb(217, 119, 6)" fillOpacity="0.85" />
+          <polygon points="186,36 179,33 179,39" fill="rgb(217, 119, 6)" fillOpacity="0.85" />
+          <text x="118" y="32" textAnchor="middle" fontSize="9" fill="rgb(217, 119, 6)">T = 10 s</text>
+          {/* x-axis */}
+          <line x1="34" y1="125" x2="352" y2="125" stroke="currentColor" strokeOpacity="0.5" />
+          <polygon points="358,125 348,121 348,129" fill="currentColor" fillOpacity="0.55" />
+          <text x="352" y="138" textAnchor="end" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">t (s)</text>
+          {/* y-axis */}
+          <line x1="50" y1="125" x2="50" y2="30" stroke="currentColor" strokeOpacity="0.4" />
+          <polygon points="50,24 46,32 54,32" fill="currentColor" fillOpacity="0.5" />
+          <text x="55" y="30" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">x(t)</text>
+          {/* pulses: width 1 s (≈14px), height 1 (top y=48); start at t=0,10,20 */}
+          <rect x="50" y="48" width="14" height="77" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.4" />
+          <rect x="186" y="48" width="14" height="77" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.4" />
+          <rect x="322" y="48" width="14" height="77" fill="rgb(29, 78, 216)" fillOpacity="0.18" stroke="rgb(29, 78, 216)" strokeWidth="1.4" />
+          {/* y tick "1" */}
+          <line x1="46" y1="48" x2="50" y2="48" stroke="currentColor" strokeOpacity="0.6" />
+          <text x="44" y="52" textAnchor="end" fontSize="10" fill="currentColor" fillOpacity="0.85">1</text>
+          {/* x tick at t=1 (pulse edge → τ) */}
+          <line x1="64" y1="122" x2="64" y2="128" stroke="currentColor" strokeOpacity="0.5" />
+          {/* x labels: 0,1 show τ=1; 10,20 show T=10 */}
+          <text x="50" y="138" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">0</text>
+          <text x="64" y="138" textAnchor="middle" fontSize="9" fill="rgb(29, 78, 216)" fillOpacity="0.9">1</text>
+          <text x="186" y="138" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">10</text>
+          <text x="322" y="138" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">20</text>
+        </svg>
         <p>
-          <strong>Φάσμα Fourier (περιοδικό):</strong> impulses στις{' '}
-          <InlineMath>{'k f_0 = k/T = k/10'}</InlineMath> Hz, με συντελεστές:
+          <strong>(2) Φάσμα πλάτους:</strong> ένα περιοδικό σήμα έχει{' '}
+          <em>γραμμικό</em> φάσμα — φασματικές γραμμές μόνο στις αρμονικές{' '}
+          <InlineMath>{'k f_0 = k/T = k/10'}</InlineMath> Hz, με ύψος{' '}
+          <InlineMath>{'|a_k|'}</InlineMath> όπου:
         </p>
-        <BlockMath>{'a_k = \\frac{\\tau}{T}\\,\\mathrm{sinc}(k\\tau/T) = 0.1\\cdot \\mathrm{sinc}(k/10)'}</BlockMath>
+        <BlockMath>{'a_k = \\frac{\\tau}{T}\\,\\mathrm{sinc}\\!\\left(\\frac{k\\tau}{T}\\right) = 0.1\\,\\mathrm{sinc}\\!\\left(\\frac{k}{10}\\right)'}</BlockMath>
+        <svg
+          viewBox="0 0 380 170"
+          className="my-3 block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+          role="img"
+          aria-label="Φάσμα πλάτους: φασματικές γραμμές στις k/10 Hz με περιβάλλουσα sinc· πρώτος μηδενισμός στο 1 Hz"
+        >
+          {/* envelope 0.1·|sinc(fτ)| (dashed) */}
+          {(() => {
+            const pts: string[] = []
+            for (let f = -1.5; f <= 1.5001; f += 0.02) {
+              const s = Math.abs(f) < 1e-9 ? 1 : Math.sin(Math.PI * f) / (Math.PI * f)
+              const x = 190 + f * 104
+              const y = 130 - Math.abs(0.1 * s) * 920
+              pts.push(`${x.toFixed(1)},${y.toFixed(1)}`)
+            }
+            return (
+              <polyline
+                points={pts.join(' ')}
+                fill="none"
+                stroke="rgb(217, 119, 6)"
+                strokeOpacity="0.7"
+                strokeWidth="1.2"
+                strokeDasharray="4 3"
+              />
+            )
+          })()}
+          {/* spectral lines at f = k/10 Hz, height |a_k| */}
+          {Array.from({ length: 31 }, (_, i) => i - 15).map((k) => {
+            const f = k * 0.1
+            const s = k === 0 ? 1 : Math.sin(Math.PI * f) / (Math.PI * f)
+            const h = Math.abs(0.1 * s)
+            if (h < 0.0006) return null
+            const x = 190 + f * 104
+            const top = 130 - h * 920
+            return (
+              <g key={k}>
+                <line x1={x} y1={130} x2={x} y2={top} stroke="rgb(29, 78, 216)" strokeOpacity="0.9" strokeWidth="1.5" />
+                <circle cx={x} cy={top} r="1.8" fill="rgb(29, 78, 216)" />
+              </g>
+            )
+          })}
+          {/* null markers at ±1 Hz (envelope touches zero) */}
+          <circle cx="86" cy="130" r="3" fill="none" stroke="rgb(217, 119, 6)" strokeWidth="1.3" />
+          <circle cx="294" cy="130" r="3" fill="none" stroke="rgb(217, 119, 6)" strokeWidth="1.3" />
+          {/* x-axis */}
+          <line x1="20" y1="130" x2="356" y2="130" stroke="currentColor" strokeOpacity="0.5" />
+          <polygon points="362,130 352,126 352,134" fill="currentColor" fillOpacity="0.55" />
+          <text x="356" y="143" textAnchor="end" fontSize="10" fill="currentColor" fillOpacity="0.7" fontStyle="italic">f (Hz)</text>
+          {/* x tick labels */}
+          <text x="86" y="144" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">−1</text>
+          <text x="190" y="144" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">0</text>
+          <text x="294" y="144" textAnchor="middle" fontSize="10" fill="currentColor" fillOpacity="0.8">1</text>
+          {/* DC + envelope labels */}
+          <text x="190" y="32" textAnchor="middle" fontSize="10" fill="rgb(29, 78, 216)">a₀ = 0.1</text>
+          <text x="300" y="66" textAnchor="middle" fontSize="9" fill="rgb(217, 119, 6)" fillOpacity="0.95">περιβάλλουσα sinc</text>
+        </svg>
         <p>
-          DC: <InlineMath>{'a_0 = 0.1'}</InlineMath>. Πρώτη ρίζα του sinc στα{' '}
-          <InlineMath>{'k = 10'}</InlineMath> (δηλαδή στο{' '}
-          <InlineMath>{'1/\\tau = 1'}</InlineMath> Hz).
+          <strong>Διάβασμα του φάσματος:</strong> η DC γραμμή{' '}
+          <InlineMath>{'a_0 = 0.1'}</InlineMath> είναι η πιο ψηλή· οι γραμμές
+          απέχουν <InlineMath>{'f_0 = 1/T = 0.1'}</InlineMath> Hz η μία από την
+          άλλη· και η περιβάλλουσα <InlineMath>{'\\mathrm{sinc}'}</InlineMath>{' '}
+          μηδενίζεται πρώτη φορά στο <InlineMath>{'k = 10'}</InlineMath>, δηλαδή
+          στο <InlineMath>{'1/\\tau = 1'}</InlineMath> Hz (εκεί{' '}
+          <InlineMath>{'a_{10} = 0'}</InlineMath> — η γραμμή λείπει). Η αρχή του
+          χρόνου που διαλέγεις για τους παλμούς δεν αλλάζει το φάσμα{' '}
+          <em>πλάτους</em> — μόνο τη φάση.
         </p>
       </>
     ),
