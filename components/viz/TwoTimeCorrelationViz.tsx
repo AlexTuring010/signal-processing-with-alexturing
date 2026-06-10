@@ -455,6 +455,31 @@ function drawTimePanel(
   }
   ctx.globalAlpha = 1
 
+  // ensemble mean m_X(t) = average over all realizations at each t.
+  // For these zero-mean presets it rides along 0 — visual proof of zero-mean.
+  ctx.strokeStyle = colors.fg
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  for (let s = 0; s <= STEPS; s++) {
+    const t = (s / STEPS) * T_SPAN
+    let sum = 0
+    for (const m of ensemble) sum += evalX(m, t)
+    const x = xt(t)
+    const y = yv(clamp(sum / ensemble.length, -yLim, yLim))
+    if (s === 0) ctx.moveTo(x, y)
+    else ctx.lineTo(x, y)
+  }
+  ctx.stroke()
+  // label (manual subscript) on a small opaque chip, just above the baseline
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  const wA = ctx.measureText('m').width
+  const wC = ctx.measureText('(t)').width
+  ctx.font = '7px ui-sans-serif, system-ui, sans-serif'
+  const wB = ctx.measureText('X').width
+  ctx.fillStyle = colors.bg
+  ctx.fillRect(x0 + padL + 1, yZero - 13, wA + wB + wC + 4, 11)
+  drawSubscripted(ctx, 'm', 'X', '(t)', x0 + padL + 3, yZero - 4, 'left', colors.fg, 9)
+
   // marker lines
   const lineTop = y0 + padT - 2
   const lineBot = y0 + ph - padB
