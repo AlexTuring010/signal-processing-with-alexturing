@@ -182,6 +182,7 @@ import { RandomProcessRealizationsViz } from '@/components/viz/RandomProcessReal
 import { DistributionExplorerViz } from '@/components/viz/DistributionExplorerViz'
 import { CorrelationScatterViz } from '@/components/viz/CorrelationScatterViz'
 import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
+import { TwoTimeCorrelationViz } from '@/components/viz/TwoTimeCorrelationViz'
 import { ErgodicityViz } from '@/components/viz/ErgodicityViz'
 import { WhiteNoiseSimulationViz } from '@/components/viz/WhiteNoiseSimulationViz'
 import { NoiseFilterShapingViz } from '@/components/viz/NoiseFilterShapingViz'
@@ -444,6 +445,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RandomPhaseCosineStationarityViz,
     RandomProcessRealizationsViz,
     AutocorrelationViz,
+    TwoTimeCorrelationViz,
     ErgodicityViz,
     DistributionExplorerViz,
     CorrelationScatterViz,
