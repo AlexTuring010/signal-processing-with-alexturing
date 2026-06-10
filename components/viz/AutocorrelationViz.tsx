@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
-import { mulberry32, normal } from '@/lib/random'
 
 /**
  * R_X(τ) for several canonical processes — purely from the closed-form
@@ -173,8 +172,10 @@ function drawAutocorr(
       ctx.fillText(`${tau}`, xt(tau), yZero + 14)
     }
   }
-  ctx.textAlign = 'right'
-  ctx.fillText('τ', x0 + pw - PAD_X, yZero + 14)
+  // Axis-variable letter sits in the right margin, past the last tick,
+  // so it never collides with the "4" tick centred at the axis end.
+  ctx.textAlign = 'left'
+  ctx.fillText('τ', x0 + pw - PAD_X + 10, yZero + 14)
 
   // Plot R_X(τ)
   ctx.strokeStyle = R_C
@@ -235,7 +236,7 @@ function drawPSD(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('S_X(f) = ℱ{R_X(τ)}', x0 + PAD_X, y0 + 12)
+  ctx.fillText('S_X(f)', x0 + PAD_X, y0 + 12)
 
   ctx.strokeStyle = colors.border
   ctx.lineWidth = 1
@@ -256,8 +257,9 @@ function drawPSD(
       ctx.fillText(`${f}`, xf(f), yZero + 14)
     }
   }
-  ctx.textAlign = 'right'
-  ctx.fillText('f', x0 + pw - PAD_X, yZero + 14)
+  // Axis-variable letter in the right margin (see drawAutocorr note).
+  ctx.textAlign = 'left'
+  ctx.fillText('f', x0 + pw - PAD_X + 10, yZero + 14)
 
   ctx.strokeStyle = S_C
   ctx.fillStyle = 'rgba(168, 85, 247, 0.18)'
