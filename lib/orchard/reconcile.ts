@@ -130,16 +130,17 @@ export function tickTree(
     // Effective per-cycle yield folds in prestige + apple-yield seed shop.
     const perCycle = yieldPerCycle(tree) * appleYieldMult(state)
     if (perCycle <= 0) continue
-    const cyclesByCap = Math.floor((cap - stored) / perCycle)
-    const cycles = Math.min(cyclesByTime, cyclesByCap)
-    if (cycles <= 0) {
-      lastHarvest = Math.max(lastHarvest, seg.to)
-      continue
-    }
-    const gain = cycles * perCycle
-    stored += gain
-    produced += gain
-    lastHarvest = since + cycles * effectiveIntervalMs
+    // Top the tree off by clamping stored to the cap — NOT by counting only
+    // whole cycles that fit under the cap. The old
+    // `floor((cap - stored) / perCycle)` added nothing whenever perCycle
+    // exceeded the leftover space: the tree stuck one notch below cap
+    // (displayed as N-1), a boost big enough to clear the cap in a single
+    // cycle produced 0, and — because storedApples never reached `cap` —
+    // auto-harvest (which sweeps only at storedApples >= cap) could never fire.
+    const before = stored
+    stored = Math.min(stored + cyclesByTime * perCycle, cap)
+    produced += stored - before
+    lastHarvest = since + cyclesByTime * effectiveIntervalMs
   }
 
   return {
