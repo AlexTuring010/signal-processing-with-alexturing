@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { getThemeColors, setupCanvas, lerp, type ThemeColors } from '@/lib/canvas'
-import { mulberry32, uniform } from '@/lib/random'
+import { mulberry32, uniform, normal } from '@/lib/random'
 
 /**
  * TwoTimeCorrelationViz — what R_X(t_i, t_j) actually measures, in the
@@ -26,8 +26,10 @@ import { mulberry32, uniform } from '@/lib/random'
  *   - small |t_i−t_j|  → tight diagonal cloud, R_X large (process is "slow").
  *   - large |t_i−t_j|  → round blob, greens & reds balance, R_X ≈ 0.
  *
- * Two presets: random-phase cosine (crisp elliptical cloud) and a slow
- * lowpass-noise process (genuinely fuzzy cloud, finite memory).
+ * Three presets: random-phase cosine (crisp elliptical cloud), a slow
+ * lowpass-noise process (fuzzy cloud, finite memory), and fast white noise
+ * (independent samples → round blob for any t_i ≠ t_j; perfect diagonal only
+ * when the two times coincide).
  *
  * Subscripts in the canvas are drawn manually (drawSubscripted) rather than
  * with unicode subscript glyphs, which have unreliable font coverage.
@@ -40,14 +42,17 @@ const N = 24 // ensemble members (what we draw AND average — honest estimate)
 const LP_M = 12 // sinusoids per lowpass realization
 const LP_B = 0.6 // lowpass bandwidth (Hz) → memory length ~ 1/(2B) ≈ 0.8 s
 const LP_SCALE = Math.sqrt(2 / LP_M) // → unit-variance lowpass process
+const WHITE_N = 80 // independent samples per realization
+const WHITE_DT = T_SPAN / WHITE_N // ≈0.05 s spacing — distinct t_i, t_j hit independent samples
 
 const TJ_C = (c: ThemeColors) => c.warn // t_j marker / axis colour (amber)
 
-type PresetId = 'cosine' | 'lowpass'
+type PresetId = 'cosine' | 'lowpass' | 'white'
 
 type Member =
   | { kind: 'cosine'; phi: number }
   | { kind: 'lowpass'; fs: number[]; ps: number[] }
+  | { kind: 'white'; samples: number[] }
 
 function buildEnsemble(preset: PresetId, seed: number): Member[] {
   const rng = mulberry32(seed || 1)
@@ -55,6 +60,10 @@ function buildEnsemble(preset: PresetId, seed: number): Member[] {
   for (let k = 0; k < N; k++) {
     if (preset === 'cosine') {
       out.push({ kind: 'cosine', phi: uniform(rng, 0, 2 * Math.PI) })
+    } else if (preset === 'white') {
+      const samples: number[] = []
+      for (let s = 0; s < WHITE_N; s++) samples.push(normal(rng))
+      out.push({ kind: 'white', samples })
     } else {
       const fs: number[] = []
       const ps: number[] = []
@@ -70,6 +79,7 @@ function buildEnsemble(preset: PresetId, seed: number): Member[] {
 
 function evalX(m: Member, t: number): number {
   if (m.kind === 'cosine') return A * Math.cos(2 * Math.PI * F0 * t + m.phi)
+  if (m.kind === 'white') return m.samples[clamp(Math.round(t / WHITE_DT), 0, m.samples.length - 1)]
   let s = 0
   for (let i = 0; i < m.fs.length; i++) s += Math.cos(2 * Math.PI * m.fs[i] * t + m.ps[i])
   return LP_SCALE * s
@@ -156,6 +166,7 @@ export function TwoTimeCorrelationViz() {
           [
             ['cosine', 'cos(2π f₀ t + Θ) — τυχαία φάση'],
             ['lowpass', 'Αργός θόρυβος (lowpass)'],
+            ['white', 'Γρήγορος λευκός θόρυβος'],
           ] as const
         ).map(([id, label]) => (
           <button
