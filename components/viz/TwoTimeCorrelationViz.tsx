@@ -94,18 +94,23 @@ export function TwoTimeCorrelationViz() {
     let sij = 0
     let sii = 0
     let sjj = 0
+    let pos = 0 // Σ of products ab > 0 (1st/3rd quadrant) — pushes R_X up
+    let neg = 0 // Σ of products ab < 0 (2nd/4th quadrant) — pulls it down
     for (const m of ensemble) {
       const xi = evalX(m, ti)
       const xj = evalX(m, tj)
-      sij += xi * xj
+      const p = xi * xj
+      sij += p
       sii += xi * xi
       sjj += xj * xj
+      if (p >= 0) pos += p
+      else neg += p
     }
     const n = ensemble.length
     const Rij = sij / n
     const denom = Math.sqrt((sii / n) * (sjj / n))
     const rho = denom > 1e-9 ? Rij / denom : 0
-    return { Rij, rho }
+    return { Rij, rho, pos: pos / n, neg: neg / n }
   }, [ensemble, ti, tj])
 
   useEffect(() => {
@@ -206,6 +211,8 @@ export function TwoTimeCorrelationViz() {
         />
       </div>
 
+      <ContributionBar pos={stats.pos} neg={stats.neg} net={stats.Rij} />
+
       <div className="mt-3 grid gap-2 rounded-md border border-accent/30 bg-accent-soft/20 px-3 py-2 text-xs sm:grid-cols-3">
         <Stat
           label={
@@ -218,13 +225,22 @@ export function TwoTimeCorrelationViz() {
         <Stat
           label={
             <>
+              ρ <span className="text-fg-subtle">(−1…1)</span>
+            </>
+          }
+          value={stats.rho.toFixed(2)}
+        />
+        <Stat
+          label={
+            <>
               Δt = |t<sub>i</sub> − t<sub>j</sub>|
             </>
           }
           value={`${dt.toFixed(2)} s`}
         />
-        <Stat label="Τι βλέπεις" value={verdict} />
       </div>
+
+      <p className="mt-2 text-xs text-fg-muted">{verdict}</p>
 
       <p className="mt-3 text-xs leading-relaxed text-fg-muted">
         Κάθε σημείο κάτω είναι ένα ζεύγος (X(t<sub>i</sub>), X(t<sub>j</sub>)) από{' '}
@@ -290,6 +306,36 @@ function Stat({ label, value }: { label: ReactNode; value: string }) {
     <div>
       <div className="text-[10px] uppercase tracking-wider text-fg-subtle">{label}</div>
       <div className="font-mono text-sm tabular-nums text-fg">{value}</div>
+    </div>
+  )
+}
+
+/**
+ * Positive vs negative product contributions to R_X, as one balance bar.
+ * Round cloud → green ≈ red, net ≈ 0 (cancellation visible). Diagonal cloud →
+ * green dominates, net large (accumulation). net = pos + neg = R_X.
+ */
+function ContributionBar({ pos, neg, net }: { pos: number; neg: number; net: number }) {
+  const total = pos + Math.abs(neg)
+  const posPct = total > 1e-9 ? (pos / total) * 100 : 50
+  return (
+    <div className="mt-3 text-xs">
+      <div className="mb-1 flex items-center justify-between text-[10px] uppercase tracking-wider text-fg-subtle">
+        <span>
+          Συνεισφορές στο R<sub>X</sub> (γινόμενα ab)
+        </span>
+        <span className="text-fg">net ≈ {net.toFixed(2)}</span>
+      </div>
+      <div className="flex h-3 w-full overflow-hidden rounded border border-border">
+        <div style={{ width: `${posPct}%`, backgroundColor: 'rgb(var(--success))' }} />
+        <div style={{ width: `${100 - posPct}%`, backgroundColor: 'rgb(var(--danger))' }} />
+      </div>
+      <div className="mt-1 flex items-center justify-between text-[10px]">
+        <span className="text-emerald-600 dark:text-emerald-400">θετικά (ab&gt;0) +{pos.toFixed(2)}</span>
+        <span className="text-red-600 dark:text-red-400">
+          αρνητικά (ab&lt;0) −{Math.abs(neg).toFixed(2)}
+        </span>
+      </div>
     </div>
   )
 }
