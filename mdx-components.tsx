@@ -180,6 +180,7 @@ import { RandomPhaseCosinePdfViz } from '@/components/viz/RandomPhaseCosinePdfVi
 import { RandomPhaseCosineStationarityViz } from '@/components/viz/RandomPhaseCosineStationarityViz'
 import { RandomProcessRealizationsViz } from '@/components/viz/RandomProcessRealizationsViz'
 import { DistributionExplorerViz } from '@/components/viz/DistributionExplorerViz'
+import { WssShapeDriftViz } from '@/components/viz/WssShapeDriftViz'
 import { CorrelationScatterViz } from '@/components/viz/CorrelationScatterViz'
 import { AutocorrelationViz } from '@/components/viz/AutocorrelationViz'
 import { TwoTimeCorrelationViz } from '@/components/viz/TwoTimeCorrelationViz'
@@ -448,6 +449,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     TwoTimeCorrelationViz,
     ErgodicityViz,
     DistributionExplorerViz,
+    WssShapeDriftViz,
     CorrelationScatterViz,
 
     // Visualizations — noise
