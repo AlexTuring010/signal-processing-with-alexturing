@@ -163,7 +163,8 @@ export function EnsembleSliceViz() {
         <InlineFx>X(t)</InlineFx> όλων των realizations <strong>κάθετα</strong>· δεξιά πέφτουν σε
         μια <strong>κατανομή</strong> — η PDF μίας στιγμής <InlineFx>f_X(t)</InlineFx>. Σύρε τον
         χρόνο: ο μέσος μένει στο 0 και η μπλε λωρίδα <InlineFx>±σ</InlineFx> ακίνητη, αλλά το{' '}
-        <strong>σχήμα</strong> της κατανομής γέρνει δεξιά. Αυτό ακριβώς αφήνει ελεύθερο η WSS.
+        <strong>σχήμα</strong> στραβώνει: η κορυφή γλιστράει αριστερά, με μακριά ουρά προς τα δεξιά
+        (θετική skewness — τη μετράει η ουρά, όχι η κορυφή). Αυτό ακριβώς αφήνει ελεύθερο η WSS.
       </p>
     </figure>
   )
