@@ -11,6 +11,7 @@ import {
   Link2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MathText } from '@/components/math'
 
 type CalloutType =
   | 'intuition'
@@ -92,7 +93,7 @@ export function Callout({ type = 'note', title, children }: Props) {
     >
       <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold tracking-tight">
         <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span>{title ?? label}</span>
+        <span>{title ? <MathText>{title}</MathText> : label}</span>
       </div>
       <div className="text-[0.95rem] leading-relaxed [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
         {children}
