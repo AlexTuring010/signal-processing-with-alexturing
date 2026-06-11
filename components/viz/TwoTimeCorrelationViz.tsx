@@ -54,12 +54,17 @@ type Member =
   | { kind: 'lowpass'; fs: number[]; ps: number[] }
   | { kind: 'white'; samples: number[] }
 
-function buildEnsemble(preset: PresetId, seed: number): Member[] {
+function buildEnsemble(preset: PresetId, seed: number, gridPhase = false): Member[] {
   const rng = mulberry32(seed || 1)
   const out: Member[] = []
   for (let k = 0; k < N; k++) {
     if (preset === 'cosine') {
-      out.push({ kind: 'cosine', phi: uniform(rng, 0, 2 * Math.PI) })
+      // gridPhase: phases on an even grid over [0, 2π) instead of random draws.
+      // The average of cos(· + 2φ) over a full-period grid is EXACTLY 0 (N ≥ 3),
+      // so R_X = (A²/2)cos(2πf₀τ) exactly — depends ONLY on τ, with zero sampling
+      // wiggle. That makes the "slide the pair, R_X doesn't move" point land clean.
+      const phi = gridPhase ? (2 * Math.PI * k) / N : uniform(rng, 0, 2 * Math.PI)
+      out.push({ kind: 'cosine', phi })
     } else if (preset === 'white') {
       const samples: number[] = []
       for (let s = 0; s < WHITE_N; s++) samples.push(normal(rng))
@@ -91,14 +96,41 @@ function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v))
 }
 
-export function TwoTimeCorrelationViz() {
+export function TwoTimeCorrelationViz({
+  variant = 'default',
+}: {
+  variant?: 'default' | 'wss-cosine'
+} = {}) {
+  // wss-cosine: a focused, cosine-only instance for the WSS section that shows
+  // R_X depends ONLY on τ. It uses a deterministic phase-grid (exact, wiggle-free
+  // R_X), hides the preset/reseed controls, and adds a "shift the pair with Δt
+  // locked" slider — slide it and R_X stays put.
+  const cosineOnly = variant === 'wss-cosine'
   const [preset, setPreset] = useState<PresetId>('cosine')
   const [seed, setSeed] = useState(7)
   const [ti, setTi] = useState(1.0)
   const [tj, setTj] = useState(1.2)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  const ensemble = useMemo(() => buildEnsemble(preset, seed), [preset, seed])
+  const ensemble = useMemo(
+    () => buildEnsemble(cosineOnly ? 'cosine' : preset, seed, cosineOnly),
+    [cosineOnly, preset, seed],
+  )
+
+  // Move t_i and t_j together, keeping their distance (τ) fixed — the heart of
+  // "R_X depends only on τ". Clamp the shared centre so neither point leaves [0, T].
+  const half = Math.abs(ti - tj) / 2
+  const center = (ti + tj) / 2
+  const shiftPair = (newCenter: number) => {
+    const c = clamp(newCenter, half, T_SPAN - half)
+    if (ti <= tj) {
+      setTi(c - half)
+      setTj(c + half)
+    } else {
+      setTi(c + half)
+      setTj(c - half)
+    }
+  }
 
   const stats = useMemo(() => {
     let sij = 0
@@ -150,39 +182,57 @@ export function TwoTimeCorrelationViz() {
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h4 className="text-sm font-semibold tracking-tight">
-          Τι μετράει η R<sub>X</sub>(t<sub>i</sub>, t<sub>j</sub>) — συσχέτιση δύο χρονικών στιγμών
+          {cosineOnly ? (
+            <>
+              Η R<sub>X</sub>(t<sub>i</sub>, t<sub>j</sub>) εξαρτάται μόνο από το Δt = t<sub>i</sub> − t
+              <sub>j</sub>
+            </>
+          ) : (
+            <>
+              Τι μετράει η R<sub>X</sub>(t<sub>i</sub>, t<sub>j</sub>) — συσχέτιση δύο χρονικών στιγμών
+            </>
+          )}
         </h4>
-        <button
-          type="button"
-          onClick={() => setSeed((s) => s + 1)}
-          className="rounded-full border border-border bg-bg-soft px-3 py-1 text-xs hover:border-accent/50 hover:text-fg"
-        >
-          Νέα δειγματοληψία
-        </button>
+        {!cosineOnly && (
+          <button
+            type="button"
+            onClick={() => setSeed((s) => s + 1)}
+            className="rounded-full border border-border bg-bg-soft px-3 py-1 text-xs hover:border-accent/50 hover:text-fg"
+          >
+            Νέα δειγματοληψία
+          </button>
+        )}
       </div>
 
-      <div className="mb-3 flex flex-wrap gap-1.5">
-        {(
-          [
-            ['cosine', 'cos(2π f₀ t + Θ) — τυχαία φάση'],
-            ['lowpass', 'Αργός θόρυβος (lowpass)'],
-            ['white', 'Γρήγορος λευκός θόρυβος'],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setPreset(id)}
-            className={`rounded-full border px-2.5 py-1 text-xs ${
-              preset === id
-                ? 'border-accent bg-accent/10 text-accent'
-                : 'border-border bg-bg-soft text-fg-muted hover:border-accent/40 hover:text-fg'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {cosineOnly ? (
+        <p className="mb-3 text-xs text-fg-muted">
+          Σήμα: <span className="font-mono text-fg">X(t) = A·cos(2π f₀ t + Θ)</span>, με{' '}
+          <span className="font-mono text-fg">Θ ~ U[0, 2π)</span> — η ίδια ΤΔ της Άσκησης 2 (§6).
+        </p>
+      ) : (
+        <div className="mb-3 flex flex-wrap gap-1.5">
+          {(
+            [
+              ['cosine', 'cos(2π f₀ t + Θ) — τυχαία φάση'],
+              ['lowpass', 'Αργός θόρυβος (lowpass)'],
+              ['white', 'Γρήγορος λευκός θόρυβος'],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setPreset(id)}
+              className={`rounded-full border px-2.5 py-1 text-xs ${
+                preset === id
+                  ? 'border-accent bg-accent/10 text-accent'
+                  : 'border-border bg-bg-soft text-fg-muted hover:border-accent/40 hover:text-fg'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <canvas
         ref={canvasRef}
@@ -222,6 +272,30 @@ export function TwoTimeCorrelationViz() {
         />
       </div>
 
+      {cosineOnly && (
+        <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/10 p-2">
+          <SliderBlock
+            label={
+              <>
+                ⇄ Μετατόπισε το ζεύγος μαζί — σταθερό Δt ={' '}
+                <span className="font-mono">{Math.abs(ti - tj).toFixed(2)} s</span>
+              </>
+            }
+            value={center}
+            min={half}
+            max={T_SPAN - half}
+            step={0.05}
+            onChange={shiftPair}
+            accentColor="rgb(var(--success))"
+            fmt={(v) => `κέντρο ${v.toFixed(2)} s`}
+          />
+          <p className="mt-1 text-[11px] text-fg-muted">
+            Κούνα τα t<sub>i</sub>, t<sub>j</sub> <strong>μαζί</strong>: το Δt μένει ίδιο και η R
+            <sub>X</sub> δεν κουνιέται. Άλλαξε το Δt (μοχλοί από πάνω) και η R<sub>X</sub> αλλάζει.
+          </p>
+        </div>
+      )}
+
       <ContributionBar pos={stats.pos} neg={stats.neg} net={stats.Rij} />
 
       <div className="mt-3 grid gap-2 rounded-md border border-accent/30 bg-accent-soft/20 px-3 py-2 text-xs sm:grid-cols-3">
@@ -253,23 +327,52 @@ export function TwoTimeCorrelationViz() {
 
       <p className="mt-2 text-xs text-fg-muted">{verdict}</p>
 
-      <p className="mt-3 text-xs leading-relaxed text-fg-muted">
-        Κάθε σημείο κάτω είναι ένα ζεύγος (X(t<sub>i</sub>), X(t<sub>j</sub>)) από{' '}
-        <strong>ένα</strong> δείγμα του ensemble — ακριβώς όπως το scatter δύο ΤΜ στη σελίδα{' '}
-        <a className="text-accent hover:underline" href="/randomness/random-variables">
-          Random variables
-        </a>
-        , μόνο που τώρα οι δύο ΤΜ είναι η <strong>ίδια</strong> διαδικασία σε δύο χρόνους. Χρώμα =
-        πρόσημο του γινομένου X(t<sub>i</sub>)·X(t<sub>j</sub>):{' '}
-        <span className="text-emerald-600 dark:text-emerald-400">πράσινο</span> σπρώχνει την R
-        <sub>X</sub> προς τα πάνω, <span className="text-red-600 dark:text-red-400">κόκκινο</span> προς
-        τα κάτω.{' '}
-        <strong>
-          Η R<sub>X</sub>(t<sub>i</sub>, t<sub>j</sub>) είναι ο μέσος όρος αυτών των γινομένων.
-        </strong>{' '}
-        Φέρε τα t<sub>i</sub>, t<sub>j</sub> κοντά → στενή διαγώνιος, μεγάλη R<sub>X</sub>·
-        απομάκρυνέ τα → η νέφη στρογγυλεύει και η R<sub>X</sub> πέφτει στο μηδέν.
-      </p>
+      {cosineOnly && (
+        <p className="mt-2 rounded-md border border-border bg-bg-soft/40 px-3 py-2 text-xs text-fg-muted">
+          Κλειστός τύπος (αποδεικνύεται στην{' '}
+          <a className="text-accent hover:underline" href="/randomness/random-processes">
+            Random processes
+          </a>{' '}
+          §10 και ξανά στην Άσκηση 2 πιο κάτω):{' '}
+          <span className="font-mono text-fg">R_X(τ) = (A²/2)·cos(2π·f₀·τ)</span> — μέσα του{' '}
+          <strong>μόνο</strong> το τ = Δt, κανένα t<sub>i</sub> ή t<sub>j</sub> χωριστά.
+        </p>
+      )}
+
+      {cosineOnly ? (
+        <p className="mt-3 text-xs leading-relaxed text-fg-muted">
+          Κάθε σημείο κάτω είναι <strong>ένα</strong> δείγμα — μία τιμή του Θ, που μπαίνει{' '}
+          <strong>ταυτόχρονα</strong> στο X(t<sub>i</sub>) και στο X(t<sub>j</sub>). Γι' αυτό οι δύο
+          τιμές είναι <strong>εξαρτημένες</strong>: το πείραμα γίνεται <strong>μία φορά</strong>, ένα Θ
+          διαλέγεται και μπαίνει και στις δύο στιγμές. Σχεδιάζουμε λίγα σημεία, αλλά το Θ παίρνει{' '}
+          <strong>άπειρες</strong> τιμές — όλες μαζί γεμίζουν τη σταθερή <strong>έλλειψη</strong> που
+          βλέπεις. Σύρε το «μετατόπισε το ζεύγος»: τα σημεία γλιστρούν πάνω στην <strong>ίδια</strong>{' '}
+          έλλειψη και η R<sub>X</sub> δεν αλλάζει — αυτό ακριβώς σημαίνει{' '}
+          <strong>
+            R<sub>X</sub>(t<sub>i</sub>, t<sub>j</sub>) = R<sub>X</sub>(τ)
+          </strong>
+          . Άλλαξε το Δt και η έλλειψη αλλάζει σχήμα (στενή διαγώνιος → κύκλος → αντι-διαγώνιος) και η R
+          <sub>X</sub> μαζί.
+        </p>
+      ) : (
+        <p className="mt-3 text-xs leading-relaxed text-fg-muted">
+          Κάθε σημείο κάτω είναι ένα ζεύγος (X(t<sub>i</sub>), X(t<sub>j</sub>)) από{' '}
+          <strong>ένα</strong> δείγμα του ensemble — ακριβώς όπως το scatter δύο ΤΜ στη σελίδα{' '}
+          <a className="text-accent hover:underline" href="/randomness/random-variables">
+            Random variables
+          </a>
+          , μόνο που τώρα οι δύο ΤΜ είναι η <strong>ίδια</strong> διαδικασία σε δύο χρόνους. Χρώμα =
+          πρόσημο του γινομένου X(t<sub>i</sub>)·X(t<sub>j</sub>):{' '}
+          <span className="text-emerald-600 dark:text-emerald-400">πράσινο</span> σπρώχνει την R
+          <sub>X</sub> προς τα πάνω, <span className="text-red-600 dark:text-red-400">κόκκινο</span> προς
+          τα κάτω.{' '}
+          <strong>
+            Η R<sub>X</sub>(t<sub>i</sub>, t<sub>j</sub>) είναι ο μέσος όρος αυτών των γινομένων.
+          </strong>{' '}
+          Φέρε τα t<sub>i</sub>, t<sub>j</sub> κοντά → στενή διαγώνιος, μεγάλη R<sub>X</sub>·
+          απομάκρυνέ τα → η νέφη στρογγυλεύει και η R<sub>X</sub> πέφτει στο μηδέν.
+        </p>
+      )}
     </figure>
   )
 }
