@@ -39,6 +39,7 @@ const T_SPAN = 4 // seconds shown
 const F0 = 0.5 // cosine freq → period 2 s, two periods across the window
 const A = 1
 const N = 24 // ensemble members (what we draw AND average — honest estimate)
+const WSS_COSINE_N = 8 // wss-cosine variant: few, distinct cosines (grid φ keeps R_X exact for ≥ 3)
 const LP_M = 12 // sinusoids per lowpass realization
 const LP_B = 0.6 // lowpass bandwidth (Hz) → memory length ~ 1/(2B) ≈ 0.8 s
 const LP_SCALE = Math.sqrt(2 / LP_M) // → unit-variance lowpass process
@@ -54,16 +55,22 @@ type Member =
   | { kind: 'lowpass'; fs: number[]; ps: number[] }
   | { kind: 'white'; samples: number[] }
 
-function buildEnsemble(preset: PresetId, seed: number, gridPhase = false): Member[] {
+function buildEnsemble(
+  preset: PresetId,
+  seed: number,
+  gridPhase = false,
+  count = N,
+): Member[] {
   const rng = mulberry32(seed || 1)
   const out: Member[] = []
-  for (let k = 0; k < N; k++) {
+  for (let k = 0; k < count; k++) {
     if (preset === 'cosine') {
       // gridPhase: phases on an even grid over [0, 2π) instead of random draws.
-      // The average of cos(· + 2φ) over a full-period grid is EXACTLY 0 (N ≥ 3),
+      // The average of cos(· + 2φ) over a full-period grid is EXACTLY 0 (count ≥ 3),
       // so R_X = (A²/2)cos(2πf₀τ) exactly — depends ONLY on τ, with zero sampling
-      // wiggle. That makes the "slide the pair, R_X doesn't move" point land clean.
-      const phi = gridPhase ? (2 * Math.PI * k) / N : uniform(rng, 0, 2 * Math.PI)
+      // wiggle. Lets us draw FEW grid phases (distinct, readable cosines) and still
+      // land an exact R_X, keeping the "slide the pair, R_X doesn't move" point clean.
+      const phi = gridPhase ? (2 * Math.PI * k) / count : uniform(rng, 0, 2 * Math.PI)
       out.push({ kind: 'cosine', phi })
     } else if (preset === 'white') {
       const samples: number[] = []
@@ -113,7 +120,13 @@ export function TwoTimeCorrelationViz({
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   const ensemble = useMemo(
-    () => buildEnsemble(cosineOnly ? 'cosine' : preset, seed, cosineOnly),
+    () =>
+      buildEnsemble(
+        cosineOnly ? 'cosine' : preset,
+        seed,
+        cosineOnly,
+        cosineOnly ? WSS_COSINE_N : N,
+      ),
     [cosineOnly, preset, seed],
   )
 
@@ -341,13 +354,15 @@ export function TwoTimeCorrelationViz({
 
       {cosineOnly ? (
         <p className="mt-3 text-xs leading-relaxed text-fg-muted">
-          Κάθε σημείο κάτω είναι <strong>ένα</strong> δείγμα — μία τιμή του Θ, που μπαίνει{' '}
-          <strong>ταυτόχρονα</strong> στο X(t<sub>i</sub>) και στο X(t<sub>j</sub>). Γι' αυτό οι δύο
-          τιμές είναι <strong>εξαρτημένες</strong>: το πείραμα γίνεται <strong>μία φορά</strong>, ένα Θ
-          διαλέγεται και μπαίνει και στις δύο στιγμές. Σχεδιάζουμε λίγα σημεία, αλλά το Θ παίρνει{' '}
-          <strong>άπειρες</strong> τιμές — όλες μαζί γεμίζουν τη σταθερή <strong>έλλειψη</strong> που
-          βλέπεις. Σύρε το «μετατόπισε το ζεύγος»: τα σημεία γλιστρούν πάνω στην <strong>ίδια</strong>{' '}
-          έλλειψη και η R<sub>X</sub> δεν αλλάζει — αυτό ακριβώς σημαίνει{' '}
+          Πάνω σχεδιάζουμε <strong>λίγες μόνο</strong> κυματομορφές — μία για κάθε τιμή του Θ· στην
+          πραγματικότητα είναι <strong>άπειρες</strong> (ένα Θ για κάθε σημείο του διαστήματος [0, 2π)).
+          Κάθε σημείο κάτω είναι ένα τέτοιο δείγμα: το <strong>ίδιο</strong> Θ μπαίνει{' '}
+          <strong>ταυτόχρονα</strong> στο X(t<sub>i</sub>) και στο X(t<sub>j</sub>), γι' αυτό οι δύο
+          τιμές είναι <strong>εξαρτημένες</strong> (το πείραμα γίνεται <strong>μία φορά</strong>). Καθώς
+          το Θ διατρέχει όλες τις άπειρες τιμές του, τα ζεύγη (X(t<sub>i</sub>), X(t<sub>j</sub>))
+          γεμίζουν μια σταθερή <strong>έλλειψη</strong>. Σύρε το «μετατόπισε το ζεύγος»: τα σημεία
+          γλιστρούν πάνω στην <strong>ίδια</strong> έλλειψη και η R<sub>X</sub> δεν αλλάζει — αυτό
+          ακριβώς σημαίνει{' '}
           <strong>
             R<sub>X</sub>(t<sub>i</sub>, t<sub>j</sub>) = R<sub>X</sub>(τ)
           </strong>
