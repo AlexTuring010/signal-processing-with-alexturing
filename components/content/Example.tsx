@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from 'react'
 import { ChevronDown, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MathText } from '@/components/math'
 
 type Props = {
   title?: string
@@ -25,7 +26,9 @@ export function Example({ title = 'Παράδειγμα', children, defaultOpen 
         aria-expanded={open}
       >
         <BookOpen className="h-4 w-4 text-accent" aria-hidden="true" />
-        <span className="flex-1 text-sm font-semibold tracking-tight">{title}</span>
+        <span className="flex-1 text-sm font-semibold tracking-tight">
+          <MathText>{title}</MathText>
+        </span>
         <span className="text-xs text-fg-muted">{open ? 'Κρύψε λύση' : 'Δες λύση'}</span>
         <ChevronDown
           className={cn(

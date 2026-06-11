@@ -26,6 +26,28 @@ export function InlineMath({ children, className }: Props) {
   return <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
 }
 
+/**
+ * Renders a plain string that may contain inline `$...$` math segments.
+ *
+ * For component *props* (e.g. a Callout/Example `title`), MDX's build-time
+ * `$...$` handling does not apply — the prop is just a string, so any math in
+ * it would otherwise render as literal `$...$` text. Wrap such strings in
+ * `<MathText>` to render the math. Strings with no `$` pass through unchanged.
+ */
+export function MathText({ children }: { children: string }) {
+  if (!children.includes('$')) return <>{children}</>
+  // split() with a capture group interleaves [text, math, text, math, ...]:
+  // even indices are literal text, odd indices are the math between $…$.
+  const parts = children.split(/\$([^$]+)\$/g)
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? <InlineMath key={i}>{part}</InlineMath> : part,
+      )}
+    </>
+  )
+}
+
 export function BlockMath({ children, className }: Props) {
   const html = katex.renderToString(children, {
     throwOnError: false,
