@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils'
  */
 
 const N_SHOWN = 12
-const N_HIST = 600
+const N_HIST = 1500
 const SAMPLES = 220
 const T_SPAN = 2
 const F1 = 1.0
@@ -44,8 +44,11 @@ function meanCurve(t: number, support: Support): number {
 }
 
 export function RandomPhaseCosineStationarityViz() {
-  const [support, setSupport] = useState<Support>('full')
-  const [tSlice, setTSlice] = useState(0.5)
+  // Default to the Άσκηση 1 case (half period, NOT WSS) — that's what §4α's
+  // text describes. The slice starts where m_X is clearly nonzero (t = 0.25,
+  // m_X = −2A/π), not at t = 0.5 where the half-period mean happens to be 0.
+  const [support, setSupport] = useState<Support>('half')
+  const [tSlice, setTSlice] = useState(0.25)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
@@ -80,7 +83,7 @@ export function RandomPhaseCosineStationarityViz() {
           onClick={() => setSupport('full')}
           className={cn('rounded px-2.5 py-0.5 transition-colors', isFull ? 'bg-accent text-accent-fg' : 'text-fg-muted hover:text-fg')}
         >
-          φ ~ U[0, 2π) — full period
+          φ ~ U[0, 2π) — full (§10, WSS)
         </button>
         <button
           type="button"
@@ -89,7 +92,7 @@ export function RandomPhaseCosineStationarityViz() {
           onClick={() => setSupport('half')}
           className={cn('rounded px-2.5 py-0.5 transition-colors', !isFull ? 'bg-accent text-accent-fg' : 'text-fg-muted hover:text-fg')}
         >
-          φ ~ U[0, π] — half period
+          φ ~ U[0, π] — half (Άσκηση 1)
         </button>
       </div>
 
@@ -267,14 +270,13 @@ function drawHistogram(
 
   const rng = mulberry32(909)
   const vals: number[] = []
-  let sum = 0
   for (let i = 0; i < N_HIST; i++) {
     const phi = rng() * SUPPORT_MAX[support]
-    const v = A * Math.cos(2 * Math.PI * F1 * tSlice + phi)
-    vals.push(v)
-    sum += v
+    vals.push(A * Math.cos(2 * Math.PI * F1 * tSlice + phi))
   }
-  const meanEmp = sum / N_HIST
+  // The mean marker uses the EXACT m_X(t) (analytic), not the noisy finite-sample
+  // estimate — so the full-period case sits pinned at 0 instead of jittering ±0.1.
+  const meanX = meanCurve(tSlice, support)
 
   const NBINS = 30
   const bins = new Array(NBINS).fill(0)
@@ -317,8 +319,8 @@ function drawHistogram(
     ctx.fillRect(x + 0.5, yh(bins[i]), binW - 1, yAxis - yh(bins[i]))
   }
 
-  // mean marker
-  const xm = xv(meanEmp)
+  // mean marker — at the exact m_X(t)
+  const xm = xv(meanX)
   ctx.strokeStyle = MEAN_C
   ctx.lineWidth = 1.6
   ctx.beginPath()
@@ -328,7 +330,7 @@ function drawHistogram(
   ctx.fillStyle = MEAN_C
   ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = xm > (x0 + pw) / 2 ? 'right' : 'left'
-  ctx.fillText(`m_X(t) = ${meanEmp.toFixed(2)}`, xm + (xm > (x0 + pw) / 2 ? -4 : 4), y0 + PAD_TOP + 8)
+  ctx.fillText(`m_X(t) = ${meanX.toFixed(2)}`, xm + (xm > (x0 + pw) / 2 ? -4 : 4), y0 + PAD_TOP + 8)
 
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
