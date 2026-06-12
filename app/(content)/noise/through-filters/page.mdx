@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Θόρυβος μέσα από φίλτρα — η μηχανή $S_Y = |H|^2 S_X$',
   description:
-    'Slide 38-40 παραγωγή της master equation $S_Y(f) = |H(f)|^2 S_X(f)$ από τη συνέλιξη στον χρόνο. Slide 51-55 Άσκηση 8 verbatim — bandpass-filtered λευκός θόρυβος με πλήρες $I_1 + I_2$ algebra → $R_Y(\\tau) = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)$, $P_Y = N_0 W$. Slide 55 παρατήρηση: WSS Gaussian zero-mean με $\\sigma^2_Y = N_0 W$. Slide 56 narrow-vs-wide visual. Παραδείγματα: ιδανικό LPF, RC LPF (Lorentzian), cascade, differentiator (FM teaser). Equivalent noise bandwidth $B_N$. NoiseFilterShapingViz κεντρικό cross-mount + AutocorrelationViz, full 5-stage loop, ExamRadar 6 manual ids.',
+    'Η master equation $S_Y(f) = |H(f)|^2 S_X(f)$ παράγεται από τη συνέλιξη στον χρόνο, και εφαρμόζεται στην Άσκηση 8: bandpass-filtered λευκό θόρυβο με πλήρες $I_1 + I_2$ algebra → $R_Y(\\tau) = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)$, $P_Y = N_0 W$, και έξοδο WSS Gaussian zero-mean με $\\sigma^2_Y = N_0 W$. Παραδείγματα: ιδανικό LPF, RC LPF (Lorentzian), cascade, differentiator (FM teaser). Equivalent noise bandwidth $B_N$.',
 }
 
 export const frontmatter = {
@@ -39,13 +39,13 @@ import { PrerequisitesBar } from '@/components/layout/PrerequisitesBar'
   sources={{
     pdf: 'SE_session10_noise.pdf',
     slides: '36–40, 51–56',
-    label: 'Slide 38-40 παραγωγή του S_Y=|H|² S_X · slide 51-55 Άσκηση 8 bandpass-filtered λευκός · slide 56 narrow-vs-wide visual',
+    label: 'Η παραγωγή του S_Y = |H|² S_X από τη συνέλιξη · η Άσκηση 8 (bandpass-filtered λευκός) · η σύγκριση στενού-ευρέος W',
   }}
 />
 
 ## 1. Νιώσε — η μηχανή που τρέχει όλη η Noise group
 
-Στη [`/randomness/psd §7`](/randomness/psd) είδαμε ότι η ΦΠΙ της εξόδου ΓΧΑ φίλτρου με WSS είσοδο είναι $\mathcal{S}_Y(f) = \lvert H(f)\rvert^2\,\mathcal{S}_X(f)$. **Αυτή η σελίδα ανοίγει το κουτί αυτό και το γεμίζει με τη μηχανή του θορύβου.** Δείχνει την παραγωγή slide-by-slide από τις slides 38-40 του session-10, και μετά την εφαρμόζει στο **κανονικό worked example** του μαθήματος (Άσκηση 8 του session-10, slides 51-55): bandpass-filtered λευκός θόρυβος.
+Στη [`/randomness/psd §7`](/randomness/psd) είδαμε ότι η ΦΠΙ της εξόδου ΓΧΑ φίλτρου με WSS είσοδο είναι $\mathcal{S}_Y(f) = \lvert H(f)\rvert^2\,\mathcal{S}_X(f)$. **Αυτή η σελίδα ανοίγει το κουτί αυτό και το γεμίζει με τη μηχανή του θορύβου.** Παράγουμε τη σχέση βήμα-βήμα από τη συνέλιξη στον χρόνο, και μετά την εφαρμόζουμε στο **κανονικό worked example** του μαθήματος, την Άσκηση 8: bandpass-filtered λευκός θόρυβος.
 
 <Callout type="key" title="Το βασικό σημείο της σελίδας">
 
@@ -57,9 +57,9 @@ $$
 
 Η σελίδα έχει **τρία πράγματα** να σου δώσει:
 
-1. **Παραγωγή** (slide 38-40): πώς η συνέλιξη στον χρόνο γίνεται πολλαπλασιασμός με $\lvert H\rvert^2$ στη συχνότητα — όχι μαγεία, **απορρέει** από τις 2-D ολοκληρώσεις πάνω σε $h(u)h(v)$.
+1. **Παραγωγή**: πώς η συνέλιξη στον χρόνο γίνεται πολλαπλασιασμός με $\lvert H\rvert^2$ στη συχνότητα — όχι μαγεία, **απορρέει** από τις 2-D ολοκληρώσεις πάνω σε $h(u)h(v)$.
 2. **Εργαλειοθήκη**: πέντε φίλτρα-«κανόνες» (ιδανικός LPF, ιδανικός BPF, RC LPF, διαφοριστής, cascade) — όταν δεις ένα από αυτά στην εκφώνηση, η μηχανή τρέχει σχεδόν μηχανικά.
-3. **Άσκηση 8 verbatim** (slide 51-55): bandpass-filtered λευκός θόρυβος. Πλήρης αλγεβρική απαγωγή του $R_Y(\tau) = N_0 W \cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)$ και $P_Y = N_0 W$. Αυτό είναι **το** μοτίβο που εμφανίζεται σε `proodos26-6`, `sept25-th3-11`, `jun25-th1-10` και ξανά στις AM/FM-in-noise σελίδες.
+3. **Άσκηση 8**: bandpass-filtered λευκός θόρυβος. Πλήρης αλγεβρική απαγωγή του $R_Y(\tau) = N_0 W \cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)$ και $P_Y = N_0 W$. Αυτό είναι **το** μοτίβο που εμφανίζεται σε `proodos26-6`, `sept25-th3-11`, `jun25-th1-10` και ξανά στις AM/FM-in-noise σελίδες.
 
 </Callout>
 
@@ -69,58 +69,48 @@ $$
 | --- | --- | --- |
 | [`/randomness/psd §7`](/randomness/psd) | <InlineMath>{'\\mathcal{S}_Y = \\lvert H\\rvert^2 \\mathcal{S}_X'}</InlineMath> ως πρόταση | — |
 | [`/noise/white-noise §2`](/noise/white-noise) | <InlineMath>{'\\mathcal{S}_N(f) = N_0/2'}</InlineMath> ως είσοδο | — |
-| **Αυτή η σελίδα** | παραγωγή slide-38-40 · κανόνες LPF/BPF/RC · **Άσκηση 8** | [`/noise/bandpass`](/noise/bandpass), [`/noise/snr`](/noise/snr) |
+| **Αυτή η σελίδα** | η παραγωγή · κανόνες LPF/BPF/RC · **Άσκηση 8** | [`/noise/bandpass`](/noise/bandpass), [`/noise/snr`](/noise/snr) |
 | **Αυτή η σελίδα** | <InlineMath>{'R_Y(\\tau) = N_0 W \\cos(2\\pi f_c\\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> (Άσκηση 8) | [`/noise/bandpass`](/noise/bandpass) (I/Q form), [`/am/modulator-demodulator`](/am/modulator-demodulator), [`/fm/in-noise`](/fm/in-noise) |
 | **Αυτή η σελίδα** | <InlineMath>{'P_n = N_0 B'}</InlineMath> ως τυπική φόρμα output θορύβου | [`/am/modulator-demodulator §6`](/am/modulator-demodulator), [`/fm/in-noise`](/fm/in-noise), [`/noise/snr`](/noise/snr) |
 | **Αυτή η σελίδα** | $\lvert H\rvert^2$ machine για διαφοριστή | [`/fm/in-noise`](/fm/in-noise) (triangular noise PSD) |
 
 Όλη η downstream Noise group (`/noise/bandpass`, `/noise/snr`) και όλες οι AM/FM-in-noise σελίδες κάθονται **πάνω σε αυτή τη μία γραμμή**.
 
-## 2. Slide 38-40 — η παραγωγή της master equation
+## 2. Η παραγωγή της master equation
 
 Η ισχύς θορύβου εξόδου δεν είναι ταυτότητα που πρέπει να μάθεις απέξω. **Παράγεται** σε τρία βήματα από τη συνέλιξη στον χρόνο.
 
-### 2α. Slide 38 — η συνέλιξη ορίζει την έξοδο
+### 2α. Η συνέλιξη ορίζει την έξοδο
 
-<Callout type="note" title="slide 38 — γραμμική συνέλιξη ΓΧΑ φίλτρου">
+Το πρώτο βήμα είναι κάτι που έχουμε ξαναδεί: η γραμμική συνέλιξη συνδέει στο πεδίο του χρόνου την έξοδο ενός συστήματος ΓΧΑ με την είσοδό του, και η συνέλιξη στον χρόνο γίνεται πολλαπλασιασμός στη συχνότητα. Αν η WSS ΤΔ $X(t)$ διέρχεται από σύστημα ΓΧΑ με κρουστική απόκριση $h(t)$, η WSS ΤΔ εξόδου $Y(t)$ δίνεται από:
 
-> «Η πράξη της γραμμικής συνέλιξης φανερώνει τον τρόπο με τον οποίο συνδέεται στο πεδίο του χρόνου η έξοδος ενός συστήματος ΓΧΑ με την είσοδό του.
->
-> Η συνέλιξη στο πεδίο του χρόνου μετασχηματίζεται σε πολλαπλασιασμό στο πεδίο της συχνότητας.
->
-> Έστω ότι η WSS ΤΔ $X(t)$ διέρχεται από ένα σύστημα ΓΧΑ με κρουστική απόκριση $h(t)$. Ισχύει για τη WSS ΤΔ $Y(t)$ της εξόδου:
->
-> $$Y(t) \;=\; X(t) * h(t) \;=\; \int_{-\infty}^{+\infty} X(\tau)\,h(t-\tau)\,d\tau\,.$$»
-
-</Callout>
+$$
+Y(t) \;=\; X(t) * h(t) \;=\; \int_{-\infty}^{+\infty} X(\tau)\,h(t-\tau)\,d\tau\,.
+$$
 
 Αυτό είναι ξανά η ίδια συνέλιξη που έχουμε δει σε όλο το `/foundations/systems` — η μόνη διαφορά είναι ότι **η είσοδος δεν είναι deterministic σήμα**, αλλά **τυχαία διαδικασία**. Η συνέλιξη επιδρά **realization-by-realization**: για κάθε επιμέρους πραγμάτωση $X(t, \omega)$, η αντίστοιχη πραγμάτωση εξόδου $Y(t, \omega)$ είναι η συνέλιξή της με τη $h(t)$.
 
-### 2β. Slide 39 — η ΣΑΣ εξόδου ως διπλή ολοκλήρωση
+### 2β. Η ΣΑΣ εξόδου ως διπλή ολοκλήρωση
 
-<Callout type="note" title="slide 39 — υπολογισμός της R_Y(τ)">
+Για να φτάσουμε στη ΦΠΙ εξόδου, χρειαζόμαστε πρώτα τη ΣΑΣ της. Ξεκινάμε από τον ορισμό και αντικαθιστούμε την $Y(t)$ και την $Y(t+\tau)$ με τη συνέλιξη που μόλις γράψαμε:
 
-> «Η ΣΑΣ της εξόδου $Y(t)$:
->
-> $$
-> R_Y(\tau) \;=\; E[Y(t)Y(t+\tau)]
-> $$
->
-> $$
-> \;=\; E\!\left[\int_{-\infty}^{\infty} X(\tau_1)h(t-\tau_1)d\tau_1 \int_{-\infty}^{\infty} X(\tau_2)h(t+\tau-\tau_2)d\tau_2\right]
-> $$
->
-> $$
-> \;=\; \int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty} E[X(\tau_1)X(\tau_2)]\,h(t-\tau_1)h(t+\tau-\tau_2)\,d\tau_1 d\tau_2\,.
-> $$
->
-> Με τις αναθέσεις $u = t-\tau_1$ και $v = t+\tau-\tau_2$ προκύπτει:
->
-> $$
-> R_Y(\tau) \;=\; \int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty} R_X(\tau + u - v)\,h(u)h(v)\,du\,dv \;=\; R_X(\tau) * h(\tau) * h(-\tau)\,.
-> $$»
+$$
+R_Y(\tau) \;=\; E[Y(t)Y(t+\tau)]
+$$
 
-</Callout>
+$$
+\;=\; E\!\left[\int_{-\infty}^{\infty} X(\tau_1)h(t-\tau_1)d\tau_1 \int_{-\infty}^{\infty} X(\tau_2)h(t+\tau-\tau_2)d\tau_2\right]
+$$
+
+$$
+\;=\; \int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty} E[X(\tau_1)X(\tau_2)]\,h(t-\tau_1)h(t+\tau-\tau_2)\,d\tau_1 d\tau_2\,.
+$$
+
+Με τις αναθέσεις $u = t-\tau_1$ και $v = t+\tau-\tau_2$ προκύπτει:
+
+$$
+R_Y(\tau) \;=\; \int_{-\infty}^{\infty}\!\!\int_{-\infty}^{\infty} R_X(\tau + u - v)\,h(u)h(v)\,du\,dv \;=\; R_X(\tau) * h(\tau) * h(-\tau)\,.
+$$
 
 **Πώς να διαβάσεις τη μετατροπή:**
 
@@ -136,26 +126,17 @@ $$
 
 </Callout>
 
-### 2γ. Slide 40 — από τη ΣΑΣ εξόδου στην ΦΠΙ εξόδου
+### 2γ. Από τη ΣΑΣ εξόδου στην ΦΠΙ εξόδου
 
-<Callout type="note" title="slide 40 — Wiener-Khinchin εφαρμογή">
+Το τελευταίο βήμα είναι ο μετασχηματισμός Fourier της $R_Y(\tau)$. Χρειαζόμαστε δύο γνωστές ιδιότητες: ότι ο $\mathcal{F}$ μιας συνέλιξης είναι γινόμενο, $\mathcal{F}[x(t) * y(t)] = X(f)\,Y(f)$, και ότι για πραγματικό $x(t)$ ισχύει $X^*(f) = X(-f)$. Εφαρμόζοντάς τες στην $R_Y(\tau) = R_X(\tau) * h(\tau) * h(-\tau)$ καταλήγουμε στη master equation και στην ισχύ εξόδου:
 
-> «Η ΦΠΙ της WSS ΤΔ $Y(t)$ προκύπτει από τον μετασχηματισμό Fourier της ΣΑΣ της. Υπενθυμίζονται οι παρακάτω ιδιότητες για δύο σήματα $x(t)$ και $y(t)$:
->
-> - $\mathcal{F}[x(t) * y(t)] = X(f)\,Y(f)$.
-> - Αν $x(t)$ πραγματικό, τότε $X^*(f) = X(-f)$.
->
-> Συνεπώς, για τις WSS ΤΔ $X(t)$ και $Y(t)$ προκύπτει:
->
-> $$
-> \boxed{\;\mathcal{S}_Y(f) \;=\; \mathcal{F}[R_Y(\tau)] \;=\; \mathcal{S}_X(f)\,\lvert H(f)\rvert^2\,,\;}
-> $$
->
-> $$
-> \boxed{\;\mathcal{P}_Y \;=\; E[Y^2(t)] \;=\; R_Y(0) \;=\; \int_{-\infty}^{\infty} \mathcal{S}_X(f)\,\lvert H(f)\rvert^2\,df\,.\;}
-> $$»
+$$
+\boxed{\;\mathcal{S}_Y(f) \;=\; \mathcal{F}[R_Y(\tau)] \;=\; \mathcal{S}_X(f)\,\lvert H(f)\rvert^2\,,\;}
+$$
 
-</Callout>
+$$
+\boxed{\;\mathcal{P}_Y \;=\; E[Y^2(t)] \;=\; R_Y(0) \;=\; \int_{-\infty}^{\infty} \mathcal{S}_X(f)\,\lvert H(f)\rvert^2\,df\,.\;}
+$$
 
 **Συμπέρασμα — δύο γραμμές που αλλάζουν τα πάντα:**
 
@@ -163,7 +144,7 @@ $$
 - Η ΣΑΣ εξόδου $R_Y(\tau) = R_X(\tau) * h(\tau) * h(-\tau)$ έχει $\mathcal{F}$ ίσο με γινόμενο: $\mathcal{S}_X(f) \cdot \lvert H(f)\rvert^2$.
 - Η συνολική ισχύς εξόδου είναι $R_Y(0)$, αλλά από Parseval-style $R_Y(0) = \int \mathcal{S}_Y(f)\,df$.
 
-🎯 **Κλείνει υπόσχεση** από [`/randomness/psd §7`](/randomness/psd) — εκεί η master equation δόθηκε ως **πρόταση**. Εδώ η παραγωγή slide-by-slide από slides 38-40 του session-10 δείχνει ότι **δεν είναι αξίωμα**, είναι απόρροια από (α) τον ορισμό της συνέλιξης, (β) τη γραμμικότητα της προσδοκίας, (γ) Wiener-Khinchin, (δ) την ιδιότητα $\mathcal{F}\{f(-t)\} = F^*(f)$ για πραγματικά σήματα.
+🎯 **Κλείνει υπόσχεση** από [`/randomness/psd §7`](/randomness/psd) — εκεί η master equation δόθηκε ως **πρόταση**. Η παραγωγή που μόλις κάναμε δείχνει ότι **δεν είναι αξίωμα**: είναι απόρροια από (α) τον ορισμό της συνέλιξης, (β) τη γραμμικότητα της προσδοκίας, (γ) Wiener-Khinchin, (δ) την ιδιότητα $\mathcal{F}\{f(-t)\} = F^*(f)$ για πραγματικά σήματα.
 
 <RecallCard
   title="Συμπύκνωσε — η master equation σε 4 βήματα"
@@ -176,9 +157,9 @@ $$
     'P_Y = ∫ S_X |H|² df',
   ]}
   skeleton={[
-    'Slide 38 — η έξοδος ορίζεται μέσω συνέλιξης με h(t).',
-    'Slide 39 — η ΣΑΣ εξόδου είναι διπλή ολοκλήρωση: R_Y = R_X * h(τ) * h(−τ).',
-    'Slide 40 — εφαρμογή Wiener-Khinchin: F{h(τ) * h(−τ)} = H(f) · H*(f) = |H(f)|².',
+    'Βήμα 1 — η έξοδος ορίζεται μέσω συνέλιξης με h(t).',
+    'Βήμα 2 — η ΣΑΣ εξόδου είναι διπλή ολοκλήρωση: R_Y = R_X * h(τ) * h(−τ).',
+    'Βήμα 3 — εφαρμογή Wiener-Khinchin: F{h(τ) * h(−τ)} = H(f) · H*(f) = |H(f)|².',
     'Συμπέρασμα: S_Y(f) = |H(f)|² S_X(f), P_Y = ∫ S_X(f)|H(f)|² df.',
   ]}
   trap={
@@ -213,9 +194,9 @@ $$
 | RC LPF, cutoff $f_c$ | $1/(1+(f/f_c)^2)$ | $\pi f_c$ | $\pi N_0 f_c/2$ |
 | Διαφοριστής ($H = j 2\pi f$) | $(2\pi f)^2$ | **απειρίζεται** (γι' αυτό πρέπει bandpass-prefiltering) | — |
 
-Οι τρεις πρώτες σειρές είναι τα τρία presets του NoiseFilterShapingViz παρακάτω. Η τέταρτη (διαφοριστής) εμφανίζεται στο [`/fm/in-noise`](/fm/in-noise).
+Οι τρεις πρώτες σειρές είναι τα τρία presets του interactive που ακολουθεί (§4). Η τέταρτη (διαφοριστής) εμφανίζεται στο [`/fm/in-noise`](/fm/in-noise).
 
-## 4. Δες — NoiseFilterShapingViz: η master equation σε πραγματικό χρόνο
+## 4. Δες — η master equation σε πραγματικό χρόνο
 
 <NoiseFilterShapingViz />
 
@@ -360,23 +341,19 @@ $$
 
 </Callout>
 
-## 8. Άσκηση 8 — bandpass-filtered λευκός θόρυβος (slide 51-55 verbatim)
+## 8. Άσκηση 8 — bandpass-filtered λευκός θόρυβος
 
 **Αυτή είναι η σπουδαία εφαρμογή της σελίδας.** Πλήρης βήμα-βήμα παραγωγή του $R_Y(\tau)$ για bandpass-filtered λευκό θόρυβο — το μοτίβο που εμφανίζεται σε `proodos26-6`, `sept25-th3-11`, `jun25-th1-10` και ξανά στις AM/FM-in-noise σελίδες.
 
-### 8α. Slide 51 — η εκφώνηση
+### 8α. Η εκφώνηση
 
-<Callout type="note" title="slide 51 — Άσκηση 8 verbatim">
+Λευκός θόρυβος $N(t)$ με ΦΠΙ $\mathcal{S}_N(f) = N_0/2$ για κάθε $f \in (-\infty, +\infty)$ τροφοδοτεί ιδανικό ζωνοπερατό φίλτρο $h(t)$ με απόκριση συχνότητας:
 
-> «Έστω η ΤΔ $N(t)$ λευκού θορύβου με ΦΠΙ $\mathcal{S}_N(f) = N_0/2$, $f \in (-\infty, +\infty)$, η οποία τροφοδοτεί το ιδανικό ζωνοπερατό φίλτρο $h(t)$ με απόκριση συχνότητας:
->
-> $$
-> H(f) = \begin{cases} 1, & f_c - W/2 \le \lvert f\rvert \le f_c + W/2 \\ 0, & \text{αλλού}\,. \end{cases}
-> $$
->
-> Αν η ΤΔ $Y(t)$ είναι η έξοδος του φίλτρου, να βρεθούν τα: $\mathcal{S}_Y(f)$, $R_Y(\tau)$ και $\mathcal{P}_Y$.»
+$$
+H(f) = \begin{cases} 1, & f_c - W/2 \le \lvert f\rvert \le f_c + W/2 \\ 0, & \text{αλλού}\,. \end{cases}
+$$
 
-</Callout>
+Αν $Y(t)$ είναι η έξοδος του φίλτρου, ζητούνται τα $\mathcal{S}_Y(f)$, $R_Y(\tau)$ και $\mathcal{P}_Y$.
 
 **Setup χάρτης πριν τη λύση:**
 
@@ -384,7 +361,7 @@ $$
 - Φίλτρο: ιδανικός BPF, **κεντραρισμένος στο $\pm f_c$**, με **εύρος ζώνης $W$ ανά πλευρά** — όχι **συνολικό** εύρος $W$. (Αυτό είναι ένα σύνηθες σημείο σύγχυσης — το $W$ εδώ είναι το ένα-πλευρό εύρος, όχι το διπλο-πλευρό.)
 - Ζητούμενα: ΦΠΙ εξόδου $\mathcal{S}_Y$, ΣΑΣ εξόδου $R_Y$, ισχύς $\mathcal{P}_Y$.
 
-### 8β. Slide 52 — εφαρμογή της master eq + ορισμός $I_1, I_2$
+### 8β. Εφαρμογή της master eq + ορισμός $I_1, I_2$
 
 **Από την master equation §2γ:**
 
@@ -406,7 +383,7 @@ $$
 R_Y(\tau) \;=\; \underbrace{\int_{f_c - W/2}^{f_c + W/2} \mathcal{S}_Y(f)\,e^{j 2\pi f \tau}\,df}_{\triangleq\,I_1\;\text{(θετικές συχνότητες)}} \;+\; \underbrace{\int_{-f_c - W/2}^{-f_c + W/2} \mathcal{S}_Y(f)\,e^{j 2\pi f \tau}\,df}_{\triangleq\,I_2\;\text{(αρνητικές συχνότητες)}}\,.
 $$
 
-### 8γ. Slide 53 — η αλγεβρική απαγωγή του $I_1$
+### 8γ. Η αλγεβρική απαγωγή του $I_1$
 
 Μέσα σε αυτό το διάστημα, $\mathcal{S}_Y(f) = N_0/2$, σταθερά. Το ολοκλήρωμα γίνεται απευθείας:
 
@@ -440,7 +417,7 @@ $$
 
 (όπου εδώ χρησιμοποιείται η κανονικοποιημένη sinc: $\mathrm{sinc}(x) = \sin(\pi x)/(\pi x)$.)
 
-### 8δ. Slide 54 — το $I_2$ με συμμετρία + σύνθεση $R_Y$
+### 8δ. Το $I_2$ με συμμετρία + σύνθεση $R_Y$
 
 Επειδή το διάστημα ολοκλήρωσης του $I_2$ είναι **το κατοπτρικό** του $I_1$ (γύρω από $-f_c$ αντί $+f_c$), και η $\mathcal{S}_Y$ είναι **πραγματική και άρτια** (αφού η $h(t)$ είναι πραγματική, $\mathcal{S}_Y(-f) = \mathcal{S}_Y(f)$), παίρνουμε με τη ίδια αλγεβρική απαγωγή:
 
@@ -464,14 +441,12 @@ $$
 \mathcal{P}_Y \;=\; R_Y(0) \;=\; N_0\,W \cdot \cos(0) \cdot \mathrm{sinc}(0) \;=\; \boxed{\,N_0\,W\,}\,.
 $$
 
-### 8ε. Slide 55 — οι δύο παρατηρήσεις
+### 8ε. Οι δύο παρατηρήσεις
 
-<Callout type="note" title="slide 55 — παρατηρήσεις verbatim">
+Η λύση αφήνει δύο παρατηρήσεις που θα χρειαστούμε ξανά και ξανά στις downstream σελίδες:
 
-> 1. «Η έξοδος του φίλτρου $Y(t)$ είναι μια **WSS ΤΔ Gauss** με μηδενική μέση τιμή και διακύμανση $\sigma^2_Y = R_Y(0) = N_0 W$.»
-> 2. «Η ισχύς του θερμικού θορύβου **αυξάνεται με το εύρος ζώνης** του φίλτρου (για χαμηλοπερατό φίλτρο $f_c = 0$).»
-
-</Callout>
+1. Η έξοδος $Y(t)$ είναι **WSS ΤΔ Gauss** με μηδενική μέση τιμή και διακύμανση $\sigma^2_Y = R_Y(0) = N_0 W$.
+2. Η ισχύς του θερμικού θορύβου **αυξάνεται με το εύρος ζώνης** του φίλτρου (στην οριακή περίπτωση χαμηλοπερατού φίλτρου, $f_c = 0$).
 
 **Πώς να διαβάσεις τις δύο παρατηρήσεις:**
 
@@ -491,7 +466,7 @@ $$
 
 ### 8στ. Στοίχιση με τα formula-sheet entries
 
-- **`lti-output-psd`** ($\mathcal{S}_Y(f) = \lvert H(f)\rvert^2 \mathcal{S}_X(f)$) — εδώ έγινε η παραγωγή (slides 38-40) και η πρώτη πλήρης εφαρμογή (Άσκηση 8).
+- **`lti-output-psd`** ($\mathcal{S}_Y(f) = \lvert H(f)\rvert^2 \mathcal{S}_X(f)$) — εδώ έγινε η παραγωγή (§2) και η πρώτη πλήρης εφαρμογή (Άσκηση 8).
 
 <Callout type="warning" title="⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο">
 
@@ -501,29 +476,25 @@ $$
 
 </Callout>
 
-- **`bandpass-noise-r`** ($R_Y(\tau) = N_0 W \cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)$) — εδώ έγινε η αλγεβρική απαγωγή (slides 52-54). ⚠️ Δεν δίνεται στο τυπολόγιο.
+- **`bandpass-noise-r`** ($R_Y(\tau) = N_0 W \cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)$) — εδώ έγινε η αλγεβρική απαγωγή (§8γ–8δ). ⚠️ Δεν δίνεται στο τυπολόγιο.
 
-## 9. Slide 56 — η οπτική σύγκριση «στενό vs ευρύ $W$»
+## 9. Η οπτική σύγκριση «στενό vs ευρύ $W$»
 
-<Callout type="note" title="slide 56 — narrow-vs-wide visual">
+Πέρα από τα νούμερα, αξίζει να δούμε τι κάνει το εύρος ζώνης $W$ στην **ίδια την κυματομορφή** της εξόδου. Αντιπαράθεσε δύο ζωνοπερατά φίλτρα κεντραρισμένα στο ίδιο $f_c$ και κοίτα μια πραγμάτωση $y_i(t)$ της εξόδου του καθενός:
 
-Η slide 56 του session-10 παρουσιάζει την οπτική αντιπαραβολή του $\lvert H(f)\rvert$ και της αντίστοιχης πραγμάτωσης $y_i(t)$ της εξόδου, για **δύο** διαφορετικές περιπτώσεις:
+- **Μικρό εύρος ζώνης $W$**: στενή pass-band. Η πραγμάτωση εξόδου είναι **αργή** — ταλαντώνεται γύρω από το $f_c$ με ένα envelope που μεταβάλλεται νωθρά και με μικρό πλάτος.
+- **Μεγάλο εύρος ζώνης $W$**: ευρεία pass-band. Η πραγμάτωση εξόδου είναι **γρήγορη** — πλούσια σε γρήγορες μεταβολές και με μεγαλύτερο πλάτος.
 
-- **Φίλτρο μικρού εύρους ζώνης $W$** (πάνω): η pass-band είναι στενή. Η πραγμάτωση εξόδου παρουσιάζεται **αργή** — οι ταλαντώσεις της είναι γύρω από $f_c$ με μικρή διασπορά εύρους.
-- **Φίλτρο μεγάλου εύρους ζώνης $W$** (κάτω): η pass-band είναι ευρεία. Η πραγμάτωση εξόδου παρουσιάζεται **γρήγορη** — πλούσιο σε γρήγορες ταλαντώσεις, αυξημένο amplitude.
+**Δύο ποσοτικά διαβάσματα αυτής της εικόνας:**
 
-</Callout>
+- **Ισχύς $\propto W$** — από την Παρατήρηση 2 (§8ε) και την §8δ: $\mathcal{P}_Y = N_0 W$. Διπλάσιο $W$ → διπλάσια ισχύς → πιο «έντονο» amplitude στην πραγμάτωση.
+- **Ταχύτητα ταλαντώσεων $\propto W$** — από τη ΣΑΣ της §8δ: $R_Y(\tau) = N_0 W \cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)$. Το envelope $\mathrm{sinc}(W\tau)$ έχει **πρώτη ρίζα** στο $\tau = 1/W$ — δηλαδή ο θόρυβος έχει **μνήμη μήκους $\sim 1/W$**. Μικρό $W$ → μακρά μνήμη → αργές ταλαντώσεις. Μεγάλο $W$ → κοντή μνήμη → γρήγορες ταλαντώσεις.
 
-**Δύο ποσοτικά διαβάσματα της slide 56:**
+Το interactive της §4 παραπάνω κάνει ακριβώς αυτή τη σύγκριση ποσοτικά: διάλεξε «Ιδανικό BPF» και μετακίνησε το slider — η ισχύς εξόδου μένει σταθερή για σταθερό $\Delta B$ και αυξάνεται γραμμικά καθώς ανοίγει το $W$. Για τη χρονική δομή, η ΣΑΣ φαίνεται στο interactive της §12 παρακάτω.
 
-- **Ισχύς $\propto W$** — από slide 55 Παρατήρηση 2 + Άσκηση 8 §8δ: $\mathcal{P}_Y = N_0 W$. Διπλάσιο $W$ → διπλάσια ισχύς → πιο «έντονο» amplitude στην πραγμάτωση.
-- **Ταχύτητα ταλαντώσεων $\propto W$** — από slide-54 ΣΑΣ: $R_Y(\tau) = N_0 W \cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)$. Το envelope $\mathrm{sinc}(W\tau)$ έχει **πρώτη ρίζα** στο $\tau = 1/W$ — δηλαδή ο θόρυβος έχει **μνήμη μήκους $\sim 1/W$**. Μικρό $W$ → μακρά μνήμη → αργές ταλαντώσεις. Μεγάλο $W$ → κοντή μνήμη → γρήγορες ταλαντώσεις.
+### 9α. Ειδική περίπτωση — χαμηλοπερατό φίλτρο
 
-Το **NoiseFilterShapingViz** §4 παραπάνω καλύπτει αυτή τη slide ποσοτικά: επιλέγεις «Ιδανικό BPF» και μετακινείς το slider — και βλέπεις την ισχύ εξόδου να μένει σταθερή για σταθερό $\Delta B$, να αυξάνεται γραμμικά αν αλλάζει $W$. Για χρονική-domain πραγματώσεις, η AutocorrelationViz παρακάτω δείχνει τη ΣΑΣ.
-
-### 9α. Ειδική περίπτωση — χαμηλοπερατό φίλτρο (slide-55 Παρατήρηση 2)
-
-Η Παρατήρηση 2 της slide 55 αναφέρει «**η ισχύς του θερμικού θορύβου αυξάνεται με το εύρος ζώνης του φίλτρου (για χαμηλοπερατό φίλτρο $f_c = 0$)**». Αυτή είναι **γενική αρχή** για bandwidth-power coupling — όχι αλγεβρικό substitution στη formula της §8.
+Η Παρατήρηση 2 της §8ε λέει ότι «**η ισχύς του θερμικού θορύβου αυξάνεται με το εύρος ζώνης του φίλτρου**», με την οριακή περίπτωση του χαμηλοπερατού φίλτρου ($f_c = 0$). Αυτή είναι **γενική αρχή** για bandwidth-power coupling — όχι αλγεβρικό substitution στη formula της §8.
 
 **Γιατί δεν μπορούμε απλώς να βάλουμε $f_c = 0$ στη §8 formula:** η παραγωγή §8γ προϋποθέτει ότι τα δύο passbands (γύρω από $+f_c$ και $-f_c$) είναι **ξένα μεταξύ τους** — δηλαδή $f_c \ge W/2$. Όταν $f_c \to 0$, οι δύο πλευρές **επικαλύπτονται** και το φίλτρο καταρρέει σε **έναν** LPF cutoff $W/2$, όχι σε φίλτρο εύρους $2W$.
 
@@ -532,7 +503,7 @@ $$
 - Για **έναν** LPF με $\lvert H\rvert^2 = 1$ για $\lvert f\rvert \le B$, **η §5 είναι ο σωστός τύπος**: $\mathcal{P}_Y = N_0 B$, $R_Y(\tau) = N_0 B\,\mathrm{sinc}(2B\tau)$.
 - Η Άσκηση 8 με $f_c \ge W/2$ δίνει ένα **διαφορετικό** φίλτρο (BPF με δύο διακριτά passbands, συνολικό φάσμα $2W$) και έχει τη δική της formula: $\mathcal{P}_Y = N_0 W$, $R_Y(\tau) = N_0 W \cos(2\pi f_c \tau)\,\mathrm{sinc}(W\tau)$.
 
-**Πώς συνδέονται οι δύο:** **ίδιο συνολικό φάσμα → ίδια ισχύς θορύβου**, ανεξάρτητα από το αν η ενέργεια κάθεται σε ένα κομμάτι γύρω από το 0 ή σε δύο γύρω από $\pm f_c$. Αν συγκρίνεις ένα LPF συνολικού εύρους $2B$ με ένα BPF συνολικού εύρους $2W$, και $2B = 2W$, τότε **και οι δύο** έχουν $\mathcal{P}_Y = N_0 B = N_0 W$. Αυτή είναι η ποσοτική έκφραση της slide-55 Παρατήρησης 2: η μεταφορά συχνότητας δεν αλλάζει ισχύ — μόνο το **συνολικό εύρος** μετράει.
+**Πώς συνδέονται οι δύο:** **ίδιο συνολικό φάσμα → ίδια ισχύς θορύβου**, ανεξάρτητα από το αν η ενέργεια κάθεται σε ένα κομμάτι γύρω από το 0 ή σε δύο γύρω από $\pm f_c$. Αν συγκρίνεις ένα LPF συνολικού εύρους $2B$ με ένα BPF συνολικού εύρους $2W$, και $2B = 2W$, τότε **και οι δύο** έχουν $\mathcal{P}_Y = N_0 B = N_0 W$. Αυτή είναι η ποσοτική έκφραση της Παρατήρησης 2 (§8ε): η μεταφορά συχνότητας δεν αλλάζει ισχύ — μόνο το **συνολικό εύρος** μετράει.
 
 <Callout type="warning" title="One-sided W vs two-sided B — μην τα μπερδέψεις στη λύση">
 
@@ -609,9 +580,9 @@ $$
 
 <AutocorrelationViz />
 
-<Callout type="intuition" title="AutocorrelationViz — διπλό-checking της Άσκησης 8">
+<Callout type="intuition" title="Διπλό-checking της Άσκησης 8">
 
-Επίλεξε το preset **«Bandpass θόρυβος»**. Παρατήρησε ότι η ΣΑΣ είναι $\cos(2\pi f_c \tau) \cdot \mathrm{sinc}(W\tau)$ — ακριβώς ο τύπος της slide 54. Το $\cos$ δίνει τη γρήγορη ταλάντωση γύρω από το 0 (φέρον), και η sinc δίνει το **envelope** που φθίνει με μνήμη μήκους $\sim 1/W$. Παρατήρησε επίσης ότι $R_Y(0) = $ ισχύς εξόδου — η κορυφή της καμπύλης σε $\tau = 0$ είναι ίση με $N_0 W$ (στο preset, σε κανονικοποιημένες μονάδες).
+Επίλεξε το preset **«Bandpass θόρυβος»**. Παρατήρησε ότι η ΣΑΣ είναι $\cos(2\pi f_c \tau) \cdot \mathrm{sinc}(W\tau)$ — ακριβώς ο τύπος της §8δ. Το $\cos$ δίνει τη γρήγορη ταλάντωση γύρω από το 0 (φέρον), και η sinc δίνει το **envelope** που φθίνει με μνήμη μήκους $\sim 1/W$. Παρατήρησε επίσης ότι $R_Y(0) = $ ισχύς εξόδου — η κορυφή της καμπύλης σε $\tau = 0$ είναι ίση με $N_0 W$ (στο preset, σε κανονικοποιημένες μονάδες).
 
 </Callout>
 
@@ -801,9 +772,9 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
 
 <ReorderDrill
   id="askisi-8-derivation-steps"
-  prompt={<p>Βάλε στη σωστή σειρά τα 6 βήματα της Άσκησης 8 (slide 51-54): «από ορισμό BPF σε <InlineMath>{'R_Y(\\tau) = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> και <InlineMath>{'P_Y = N_0 W'}</InlineMath>».</p>}
+  prompt={<p>Βάλε στη σωστή σειρά τα 6 βήματα της Άσκησης 8: «από ορισμό BPF σε <InlineMath>{'R_Y(\\tau) = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> και <InlineMath>{'P_Y = N_0 W'}</InlineMath>».</p>}
   steps={[
-    <span>Slide 51 setup: λευκός θόρυβος <InlineMath>{'\\mathcal{S}_N = N_0/2'}</InlineMath> + ιδανικός BPF στις <InlineMath>{'\\pm f_c'}</InlineMath> εύρους <InlineMath>{'W'}</InlineMath> ανά πλευρά.</span>,
+    <span>Setup: λευκός θόρυβος <InlineMath>{'\\mathcal{S}_N = N_0/2'}</InlineMath> + ιδανικός BPF στις <InlineMath>{'\\pm f_c'}</InlineMath> εύρους <InlineMath>{'W'}</InlineMath> ανά πλευρά.</span>,
     <span>Master equation: <InlineMath>{'\\mathcal{S}_Y(f) = \\lvert H\\rvert^2 \\mathcal{S}_N = N_0/2'}</InlineMath> στη ζώνη BPF, 0 αλλιώς.</span>,
     <span>Inverse FT split σε <InlineMath>{'I_1'}</InlineMath> (θετικές) + <InlineMath>{'I_2'}</InlineMath> (αρνητικές συχνότητες).</span>,
     <span><InlineMath>{'I_1'}</InlineMath> ολοκλήρωμα: factor <InlineMath>{'e^{j2\\pi f_c \\tau}'}</InlineMath>, Euler split, αναγωγή σε <InlineMath>{'e^{j2\\pi f_c \\tau}\\,(N_0/2)\\,W\\,\\mathrm{sinc}(W\\tau)'}</InlineMath>.</span>,
@@ -826,7 +797,7 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
     { blank: 'rc', accept: ['π N_0 f_c/2', 'pi N_0 f_c/2', '(π/2)N_0 f_c', '(pi/2)N_0 f_c', 'π/2 · N_0 f_c'], hint: 'παράγοντας π/2 πάνω από ιδανικό' },
     <span>. Equivalent noise bw: <InlineMath>{'B_N ='}</InlineMath></span>,
     { blank: 'bn', accept: ['∫_0^∞ |H|^2 df / |H(0)|^2', 'integral 0 inf |H|^2 df / |H(0)|^2', '∫|H|²df/|H(0)|²'], hint: 'μονόπλευρο ολοκλήρωμα / peak gain' },
-    <span>. Άσκηση 8 (slide 54): <InlineMath>{'R_Y(\\tau) ='}</InlineMath></span>,
+    <span>. Άσκηση 8: <InlineMath>{'R_Y(\\tau) ='}</InlineMath></span>,
     { blank: 'r-y-bandpass', accept: ['N_0 W cos(2πf_c τ) sinc(Wτ)', 'N_0W cos(2πf_cτ)sinc(Wτ)', 'N0 W cos(2π f_c τ) sinc(W τ)', 'N_0 W·cos(2πf_cτ)·sinc(Wτ)'], hint: 'cos × sinc envelope, factor N_0 W' },
     <span>. Cascade <InlineMath>{'H_1 H_2'}</InlineMath>: <InlineMath>{'\\lvert H_{total}\\rvert^2 ='}</InlineMath></span>,
     { blank: 'cascade', accept: ['|H_1|^2 |H_2|^2', '|H_1|²|H_2|²', '|H1|^2|H2|^2', '|H_1|^2 · |H_2|^2'], hint: 'πολλαπλασιασμός των squared magnitudes' },
@@ -836,11 +807,11 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
   solution={
     <ol className="ml-5 list-decimal space-y-1">
       <li><InlineMath>{'\\mathcal{S}_Y(f) = \\lvert H(f)\\rvert^2\\,\\mathcal{S}_X(f)'}</InlineMath> (master eq, §2γ)</li>
-      <li><InlineMath>{'P_Y = \\int \\lvert H(f)\\rvert^2 \\mathcal{S}_X(f)\\,df'}</InlineMath> (slide 40)</li>
+      <li><InlineMath>{'P_Y = \\int \\lvert H(f)\\rvert^2 \\mathcal{S}_X(f)\\,df'}</InlineMath> (§2γ)</li>
       <li><InlineMath>{'P_Y = N_0 B'}</InlineMath> (ιδανικό LPF, §5)</li>
       <li><InlineMath>{'P_Y = \\pi N_0 f_c / 2'}</InlineMath> (RC LPF, §6α)</li>
       <li><InlineMath>{'B_N = \\int_0^\\infty \\lvert H\\rvert^2 df / \\lvert H(0)\\rvert^2'}</InlineMath> (§7)</li>
-      <li><InlineMath>{'R_Y(\\tau) = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> (Άσκηση 8 §8δ, slide 54)</li>
+      <li><InlineMath>{'R_Y(\\tau) = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> (Άσκηση 8 §8δ)</li>
       <li><InlineMath>{'\\lvert H_1 H_2\\rvert^2 = \\lvert H_1\\rvert^2 \\lvert H_2\\rvert^2'}</InlineMath> (cascade, §10)</li>
       <li><InlineMath>{'\\lvert j 2\\pi f\\rvert^2 = (2\\pi f)^2'}</InlineMath> (διαφοριστής, §11)</li>
     </ol>
@@ -849,7 +820,7 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
 
 <RecallDrill
   id="bandpass-noise-properties-recall"
-  prompt={<p>Από μνήμη: γράψε τις **τέσσερις** ιδιότητες που η slide 55 αποδίδει στην έξοδο <InlineMath>{'Y(t)'}</InlineMath> της Άσκησης 8 (bandpass-filtered AWGN). Όταν τελειώσεις, αποκάλυψε και σύγκρινε.</p>}
+  prompt={<p>Από μνήμη: γράψε τις **τέσσερις** ιδιότητες που έχει η έξοδος <InlineMath>{'Y(t)'}</InlineMath> της Άσκησης 8 (bandpass-filtered AWGN). Όταν τελειώσεις, αποκάλυψε και σύγκρινε.</p>}
   answer={
     <ol className="ml-5 list-decimal space-y-1.5">
       <li><strong>WSS</strong> — η ΓΧΑ φιλτράρισμα διατηρεί τη wide-sense στασιμότητα: <InlineMath>{'R_Y(t, t+\\tau) = R_Y(\\tau)'}</InlineMath>, ανεξάρτητο του <InlineMath>{'t'}</InlineMath>.</li>
@@ -883,7 +854,7 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
   <p>**Αν δεις «θόρυβος μέσα από [φίλτρο]» ή «output PSD/power μετά από [φίλτρο]»**, η ερώτηση πέφτει σε μία από **τρεις κατηγορίες**:</p>
   <ol className="ml-5 list-decimal space-y-1.5">
     <li><strong>Λευκός + LPF — ζητείται ισχύς εξόδου.</strong> Άμεση εφαρμογή §5: <InlineMath>{'P_Y = N_0 B'}</InlineMath>. Δεν χρειάζεται ολοκλήρωση. Παραδείγματα: <code>proodos26-6</code>, <code>sept25-th3-11</code>. ΥΨΗΛΗ πιθανότητα — έχει εμφανιστεί 3 περιόδους στη σειρά.</li>
-    <li><strong>Λευκός + BPF — ζητείται PSD, ΣΑΣ και ισχύς (Άσκηση 8 pattern).</strong> Πλήρης αλγεβρική απαγωγή όπως §8: <InlineMath>{'\\mathcal{S}_Y = N_0/2'}</InlineMath> στη ζώνη, <InlineMath>{'R_Y = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath>, <InlineMath>{'P_Y = N_0 W'}</InlineMath>. Συχνά συνδυάζεται με slide-55 παρατηρήσεις (WSS Gaussian zero-mean). Παράδειγμα: <code>jun25-th1-10</code> (LPF + HPF — επέκταση στο pattern).</li>
+    <li><strong>Λευκός + BPF — ζητείται PSD, ΣΑΣ και ισχύς (Άσκηση 8 pattern).</strong> Πλήρης αλγεβρική απαγωγή όπως §8: <InlineMath>{'\\mathcal{S}_Y = N_0/2'}</InlineMath> στη ζώνη, <InlineMath>{'R_Y = N_0 W \\cos(2\\pi f_c \\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath>, <InlineMath>{'P_Y = N_0 W'}</InlineMath>. Συχνά συνδυάζεται με τις παρατηρήσεις της §8ε (WSS Gaussian zero-mean). Παράδειγμα: <code>jun25-th1-10</code> (LPF + HPF — επέκταση στο pattern).</li>
     <li><strong>Cascade ή ισοδύναμο.</strong> Αν δίνονται δύο φίλτρα σε σειρά: <InlineMath>{'\\lvert H_1 H_2\\rvert^2 = \\lvert H_1\\rvert^2 \\lvert H_2\\rvert^2'}</InlineMath>. Αν δίνεται ένα μη-ιδανικό φίλτρο (π.χ. RC): χρησιμοποίησε <InlineMath>{'B_N'}</InlineMath> να γράψεις <InlineMath>{'P_Y = N_0 B_N'}</InlineMath>.</li>
   </ol>
   <p>**Mnemonics για στιγμιαία ανάκληση:**</p>
@@ -904,7 +875,7 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
     { id: 'jun25-th1-10', likelihood: 'high', note: 'Ιούνιος 2025 — λευκός μέσα από LPF και HPF (παράλληλα setups). Δύο εφαρμογές του master eq: το LPF δίνει rect output PSD εύρους W και ΣΑΣ = N_0 W sinc(2Wτ) (§5)· το HPF δίνει output PSD που είναι λευκό με τη ζώνη |f| < 10W αφαιρεμένη — η αντίστοιχη ΣΑΣ έχει «δέλτα μείον sinc» δομή. Πρακτική του §10 cascade rule και της §3 παρανομής περί απείρου.' },
     { id: 'jun25-th1-9', likelihood: 'medium', note: 'Ιούνιος 2025 — PSD θερμικού (input setup). Δεν είναι «μέσα από φίλτρο» αυτό καθαυτό, αλλά setup για το επόμενο πρόβλημα. Δες σε συνδυασμό με jun25-th1-10.' },
     { id: 'sept25-th3-10', likelihood: 'medium', note: 'Σεπτέμβριος 2025 — PSD θερμικού (input setup). Παράλληλη setup με jun25-th1-9.' },
-    { id: 'jan26-th1-3', likelihood: 'low', note: 'Ιανουάριος 2026 — Σ/Λ trap «λευκός = Gaussian». Όχι direct application του |H|², αλλά αν εμφανιστεί ως τμήμα ευρύτερου προβλήματος, χρειάζεται slide-55 παρατήρηση (η έξοδος Gaussian επειδή η είσοδος Gaussian).' },
+    { id: 'jan26-th1-3', likelihood: 'low', note: 'Ιανουάριος 2026 — Σ/Λ trap «λευκός = Gaussian». Όχι direct application του |H|², αλλά αν εμφανιστεί ως τμήμα ευρύτερου προβλήματος, χρειάζεται η παρατήρηση της §8ε (η έξοδος Gaussian επειδή η είσοδος Gaussian).' },
   ]}
 />
 
@@ -921,7 +892,7 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
 <RecallCard
   variant="summary"
   keywords={[
-    'Slide 38-40 — η παραγωγή της master eq',
+    '§2 — η παραγωγή της master eq',
     'S_Y(f) = |H(f)|² S_X(f)',
     'P_Y = ∫ |H|² S_X df = R_Y(0)',
     'LPF cutoff B → P_Y = N_0 B',
@@ -931,8 +902,8 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
     'Cascade: |H_1|² × |H_2|²',
     'Διαφοριστής: |H|² = (2πf)²',
     'Άσκηση 8: R_Y = N_0 W cos(2πf_c τ) sinc(Wτ)',
-    'Slide 55 — output WSS Gauss zero-mean σ² = N_0 W',
-    'Slide 56 — narrow vs wide W',
+    'Άσκηση 8 — output WSS Gauss zero-mean σ² = N_0 W',
+    'Narrow vs wide W — εύρος ζώνης ↔ ταχύτητα ταλαντώσεων',
   ]}
   skeleton={[
     'Διάβασε εκφώνηση. Αν λέει «λευκός θόρυβος + φίλτρο [X]», γράψε αμέσως S_Y = |H_X|² · N_0/2.',
@@ -941,7 +912,7 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
     'Αν η εκφώνηση ζητά ΣΑΣ εξόδου, εφάρμοσε αντίστροφο FT της S_Y. Για BPF: I_1 + I_2 split → factor e^{jw} + e^{-jw} = 2cos → R_Y = N_0 W cos(2πf_c τ) sinc(Wτ).',
     'Αν δύο φίλτρα σε σειρά: πολλαπλασίασε squared magnitudes, ποτέ μην προσθέτεις.',
     'Αν φιλτράρι ζητάει B_N, εφάρμοσε τον τύπο της §7. Μετά γράψε P_Y = N_0 B_N.',
-    'Για slide-55 παρατήρηση: αν η είσοδος είναι AWGN, η έξοδος είναι WSS Gauss zero-mean με σ² = P_Y.',
+    'Παρατήρηση: αν η είσοδος είναι AWGN, η έξοδος είναι WSS Gauss zero-mean με σ² = P_Y.',
   ]}
   trap={
     <>
@@ -951,18 +922,18 @@ $$\mathcal{P}_Y \;=\; 2\cdot\int_{f_c - W/2}^{f_c + W/2}\frac{N_0}{2}\,df \;=\; 
 />
 
 <Recap>
-- **Slide 38-40 παραγωγή**: <InlineMath>{'\\mathcal{S}_Y(f) = \\lvert H(f)\\rvert^2 \\mathcal{S}_X(f)'}</InlineMath> — όχι αξίωμα, **απορρέει** από συνέλιξη + Wiener-Khinchin + <InlineMath>{'\\mathcal{F}\\{h(-\\tau)\\} = H^*(f)'}</InlineMath>.
+- **Η παραγωγή**: <InlineMath>{'\\mathcal{S}_Y(f) = \\lvert H(f)\\rvert^2 \\mathcal{S}_X(f)'}</InlineMath> — όχι αξίωμα, **απορρέει** από συνέλιξη + Wiener-Khinchin + <InlineMath>{'\\mathcal{F}\\{h(-\\tau)\\} = H^*(f)'}</InlineMath>.
 - **Βασικές περιπτώσεις**: ιδανικό LPF → <InlineMath>{'P_Y = N_0 B'}</InlineMath>, ιδανικό BPF → <InlineMath>{'P_Y = N_0 W'}</InlineMath>, RC LPF → <InlineMath>{'P_Y = (\\pi/2) N_0 f_c'}</InlineMath>.
 - **Equivalent noise bandwidth**: <InlineMath>{'B_N = \\int_0^\\infty\\lvert H\\rvert^2 df / \\lvert H(0)\\rvert^2'}</InlineMath> μετατρέπει οποιοδήποτε φίλτρο σε ισοδύναμο ιδανικό LPF για θορυβικούς υπολογισμούς. <InlineMath>{'P_Y = N_0 B_N'}</InlineMath>.
 - **Cascade**: <InlineMath>{'\\lvert H_{total}\\rvert^2 = \\prod_i \\lvert H_i\\rvert^2'}</InlineMath>. Πολλαπλασιαστική, όχι convolution στη frequency domain.
 - **Διαφοριστής** (FM teaser): <InlineMath>{'\\lvert H\\rvert^2 = (2\\pi f)^2'}</InlineMath> → τριγωνική output PSD. Όλη η FM-in-noise analysis εκκινεί από εδώ.
-- **Άσκηση 8 (§8, slides 51-55) — η σπουδαία εφαρμογή**: λευκός + ιδανικός BPF στις <InlineMath>{'\\pm f_c'}</InlineMath> εύρους <InlineMath>{'W'}</InlineMath> ανά πλευρά. Πλήρης αλγεβρική απαγωγή: <InlineMath>{'\\mathcal{S}_Y = N_0/2'}</InlineMath> στη ζώνη, <InlineMath>{'I_1 + I_2'}</InlineMath> split → <InlineMath>{'R_Y(\\tau) = N_0 W \\cos(2\\pi f_c\\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath>, <InlineMath>{'P_Y = N_0 W'}</InlineMath>.
-- **Slide 55 παρατηρήσεις**: η έξοδος είναι **WSS Gauss zero-mean** με <InlineMath>{'\\sigma^2_Y = N_0 W'}</InlineMath>. Όλη η AM/FM-in-noise analysis βασίζεται σε αυτή την ταμπέλα.
-- **Slide 56 narrow-vs-wide**: εύρος ζώνης φίλτρου = **ισχύς** × **ταχύτητα ταλαντώσεων**. Διπλάσιο W → διπλάσια P_Y, διπλάσιος ρυθμός zero-crossings.
+- **Άσκηση 8 (§8) — η σπουδαία εφαρμογή**: λευκός + ιδανικός BPF στις <InlineMath>{'\\pm f_c'}</InlineMath> εύρους <InlineMath>{'W'}</InlineMath> ανά πλευρά. Πλήρης αλγεβρική απαγωγή: <InlineMath>{'\\mathcal{S}_Y = N_0/2'}</InlineMath> στη ζώνη, <InlineMath>{'I_1 + I_2'}</InlineMath> split → <InlineMath>{'R_Y(\\tau) = N_0 W \\cos(2\\pi f_c\\tau)\\,\\mathrm{sinc}(W\\tau)'}</InlineMath>, <InlineMath>{'P_Y = N_0 W'}</InlineMath>.
+- **Οι δύο παρατηρήσεις (§8ε)**: η έξοδος είναι **WSS Gauss zero-mean** με <InlineMath>{'\\sigma^2_Y = N_0 W'}</InlineMath>. Όλη η AM/FM-in-noise analysis βασίζεται σε αυτή την ταμπέλα.
+- **Narrow-vs-wide (§9)**: εύρος ζώνης φίλτρου = **ισχύς** × **ταχύτητα ταλαντώσεων**. Διπλάσιο W → διπλάσια P_Y, διπλάσιος ρυθμός zero-crossings.
 
 🎯 **Κλείνει υποσχέσεις** από:
-- [`/randomness/psd §7`](/randomness/psd) — η master equation που εκεί δόθηκε ως **πρόταση**, εδώ παράγεται slide-38-40 από συνέλιξη + Wiener-Khinchin.
-- [`/noise/white-noise §14`](/noise/white-noise) — η Άσκηση 8 του session-10 (slides 51-55) που εκεί αναγγέλθηκε «λύνεται στη /noise/through-filters», εδώ λύνεται verbatim.
+- [`/randomness/psd §7`](/randomness/psd) — η master equation που εκεί δόθηκε ως **πρόταση**, εδώ παράγεται από συνέλιξη + Wiener-Khinchin.
+- [`/noise/white-noise §14`](/noise/white-noise) — η Άσκηση 8 που εκεί αναγγέλθηκε «λύνεται στη /noise/through-filters», εδώ λύνεται πλήρως.
 
 </Recap>
 
