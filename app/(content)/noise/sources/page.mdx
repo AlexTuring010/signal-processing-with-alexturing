@@ -206,7 +206,7 @@ $$R_N(\tau) = \mathcal{F}^{-1}[\mathcal{S}_N(f)] = \frac{N_0}{2}\,\delta(\tau).$
 
 <Callout type="warning" title="Παγίδα κορυφαία — «λευκός» ≠ «Gaussian»">
 
-Ο **θερμικός θόρυβος** είναι **και** λευκός **και** Gaussian (το CLT της §2 δίνει το Gaussian, το επίπεδο φάσμα της §6 δίνει το λευκό). Αυτή η ταυτόχρονη ιδιότητα ονομάζεται **AWGN** (Additive White Gaussian Noise) και είναι η συνθήκη που υποθέτουν σχεδόν *όλα* τα past-exam προβλήματα στην Noise group.
+Ο **θερμικός θόρυβος** είναι **και** λευκός **και** Gaussian: το Gaussian το δίνει το **θεώρημα κεντρικού ορίου** (central limit theorem, CLT — §2), το λευκό το δίνει το επίπεδο φάσμα της §6. Αυτή η ταυτόχρονη ιδιότητα ονομάζεται **AWGN** (Additive White Gaussian Noise) και είναι η συνθήκη που υποθέτουν σχεδόν *όλα* τα past-exam προβλήματα στην Noise group.
 
 Αλλά οι δύο ιδιότητες είναι **ανεξάρτητες**:
 
@@ -229,7 +229,7 @@ $$R_N(\tau) = \mathcal{F}^{-1}[\mathcal{S}_N(f)] = \frac{N_0}{2}\,\delta(\tau).$
 
 1. **Πρόκειται για WSS ΤΔ** — η αυτοσυσχέτιση εξαρτάται μόνο από το $\tau$, η μέση τιμή σταθερή.
 2. **Έχει μηδενική μέση τιμή** — από τη φυσική της §2.
-3. **Ακολουθεί την κατανομή Gauss** — από το CLT.
+3. **Ακολουθεί την κατανομή Gauss** — από το θεώρημα κεντρικού ορίου (CLT).
 4. **Πρόκειται για λευκή ΤΔ με ΦΠΙ** $\mathcal{S}_N(f) = N_0/2$ Watts/Hz.
 
 </Callout>
@@ -785,7 +785,7 @@ $$P_N = N_0 B = kTB \;\;\text{Watts}\,.$$
 
 <Recap>
 - **Θερμικός θόρυβος (Johnson-Nyquist)** είναι η κύρια — και ουσιαστικά **μοναδική** εξεταστική — πηγή θορύβου στο K21. Προέρχεται από τυχαία θερμική κίνηση ηλεκτρονίων σε ωμικές αντιστάσεις.
-- **CLT** δίνει Gaussian κατανομή με μηδενική μέση τιμή. **Σύνοψη:** WSS + zero-mean + Gauss + flat PSD.
+- Το **θεώρημα κεντρικού ορίου (CLT)** δίνει Gaussian κατανομή με μηδενική μέση τιμή. **Σύνοψη:** WSS + zero-mean + Gauss + flat PSD.
 - **Η κεντρική αλυσίδα:** <InlineMath>{'\\sigma^2 = 4kTRW \\Rightarrow P_N = kTW \\Rightarrow S_N(f) = kT/2 \\Rightarrow N_0 \\triangleq kT'}</InlineMath>. Από εδώ και κάτω, όλη η Noise group γράφεται σε <InlineMath>{'N_0/2'}</InlineMath>-γλώσσα.
 - **Ενεργός θερμοκρασία <InlineMath>{'T_e'}</InlineMath>** (§4) μοντελοποιεί όλον τον εσωτερικό θόρυβο του δέκτη σαν να ήταν θερμικός σε ισοδύναμο αντιστάτη. Σχέση με noise figure: <InlineMath>{'T_e = (F - 1)T_0'}</InlineMath>.
 - **Πρακτικός κανόνας:** noise floor σε room temperature είναι **<InlineMath>{'-174'}</InlineMath> dBm/Hz**. Σε ζώνη <InlineMath>B</InlineMath>: <InlineMath>{'P_N[\\text{dBm}] = -174 + 10\\log B + F'}</InlineMath>.
