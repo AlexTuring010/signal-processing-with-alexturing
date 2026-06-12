@@ -189,6 +189,7 @@ import { ErgodicityViz } from '@/components/viz/ErgodicityViz'
 import { WhiteNoiseSimulationViz } from '@/components/viz/WhiteNoiseSimulationViz'
 import { NoiseFilterShapingViz } from '@/components/viz/NoiseFilterShapingViz'
 import { SNRPlaygroundViz } from '@/components/viz/SNRPlaygroundViz'
+import { NoiseTemperatureChainViz } from '@/components/viz/NoiseTemperatureChainViz'
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
@@ -458,6 +459,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     WhiteNoiseSimulationViz,
     NoiseFilterShapingViz,
     SNRPlaygroundViz,
+    NoiseTemperatureChainViz,
 
     // Markdown table override: wrap in a scroll container so the table can
     // fill the available width on desktop and overflow horizontally on
