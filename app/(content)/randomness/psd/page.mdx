@@ -547,7 +547,7 @@ $$
 </ExamProblem>
 
 <ExamProblem id="lti-output-psd" year="ΓΧΑ output — η κύρια μηχανή" weight="κρίσιμο">
-**Ερώτηση:** Λευκός θόρυβος PSD $S_X(f) = N_0/2$ διέρχεται από ΓΧΑ σύστημα με $\lvert H(f)\rvert^2 = 1/(1 + (f/f_0)^2)$ (1-pole RC LPF). Βρες το output PSD και την συνολική output ισχύ.
+**Ερώτηση:** Λευκός θόρυβος PSD $S_X(f) = N_0/2$ διέρχεται από ΓΧΑ σύστημα με $\lvert H(f)\rvert^2 = 1/(1 + (f/f_0)^2)$ (1-pole RC LPF — η συνάρτηση μεταφοράς του χτίζεται στο [`/foundations/filters`](/foundations/filters)). Βρες το output PSD και την συνολική output ισχύ.
 
 <Callout type="intuition" title="Πριν τη λύση — τι αναγνωρίζεις;">
 Σου δίνεται input PSD + filter magnitude squared, σου ζητάει output PSD + ισχύ. Είναι **άμεση εφαρμογή** της μηχανής $S_Y = |H|^2 S_X$ (§7). Η συνολική ισχύς προκύπτει με ολοκλήρωμα — και το ολοκλήρωμα $\int 1/(1+x^2)\,dx = \arctan x$ ⚠️ πρέπει να θυμάσαι (δεν δίνεται στο τυπολόγιο).
