@@ -173,7 +173,7 @@ const REGISTRY: Record<string, () => ReactNode> = {
   // Noise
   'white-noise-psd': () => <WhiteNoiseSimulationViz />,
   'lti-output-psd': () => <NoiseFilterShapingViz />,
-  'bandpass-noise-r': () => <NoiseFilterShapingViz />,
+  'bandpass-noise-r': () => <AutocorrelationViz initialPreset="bandpass" />,
   snr: () => <SNRPlaygroundViz />,
 }
 

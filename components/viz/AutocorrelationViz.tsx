@@ -48,8 +48,12 @@ const PRESETS = [
 
 type PresetId = (typeof PRESETS)[number]['id']
 
-export function AutocorrelationViz() {
-  const [preset, setPreset] = useState<PresetId>('cosine')
+export function AutocorrelationViz({
+  initialPreset = 'cosine',
+}: {
+  initialPreset?: PresetId
+} = {}) {
+  const [preset, setPreset] = useState<PresetId>(initialPreset)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
