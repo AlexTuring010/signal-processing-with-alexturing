@@ -55,16 +55,28 @@ export function WhiteNoiseSimulationViz() {
           Νέα δειγματοληψία
         </button>
       </div>
+      <p className="mb-2 text-xs text-fg-muted">
+        Το <strong>n(t)</strong> είναι το ίδιο το σήμα του θορύβου — μία{' '}
+        <em>realization</em>: μια τυχαία τιμή που αλλάζει στον χρόνο. Ο υπολογιστής
+        δεν κρατά συνεχή καμπύλη· κρατά <strong>N samples</strong>, τις τιμές του{' '}
+        n(t) σε N χρονικές στιγμές — η γραμμή απλώς ενώνει τα σημεία. Για{' '}
+        <strong>λευκό</strong> θόρυβο τα διαδοχικά samples είναι{' '}
+        <strong>ανεξάρτητα</strong> (καμία μνήμη), γι' αυτό η εικόνα είναι τόσο
+        «αγκαθωτή»· κάθε sample είναι Gaussian με τυπική απόκλιση σ, οπότε ~95%
+        τους πέφτουν μέσα στις <strong>±2σ</strong> γραμμές. (Διπλή σημασία του
+        «δείγμα/sample»: ο τίτλος λέει «δείγμα» εννοώντας μία ολόκληρη realization —
+        ένα σήμα από το ensemble· το slider «N samples» εννοεί τα χρονικά σημεία
+        μέσα σε αυτήν.)
+      </p>
       <p className="mb-3 text-xs text-fg-muted">
-        Πάνω: μία realization στον χρόνο — Gaussian τυχαίοι αριθμοί, ανεξάρτητοι
-        μεταξύ τους. Κάτω: η εκτιμώμενη PSD, που στη θεωρία είναι{' '}
-        <strong>επίπεδη στα N₀/2</strong> (κόκκινη γραμμή). <strong>Μία</strong>{' '}
-        realization (M = 1) δίνει πάντα οδοντωτό «δάσος» — και μεγαλώνοντας το N
-        παίρνεις <em>περισσότερα</em> «δέντρα», όχι πιο επίπεδη γραμμή (το
-        periodogram κρατά ~100% σφάλμα ανά συχνότητα, ό,τι N κι αν βάλεις). Αυτό
-        που το ισιώνει είναι ο <strong>μέσος όρος πολλών</strong> realizations:
-        αύξησε το M και τα δέντρα μαζεύονται στη θεωρητική γραμμή (η διασπορά
-        πέφτει ∝ 1/M).
+        Πάνω: αυτή η μία realization στον χρόνο. Κάτω: η εκτιμώμενη PSD, που στη
+        θεωρία είναι <strong>επίπεδη στα N₀/2</strong> (κόκκινη γραμμή).{' '}
+        <strong>Μία</strong> realization (M = 1) δίνει πάντα οδοντωτό «δάσος» — και
+        μεγαλώνοντας το N παίρνεις <em>περισσότερα</em> «δέντρα», όχι πιο επίπεδη
+        γραμμή (το periodogram κρατά ~100% σφάλμα ανά συχνότητα, ό,τι N κι αν
+        βάλεις). Αυτό που το ισιώνει είναι ο <strong>μέσος όρος πολλών</strong>{' '}
+        realizations: αύξησε το M και τα δέντρα μαζεύονται στη θεωρητική γραμμή (η
+        διασπορά πέφτει ∝ 1/M).
       </p>
       <canvas
         ref={canvasRef}
@@ -190,7 +202,7 @@ function drawTimeDomain(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText(`n(t) — μία realization, ${xs.length} samples`, x0 + PAD_X, y0 + 12)
+  ctx.fillText(`n(t) — μία realization · ${xs.length} samples στον χρόνο`, x0 + PAD_X, y0 + 12)
 
   ctx.strokeStyle = colors.border
   ctx.beginPath()
@@ -198,17 +210,30 @@ function drawTimeDomain(
   ctx.lineTo(x0 + pw - PAD_X, yZero)
   ctx.stroke()
 
-  // ±σ guides
-  ctx.strokeStyle = colors.border
-  ctx.setLineDash([3, 3])
-  for (const k of [-2, -1, 1, 2]) {
-    const y = yv(k * SIGMA)
+  // ±σ and ±2σ bands — Gaussian samples land within ±σ ~68% of the time, ±2σ ~95%.
+  // ±2σ is drawn prominently (the page leans on it); ±σ stays a faint guide.
+  ctx.setLineDash([4, 3])
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
+  ctx.textAlign = 'right'
+  const bands = [
+    { k: 2, label: '+2σ', strong: true },
+    { k: 1, label: '+σ', strong: false },
+    { k: -1, label: '−σ', strong: false },
+    { k: -2, label: '−2σ', strong: true },
+  ]
+  for (const b of bands) {
+    const y = yv(b.k * SIGMA)
+    ctx.strokeStyle = b.strong ? colors.fgMuted : colors.border
+    ctx.lineWidth = b.strong ? 1.2 : 1
     ctx.beginPath()
     ctx.moveTo(x0 + PAD_X, y)
     ctx.lineTo(x0 + pw - PAD_X, y)
     ctx.stroke()
+    ctx.fillStyle = b.strong ? colors.fgMuted : colors.fgSubtle
+    ctx.fillText(b.label, x0 + PAD_X - 4, y + 3)
   }
   ctx.setLineDash([])
+  ctx.lineWidth = 1
 
   // Plot noise
   ctx.strokeStyle = 'rgb(29, 78, 216)'
