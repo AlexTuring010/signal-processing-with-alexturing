@@ -199,6 +199,8 @@ import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
 import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
 import { IdealSincResponseViz } from '@/components/viz/IdealSincResponseViz'
 import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
+import { RcCircuitDiagram } from '@/components/viz/RcCircuitDiagram'
+import { RcLowpassShapeViz } from '@/components/viz/RcLowpassShapeViz'
 import { FilterSpectralMaskViz } from '@/components/viz/FilterSpectralMaskViz'
 import { SincTruncationToRealFilterViz } from '@/components/viz/SincTruncationToRealFilterViz'
 import { RealFilterStepperViz } from '@/components/viz/RealFilterStepperViz'
@@ -356,6 +358,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     FilterTypeViewer,
     IdealSincResponseViz,
     IdealVsRealFilterViz,
+    RcCircuitDiagram,
+    RcLowpassShapeViz,
     FilterSpectralMaskViz,
     SincTruncationToRealFilterViz,
     RealFilterStepperViz,
