@@ -57,7 +57,7 @@ export function FilterBandwidthOutputViz() {
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h4 className="text-sm font-semibold tracking-tight">
-          Εύρος ζώνης φίλτρου W → ισχύς + ταχύτητα της εξόδου y(t)
+          Εύρος ζώνης φίλτρου W → ισχύς + ταχύτητα της εξόδου
         </h4>
         <button
           type="button"
@@ -126,7 +126,7 @@ export function FilterBandwidthOutputViz() {
       <p className="mt-2 text-xs text-fg-muted">
         Σύρε το W: η έξοδος γίνεται ταυτόχρονα <strong>μεγαλύτερη</strong> (περισσότερη ισχύς, πλάτος ∝
         √W) και <strong>γρηγορότερη</strong> (πιο πυκνά zero-crossings ∝ W). Ίδιος θόρυβος εισόδου —
-        μόνο το φίλτρο αλλάζει.
+        μόνο το φίλτρο αλλάζει. <strong>Προσοχή:</strong> η έξοδος είναι <strong>τυχαία διαδικασία</strong> (ΤΔ) — εδώ βλέπεις <strong>μία realization</strong>. Η «Νέα δειγματοληψία» δίνει άλλη: αλλάζει η εικόνα, αλλά η ισχύς και η ταχύτητα (στατιστικές ιδιότητες όλου του ensemble) μένουν οι ίδιες.
       </p>
     </figure>
   )
@@ -262,7 +262,7 @@ function drawTimePanel(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('Έξοδος y(t) στον χρόνο', x0 + padL, y0 + 9)
+  ctx.fillText('Μία realization y_i(t) της ΤΔ εξόδου', x0 + padL, y0 + 9)
 
   // zero baseline
   ctx.strokeStyle = colors.border
