@@ -197,6 +197,7 @@ import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { HilbertMultiplierRotationViz } from '@/components/viz/HilbertMultiplierRotationViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
+import { ComplexEnvelopeDownshiftViz } from '@/components/viz/ComplexEnvelopeDownshiftViz'
 import { BasebandBandpassSpectrumViz } from '@/components/viz/BasebandBandpassSpectrumViz'
 import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
 import { IdealSincResponseViz } from '@/components/viz/IdealSincResponseViz'
@@ -371,6 +372,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     HilbertTransformViz,
     HilbertMultiplierRotationViz,
     PreEnvelopeSpectrumViz,
+    ComplexEnvelopeDownshiftViz,
     BasebandBandpassSpectrumViz,
 
     // Visualizations — am / overview
