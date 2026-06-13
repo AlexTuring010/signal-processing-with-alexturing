@@ -195,6 +195,7 @@ import { BandwidthComparisonViz } from '@/components/viz/BandwidthComparisonViz'
 import { BandpassIQDecompositionViz } from '@/components/viz/BandpassIQDecompositionViz'
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
+import { HilbertMultiplierRotationViz } from '@/components/viz/HilbertMultiplierRotationViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
 import { BasebandBandpassSpectrumViz } from '@/components/viz/BasebandBandpassSpectrumViz'
 import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
@@ -368,6 +369,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — modulation / bridge
     IQDecompositionViz,
     HilbertTransformViz,
+    HilbertMultiplierRotationViz,
     PreEnvelopeSpectrumViz,
     BasebandBandpassSpectrumViz,
 
