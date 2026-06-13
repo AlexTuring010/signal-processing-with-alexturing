@@ -196,6 +196,7 @@ import { BandpassIQDecompositionViz } from '@/components/viz/BandpassIQDecomposi
 import { IQDecompositionViz } from '@/components/viz/IQDecompositionViz'
 import { HilbertTransformViz } from '@/components/viz/HilbertTransformViz'
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
+import { BasebandBandpassSpectrumViz } from '@/components/viz/BasebandBandpassSpectrumViz'
 import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
 import { IdealSincResponseViz } from '@/components/viz/IdealSincResponseViz'
 import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
@@ -368,6 +369,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     IQDecompositionViz,
     HilbertTransformViz,
     PreEnvelopeSpectrumViz,
+    BasebandBandpassSpectrumViz,
 
     // Visualizations — am / overview
     AMFamilySpectra,
