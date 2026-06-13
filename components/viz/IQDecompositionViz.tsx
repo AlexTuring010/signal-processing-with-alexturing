@@ -425,7 +425,7 @@ function drawComplexPlane(
   ctx.fillStyle = colors.fgMuted
   ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  ctx.fillText('Trace στο μιγαδικό επίπεδο: g(t) = x_I + j·x_Q', cx, y0 + 12)
+  ctx.fillText('g(t) = x_I + j·x_Q', cx, y0 + 12)
 
   // axes
   ctx.strokeStyle = colors.border
