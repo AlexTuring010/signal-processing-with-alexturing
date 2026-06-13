@@ -199,6 +199,7 @@ import { HilbertMultiplierRotationViz } from '@/components/viz/HilbertMultiplier
 import { PreEnvelopeSpectrumViz } from '@/components/viz/PreEnvelopeSpectrumViz'
 import { ComplexEnvelopeDownshiftViz } from '@/components/viz/ComplexEnvelopeDownshiftViz'
 import { BasebandBandpassSpectrumViz } from '@/components/viz/BasebandBandpassSpectrumViz'
+import { BandpassSpectrumFromEnvelopeViz } from '@/components/viz/BandpassSpectrumFromEnvelopeViz'
 import { FilterTypeViewer } from '@/components/viz/FilterTypeViewer'
 import { IdealSincResponseViz } from '@/components/viz/IdealSincResponseViz'
 import { IdealVsRealFilterViz } from '@/components/viz/IdealVsRealFilterViz'
@@ -374,6 +375,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PreEnvelopeSpectrumViz,
     ComplexEnvelopeDownshiftViz,
     BasebandBandpassSpectrumViz,
+    BandpassSpectrumFromEnvelopeViz,
 
     // Visualizations — am / overview
     AMFamilySpectra,
