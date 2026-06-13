@@ -28,7 +28,7 @@ export function SSBGenerationViz() {
         Δύο κλασικές μέθοδοι παραγωγής SSB. Η <strong>filter method</strong> είναι
         εννοιολογικά απλή (DSB-SC + στενό BPF) αλλά απαιτεί απότομο φίλτρο. Η{' '}
         <strong>phase-shift method</strong> χρησιμοποιεί τον{' '}
-        <a href="/modulation/bridge#2-hilbert-transform-phase-shifter-όλων-των-συχνοτήτων" className="text-accent underline-offset-2 hover:underline">
+        <a href="/modulation/bridge#5a-ο-μετασχηματισμός-hilbert--phase-shifter-όλων-των-συχνοτήτων" className="text-accent underline-offset-2 hover:underline">
           Hilbert transform
         </a>{' '}
         και αποφεύγει το αυστηρό φίλτρο.
@@ -42,7 +42,7 @@ export function SSBGenerationViz() {
       <div className="mt-3 rounded-md border border-accent/40 bg-accent-soft/30 px-3 py-2 text-xs">
         Η phase-shift method γίνεται «καθαρή» όταν δεις τη μαθηματική απόδειξη:
         <span className="font-mono"> m(t) cos(ω_c t) ∓ m̂(t) sin(ω_c t)</span>.
-        Από [bridge §3](/modulation/bridge#3-pre-envelope-x_pt-μονόπλευρο-φάσμα),
+        Από [bridge §5e](/modulation/bridge#5e-βήμα-1--pre-envelope-x_pt-σβήνει-το-αρνητικό-μισό),
         το φάσμα του pre-envelope <span className="font-mono">x_p = m + jm̂</span>{' '}
         έχει μονόπλευρο φάσμα — άρα όταν το πολλαπλασιάσουμε με{' '}
         <span className="font-mono">e^(j ω_c t)</span> και πάρουμε το real part,

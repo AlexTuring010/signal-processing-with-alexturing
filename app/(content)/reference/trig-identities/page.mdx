@@ -325,7 +325,7 @@ $$
 \boxed{\,x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) + \frac{A_c\beta}{2}\cos(2\pi(f_c + f_m)t) - \frac{A_c\beta}{2}\cos(2\pi(f_c - f_m)t)\,}
 $$
 
-**Σύγκρινε με το AM single-tone της §4b:** ίδια **τρία cosines στις ίδιες θέσεις**, αλλά **η μία sideband έχει πρόσημο −**. Αυτό το αρνητικό πρόσημο είναι **η μόνη αλγεβρική διαφορά** μεταξύ NBFM και AM μικρού $\mu$. Δίνει την περιστροφή του phasor στο [I/Q canonical form](/modulation/bridge#5b) και την constant-envelope ιδιότητα της FM.
+**Σύγκρινε με το AM single-tone της §4b:** ίδια **τρία cosines στις ίδιες θέσεις**, αλλά **η μία sideband έχει πρόσημο −**. Αυτό το αρνητικό πρόσημο είναι **η μόνη αλγεβρική διαφορά** μεταξύ NBFM και AM μικρού $\mu$. Δίνει την περιστροφή του phasor στο [I/Q canonical form](/modulation/bridge#4-πέντε-διαμορφώσεις-μία-canonical-μορφή) και την constant-envelope ιδιότητα της FM.
 
 <Callout type="warning" title="cos·cos vs sin·sin — μην ξεχάσεις το −">
 **Η πιο κοινή γκάφα στο NBFM:** χρησιμοποιείς την cos·cos product-to-sum (που έχει **+** μεταξύ των cosines) αντί της σωστής sin·sin (που έχει **−**). Αποτέλεσμα: παίρνεις ίδιο σήμα με AM, χάνεις την NBFM-vs-AM διάκριση. Το πρόσημο **+/−** στις product-to-sum **είναι** η διαφορά μεταξύ AM και NBFM.
@@ -681,7 +681,7 @@ $$
 **Ερώτηση:** Δείξε ότι αν $m(t) = A\cos(2\pi f_m t)$, τότε το σήμα $x(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)$ είναι ένα **καθαρό cosine** στη συχνότητα $f_c - f_m$ (LSB).
 
 <Example title="Λύση" defaultOpen={true}>
-Με $m(t) = A\cos(2\pi f_m t)$, ο Hilbert transform είναι $\hat{m}(t) = A\sin(2\pi f_m t)$ (cos → sin, [bridge §2](/modulation/bridge#2-hilbert-transform)).
+Με $m(t) = A\cos(2\pi f_m t)$, ο Hilbert transform είναι $\hat{m}(t) = A\sin(2\pi f_m t)$ (cos → sin, [bridge §5a](/modulation/bridge#5a-ο-μετασχηματισμός-hilbert--phase-shifter-όλων-των-συχνοτήτων)).
 
 Αντικαθιστώντας:
 
