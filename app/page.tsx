@@ -15,9 +15,10 @@ import {
   Zap,
   FlaskConical,
 } from 'lucide-react'
-import { CHAPTERS, AVAILABLE_COUNT, ALL_SECTIONS } from '@/lib/content-index'
+import { ALL_SECTIONS } from '@/lib/content-index'
 import { Comments } from '@/components/layout/Comments'
 import { Leaderboard } from '@/components/layout/Leaderboard'
+import { SyllabusProgress } from '@/components/layout/SyllabusProgress'
 
 const FIRST_AVAILABLE = ALL_SECTIONS.find((s) => s.available)
 
@@ -49,8 +50,6 @@ const EXAM_PRIORITY = [
 ]
 
 export default function HomePage() {
-  const lecturePct = Math.round((AVAILABLE_COUNT / ALL_SECTIONS.length) * 100)
-
   return (
     <div className="mx-auto max-w-screen-xl px-4 py-10 sm:px-6 lg:py-16">
       {/* Hero */}
@@ -314,76 +313,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Full syllabus */}
-      <section className="mx-auto mt-14 max-w-6xl">
-        <div className="mb-6 flex items-baseline justify-between">
-          <h2 className="text-2xl font-bold tracking-tight">Όλη η ύλη</h2>
-          <span className="text-sm text-fg-muted">
-            <span className="font-mono tabular-nums text-fg">
-              {AVAILABLE_COUNT}/{ALL_SECTIONS.length}
-            </span>{' '}
-            ενότητες ({lecturePct}%)
-          </span>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {CHAPTERS.map((c) => {
-            const ready = c.sections.filter((s) => s.available).length
-            const total = c.sections.length
-            const allReady = ready === total && total > 0
-            return (
-              <article
-                key={c.id}
-                className="rounded-xl border border-border bg-bg-elevated p-4 transition hover:border-border/80"
-              >
-                <header className="mb-3 flex items-baseline justify-between gap-3">
-                  <h3 className="font-semibold tracking-tight">{c.title}</h3>
-                  <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-mono tabular-nums ${
-                      allReady
-                        ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
-                        : ready === 0
-                          ? 'bg-bg-soft text-fg-subtle'
-                          : 'bg-amber-500/15 text-amber-700 dark:text-amber-300'
-                    }`}
-                  >
-                    {ready}/{total}
-                  </span>
-                </header>
-                {c.blurb && (
-                  <p className="mb-3 text-xs text-fg-muted">{c.blurb}</p>
-                )}
-                <ul className="space-y-1">
-                  {c.sections.map((s) => (
-                    <li key={s.slug}>
-                      {s.available ? (
-                        <Link
-                          href={`/${s.slug}`}
-                          className="group flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm transition hover:bg-accent/5"
-                        >
-                          <span className="text-fg-muted group-hover:text-accent">
-                            {s.title}
-                          </span>
-                          <ChevronRight
-                            className="h-3.5 w-3.5 text-fg-subtle opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100 group-hover:text-accent"
-                            aria-hidden
-                          />
-                        </Link>
-                      ) : (
-                        <div className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm">
-                          <span className="text-fg-subtle/60">{s.title}</span>
-                          <span className="rounded-full bg-bg-soft px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-fg-subtle">
-                            σύντομα
-                          </span>
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            )
-          })}
-        </div>
-      </section>
+      {/* Full syllabus — with the reader's personal completion overlaid */}
+      <SyllabusProgress />
 
       {/* Leaderboard */}
       <section className="mx-auto mt-14 max-w-4xl">
