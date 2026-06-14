@@ -59,7 +59,7 @@ import Link from 'next/link'
 
 Σε αυτό το πρώτο κεφάλαιο της οικογένειας **Διαμόρφωσης Γωνίας** μαθαίνουμε:
 
-1. Γιατί οι διαφάνειες μιλούν για «**Διαμόρφωση Γωνίας**» αντί για «FM» — και τι κερδίζεις από αυτή τη γενίκευση.
+1. Γιατί μιλάμε για «**Διαμόρφωση Γωνίας**» αντί απλώς για «FM» — και τι κερδίζεις από αυτή τη γενίκευση.
 2. Την έννοια της **στιγμιαίας συχνότητας** <InlineMath>{'f_i(t)'}</InlineMath>.
 3. Την **εξίσωση FM** μέσω της ευαισθησίας συχνότητας <InlineMath>{'K_f'}</InlineMath>.
 4. Την **PM↔FM δυϊκότητα** (integrator/differentiator) με συγκεκριμένες σταθερές.
@@ -68,18 +68,11 @@ import Link from 'next/link'
 
 ## 1. Διαμόρφωση Γωνίας — η γενική κατηγορία
 
-Στην AM γράφαμε <InlineMath>{'x(t) = (A_c + m(t))\\cos(2\\pi f_c t)'}</InlineMath> — η πληροφορία είναι μέσα στο πλάτος. Το **slide 4** εισάγει μια εντελώς διαφορετική στρατηγική με μια πρόταση:
+Στην AM γράφαμε <InlineMath>{'x(t) = (A_c + m(t))\\cos(2\\pi f_c t)'}</InlineMath> — η πληροφορία είναι μέσα στο πλάτος. Υπάρχει όμως μια εντελώς διαφορετική στρατηγική, που γεννά μια ολόκληρη οικογένεια διαμορφώσεων:
 
-<Callout type="key" title="Πώς ορίζεται η Διαμόρφωση Γωνίας (slide 4)">
+<Callout type="key" title="Πώς ορίζεται η Διαμόρφωση Γωνίας">
 
-<p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
-«Πέραν του πλάτους, το σήμα <InlineMath>{'m(t)'}</InlineMath> δύναται να
-<strong> ενσωματωθεί στη συχνότητα ή τη φάση του </strong>
-<InlineMath>{'x(t)'}</InlineMath>
-<strong> διατηρώντας το πλάτος του σταθερό</strong>. Η διαμόρφωση αυτή ονομάζεται
-<em> διαμόρφωση φάσης (PM: Phase Modulation)</em> ή
-<em> διαμόρφωση συχνότητας (FM: Frequency Modulation)</em>.»
-</p>
+Πέρα από το πλάτος, το message <InlineMath>{'m(t)'}</InlineMath> μπορεί να **ενσωματωθεί στη συχνότητα ή τη φάση** του <InlineMath>{'x(t)'}</InlineMath>, **διατηρώντας το πλάτος του σταθερό**. Όταν η πληροφορία μπαίνει στη φάση, η διαμόρφωση λέγεται **διαμόρφωση φάσης (PM: Phase Modulation)**· όταν μπαίνει στη συχνότητα, **διαμόρφωση συχνότητας (FM: Frequency Modulation)**. Και οι δύο ανήκουν στην οικογένεια της **διαμόρφωσης γωνίας**.
 
 Με γενική μαθηματική μορφή:
 
@@ -100,13 +93,13 @@ $$
 
 Θα δούμε αμέσως ότι αυτές οι δύο μορφές δεν είναι ασύνδετες — διαφέρουν απλώς κατά έναν integrator / differentiator. Πρώτα όμως: γιατί όλη αυτή η φασαρία;
 
-<Callout type="intuition" title="Γιατί διαμόρφωση γωνίας υπερτερεί της AM (slide 5)">
+<Callout type="intuition" title="Γιατί η διαμόρφωση γωνίας υπερτερεί της AM">
 
-Οι διαφάνειες δίνουν τρεις λόγους:
+Τρεις λόγοι, και οι τρεις γύρω από τον θόρυβο και το κόστος:
 
-1. **«Η διαμόρφωση γωνίας υπερτερεί της διαμόρφωσης AM στην ποιότητα του σήματος πληροφορίας καθώς επηρεάζεται λιγότερο από πηγές θορύβου.»** — για δεδομένη ισχύ εκπομπής, καλύτερη ποιότητα μετάδοσης.
-2. **«Ο θόρυβος επηρεάζει άμεσα το πλάτος του λαμβανόμενου σήματος ενώ η επίδραση στη φάση είναι λιγότερο σημαντική.»** — γι' αυτό σώζεσαι κρατώντας την πληροφορία στη φάση.
-3. **«Όμως, η διαμόρφωση γωνίας απαιτεί πιο ακριβά και πολύπλοκα συστήματα»** — και πληρώνεις σε **μεγαλύτερο bandwidth** (Carson's rule, επόμενο κεφάλαιο).
+1. **Καλύτερη ποιότητα σε θόρυβο.** Η διαμόρφωση γωνίας επηρεάζεται λιγότερο από τις πηγές θορύβου — για δεδομένη ισχύ εκπομπής, παίρνεις καθαρότερη μετάδοση.
+2. **Ο θόρυβος χτυπά κυρίως το πλάτος.** Επηρεάζει άμεσα το **πλάτος** του λαμβανόμενου σήματος, ενώ η επίδρασή του στη **φάση** είναι λιγότερο σημαντική — γι' αυτό σώζεσαι κρατώντας την πληροφορία στη φάση.
+3. **Το κόστος.** Η διαμόρφωση γωνίας απαιτεί πιο ακριβά και πολύπλοκα συστήματα, και πληρώνεις σε **μεγαλύτερο bandwidth** (Carson's rule, επόμενο κεφάλαιο).
 
 Σύνοψη: «τραντάζω τη φάση/συχνότητα» (γωνία) αντί για «τραντάζω το πλάτος» — και τα τραντάγματα του θορύβου δεν με πειράζουν τόσο, με κόστος hardware + bandwidth.
 
@@ -114,7 +107,7 @@ $$
 
 ## 2. Στιγμιαία συχνότητα — η μηχανική αναλογία
 
-Σε ένα κανονικό cosine <InlineMath>{'A\\cos(2\\pi f_0 t)'}</InlineMath>, η συχνότητα είναι σταθερή <InlineMath>{'f_0'}</InlineMath>. Αλλά τι σημαίνει «η συχνότητα κουνιέται με τον χρόνο»; Το **slide 6** δίνει τον ακριβή ορισμό:
+Σε ένα κανονικό cosine <InlineMath>{'A\\cos(2\\pi f_0 t)'}</InlineMath>, η συχνότητα είναι σταθερή <InlineMath>{'f_0'}</InlineMath>. Αλλά τι σημαίνει «η συχνότητα κουνιέται με τον χρόνο»; Ο ακριβής ορισμός είναι:
 
 $$
 \boxed{\,f_i(t) \triangleq \frac{1}{2\pi}\frac{d\theta(t)}{dt} = f_c + \frac{1}{2\pi}\frac{d\phi(t)}{dt}\,}
@@ -122,15 +115,9 @@ $$
 
 όπου <InlineMath>{'\\theta(t)'}</InlineMath> είναι η συνολική φάση. Σημείωσε τον δείκτη <InlineMath>{'_i'}</InlineMath> («instantaneous») — χρησιμοποιείται για να ξεχωρίζει αυτή την έννοια από τη φασματική συχνότητα του Fourier.
 
-<Callout type="intuition" title="Στιγμιαία συχνότητα = στιγμιαία ταχύτητα (slide 6)">
+<Callout type="intuition" title="Στιγμιαία συχνότητα = στιγμιαία ταχύτητα">
 
-<p className="my-2 border-l-2 border-fg-subtle/40 pl-3 italic">
-«Η έννοια αυτή δεν πρέπει να συγχέεται με τη συχνότητα όπως έχει οριστεί
-μέσω του φάσματος. Οι συχνότητες που καταλαμβάνει ένα σήμα υπολογίζονται
-(μετασχηματισμός Fourier) <strong>για ολόκληρο το χρονικό του διάστημα</strong>.
-Η στιγμιαία συχνότητα ορίζεται <strong>για συγκεκριμένη χρονική στιγμή</strong>,
-όπως αντίστοιχα ορίζεται η <strong>στιγμιαία ταχύτητα στη Μηχανική</strong>.»
-</p>
+Πρόσεξε να μην μπερδέψεις αυτή την έννοια με τη συχνότητα όπως ορίζεται μέσω του φάσματος. Οι συχνότητες που καταλαμβάνει ένα σήμα υπολογίζονται (μέσω μετασχηματισμού Fourier) **για ολόκληρο το χρονικό του διάστημα**. Η στιγμιαία συχνότητα, αντίθετα, ορίζεται **για μια συγκεκριμένη χρονική στιγμή** — όπως ακριβώς ορίζεται η **στιγμιαία ταχύτητα στη Μηχανική**.
 
 Αυτή η αναλογία είναι κρίσιμη: όπως ένα σώμα έχει μέση ταχύτητα σε ένα ταξίδι ΚΑΙ στιγμιαία ταχύτητα σε κάθε δευτερόλεπτο, έτσι και ένα σήμα έχει φασματικό περιεχόμενο σε όλη του τη διάρκεια ΚΑΙ στιγμιαία συχνότητα σε κάθε <InlineMath>{'t'}</InlineMath>. Οι δύο μετρήσεις απαντούν σε διαφορετικές ερωτήσεις.
 
@@ -144,7 +131,7 @@ $$
 
 ## 3. Από στιγμιαία συχνότητα στην εξίσωση FM
 
-Στη FM, ο **ρυθμός μεταβολής της φάσης** (slide 8) είναι γραμμικά ανάλογος με το message μέσω της σταθεράς <InlineMath>{'K_f'}</InlineMath>:
+Στη FM, ο **ρυθμός μεταβολής της φάσης** είναι γραμμικά ανάλογος με το message μέσω της σταθεράς <InlineMath>{'K_f'}</InlineMath>:
 
 $$
 \frac{d\phi(t)}{dt} = 2\pi K_f\, m(t)
@@ -195,11 +182,11 @@ $$
 
 **Σημείωση που μπερδεύει τους περισσότερους:** το ολοκλήρωμα είναι κρίσιμο. Δεν είναι το <InlineMath>{'m(t)'}</InlineMath> που μπαίνει απευθείας στη φάση — είναι το ολοκλήρωμά του. Γι' αυτό η FM διαφέρει από την PM, όπου το <InlineMath>{'m(t)'}</InlineMath> μπαίνει απευθείας. Δες την επόμενη ενότητα για τη μετατροπή.
 
-## 4. Δυϊκότητα PM ↔ FM — με τις σταθερές των διαφανειών
+## 4. Δυϊκότητα PM ↔ FM — με τις ακριβείς σταθερές
 
-Ένα **πολύ κομψό αποτέλεσμα** από τα **slides 12-13**: PM και FM δεν είναι ανεξάρτητες τεχνολογίες. Μπορείς να φτιάξεις τη μία από την άλλη με ένα ολοκληρωτή ή έναν διαφοριστή — και υπάρχει **ακριβής σχέση** μεταξύ των δύο ευαισθησιών.
+Ένα **πολύ κομψό αποτέλεσμα**: PM και FM δεν είναι ανεξάρτητες τεχνολογίες. Μπορείς να φτιάξεις τη μία από την άλλη με ένα ολοκληρωτή ή έναν διαφοριστή — και υπάρχει **ακριβής σχέση** μεταξύ των δύο ευαισθησιών.
 
-<Callout type="key" title="PM/FM duality με συγκεκριμένες σταθερές (slides 12-13)">
+<Callout type="key" title="PM/FM duality με συγκεκριμένες σταθερές">
 
 **Φτιάχνω FM από PM**: αν στην είσοδο ενός PM modulator (με σταθερά <InlineMath>{'K_p'}</InlineMath>) βάλω το **ολοκλήρωμα** <InlineMath>{'\\int m(\\tau)\\,d\\tau'}</InlineMath> αντί για το <InlineMath>{'m(t)'}</InlineMath>, παίρνω την έξοδο:
 
@@ -227,11 +214,11 @@ $$
 
 ## 5. Modulation index β_f — η σωστή γενική μορφή
 
-Έχει εκπληκτική σημασία στις εξετάσεις να ξέρεις πώς ορίζεται το **modulation index** για FM. Το slide 9 το δίνει γενικά:
+Έχει εκπληκτική σημασία στις εξετάσεις να ξέρεις πώς ορίζεται το **modulation index** για FM. Ο γενικός ορισμός είναι ο εξής:
 
-<Callout type="key" title="Ορισμός β_f για ΓΕΝΙΚΟ message (slide 9)">
+<Callout type="key" title="Ορισμός β_f για ΓΕΝΙΚΟ message">
 
-«Αν <InlineMath>{'W'}</InlineMath> είναι το **εύρος ζώνης** του <InlineMath>{'m(t)'}</InlineMath>, ο δείκτης διαμόρφωσης <InlineMath>{'\\beta_f'}</InlineMath> εκφράζει τη μέγιστη μεταβολή της στιγμιαίας συχνότητας από την κεντρική συχνότητα <InlineMath>{'f_c'}</InlineMath>, **κανονικοποιημένη ως προς το <InlineMath>{'W'}</InlineMath>**»:
+Αν <InlineMath>{'W'}</InlineMath> είναι το **εύρος ζώνης** του <InlineMath>{'m(t)'}</InlineMath>, ο δείκτης διαμόρφωσης <InlineMath>{'\\beta_f'}</InlineMath> εκφράζει τη μέγιστη μεταβολή της στιγμιαίας συχνότητας από την κεντρική συχνότητα <InlineMath>{'f_c'}</InlineMath>, **κανονικοποιημένη ως προς το <InlineMath>{'W'}</InlineMath>**:
 
 $$
 \boxed{\,\beta_f \triangleq \frac{\Delta f_{max}}{W} = \frac{K_f\, \max|m(t)|}{W}\,}
@@ -310,7 +297,7 @@ $$
 
 ## 6. I/Q canonical form + γιατί η ισχύς είναι A_c²/2
 
-Στο **slide 10**, η ταυτότητα <InlineMath>{'\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta'}</InlineMath> σπάει την εξίσωση γωνίας σε I/Q μορφή:
+Η ταυτότητα <InlineMath>{'\\cos(\\alpha+\\beta) = \\cos\\alpha\\cos\\beta - \\sin\\alpha\\sin\\beta'}</InlineMath> σπάει την εξίσωση γωνίας σε I/Q μορφή:
 
 $$
 x(t) = \underbrace{A_c\cos(\phi(t))}_{x_I(t)}\cos(2\pi f_c t) - \underbrace{A_c\sin(\phi(t))}_{x_Q(t)}\sin(2\pi f_c t)
@@ -326,9 +313,9 @@ $$
 
 <ConstantEnvelopeCircleViz />
 
-### 6α. Η ισχύς του PM/FM σήματος (slide 11)
+### 6α. Η ισχύς του PM/FM σήματος
 
-Από αυτή τη σταθερότητα προκύπτει αμέσως η **ισχύς** του διαμορφωμένου σήματος. Το slide 11 την υπολογίζει ρητά:
+Από αυτή τη σταθερότητα προκύπτει αμέσως η **ισχύς** του διαμορφωμένου σήματος:
 
 $$
 \mathcal{P}_x^{PM} = \mathcal{P}_x^{FM} = \lim_{T\to\infty} \frac{1}{T}\int_{-T/2}^{T/2} |A_c\cos(2\pi f_c t + \phi(t))|^2\, dt = \boxed{\,\frac{A_c^2}{2}\,}
@@ -342,26 +329,24 @@ $$
 Το trade-off: η FM **καταναλώνει περισσότερο bandwidth** για την ίδια ποιότητα ομιλίας (Carson's rule, επόμενο κεφάλαιο), σχεδόν 6× χειρότερη χρήση φάσματος σε WBFM.
 </Callout>
 
-→ Η πλήρης τέταρτη γραμμή του πίνακα I/Q για όλα τα modulation σχήματα ζει στο <Link href="/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή">/modulation/bridge §5b</Link>. Δες εκεί και τον <InlineMath>{'<IQDecompositionViz>'}</InlineMath> με preset «FM» για το complex envelope σε διπλανή προβολή.
+→ Η πλήρης τέταρτη γραμμή του πίνακα I/Q για όλα τα modulation σχήματα ζει στο <Link href="/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή">/modulation/bridge §5b</Link>. Εκεί μπορείς να δεις και το complex envelope της FM σε διπλανή προβολή, βάζοντας το διαδραστικό σχήμα I/Q στο preset «FM».
 
 ## 7. NBFM vs WBFM — δύο regimes και η σχέση τους με την AM
 
-Ανάλογα με την τιμή του <InlineMath>{'\\beta_f'}</InlineMath>, η διαμόρφωση γωνίας ξεχωρίζει σε δύο πολύ διαφορετικά καθεστώτα. Το **slide 29** δίνει τον ακριβή ορισμό:
+Ανάλογα με την τιμή του <InlineMath>{'\\beta_f'}</InlineMath>, η διαμόρφωση γωνίας ξεχωρίζει σε δύο πολύ διαφορετικά καθεστώτα:
 
-<Callout type="key" title="NBFM vs WBFM — ο ορισμός (slide 29)">
+<Callout type="key" title="NBFM vs WBFM — ο ορισμός">
 
-- **WBFM (Wide Band)**: «φασματικό περιεχόμενο του <InlineMath>{'x(t)'}</InlineMath> εκτείνεται σε **μεγάλο/ευρύ διάστημα**».
-- **NBFM (Narrow Band)**: «φασματικό περιεχόμενο του <InlineMath>{'x(t)'}</InlineMath> εκτείνεται σε **μικρό/στενό διάστημα**».
+- **WBFM (Wide Band)**: το φασματικό περιεχόμενο του <InlineMath>{'x(t)'}</InlineMath> εκτείνεται σε **ευρύ διάστημα** συχνοτήτων.
+- **NBFM (Narrow Band)**: το φασματικό περιεχόμενο του <InlineMath>{'x(t)'}</InlineMath> εκτείνεται σε **στενό διάστημα**.
 
-Ο διαχωρισμός εξαρτάται από τον δείκτη διαμόρφωσης <InlineMath>{'\\beta'}</InlineMath> (<InlineMath>{'= \\beta_p'}</InlineMath> ή <InlineMath>{'\\beta_f'}</InlineMath>):
+Ο διαχωρισμός εξαρτάται από τον δείκτη διαμόρφωσης <InlineMath>{'\\beta'}</InlineMath> (<InlineMath>{'= \\beta_p'}</InlineMath> ή <InlineMath>{'\\beta_f'}</InlineMath>): **όταν <InlineMath>{'\\beta \\ll 1'}</InlineMath>** προκύπτει <InlineMath>{'B \\cong 2W'}</InlineMath>, δηλαδή διαμόρφωση **στενής ζώνης**· διαφορετικά, διαμόρφωση **ευρείας ζώνης**.
 
-> **Όταν <InlineMath>{'\\beta \\ll 1'}</InlineMath>** προκύπτει ότι <InlineMath>{'B \\cong 2W'}</InlineMath>, δηλαδή διαμόρφωση **στενής ζώνης**. Διαφορετικά, προκύπτει διαμόρφωση **ευρείας ζώνης**.
-
-Σημείωσε ότι ο πρόσημος είναι <InlineMath>{'\\beta \\ll 1'}</InlineMath>, **όχι** <InlineMath>{'\\beta < 0.3'}</InlineMath>. Η τιμή 0.3 είναι μια χονδρική «πρακτική» τιμή που χρησιμοποιείται σε ορισμένα εγχειρίδια — αλλά για την εξέταση, η διατύπωση των διαφανειών είναι η σωστή.
+Πρόσεξε ότι το κριτήριο είναι <InlineMath>{'\\beta \\ll 1'}</InlineMath>, **όχι** <InlineMath>{'\\beta < 0.3'}</InlineMath>. Η τιμή 0.3 είναι μια χονδρική «πρακτική» τιμή ορισμένων εγχειριδίων — αλλά το αυστηρό κριτήριο που μετράει στην εξέταση είναι το <InlineMath>{'\\beta \\ll 1'}</InlineMath>.
 
 </Callout>
 
-### 7α. NBFM γραμμικοποίηση → μοιάζει με AM (slide 29-31)
+### 7α. NBFM γραμμικοποίηση → μοιάζει με AM
 
 Όταν <InlineMath>{'\\beta_f \\ll 1'}</InlineMath>, η φάση <InlineMath>{'\\phi(t) = 2\\pi K_f \\int m'}</InlineMath> είναι πολύ μικρή και ισχύουν οι **γραμμικές προσεγγίσεις**:
 
@@ -380,11 +365,11 @@ $$
 - **<InlineMath>{'A_c \\cos(2\\pi f_c t)'}</InlineMath>** — δύο κρούσεις στα <InlineMath>{'\\pm f_c'}</InlineMath> ύψους <InlineMath>{'A_c/2'}</InlineMath> — **ταυτόσημες με τον φέροντα του Συμβατικού AM**.
 - **<InlineMath>{'A_c \\phi(t) \\sin(2\\pi f_c t)'}</InlineMath>** — ένα **DSB-AM-SC** σήμα του <InlineMath>{'\\phi(t)'}</InlineMath> γύρω από <InlineMath>{'f_c'}</InlineMath>.
 
-«Η διαμόρφωση αυτή προσομοιάζει το Συμβατικό AM» (slide 30, verbatim). Το **εύρος ζώνης του NBFM είναι περίπου ίσο με <InlineMath>{'2W'}</InlineMath>**, όσο δηλαδή και του AM (slide 31).
+Έτσι **η NBFM διαμόρφωση προσομοιάζει το Συμβατικό AM**. Το **εύρος ζώνης του NBFM είναι περίπου ίσο με <InlineMath>{'2W'}</InlineMath>**, όσο δηλαδή και του AM.
 
-### 7β. Single-tone NBFM — η canonical εξέταση (slide 33)
+### 7β. Single-tone NBFM — η canonical εξέταση
 
-Για single-tone <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath>, το <InlineMath>{'\\phi(t) = \\beta_f \\sin(2\\pi f_m t)'}</InlineMath>. Χρησιμοποιώντας την ταυτότητα <InlineMath>{'2\\sin a \\sin b = \\cos(a-b) - \\cos(a+b)'}</InlineMath>, προκύπτει (slide 33):
+Για single-tone <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath>, το <InlineMath>{'\\phi(t) = \\beta_f \\sin(2\\pi f_m t)'}</InlineMath>. Χρησιμοποιώντας την ταυτότητα <InlineMath>{'2\\sin a \\sin b = \\cos(a-b) - \\cos(a+b)'}</InlineMath>, προκύπτει:
 
 $$
 \begin{aligned}
@@ -411,9 +396,9 @@ $$
 
 </Callout>
 
-## 8. Worked example — Άσκηση 2 (slide 27-28)
+## 8. Worked example — Άσκηση 2
 
-<ExamProblem id="askisi-2-sinc-carson" year="Session 15 — Άσκηση 2" weight="canonical worked example">
+<ExamProblem id="askisi-2-sinc-carson" year="Άσκηση 2" weight="canonical worked example">
 **Δίνεται:** σήμα πληροφορίας <InlineMath>{'m(t) = 10\\,\\mathrm{sinc}(10^4 t)'}</InlineMath> Volt, και FM διαμορφωτής με ευαισθησία <InlineMath>{'K_f = 4'}</InlineMath> kHz/Volt.
 
 **Ζητείται:** το **ενεργό εύρος ζώνης** του διαμορφωμένου FM σήματος (Carson).
@@ -434,7 +419,7 @@ $$
 
 **Βήμα 2: μέγιστο πλάτος.** <InlineMath>{'\\max|\\mathrm{sinc}(\\cdot)| = 1'}</InlineMath>, άρα <InlineMath>{'\\max|m(t)| = 10'}</InlineMath>.
 
-**Βήμα 3: modulation index** (ο γενικός ορισμός του slide 9):
+**Βήμα 3: modulation index** (ο γενικός ορισμός):
 
 $$
 \beta_f = \frac{K_f\, \max|m|}{W} = \frac{4 \cdot 10}{5} = 8
@@ -524,7 +509,7 @@ $$
   steps={[
     'Βρες W = bandwidth του message (Fourier transform → support στο φάσμα).',
     'Υπολόγισε Δf_max = K_f · max|m(t)|.',
-    'Σχηματισε β_f = Δf_max / W (γενικός ορισμός slide 9).',
+    'Σχηματισε β_f = Δf_max / W (ο γενικός ορισμός).',
     'Εφάρμοσε Carson: B = 2W(β_f + 1) — επόμενο κεφάλαιο /fm/carson.',
   ]}
 />
@@ -563,7 +548,7 @@ $$
   <p>
     <strong>«Σ/Λ ταξινόμηση NBFM/WBFM»</strong> — το αληθινό κριτήριο είναι{' '}
     <InlineMath>{'\\beta \\ll 1'}</InlineMath> για NBFM. Η τιμή «0.3» είναι χονδρικό
-    όριο εγχειριδίων· σε αμφισβητούμενα Σ/Λ ισχύει ο ορισμός των διαφανειών.
+    όριο εγχειριδίων· σε αμφισβητούμενα Σ/Λ ισχύει ο αυστηρός ορισμός <InlineMath>{'\\beta \\ll 1'}</InlineMath>.
     Παράδειγμα: Jan'26 ΘΕΜΑ 1.5 («β=0.3 είναι WBFM» = ΛΑΘΟΣ, NBFM).
   </p>
   <p>
@@ -580,7 +565,7 @@ $$
 
 <ExerciseProgress slug="fm/idea" total={7} />
 
-Επτά ερωτήσεις που καλύπτουν το spectrum: το canonical worked example της Άσκησης 2 (sinc → 90 kHz), αναγνώριση παραμέτρων από εξίσωση, σταθερό envelope ως Σ/Λ, NBFM/WBFM ταξινόμηση (με τον σωστό ορισμό των διαφανειών), σχέση β–Δf–f_m, σύγκριση με AM, και η canonical sign-flip παγίδα του slide 33-34.
+Επτά ερωτήσεις που καλύπτουν το spectrum: το canonical worked example της Άσκησης 2 (sinc → 90 kHz), αναγνώριση παραμέτρων από εξίσωση, σταθερό envelope ως Σ/Λ, NBFM/WBFM ταξινόμηση (με τον σωστό ορισμό β ≪ 1), σχέση β–Δf–f_m, σύγκριση με AM, και η canonical sign-flip παγίδα του single-tone NBFM.
 
 <ExamProblem id="instantaneous-frequency" year="Computation" weight="βασικό">
 **Ερώτηση:** FM σήμα <InlineMath>{'x(t) = A_c\\cos[2\\pi\\cdot 100\\,000\\,t + 5\\sin(2\\pi\\cdot 1000\\,t)]'}</InlineMath>. Βρες το <InlineMath>{'f_c'}</InlineMath>, <InlineMath>{'f_m'}</InlineMath>, <InlineMath>{'\\beta_f'}</InlineMath>, και τη μέγιστη frequency deviation <InlineMath>{'\\Delta f'}</InlineMath>.
@@ -607,7 +592,7 @@ $$
 </ExamProblem>
 
 <ExamProblem id="nbfm-vs-wbfm" year="Jan'26 ΘΕΜΑ 1.5 (style)" weight="Σ/Λ">
-**Ερώτηση:** Ταξινόμησε τα παρακάτω FM σήματα ως NBFM ή WBFM σύμφωνα με τον ορισμό των διαφανειών («NBFM ⟺ β ≪ 1»):
+**Ερώτηση:** Ταξινόμησε τα παρακάτω FM σήματα ως NBFM ή WBFM σύμφωνα με τον ορισμό «NBFM ⟺ β ≪ 1»:
 - (α) <InlineMath>{'\\beta_f = 0.2'}</InlineMath>
 - (β) <InlineMath>{'\\beta_f = 0.3'}</InlineMath>
 - (γ) <InlineMath>{'\\beta_f = 1.5'}</InlineMath>
@@ -616,7 +601,7 @@ $$
 
 <Example title="Λύση" defaultOpen={true}>
 
-Σύμβαση των διαφανειών (slide 29): NBFM όταν <InlineMath>{'\\beta \\ll 1'}</InlineMath>, αλλιώς WBFM.
+Ο ορισμός: NBFM όταν <InlineMath>{'\\beta \\ll 1'}</InlineMath>, αλλιώς WBFM.
 
 - (α) <InlineMath>{'\\beta_f = 0.2'}</InlineMath>: **NBFM** (αρκετά <InlineMath>{'\\ll 1'}</InlineMath>)
 - (β) <InlineMath>{'\\beta_f = 0.3'}</InlineMath>: **NBFM** (οριακή τιμή, αλλά <InlineMath>{'\\ll 1'}</InlineMath> ισχύει ακόμα — αυτή είναι η canonical Jan'26 Θ1.5 παγίδα).
@@ -660,7 +645,7 @@ $$
 </Example>
 </ExamProblem>
 
-<ExamProblem id="nbfm-vs-am-sign-flip" year="Theory — slide 33-34" weight="canonical Σ/Λ">
+<ExamProblem id="nbfm-vs-am-sign-flip" year="Theory — NBFM vs AM" weight="canonical Σ/Λ">
 **Ερώτηση:** Συγκρίνετε τα φάσματα NBFM και Συμβατικού AM όταν προέρχονται από το **ίδιο** single-tone <InlineMath>{'m(t) = A_m\\cos(2\\pi f_m t)'}</InlineMath> και ίδιο <InlineMath>{'A_c, f_c'}</InlineMath>, με <InlineMath>{'\\beta_f = \\mu'}</InlineMath>. Σε τι ταυτίζονται και σε τι διαφέρουν;
 
 <Example title="Λύση" defaultOpen={true}>
@@ -675,14 +660,14 @@ $$
 | Παράμετρος | AM | NBFM |
 | --- | --- | --- |
 | Φάση USB | <InlineMath>{'+'}</InlineMath> | <InlineMath>{'+'}</InlineMath> |
-| Φάση LSB | <InlineMath>{'+'}</InlineMath> | <InlineMath>{'-'}</InlineMath> (slide 33) |
+| Φάση LSB | <InlineMath>{'+'}</InlineMath> | <InlineMath>{'-'}</InlineMath> |
 | Envelope | <InlineMath>{'A_c[1 + \\mu\\cos]'}</InlineMath> | <InlineMath>{'A_c'}</InlineMath> σταθερό |
 | Ισχύς carrier | <InlineMath>{'A_c^2/2'}</InlineMath> | <InlineMath>{'A_c^2/2'}</InlineMath> (πάντα) |
 | Ισχύς sidebands | <InlineMath>{'A_c^2\\mu^2/4'}</InlineMath> | <InlineMath>{'A_c^2\\beta_f^2/4'}</InlineMath> |
 
 **Σ/Λ καρφί:** «το φάσμα του NBFM είναι ταυτόσημο με αυτό του Συμβατικού AM» — **ΛΑΘΟΣ** αν το «ταυτόσημο» περιλαμβάνει τη φάση. Μέτρο: ταυτόσημο. Πλήρης μιγαδική περιγραφή: διαφορά <InlineMath>{'\\pi'}</InlineMath> στο LSB. Στο χρόνο φαίνεται με ένα κοίταγμα — AM «πάει πέρα-δώθε» στο envelope, NBFM όχι.
 
-Δες το <strong>NbfmVsAmSpectrumViz</strong> πιο πάνω για το οπτικό: το LSB του NBFM δείχνει προς τα κάτω, το LSB του AM δείχνει προς τα πάνω.
+Δες το διαδραστικό σχήμα σύγκρισης NBFM–AM πιο πάνω για το οπτικό: το LSB του NBFM δείχνει προς τα κάτω, το LSB του AM δείχνει προς τα πάνω.
 
 </Example>
 </ExamProblem>
@@ -702,14 +687,14 @@ $$
     'NBFM LSB έχει -, AM έχει +',
   ]}
   skeleton={[
-    'Από slides 4-5: «πέραν του πλάτους, ενσωμάτωση στη συχνότητα/φάση» — μια ολόκληρη οικογένεια διαμόρφωσης γωνίας (PM, FM) με συν. πλεονέκτημα: ανθεκτικότητα σε amplitude θόρυβο, με κόστος bandwidth + complexity.',
-    'Από slide 6: στιγμιαία συχνότητα f_i = (1/2π)(dθ/dt) — αναλογία στιγμιαίας ταχύτητας στη Μηχανική.',
-    'Από slide 8: dφ/dt = 2π K_f m(t) → φ = 2π K_f ∫m → εξίσωση FM. Στιγμιαία συχνότητα f_i = f_c + K_f m(t).',
-    'Από slides 12-13: PM/FM δυϊκότητα με ακριβείς σταθερές K_p = 2π K_f.',
-    'Από slide 9: β_f = Δf_max / W (γενικός ορισμός με bandwidth W του message). Single-tone special: W = f_m.',
-    'Από slides 10-11: I/Q canonical form δείχνει envelope = A_c και άρα P_x = A_c²/2 ανεξάρτητα του β.',
-    'Από slides 29-31: NBFM = β ≪ 1, γραμμικοποίηση sin(φ) ≈ φ, σήμα μοιάζει με Συμβατικό AM (B ≈ 2W).',
-    'Από slide 33-34: single-tone NBFM = AM_carrier + (A_c β_f / 2)[cos(f_c+f_m)t − cos(f_c−f_m)t]. Το «−» στο LSB είναι η μοναδική διαφορά από AM.',
+    'Διαμόρφωση γωνίας: πέρα από το πλάτος, ενσωμάτωση της πληροφορίας στη συχνότητα/φάση — μια ολόκληρη οικογένεια (PM, FM) με κύριο πλεονέκτημα την ανθεκτικότητα σε amplitude θόρυβο, με κόστος bandwidth + complexity.',
+    'Στιγμιαία συχνότητα f_i = (1/2π)(dθ/dt) — αναλογία στιγμιαίας ταχύτητας στη Μηχανική.',
+    'FM: dφ/dt = 2π K_f m(t) → φ = 2π K_f ∫m → εξίσωση FM. Στιγμιαία συχνότητα f_i = f_c + K_f m(t).',
+    'PM/FM δυϊκότητα με ακριβείς σταθερές K_p = 2π K_f.',
+    'β_f = Δf_max / W (γενικός ορισμός με bandwidth W του message). Single-tone special: W = f_m.',
+    'I/Q canonical form δείχνει envelope = A_c και άρα P_x = A_c²/2 ανεξάρτητα του β.',
+    'NBFM = β ≪ 1, γραμμικοποίηση sin(φ) ≈ φ, σήμα μοιάζει με Συμβατικό AM (B ≈ 2W).',
+    'Single-tone NBFM = AM_carrier + (A_c β_f / 2)[cos(f_c+f_m)t − cos(f_c−f_m)t]. Το «−» στο LSB είναι η μοναδική διαφορά από AM.',
   ]}
   trap={
     <>
@@ -720,13 +705,13 @@ $$
 
 <Recap>
 - Η οικογένεια **Διαμόρφωσης Γωνίας** (Angle Modulation) περιλαμβάνει PM και FM. Η πληροφορία ζει στη φάση/συχνότητα, όχι στο πλάτος. Πλεονέκτημα: ανθεκτικότητα σε amplitude θόρυβο. Κόστος: bandwidth + complexity.
-- **Στιγμιαία συχνότητα** <InlineMath>{'f_i(t) = f_c + K_f m(t)'}</InlineMath> — η μηχανική αναλογία της στιγμιαίας ταχύτητας (slide 6).
+- **Στιγμιαία συχνότητα** <InlineMath>{'f_i(t) = f_c + K_f m(t)'}</InlineMath> — η μηχανική αναλογία της στιγμιαίας ταχύτητας.
 - **Εξίσωση FM**: <InlineMath>{'x_{FM} = A_c\\cos[2\\pi f_c t + 2\\pi K_f \\int m\\, d\\tau]'}</InlineMath>. Για single-tone: <InlineMath>{'x_{FM} = A_c\\cos[2\\pi f_c t + \\beta_f\\sin(2\\pi f_m t)]'}</InlineMath>.
-- **PM↔FM δυϊκότητα** (slides 12-13): φτιάχνω FM με PM modulator + ολοκληρωτή στην είσοδο, όταν <InlineMath>{'K_p = 2\\pi K_f'}</InlineMath>· και αντίστροφα με διαφοριστή.
-- **Modulation index** (slide 9): <InlineMath>{'\\beta_f = \\Delta f_{max}/W = K_f\\,\\max|m|/W'}</InlineMath>, αδιάστατο. Single-tone reduction: <InlineMath>{'\\beta_f = K_f A_m/f_m = \\Delta f/f_m'}</InlineMath>.
-- **Σταθερό envelope** <InlineMath>{'V = A_c'}</InlineMath> από την I/Q μορφή — άρα **<InlineMath>{'\\mathcal{P}_x = A_c^2/2'}</InlineMath> πάντα**, ανεξάρτητα του β (slide 11).
-- **NBFM** (<InlineMath>{'\\beta_f \\ll 1'}</InlineMath>, slide 29): γραμμικοποίηση κάνει το σήμα να μοιάζει με Συμβατικό AM, με bandwidth <InlineMath>{'\\approx 2W'}</InlineMath>. **WBFM** (<InlineMath>{'\\beta_f \\gg 1'}</InlineMath>): πολλές sidebands, bandwidth κατά Carson <InlineMath>{'\\approx 2(\\beta_f+1)W'}</InlineMath>.
-- **Σ/Λ trap**: NBFM και AM έχουν ίδιο **μέτρο** φάσματος αλλά **αντίθετο πρόσημο** στο LSB (slide 33-34). Το envelope τους είναι εντελώς διαφορετικό.
+- **PM↔FM δυϊκότητα**: φτιάχνω FM με PM modulator + ολοκληρωτή στην είσοδο, όταν <InlineMath>{'K_p = 2\\pi K_f'}</InlineMath>· και αντίστροφα με διαφοριστή.
+- **Modulation index**: <InlineMath>{'\\beta_f = \\Delta f_{max}/W = K_f\\,\\max|m|/W'}</InlineMath>, αδιάστατο. Single-tone reduction: <InlineMath>{'\\beta_f = K_f A_m/f_m = \\Delta f/f_m'}</InlineMath>.
+- **Σταθερό envelope** <InlineMath>{'V = A_c'}</InlineMath> από την I/Q μορφή — άρα **<InlineMath>{'\\mathcal{P}_x = A_c^2/2'}</InlineMath> πάντα**, ανεξάρτητα του β.
+- **NBFM** (<InlineMath>{'\\beta_f \\ll 1'}</InlineMath>): γραμμικοποίηση κάνει το σήμα να μοιάζει με Συμβατικό AM, με bandwidth <InlineMath>{'\\approx 2W'}</InlineMath>. **WBFM** (<InlineMath>{'\\beta_f \\gg 1'}</InlineMath>): πολλές sidebands, bandwidth κατά Carson <InlineMath>{'\\approx 2(\\beta_f+1)W'}</InlineMath>.
+- **Σ/Λ trap**: NBFM και AM έχουν ίδιο **μέτρο** φάσματος αλλά **αντίθετο πρόσημο** στο LSB. Το envelope τους είναι εντελώς διαφορετικό.
 - **Επόμενο κεφάλαιο** (<Link href="/fm/pm">/fm/pm</Link>): η PM ξεχωριστά με <InlineMath>{'\\beta_p, K_p'}</InlineMath>· μετά Bessel/Carson/noise.
 </Recap>
 
