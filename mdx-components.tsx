@@ -120,6 +120,7 @@ import { SineFrequencyPairViz } from '@/components/viz/SineFrequencyPairViz'
 import { SgnToInversePiFViz } from '@/components/viz/SgnToInversePiFViz'
 import { ConstantDeltaDualityViz } from '@/components/viz/ConstantDeltaDualityViz'
 import { AMFamilySpectra } from '@/components/viz/AMFamilySpectra'
+import { CarrierAmplitudeFollowsMessageViz } from '@/components/viz/CarrierAmplitudeFollowsMessageViz'
 import { ModulationDecisionTree } from '@/components/viz/ModulationDecisionTree'
 import { BasebandToRfShiftPlayground } from '@/components/viz/BasebandToRfShiftPlayground'
 import { AMTradeoffSpace } from '@/components/viz/AMTradeoffSpace'
@@ -379,6 +380,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
     // Visualizations — am / overview
     AMFamilySpectra,
+    CarrierAmplitudeFollowsMessageViz,
     ModulationDecisionTree,
     BasebandToRfShiftPlayground,
     AMTradeoffSpace,
