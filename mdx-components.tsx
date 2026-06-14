@@ -126,6 +126,7 @@ import { BasebandToRfShiftPlayground } from '@/components/viz/BasebandToRfShiftP
 import { AMTradeoffSpace } from '@/components/viz/AMTradeoffSpace'
 import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
+import { SidebandOverlapViz } from '@/components/viz/SidebandOverlapViz'
 import { AMPowerCalculator } from '@/components/viz/AMPowerCalculator'
 import { OvermodulationPhaseReversalViz } from '@/components/viz/OvermodulationPhaseReversalViz'
 import { EfficiencyVsMuCurveViz } from '@/components/viz/EfficiencyVsMuCurveViz'
@@ -388,6 +389,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Visualizations — am / conventional
     AMSignalViz,
     AMSpectrumViz,
+    SidebandOverlapViz,
     AMPowerCalculator,
     OvermodulationPhaseReversalViz,
     EfficiencyVsMuCurveViz,
