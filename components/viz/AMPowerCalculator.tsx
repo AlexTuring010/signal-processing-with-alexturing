@@ -43,10 +43,13 @@ export function AMPowerCalculator() {
         AM ισχύς και efficiency calculator
       </h4>
       <p className="mb-3 text-xs text-fg-muted">
-        Δώσε το πλάτος carrier <span className="font-mono">A_c</span> (V) και
-        το πλάτος single-tone message <span className="font-mono">A_m</span>{' '}
-        (V). Ο calculator δείχνει το <span className="font-mono">μ</span>, τις
-        ισχύεις (carrier, sidebands, total) και το efficiency{' '}
+        Υποθέτει <strong>single-tone</strong> message{' '}
+        <span className="font-mono">m(t) = A_m·cos(2π f_m t)</span>, οπότε{' '}
+        <span className="font-mono">μ = A_m / A_c</span>. Δώσε τα πλάτη carrier{' '}
+        <span className="font-mono">A_c</span> και message{' '}
+        <span className="font-mono">A_m</span> (V)· δείχνει το{' '}
+        <span className="font-mono">μ</span>, τις ισχύεις (carrier, sidebands,
+        total) και το efficiency{' '}
         <span className="font-mono">η = P_useful / P_total</span>.
       </p>
 
@@ -125,6 +128,15 @@ export function AMPowerCalculator() {
           </p>
         </div>
       </div>
+
+      <p className="mt-3 text-[11px] text-fg-subtle">
+        Ισχύει για <strong>single-tone</strong> message (ένας τόνος ⇒ ένας
+        μοναδικός <span className="font-mono">μ = A_m/A_c</span>). Για message με
+        πολλούς τόνους δεν υπάρχει ένας <span className="font-mono">μ</span> —
+        εκεί χρησιμοποιείς τη γενική μορφή{' '}
+        <span className="font-mono">η = P_m / (A_c² + P_m)</span> με{' '}
+        <span className="font-mono">P_m = ⟨m²(t)⟩</span> (§5cγ).
+      </p>
     </figure>
   )
 }
