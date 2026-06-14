@@ -112,13 +112,17 @@ export function DsbVsAmEnvelopeDetectorComparison() {
       </div>
 
       <p className="mb-3 text-xs text-fg-muted">
-        Ίδιο <span className="font-mono">m(t)</span>, ίδιο <span className="font-mono">f_c</span> —
-        διαφορετική διαμόρφωση. Αριστερά: Conventional AM
-        (<span className="font-mono">x = [A_c + m]\,cos</span>). Δεξιά: DSB-SC
-        (<span className="font-mono">x = m\,cos</span>). Και στις δύο, ο envelope
-        detector βγάζει την <em>απόλυτη τιμή του φακέλου</em>. Σύγκρινε το
-        ανακτημένο <span className="font-mono">m̂(t)</span> με το αληθινό{' '}
-        <span className="font-mono">m(t)</span>.
+        Ίδιο <span className="font-mono">m(t)</span>, ίδιο{' '}
+        <span className="font-mono">f_c</span> — διαφορετική διαμόρφωση.
+        Αριστερά: Conventional AM (<span className="font-mono">x = [A_c + m]·cos</span>).
+        Δεξιά: DSB-SC (<span className="font-mono">x = m·cos</span>). Και στις δύο
+        στήλες περνάμε το σήμα από την <strong>ίδια αλυσίδα</strong>: envelope
+        detector (βγάζει την απόλυτη τιμή του φακέλου){' '}
+        <span className="font-mono">→</span> <strong>DC-block</strong> που αφαιρεί
+        τη σταθερή συνιστώσα — αυτός που στην AM αφαιρεί το{' '}
+        <span className="font-mono">A_c</span>. Σύγκρινε το ανακτημένο{' '}
+        <span className="font-mono">m̂</span> (μπλε για AM, κόκκινο για DSB) με το
+        αληθινό <span className="font-mono">m</span> (amber διακεκομμένο).
       </p>
 
       <div
@@ -193,9 +197,12 @@ export function DsbVsAmEnvelopeDetectorComparison() {
             RMS error / RMS m = {(amDistortion * 100).toFixed(1)}%
           </div>
           <p className="mt-1 text-fg-muted">
-            Ο envelope detector παράγει <span className="font-mono">|A_c + m(t)|</span>.
-            Όσο <span className="font-mono">A_c + m(t) &gt; 0</span> (δηλαδή μ ≤ 1),
-            η ανάκτηση είναι ακριβώς το <span className="font-mono">m(t)</span> με ένα DC offset.
+            Ο envelope detector βγάζει <span className="font-mono">|A_c + m(t)|</span>,
+            που για <span className="font-mono">μ ≤ 1</span> ισούται με{' '}
+            <span className="font-mono">A_c + m(t)</span>. Ο DC-block αφαιρεί το σταθερό{' '}
+            <span className="font-mono">A_c</span> και μένει{' '}
+            <strong>ακριβώς το <span className="font-mono">m(t)</span></strong> — γι' αυτό
+            η μπλε κάθεται πάνω στην amber.
           </p>
         </div>
 
@@ -208,10 +215,15 @@ export function DsbVsAmEnvelopeDetectorComparison() {
             RMS error / RMS m = {(dsbDistortion * 100).toFixed(1)}%
           </div>
           <p className="mt-1 text-fg-muted">
-            Ο envelope detector παράγει <span className="font-mono">|m(t)|</span> —
-            η rectified απόλυτη τιμή. Όπου το <span className="font-mono">m(t)</span>{' '}
-            ήταν αρνητικό, εμφανίζεται ως κατοπτρικά θετικό. Λύση: <strong>coherent demodulation</strong>{' '}
-            (πολλαπλασιασμός με <span className="font-mono">2cos(2π f_c t)</span> + LPF).
+            Ο envelope detector βγάζει <span className="font-mono">|m(t)|</span>. Ο{' '}
+            <strong>ίδιος DC-block</strong> (που στην AM αφαιρούσε το{' '}
+            <span className="font-mono">A_c</span>) αφαιρεί τον μέσο όρο, οπότε η κόκκινη
+            είναι <span className="font-mono">|m(t)| − ⟨|m|⟩</span> —{' '}
+            <strong>γι' αυτό πέφτει και κάτω από το μηδέν</strong>. Το σχήμα όμως μένει
+            λάθος: όπου το <span className="font-mono">m(t)</span> ήταν αρνητικό, η
+            rectification το «αναποδογύρισε» προς τα πάνω, και καμία αφαίρεση DC δεν το
+            ξαναγυρίζει. Λύση: <strong>coherent demodulation</strong> (×{' '}
+            <span className="font-mono">2cos(2π f_c t)</span> + LPF).
           </p>
         </div>
       </div>
@@ -307,12 +319,12 @@ function drawColumn(
   const headerH = 22
   // Header
   ctx.fillStyle = colors.fg
-  ctx.font = 'bold 12px ui-sans-serif, system-ui, sans-serif'
+  ctx.font = 'bold 11px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
   if (mode === 'am') {
-    ctx.fillText('AM:  x(t) = [A_c + m(t)] cos(2π f_c t)', x0 + 12, y0 + 14)
+    ctx.fillText('AM:  x = [A_c + m]·cos', x0 + 10, y0 + 14)
   } else {
-    ctx.fillText('DSB-SC:  x(t) = m(t) cos(2π f_c t)', x0 + 12, y0 + 14)
+    ctx.fillText('DSB-SC:  x = m·cos', x0 + 10, y0 + 14)
   }
 
   const innerY = y0 + headerH
@@ -350,9 +362,9 @@ function drawTransmitted(
 
   // Sub-header
   ctx.fillStyle = colors.fgMuted
-  ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText('Εκπεμπόμενο σήμα + envelope (violet)', x0 + PAD_X, y0 + 10)
+  ctx.fillText('Εκπεμπόμενο x(t) (envelope: violet)', x0 + PAD_X, y0 + 10)
 
   // Zero line
   ctx.strokeStyle = colors.border
@@ -444,15 +456,9 @@ function drawRecovered(
 
   // Sub-header
   ctx.fillStyle = colors.fgMuted
-  ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
+  ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'left'
-  ctx.fillText(
-    mode === 'am'
-      ? 'Έξοδος envelope detector m̂(t) (μπλε) vs αληθινό m(t) (amber)'
-      : 'Έξοδος envelope detector m̂(t) (κόκκινο) vs αληθινό m(t) (amber)',
-    x0 + PAD_X,
-    y0 + 10,
-  )
+  ctx.fillText('Μετά detector + DC-block:  m̂  vs  m', x0 + PAD_X, y0 + 10)
 
   // Zero line
   ctx.strokeStyle = colors.border
