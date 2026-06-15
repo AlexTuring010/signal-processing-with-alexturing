@@ -15,18 +15,34 @@ import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
  *
  * The PM peaks slide EARLIER (left of the reference peak) when m is high and
  * LATER (right) when m is low — a phase φ corresponds to a time shift
- * φ/(2π f_c). At β_p = 0 the two waves coincide exactly (no modulation, no
- * shift). The teaching point: phase is only meaningful relative to the
- * reference, so a PM receiver must HOLD that reference (PLL/pilot) — unlike FM,
- * which just reads the wiggle rate.
+ * φ/(2π f_c). At β_p = 0 the two waves coincide exactly.
+ *
+ * Two message shapes:
+ *   - cosine: the phase drifts smoothly early↔late (subtle).
+ *   - square: the phase HOLDS a constant lead for a whole stretch, then SNAPS
+ *     to a constant lag — by far the easiest way to see the shift, and an
+ *     honest picture (a jump in m gives a jump in the PM phase).
+ *
+ * Teaching point: phase is only meaningful relative to the reference, so a PM
+ * receiver must HOLD that reference (PLL/pilot) — unlike FM, which reads rate.
  */
 
 const FC = 3 // carrier cycles per unit time (low, so the shift is readable)
 const FM = 0.5 // message frequency
 const T_WINDOW = 6 // units of signal shown
 
+type Shape = 'cos' | 'square'
+
+function messageAt(t: number, shape: Shape): number {
+  if (shape === 'cos') return Math.cos(2 * Math.PI * FM * t)
+  const P = 1 / FM
+  const u = ((t % P) + P) % P
+  return u < P / 2 ? 1 : -1
+}
+
 export function PmPhaseLeadLagViz() {
-  const [betaP, setBetaP] = useState(1.5)
+  const [betaP, setBetaP] = useState(2.0)
+  const [shape, setShape] = useState<Shape>('square')
   const [running, setRunning] = useState(true)
   const tRef = useRef(0)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -40,12 +56,12 @@ export function PmPhaseLeadLagViz() {
       if (running) tRef.current += dt
       const canvas = canvasRef.current
       const colors = getThemeColors()
-      if (canvas && colors) drawScene(canvas, colors, betaP, tRef.current)
+      if (canvas && colors) drawScene(canvas, colors, betaP, shape, tRef.current)
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [running, betaP])
+  }, [running, betaP, shape])
 
   return (
     <figure className="my-6 rounded-lg border border-border bg-bg-elevated p-4">
@@ -53,15 +69,41 @@ export function PmPhaseLeadLagViz() {
         <h4 className="text-sm font-semibold tracking-tight">
           PM — η φάση κουβαλάει το message: οι κορυφές γλιστρούν νωρίτερα / αργότερα
         </h4>
-        <button
-          type="button"
-          onClick={() => setRunning((r) => !r)}
-          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-soft px-3 py-1 text-xs hover:border-accent/50 hover:text-fg"
-          aria-label={running ? 'Παύση' : 'Παίξε'}
-        >
-          {running ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-          {running ? 'Παύση' : 'Παίξε'}
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="inline-flex overflow-hidden rounded-full border border-border text-xs">
+            <button
+              type="button"
+              onClick={() => setShape('cos')}
+              className={
+                shape === 'cos'
+                  ? 'bg-accent px-3 py-1 text-white'
+                  : 'bg-bg-soft px-3 py-1 text-fg-muted hover:text-fg'
+              }
+            >
+              Ημίτονο
+            </button>
+            <button
+              type="button"
+              onClick={() => setShape('square')}
+              className={
+                shape === 'square'
+                  ? 'bg-accent px-3 py-1 text-white'
+                  : 'bg-bg-soft px-3 py-1 text-fg-muted hover:text-fg'
+              }
+            >
+              Τετραγωνικό (on/off)
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => setRunning((r) => !r)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-bg-soft px-3 py-1 text-xs hover:border-accent/50 hover:text-fg"
+            aria-label={running ? 'Παύση' : 'Παίξε'}
+          >
+            {running ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+            {running ? 'Παύση' : 'Παίξε'}
+          </button>
+        </div>
       </div>
 
       <p className="mb-3 text-xs text-fg-muted">
@@ -70,12 +112,13 @@ export function PmPhaseLeadLagViz() {
         <strong>carrier αναφοράς</strong>{' '}
         <span className="font-mono">cos(2π f_c t)</span>, η{' '}
         <strong>συμπαγής</strong> μπλε είναι το <strong>PM σήμα</strong>{' '}
-        <span className="font-mono">cos(2π f_c t + β_p·m(t))</span>. Όπου το message
-        είναι <strong>ψηλά</strong>, οι κορυφές της PM πέφτουν{' '}
-        <strong>αριστερά</strong> (νωρίτερα) από της αναφοράς· όπου είναι{' '}
-        <strong>χαμηλά</strong>, <strong>δεξιά</strong> (αργότερα). Στο{' '}
-        <span className="font-mono">β_p = 0</span> οι δύο καμπύλες ταυτίζονται —
-        καμία διαμόρφωση, καμία μετατόπιση.
+        <span className="font-mono">cos(2π f_c t + β_p·m(t))</span>. Με το{' '}
+        <strong>Τετραγωνικό</strong> message (προεπιλογή) είναι ευκολότερο: όσο το
+        message είναι <strong>ψηλά</strong>, οι μπλε κορυφές κάθονται σταθερά{' '}
+        <strong>αριστερά</strong> (νωρίτερα) από τις γκρι· μόλις το message πέσει{' '}
+        <strong>χαμηλά</strong>, η φάση <strong>«σπάει»</strong> και οι μπλε
+        κορυφές πάνε σταθερά <strong>δεξιά</strong> (αργότερα). Στο{' '}
+        <span className="font-mono">β_p = 0</span> οι δύο καμπύλες ταυτίζονται.
       </p>
 
       <canvas
@@ -127,6 +170,7 @@ function drawScene(
   canvas: HTMLCanvasElement,
   colors: ReturnType<typeof getThemeColors>,
   betaP: number,
+  shape: Shape,
   tNow: number,
 ) {
   if (!colors) return
@@ -134,8 +178,8 @@ function drawScene(
   ctx.clearRect(0, 0, w, h)
 
   const msgH = h * 0.36
-  drawMessage(ctx, colors, 0, 0, w, msgH, tNow)
-  drawOverlay(ctx, colors, 0, msgH, w, h - msgH, betaP, tNow)
+  drawMessage(ctx, colors, 0, 0, w, msgH, shape, tNow)
+  drawOverlay(ctx, colors, 0, msgH, w, h - msgH, betaP, shape, tNow)
 }
 
 function drawMessage(
@@ -145,6 +189,7 @@ function drawMessage(
   y0: number,
   pw: number,
   ph: number,
+  shape: Shape,
   tNow: number,
 ) {
   if (!colors) return
@@ -172,10 +217,10 @@ function drawMessage(
   ctx.strokeStyle = MSG_C
   ctx.lineWidth = 1.6
   ctx.beginPath()
-  const STEPS = 400
+  const STEPS = 500
   for (let i = 0; i <= STEPS; i++) {
     const t = lerp(i, 0, STEPS, tStart, tEnd)
-    const m = Math.cos(2 * Math.PI * FM * t)
+    const m = messageAt(t, shape)
     if (i === 0) ctx.moveTo(xt(t), yv(m))
     else ctx.lineTo(xt(t), yv(m))
   }
@@ -190,6 +235,7 @@ function drawOverlay(
   pw: number,
   ph: number,
   betaP: number,
+  shape: Shape,
   tNow: number,
 ) {
   if (!colors) return
@@ -230,16 +276,28 @@ function drawOverlay(
   ctx.stroke()
   ctx.setLineDash([])
 
-  // PM signal (solid)
+  // PM signal (solid). For a square message the phase jumps, so break the path
+  // at the transitions instead of drawing a spurious vertical connector.
   ctx.strokeStyle = PM_C
   ctx.lineWidth = 1.6
   ctx.beginPath()
+  let prevM = messageAt(tStart, shape)
+  let penDown = false
   for (let i = 0; i <= STEPS; i++) {
     const t = lerp(i, 0, STEPS, tStart, tEnd)
-    const phi = betaP * Math.cos(2 * Math.PI * FM * t)
+    const m = messageAt(t, shape)
+    if (shape === 'square' && m !== prevM) penDown = false // phase jump → lift pen
+    prevM = m
+    const phi = betaP * m
     const pm = Math.cos(2 * Math.PI * FC * t + phi)
-    if (i === 0) ctx.moveTo(xt(t), yv(pm))
-    else ctx.lineTo(xt(t), yv(pm))
+    const px = xt(t)
+    const py = yv(pm)
+    if (!penDown) {
+      ctx.moveTo(px, py)
+      penDown = true
+    } else {
+      ctx.lineTo(px, py)
+    }
   }
   ctx.stroke()
 }
