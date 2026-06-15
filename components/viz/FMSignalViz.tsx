@@ -179,8 +179,15 @@ export function FMSignalViz() {
           aria-label="Modulation index beta"
         />
         <p className="mt-1 text-[11px] text-fg-subtle">
-          Σύρε το β <strong>ψηλά</strong> για μεγάλη μετατόπιση συχνότητας (WBFM —
-          εκεί η διαφορά φαίνεται έντονα). Κοντά στο <strong>0</strong> (NBFM) η
+          Το <strong>β_f = Δf/W</strong> λέει <strong>πόσο βαθιά</strong>{' '}
+          διαμορφώνεις: πόσο <strong>μακριά</strong> ταξιδεύει η συχνότητα
+          (<span className="font-mono">Δf</span>) σε σχέση με το πόσο{' '}
+          <strong>γρήγορα</strong> κουνιέται το message
+          (<span className="font-mono">W = f_m</span> εδώ). Επειδή σ' αυτό το
+          σχήμα το W μένει σταθερό, σύροντας το slider αλλάζεις στην ουσία το{' '}
+          <span className="font-mono">Δf</span> — το «πόσο δυνατά σπρώχνεις» τη
+          συχνότητα. Βάλ' το <strong>ψηλά</strong> → μεγάλη μετατόπιση (WBFM, η
+          διαφορά φαίνεται έντονα)· κοντά στο <strong>0</strong> (NBFM) η
           συχνότητα μετακινείται ελάχιστα και το σήμα μοιάζει σχεδόν με σταθερό
           carrier — γι' αυτό η αλλαγή «δεν φαινόταν» στις χαμηλές τιμές.
         </p>
