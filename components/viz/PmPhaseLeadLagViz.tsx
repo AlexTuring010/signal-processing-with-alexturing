@@ -19,9 +19,11 @@ import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
  *
  * Two message shapes:
  *   - cosine: the phase drifts smoothly early↔late (subtle).
- *   - square: the phase HOLDS a constant lead for a whole stretch, then SNAPS
- *     to a constant lag — by far the easiest way to see the shift, and an
- *     honest picture (a jump in m gives a jump in the PM phase).
+ *   - square (on/off, m ∈ {0,1}): in the OFF stretch the PM sits EXACTLY on the
+ *     reference (a visible "zero" baseline to compare against); in the ON
+ *     stretch it snaps to a constant early shift. Easiest to read, and honest
+ *     (a jump in m is a jump in the PM phase). Using 0/1 rather than ±1 means
+ *     there is always an aligned baseline, so "shifted" is obvious.
  *
  * Teaching point: phase is only meaningful relative to the reference, so a PM
  * receiver must HOLD that reference (PLL/pilot) — unlike FM, which reads rate.
@@ -37,7 +39,7 @@ function messageAt(t: number, shape: Shape): number {
   if (shape === 'cos') return Math.cos(2 * Math.PI * FM * t)
   const P = 1 / FM
   const u = ((t % P) + P) % P
-  return u < P / 2 ? 1 : -1
+  return u < P / 2 ? 1 : 0
 }
 
 export function PmPhaseLeadLagViz() {
@@ -113,12 +115,14 @@ export function PmPhaseLeadLagViz() {
         <span className="font-mono">cos(2π f_c t)</span>, η{' '}
         <strong>συμπαγής</strong> μπλε είναι το <strong>PM σήμα</strong>{' '}
         <span className="font-mono">cos(2π f_c t + β_p·m(t))</span>. Με το{' '}
-        <strong>Τετραγωνικό</strong> message (προεπιλογή) είναι ευκολότερο: όσο το
-        message είναι <strong>ψηλά</strong>, οι μπλε κορυφές κάθονται σταθερά{' '}
-        <strong>αριστερά</strong> (νωρίτερα) από τις γκρι· μόλις το message πέσει{' '}
-        <strong>χαμηλά</strong>, η φάση <strong>«σπάει»</strong> και οι μπλε
-        κορυφές πάνε σταθερά <strong>δεξιά</strong> (αργότερα). Στο{' '}
-        <span className="font-mono">β_p = 0</span> οι δύο καμπύλες ταυτίζονται.
+        <strong>Τετραγωνικό</strong> message (προεπιλογή) γίνεται ξεκάθαρο: όσο το
+        message είναι στο <strong>0 (off)</strong>, η μπλε καμπύλη κάθεται{' '}
+        <strong>ακριβώς πάνω</strong> στη γκρι — καμία μετατόπιση, οπότε έχεις ένα
+        σταθερό «σημείο μηδέν» να συγκρίνεις. Μόλις ανέβει στο{' '}
+        <strong>1 (on)</strong>, η φάση <strong>«σπάει»</strong> και οι μπλε
+        κορυφές πηδούν <strong>αριστερά</strong> (νωρίτερα). Βλέπεις το μπλε να{' '}
+        <strong>κλειδώνει</strong> πάνω στη γκρι, να <strong>ξεκολλάει</strong>,
+        και να ξανακλειδώνει.
       </p>
 
       <canvas
