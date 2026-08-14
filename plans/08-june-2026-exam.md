@@ -259,7 +259,7 @@ Plus `content/practice/exercises.tsx:1-20` header counts, and a `SOSE_COACHING` 
 | 1 | Fix the SSB-envelope error at `am/modulator-demodulator:235` | build | ✅ done |
 | 2 | Part A: assets + `EXAM_PAPERS` + `/exams/[source]` + `ExamSourceChip` | build | ✅ done |
 | 3 | Part A: the nested/awkward chip sites | build | ✅ done (except `<ExamProblem>`) |
-| 4 | B3 content gaps (energy machinery) — **before any Q12 card** | build | next |
+| 4 | B3 content gaps (energy machinery) — **before any Q12 card** | build | ✅ done |
 | 5 | Stale copy (B5) | typecheck + lint + **build** | pending |
 | 6 | The 11 non-draw cards, in ΘΕΜΑ order | build | pending |
 | 7 | Viz extends (B2), then the 6 draw cards | build | pending |
@@ -280,6 +280,33 @@ Plus `content/practice/exercises.tsx:1-20` header counts, and a `SOSE_COACHING` 
   exam named in «Το ίδιο θέμα έχει μπει και σε …» links to that paper.
 - **Found in passing:** 58 broken in-page anchors site-wide (7 mechanically fixed,
   51 left). See `plans/ANCHOR_AUDIT.md` — unrelated to this exam.
+
+### Step 4 as built (energy machinery)
+
+- `foundations/fourier-transform` **§9.2** — the two general rules
+  `∫sinc²(at)dt = 1/a` and `∫sinc⁴(at)dt = 2/(3a)`, derived via Parseval from the two
+  τυπολόγιο pairs. Note the page **already** had an energy-of-a-sinc drill
+  (`parseval-sinc-energy`, in Εξάσκηση), so §9.2 links to it rather than repeating it and
+  puts the weight on the sinc⁴ case, which existed nowhere in the repo.
+- `am/multiplexing` **§4c** — `E_DSB-SC = A_c²E_m/2`, `E_SSB = A_c²E_k`, why the
+  double-frequency term vanishes **exactly** (`f_c > B_m`, not "f_c ≫ W"), why disjoint
+  spectra make energies add, and the full worked Q12 answer.
+- `reference/integrals` — pointer to §9.2 rather than a duplicated derivation.
+
+**Q12 answer: `E_g = 11A_c²/(18W)`.** Verified independently; the two channel energies are
+`E_m = 1/W` and `E_k = 1/(9W)`.
+
+⚠️ **The SSB convention is load-bearing and is stated on the page.** The site's full form
+`A_c[k cos − k̂ sin]` (consistent with its `P_x = A_c²P_m`) gives `11A_c²/(18W)`. The half
+I/Q form `(A_c/2)[…]` — what you get by literally filtering one sideband off a DSB-SC
+signal — gives `19A_c²/(36W)`. Neither is wrong; not declaring which one you used is.
+The exam does not specify `A_c` for ΘΕΜΑ 2, so the card in step 6 must state the convention
+in its opening line.
+
+**Transcription re-verified against the scan** (cropped + upscaled): the paper really does
+read `m(t) = sinc(Wt)` and `k(t) = sinc²(6Wt)`. The unusual 12:1 bandwidth ratio is genuine,
+not a transcription slip — earlier papers in the corpus used `sinc(2Wt)` with equal
+bandwidths, so do not "correct" it to match them. Note `B_m = W/2`, not `W`.
 
 **Cautions**
 - `content/practice/**` is the overnight builder's T1 scope and `ex-proodos26-11-rework` is
