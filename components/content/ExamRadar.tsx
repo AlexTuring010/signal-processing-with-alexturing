@@ -6,13 +6,13 @@ import { usePathname } from 'next/navigation'
 import { Radar, GraduationCap, Repeat } from 'lucide-react'
 import { EXERCISES } from '@/content/practice/exercises'
 import {
-  SOURCE_LABELS,
   TOPIC_COLORS,
   TOPIC_LABELS,
   type Exercise,
   type ExamSource,
   type Topic,
 } from '@/content/practice/types'
+import { ExamSourceChip } from '@/components/practice/ExamSourceChip'
 import { cn } from '@/lib/utils'
 
 export type Likelihood = 'high' | 'medium' | 'low'
@@ -43,6 +43,7 @@ const LIKELIHOOD_STYLES: Record<Likelihood, { dot: string; label: string }> = {
 }
 
 const SOURCE_RECENCY: Record<ExamSource, number> = {
+  'june-2026': 7,
   'proodos-april-2026': 6,
   'jan-2026': 5,
   'sept-2025': 4,
@@ -145,11 +146,20 @@ export function ExamRadar({
         {rows.map(({ ex, likelihood, note }) => {
           const style = LIKELIHOOD_STYLES[likelihood]
           return (
-            <li key={ex.id}>
+            // Stretched-link row: the <Link> is an overlay so the whole row
+            // stays clickable, while the source chip — which is itself a link
+            // to the scanned paper — can live in the content layer without
+            // nesting an <a> inside an <a>.
+            <li
+              key={ex.id}
+              className="group relative rounded-md border border-border bg-bg-elevated transition hover:border-fuchsia-400/50 hover:bg-fuchsia-50/40 dark:hover:bg-fuchsia-400/10"
+            >
               <Link
                 href={`/practice#exercise:${ex.id}`}
-                className="group flex items-center gap-3 rounded-md border border-border bg-bg-elevated px-3 py-2 text-left transition hover:border-fuchsia-400/50 hover:bg-fuchsia-50/40 dark:hover:bg-fuchsia-400/10"
-              >
+                className="absolute inset-0 z-0 rounded-md"
+                aria-label={ex.title}
+              />
+              <div className="pointer-events-none relative z-10 flex items-center gap-3 px-3 py-2 text-left">
                 <span
                   className={cn(
                     'inline-block h-2 w-2 shrink-0 rounded-full',
@@ -181,9 +191,12 @@ export function ExamRadar({
                   )}
                 </span>
                 {ex.source && (
-                  <span className="hidden shrink-0 rounded-full border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[10px] font-semibold text-purple-700 dark:text-purple-300 sm:inline">
-                    {SOURCE_LABELS[ex.source]}
-                  </span>
+                  <ExamSourceChip
+                    source={ex.source}
+                    page={ex.paperPage}
+                    size="xs"
+                    className="pointer-events-auto hidden shrink-0 sm:inline-block"
+                  />
                 )}
                 {ex.problemNumber && (
                   <span className="hidden shrink-0 rounded-full border border-border bg-bg-soft px-2 py-0.5 text-[10px] font-mono font-semibold text-fg-muted sm:inline">
@@ -198,7 +211,7 @@ export function ExamRadar({
                 >
                   {TOPIC_LABELS[ex.topic]}
                 </span>
-              </Link>
+              </div>
             </li>
           )
         })}

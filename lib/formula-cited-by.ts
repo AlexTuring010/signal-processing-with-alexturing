@@ -15,6 +15,8 @@ export type CitedExercise = {
   title: string
   problemNumber?: string
   source?: ExamSource
+  /** Page of the scanned paper, so the source chip can deep-link to it. */
+  paperPage?: number
 }
 
 const CITED_BY: Record<string, CitedExercise[]> = (() => {
@@ -26,6 +28,7 @@ const CITED_BY: Record<string, CitedExercise[]> = (() => {
       title: ex.title,
       problemNumber: ex.problemNumber,
       source: ex.source,
+      paperPage: ex.paperPage,
     }
     for (const fid of ex.formulaIds) {
       ;(out[fid] ??= []).push(cite)
@@ -35,6 +38,7 @@ const CITED_BY: Record<string, CitedExercise[]> = (() => {
 })()
 
 const SOURCE_RECENCY: Record<ExamSource, number> = {
+  'june-2026': 7,
   'proodos-april-2026': 6,
   'jan-2026': 5,
   'sept-2025': 4,

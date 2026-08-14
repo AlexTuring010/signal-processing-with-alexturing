@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import {
   ChevronDown,
   GraduationCap,
@@ -20,6 +20,7 @@ import {
 } from '@/content/practice/types'
 import type { Exercise } from '@/content/practice/types'
 import type { RepeatOccurrence } from '@/content/practice/repeats'
+import { ExamSourceChip } from './ExamSourceChip'
 import { PrereqChips } from './PrereqChips'
 import { useFormulaSheet } from './formula-sheet-store'
 import { SectionComments } from '@/components/layout/SectionComments'
@@ -34,14 +35,35 @@ type Props = {
   repeatedIn?: RepeatOccurrence[]
 }
 
-/** "Πρόοδος A · Μάιος 2025 (ΘΕΜΑ 2.2)" — joined with commas and a final «και». */
-function formatRepeatList(occurrences: RepeatOccurrence[]): string {
-  const labels = occurrences.map(
-    (o) =>
-      SOURCE_LABELS[o.source] + (o.problemNumber ? ` (${o.problemNumber})` : ''),
-  )
-  if (labels.length <= 1) return labels[0] ?? ''
-  return labels.slice(0, -1).join(', ') + ' και ' + labels[labels.length - 1]
+/**
+ * "Πρόοδος A · Μάιος 2025 (ΘΕΜΑ 2.2)" — joined with commas and a final «και».
+ * Each exam name links to its scanned paper, so the claim that the question
+ * really did recur is checkable rather than taken on trust.
+ */
+function formatRepeatList(occurrences: RepeatOccurrence[]): ReactNode {
+  const items = occurrences.map((o) => (
+    <span key={o.id}>
+      <a
+        href={
+          o.paperPage && o.paperPage > 1
+            ? `/exams/${o.source}#p${o.paperPage}`
+            : `/exams/${o.source}`
+        }
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-fg underline decoration-dotted underline-offset-2 hover:text-accent"
+        title={`Άνοιγμα του θέματος «${SOURCE_LABELS[o.source]}» σε νέα καρτέλα`}
+      >
+        {SOURCE_LABELS[o.source]}
+      </a>
+      {o.problemNumber ? ` (${o.problemNumber})` : ''}
+    </span>
+  ))
+  if (items.length <= 1) return items[0] ?? null
+  return items.reduce<ReactNode[]>((acc, item, i) => {
+    if (i === 0) return [item]
+    return [...acc, i === items.length - 1 ? ' και ' : ', ', item]
+  }, [])
 }
 
 const DIFFICULTY_COLORS = {
@@ -88,9 +110,11 @@ export function ExerciseCard({ exercise, repeatedIn }: Props) {
             {ORIGIN_LABELS[exercise.origin]}
           </span>
           {exercise.source && (
-            <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
-              {SOURCE_LABELS[exercise.source]}
-            </span>
+            <ExamSourceChip
+              source={exercise.source}
+              page={exercise.paperPage}
+              size="sm"
+            />
           )}
           {exercise.problemNumber && (
             <span className="rounded-full border border-border bg-bg-soft px-2 py-0.5 text-[11px] font-mono font-semibold text-fg-muted">

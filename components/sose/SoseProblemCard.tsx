@@ -14,10 +14,10 @@ import {
   TOPIC_COLORS,
   TOPIC_LABELS,
   DIFFICULTY_LABELS,
-  SOURCE_LABELS,
   ORIGIN_LABELS,
   ORIGIN_COLORS,
 } from '@/content/practice/types'
+import { ExamSourceChip } from '@/components/practice/ExamSourceChip'
 import { useFormulaSheet } from '@/components/practice/formula-sheet-store'
 import { SectionComments } from '@/components/layout/SectionComments'
 import { SectionCommentsProvider } from '@/components/layout/section-comments-context'
@@ -94,9 +94,11 @@ export function SoseProblemCard({
               {ORIGIN_LABELS[exercise.origin]}
             </span>
             {exercise.source && (
-              <span className="rounded-full border border-purple-500/40 bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
-                {SOURCE_LABELS[exercise.source]}
-              </span>
+              <ExamSourceChip
+                source={exercise.source}
+                page={exercise.paperPage}
+                size="sm"
+              />
             )}
             {exercise.problemNumber && (
               <span className="rounded-full border border-border bg-bg-soft px-2 py-0.5 text-[11px] font-mono font-semibold text-fg-muted">

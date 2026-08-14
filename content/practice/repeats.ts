@@ -15,6 +15,8 @@ export type RepeatOccurrence = {
   id: string
   source: ExamSource
   problemNumber?: string
+  /** Page of that exam's scan, so the name can link to the right page. */
+  paperPage?: number
 }
 
 /**
@@ -48,6 +50,7 @@ export function computeRepeats(
           id: other.id,
           source: other.source,
           problemNumber: other.problemNumber,
+          paperPage: other.paperPage,
         }))
     }
   }

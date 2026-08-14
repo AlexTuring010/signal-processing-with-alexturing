@@ -9,6 +9,7 @@ import {
   Layers,
   CheckCircle2,
   Circle,
+  ExternalLink,
 } from 'lucide-react'
 import type { Exercise, Topic, Origin, ExamSource } from '@/content/practice/types'
 import { SOURCE_LABELS } from '@/content/practice/types'
@@ -25,7 +26,10 @@ type Props = {
 
 type OriginFilter = 'all' | Origin
 
+// NB: not type-checked against ExamSource membership — a source missing from
+// this array silently loses its filter chip. Keep in sync with SOURCE_LABELS.
 const SOURCE_ORDER: ExamSource[] = [
+  'june-2026',
   'proodos-april-2026',
   'jan-2026',
   'sept-2025',
@@ -183,6 +187,21 @@ export function ExerciseLibrary({ exercises, repeats }: Props) {
                   )
                 })}
               </div>
+              {/*
+                The chips above are filters (<button>), so they can't also be
+                links. When one exam is selected, offer its scan separately.
+              */}
+              {sourceFilter !== 'all' && (
+                <a
+                  href={`/exams/${sourceFilter}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs text-fg-muted transition-colors hover:text-accent"
+                >
+                  <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                  Δες το πρωτότυπο θέμα «{SOURCE_LABELS[sourceFilter]}»
+                </a>
+              )}
             </div>
           )}
           <div>

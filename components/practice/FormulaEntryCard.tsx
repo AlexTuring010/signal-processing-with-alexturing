@@ -14,11 +14,8 @@ import {
 
 import type { FormulaEntry } from '@/content/practice/formulas'
 import { FORMULA_META } from '@/content/practice/formula-meta'
-import {
-  SECTION_TITLES,
-  SOURCE_LABELS,
-  type ExamSource,
-} from '@/content/practice/types'
+import { SECTION_TITLES } from '@/content/practice/types'
+import { ExamSourceChip } from '@/components/practice/ExamSourceChip'
 import { SectionComments } from '@/components/layout/SectionComments'
 import {
   hasFormulaViz,
@@ -251,26 +248,36 @@ function Section({
   )
 }
 
+/**
+ * Stretched-link chip: the <Link> covers the whole pill so it stays one click
+ * target, but the source tag sits in the content layer as its own link to the
+ * scanned paper — an <a> inside an <a> would be invalid HTML.
+ */
 function CitedChip({ ex }: { ex: CitedExercise }) {
   return (
-    <Link
-      href={`/practice#exercise:${ex.id}`}
-      className="inline-flex items-center gap-1.5 rounded-md border border-border bg-bg px-2 py-1 text-[11px] text-fg-muted transition hover:border-accent/40 hover:bg-accent-soft/40 hover:text-fg"
+    <span
+      className="relative inline-flex items-center gap-1.5 rounded-md border border-border bg-bg px-2 py-1 text-[11px] text-fg-muted transition hover:border-accent/40 hover:bg-accent-soft/40 hover:text-fg"
       title={ex.title}
     >
-      {ex.problemNumber && (
-        <span className="font-mono text-fg-subtle">{ex.problemNumber}</span>
+      <Link
+        href={`/practice#exercise:${ex.id}`}
+        className="absolute inset-0 z-0 rounded-md"
+        aria-label={ex.title}
+      />
+      <span className="pointer-events-none relative z-10 inline-flex items-center gap-1.5">
+        {ex.problemNumber && (
+          <span className="font-mono text-fg-subtle">{ex.problemNumber}</span>
+        )}
+        <span className="max-w-[18ch] truncate font-medium">{ex.title}</span>
+      </span>
+      {ex.source && (
+        <ExamSourceChip
+          source={ex.source}
+          page={ex.paperPage}
+          size="tiny"
+          className="relative z-10 hidden sm:inline-block"
+        />
       )}
-      <span className="max-w-[18ch] truncate font-medium">{ex.title}</span>
-      {ex.source && <SourceTag source={ex.source} />}
-    </Link>
-  )
-}
-
-function SourceTag({ source }: { source: ExamSource }) {
-  return (
-    <span className="hidden rounded-full border border-purple-500/40 bg-purple-500/10 px-1.5 py-px text-[9px] font-semibold text-purple-700 dark:text-purple-300 sm:inline">
-      {SOURCE_LABELS[source]}
     </span>
   )
 }

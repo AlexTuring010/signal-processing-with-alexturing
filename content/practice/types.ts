@@ -35,6 +35,7 @@ export type ExamSource =
   | 'proodos-a-2025'
   | 'proodos-b-2025'
   | 'proodos-april-2026'
+  | 'june-2026'
 
 export const TOPIC_LABELS: Record<Topic, string> = {
   foundations: 'Foundations',
@@ -67,6 +68,90 @@ export const SOURCE_LABELS: Record<ExamSource, string> = {
   'proodos-a-2025': 'Πρόοδος A · Μάιος 2025',
   'proodos-b-2025': 'Πρόοδος B · Μάιος 2025',
   'proodos-april-2026': 'Πρόοδος · Απρίλιος 2026',
+  'june-2026': 'Ιούνιος 2026',
+}
+
+/**
+ * The actual scanned paper behind each exam source.
+ *
+ * This is what makes a source chip clickable: «Ιούνιος 2026» opens
+ * `/exams/june-2026` in a new tab so the reader can check a transcribed
+ * exercise against the original scan instead of trusting it.
+ *
+ * `files` are served from `public/exams/` and are generated from the
+ * originals in `past_exams/` by `scripts/build-exam-assets.mjs` (which
+ * downscales the 12 MP phone photos). Page order matters — index 0 is page 1.
+ *
+ * Only fields actually printed on the paper are filled in; `duration` and
+ * `totalPoints` are omitted where the scan doesn't state them.
+ */
+export type ExamPaper = {
+  kind: 'images' | 'pdf'
+  /** Filenames under `/exams/`, in page order. */
+  files: string[]
+  /** Period + academic year line, as printed on the paper. */
+  period: string
+  duration?: string
+  totalPoints?: number
+  /** Set when the scan itself is damaged, so the viewer can say so up front. */
+  scanWarning?: string
+}
+
+export const EXAM_PAPERS: Record<ExamSource, ExamPaper> = {
+  'sept-2025': {
+    kind: 'images',
+    files: ['sept-2025-p1.jpg'],
+    period: 'Εξεταστική Σεπτεμβρίου 2025 · ακ. έτος 2024–2025',
+    duration: '2 ώρες',
+    totalPoints: 100,
+  },
+  'jan-2026': {
+    kind: 'images',
+    files: ['jan-2026-p1.jpg', 'jan-2026-p2.jpg'],
+    period: 'Επί πτυχίω εξέταση Ιανουαρίου 2026 · ακ. έτος 2025–2026',
+  },
+  'june-2025': {
+    kind: 'pdf',
+    files: ['june-2025-p1.pdf'],
+    period: 'Εξεταστική Ιουνίου 2025 · ακ. έτος 2024–2025 · ομάδα Α',
+    duration: '2 ώρες',
+    totalPoints: 100,
+  },
+  'proodos-a-2025': {
+    kind: 'images',
+    files: ['proodos-a-2025-p1.jpg', 'proodos-a-2025-p2.jpg'],
+    period: 'Πρόοδος Μαΐου 2025 · ακ. έτος 2024–2025 · ομάδα Α',
+    duration: '1 ώρα',
+    scanWarning:
+      'Το αρχείο της σάρωσης είναι κατεστραμμένο: λείπει το κάτω μέρος και των δύο σελίδων — το ΘΕΜΑ 2 (ερώτημα 3) στη σελίδα 1 και ολόκληρο το ΘΕΜΑ 4 στη σελίδα 2 δεν φαίνονται.',
+  },
+  'proodos-b-2025': {
+    kind: 'images',
+    files: ['proodos-b-2025-p1.jpg', 'proodos-b-2025-p2.jpg'],
+    period: 'Πρόοδος Μαΐου 2025 · ακ. έτος 2024–2025 · ομάδα Β',
+    duration: '1 ώρα',
+  },
+  'proodos-april-2026': {
+    kind: 'images',
+    files: ['proodos-april-2026-p1.jpg'],
+    period: 'Πρόοδος Απριλίου 2026 · ακ. έτος 2025–2026',
+    duration: '1 ώρα',
+    totalPoints: 100,
+  },
+  'june-2026': {
+    kind: 'images',
+    files: ['june-2026-p1.jpg', 'june-2026-p2.jpg'],
+    period: 'Εξεταστική Ιουνίου 2026 · ακ. έτος 2025–2026',
+    duration: '2 ώρες',
+    totalPoints: 100,
+  },
+}
+
+/** Public URL of one page of an exam scan. */
+export function examPageHref(source: ExamSource, page = 1): string {
+  const paper = EXAM_PAPERS[source]
+  const file = paper.files[Math.min(Math.max(page, 1), paper.files.length) - 1]
+  return `/exams/${file}`
 }
 
 export const ORIGIN_LABELS: Record<Origin, string> = {
@@ -98,6 +183,12 @@ export type Exercise = {
   source?: ExamSource
   /** Problem label, e.g. "ΘΕΜΑ 1.5", "ΘΕΜΑ 4.2". */
   problemNumber?: string
+  /**
+   * Which page of the scanned paper this problem sits on (1-indexed). Lets the
+   * source chip deep-link straight to the right page of `/exams/<source>`
+   * instead of dropping the reader at page 1. Defaults to 1 when absent.
+   */
+  paperPage?: number
   /**
    * Exercises sharing a `repeatGroup` are the same question recurring across
    * exams (sometimes lightly reworded). The card shows an "Επαναλαμβανόμενο

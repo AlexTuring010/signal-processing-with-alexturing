@@ -253,17 +253,33 @@ Plus `content/practice/exercises.tsx:1-20` header counts, and a `SOSE_COACHING` 
 
 ## Sequencing
 
-| Step | Content | Gate |
-|---|---|---|
-| 0 | Re-shoot `proodos_a1/a2` (owner) | — |
-| 1 | Fix the SSB-envelope error at `am/modulator-demodulator:235` | build |
-| 2 | Part A: assets + `EXAM_PAPERS` + `/exams/[source]` + `ExamSourceChip` at the 2 free sites | build, mobile check |
-| 3 | Part A: the 5 nested/awkward sites | build |
-| 4 | B3 content gaps (energy machinery) — **before any Q12 card** | build |
-| 5 | Register `'june-2026'` (B4) + stale copy (B5) | typecheck + lint + **build** |
-| 6 | The 11 non-draw cards, in ΘΕΜΑ order | build |
-| 7 | Viz extends (B2), then the 6 draw cards | build |
-| 8 | Docs reconcile (B6) + `examWeight` decision | — |
+| Step | Content | Gate | Status |
+|---|---|---|---|
+| 0 | Re-shoot `proodos_a1/a2` (owner) | — | ⏳ owner |
+| 1 | Fix the SSB-envelope error at `am/modulator-demodulator:235` | build | ✅ done |
+| 2 | Part A: assets + `EXAM_PAPERS` + `/exams/[source]` + `ExamSourceChip` | build | ✅ done |
+| 3 | Part A: the nested/awkward chip sites | build | ✅ done (except `<ExamProblem>`) |
+| 4 | B3 content gaps (energy machinery) — **before any Q12 card** | build | next |
+| 5 | Stale copy (B5) | typecheck + lint + **build** | pending |
+| 6 | The 11 non-draw cards, in ΘΕΜΑ order | build | pending |
+| 7 | Viz extends (B2), then the 6 draw cards | build | pending |
+| 8 | Docs reconcile (B6) + `examWeight` decision | — | pending |
+
+### Deviations from the plan as written
+
+- **`'june-2026'` was registered in step 2, not step 5.** `EXAM_PAPERS` is a
+  `Record<ExamSource, …>`, so the paper couldn't be listed without the union member.
+  All five B4 sites are done; the filter chip simply doesn't render while the exam has
+  zero exercises (`ExerciseLibrary` skips `count === 0`).
+- **`<ExamProblem year="…">` (site 7) deferred.** Unlike the others it has no
+  `ExamSource` — `year` is free text and is usually a topic label ("True/False"), with
+  only three MDX call sites carrying a real exam reference. Wiring it means adding an
+  optional `source` prop *and* editing those call sites by hand; it isn't on the path
+  a reader takes while solving, so it can ride along with step 6.
+- **Bonus fix:** `formatRepeatList` in `ExerciseCard` now returns `ReactNode`, so each
+  exam named in «Το ίδιο θέμα έχει μπει και σε …» links to that paper.
+- **Found in passing:** 58 broken in-page anchors site-wide (7 mechanically fixed,
+  51 left). See `plans/ANCHOR_AUDIT.md` — unrelated to this exam.
 
 **Cautions**
 - `content/practice/**` is the overnight builder's T1 scope and `ex-proodos26-11-rework` is
