@@ -16,11 +16,17 @@ import { SectionCommentsProvider } from '@/components/layout/section-comments-co
 import { EXERCISES } from '@/content/practice/exercises'
 import { computeRepeats } from '@/content/practice/repeats'
 import { QUIZ_BANK } from '@/content/practice/quiz-bank'
+import { SOSE_PATH, EXAM_SESSIONS } from '@/lib/sose'
 
 export const metadata = {
   title: 'Practice — λυμένα παραδείγματα + quiz',
-  description:
-    'Λυμένες ασκήσεις με προτεραιότητα στα παλαιά θέματα εξετάσεων (Σεπτ\'25, Ιαν\'26, Ιουν\'25, Πρόοδοι A+B Μαΐου\'25). Φιλτράρισμα κατά topic, εξεταστική, πηγή. Quiz mode σε 3 τρόπους εξάσκησης. Το τυπολόγιο εμφανίζεται κάτω αριστερά κάθε στιγμή.',
+  // Session list is derived so it can't drift from the bank the way a
+  // hardcoded one did (it was already missing Απρίλιος 2026).
+  description: `Λυμένες ασκήσεις με προτεραιότητα στα παλαιά θέματα εξετάσεων (${EXAM_SESSIONS.map(
+    (s) => s.label,
+  ).join(
+    ', ',
+  )}). Φιλτράρισμα κατά topic, εξεταστική, πηγή. Quiz mode σε 3 τρόπους εξάσκησης. Το τυπολόγιο εμφανίζεται κάτω αριστερά κάθε στιγμή.`,
 }
 
 export default function PracticePage() {
@@ -70,8 +76,8 @@ export default function PracticePage() {
               <ChevronRight className="ml-auto h-4 w-4 text-fg-subtle transition group-hover:translate-x-0.5 group-hover:text-rose-500" />
             </h2>
             <p className="mt-1 text-sm text-fg-muted">
-              Just-in-time learning για last-minute. 75 ασκήσεις σε σειρά
-              θεωρητικής δυσκολίας με coaching ανά πρόβλημα.
+              Just-in-time learning για last-minute. {SOSE_PATH.length} ασκήσεις
+              σε σειρά θεωρητικής δυσκολίας με coaching ανά πρόβλημα.
             </p>
           </Link>
           <a

@@ -72,6 +72,29 @@ export const SOURCE_LABELS: Record<ExamSource, string> = {
 }
 
 /**
+ * How recent each exam session is — higher is newer.
+ *
+ * SINGLE SOURCE OF TRUTH. This used to be duplicated in `ExamRadar`,
+ * `formula-cited-by` and (as a hand-ordered array) in `ExerciseLibrary`, so
+ * adding an exam meant remembering four places and the array wasn't
+ * type-checked. Add the new session here and everything downstream follows.
+ */
+export const SOURCE_RECENCY: Record<ExamSource, number> = {
+  'june-2026': 7,
+  'proodos-april-2026': 6,
+  'jan-2026': 5,
+  'sept-2025': 4,
+  'june-2025': 3,
+  'proodos-b-2025': 2,
+  'proodos-a-2025': 1,
+}
+
+/** Every exam session, newest first. Derived — never hand-order this. */
+export const SOURCES_BY_RECENCY: ExamSource[] = (
+  Object.keys(SOURCE_RECENCY) as ExamSource[]
+).sort((a, b) => SOURCE_RECENCY[b] - SOURCE_RECENCY[a])
+
+/**
  * The actual scanned paper behind each exam source.
  *
  * This is what makes a source chip clickable: «Ιούνιος 2026» opens

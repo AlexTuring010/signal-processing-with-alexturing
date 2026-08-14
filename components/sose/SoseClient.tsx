@@ -29,6 +29,8 @@ type Props = {
   problems: ProblemPayload[]
   totalExamWeight: number
   topicTotals: Record<Topic, number>
+  /** Exam sessions represented in the bank, newest first. */
+  sessions: { source: string; label: string }[]
 }
 
 const SOLVED_PREFIX = 'practice'
@@ -40,7 +42,12 @@ const SOLVED_PREFIX = 'practice'
  * Position autosaves to `STORAGE_KEYS.sosePosition` so a returning student
  * can resume from the landing page.
  */
-export function SoseClient({ problems, totalExamWeight, topicTotals }: Props) {
+export function SoseClient({
+  problems,
+  totalExamWeight,
+  topicTotals,
+  sessions,
+}: Props) {
   const router = useRouter()
   const params = useSearchParams()
   const total = problems.length
@@ -162,6 +169,7 @@ export function SoseClient({ problems, totalExamWeight, topicTotals }: Props) {
       <SoseLanding
         total={total}
         stats={stats}
+        sessions={sessions}
         savedPosition={readSavedPosition(total)}
         onStart={() => goTo(1)}
         onResume={(n) => goTo(n)}

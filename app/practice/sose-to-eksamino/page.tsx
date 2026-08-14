@@ -5,13 +5,17 @@ import {
   FormulaSheetPanel,
   FormulaSheetButton,
 } from '@/components/practice/FormulaSheetPanel'
-import { SOSE_PATH, TOTAL_EXAM_WEIGHT, TOPIC_TOTALS } from '@/lib/sose'
+import {
+  SOSE_PATH,
+  TOTAL_EXAM_WEIGHT,
+  TOPIC_TOTALS,
+  EXAM_SESSIONS,
+} from '@/lib/sose'
 import { coachingFor, relatedFor, positionOf } from '@/lib/sose'
 
 export const metadata: Metadata = {
   title: 'Σώσε το εξάμηνο — last-minute exam survival',
-  description:
-    'Just-in-time learning. Ξεκίνα από την πιο εύκολη άσκηση και διάβασε μόνο τη θεωρία που χρειάζεσαι όταν τη χρειάζεσαι. 75 ασκήσεις σε σειρά από εύκολη θεωρία προς δύσκολη.',
+  description: `Just-in-time learning. Ξεκίνα από την πιο εύκολη άσκηση και διάβασε μόνο τη θεωρία που χρειάζεσαι όταν τη χρειάζεσαι. ${SOSE_PATH.length} ασκήσεις σε σειρά από εύκολη θεωρία προς δύσκολη.`,
 }
 
 /**
@@ -47,6 +51,7 @@ export default function SoseToEksaminoPage() {
           problems={problems}
           totalExamWeight={TOTAL_EXAM_WEIGHT}
           topicTotals={TOPIC_TOTALS}
+          sessions={EXAM_SESSIONS}
         />
       </Suspense>
     </>

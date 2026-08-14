@@ -8,7 +8,7 @@
  */
 
 import { EXERCISES } from '@/content/practice/exercises'
-import type { ExamSource } from '@/content/practice/types'
+import { SOURCE_RECENCY, type ExamSource } from '@/content/practice/types'
 
 export type CitedExercise = {
   id: string
@@ -36,16 +36,6 @@ const CITED_BY: Record<string, CitedExercise[]> = (() => {
   }
   return out
 })()
-
-const SOURCE_RECENCY: Record<ExamSource, number> = {
-  'june-2026': 7,
-  'proodos-april-2026': 6,
-  'jan-2026': 5,
-  'sept-2025': 4,
-  'june-2025': 3,
-  'proodos-b-2025': 2,
-  'proodos-a-2025': 1,
-}
 
 function recencyOf(ex: CitedExercise): number {
   return ex.source ? (SOURCE_RECENCY[ex.source] ?? 0) : 0

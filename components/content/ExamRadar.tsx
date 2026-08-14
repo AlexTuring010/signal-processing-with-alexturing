@@ -6,10 +6,10 @@ import { usePathname } from 'next/navigation'
 import { Radar, GraduationCap, Repeat } from 'lucide-react'
 import { EXERCISES } from '@/content/practice/exercises'
 import {
+  SOURCE_RECENCY,
   TOPIC_COLORS,
   TOPIC_LABELS,
   type Exercise,
-  type ExamSource,
   type Topic,
 } from '@/content/practice/types'
 import { ExamSourceChip } from '@/components/practice/ExamSourceChip'
@@ -40,16 +40,6 @@ const LIKELIHOOD_STYLES: Record<Likelihood, { dot: string; label: string }> = {
   high: { dot: 'bg-rose-500', label: 'Ψηλή πιθανότητα' },
   medium: { dot: 'bg-amber-500', label: 'Μεσαία πιθανότητα' },
   low: { dot: 'bg-slate-400', label: 'Χαμηλή πιθανότητα' },
-}
-
-const SOURCE_RECENCY: Record<ExamSource, number> = {
-  'june-2026': 7,
-  'proodos-april-2026': 6,
-  'jan-2026': 5,
-  'sept-2025': 4,
-  'june-2025': 3,
-  'proodos-b-2025': 2,
-  'proodos-a-2025': 1,
 }
 
 type Row = { ex: Exercise; likelihood: Likelihood; note?: ReactNode }

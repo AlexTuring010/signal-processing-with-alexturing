@@ -16,6 +16,7 @@ import {
   FlaskConical,
 } from 'lucide-react'
 import { ALL_SECTIONS } from '@/lib/content-index'
+import { SOSE_PATH } from '@/lib/sose'
 import { Comments } from '@/components/layout/Comments'
 import { Leaderboard } from '@/components/layout/Leaderboard'
 import { SyllabusProgress } from '@/components/layout/SyllabusProgress'
@@ -176,7 +177,7 @@ export default function HomePage() {
               εργαλείο που μπορεί να πέσει στην εξέταση.
             </p>
             <div className="mt-4 flex flex-wrap gap-1.5">
-              <PathChip accent>🛠 75 ασκήσεις</PathChip>
+              <PathChip accent>🛠 {SOSE_PATH.length} ασκήσεις</PathChip>
               <PathChip accent>📊 Παρακολούθηση εξετ. βάρους</PathChip>
               <PathChip accent>🎯 Coaching ανά άσκηση</PathChip>
             </div>

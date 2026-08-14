@@ -12,7 +12,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import type { Exercise, Topic, Origin, ExamSource } from '@/content/practice/types'
-import { SOURCE_LABELS } from '@/content/practice/types'
+import { SOURCE_LABELS, SOURCES_BY_RECENCY } from '@/content/practice/types'
 import type { RepeatOccurrence } from '@/content/practice/repeats'
 import { TopicFilter } from './TopicFilter'
 import { ExerciseCard, PRACTICE_SOLVED_PREFIX } from './ExerciseCard'
@@ -26,17 +26,9 @@ type Props = {
 
 type OriginFilter = 'all' | Origin
 
-// NB: not type-checked against ExamSource membership — a source missing from
-// this array silently loses its filter chip. Keep in sync with SOURCE_LABELS.
-const SOURCE_ORDER: ExamSource[] = [
-  'june-2026',
-  'proodos-april-2026',
-  'jan-2026',
-  'sept-2025',
-  'june-2025',
-  'proodos-b-2025',
-  'proodos-a-2025',
-]
+// Derived from SOURCE_RECENCY so a new exam session can never silently lose
+// its filter chip (which is what a hand-maintained array here used to risk).
+const SOURCE_ORDER: ExamSource[] = SOURCES_BY_RECENCY
 
 export function ExerciseLibrary({ exercises, repeats }: Props) {
   const [topics, setTopics] = useState<Set<Topic>>(new Set())

@@ -260,7 +260,7 @@ Plus `content/practice/exercises.tsx:1-20` header counts, and a `SOSE_COACHING` 
 | 2 | Part A: assets + `EXAM_PAPERS` + `/exams/[source]` + `ExamSourceChip` | build | ✅ done |
 | 3 | Part A: the nested/awkward chip sites | build | ✅ done (except `<ExamProblem>`) |
 | 4 | B3 content gaps (energy machinery) — **before any Q12 card** | build | ✅ done |
-| 5 | Stale copy (B5) | typecheck + lint + **build** | pending |
+| 5 | Stale copy (B5) | typecheck + lint + **build** | ✅ done (structural counts) |
 | 6 | The 11 non-draw cards, in ΘΕΜΑ order | build | pending |
 | 7 | Viz extends (B2), then the 6 draw cards | build | pending |
 | 8 | Docs reconcile (B6) + `examWeight` decision | — | pending |
@@ -302,6 +302,32 @@ I/Q form `(A_c/2)[…]` — what you get by literally filtering one sideband off
 signal — gives `19A_c²/(36W)`. Neither is wrong; not declaring which one you used is.
 The exam does not specify `A_c` for ΘΕΜΑ 2, so the card in step 6 must state the convention
 in its opening line.
+
+### Step 5 as built (stale copy)
+
+Rather than editing the numbers — which would rot again the moment step 6 lands — the
+structural counts are now **derived**:
+
+- `SOURCE_RECENCY` moved into `content/practice/types.ts` as the **single source of truth**,
+  with `SOURCES_BY_RECENCY` derived from it. `ExamRadar`, `formula-cited-by` and
+  `ExerciseLibrary` now import it instead of keeping three private copies (one of which,
+  `SOURCE_ORDER`, was an unchecked array that silently dropped a missing session).
+- `EXAM_SESSIONS` in `lib/sose.ts` = sessions that actually have ≥1 problem in the bank,
+  newest first. A session appears **only once it has cards**, so the claim is always true.
+- «Πρόβλημα 75», «75 ασκήσεις» (×2), «βάσει 6 παλαιών εξεταστικών», the session fine-print
+  list, and both page metadata descriptions now compute from `SOSE_PATH` / `EXAM_SESSIONS`.
+
+Verified against ground truth: renders 75 problems / 6 sessions, matching 75 exercise
+objects and 6 distinct sources in `exercises.tsx`. June 2026 is correctly *absent* until its
+cards exist. The `/practice` description had also been silently missing Απρίλιος 2026 — that
+class of bug is now structurally impossible.
+
+**Still hand-maintained (deliberately):** the ~14 «εμφανίστηκε σε N παλιά θέματα» counters in
+MDX and the ~56 matching `memorizationNote` counts in `exercises.tsx`. These are per-formula
+Pass-B weights from `MUST_LEARN_FORMULAS.md`, embedded in prose, so they can't be
+interpolated without rewriting each sentence. **They go stale in step 6** — recount them with
+a script once the June 2026 cards exist, and update the Parseval callout at
+`foundations/fourier-transform` §9 («Εμφανίστηκε σε **1** παλιό θέμα» → 2, since Q12 cites it).
 
 **Transcription re-verified against the scan** (cropped + upscaled): the paper really does
 read `m(t) = sinc(Wt)` and `k(t) = sinc²(6Wt)`. The unusual 12:1 bandwidth ratio is genuine,

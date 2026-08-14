@@ -2,7 +2,7 @@
  * «Σώσε το εξάμηνο» — exam-survival flow logic.
  *
  * Powers `/practice/sose-to-eksamino`. The flow walks a student through the
- * 75-problem exercise bank in **theory-progression order**: easiest theory
+ * whole exercise bank in **theory-progression order**: easiest theory
  * first, hardest last. Each problem is a "tool" the student earns; coverage
  * of the exam weight is the real-data progress metric.
  *
@@ -20,12 +20,15 @@
 import { CHAPTERS } from '@/content/sections'
 import { EXERCISES } from '@/content/practice/exercises'
 import { SOSE_COACHING } from '@/content/practice/sose-coaching'
-import type {
-  Difficulty,
-  Exercise,
-  ExerciseCoaching,
-  Origin,
-  Topic,
+import {
+  SOURCE_LABELS,
+  SOURCES_BY_RECENCY,
+  type Difficulty,
+  type ExamSource,
+  type Exercise,
+  type ExerciseCoaching,
+  type Origin,
+  type Topic,
 } from '@/content/practice/types'
 
 /**
@@ -71,7 +74,7 @@ const ORIGIN_RANK: Record<Origin, number> = {
 }
 
 /**
- * The full crunch path: 75 exercises sorted by theory progression.
+ * The full crunch path: every exercise, sorted by theory progression.
  * Position is 1-indexed in the URL (`?n=1` is the first); array indexing
  * stays 0-based here.
  */
@@ -174,6 +177,19 @@ export const TOTAL_EXAM_WEIGHT: number = SOSE_PATH.reduce(
   (acc, ex) => acc + (ex.weight ?? 0),
   0,
 )
+
+/**
+ * The exam sessions the bank actually draws on, newest first.
+ *
+ * Derived, not hand-written: the landing page used to hardcode «βάσει 6
+ * παλαιών εξεταστικών» and a literal list of session names, both of which went
+ * stale the moment an exam was added. A session only appears here once it has
+ * at least one problem in the bank, so the claim is always true.
+ */
+export const EXAM_SESSIONS: { source: ExamSource; label: string }[] =
+  SOURCES_BY_RECENCY.filter((src) =>
+    SOSE_PATH.some((ex) => ex.origin === 'past-exam' && ex.source === src),
+  ).map((source) => ({ source, label: SOURCE_LABELS[source] }))
 
 export type CoverageStats = {
   /** Number of solved problems in the path. */

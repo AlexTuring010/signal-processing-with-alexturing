@@ -21,6 +21,8 @@ type Stats = {
 type Props = {
   total: number
   stats: Stats
+  /** Exam sessions the bank draws on, newest first. Derived, never hardcoded. */
+  sessions: { source: string; label: string }[]
   /** Saved position from a prior session, if any. */
   savedPosition: number | null
   onStart: () => void
@@ -36,6 +38,7 @@ type Props = {
 export function SoseLanding({
   total,
   stats,
+  sessions,
   savedPosition,
   onStart,
   onResume,
@@ -101,14 +104,14 @@ export function SoseLanding({
           <li>
             <strong className="text-fg">Είναι σε σωστή σειρά.</strong> Οι
             ασκήσεις είναι ταξινομημένες <em>ανά θεωρητική δυσκολία</em>.
-            Πρόβλημα 1 χρειάζεται μηδέν θεωρία· Πρόβλημα 75 χρειάζεται όλα.
-            Δεν θα κολλήσεις σε FM χωρίς να έχεις δει AM.
+            Πρόβλημα 1 χρειάζεται μηδέν θεωρία· Πρόβλημα {total} χρειάζεται
+            όλα. Δεν θα κολλήσεις σε FM χωρίς να έχεις δει AM.
           </li>
           <li>
             <strong className="text-fg">Παρακολουθούμε αληθινό βάρος.</strong>{' '}
             Όχι «έχεις λύσει το 30%» αλλά «έχεις καλύψει το 32% του
-            εξεταστικού βάρους βάσει 6 παλαιών εξεταστικών». Πραγματικός
-            αριθμός που σου λέει πόσο έχεις απομείνει.
+            εξεταστικού βάρους βάσει {sessions.length} παλαιών εξεταστικών».
+            Πραγματικός αριθμός που σου λέει πόσο έχεις απομείνει.
           </li>
           <li>
             <strong className="text-fg">Κάθε άσκηση έρχεται με coaching.</strong>{' '}
@@ -171,9 +174,9 @@ export function SoseLanding({
       {/* Honest fine print */}
       <p className="mt-12 text-center text-xs text-fg-subtle">
         Το «εξεταστικό βάρος» υπολογίζεται από τα ποσοστά που έχουν δοθεί
-        στα παλαιά θέματα (Σεπτ&apos;25, Ιαν&apos;26, Ιουν&apos;25, Πρόοδοι
-        Μαΐου&apos;25 και Απρ&apos;26). Δεν είναι πρόβλεψη για το επόμενο
-        εξεταστικό — είναι μέτρηση του τι έχεις ήδη δουλέψει.
+        στα παλαιά θέματα ({sessions.map((s) => s.label).join(' · ')}). Δεν
+        είναι πρόβλεψη για το επόμενο εξεταστικό — είναι μέτρηση του τι έχεις
+        ήδη δουλέψει.
       </p>
     </div>
   )
