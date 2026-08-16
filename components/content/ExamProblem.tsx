@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation'
 import { ChevronDown, GraduationCap, CheckCircle2, Circle } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
+import { ExamSourceChip } from '@/components/practice/ExamSourceChip'
+import type { ExamSource } from '@/content/practice/types'
 
 type Props = {
   year: string
@@ -16,6 +18,14 @@ type Props = {
    * is fine when those props are unique within a page.
    */
   id?: string
+  /**
+   * Set ONLY when the problem is transcribed from a real past paper — it makes
+   * the scan one tap away. `year` is free text (often a topic label like
+   * "True/False"), so it cannot be used to derive this.
+   */
+  source?: ExamSource
+  /** Which page of that paper the problem sits on (1-indexed). */
+  sourcePage?: number
   children: ReactNode
 }
 
@@ -34,6 +44,8 @@ export function ExamProblem({
   weight,
   title = 'Θέμα εξετάσεων',
   id,
+  source,
+  sourcePage,
   children,
 }: Props) {
   const [open, setOpen] = useState(false)
@@ -112,6 +124,13 @@ export function ExamProblem({
           )}
         </button>
       </div>
+      {source && (
+        /* Sibling of the toggle — an <a> may not live inside a <button>. */
+        <div className="flex items-center gap-2 px-4 pb-2.5 -mt-1 text-xs text-fg-muted">
+          <span>Από το πρωτότυπο θέμα:</span>
+          <ExamSourceChip source={source} page={sourcePage} size="xs" />
+        </div>
+      )}
       {open && (
         <div className="animate-fade-in border-t border-accent/30 bg-bg px-4 py-4 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
           {children}
