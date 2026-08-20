@@ -258,7 +258,7 @@ Plus `content/practice/exercises.tsx:1-20` header counts, and a `SOSE_COACHING` 
 | 0 | Re-shoot `proodos_a1/a2` (owner) | — | ⏳ owner |
 | 1 | Fix the SSB-envelope error at `am/modulator-demodulator:235` | build | ✅ done |
 | 2 | Part A: assets + `EXAM_PAPERS` + `/exams/[source]` + `ExamSourceChip` | build | ✅ done |
-| 3 | Part A: the nested/awkward chip sites | build | ✅ done (except `<ExamProblem>`) |
+| 3 | Part A: the nested/awkward chip sites | build | ✅ done (all 7, incl. `<ExamProblem>`) |
 | 4 | B3 content gaps (energy machinery) — **before any Q12 card** | build | ✅ done |
 | 5 | Stale copy (B5) | typecheck + lint + **build** | ✅ done (structural counts) |
 | 6 | The 11 non-draw cards, in ΘΕΜΑ order | build | pending |
@@ -271,11 +271,15 @@ Plus `content/practice/exercises.tsx:1-20` header counts, and a `SOSE_COACHING` 
   `Record<ExamSource, …>`, so the paper couldn't be listed without the union member.
   All five B4 sites are done; the filter chip simply doesn't render while the exam has
   zero exercises (`ExerciseLibrary` skips `count === 0`).
-- **`<ExamProblem year="…">` (site 7) deferred.** Unlike the others it has no
-  `ExamSource` — `year` is free text and is usually a topic label ("True/False"), with
-  only three MDX call sites carrying a real exam reference. Wiring it means adding an
-  optional `source` prop *and* editing those call sites by hand; it isn't on the path
-  a reader takes while solving, so it can ride along with step 6.
+- **`<ExamProblem year="…">` (site 7) rode along with step 6** — commit `450f3fb`.
+  Unlike the others it has no `ExamSource`: `year` is free text and is usually a topic
+  label ("True/False", "Efficiency"), so the paper has to be named by hand. Added optional
+  `source` + `sourcePage` props; the chip renders on its own strip below the header row
+  (an `<a>` may not sit inside the toggle `<button>`, and squeezing it into that row
+  crowds a phone). **Seven** call sites quote a real paper, not three: `am/conventional:736`,
+  `am/dsb-sc:672` + `:702`, `am/ssb:854`, `fm/carson:400` + `:426` + `:496`.
+  Deliberately **not** wired: `fm/idea:652` («Jan'26 ΘΕΜΑ 1.5 *(style)*»), whose β-list is
+  invented for practice — a scan link would claim a provenance it doesn't have.
 - **Bonus fix:** `formatRepeatList` in `ExerciseCard` now returns `ReactNode`, so each
   exam named in «Το ίδιο θέμα έχει μπει και σε …» links to that paper.
 - **Found in passing:** 58 broken in-page anchors site-wide (7 mechanically fixed,
