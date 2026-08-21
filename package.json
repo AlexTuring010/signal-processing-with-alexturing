@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node lib/validate-formula-ids.mjs",
+    "prebuild": "node lib/validate-formula-ids.mjs && node lib/validate-math-escapes.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

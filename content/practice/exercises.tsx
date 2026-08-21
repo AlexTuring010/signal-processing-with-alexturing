@@ -2654,7 +2654,7 @@ export const EXERCISES: Exercise[] = [
         </p>
         <p>
           <strong>Ερώτημα 14:</strong> Να υπολογιστεί ο δείκτης διαμόρφωσης{' '}
-          <InlineMath>{'\beta'}</InlineMath>.
+          <InlineMath>{'\\beta'}</InlineMath>.
         </p>
       </>
     ),
