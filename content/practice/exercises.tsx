@@ -2,7 +2,8 @@
  * Exercise bank — past-exam problems (priority) + lecture worked examples.
  *
  * Past-exam problems are transcribed verbatim from the original papers:
- *   - Πρόοδος · April 2026 (13 problems — most recent midterm)
+ *   - June 2026 (11 of 17 problems — the 6 draw problems land separately)
+ *   - Πρόοδος · April 2026 (13 problems)
  *   - Sept 2025 (11 problems)
  *   - Jan 2026 Επί Πτυχίω (16 problems)
  *   - June 2025 Α (16 problems)
@@ -28,9 +29,3296 @@ import { AMSignalViz } from '@/components/viz/AMSignalViz'
 import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
 import { OvermodulationPhaseReversalViz } from '@/components/viz/OvermodulationPhaseReversalViz'
 import { FdmCanonicalProblemViz } from '@/components/viz/FdmCanonicalProblemViz'
+import { DistributionExplorerViz } from '@/components/viz/DistributionExplorerViz'
 import type { Exercise } from './types'
 
 export const EXERCISES: Exercise[] = [
+  // ═══════════════════════════════════════════════════════════════════════
+  // ΙΟΥΝΙΟΣ 2026 (17 ερωτήματα · 100% · 2 ώρες)
+  //
+  // 11 από τα 17 είναι εδώ. Τα 2, 4, 5, 9, 11, 17 είναι draw problems και
+  // απαντιούνται με διαδραστικό σχήμα, όχι με κείμενο — έρχονται ξεχωριστά.
+  // ═══════════════════════════════════════════════════════════════════════
+  {
+    id: 'jun26-th1-1',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 1.1',
+    paperPage: 1,
+    weight: 5,
+    title: 'Διαφορά αναλογικής AM και FM',
+    topic: 'modulation',
+    difficulty: 'easy',
+    repeatGroup: 'am-vs-fm-comparison',
+    prerequisites: ['am/conventional', 'fm/idea', 'fm/carson', 'fm/in-noise'],
+    formulaIds: ['am-signal', 'am-bandwidth', 'am-eta', 'am-output-snr', 'fm-signal', 'fm-instantaneous-freq', 'carson', 'fm-power', 'fm-snr-ref', 'fm-snr-out', 'fm-gain-am'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — κανένα από αυτά δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Το τυπολόγιο δεν περιέχει καμία εξίσωση διαμόρφωσης: ούτε την{' '}
+        <InlineMath>{'x_{AM}(t)=[A_c+m(t)]\\cos(2\\pi f_c t)'}</InlineMath>, ούτε την{' '}
+        <InlineMath>{'x_{FM}(t)=A_c\\cos[2\\pi f_c t+2\\pi K_f\\int_{-\\infty}^{t}m(\\tau)\\,d\\tau]'}</InlineMath>,
+        ούτε τη στιγμιαία συχνότητα <InlineMath>{'f_i(t)=f_c+K_f\\,m(t)'}</InlineMath>, ούτε το{' '}
+        <InlineMath>{'B_{AM}=2W'}</InlineMath>, ούτε τον κανόνα Carson{' '}
+        <InlineMath>{'B\\cong 2(\\beta+1)W'}</InlineMath>, ούτε την απόδοση{' '}
+        <InlineMath>{'\\eta=\\mu^2/(2+\\mu^2)\\le 1/3'}</InlineMath>, ούτε τα αποτελέσματα{' '}
+        <InlineMath>{'\\text{SNR}_{out}'}</InlineMath> και{' '}
+        <InlineMath>{'G_{FM/AM}=9\\beta^2'}</InlineMath>. Είναι ερώτημα καθαρής μνήμης — και
+        γι' αυτό από τα πιο κερδοφόρα, αφού δεν κινδυνεύεις να κολλήσεις σε πράξη. Τα ίδια
+        εργαλεία τα έχεις ήδη χρειαστεί ένα-ένα σε προηγούμενα θέματα: την εξίσωση FM και το{' '}
+        <InlineMath>{'\\beta'}</InlineMath> στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th2-6"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 2.6
+        </Link>, τον κανόνα Carson στο{' '}
+        <Link
+          href="/practice#exercise:jun25-th3-fm"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 3
+        </Link>, το bandwidth και την απόδοση της AM στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-3"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.3
+        </Link>. Τα output-SNR αποτελέσματα{' '}
+        (<InlineMath>{'\\eta\\,\\text{SNR}_{ref}'}</InlineMath>,{' '}
+        <InlineMath>{'3\\beta^2\\,\\text{SNR}_{ref}'}</InlineMath>,{' '}
+        <InlineMath>{'9\\beta^2'}</InlineMath>) δεν τα ζητάει ρητά καμία άλλη άσκηση της
+        τράπεζας — είναι από τα λίγα που πρέπει να τα κουβαλάς έτοιμα στο μυαλό σου.
+      </>
+    ),
+    statement: (
+      <p>
+        Να εξηγηθεί η διαφορά μεταξύ αναλογικής AM και FM διαμόρφωσης.
+      </p>
+    ),
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
+          <span className="text-fg-muted">
+            Και οι δύο τεχνικές στέλνουν στον αέρα το ίδιο αντικείμενο: ένα ημιτονοειδές κύμα
+            υψηλής συχνότητας, το <strong>carrier</strong>. Ένα τέτοιο κύμα{' '}
+            <InlineMath>{'A\\cos(2\\pi f t + \\varphi)'}</InlineMath> έχει μόνο{' '}
+            <strong>τρία</strong> «κουμπιά» που μπορείς να γυρίσεις: το πλάτος{' '}
+            <InlineMath>A</InlineMath>, τη συχνότητα <InlineMath>f</InlineMath> και τη φάση{' '}
+            <InlineMath>{'\\varphi'}</InlineMath>. Η <strong>AM</strong> γράφει το μήνυμα στο
+            πρώτο κουμπί, η <strong>FM</strong> στο δεύτερο. Όλες οι υπόλοιπες διαφορές —
+            bandwidth, ισχύς, θόρυβος, δέκτης — <em>δεν είναι ξεχωριστά γεγονότα προς
+            αποστήθιση</em>· είναι συνέπειες αυτής της μίας επιλογής. Παρακάτω τις βγάζουμε
+            μία-μία από αυτήν, και αυτή ακριβώς είναι η δομή που πρέπει να γράψεις.
+          </span>
+        </div>
+
+        <p>
+          Μια διευκρίνιση που αξίζει να τη γράψεις κι εσύ στην κόλλα σου: «αναλογική AM» εδώ
+          σημαίνει τη <strong>συμβατική AM</strong> — αυτήν που εκπέμπει και τη φέρουσα,{' '}
+          <InlineMath>{'x_{AM}(t)=[A_c+m(t)]\\cos(2\\pi f_c t)'}</InlineMath>. Είναι η
+          παραλλαγή που εννοείται όταν λέμε σκέτο «AM», και η μόνη με το κόστος της φέρουσας
+          που θα συγκρίνουμε παρακάτω. Οι υπόλοιπες παραλλαγές (DSB-SC, SSB, VSB) αλλάζουν
+          τους αριθμούς της ισχύος και του bandwidth, όχι όμως τη ρίζα της διαφοράς: «πλάτος
+          vs συχνότητα».
+        </p>
+
+        <p className="mt-4 font-medium text-fg">1. Τι μεταβάλλεται — οι δύο εξισώσεις</p>
+        <p>
+          Στην <strong>AM</strong> το μήνυμα <InlineMath>{'m(t)'}</InlineMath> προστίθεται στο
+          πλάτος και η γωνία μένει ανέγγιχτη:
+        </p>
+        <BlockMath>{'x_{AM}(t) = [A_c + m(t)]\\,\\cos(2\\pi f_c t)'}</BlockMath>
+        <p>
+          Τι λέει αυτό στα απλά: το κύμα ταλαντώνεται πάντα με τον <em>ίδιο</em> ρυθμό{' '}
+          <InlineMath>{'f_c'}</InlineMath>, και αυτό που ανεβοκατεβαίνει είναι το{' '}
+          <strong>ύψος</strong> του — η <strong>envelope</strong>{' '}
+          <InlineMath>{'A_c + m(t)'}</InlineMath>. Η πληροφορία ζει στο πλάτος.
+        </p>
+        <p>
+          Στην <strong>FM</strong> το πλάτος παγώνει στο <InlineMath>{'A_c'}</InlineMath> και
+          το μήνυμα μπαίνει <em>μέσα</em> στη γωνία:
+        </p>
+        <BlockMath>{'x_{FM}(t) = A_c\\cos\\!\\left[2\\pi f_c t + 2\\pi K_f\\int_{-\\infty}^{t} m(\\tau)\\,d\\tau\\right]'}</BlockMath>
+        <p>
+          Γιατί ολοκλήρωμα και όχι σκέτο <InlineMath>{'m(t)'}</InlineMath> μέσα στο cosine; Το
+          ολοκλήρωμα δεν είναι αυθαίρετο — είναι το τίμημα για να ελέγχει το μήνυμα τη{' '}
+          <strong>στιγμιαία συχνότητα</strong>, δηλαδή τον ρυθμό με τον οποίο τρέχει η γωνία.
+          Παραγωγίζοντας τη συνολική γωνία <InlineMath>{'\\theta(t)'}</InlineMath> παίρνουμε
+          ακριβώς αυτό που ζητήσαμε:
+        </p>
+        <BlockMath>{'f_i(t) = \\frac{1}{2\\pi}\\frac{d\\theta(t)}{dt} = f_c + K_f\\, m(t)'}</BlockMath>
+        <p>
+          Στα απλά: όταν το μήνυμα ανεβαίνει, οι κορυφές του κύματος{' '}
+          <strong>πυκνώνουν</strong>· όταν κατεβαίνει, <strong>αραιώνουν</strong>. Το ύψος δεν
+          κουνιέται ποτέ. Η πληροφορία ζει στη συχνότητα.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Γραμμική vs μη γραμμική διαμόρφωση — η καρδιά του θέματος.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Στην AM το <InlineMath>{'m(t)'}</InlineMath> είναι <em>έξω</em> από το cosine, απλός
+            πολλαπλασιαστής· άρα το φάσμα του μηνύματος περνάει <strong>αυτούσιο</strong>,
+            μετατοπισμένο στο <InlineMath>{'\\pm f_c'}</InlineMath>. Στην FM το{' '}
+            <InlineMath>{'m(t)'}</InlineMath> είναι <em>μέσα</em> στο cosine, και το cosine
+            είναι μη γραμμική συνάρτηση. Ο πιο γρήγορος έλεγχος: πάρε έναν σκέτο τόνο{' '}
+            <InlineMath>{'m(t)=A_m\\cos(2\\pi f_m t)'}</InlineMath> και{' '}
+            <strong>διπλασίασε το <InlineMath>{'A_m'}</InlineMath></strong>. Στην AM
+            διπλασιάζονται τα πλάτη των δύο πλευρικών γραμμών και τίποτε άλλο — τρεις
+            φασματικές γραμμές στις θετικές συχνότητες πριν (φέρουσα + δύο πλευρικές), τρεις
+            και μετά. Στην FM διπλασιάζεται η απόκλιση{' '}
+            <InlineMath>{'\\Delta f = K_f A_m'}</InlineMath>, άρα και ο δείκτης{' '}
+            <InlineMath>{'\\beta = \\Delta f/f_m'}</InlineMath>: εμφανίζονται{' '}
+            <strong>καινούριες</strong> πλευρικές γραμμές, όλη η ισχύς ανακατανέμεται ανάμεσά
+            τους, και η φέρουσα μπορεί ακόμη και να <strong>μηδενιστεί</strong> — συμβαίνει
+            γύρω στο <InlineMath>{'\\beta \\approx 2.4'}</InlineMath>, και φαίνεται στον πίνακα
+            Bessel που είναι τυπωμένος πάνω σε αυτό το ίδιο θέμα (γραμμή{' '}
+            <InlineMath>{'\\beta = 2.41'}</InlineMath>, στήλη «Carrier»: μηδέν). Γι' αυτό η FM
+            δεν είναι απλή μετατόπιση φάσματος όπως η AM.
+          </span>
+        </div>
+
+        <p className="mt-4 font-medium text-fg">2. Συνέπεια — εύρος ζώνης</p>
+        <p>
+          Αφού το φάσμα της AM είναι το φάσμα του μηνύματος μετατοπισμένο, το bandwidth
+          βγαίνει αμέσως: αν το <InlineMath>{'m(t)'}</InlineMath> φτάνει μέχρι{' '}
+          <InlineMath>W</InlineMath>, τότε
+        </p>
+        <BlockMath>{'B_{AM} = 2W'}</BlockMath>
+        <p>
+          και είναι <strong>σταθερό</strong>: δεν εξαρτάται από το πόσο δυνατά μιλάς. Στην FM
+          οι πλευρικές γραμμές είναι θεωρητικά <strong>άπειρες</strong>, οπότε πρακτικά
+          κρατάμε όσες κουβαλούν σχεδόν όλη την ισχύ. Αυτό ακριβώς μετράει ο{' '}
+          <strong>κανόνας του Carson</strong>:
+        </p>
+        <BlockMath>{'B_{FM} \\cong 2(\\beta + 1)W = 2(\\Delta f + W)'}</BlockMath>
+        <p>
+          Δύο πράγματα να κρατήσεις: (α) είναι πάντα <strong>μεγαλύτερο</strong> από{' '}
+          <InlineMath>{'2W'}</InlineMath>, και (β) το ρυθμίζεις εσύ μέσω του{' '}
+          <InlineMath>{'\\beta'}</InlineMath> — ελευθερία που η AM δεν σου δίνει καθόλου. Αυτή
+          η ελευθερία είναι το νόμισμα με το οποίο η FM θα «αγοράσει» ποιότητα στο επόμενο
+          βήμα. Οριακή περίπτωση που δείχνει ότι ο τύπος είναι συνεπής: για{' '}
+          <InlineMath>{'\\beta \\ll 1'}</InlineMath> (NBFM) ο Carson δίνει{' '}
+          <InlineMath>{'B \\approx 2W'}</InlineMath> — ίδιο με την AM.
+        </p>
+
+        <p className="mt-4 font-medium text-fg">3. Συνέπεια — ισχύς και απόδοση</p>
+        <p>
+          Στην AM η envelope περιέχει τον σταθερό όρο <InlineMath>{'A_c'}</InlineMath>, ο
+          οποίος εμφανίζεται στο φάσμα ως μια <strong>γραμμή-φέρουσα</strong>. Αυτή η γραμμή
+          δεν κουβαλάει καμία πληροφορία· είναι εκεί μόνο για να μπορεί ο δέκτης να διαβάσει
+          την envelope. Άρα ένα κομμάτι της εκπεμπόμενης ισχύος πάει χαμένο, και η απόδοση
+          είναι
+        </p>
+        <BlockMath>{'\\eta = \\frac{P_m}{A_c^2 + P_m} \\;\\stackrel{\\text{single-tone}}{=}\\; \\frac{\\mu^2}{2+\\mu^2} \\;\\le\\; \\frac{1}{3}'}</BlockMath>
+        <p>
+          Το <InlineMath>{'1/3'}</InlineMath> είναι <em>απόλυτο μέγιστο</em> και το πιάνεις
+          μόνο στο <InlineMath>{'\\mu = 1'}</InlineMath>: ακόμη και στην καλύτερη περίπτωση,
+          τα δύο τρίτα της ισχύος καίγονται στη φέρουσα. Στην FM, αντίθετα, το πλάτος είναι
+          σταθερό, οπότε η μέση ισχύς είναι απλώς
+        </p>
+        <BlockMath>{'P_{FM} = \\frac{A_c^2}{2} \\qquad \\text{για κάθε } \\beta \\text{ και κάθε } m(t)'}</BlockMath>
+        <p>
+          Δεν υπάρχει σταθερό «τέλος» που να πληρώνεις στη φέρουσα: όσο μεγαλώνει το{' '}
+          <InlineMath>{'\\beta'}</InlineMath>, η ίδια συνολική ισχύς{' '}
+          <strong>ανακατανέμεται</strong> από τη φέρουσα προς τις πλευρικές ζώνες — γι' αυτό
+          και μπορεί η φέρουσα να εξαφανιστεί εντελώς. Αυτό εννοούμε όταν λέμε «η FM δεν
+          σπαταλά ισχύ σε φέρουσα». Πρακτικό μπόνους του σταθερού πλάτους: ο ενισχυτής του
+          πομπού μπορεί να δουλεύει σε κορεσμό, που είναι φθηνότερο και αποδοτικότερο.
+        </p>
+
+        <p className="mt-4 font-medium text-fg">4. Συνέπεια — συμπεριφορά στον θόρυβο</p>
+        <p>
+          Ο θόρυβος του καναλιού χτυπάει κυρίως το <strong>πλάτος</strong> του λαμβανόμενου
+          κύματος. Εδώ η διαφορά γίνεται δραματική, και βγαίνει κατευθείαν από το βήμα 1:
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            Στην <strong>AM</strong> η πληροφορία <em>είναι</em> το πλάτος. Ό,τι προσθέσει ο
+            θόρυβος στην envelope, ο δέκτης το διαβάζει ως μήνυμα — δεν έχει κανέναν τρόπο να
+            τα ξεχωρίσει.
+          </li>
+          <li>
+            Στην <strong>FM</strong> το πλάτος δεν κουβαλάει τίποτα. Ο δέκτης βάζει πρώτα έναν{' '}
+            <strong>limiter</strong> που ισοπεδώνει το κύμα ξανά σε σταθερό ύψος, σβήνοντας τον
+            θόρυβο πλάτους, και μόνο μετά μετράει τον ρυθμό. Το να πετάξεις το πλάτος είναι
+            νόμιμο ακριβώς επειδή δεν έβαλες ποτέ πληροφορία εκεί.
+          </li>
+        </ul>
+        <p>
+          Ποσοτικά, η σύγκριση έχει νόημα μόνο αν τα δύο συστήματα εκπέμπουν την{' '}
+          <strong>ίδια συνολική ισχύ</strong> <InlineMath>{'P_T'}</InlineMath> — αυτό είναι
+          που πληρώνεις στον πομπό σου. Κοινή βάση λοιπόν είναι το{' '}
+          <InlineMath>{'\\text{SNR}_{ref} = P_T/(N_0 W)'}</InlineMath>, δηλαδή το SNR που θα
+          είχες αν ολόκληρη η εκπεμπόμενη ισχύς έφτανε σε baseband εύρους{' '}
+          <InlineMath>W</InlineMath>. Πρόσεξε ότι το <InlineMath>{'P_T'}</InlineMath> γράφεται
+          αλλιώς σε κάθε σύστημα: στη FM είναι <InlineMath>{'P_T = A_c^2/2'}</InlineMath>, ενώ
+          στη συμβατική AM είναι <InlineMath>{'P_T = (A_c^2 + P_m)/2'}</InlineMath> — μαζί με
+          τη φέρουσα, που στο <InlineMath>{'\\mu = 1'}</InlineMath> κάνει{' '}
+          <InlineMath>{'\\tfrac{3}{4}A_c^2'}</InlineMath>. Δηλαδή «ίδιο{' '}
+          <InlineMath>{'P_T'}</InlineMath>» <em>δεν</em> σημαίνει ίδιο πλάτος φέροντος. Αν
+          προσπεράσεις αυτό το βήμα και βάλεις το ίδιο{' '}
+          <InlineMath>{'A_c'}</InlineMath> και στα δύο, το κέρδος σου βγαίνει λάθος κατά έναν
+          παράγοντα <InlineMath>{'3/2'}</InlineMath> — καταλήγεις σε{' '}
+          <InlineMath>{'6\\beta^2'}</InlineMath> αντί για{' '}
+          <InlineMath>{'9\\beta^2'}</InlineMath>, και είναι η κλασική παγίδα αυτής της
+          σύγκρισης. Με τη σωστή βάση:
+        </p>
+        <BlockMath>{'\\text{SNR}_{out,AM} = \\eta\\,\\text{SNR}_{ref} \\le \\tfrac{1}{3}\\,\\text{SNR}_{ref}, \\qquad \\text{SNR}_{out,FM} = 3\\beta^2\\,\\text{SNR}_{ref}'}</BlockMath>
+        <BlockMath>{'\\Rightarrow\\quad G_{FM/AM} = \\frac{3\\beta^2}{1/3} = 9\\beta^2'}</BlockMath>
+        <p>
+          Πρόσεξε τη δομή του αποτελέσματος: το κέρδος πάει με{' '}
+          <InlineMath>{'\\beta^2'}</InlineMath>, ενώ το bandwidth του Carson πάει με{' '}
+          <InlineMath>{'\\beta'}</InlineMath>. Δηλαδή η FM δίνει <em>τετραγωνική</em> βελτίωση
+          ποιότητας για <em>γραμμικό</em> κόστος φάσματος — αυτό είναι όλο το επιχείρημα υπέρ
+          της.
+        </p>
+        <p>
+          <strong>Το νούμερο θέλει κομπιουτεράκι</strong> (επιτρέπεται στην εξέταση). Για το
+          εμπορικό FM ραδιόφωνο με <InlineMath>{'\\beta = 5'}</InlineMath>:{' '}
+          <InlineMath>{'9\\cdot 5^2 = 225'}</InlineMath> φορές, δηλαδή{' '}
+          <InlineMath>{'10\\log_{10}225 \\approx 23.5'}</InlineMath> dB. Αν δεν θέλεις να
+          εμπιστευτείς το πλήκτρο, σπάσε το: <InlineMath>{'225 = 9\\cdot 25'}</InlineMath>,{' '}
+          <InlineMath>{'10\\log_{10}9 \\approx 9.5'}</InlineMath> dB και{' '}
+          <InlineMath>{'10\\log_{10}25 \\approx 14.0'}</InlineMath> dB, άθροισμα{' '}
+          <InlineMath>{'23.5'}</InlineMath> dB.
+        </p>
+
+        <p className="mt-4 font-medium text-fg">5. Συνέπεια — δέκτης και τα ψιλά γράμματα</p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>AM:</strong> με <InlineMath>{'\\mu \\le 1'}</InlineMath> αρκεί ένας{' '}
+            <strong>envelope detector</strong> — δίοδος και ένα RC. Δεν χρειάζεται καμία
+            αναφορά φάσης. Αυτός ακριβώς είναι ο λόγος που η συμβατική AM δέχτηκε εξαρχής να
+            σπαταλήσει ισχύ στη φέρουσα: αγόρασε φθηνούς δέκτες.
+          </li>
+          <li>
+            <strong>FM:</strong> <strong>limiter + discriminator</strong> (ή PLL). Ούτε εδώ
+            χρειάζεται αναφορά φάσης — μετράς ρυθμό, όχι θέση — αλλά είναι σαφώς περισσότερα
+            κυκλώματα.
+          </li>
+          <li>
+            <strong>Πώς χαλάει:</strong> το <InlineMath>{'9\\beta^2'}</InlineMath> ισχύει μόνο
+            πάνω από ένα <strong>κατώφλι</strong> εισερχόμενου SNR (τάξης 10 dB). Κάτω από
+            αυτό η FM καταρρέει <em>απότομα</em>, ενώ η AM χειροτερεύει ομαλά. Σε πολύ
+            θορυβώδη ζεύξη λοιπόν το πλεονέκτημα της FM εξαφανίζεται.
+          </li>
+          <li>
+            <strong>Capture effect:</strong> αν δύο πομποί εκπέμπουν στην ίδια συχνότητα, ο
+            FM δέκτης «κλειδώνει» στον ισχυρότερο και ο ασθενέστερος σβήνει τελείως. Στην AM
+            τα δύο σήματα απλώς προστίθενται και τα ακούς και τα δύο.
+          </li>
+        </ul>
+
+        <table className="my-3 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="py-2 text-left">Άξονας</th>
+              <th className="py-2 text-left">AM (συμβατική)</th>
+              <th className="py-2 text-left">FM</th>
+            </tr>
+          </thead>
+          <tbody className="text-fg-muted">
+            <tr><td>Τι κουβαλάει το μήνυμα</td><td>Το πλάτος (envelope)</td><td>Η στιγμιαία συχνότητα</td></tr>
+            <tr><td>Τι μένει σταθερό</td><td>Η συχνότητα <InlineMath>{'f_c'}</InlineMath></td><td>Το πλάτος <InlineMath>{'A_c'}</InlineMath></td></tr>
+            <tr><td>Γραμμικότητα</td><td>Γραμμική — φάσμα μηνύματος μετατοπισμένο</td><td>Μη γραμμική — άπειρες πλευρικές (Bessel)</td></tr>
+            <tr><td>Bandwidth</td><td><InlineMath>{'2W'}</InlineMath>, σταθερό</td><td><InlineMath>{'2(\\beta+1)W'}</InlineMath>, μεγαλώνει με το β</td></tr>
+            <tr><td>Ισχύς / απόδοση</td><td><InlineMath>{'\\tfrac{A_c^2}{2}+\\tfrac{P_m}{2}'}</InlineMath>, <InlineMath>{'\\eta \\le 1/3'}</InlineMath></td><td><InlineMath>{'\\tfrac{A_c^2}{2}'}</InlineMath>, χωρίς πάγιο κόστος φέρουσας</td></tr>
+            <tr><td>Θόρυβος</td><td>Πέφτει κατευθείαν πάνω στο μήνυμα</td><td>Limiter τον κόβει· <InlineMath>{'G = 9\\beta^2'}</InlineMath></td></tr>
+            <tr><td>Δέκτης</td><td>Envelope detector (φθηνός)</td><td>Limiter + discriminator</td></tr>
+            <tr><td>Υποβάθμιση</td><td>Ομαλή</td><td>Απότομη κάτω από το threshold</td></tr>
+          </tbody>
+        </table>
+
+        <p>
+          <strong>Η μία πρόταση που τα συνοψίζει όλα:</strong> η AM βάζει την πληροφορία στο
+          πλάτος και πληρώνει με ισχύ και ευπάθεια στον θόρυβο· η FM τη βάζει στη συχνότητα
+          και πληρώνει με εύρος ζώνης και πολυπλοκότητα — <em>η FM αγοράζει SNR με
+          bandwidth</em>.
+        </p>
+
+        <div className="my-3 rounded-md border border-violet-500/30 bg-violet-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">🧭 Μοτίβο αναγνώρισης</strong>
+          <span className="text-fg-muted">
+            {' '}— σε ερώτημα 5% έχεις περίπου πέντε λεπτά, οπότε μη γράψεις παράγραφο. Γράψε:
+            (1) τις δύο εξισώσεις, (2) μία πρόταση «στην AM η πληροφορία είναι στο πλάτος, στη
+            FM στη συχνότητα», (3) πίνακα με τέσσερις γραμμές — bandwidth, ισχύς, θόρυβος,
+            δέκτης — και (4) την τελική πρόταση του trade-off. Τον ίδιο σκελετό τον
+            ξαναχρησιμοποιείς αυτούσιο σε κάθε «σύγκρινε τη διαμόρφωση X με την Y»: αλλάζεις
+            μόνο την πρώτη γραμμή, «τι μεταβάλλεται», και οι υπόλοιπες ξαναβγαίνουν μόνες τους.
+          </span>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th1-3',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 1.3',
+    paperPage: 1,
+    weight: 7,
+    title: 'Κατανομή των δειγμάτων του λευκού θορύβου',
+    topic: 'random',
+    difficulty: 'medium',
+    prerequisites: ['noise/white-noise', 'noise/sources', 'randomness/random-variables'],
+    formulaIds: ['white-noise-psd', 'wiener-khinchin', 'wss-rx-properties', 'random-autocorr', 'bandlimited-noise-power', 'thermal-noise'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong> κανένα από
+        τα τρία εργαλεία αυτού του ερωτήματος δεν υπάρχει στο επίσημο τυπολόγιο.{' '}
+        <strong>(1)</strong> Η Gaussian ΣΠΠ (συνάρτηση πυκνότητας πιθανότητας){' '}
+        <InlineMath>{'f_{N(t_i)}(x)=\\tfrac{1}{\\sigma\\sqrt{2\\pi}}e^{-x^2/(2\\sigma^2)}'}</InlineMath>{' '}
+        — το ίδιο εργαλείο χρειάστηκε και στο{' '}
+        <Link
+          href="/practice#exercise:pb25-th1-3"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Β 2025 ΘΕΜΑ 1.3
+        </Link>{' '}
+        και στο{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-3"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 1.3
+        </Link>
+        . <strong>(2)</strong> Η PSD του λευκού θορύβου{' '}
+        <InlineMath>{'S_N(f)=N_0/2'}</InlineMath> μαζί με τη ΣΑΣ της{' '}
+        <InlineMath>{'R_N(\\tau)=(N_0/2)\\delta(\\tau)'}</InlineMath> — όπως στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th3-10"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 3.10
+        </Link>
+        . <strong>(3)</strong> Η ισχύς σε πεπερασμένη ζώνη{' '}
+        <InlineMath>{'P_N=N_0W'}</InlineMath> — όπως στο{' '}
+        <Link
+          href="/practice#exercise:proodos26-6"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ. 2026 ΘΕΜΑ 6
+        </Link>
+        . Και το <strong>θεώρημα κεντρικού ορίου</strong> (Central Limit Theorem,
+        CLT) το γράφεις κι αυτό απέξω: δεν είναι τύπος, είναι η{' '}
+        <em>αιτιολόγηση</em> — και χωρίς αυτήν η απάντηση «Gaussian» μένει
+        ατεκμηρίωτη.
+      </>
+    ),
+    statement: (
+      <>
+        <p>
+          Το προηγούμενο ερώτημα του ίδιου θέματος ζητούσε τη{' '}
+          <strong>ΦΠΙ</strong> (φασματική πυκνότητα ισχύος — PSD) της τυχαίας
+          διαδικασίας του <strong>λευκού θορύβου</strong>{' '}
+          <InlineMath>{'N(t)'}</InlineMath>, δηλαδή το επίπεδο φάσμα{' '}
+          <InlineMath>{'S_N(f) = N_0/2'}</InlineMath> για κάθε{' '}
+          <InlineMath>f</InlineMath>.
+        </p>
+        <p>
+          Στο ίδιο παράδειγμα του λευκού θορύβου:{' '}
+          <strong>
+            τι κατανομή ακολουθεί η συνάρτηση πυκνότητας πιθανότητας
+          </strong>{' '}
+          (ΣΠΠ — probability density function, pdf){' '}
+          <strong>
+            των τυχαίων μεταβλητών που αποτελούν τα δείγματα του θορύβου;
+          </strong>
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — τι ακριβώς είναι ένα «δείγμα του θορύβου».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Πάγωσε το ρολόι σε μια στιγμή <InlineMath>{'t_i'}</InlineMath> και μέτρα
+            την τάση του θορύβου. Δεν παίρνεις έναν αριθμό που μπορούσες να
+            προβλέψεις — παίρνεις έναν <strong>τυχαίο</strong> αριθμό. Άρα το{' '}
+            <InlineMath>{'N(t_i)'}</InlineMath> δεν είναι σήμα· είναι μια{' '}
+            <strong>τυχαία μεταβλητή</strong>. Και «τι κατανομή ακολουθεί» σημαίνει
+            πρακτικά: <em>αν επαναλάμβανες αυτή τη μέτρηση εκατομμύρια φορές κι
+            έφτιαχνες ιστόγραμμα των τιμών, τι σχήμα θα έβγαινε — καμπάνα, κουτί,
+            κάτι άλλο;</em>{' '}
+            <strong className="text-fg">Πρόσεξε τι ζητάει και τι όχι:</strong> ζητάει
+            το σχήμα του ιστογράμματος των <em>τιμών</em>. Καμία σχέση με συχνότητες.
+          </span>
+        </div>
+
+        <p>
+          <strong>
+            Βήμα 1 — γιατί η ΦΠΙ του προηγούμενου ερωτήματος δεν απαντάει.
+          </strong>{' '}
+          Το πρώτο ένστικτο είναι να γυρίσεις πίσω στη{' '}
+          <InlineMath>{'S_N(f) = N_0/2'}</InlineMath> και να βγάλεις από εκεί την
+          απάντηση. Δεν γίνεται, και αξίζει να δεις γιατί: η ΦΠΙ λέει{' '}
+          <strong>πού κάθεται η ισχύς πάνω στη συχνότητα</strong> — μετριέται σε Watt
+          ανά Hz, δεν είναι καν κατανομή πιθανότητας. Η ΣΠΠ λέει{' '}
+          <strong>πώς μοιράζονται οι τιμές</strong> του θορύβου. Δύο διαφορετικά
+          γραφήματα, δύο διαφορετικοί άξονες.
+        </p>
+
+        <p>
+          Το κλείνει ένα αντιπαράδειγμα: πάρε ασυσχέτιστες τιμές ομοιόμορφα
+          κατανεμημένες στο <InlineMath>{'[-1, +1]'}</InlineMath>. Η ΦΠΙ βγαίνει{' '}
+          <em>κι αυτή</em> επίπεδη — άρα εξίσου «λευκός» θόρυβος — αλλά το ιστόγραμμά
+          της είναι <strong>κουτί</strong>, όχι καμπάνα. Άρα η λέξη «λευκός»{' '}
+          <em>δεν</em> καθορίζει την κατανομή· χρειάζεται μια δεύτερη, εντελώς
+          ανεξάρτητη πληροφορία. Αυτό είναι το πραγματικό βήμα του ερωτήματος: να
+          καταλάβεις ότι η απάντηση <strong>δεν κρύβεται στα δοσμένα</strong> και να
+          ξέρεις πού αλλού να την ψάξεις.
+        </p>
+
+        <p>
+          <strong>Βήμα 2 — από πού έρχεται τελικά: από τη φυσική της πηγής.</strong>{' '}
+          Η τάση θορύβου στα άκρα ενός αγωγού είναι το <strong>άθροισμα</strong>{' '}
+          τεράστιου πλήθους μικροσκοπικών και μεταξύ τους ανεξάρτητων συνεισφορών —
+          της τυχαίας θερμικής κίνησης του κάθε ηλεκτρονίου. Το{' '}
+          <strong>θεώρημα κεντρικού ορίου</strong> (Central Limit Theorem, CLT) λέει
+          ακριβώς αυτό: όταν αθροίζεις πάρα πολλές ανεξάρτητες τυχαίες συνεισφορές, το
+          άθροισμα τείνει σε <strong>Gaussian</strong> κατανομή —{' '}
+          <em>ό,τι κι αν είναι η κατανομή της καθεμιάς ξεχωριστά</em>. Δεν χρειάζεται
+          να ξέρεις τίποτα για το «σπρώξιμο» ενός μεμονωμένου ηλεκτρονίου· το πλήθος
+          τους κάνει τη δουλειά. Παρατήρησε ότι το επιχείρημα{' '}
+          <strong>δεν περνάει καθόλου</strong> από τη ΦΠΙ.
+        </p>
+
+        <p>
+          <strong>Βήμα 3 — η απάντηση.</strong> Τα δείγματα του θορύβου ακολουθούν{' '}
+          <strong>Gaussian (κανονική) κατανομή με μηδενική μέση τιμή</strong>:
+        </p>
+
+        <BlockMath>{'f_{N(t_i)}(x) \\;=\\; \\frac{1}{\\sigma\\sqrt{2\\pi}}\\, e^{-\\frac{x^2}{2\\sigma^2}}\\,, \\qquad \\forall\\, t_i'}</BlockMath>
+
+        <p>
+          <strong>Τι λέει η γραμμή αυτή στα απλά:</strong> το ιστόγραμμα των τιμών
+          είναι μια <strong>καμπάνα κεντραρισμένη στο μηδέν</strong>, και το πόσο
+          φαρδιά είναι το ρυθμίζει μία και μόνο παράμετρος, το{' '}
+          <InlineMath>{'\\sigma'}</InlineMath>. Το{' '}
+          <InlineMath>{'\\forall\\, t_i'}</InlineMath> στο τέλος δεν είναι
+          διακοσμητικό: λέει ότι είναι <strong>η ίδια ακριβώς καμπάνα σε κάθε στιγμή</strong>{' '}
+          <InlineMath>{'t_i'}</InlineMath> που θα διαλέξεις — η κατανομή δεν
+          «μετακινείται» με τον χρόνο.
+        </p>
+
+        <p>
+          <strong>Γιατί μηδενική μέση τιμή — δύο ανεξάρτητοι λόγοι.</strong>{' '}
+          <em>(i) Φυσικά:</em> τα ηλεκτρόνια δεν έχουν προτιμώμενη κατεύθυνση, οπότε
+          οι θετικές και οι αρνητικές συνεισφορές αλληλοαναιρούνται κατά μέσο όρο.{' '}
+          <em>(ii) Από την ίδια τη ΦΠΙ:</em> μια σταθερή (DC) συνιστώσα{' '}
+          <InlineMath>{'m_N \\ne 0'}</InlineMath> θα εμφανιζόταν υποχρεωτικά ως
+          κρουστική <InlineMath>{'m_N^2\\,\\delta(f)'}</InlineMath> πάνω στη ΦΠΙ, στο{' '}
+          <InlineMath>{'f = 0'}</InlineMath>. Η ΦΠΙ που δόθηκε είναι{' '}
+          <strong>καθαρά επίπεδη</strong>, χωρίς καμία κρουστική — άρα{' '}
+          <InlineMath>{'m_N = 0'}</InlineMath>. Ωραίο σημείο: εδώ η ΦΠΙ{' '}
+          <em>όντως</em> λέει κάτι για την κατανομή — μόνο που λέει πού είναι{' '}
+          <strong>κεντραρισμένη</strong>, όχι τι <strong>σχήμα</strong> έχει.
+        </p>
+
+        <figure className="my-4">
+          <DistributionExplorerViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Στο διαδραστικό «Κύριες κατανομές — PDF, μέσος, διασπορά» παραπάνω: μείνε
+            στην καρτέλα <strong>Gaussian</strong>, άφησε το{' '}
+            <strong>μ (mean)</strong> στο <InlineMath>0</InlineMath> — αυτή είναι η
+            μέση τιμή που μόλις δικαιολογήσαμε — και σύρε το{' '}
+            <strong>σ (std dev)</strong>. Το <em>σχήμα</em> δεν αλλάζει ποτέ· αλλάζει
+            μόνο το <em>πλάτος</em> της καμπάνας. Κράτα αυτή τη διάκριση
+            σχήματος-και-πλάτους — παρακάτω θα δούμε ότι το σχήμα το ξέρουμε με
+            βεβαιότητα, ενώ το πλάτος μένει απροσδιόριστο μέχρι να μπει στη μέση ένα
+            εύρος ζώνης. Μετά πάτησε <strong>Uniform</strong>: αυτό είναι το
+            αντιπαράδειγμα του Βήματος 1 — ένας θόρυβος που μπορεί να έχει{' '}
+            <em>ίδια</em> επίπεδη ΦΠΙ και να μην είναι καθόλου Gaussian.
+          </figcaption>
+        </figure>
+
+        <p>
+          <strong>
+            Βήμα 4 — τι προσθέτει τελικά το «λευκός»: όχι το σχήμα της καμπάνας, αλλά
+            τη σχέση των δειγμάτων μεταξύ τους.
+          </strong>{' '}
+          Ξεκίνα από τη ΣΑΣ (συνάρτηση αυτοσυσχέτισης), που βγαίνει από τη ΦΠΙ με
+          αντίστροφο μετασχηματισμό Fourier (σχέση Wiener–Khinchin):
+        </p>
+
+        <BlockMath>{'R_N(\\tau) \\;=\\; \\mathcal{F}^{-1}\\{S_N(f)\\} \\;=\\; \\mathcal{F}^{-1}\\left\\{\\frac{N_0}{2}\\right\\} \\;=\\; \\frac{N_0}{2}\\,\\delta(\\tau)'}</BlockMath>
+
+        <p>
+          Πάρε τώρα δύο <em>διαφορετικές</em> στιγμές{' '}
+          <InlineMath>{'t_i \\ne t_j'}</InlineMath>, δηλαδή απόσταση{' '}
+          <InlineMath>{'\\tau = t_j - t_i \\ne 0'}</InlineMath>. Εκεί η δέλτα είναι
+          μηδέν, οπότε από τον ορισμό{' '}
+          <InlineMath>{'R_N(\\tau) = E[N(t_i)N(t_j)]'}</InlineMath> και επειδή{' '}
+          <InlineMath>{'m_N = 0'}</InlineMath>:
+        </p>
+
+        <BlockMath>{'\\mathrm{Cov}\\big(N(t_i),\\, N(t_j)\\big) \\;=\\; R_N(\\tau) - m_N^2 \\;=\\; 0 \\qquad \\text{για κάθε } \\tau \\ne 0'}</BlockMath>
+
+        <p>
+          Δηλαδή δύο δείγματα σε διαφορετικές στιγμές είναι{' '}
+          <strong>ασυσχέτιστα</strong> — όσο κοντά κι αν τα πάρεις. Αυτό είναι όλο το
+          νόημα του «λευκού»: <strong>μηδενική μνήμη</strong>.
+        </p>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Το μπόνους που το δίνει μόνο η Gaussian — «ασυσχέτιστα ⇒ ανεξάρτητα».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            «Ασυσχέτιστα» είναι <em>αδύναμη</em> δήλωση: λέει μόνο ότι δεν υπάρχει{' '}
+            <em>γραμμική</em> σχέση. Σε γενικές τυχαίες μεταβλητές «ασυσχέτιστα»{' '}
+            <strong>δεν</strong> σημαίνει «ανεξάρτητα» — αντιπαράδειγμα:{' '}
+            <InlineMath>{'X \\sim U[-1,1]'}</InlineMath> και{' '}
+            <InlineMath>{'Y = X^2'}</InlineMath>. Το <InlineMath>Y</InlineMath>{' '}
+            καθορίζεται <em>πλήρως</em> από το <InlineMath>X</InlineMath> (πιο
+            εξαρτημένα δεν γίνεται), κι όμως{' '}
+            <InlineMath>{'\\mathrm{Cov}(X,Y) = 0'}</InlineMath>. Υπάρχει{' '}
+            <strong>μία</strong> οικογένεια όπου η συνεπαγωγή ισχύει: οι{' '}
+            <strong>από κοινού (jointly) Gaussian</strong> μεταβλητές — προσοχή, όχι
+            «η καθεμιά χωριστά Gaussian», αλλά η <em>από κοινού</em> κατανομή τους
+            Gaussian. Και αυτό ακριβώς είναι ο λευκός Gaussian θόρυβος: κάθε
+            πεπερασμένη ομάδα δειγμάτων του είναι από κοινού Gaussian. Άρα εδώ —{' '}
+            <em>και μόνο επειδή η απάντηση βγήκε «Gaussian»</em> — τα ασυσχέτιστα
+            δείγματα αναβαθμίζονται σε <strong>ανεξάρτητα</strong>: τα δείγματα του
+            λευκού Gaussian θορύβου είναι <strong>iid</strong>{' '}
+            <InlineMath>{'\\mathcal{N}(0, \\sigma^2)'}</InlineMath> (independent and
+            identically distributed — ανεξάρτητα και ισόνομα). Το «ξέρω το{' '}
+            <InlineMath>{'N(t_i)'}</InlineMath>» δεν σου δίνει <em>καμία</em>{' '}
+            πληροφορία για το <InlineMath>{'N(t_j)'}</InlineMath>.
+          </span>
+        </div>
+
+        <p>
+          <strong>
+            Βήμα 5 — η λεπτομέρεια που χωρίζει το «σχήμα» από το «πλάτος» της
+            καμπάνας.
+          </strong>{' '}
+          Το σχήμα το ξέρουμε πλέον. Πόσο φαρδιά όμως είναι; Για ΤΔ μηδενικής μέσης
+          τιμής η διακύμανση είναι η ΣΑΣ στο μηδέν:
+        </p>
+
+        <BlockMath>{'\\sigma^2 \\;=\\; E[N^2(t)] \\;=\\; R_N(0) \\;=\\; \\frac{N_0}{2}\\,\\delta(0) \\;=\\; \\infty'}</BlockMath>
+
+        <p>
+          Για τον <strong>ιδανικό</strong> λευκό θόρυβο η καμπάνα βγαίνει απείρως
+          φαρδιά — που είναι απλώς μια δεύτερη όψη του γνωστού παραδόξου ότι ο λευκός
+          θόρυβος έχει άπειρη ισχύ. Δεν είναι λάθος στον υπολογισμό· είναι υπενθύμιση
+          ότι ο τελείως επίπεδος θόρυβος είναι <strong>μαθηματικό μοντέλο</strong>,
+          όχι φυσικό αντικείμενο. Το σχήμα (Gaussian) στέκει· το πλάτος γίνεται
+          πεπερασμένο μόλις μπει στη μέση ένα πραγματικό εύρος ζώνης — και κάθε δέκτης
+          βάζει ένα. Μέσα από ιδανικό φίλτρο που περνάει{' '}
+          <InlineMath>{'|f| \\le W'}</InlineMath>:
+        </p>
+
+        <BlockMath>{'\\sigma^2 \\;=\\; P_N \\;=\\; \\int_{-W}^{W}\\frac{N_0}{2}\\,df \\;=\\; N_0 W'}</BlockMath>
+
+        <p>
+          <strong>Προσοχή σε μια σύμβαση που κρύβεται εδώ.</strong> Η γραμμή{' '}
+          <InlineMath>{'\\sigma^2 = N_0 W'}</InlineMath> γράφτηκε στην{' '}
+          <em>κανονικοποιημένη</em> γραφή — αυτή που χρησιμοποιούμε παντού: μετράμε
+          ισχύ σαν το σήμα να πέφτει πάνω σε αντίσταση{' '}
+          <InlineMath>{'1\\,\\Omega'}</InlineMath>, οπότε «ισχύς» και{' '}
+          <InlineMath>{'E[N^2(t)]'}</InlineMath> βγάζουν τον ίδιο αριθμό. Αν αντίθετα
+          κρατήσεις τα Volt, τότε το <InlineMath>{'\\sigma^2'}</InlineMath> που
+          μπαίνει μέσα στη ΣΠΠ είναι η διακύμανση της <em>τάσης</em> στα άκρα
+          αντίστασης <InlineMath>R</InlineMath>,{' '}
+          <InlineMath>{'\\sigma^2 = E[N^2(t)] = 4kTRW'}</InlineMath> Volts², και η
+          ισχύς είναι <strong>άλλο μέγεθος</strong> — αυτή που παραδίδεται σε
+          προσαρμοσμένο (matched) φορτίο:{' '}
+          <InlineMath>{'P_N = E[N^2(t)]/(4R) = kTW = N_0 W'}</InlineMath> Watt, αφού{' '}
+          <InlineMath>{'N_0 \\triangleq kT'}</InlineMath>. Το{' '}
+          <InlineMath>{'4R'}</InlineMath> <em>δεν</em> είναι μετατροπή μονάδων· είναι
+          ο διαιρέτης του matched load. Όποια γραφή κι αν διαλέξεις, το συμπέρασμα
+          που μας ενδιαφέρει εδώ είναι το ίδιο: η καμπάνα αποκτά{' '}
+          <em>πεπερασμένο</em> πλάτος μόλις μπει στη μέση ένα εύρος ζώνης.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">✍️ Τι γράφεις στο γραπτό (7%)</strong>
+          <ol className="ml-5 mt-1.5 list-decimal space-y-1 text-fg-muted">
+            <li>
+              <strong>Gaussian (κανονική) κατανομή, μηδενικής μέσης τιμής.</strong>{' '}
+              Αυτή είναι η απάντηση που ζητάει κυριολεκτικά το ερώτημα.
+            </li>
+            <li>
+              Ο τύπος:{' '}
+              <InlineMath>{'f_{N(t_i)}(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}}e^{-x^2/(2\\sigma^2)}'}</InlineMath>{' '}
+              για κάθε <InlineMath>{'t_i'}</InlineMath> — <em>ίδια</em> κατανομή σε
+              κάθε χρονική στιγμή.
+            </li>
+            <li>
+              Η αιτιολόγηση σε μία γραμμή: <strong>θεώρημα κεντρικού ορίου</strong>{' '}
+              (Central Limit Theorem, CLT) πάνω σε πλήθος ανεξάρτητων συνεισφορών
+              ηλεκτρονίων — <em>όχι</em> από τη ΦΠΙ (φασματική πυκνότητα ισχύος).
+            </li>
+            <li>
+              Μία γραμμή μπόνους που δείχνει ότι κατάλαβες τι κάνει το «λευκός»:{' '}
+              <InlineMath>{'R_N(\\tau) = (N_0/2)\\delta(\\tau)'}</InlineMath> ⇒ τα
+              δείγματα σε διαφορετικές στιγμές είναι ασυσχέτιστα, και επειδή είναι από
+              κοινού Gaussian, <strong>ανεξάρτητα</strong>.
+            </li>
+          </ol>
+          <p className="mt-1.5 text-fg-muted">
+            Κομπιουτεράκι δεν χρειάζεται πουθενά εδώ — το ερώτημα είναι εξ ολοκλήρου
+            εννοιολογικό, δεν βγαίνει κανένας αριθμός.
+          </p>
+        </div>
+
+        <p className="text-sm text-fg-muted">
+          <strong className="text-fg">Μην το μπερδέψεις με την αδελφή Σ/Λ παγίδα.</strong>{' '}
+          Εδώ η απάντηση <em>είναι</em> «Gaussian» — αλλά επειδή το φυσικό μοντέλο του
+          θερμικού θορύβου το επιβάλλει, όχι επειδή ο θόρυβος είναι λευκός. Όταν η
+          εκφώνηση αντιστρέψει τη ροή και ισχυριστεί ότι «η ΦΠΙ ακολουθεί την κατανομή
+          Gauss», η απάντηση είναι <strong>ΛΑΘΟΣ</strong> — δες{' '}
+          <Link
+            href="/practice#exercise:jan26-th1-3"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            Ιαν. 2026 ΘΕΜΑ 1.3
+          </Link>
+          ,{' '}
+          <Link
+            href="/practice#exercise:pa25-th1-3"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            Πρόοδος Α 2025 ΘΕΜΑ 1.3
+          </Link>{' '}
+          και{' '}
+          <Link
+            href="/practice#exercise:pb25-th1-3"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            Πρόοδος Β 2025 ΘΕΜΑ 1.3
+          </Link>
+          . Οι δύο ορθογώνιοι άξονες αναλύονται στο{' '}
+          <Link
+            href="/noise/white-noise"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/white-noise §6–§7
+          </Link>
+          , η φυσική του CLT και ο ίδιος αυτός τύπος της ΣΠΠ στο{' '}
+          <Link
+            href="/noise/sources"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/sources §2–§3
+          </Link>
+          , και το «ασυσχέτιστα ⇒ ανεξάρτητα μόνο για jointly Gaussian» στο{' '}
+          <Link
+            href="/randomness/random-variables"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /randomness/random-variables §5β και §6δ
+          </Link>
+          .
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th1-6',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 1.6',
+    paperPage: 1,
+    weight: 7,
+    title: 'ΣΑΣ λευκού θορύβου μέσα από ιδανικό ζωνοπερατό φίλτρο',
+    topic: 'noise',
+    difficulty: 'medium',
+    prerequisites: ['noise/white-noise', 'noise/through-filters', 'randomness/psd', 'foundations/filters'],
+    formulaIds: ['white-noise-psd', 'lti-output-psd', 'wiener-khinchin', 'fourier-pair-rect', 'fourier-modulation-theorem', 'bandpass-noise-r', 'bandlimited-noise-autocorr'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο.</strong>{' '}
+        Το επίσημο τυπολόγιο δεν έχει <em>καμία</em> γραμμή θορύβου. Απέξω
+        γράφεις: την PSD του λευκού θορύβου{' '}
+        <InlineMath>{'S_X(f) = N_0/2'}</InlineMath> (εδώ σου τη δίνει η
+        εκφώνηση — αλλού όχι), τον νόμο εξόδου LTI{' '}
+        <InlineMath>{'S_Y(f) = |H(f)|^2 S_X(f)'}</InlineMath>, το ότι η ΣΑΣ
+        (Συνάρτηση Αυτοσυσχέτισης) βγαίνει ως αντίστροφος Fourier της PSD{' '}
+        <InlineMath>{'R_Y(\\tau) = \\mathcal{F}^{-1}\\{S_Y(f)\\}'}</InlineMath>{' '}
+        (Wiener–Khinchin ανάποδα), και το τελικό{' '}
+        <InlineMath>{'R_Y(\\tau) = N_0 W\\,\\mathrm{sinc}(W\\tau)\\cos(2\\pi f_c \\tau)'}</InlineMath>.
+        Την ίδια συνταγή δύο βημάτων («PSD μέσα από{' '}
+        <InlineMath>{'|H|^2'}</InlineMath>, μετά αντίστροφος Fourier ή
+        ολοκλήρωμα») τη χρειάστηκες ήδη στο{' '}
+        <Link
+          href="/practice#exercise:proodos26-6"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδος Απρ.2026 ΘΕΜΑ 6
+        </Link>{' '}
+        και στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th3-11"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ.2025 ΘΕΜΑ 3.11
+        </Link>{' '}
+        — και τα δύο όμως σταματούν στην <em>ισχύ</em> ενός{' '}
+        <em>χαμηλοπερατού</em>. Το{' '}
+        <Link
+          href="/practice#exercise:jun25-th1-10"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν.2025 ΘΕΜΑ 1.10
+        </Link>{' '}
+        είναι το μόνο άλλο που ζητά ΣΑΣ, πάλι χαμηλοπερατού, οπότε εκεί βγαίνει
+        σκέτο sinc <em>χωρίς</em> συνημίτονο — η διαφορά δουλεύεται αναλυτικά
+        στη λύση.{' '}
+        <strong>Καλά νέα:</strong> τα δύο εργαλεία που κάνουν την πραγματική
+        δουλειά <em>είναι</em> στο τυπολόγιο — το ζεύγος{' '}
+        <InlineMath>{'\\Pi(t/T) \\leftrightarrow T\\,\\mathrm{sinc}(fT)'}</InlineMath>{' '}
+        και το θεώρημα διαμόρφωσης{' '}
+        <InlineMath>{'x(t)\\cos(2\\pi f_c t) \\leftrightarrow \\tfrac{1}{2}[X(f-f_c)+X(f+f_c)]'}</InlineMath>.
+        Μάθε να τα διαβάζεις <em>ανάποδα</em>, από τη συχνότητα προς τον χρόνο,
+        και γλιτώνεις όλο το ολοκλήρωμα.
+      </>
+    ),
+    statement: (
+      <p>
+        Έστω <InlineMath>{'X(t)'}</InlineMath> μια λευκή Gaussian διαδικασία με
+        ΦΠΙ (Φασματική Πυκνότητα Ισχύος — PSD){' '}
+        <InlineMath>{'S_X(f) = N_0/2'}</InlineMath>. Να βρεθεί η ΣΑΣ (Συνάρτηση
+        Αυτοσυσχέτισης — autocorrelation function) της εξόδου ενός ιδανικού
+        ζωνοπερατού φίλτρου με εύρος ζώνης <InlineMath>W</InlineMath>, το οποίο
+        έχει σαν είσοδο τη <InlineMath>{'X(t)'}</InlineMath>.
+      </p>
+    ),
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm">
+          <p>
+            <strong className="text-fg">
+              Πρώτα η παραδοχή — η εκφώνηση αφήνει δύο τρύπες.
+            </strong>{' '}
+            <span className="text-fg-muted">
+              (α) Δεν δίνει κεντρική συχνότητα· θα τη λέμε{' '}
+              <InlineMath>{'f_c'}</InlineMath> και θα μείνει σύμβολο στην
+              απάντηση. (β) Το «εύρος ζώνης <InlineMath>W</InlineMath>» ενός
+              ζωνοπερατού φίλτρου σηκώνει δύο αναγνώσεις: <em>συνολικό</em>{' '}
+              πλάτος της ζώνης διέλευσης, ή πλάτος <InlineMath>W</InlineMath>{' '}
+              <em>εκατέρωθεν</em> του <InlineMath>{'f_c'}</InlineMath>. Κρατάμε
+              την πρώτη, και τη δηλώνουμε με <em>όρια</em>, όχι με λέξεις — γιατί
+              οι λέξεις είναι ακριβώς εκεί που γίνεται η ζημιά: το{' '}
+              <InlineMath>W</InlineMath> είναι το πλάτος της{' '}
+              <strong>κάθε μιας</strong> από τις δύο ζώνες διέλευσης (μία γύρω από
+              το <InlineMath>{'+f_c'}</InlineMath>, η κατοπτρική της γύρω από το{' '}
+              <InlineMath>{'-f_c'}</InlineMath>), άρα συνολικό φάσμα{' '}
+              <InlineMath>{'2W'}</InlineMath> — η ίδια σύμβαση με την οποία
+              δουλεύεται το πρόβλημα και στα φίλτρα θορύβου:
+            </span>
+          </p>
+          <BlockMath>{'H(f) = \\begin{cases} 1, & f_c - \\frac{W}{2} \\le |f| \\le f_c + \\frac{W}{2} \\\\ 0, & \\text{αλλού} \\end{cases}'}</BlockMath>
+          <p className="text-fg-muted">
+            Γράψε αυτή τη γραμμή <strong className="text-fg">πρώτη</strong> στο
+            γραπτό σου: χωρίς αυτήν, ένας παράγοντας 2 στην απάντηση δεν μπορεί
+            να κριθεί σωστός ή λάθος. Η άλλη ανάγνωση δουλεύεται στο τέλος,
+            ώστε να έχεις και τις δύο απαντήσεις.
+          </p>
+        </div>
+
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
+          <span className="text-fg-muted">
+            Ο λευκός θόρυβος είναι ένα ατελείωτο, επίπεδο πάτωμα ισχύος ύψους{' '}
+            <InlineMath>{'N_0/2'}</InlineMath> σε <em>κάθε</em> συχνότητα. Το
+            ιδανικό φίλτρο δεν αλλάζει το ύψος του πατώματος — απλώς αποφασίζει{' '}
+            <em>ποιο κομμάτι</em> του άξονα επιβιώνει. Ένα χαμηλοπερατό κρατάει{' '}
+            <strong>μία</strong> λωρίδα γύρω από το μηδέν. Ένα ζωνοπερατό
+            κρατάει <strong>δύο</strong>: μία γύρω από το{' '}
+            <InlineMath>{'+f_c'}</InlineMath> και την κατοπτρική της γύρω από
+            το <InlineMath>{'-f_c'}</InlineMath> (το φάσμα μιας πραγματικής
+            διαδικασίας είναι πάντα συμμετρικό). Αυτή η{' '}
+            <strong>μετατόπιση</strong> είναι όλο το καινούργιο στοιχείο του
+            προβλήματος: μετατοπισμένο φάσμα σημαίνει σήμα που{' '}
+            <em>ταλαντώνεται</em> στον χρόνο. Περιμένουμε λοιπόν την ίδια
+            «καμπάνα» sinc που δίνει και το χαμηλοπερατό, αλλά γεμισμένη με ένα
+            συνημίτονο στα <InlineMath>{'f_c'}</InlineMath>.
+          </span>
+        </div>
+
+        <p>
+          <strong>Βήμα 1 — η PSD της εξόδου.</strong> Όταν μια WSS τυχαία
+          διαδικασία περνά από γραμμικό χρονικά-αμετάβλητο (LTI) φίλτρο, κάθε
+          συχνότητα πολλαπλασιάζεται σε <em>πλάτος</em> με{' '}
+          <InlineMath>{'H(f)'}</InlineMath>, άρα σε <em>ισχύ</em> με{' '}
+          <InlineMath>{'|H(f)|^2'}</InlineMath>:
+        </p>
+        <BlockMath>{'S_Y(f) = |H(f)|^2\\,S_X(f)'}</BlockMath>
+        <p>
+          Για ιδανικό φίλτρο το <InlineMath>{'|H(f)|^2'}</InlineMath> είναι
+          μόνο <InlineMath>0</InlineMath> ή <InlineMath>1</InlineMath>, οπότε η
+          έξοδος είναι το ίδιο επίπεδο <InlineMath>{'N_0/2'}</InlineMath>{' '}
+          κομμένο στις δύο ζώνες διέλευσης:
+        </p>
+        <BlockMath>{'S_Y(f) = \\begin{cases} \\dfrac{N_0}{2}, & f_c - \\frac{W}{2} \\le |f| \\le f_c + \\frac{W}{2} \\\\ 0, & \\text{αλλού} \\end{cases}'}</BlockMath>
+
+        <figure className="my-4">
+          <NoiseFilterShapingViz />
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Διάλεξε <strong>«Ιδανικό BPF»</strong>: αριστερά το επίπεδο{' '}
+            <InlineMath>{'S_X = N_0/2'}</InlineMath>, στη μέση η μάσκα{' '}
+            <InlineMath>{'|H|^2'}</InlineMath> με τις <em>δύο</em> ζώνες, δεξιά
+            η σκιασμένη έξοδος. Ένα σύμβολο θέλει προσοχή: το σχήμα γράφει
+            «ΔΒ = 0,15» και αυτό είναι το <em>μισό</em> πλάτος της κάθε ζώνης,
+            οπότε το <InlineMath>W</InlineMath> της άσκησης αντιστοιχεί εδώ σε
+            0,30. Καθώς μετακινείς το <InlineMath>{'f_c'}</InlineMath> στο μεσαίο
+            κομμάτι της διαδρομής, η ένδειξη <InlineMath>{'P_Y'}</InlineMath>{' '}
+            <strong>δεν αλλάζει</strong> — ακριβώς επειδή το συνολικό πλάτος που
+            περνάει μένει το ίδιο. Στα δύο άκρα του slider πέφτει, αλλά όχι για
+            φυσικό λόγο: εκεί η ζώνη είτε βγαίνει έξω από τον σχεδιασμένο άξονα
+            είτε διπλώνει πάνω στο μηδέν. Αυτό είναι το πρώτο
+            βήμα μόνο — το σχήμα της ΣΑΣ που ζητά η άσκηση βγαίνει από εδώ με
+            αντίστροφο Fourier, στο επόμενο βήμα. Η πλήρης αναλυτική απαγωγή
+            ζει στο{' '}
+            <Link
+              href="/noise/through-filters"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              /noise/through-filters §8
+            </Link>
+            .
+          </figcaption>
+        </figure>
+
+        <p>
+          <strong>Βήμα 2 — γιατί επιτρέπεται να γυρίσουμε από την PSD στη ΣΑΣ.</strong>{' '}
+          Η έξοδος ενός LTI φίλτρου με WSS είσοδο είναι κι αυτή WSS — άρα
+          ορίζεται <InlineMath>{'R_Y(\\tau)'}</InlineMath> και ισχύει το
+          θεώρημα Wiener–Khinchin: PSD και ΣΑΣ είναι ζεύγος Fourier. Το
+          διαβάζουμε ανάποδα:
+        </p>
+        <BlockMath>{'R_Y(\\tau) = \\mathcal{F}^{-1}\\{S_Y(f)\\} = \\int_{-\\infty}^{\\infty} S_Y(f)\\,e^{j 2\\pi f \\tau}\\,df'}</BlockMath>
+        <p>
+          Με απλά λόγια: η ΣΑΣ δεν είναι κάτι καινούργιο που πρέπει να
+          υπολογιστεί από την αρχή — είναι η <em>ίδια πληροφορία</em> με την
+          PSD, γραμμένη στον άξονα του χρόνου αντί για τον άξονα της
+          συχνότητας.
+        </p>
+
+        <p>
+          <strong>
+            Βήμα 3 — ο σύντομος δρόμος: δύο γραμμές του τυπολογίου, μηδέν
+            ολοκληρώματα.
+          </strong>{' '}
+          Γράψε την <InlineMath>{'S_Y'}</InlineMath> ως ένα{' '}
+          <em>baseband</em> ορθογώνιο πλάτους <InlineMath>W</InlineMath> που
+          έχει αντιγραφεί στο <InlineMath>{'+f_c'}</InlineMath> και στο{' '}
+          <InlineMath>{'-f_c'}</InlineMath>:
+        </p>
+        <BlockMath>{'S_Y(f) = \\frac{N_0}{2}\\left[\\Pi\\!\\left(\\frac{f-f_c}{W}\\right) + \\Pi\\!\\left(\\frac{f+f_c}{W}\\right)\\right]'}</BlockMath>
+        <p>
+          Ονόμασε <InlineMath>{'G(f) = \\frac{N_0}{2}\\,\\Pi\\!\\left(\\frac{f}{W}\\right)'}</InlineMath>{' '}
+          το ένα ορθογώνιο <em>πριν</em> τη μετατόπιση. Το ζεύγος
+          rect ↔ sinc του τυπολογίου, διαβασμένο από τη συχνότητα προς τον
+          χρόνο (ορθογώνιο πλάτους <InlineMath>W</InlineMath> στο{' '}
+          <InlineMath>f</InlineMath> ⟶ sinc στο{' '}
+          <InlineMath>{'\\tau'}</InlineMath>), δίνει:
+        </p>
+        <BlockMath>{'G(f) = \\frac{N_0}{2}\\,\\Pi\\!\\left(\\frac{f}{W}\\right) \\;\\longleftrightarrow\\; g(\\tau) = \\frac{N_0 W}{2}\\,\\mathrm{sinc}(W\\tau)'}</BlockMath>
+        <p>
+          (Σύμβαση της σελίδας — και του τυπολογίου:{' '}
+          <InlineMath>{'\\mathrm{sinc}(x) = \\dfrac{\\sin(\\pi x)}{\\pi x}'}</InlineMath>,
+          δηλαδή μηδενίζεται στους ακέραιους. Αν χρησιμοποιήσεις την άλλη
+          σύμβαση <InlineMath>{'\\sin(x)/x'}</InlineMath>, τα μηδενικά σου
+          πέφτουν αλλού.)
+        </p>
+        <p>
+          Τώρα το θεώρημα διαμόρφωσης — πάλι ανάποδα. Το τυπολόγιο το γράφει{' '}
+          <InlineMath>{'x(t)\\cos(2\\pi f_c t) \\leftrightarrow \\tfrac{1}{2}[X(f-f_c)+X(f+f_c)]'}</InlineMath>.
+          Δηλαδή: <strong>δύο αντίγραφα ενός φάσματος στα{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath> είναι το ίδιο πράγμα με «η αρχική
+          χρονική συνάρτηση επί ένα συνημίτονο στα{' '}
+          <InlineMath>{'f_c'}</InlineMath>»</strong>. Η δική μας{' '}
+          <InlineMath>{'S_Y'}</InlineMath> είναι ακριβώς{' '}
+          <InlineMath>{'G(f-f_c)+G(f+f_c)'}</InlineMath>, δηλαδή{' '}
+          <em>διπλάσια</em> από τη δεξιά μεριά του τύπου:
+        </p>
+        <BlockMath>{'R_Y(\\tau) = 2\\,g(\\tau)\\,\\cos(2\\pi f_c \\tau) = 2\\cdot\\frac{N_0 W}{2}\\,\\mathrm{sinc}(W\\tau)\\cos(2\\pi f_c \\tau)'}</BlockMath>
+        <BlockMath>{'\\boxed{\\;R_Y(\\tau) = N_0 W\\,\\mathrm{sinc}(W\\tau)\\,\\cos(2\\pi f_c \\tau)\\;}'}</BlockMath>
+        <p>
+          <strong>Τι λέει πραγματικά αυτή η γραμμή:</strong> ο θόρυβος στην
+          έξοδο «θυμάται» τον εαυτό του για περίπου{' '}
+          <InlineMath>{'1/W'}</InlineMath> δευτερόλεπτα — αυτό είναι το εύρος
+          της περιβάλλουσας sinc — και μέσα σε αυτό το παράθυρο μνήμης
+          ταλαντώνεται με τον ρυθμό του φέροντος{' '}
+          <InlineMath>{'f_c'}</InlineMath>. Όσο πιο στενό το φίλτρο, τόσο πιο
+          «αργός» και πιο προβλέψιμος ο θόρυβος.
+        </p>
+
+        <figure className="my-4">
+          <svg
+            viewBox="0 0 580 215"
+            className="w-full"
+            role="img"
+            aria-label="Η ΣΑΣ ζωνοπερατού λευκού θορύβου: περιβάλλουσα sinc με συνημιτονοειδή ταλάντωση στο f_c"
+          >
+            <line x1="25" y1="105" x2="556" y2="105" stroke="currentColor" strokeOpacity="0.35" />
+            <polygon points="564,105 554,101 554,109" fill="currentColor" fillOpacity="0.45" />
+            <text x="552" y="96" fontSize="11" fill="currentColor" fillOpacity="0.7" fontStyle="italic">τ</text>
+            <text x="30" y="46" fontSize="10.5" fill="rgb(217,119,6)">περιβάλλουσα ± N₀W·sinc(Wτ)</text>
+            <polyline
+              fill="none"
+              stroke="rgb(217,119,6)"
+              strokeOpacity="0.85"
+              strokeWidth="1.4"
+              strokeDasharray="5 4"
+              points="40,105 50,108.1 60,111.3 70,114.3 80,117 90,119.2 100,120.7 110,121.3 120,120.9 130,119.4 140,116.7 150,112.8 160,107.9 170,101.9 180,95 190,87.5 200,79.5 210,71.2 220,63.1 230,55.4 240,48.2 250,42 260,36.9 270,33.1 280,30.8 290,30 300,30.8 310,33.1 320,36.9 330,42 340,48.2 350,55.4 360,63.1 370,71.2 380,79.5 390,87.5 400,95 410,101.9 420,107.9 430,112.8 440,116.7 450,119.4 460,120.9 470,121.3 480,120.7 490,119.2 500,117 510,114.3 520,111.3 530,108.1 540,105"
+            />
+            <polyline
+              fill="none"
+              stroke="rgb(217,119,6)"
+              strokeOpacity="0.85"
+              strokeWidth="1.4"
+              strokeDasharray="5 4"
+              transform="matrix(1 0 0 -1 0 210)"
+              points="40,105 50,108.1 60,111.3 70,114.3 80,117 90,119.2 100,120.7 110,121.3 120,120.9 130,119.4 140,116.7 150,112.8 160,107.9 170,101.9 180,95 190,87.5 200,79.5 210,71.2 220,63.1 230,55.4 240,48.2 250,42 260,36.9 270,33.1 280,30.8 290,30 300,30.8 310,33.1 320,36.9 330,42 340,48.2 350,55.4 360,63.1 370,71.2 380,79.5 390,87.5 400,95 410,101.9 420,107.9 430,112.8 440,116.7 450,119.4 460,120.9 470,121.3 480,120.7 490,119.2 500,117 510,114.3 520,111.3 530,108.1 540,105"
+            />
+            <path
+              fill="none"
+              stroke="currentColor"
+              strokeOpacity="0.9"
+              strokeWidth="1.6"
+              d="M 40 105 L 50.4 105 Q 60.8 92 71.3 105 Q 81.7 129.8 92.1 105 Q 102.5 73.2 112.9 105 Q 123.3 136 133.8 105 Q 144.2 84.5 154.6 105 Q 165 105 175.4 105 Q 185.8 133.6 196.3 105 Q 206.7 43 217.1 105 Q 227.5 200.5 237.9 105 Q 248.3 -19 258.8 105 Q 269.2 248.2 279.6 105 Q 290 -45 300.4 105 Q 310.8 248.2 321.3 105 Q 331.7 -19 342.1 105 Q 352.5 200.5 362.9 105 Q 373.3 43 383.8 105 Q 394.2 133.6 404.6 105 Q 415 105 425.4 105 Q 435.8 84.5 446.3 105 Q 456.7 136 467.1 105 Q 477.5 73.2 487.9 105 Q 498.3 129.8 508.8 105 Q 519.2 92 529.6 105 L 540 105"
+            />
+            <circle cx="290" cy="30" r="3.2" fill="rgb(217,119,6)" />
+            <text x="298" y="27" fontSize="11" fill="currentColor" fillOpacity="0.85">R_Y(0) = N₀W</text>
+            <line x1="165" y1="105" x2="165" y2="190" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="3 3" />
+            <line x1="415" y1="105" x2="415" y2="190" stroke="currentColor" strokeOpacity="0.25" strokeDasharray="3 3" />
+            <text x="165" y="204" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.7">−1/W</text>
+            <text x="415" y="204" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.7">+1/W</text>
+            <text x="40" y="204" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.55">−2/W</text>
+            <text x="540" y="204" textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.55">+2/W</text>
+          </svg>
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Η απάντηση σε σχήμα: η διακεκομμένη καμπάνα είναι η περιβάλλουσα{' '}
+            <InlineMath>{'\\pm N_0 W\\,\\mathrm{sinc}(W\\tau)'}</InlineMath> — μηδενίζεται
+            στα <InlineMath>{'\\tau = \\pm 1/W,\\, \\pm 2/W,\\ldots'}</InlineMath> —
+            και η συνεχής γραμμή είναι η ΣΑΣ, δηλαδή η περιβάλλουσα{' '}
+            <em>γεμισμένη</em> με το{' '}
+            <InlineMath>{'\\cos(2\\pi f_c \\tau)'}</InlineMath>. Το ύψος στο{' '}
+            <InlineMath>{'\\tau = 0'}</InlineMath> είναι η ισχύς,{' '}
+            <InlineMath>{'N_0 W'}</InlineMath>. Το σχήμα είναι σχεδιασμένο με{' '}
+            <InlineMath>{'f_c = 3W'}</InlineMath> για να ξεχωρίζουν οι
+            ταλαντώσεις· σε πραγματικό δέκτη{' '}
+            <InlineMath>{'f_c \\gg W'}</InlineMath> και οι ταλαντώσεις είναι
+            πολύ πυκνότερες μέσα στην ίδια ακριβώς περιβάλλουσα.
+          </figcaption>
+        </figure>
+
+        <p>
+          <strong>Βήμα 4 — ο έλεγχος με το ολοκλήρωμα</strong> (αν στην εξέταση
+          δεν θυμάσαι το θεώρημα διαμόρφωσης, αυτός είναι ο μακρύς αλλά σίγουρος
+          δρόμος). Η <InlineMath>{'S_Y'}</InlineMath> είναι πραγματική και
+          άρτια, άρα οι συνεισφορές των δύο ζωνών είναι συζυγείς μιγαδικοί: το
+          άθροισμά τους ισούται με το διπλάσιο του πραγματικού μέρους, δηλαδή
+          αντικαθιστάς το <InlineMath>{'e^{j2\\pi f\\tau}'}</InlineMath> με{' '}
+          <InlineMath>{'\\cos(2\\pi f \\tau)'}</InlineMath> και ολοκληρώνεις
+          μόνο στη θετική ζώνη, επί 2:
+        </p>
+        <BlockMath>{'R_Y(\\tau) = 2\\int_{f_c - W/2}^{f_c + W/2} \\frac{N_0}{2}\\cos(2\\pi f \\tau)\\,df = \\frac{N_0}{2\\pi\\tau}\\Big[\\sin\\big(2\\pi(f_c + \\tfrac{W}{2})\\tau\\big) - \\sin\\big(2\\pi(f_c - \\tfrac{W}{2})\\tau\\big)\\Big]'}</BlockMath>
+        <p>
+          Η αγκύλη είναι διαφορά ημιτόνων, και η ταυτότητα{' '}
+          <InlineMath>{'\\sin A - \\sin B = 2\\cos\\frac{A+B}{2}\\sin\\frac{A-B}{2}'}</InlineMath>{' '}
+          είναι ακριβώς αυτή που ξεχωρίζει το «κέντρο» από το «πλάτος»: εδώ{' '}
+          <InlineMath>{'\\frac{A+B}{2} = 2\\pi f_c \\tau'}</InlineMath> (το
+          κέντρο της ζώνης) και{' '}
+          <InlineMath>{'\\frac{A-B}{2} = \\pi W \\tau'}</InlineMath> (το μισό
+          του πλάτους της):
+        </p>
+        <BlockMath>{'R_Y(\\tau) = \\frac{N_0}{2\\pi\\tau}\\cdot 2\\cos(2\\pi f_c \\tau)\\sin(\\pi W \\tau) = N_0\\,\\cos(2\\pi f_c\\tau)\\,\\frac{\\sin(\\pi W \\tau)}{\\pi \\tau}'}</BlockMath>
+        <p>
+          Πολλαπλασιάζοντας και διαιρώντας με <InlineMath>W</InlineMath>{' '}
+          εμφανίζεται το κανονικοποιημένο sinc,{' '}
+          <InlineMath>{'\\frac{\\sin(\\pi W\\tau)}{\\pi\\tau} = W\\,\\mathrm{sinc}(W\\tau)'}</InlineMath>,
+          και βγαίνει το ίδιο αποτέλεσμα με το Βήμα 3. Το ότι η «γρήγορη» και η
+          «αργή» διαδρομή συμφωνούν είναι ο έλεγχός σου.
+        </p>
+
+        <p>
+          <strong>Βήμα 5 — τι άλλο μπορείς να πεις δωρεάν.</strong> Θέτοντας{' '}
+          <InlineMath>{'\\tau = 0'}</InlineMath> στη ΣΑΣ παίρνεις την ισχύ
+          (γιατί <InlineMath>{'R_Y(0) = E[Y^2(t)]'}</InlineMath>):
+        </p>
+        <BlockMath>{'P_Y = R_Y(0) = N_0 W\\,\\mathrm{sinc}(0)\\cos(0) = N_0 W'}</BlockMath>
+        <p>
+          Έλεγχος με το «εμβαδόν»: ύψος <InlineMath>{'N_0/2'}</InlineMath> επί
+          το <em>συνολικό</em> φάσμα που περνάει — δύο ζώνες πλάτους{' '}
+          <InlineMath>W</InlineMath> η καθεμία, δηλαδή{' '}
+          <InlineMath>{'2W'}</InlineMath> — δίνει{' '}
+          <InlineMath>{'\\frac{N_0}{2}\\cdot 2W = N_0 W'}</InlineMath>. Ταιριάζει.
+          Πρόσεξε ότι το <InlineMath>{'f_c'}</InlineMath> <em>δεν</em> εμφανίζεται
+          στην ισχύ: η μεταφορά μιας ζώνης πάνω-κάτω στον άξονα δεν αλλάζει
+          εμβαδόν. Τέλος, επειδή η είσοδος είναι Gaussian και το φίλτρο
+          γραμμικό, η έξοδος παραμένει Gaussian — άρα{' '}
+          <InlineMath>{'Y(t)'}</InlineMath> είναι WSS Gaussian διαδικασία με
+          μηδενική μέση τιμή και διασπορά{' '}
+          <InlineMath>{'\\sigma_Y^2 = N_0 W'}</InlineMath>. Αυτή η πρόταση
+          αξίζει μονάδες και κοστίζει μία γραμμή.
+        </p>
+
+        <p>
+          <strong>Πού ακριβώς διαφέρει από το χαμηλοπερατό.</strong> Η αιτία
+          είναι ένα και μόνο βήμα: το <em>σχήμα</em> της{' '}
+          <InlineMath>{'S_Y'}</InlineMath> που μπαίνει στον αντίστροφο Fourier.
+          Στο χαμηλοπερατό με συχνότητα αποκοπής <InlineMath>W</InlineMath> η{' '}
+          <InlineMath>{'S_Y'}</InlineMath> είναι <em>ένα</em> συνεχόμενο
+          ορθογώνιο πλάτους <InlineMath>{'2W'}</InlineMath> κεντραρισμένο στο
+          μηδέν, οπότε ο αντίστροφος Fourier δίνει{' '}
+          <InlineMath>{'N_0 W\\,\\mathrm{sinc}(2W\\tau)'}</InlineMath>: το
+          όρισμα του sinc είναι το πλάτος του κομματιού, και δεν υπάρχει
+          μετατόπιση, άρα δεν υπάρχει συνημίτονο. Άλλαξε μόνο αυτό — σπάσε το
+          ίδιο συνολικό φάσμα σε <em>δύο</em> κομμάτια πλάτους{' '}
+          <InlineMath>W</InlineMath> και μετάφερέ τα στα{' '}
+          <InlineMath>{'\\pm f_c'}</InlineMath> — και προκύπτουν δύο αλλαγές:
+          το όρισμα του sinc γίνεται <InlineMath>{'W\\tau'}</InlineMath> αντί{' '}
+          <InlineMath>{'2W\\tau'}</InlineMath> (κάθε κομμάτι είναι πια το μισό
+          σε πλάτος, άρα η περιβάλλουσα διπλάσια σε διάρκεια), και η μετατόπιση
+          προσθέτει τον παράγοντα{' '}
+          <InlineMath>{'\\cos(2\\pi f_c \\tau)'}</InlineMath>.
+        </p>
+        <table className="my-3 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="py-2 text-left">Ιδανικό φίλτρο</th>
+              <th className="py-2 text-left">ΣΑΣ εξόδου</th>
+              <th className="py-2 text-left">1ο μηδενικό περιβάλλουσας</th>
+              <th className="py-2 text-left">Ισχύς</th>
+            </tr>
+          </thead>
+          <tbody className="text-fg-muted">
+            <tr>
+              <td>Χαμηλοπερατό, αποκοπή <InlineMath>W</InlineMath></td>
+              <td><InlineMath>{'N_0 W\\,\\mathrm{sinc}(2W\\tau)'}</InlineMath></td>
+              <td><InlineMath>{'1/(2W)'}</InlineMath></td>
+              <td><InlineMath>{'N_0 W'}</InlineMath></td>
+            </tr>
+            <tr>
+              <td>Ζωνοπερατό, εύρος <InlineMath>W</InlineMath> στο <InlineMath>{'\\pm f_c'}</InlineMath></td>
+              <td><InlineMath>{'N_0 W\\,\\mathrm{sinc}(W\\tau)\\cos(2\\pi f_c\\tau)'}</InlineMath></td>
+              <td><InlineMath>{'1/W'}</InlineMath></td>
+              <td><InlineMath>{'N_0 W'}</InlineMath></td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Δηλαδή <strong>ίδια ισχύς, διαφορετική μνήμη</strong>: ίδιο συνολικό
+          φάσμα σημαίνει ίδιο εμβαδόν, αλλά ο ζωνοπερατός θόρυβος
+          αποσυσχετίζεται δύο φορές πιο αργά και ταλαντώνεται. Η επόμενη σελίδα
+          που πατάει ακριβώς πάνω σε αυτό είναι η{' '}
+          <Link
+            href="/noise/bandpass"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /noise/bandpass
+          </Link>
+          , όπου το ίδιο <InlineMath>{'R_Y'}</InlineMath> παραγοντοποιείται σε
+          I/Q μορφή και δείχνει ότι ο ζωνοπερατός θόρυβος «είναι» δύο baseband
+          θόρυβοι πάνω σε φέρον.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Η άλλη ανάγνωση του «εύρος ζώνης <InlineMath>W</InlineMath>».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Αν εννοείται <InlineMath>W</InlineMath> <em>εκατέρωθεν</em> του{' '}
+            <InlineMath>{'f_c'}</InlineMath>, δηλαδή ζώνη διέλευσης{' '}
+            <InlineMath>{'f_c - W \\le |f| \\le f_c + W'}</InlineMath>, τότε κάθε
+            κομμάτι έχει πλάτος <InlineMath>{'2W'}</InlineMath>. Δεν
+            ξαναϋπολογίζεις τίποτα: παντού όπου είχες{' '}
+            <InlineMath>W</InlineMath> βάζεις{' '}
+            <InlineMath>{'2W'}</InlineMath>, οπότε{' '}
+            <InlineMath>{'R_Y(\\tau) = 2N_0 W\\,\\mathrm{sinc}(2W\\tau)\\cos(2\\pi f_c\\tau)'}</InlineMath>{' '}
+            και <InlineMath>{'P_Y = 2 N_0 W'}</InlineMath>. Η δομή της απάντησης
+            (sinc επί συνημίτονο) είναι πανομοιότυπη — αλλάζει μόνο η κλίμακα.
+            Γι' αυτό η μία γραμμή παραδοχής στην αρχή αξίζει όσο και το
+            υπόλοιπο βήμα: με αυτήν, όποια σύμβαση κι αν είχε στο μυαλό του ο
+            διορθωτής, η λύση σου διαβάζεται σωστή.
+          </span>
+        </div>
+
+        <p>
+          <strong>Κομπιουτεράκι:</strong> δεν χρειάζεται πουθενά — η άσκηση
+          είναι εντελώς συμβολική, δεν δίνεται ούτε{' '}
+          <InlineMath>{'N_0'}</InlineMath>, ούτε{' '}
+          <InlineMath>{'f_c'}</InlineMath>, ούτε αριθμητικό{' '}
+          <InlineMath>W</InlineMath>. Αν σε μια παραλλαγή σου δώσουν νούμερα, το
+          μόνο που θέλει υπολογιστή είναι η τιμή του{' '}
+          <InlineMath>{'\\mathrm{sinc}'}</InlineMath> σε κάποιο συγκεκριμένο{' '}
+          <InlineMath>{'\\tau'}</InlineMath> — και τότε θυμήσου να βάλεις το
+          κομπιουτεράκι σε <strong>radians</strong>, γιατί το όρισμα{' '}
+          <InlineMath>{'\\pi W \\tau'}</InlineMath> είναι σε ακτίνια.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th1-7',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 1.7',
+    paperPage: 1,
+    weight: 7,
+    title: 'Ισχύς αρμονικού αθροίσματος Σ κAcos(2πκft)',
+    topic: 'foundations',
+    difficulty: 'medium',
+    repeatGroup: 'power-sum-sinusoids',
+    prerequisites: ['foundations/signals', 'foundations/fourier-series'],
+    formulaIds: ['signal-power', 'cos-power-half', 'parseval-power', 'trig-prod-cos-cos', 'trig-double-cos'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        (α) η ισχύς ενός τόνου, <InlineMath>{'P = A^2/2'}</InlineMath>, και η γενίκευσή της για
+        άθροισμα τόνων σε διαφορετικές συχνότητες,{' '}
+        <InlineMath>{'P_x = \\sum_{\\kappa} A_\\kappa^2/2'}</InlineMath> (Parseval για Fourier
+        series) — το τυπολόγιο δεν έχει ούτε ορισμό ισχύος ούτε Parseval· (β) το άθροισμα
+        τετραγώνων{' '}
+        <InlineMath>{'\\sum_{\\kappa=1}^{n}\\kappa^2 = \\frac{n(n+1)(2n+1)}{6}'}</InlineMath>,
+        που είναι καθαρή άλγεβρα και λείπει κι αυτό.{' '}
+        <strong>Αυτό που όντως βρίσκεις στο τυπολόγιο</strong> είναι οι δύο ταυτότητες{' '}
+        <InlineMath>{'\\cos(x)\\cos(y) = \\tfrac{1}{2}[\\cos(x-y)+\\cos(x+y)]'}</InlineMath> και{' '}
+        <InlineMath>{'\\cos^2(x) = \\tfrac{1}{2}[1+\\cos(2x)]'}</InlineMath> — δηλαδή τα εργαλεία
+        της απόδειξης, όχι το συμπέρασμα. Το ίδιο εργαλείο χρειάστηκε και στο{' '}
+        <Link
+          href="/practice#exercise:jan26-th2-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 2.9
+        </Link>{' '}
+        και στο{' '}
+        <Link
+          href="/practice#exercise:pa25-th2-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Α 2025 ΘΕΜΑ 2.4
+        </Link>.
+      </>
+    ),
+    statement: (
+      <p>
+        Έστω το σήμα{' '}
+        <InlineMath>{'x(t) = \\sum_{\\kappa=1}^{\\kappa=6} \\kappa A \\cos(2\\pi \\kappa f t)'}</InlineMath>.
+        Να υπολογιστεί η ισχύς του <InlineMath>{'x(t)'}</InlineMath>.
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          Πριν από οποιονδήποτε υπολογισμό, ας δούμε τι είναι στ&apos; αλήθεια αυτό το
+          άθροισμα. Γράφοντας τους έξι όρους έναν-έναν:
+        </p>
+        <BlockMath>{'x(t) = A\\cos(2\\pi f t) + 2A\\cos(2\\pi\\,2f\\,t) + 3A\\cos(2\\pi\\,3f\\,t) + \\cdots + 6A\\cos(2\\pi\\,6f\\,t)'}</BlockMath>
+        <p>
+          Δηλαδή έξι καθαροί τόνοι. Ο <InlineMath>{'\\kappa'}</InlineMath>-οστός έχει συχνότητα{' '}
+          <InlineMath>{'\\kappa f'}</InlineMath> και πλάτος{' '}
+          <InlineMath>{'A_\\kappa = \\kappa A'}</InlineMath> — όσο ανεβαίνουμε σε αρμονική, τόσο
+          δυναμώνει το πλάτος. Και οι έξι συχνότητες είναι ακέραια πολλαπλάσια της ίδιας
+          θεμελιώδους <InlineMath>f</InlineMath>, άρα το <InlineMath>{'x(t)'}</InlineMath> είναι{' '}
+          <strong>περιοδικό</strong> με περίοδο <InlineMath>{'T_0 = 1/f'}</InlineMath>: μέσα σε
+          αυτό το διάστημα η πρώτη αρμονική κάνει έναν κύκλο, η δεύτερη δύο, …, η έκτη έξι.
+        </p>
+        <p>
+          Επειδή είναι περιοδικό και δεν σβήνει ποτέ, η <em>ενέργειά</em> του είναι άπειρη — το
+          μέγεθος που έχει νόημα εδώ είναι η <strong>ισχύς</strong>, δηλαδή η μέση τιμή του{' '}
+          <InlineMath>{'x^2(t)'}</InlineMath> μέσα σε μία περίοδο:
+        </p>
+        <BlockMath>{'P_x = \\frac{1}{T_0}\\int_{0}^{T_0} x^2(t)\\, dt'}</BlockMath>
+        <p>
+          Το επόμενο βήμα είναι το μόνο που έχει πραγματικό περιεχόμενο: υψώνουμε στο τετράγωνο.
+          Ένα άθροισμα έξι όρων στο τετράγωνο δίνει{' '}
+          <InlineMath>{'6\\times 6 = 36'}</InlineMath> γινόμενα — 6 «διαγώνια»
+          (<InlineMath>{'\\kappa = \\lambda'}</InlineMath>) και 30 «σταυρωτά»
+          (<InlineMath>{'\\kappa \\neq \\lambda'}</InlineMath>):
+        </p>
+        <BlockMath>{'x^2(t) = \\sum_{\\kappa=1}^{6}\\sum_{\\lambda=1}^{6} (\\kappa A)(\\lambda A)\\,\\cos(2\\pi \\kappa f t)\\cos(2\\pi \\lambda f t)'}</BlockMath>
+        <p>
+          <strong>Γιατί πεθαίνουν τα 30 σταυρωτά.</strong> Αυτό δεν το δεχόμαστε επειδή «έτσι
+          γίνεται» — το δείχνουμε. Για <InlineMath>{'\\kappa \\neq \\lambda'}</InlineMath>{' '}
+          χρησιμοποιούμε την ταυτότητα γινομένου-σε-άθροισμα, που{' '}
+          <strong>υπάρχει στο τυπολόγιο</strong>:
+        </p>
+        <BlockMath>{'\\cos(x)\\cos(y) = \\tfrac{1}{2}\\big[\\cos(x-y) + \\cos(x+y)\\big]'}</BlockMath>
+        <p>
+          Με <InlineMath>{'x = 2\\pi\\kappa f t'}</InlineMath> και{' '}
+          <InlineMath>{'y = 2\\pi\\lambda f t'}</InlineMath> το γινόμενο γίνεται
+        </p>
+        <BlockMath>{'\\tfrac{1}{2}\\cos\\!\\big(2\\pi(\\kappa-\\lambda) f t\\big) \\;+\\; \\tfrac{1}{2}\\cos\\!\\big(2\\pi(\\kappa+\\lambda) f t\\big)'}</BlockMath>
+        <p>
+          Και τα δύο είναι πάλι cosines, σε συχνότητες που είναι <em>μη-μηδενικά</em> ακέραια
+          πολλαπλάσια του <InlineMath>f</InlineMath> (αφού{' '}
+          <InlineMath>{'\\kappa \\neq \\lambda'}</InlineMath>, το{' '}
+          <InlineMath>{'\\kappa - \\lambda'}</InlineMath> δεν μηδενίζεται). Ένα τέτοιο cosine
+          συμπληρώνει ακέραιο αριθμό ολόκληρων κύκλων μέσα στο{' '}
+          <InlineMath>{'T_0'}</InlineMath>: όση επιφάνεια μαζεύει πάνω από το μηδέν, άλλη τόση
+          χάνει από κάτω, οπότε το ολοκλήρωμά του σε μία περίοδο βγαίνει{' '}
+          <strong>ακριβώς μηδέν</strong> — όχι «περίπου». Άρα και τα 30 σταυρωτά γινόμενα
+          σβήνουν εντελώς.
+        </p>
+        <p>
+          Αυτό ακριβώς εννοούμε λέγοντας ότι <strong>τόνοι σε διαφορετικές συχνότητες είναι
+          ορθογώνιοι</strong>: δεν ανακατεύονται ενεργειακά, ο καθένας κουβαλάει τη δική του
+          ισχύ και οι επιμέρους ισχύες προστίθενται. Στο frequency domain είναι το θεώρημα
+          Parseval για Fourier series: το φάσμα έχει έξι ζευγάρια γραμμών, καμία δεν πέφτει πάνω
+          σε άλλη, και η συνολική ισχύς είναι το άθροισμα της ισχύος κάθε γραμμής.
+        </p>
+        <p>
+          <strong>Τα 6 διαγώνια.</strong> Για <InlineMath>{'\\kappa = \\lambda'}</InlineMath>{' '}
+          μένει <InlineMath>{'(\\kappa A)^2\\cos^2(2\\pi\\kappa f t)'}</InlineMath>. Με την
+          ταυτότητα <InlineMath>{'\\cos^2(x) = \\tfrac{1}{2}[1+\\cos(2x)]'}</InlineMath> (επίσης
+          στο τυπολόγιο) το <InlineMath>{'\\cos^2'}</InlineMath> σπάει σε ένα σταθερό{' '}
+          <InlineMath>{'1/2'}</InlineMath> συν έναν όρο{' '}
+          <InlineMath>{'\\cos(2x)'}</InlineMath> που μηδενίζεται με το ίδιο ακριβώς επιχείρημα.
+          Μένει λοιπόν μέση τιμή <InlineMath>{'1/2'}</InlineMath>, δηλαδή κάθε τόνος πλάτους{' '}
+          <InlineMath>{'A_\\kappa'}</InlineMath> συνεισφέρει{' '}
+          <InlineMath>{'A_\\kappa^2/2'}</InlineMath>:
+        </p>
+        <BlockMath>{'P_x = \\sum_{\\kappa=1}^{6} \\frac{(\\kappa A)^2}{2} = \\frac{A^2}{2}\\sum_{\\kappa=1}^{6}\\kappa^2'}</BlockMath>
+        <p>
+          <strong>Το άθροισμα των τετραγώνων.</strong> Μπορείς να το κάνεις και με το χέρι —{' '}
+          <InlineMath>{'1+4+9+16+25+36 = 91'}</InlineMath> — αλλά στην εξέταση αξίζει ο κλειστός
+          τύπος: είναι πιο γρήγορος, δεν σε αφήνει να χάσεις όρο, και δουλεύει για οποιοδήποτε{' '}
+          <InlineMath>n</InlineMath> σου βάλουν:
+        </p>
+        <BlockMath>{'\\sum_{\\kappa=1}^{n}\\kappa^2 = \\frac{n(n+1)(2n+1)}{6} \\quad\\Longrightarrow\\quad \\sum_{\\kappa=1}^{6}\\kappa^2 = \\frac{6\\cdot 7\\cdot 13}{6} = 91'}</BlockMath>
+        <p>
+          <strong>⚠️ Η κλασική παγίδα:</strong> το{' '}
+          <InlineMath>{'\\sum_{\\kappa=1}^{6}\\kappa^2 = 91'}</InlineMath> δεν έχει καμία σχέση
+          με το{' '}
+          <InlineMath>{'\\left(\\sum_{\\kappa=1}^{6}\\kappa\\right)^2 = 21^2 = 441'}</InlineMath>.
+          Πρώτα υψώνεις κάθε πλάτος στο τετράγωνο, μετά αθροίζεις — ποτέ ανάποδα.
+        </p>
+        <p>Οπότε η ισχύς είναι:</p>
+        <BlockMath>{'\\boxed{\\,P_x = \\frac{91\\,A^2}{2} = 45.5\\,A^2\\,}'}</BlockMath>
+        <p>
+          Δύο πράγματα αξίζει να προσέξεις στο αποτέλεσμα. Πρώτον, το{' '}
+          <InlineMath>f</InlineMath> <strong>δεν εμφανίζεται πουθενά</strong>: όσο οι τόνοι
+          κάθονται σε <em>διαφορετικές</em> συχνότητες — εδώ στις{' '}
+          <InlineMath>{'f, 2f, \\ldots, 6f'}</InlineMath>, που είναι όντως έξι διαφορετικές
+          για οποιοδήποτε <InlineMath>{'f \\neq 0'}</InlineMath> — η ισχύς εξαρτάται μόνο από
+          τα πλάτη, όχι από το πού ακριβώς πέφτει η καθεμία στον άξονα συχνοτήτων. Αυτός
+          είναι και ο λόγος που η εκφώνηση δεν σου δίνει τιμή για το{' '}
+          <InlineMath>f</InlineMath> — δεν τη χρειάζεσαι, και δεν λείπει δεδομένο.
+        </p>
+        <p>
+          Δεύτερον, επειδή τα πλάτη μεγαλώνουν με το <InlineMath>{'\\kappa'}</InlineMath>, η ισχύς
+          είναι στοιβαγμένη στις ψηλές αρμονικές: μόνο η έκτη δίνει{' '}
+          <InlineMath>{'(6A)^2/2 = 18A^2'}</InlineMath>, δηλαδή περισσότερα από τις τέσσερις
+          πρώτες μαζί (<InlineMath>{'(1+4+9+16)A^2/2 = 15A^2'}</InlineMath>).
+        </p>
+        <p>
+          <strong>Αριθμητικά:</strong> εδώ δεν χρειάζεσαι κομπιουτεράκι — το{' '}
+          <InlineMath>{'6\\cdot 7\\cdot 13/6 = 91'}</InlineMath> και το{' '}
+          <InlineMath>{'91/2 = 45.5'}</InlineMath> γίνονται με το μυαλό (το{' '}
+          <InlineMath>{'7\\cdot 13 = 91'}</InlineMath> είναι η μόνη σταθερά που ξεκλειδώνει τον
+          υπολογισμό). Αν το <InlineMath>A</InlineMath> δίνεται σε Volt, το{' '}
+          <InlineMath>{'P_x = 45.5\\,A^2'}</InlineMath> είναι σε{' '}
+          <InlineMath>{'\\mathrm{V}^2'}</InlineMath>, δηλαδή Watt πάνω σε αντίσταση{' '}
+          <InlineMath>{'1\\,\\Omega'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th1-8',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 1.8',
+    paperPage: 1,
+    weight: 5,
+    title: 'NBFM ή WBFM από K_f και πλάτος message',
+    topic: 'fm',
+    difficulty: 'easy',
+    prerequisites: ['fm/idea', 'fm/carson'],
+    formulaIds: ['fm-instantaneous-freq', 'fm-beta', 'fm-single-tone', 'carson'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — κανένα από αυτά δεν είναι στο τυπολόγιο.</strong>{' '}
+        Η στιγμιαία συχνότητα <InlineMath>{'f_i(t) = f_c + K_f\\,m(t)'}</InlineMath>{' '}
+        (από εκεί βγαίνει το <InlineMath>{'\\Delta f = K_f\\max|m|'}</InlineMath>), ο ορισμός{' '}
+        <InlineMath>{'\\beta_f = \\Delta f / W'}</InlineMath>, ο κανόνας Carson{' '}
+        <InlineMath>{'B \\cong 2(\\beta+1)W'}</InlineMath>, και το ίδιο το κριτήριο{' '}
+        <InlineMath>{'\\beta \\ll 1 \\Rightarrow'}</InlineMath> NBFM — όλα γράφονται απέξω.
+        Το βήμα «πλάτος <InlineMath>{'\\rightarrow \\Delta f'}</InlineMath>» χρειάστηκε
+        ολόιδιο και στο{' '}
+        <Link
+          href="/practice#exercise:jun25-th3-fm"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν.2025 ΘΕΜΑ 3
+        </Link>{' '}
+        (εκεί <InlineMath>{'m(t)=2\\cos(2\\pi\\cdot 2000\\,t)'}</InlineMath> με{' '}
+        <InlineMath>{'K_f = 1'}</InlineMath> kHz/V), και την ίδια ετυμηγορία NBFM/WBFM
+        ζητάει το{' '}
+        <Link
+          href="/practice#exercise:jan26-th1-5"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν.2026 ΘΕΜΑ 1.5
+        </Link>{' '}
+        — εκεί όμως σου δίνεται έτοιμο το <InlineMath>{'\\beta'}</InlineMath>, ενώ εδώ
+        πρέπει να το χτίσεις.
+      </>
+    ),
+    statement: (
+      <p>
+        Έστω το σήμα πληροφορίας{' '}
+        <InlineMath>{'m(t) = 2\\cos(2\\pi\\cdot 100\\,t)'}</InlineMath> Volt που
+        διαμορφώνεται κατά FM με ευαισθησία συχνότητας{' '}
+        <InlineMath>{'K_f = 5'}</InlineMath> Hz/Volt. Πρόκειται για διαμόρφωση NBFM ή
+        WBFM και γιατί;
+      </p>
+    ),
+    solution: (
+      <>
+        <p>
+          Το NBFM (narrowband FM) και το WBFM (wideband FM) δεν είναι ιδιότητες του
+          διαμορφωτή — είναι ετυμηγορία πάνω σε έναν και μόνο αριθμό, τον δείκτη
+          διαμόρφωσης <InlineMath>{'\\beta_f'}</InlineMath>. Άρα όλη η άσκηση είναι:
+          χτίσε το <InlineMath>{'\\beta_f'}</InlineMath> από τα δεδομένα, σύγκρινέ το με
+          τη μονάδα, και μετά πες τι σημαίνει αυτό. Πρόσεξε ότι η{' '}
+          <InlineMath>{'f_c'}</InlineMath> δεν δίνεται — και δεν χρειάζεται: το{' '}
+          <InlineMath>{'\\beta_f'}</InlineMath> δεν εξαρτάται από το πού κάθεται το φέρον.
+        </p>
+
+        <p>
+          <strong>Βήμα 1 — τι κρύβει η εκφώνηση.</strong> Το{' '}
+          <InlineMath>{'m(t) = 2\\cos(2\\pi\\cdot 100\\,t)'}</InlineMath> κουβαλάει δύο
+          τελείως διαφορετικά νούμερα: το <em>πλάτος</em>{' '}
+          <InlineMath>{'A_m = 2'}</InlineMath> Volt και τη <em>συχνότητα</em>{' '}
+          <InlineMath>{'f_m = 100'}</InlineMath> Hz. Το καθένα παίζει άλλο ρόλο μέσα στη
+          FM. Εδώ ακριβώς κρίνεται η άσκηση.
+        </p>
+
+        <p>
+          <strong>Βήμα 2 — το πλάτος δίνει την απόκλιση συχνότητας.</strong> Στη FM η
+          στιγμιαία συχνότητα του σήματος είναι
+        </p>
+        <BlockMath>{'f_i(t) = f_c + K_f\\, m(t)'}</BlockMath>
+        <p>
+          δηλαδή το message «σπρώχνει» τη συχνότητα πάνω-κάτω γύρω από το φέρον. Ο{' '}
+          <InlineMath>{'K_f'}</InlineMath> μετριέται σε Hz/Volt και λέει ακριβώς αυτό:
+          κάθε Volt του <InlineMath>{'m(t)'}</InlineMath> μετατοπίζει τη στιγμιαία
+          συχνότητα κατά 5 Hz. Το message φτάνει το πολύ στα 2 Volt, άρα η μέγιστη
+          απόκλιση συχνότητας είναι
+        </p>
+        <BlockMath>{'\\Delta f = K_f\\,\\max|m(t)| = 5\\,\\tfrac{\\text{Hz}}{\\text{V}} \\times 2\\,\\text{V} = 10\\ \\text{Hz}'}</BlockMath>
+        <p>
+          Με απλά λόγια: η συχνότητα του πομπού ταξιδεύει το πολύ ±10 Hz γύρω από το{' '}
+          <InlineMath>{'f_c'}</InlineMath>, και τίποτα παραπάνω.
+        </p>
+
+        <p>
+          <strong>Βήμα 3 — η συχνότητα δίνει το bandwidth του message.</strong> Το
+          bandwidth ενός σήματος που είναι ένας μόνο τόνος είναι η ίδια του η συχνότητα,
+          άρα <InlineMath>{'W = f_m = 100'}</InlineMath> Hz. Πρόσεξε τι <em>δεν</em> λέει
+          αυτό το 100 Hz: δεν λέει πόσο <em>μακριά</em> φεύγει η συχνότητα του πομπού —
+          λέει πόσο <em>γρήγορα</em> πηγαινοέρχεται.
+        </p>
+
+        <p>
+          <strong>Βήμα 4 — ο λόγος τους είναι το β.</strong>
+        </p>
+        <BlockMath>{'\\beta_f = \\frac{\\Delta f}{W} = \\frac{K_f\\,\\max|m|}{f_m} = \\frac{10\\ \\text{Hz}}{100\\ \\text{Hz}} = 0.1'}</BlockMath>
+        <p>
+          Το <InlineMath>{'\\beta_f'}</InlineMath> βγαίνει καθαρός αριθμός (Hz προς Hz)
+          και μετράει «πόσα message-bandwidths φαρδιά είναι η διαδρομή που κάνει η
+          συχνότητα». Όλη η αριθμητική εδώ γίνεται με το μυαλό —{' '}
+          <InlineMath>{'5\\cdot 2 = 10'}</InlineMath> και{' '}
+          <InlineMath>{'10/100 = 0.1'}</InlineMath> — δεν χρειάζεται το κομπιουτεράκι.
+        </p>
+
+        <p>
+          <strong>Απάντηση: NBFM.</strong> Το κριτήριο είναι{' '}
+          <InlineMath>{'\\beta \\ll 1 \\Rightarrow'}</InlineMath> NBFM,{' '}
+          <InlineMath>{'\\beta \\gg 1 \\Rightarrow'}</InlineMath> WBFM, και το{' '}
+          <InlineMath>{'\\beta_f = 0.1'}</InlineMath> είναι δέκα φορές μικρότερο από τη
+          μονάδα. (Κάποια εγχειρίδια κυκλοφορούν και μια πρακτική τιμή{' '}
+          <InlineMath>{'\\beta < 0.3'}</InlineMath>· εδώ δεν χρειάζεται να διαλέξεις,
+          γιατί το 0.1 περνάει άνετα και τα δύο κριτήρια.)
+        </p>
+
+        <p>
+          <strong>Το «γιατί» που ζητάει ρητά η εκφώνηση.</strong> Το{' '}
+          <InlineMath>{'\\beta_f \\ll 1'}</InlineMath> δεν είναι απλώς μια ταμπέλα — έχει
+          δύο συγκεκριμένες, μετρήσιμες συνέπειες, και αυτές είναι η αιτιολόγηση.
+        </p>
+
+        <p>
+          <strong>(α) Το εύρος ζώνης καταρρέει σε αυτό μιας AM.</strong> Ο κανόνας Carson
+          δίνει
+        </p>
+        <BlockMath>{'B \\cong 2(\\beta_f + 1)\\,W = 2\\,(0.1 + 1)\\cdot 100 = 220\\ \\text{Hz}'}</BlockMath>
+        <p>
+          που απέχει μόλις 10% από το όριο <InlineMath>{'2W = 200'}</InlineMath> Hz —
+          δηλαδή από το bandwidth που θα έπιανε μια AM με το ίδιο ακριβώς message. Αυτή η
+          FM δεν «πληρώνει» φάσμα: χωράει εκεί που θα χωρούσε και μια AM. Αν αντίθετα το{' '}
+          <InlineMath>{'\\beta'}</InlineMath> ήταν μεγάλο, το{' '}
+          <InlineMath>{'2\\Delta f'}</InlineMath> θα κυριαρχούσε στον Carson και το
+          bandwidth θα εκτοξευόταν — αυτό είναι το WBFM.
+        </p>
+
+        <p>
+          <strong>(β) Το φάσμα έχει φέρον συν ένα μόνο ζεύγος sidebands.</strong> Για
+          single-tone message η φάση είναι{' '}
+          <InlineMath>{'\\phi(t) = \\beta_f\\sin(2\\pi f_m t)'}</InlineMath>. Όταν αυτή
+          είναι πολύ μικρή (εδώ το πολύ 0.1 rad), ισχύουν οι γραμμικές προσεγγίσεις{' '}
+          <InlineMath>{'\\cos\\phi \\cong 1'}</InlineMath> και{' '}
+          <InlineMath>{'\\sin\\phi \\cong \\phi'}</InlineMath>, οπότε το σήμα γράφεται
+        </p>
+        <BlockMath>{'x(t) \\cong A_c\\cos(2\\pi f_c t) + \\tfrac{A_c\\beta_f}{2}\\cos[2\\pi(f_c+f_m)t] - \\tfrac{A_c\\beta_f}{2}\\cos[2\\pi(f_c-f_m)t]'}</BlockMath>
+        <p>
+          Τρεις γραμμές μόνο: φέρον στο <InlineMath>{'f_c'}</InlineMath> και δύο sidebands
+          στα <InlineMath>{'f_c \\pm 100'}</InlineMath> Hz, με πλάτος{' '}
+          <InlineMath>{'A_c\\beta_f/2 = 0.05\\,A_c'}</InlineMath>, δηλαδή 5% του φέροντος.
+          Γι&apos; αυτό λέμε ότι το NBFM «μοιάζει με AM».
+        </p>
+        <p>
+          <strong>Μοιάζει, δεν ταυτίζεται.</strong> Στο NBFM ο όρος των sidebands κάθεται
+          πάνω στο <InlineMath>{'\\sin(2\\pi f_c t)'}</InlineMath> — σε quadrature (90°) με
+          το φέρον, και γι&apos; αυτό το κάτω sideband βγαίνει με <em>μείον</em>. Στην AM
+          και τα δύο sidebands κάθονται πάνω στο ίδιο{' '}
+          <InlineMath>{'\\cos(2\\pi f_c t)'}</InlineMath> με το φέρον. Ίδιο μέτρο φάσματος,
+          διαφορετική γεωμετρία — αν σε ρωτήσουν «είναι το NBFM ίδιο με το AM;», αυτή είναι
+          η σωστή απάντηση.
+        </p>
+
+        <p>
+          <strong>Η παγίδα της άσκησης.</strong> Ο συνηθισμένος λάθος δρόμος είναι να
+          πολλαπλασιάσεις τον <InlineMath>{'K_f'}</InlineMath> με τη συχνότητα:{' '}
+          <InlineMath>{'5 \\times 100 = 500'}</InlineMath> Hz, οπότε{' '}
+          <InlineMath>{'\\beta = 5'}</InlineMath> και η απάντηση γίνεται «WBFM» — τελείως
+          λάθος. Ο έλεγχος μονάδων το κόβει σε δύο δευτερόλεπτα: ο{' '}
+          <InlineMath>{'K_f'}</InlineMath> είναι <strong>Hz ανά Volt</strong>, άρα μπορεί
+          να πολλαπλασιάσει μόνο Volt. Η <InlineMath>{'f_m'}</InlineMath> είναι ήδη σε Hz —
+          δεν έχει καμία δουλειά μέσα σε εκείνο το γινόμενο· ο ρόλος της είναι ο{' '}
+          <em>παρονομαστής</em> του <InlineMath>{'\\beta'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th2-10',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 2.10',
+    paperPage: 1,
+    weight: 6,
+    title: 'Μικτό FDM: το n της μη-επικάλυψης (DSB-SC + USSB)',
+    topic: 'am',
+    difficulty: 'medium',
+    prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/ssb', 'foundations/fourier-transform'],
+    formulaIds: ['dsb-sc-signal', 'ssb-signal', 'fdm-spacing', 'fourier-pair-rect', 'fourier-pair-tri'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong> ο τύπος DSB-SC{' '}
+        <InlineMath>{'x_{DSB\\text{-}SC}(t) = A_c\\,m(t)\\cos(2\\pi f_1 t)'}</InlineMath>, ο τύπος USSB{' '}
+        <InlineMath>{'x_{USB}(t) = A_c k(t)\\cos(2\\pi f_2 t) - A_c\\hat{k}(t)\\sin(2\\pi f_2 t)'}</InlineMath>{' '}
+        και η συνθήκη μη-επικάλυψης FDM (<InlineMath>{'\\Delta f \\ge 2W'}</InlineMath> για AM/DSB-SC,{' '}
+        <InlineMath>{'\\Delta f \\ge W'}</InlineMath> για SSB). Πρόσεξε όμως ότι αυτές οι δύο έτοιμες
+        μορφές ισχύουν <em>μόνο</em> για δύο κανάλια ίδιου τύπου και ίδιου εύρους — εδώ δεν ισχύει
+        τίποτα από τα δύο, οπότε χτίζεις τη συνθήκη από τις άκρες των φασμάτων.{' '}
+        <strong>Δίνονται</strong> στο τυπολόγιο τα ζεύγη Fourier{' '}
+        <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\Pi'}</InlineMath> και{' '}
+        <InlineMath>{'\\mathrm{sinc}^2\\leftrightarrow\\Lambda'}</InlineMath>, από τα οποία βγαίνουν τα
+        δύο εύρη. Το ίδιο εργαλείο χρειάστηκε και στον{' '}
+        <Link
+          href="/practice#exercise:jun25-th2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 2
+        </Link>{' '}
+        (σχεδόν ίδια εκφώνηση με <InlineMath>{'f_2 = n f_1'}</InlineMath>, αλλά με{' '}
+        <InlineMath>{'k = \\mathrm{sinc}(6Wt)'}</InlineMath> σε συμβατικό AM στο πάνω κανάλι) και στην{' '}
+        <Link
+          href="/practice#exercise:proodos26-12"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Απρ. 2026 ΘΕΜΑ 12
+        </Link>{' '}
+        (δύο USSB κανάλια με ελεύθερα φέροντα).
+      </>
+    ),
+    statement: (
+      <p>
+        Έστω τα δυο βασικά σήματα πληροφορίας{' '}
+        <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και{' '}
+        <InlineMath>{'k(t) = \\mathrm{sinc}^2(6Wt)'}</InlineMath>. Το{' '}
+        <InlineMath>{'m(t)'}</InlineMath> διαμορφώνεται κατά <strong>AM-DSB-SC</strong> με φέρον{' '}
+        <InlineMath>{'f_1'}</InlineMath> και το <InlineMath>{'k(t)'}</InlineMath> διαμορφώνεται κατά{' '}
+        <strong>AM-USSB</strong> με φέρον <InlineMath>{'f_2 = n f_1'}</InlineMath> αντίστοιχα. Τα δυο
+        σήματα πολυπλέκονται (προστίθενται) σ&rsquo; έναν πολυπλέκτη. Πόσο πρέπει να είναι το{' '}
+        <InlineMath>{'n'}</InlineMath> για να μην συμπέσουν φασματικά;
+      </p>
+    ),
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — «να μην συμπέσουν φασματικά» σημαίνει «να μην πατάει η μία λωρίδα πάνω
+            στην άλλη».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Ο πολυπλέκτης δεν κάνει τίποτα έξυπνο: απλώς <em>προσθέτει</em> τα δύο διαμορφωμένα
+            σήματα. Στη συχνότητα η πρόσθεση δεν ανακατεύει τίποτα — κάθε κανάλι κάθεται στη δική του
+            λωρίδα συχνοτήτων, και όσο οι δύο λωρίδες δεν έχουν κοινό σημείο, ο δέκτης κόβει με ένα
+            bandpass φίλτρο όποια θέλει και την αποδιαμορφώνει σαν να μην υπήρξε ποτέ η άλλη. Άρα όλο
+            το ερώτημα ανάγεται σε γεωμετρία:{' '}
+            <em>πού αρχίζει και πού τελειώνει η λωρίδα του καθενός</em>. Πρόσεξε ότι το πλάτος{' '}
+            <InlineMath>{'A_c'}</InlineMath> δεν μπαίνει πουθενά στον λογαριασμό — η επικάλυψη αφορά
+            το <em>πού</em>, όχι το <em>πόσο ψηλά</em>.
+          </span>
+        </div>
+
+        <p>
+          <strong>(1) Τα δύο baseband φάσματα — και το πραγματικό τους μισό-εύρος.</strong> Πριν
+          αγγίξουμε φέροντα, βρίσκουμε πόσο πλατύ είναι το κάθε μήνυμα στη συχνότητα· αυτό και μόνο
+          καθορίζει το πλάτος της λωρίδας του.
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>
+              <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath>
+            </strong>{' '}
+            — ένα sinc στον χρόνο έχει για μετασχηματισμό ένα καθαρό rect στη συχνότητα (το ζεύγος{' '}
+            <InlineMath>{'\\mathrm{sinc}\\leftrightarrow\\Pi'}</InlineMath> του τυπολογίου):
+            <BlockMath>{'M(f) = \\tfrac{1}{W}\\,\\Pi\\!\\left(\\tfrac{f}{W}\\right),\\qquad |f| \\le \\tfrac{W}{2}'}</BlockMath>
+            Δηλαδή το bandwidth του <InlineMath>{'m'}</InlineMath> είναι{' '}
+            <strong>
+              <InlineMath>{'B_m = W/2'}</InlineMath>
+            </strong>{' '}
+            — <em>όχι</em> <InlineMath>{'W'}</InlineMath>. Το <InlineMath>{'W'}</InlineMath> μέσα στο{' '}
+            <InlineMath>{'\\mathrm{sinc}(Wt)'}</InlineMath> είναι το <em>συνολικό</em> πλάτος του rect
+            (από <InlineMath>{'-W/2'}</InlineMath> ως <InlineMath>{'+W/2'}</InlineMath>), άρα το
+            μισό-εύρος είναι το μισό του. Είναι η πιο συχνή απροσεξία σε αυτό το θέμα.
+          </li>
+          <li>
+            <strong>
+              <InlineMath>{'k(t) = \\mathrm{sinc}^2(6Wt)'}</InlineMath>
+            </strong>{' '}
+            — εδώ έχουμε <em>τετράγωνο</em> στον χρόνο, και πολλαπλασιασμός στον χρόνο σημαίνει{' '}
+            <strong>συνέλιξη στη συχνότητα</strong>· rect συνελιγμένο με τον εαυτό του δίνει τρίγωνο
+            (το ζεύγος <InlineMath>{'\\mathrm{sinc}^2\\leftrightarrow\\Lambda'}</InlineMath> του
+            τυπολογίου):
+            <BlockMath>{'K(f) = \\tfrac{1}{6W}\\,\\Lambda\\!\\left(\\tfrac{f}{6W}\\right),\\qquad |f| \\le 6W'}</BlockMath>
+            Δηλαδή{' '}
+            <strong>
+              <InlineMath>{'B_k = 6W'}</InlineMath>
+            </strong>
+            . Η συνέλιξη <em>διπλασιάζει</em> το εύρος: το σκέτο{' '}
+            <InlineMath>{'\\mathrm{sinc}(6Wt)'}</InlineMath> θα είχε μισό-εύρος{' '}
+            <InlineMath>{'3W'}</InlineMath>, το τετράγωνό του έχει <InlineMath>{'6W'}</InlineMath>. Το{' '}
+            <InlineMath>{'k'}</InlineMath> είναι λοιπόν <strong>12 φορές</strong> πλατύτερο από το{' '}
+            <InlineMath>{'m'}</InlineMath> — μια πολύ άνιση ζευγαρωσιά, και εκεί ακριβώς σπάνε οι
+            αποστηθισμένοι κανόνες.
+          </li>
+        </ul>
+
+        <p>
+          <strong>
+            (2) Πού κάθεται η λωρίδα του καθενός — εδώ κρύβεται η ασυμμετρία του θέματος.
+          </strong>{' '}
+          Τα δύο κανάλια <em>δεν</em> στέλνονται με τον ίδιο τρόπο, και αυτό αλλάζει τη γεωμετρία.
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>Κανάλι 1 — DSB-SC, δίπλευρο.</strong> Από τη{' '}
+            <InlineMath>{'x_1(t) = A_c\\,m(t)\\cos(2\\pi f_1 t)'}</InlineMath> παίρνουμε{' '}
+            <InlineMath>{'X_1(f) = \\tfrac{A_c}{2}\\left[M(f-f_1) + M(f+f_1)\\right]'}</InlineMath>: το{' '}
+            <InlineMath>{'M'}</InlineMath> αντιγράφεται <em>ολόκληρο</em> γύρω από το φέρον, και προς
+            τα πάνω και προς τα κάτω. Στις θετικές συχνότητες πιάνει
+            <BlockMath>{'\\left[\\,f_1 - \\tfrac{W}{2},\\;\\; f_1 + \\tfrac{W}{2}\\,\\right]'}</BlockMath>
+            συνολικό εύρος <InlineMath>{'2B_m = W'}</InlineMath>, με το φέρον ακριβώς στη{' '}
+            <em>μέση</em>: προεξέχει <InlineMath>{'W/2'}</InlineMath> δεξιά και{' '}
+            <InlineMath>{'W/2'}</InlineMath> αριστερά του.
+          </li>
+          <li>
+            <strong>Κανάλι 2 — USSB, μονόπλευρο.</strong> Από τη{' '}
+            <InlineMath>{'x_2(t) = A_c k(t)\\cos(2\\pi f_2 t) - A_c\\hat{k}(t)\\sin(2\\pi f_2 t)'}</InlineMath>{' '}
+            επιβιώνει <strong>μόνο η πάνω πλευρική</strong>: στις θετικές συχνότητες{' '}
+            <InlineMath>{'X_2(f) = A_c K(f - f_2)'}</InlineMath> για{' '}
+            <InlineMath>{'f \\ge f_2'}</InlineMath>, και <strong>ακριβώς μηδέν</strong> για{' '}
+            <InlineMath>{'f < f_2'}</InlineMath> (αυτό κάνει ο όρος με τον Hilbert: ακυρώνει την κάτω
+            πλευρική). Άρα πιάνει
+            <BlockMath>{'\\left[\\,f_2,\\;\\; f_2 + 6W\\,\\right]'}</BlockMath>
+            Η λωρίδα <em>ξεκινά πάνω στο φέρον</em> και απλώνεται μόνο προς τα πάνω· η κορυφή του
+            τριγώνου κάθεται κολλητά στο <InlineMath>{'f_2'}</InlineMath> και το φάσμα κατεβαίνει
+            γραμμικά στο μηδέν στα <InlineMath>{'f_2 + 6W'}</InlineMath>.
+          </li>
+        </ul>
+        <p>
+          <strong>Γιατί αυτό είναι όλο το κλειδί:</strong> το κάτω κανάλι «ξοδεύει» χώρο{' '}
+          <em>δεξιά</em> από το φέρον του — ακριβώς <InlineMath>{'W/2'}</InlineMath>. Το πάνω κανάλι{' '}
+          <strong>δεν ξοδεύει καθόλου χώρο αριστερά</strong> από το δικό του — μηδέν. Το κενό που
+          πρέπει να αφήσουμε ανάμεσα στα δύο φέροντα είναι το άθροισμα αυτών των δύο, και ο δεύτερος
+          όρος εξαφανίζεται.
+        </p>
+
+        <p>
+          <strong>(3) Η συνθήκη μη-επικάλυψης, χτισμένη από τις άκρες.</strong> Παίρνουμε{' '}
+          <InlineMath>{'f_1 < f_2'}</InlineMath>, δηλαδή το στενό DSB-SC κανάλι από κάτω — αυτό εννοεί
+          η εκφώνηση όταν γράφει <InlineMath>{'f_2 = n f_1'}</InlineMath> (την άλλη ανάγνωση τη
+          βλέπουμε στο τέλος). Η <em>δεξιά ακμή του κάτω</em> δεν πρέπει να περάσει την{' '}
+          <em>αριστερή ακμή του πάνω</em>:
+        </p>
+        <BlockMath>{'f_1 + \\tfrac{W}{2} \\;\\le\\; f_2 = n f_1 \\quad\\Longrightarrow\\quad (n-1)\\,f_1 \\;\\ge\\; \\tfrac{W}{2} \\quad\\Longrightarrow\\quad \\boxed{\\,n \\;\\ge\\; 1 + \\dfrac{W}{2 f_1}\\,}'}</BlockMath>
+        <p>
+          <strong>Τι λέει αυτό στα απλά:</strong> αρκεί το δεύτερο φέρον να είναι ψηλότερα από το
+          πρώτο κατά τουλάχιστον <InlineMath>{'W/2'}</InlineMath> — δηλαδή όσο ακριβώς προεξέχει η
+          DSB-SC λωρίδα δεξιά από το <InlineMath>{'f_1'}</InlineMath>. Ισοδύναμα{' '}
+          <InlineMath>{'\\Delta f = f_2 - f_1 \\ge W/2'}</InlineMath>. Πρόσεξε ότι το{' '}
+          <InlineMath>{'6W'}</InlineMath> του δεύτερου καναλιού <em>δεν εμφανίζεται πουθενά</em>: αφού
+          η λωρίδα του απλώνεται προς τα πάνω, δεν ενοχλεί κανέναν από τους από κάτω. Θα μετρούσε μόνο
+          αν στοιβάζαμε κι ένα τρίτο κανάλι πάνω του.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            ⚠️ Μην γράψεις μηχανικά «<InlineMath>{'\\Delta f \\ge 2W'}</InlineMath>» ή «
+            <InlineMath>{'\\Delta f \\ge W'}</InlineMath>».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Οι έτοιμες μορφές που κουβαλάς για FDM (<InlineMath>{'\\Delta f \\ge 2W'}</InlineMath> για
+            AM/DSB-SC, <InlineMath>{'\\Delta f \\ge W'}</InlineMath> για SSB) υποθέτουν{' '}
+            <em>δύο κανάλια ίδιου τύπου και ίδιου εύρους</em>. Εδώ δεν ισχύει ούτε το ένα ούτε το
+            άλλο: το ένα κανάλι είναι δίπλευρο και το άλλο μονόπλευρο, και τα εύρη διαφέρουν κατά
+            12×. Ο γενικός κανόνας που δουλεύει πάντα είναι:{' '}
+            <em>
+              ελάχιστο κενό φερόντων = (όσο προεξέχει το κάτω κανάλι δεξιά από το φέρον του) + (όσο
+              προεξέχει το πάνω κανάλι αριστερά από το δικό του)
+            </em>
+            . Για δύο DSB κανάλια με μηνύματα ίδιου bandwidth{' '}
+            <InlineMath>B</InlineMath> δίνει <InlineMath>{'B + B = 2B'}</InlineMath> — να από πού
+            βγαίνει ο σχολικός <InlineMath>{'\\Delta f \\ge 2W'}</InlineMath> (τα συνηθισμένα θέματα
+            γράφουν <InlineMath>{'B = W'}</InlineMath>). Εδώ όμως{' '}
+            <InlineMath>{'B_m = W/2'}</InlineMath> και το πάνω κανάλι δεν προεξέχει καθόλου
+            αριστερά, οπότε δίνει{' '}
+            <InlineMath>{'\\tfrac{W}{2} + 0 = \\tfrac{W}{2}'}</InlineMath>. Χτίσ&rsquo; το πάντα έτσι
+            και έχεις δίκιο για οποιονδήποτε συνδυασμό σημάτων και σχημάτων.
+          </span>
+        </div>
+
+        <p>
+          <strong>(4) Η δεύτερη συνθήκη — να μη διπλώσει κανένα κανάλι στο DC.</strong> Κάθε
+          πραγματικό σήμα έχει και κατοπτρικό φάσμα στις αρνητικές συχνότητες. Το DSB-SC κανάλι έχει
+          το κάτοπτρό του στο <InlineMath>{'[-f_1 - W/2,\\; -f_1 + W/2]'}</InlineMath>· αν το{' '}
+          <InlineMath>{'f_1'}</InlineMath> είναι πολύ χαμηλό, το κάτοπτρο περνάει το μηδέν και μπαίνει
+          στις θετικές συχνότητες, πάνω στο ίδιο του το αντίγραφο — και τότε το σήμα καταστρέφεται
+          ακόμη και χωρίς δεύτερο κανάλι. Για να μη συμβεί:
+        </p>
+        <BlockMath>{'f_1 - \\tfrac{W}{2} \\;\\ge\\; 0 \\quad\\Longleftrightarrow\\quad f_1 \\;\\ge\\; \\tfrac{W}{2}'}</BlockMath>
+        <p>
+          Το USSB κανάλι <em>δεν</em> χρειάζεται αντίστοιχη συνθήκη: η λωρίδα του ξεκινά στο{' '}
+          <InlineMath>{'f_2'}</InlineMath> και ανεβαίνει, οπότε το κάτοπτρό της ζει ολόκληρο στο{' '}
+          <InlineMath>{'[-f_2 - 6W,\\; -f_2]'}</InlineMath> και δεν πλησιάζει ποτέ το μηδέν, για
+          οποιοδήποτε <InlineMath>{'f_2 > 0'}</InlineMath>. Είναι το ίδιο πλεονέκτημα που κάνει το SSB
+          αγαπημένο της πολυπλεξίας.
+        </p>
+
+        <p>
+          <strong>(5) Το ωραίο σημείο — οι δύο συνθήκες κουμπώνουν μεταξύ τους.</strong> Βάλε τη{' '}
+          <InlineMath>{'f_1 \\ge W/2'}</InlineMath> μέσα στην απάντηση του βήματος (3). Αφού{' '}
+          <InlineMath>{'2f_1 \\ge W'}</InlineMath>, το κλάσμα <InlineMath>{'W/(2f_1)'}</InlineMath>{' '}
+          είναι το πολύ 1, άρα
+        </p>
+        <BlockMath>{'1 + \\dfrac{W}{2 f_1} \\;\\le\\; 1 + 1 \\;=\\; 2'}</BlockMath>
+        <p>
+          Με άλλα λόγια:{' '}
+          <strong>
+            αν το πρώτο κανάλι είναι καν καλοσχηματισμένο, το <InlineMath>{'n = 2'}</InlineMath>{' '}
+            αρκεί πάντα
+          </strong>
+          . Και η ισότητα πιάνεται ακριβώς στην οριακή περίπτωση{' '}
+          <InlineMath>{'f_1 = W/2'}</InlineMath>, όπου η απαίτηση γίνεται{' '}
+          <InlineMath>{'n \\ge 2'}</InlineMath> — ούτε ψιλό παραπάνω. Δεν είναι σύμπτωση, και αξίζει
+          να το δεις γεωμετρικά: <InlineMath>{'f_1 = W/2'}</InlineMath> σημαίνει ότι η DSB-SC λωρίδα
+          πιάνει ακριβώς το <InlineMath>{'[0,\\, W]'}</InlineMath>, οπότε το επόμενο φέρον πρέπει να
+          είναι τουλάχιστον στο <InlineMath>{'W'}</InlineMath>, που είναι ακριβώς{' '}
+          <InlineMath>{'2f_1'}</InlineMath>.
+        </p>
+        <p>
+          Αν λοιπόν το <InlineMath>{'n'}</InlineMath> διαβαστεί ως <strong>ακέραιος</strong> (έτσι
+          γράφεται συνήθως ένα <InlineMath>{'f_2 = n f_1'}</InlineMath>), η απάντηση είναι{' '}
+          <strong>
+            <InlineMath>{'n \\ge 2'}</InlineMath>
+          </strong>
+          , με το <InlineMath>{'n = 2'}</InlineMath> να είναι η μικρότερη επιτρεπτή τιμή. Το{' '}
+          <InlineMath>{'n = 1'}</InlineMath> είναι αδύνατο: δίνει{' '}
+          <InlineMath>{'f_2 = f_1'}</InlineMath>, δηλαδή η USSB λωρίδα ξεκινά <em>μέσα</em> στη DSB-SC
+          λωρίδα (που φτάνει ως το <InlineMath>{'f_1 + W/2'}</InlineMath>) — καθαρή επικάλυψη σε ένα
+          διάστημα πλάτους <InlineMath>{'W/2'}</InlineMath>. Και <InlineMath>{'n \\le 0'}</InlineMath>{' '}
+          δεν δίνει καν θετικό φέρον. Αν πάλι το <InlineMath>{'n'}</InlineMath> επιτρέπεται
+          πραγματικός, η ακριβής απάντηση παραμένει η <InlineMath>{'n \\ge 1 + W/(2f_1)'}</InlineMath>:
+          όσο ψηλότερο το <InlineMath>{'f_1'}</InlineMath> σε σχέση με το{' '}
+          <InlineMath>{'W'}</InlineMath>, τόσο πιο κοντά στο 1 μπορεί να πέσει το{' '}
+          <InlineMath>{'n'}</InlineMath>.
+        </p>
+
+        <div className="my-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Έλεγχος αλλάζοντας μία μόνο παράμετρο — τι θα γινόταν αν το πάνω κανάλι ήταν DSB;
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Κράτα τα ίδια δύο μηνύματα και άλλαξε <em>μόνο</em> το σχήμα διαμόρφωσης του δεύτερου
+            καναλιού, από USSB σε DSB. Τότε ένα ακριβώς βήμα της λύσης αλλάζει — το (2): η λωρίδα του{' '}
+            <InlineMath>{'k'}</InlineMath> δεν ξεκινά πια στο <InlineMath>{'f_2'}</InlineMath>, αλλά{' '}
+            <InlineMath>{'6W'}</InlineMath> <em>κάτω</em> από αυτό, δηλαδή στο{' '}
+            <InlineMath>{'f_2 - 6W'}</InlineMath>. Η ίδια ανισότητα ξαναγράφεται{' '}
+            <InlineMath>{'f_1 + \\tfrac{W}{2} \\le n f_1 - 6W'}</InlineMath> και δίνει{' '}
+            <InlineMath>{'n \\ge 1 + \\tfrac{13W}{2 f_1}'}</InlineMath>· στο οριακό{' '}
+            <InlineMath>{'f_1 = W/2'}</InlineMath> αυτό απαιτεί <InlineMath>{'n \\ge 14'}</InlineMath>{' '}
+            αντί για <InlineMath>{'n \\ge 2'}</InlineMath>. Η μονή πλευρική δεν είναι λοιπόν
+            διακοσμητική λεπτομέρεια: <em>εξαφανίζει</em> ολόκληρη την κάτω πλευρική από το κενό που
+            χρειάζεσαι. Το ίδιο ερώτημα, με συμβατικό AM στο πάνω κανάλι και{' '}
+            <InlineMath>{'k = \\mathrm{sinc}(6Wt)'}</InlineMath> (μισό-εύρος{' '}
+            <InlineMath>{'3W'}</InlineMath>), έπεσε στον{' '}
+            <Link
+              href="/practice#exercise:jun25-th2"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              Ιούνιο 2025 (ΘΕΜΑ 2)
+            </Link>{' '}
+            και έδωσε <InlineMath>{'n \\ge 1 + \\tfrac{7W}{2 f_1}'}</InlineMath> — ίδια μηχανική,
+            διαφορετικό κενό.
+          </span>
+        </div>
+
+        <p>
+          <strong>Και η άλλη ανάγνωση, για πληρότητα.</strong> Αν κάποιος έπαιρνε{' '}
+          <InlineMath>{'n < 1'}</InlineMath>, το USSB κανάλι θα έμπαινε <em>κάτω</em> από το DSB-SC.
+          Τότε η συνθήκη θα ήταν <InlineMath>{'n f_1 + 6W \\le f_1 - \\tfrac{W}{2}'}</InlineMath>,
+          δηλαδή <InlineMath>{'n \\le 1 - \\tfrac{13W}{2 f_1}'}</InlineMath> — που απαιτεί{' '}
+          <InlineMath>{'f_1 > 13W/2'}</InlineMath> για να βγει καν θετικό{' '}
+          <InlineMath>{'n'}</InlineMath>. Είναι τεχνικά έγκυρο, αλλά δεν είναι το ζητούμενο: το{' '}
+          <InlineMath>{'f_2 = n f_1'}</InlineMath> γράφεται για να τοποθετήσει το δεύτερο κανάλι{' '}
+          <em>πάνω</em> από το πρώτο.
+        </p>
+
+        <p>
+          <strong>Στην πράξη.</strong> Όλα τα παραπάνω υποθέτουν ιδανικά brick-wall φίλτρα στον δέκτη.
+          Με πραγματικά φίλτρα προσθέτεις ένα guard band ~10–20% πάνω από το θεωρητικό ελάχιστο,
+          αλλιώς οι ουρές του transition band του BPF μαζεύουν ενέργεια από το γειτονικό κανάλι
+          (crosstalk) — δες{' '}
+          <Link href="/am/multiplexing" className="text-accent underline-offset-2 hover:underline">
+            /am/multiplexing §3, §5
+          </Link>
+          .
+        </p>
+
+        <p>
+          <strong>Απάντηση:</strong> χρειάζεται <InlineMath>{'f_1 \\ge W/2'}</InlineMath> και{' '}
+          <InlineMath>{'n \\ge 1 + \\dfrac{W}{2 f_1}'}</InlineMath>, ισοδύναμα{' '}
+          <InlineMath>{'f_2 - f_1 \\ge W/2'}</InlineMath>. Επειδή{' '}
+          <InlineMath>{'1 + W/(2f_1) \\le 2'}</InlineMath> για κάθε επιτρεπτό{' '}
+          <InlineMath>{'f_1'}</InlineMath>, η μικρότερη ακέραια τιμή που δουλεύει πάντα είναι{' '}
+          <strong>
+            <InlineMath>{'n = 2'}</InlineMath>
+          </strong>
+          · το <InlineMath>{'n = 1'}</InlineMath> αποκλείεται.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th2-12',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 2.12',
+    paperPage: 1,
+    weight: 8,
+    title: 'Συνολική ενέργεια πολυπλεγμένου DSB-SC + USSB',
+    topic: 'am',
+    difficulty: 'hard',
+    prerequisites: ['am/multiplexing', 'am/dsb-sc', 'am/ssb', 'foundations/fourier-transform'],
+    formulaIds: ['signal-energy', 'parseval', 'fourier-pair-rect', 'fourier-pair-tri', 'dsb-sc-signal', 'ssb-signal', 'hilbert'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο ορισμός της ενέργειας{' '}
+        <InlineMath>{'\\mathcal{E}_x = \\int_{-\\infty}^{\\infty}|x(t)|^2\\,dt'}</InlineMath>,
+        η <strong>Parseval</strong>{' '}
+        <InlineMath>{'\\int |x(t)|^2\\,dt = \\int |X(f)|^2\\,df'}</InlineMath>{' '}
+        (το τυπολόγιο τυπώνει μόνο την ισότητα ενέργειας του Hilbert, όχι τη γενική μορφή
+        χρόνου↔συχνότητας), ο τύπος DSB-SC{' '}
+        <InlineMath>{'x_{DSB}(t) = A_c\\,m(t)\\cos(2\\pi f_c t)'}</InlineMath>{' '}
+        και ο τύπος USSB{' '}
+        <InlineMath>{'x_{USB}(t) = A_c m(t)\\cos(2\\pi f_c t) - A_c\\hat{m}(t)\\sin(2\\pi f_c t)'}</InlineMath>.{' '}
+        <strong>✓ Δίνονται στο τυπολόγιο</strong> τα τρία εργαλεία που κάνουν τη δουλειά: τα
+        ζεύγη <InlineMath>{'\\Pi \\leftrightarrow \\mathrm{sinc}'}</InlineMath> και{' '}
+        <InlineMath>{'\\Lambda \\leftrightarrow \\mathrm{sinc}^2'}</InlineMath>, και η σχέση
+        Hilbert{' '}
+        <InlineMath>{'\\mathcal{F}\\{\\hat m\\} = -j\\,\\mathrm{sgn}(f)\\,M(f)'}</InlineMath>.
+        Από αυτά, τα δύο ολοκληρώματα ενέργειας{' '}
+        <InlineMath>{'\\int \\mathrm{sinc}^2(at)\\,dt = 1/a'}</InlineMath> και{' '}
+        <InlineMath>{'\\int \\mathrm{sinc}^4(at)\\,dt = 2/(3a)'}</InlineMath> βγαίνουν σε δύο
+        γραμμές — δεν τα αποστηθίζεις· η παραγωγή τους είναι στο{' '}
+        <Link
+          href="/foundations/fourier-transform"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Fourier transform §9.2
+        </Link>.{' '}
+        Το ίδιο εργαλείο χρειάστηκε και στο{' '}
+        <Link
+          href="/practice#exercise:jun25-th2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 2
+        </Link>{' '}
+        (ίδιο setup και ίδια ερώτηση ενέργειας — αλλά με συμβατικό AM στο δεύτερο κανάλι,
+        οπότε εκεί η φέρουσα απειρίζει το αποτέλεσμα), στο{' '}
+        <Link
+          href="/practice#exercise:proodos26-12"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Απρ. 2026 ΘΕΜΑ 12
+        </Link>{' '}
+        (ίδια πλήρης μορφή USSB) και στο{' '}
+        <Link
+          href="/practice#exercise:pb25-th4-nonlinear"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Πρόοδ. Β 2025 ΘΕΜΑ 4
+        </Link>{' '}
+        (ενέργεια παλμού για κανονικοποίηση).
+      </>
+    ),
+    statement: (
+      <>
+        <p>
+          <strong>ΘΕΜΑ 2 — κοινή εκφώνηση:</strong> Έστω τα δυο βασικά σήματα πληροφορίας{' '}
+          <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και{' '}
+          <InlineMath>{'k(t) = \\mathrm{sinc}^2(6Wt)'}</InlineMath>. Το{' '}
+          <InlineMath>{'m(t)'}</InlineMath> διαμορφώνεται κατά <strong>AM-DSB-SC</strong> με
+          φέρον <InlineMath>{'f_1'}</InlineMath> και το <InlineMath>{'k(t)'}</InlineMath>{' '}
+          διαμορφώνεται κατά <strong>AM-USSB</strong> με φέρον{' '}
+          <InlineMath>{'f_2 = n f_1'}</InlineMath> αντίστοιχα. Τα δυο σήματα πολυπλέκονται
+          (προστίθενται) σ' έναν πολυπλέκτη.
+        </p>
+        <p>
+          <strong>Ερώτημα 12 (8%):</strong> Υπολογίστε τη συνολική ενέργεια του πολυπλεγμένου
+          σήματος.
+        </p>
+        <p className="text-sm text-fg-muted">
+          (Το θέμα δεν δίνει πουθενά πλάτος φέροντος. Κρατάμε λοιπόν το{' '}
+          <InlineMath>{'A_c'}</InlineMath> συμβολικά και για τα δύο κανάλια· αν προτιμάς{' '}
+          <InlineMath>{'A_c = 1'}</InlineMath>, απλώς εξαφανίζεται από το τελικό κλάσμα.)
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-900 dark:text-amber-100">
+          <strong>Πρώτη γραμμή της λύσης — δήλωσε τις δύο συμβάσεις, πριν γράψεις αριθμό.</strong>{' '}
+          <span>
+            <strong>(i)</strong> Το θέμα δεν δίνει πλάτος φέροντος, οπότε γράφουμε{' '}
+            <InlineMath>{'A_c'}</InlineMath> και στα δύο κανάλια και το κουβαλάμε συμβολικά ως
+            το τέλος. <strong>(ii)</strong> Για την USSB χρησιμοποιούμε την{' '}
+            <strong>πλήρη μορφή</strong>{' '}
+            <InlineMath>{'x_2(t) = A_c\\big[k(t)\\cos(2\\pi f_2 t) - \\hat{k}(t)\\sin(2\\pi f_2 t)\\big]'}</InlineMath>{' '}
+            — η ίδια σύμβαση με την οποία η σελίδα{' '}
+            <Link
+              href="/am/ssb"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              SSB
+            </Link>{' '}
+            βγάζει <InlineMath>{'P_x = A_c^2 P_m'}</InlineMath>. Γιατί έχει σημασία: η «μισή»
+            (I/Q) γραφή <InlineMath>{'\\tfrac{A_c}{2}\\big[k\\cos - \\hat{k}\\sin\\big]'}</InlineMath>{' '}
+            διαφέρει κατά παράγοντα 2 στο πλάτος, άρα <strong>4 στην ενέργεια</strong>, και
+            δίνει διαφορετικό τελικό νούμερο. Καμία από τις δύο δεν είναι λάθος· λάθος είναι να
+            μην πεις ποια χρησιμοποιείς.
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — γιατί το ερώτημα λέει «ενέργεια» και όχι «ισχύς».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Το <InlineMath>{'\\mathrm{sinc}'}</InlineMath> και το{' '}
+            <InlineMath>{'\\mathrm{sinc}^2'}</InlineMath> σβήνουν καθώς ο χρόνος μεγαλώνει: ο
+            παλμός περνάει, και μετά δεν υπάρχει τίποτα. Ένα τέτοιο σήμα κουβαλάει{' '}
+            <em>πεπερασμένο συνολικό απόθεμα</em> — αυτό είναι η ενέργειά του — αλλά{' '}
+            <strong>μηδενική μέση ισχύ</strong>, γιατί μοιράζεις αυτό το πεπερασμένο απόθεμα σε
+            άπειρο χρόνο. Γι' αυτό κάθε τύπος ισχύος που ξέρεις για AM (
+            <InlineMath>{'P = A_c^2 P_m / 2'}</InlineMath> κ.ο.κ.) εδώ επιστρέφει{' '}
+            <InlineMath>0</InlineMath>: σωστός τύπος, λάθος κατηγορία σήματος. Χρειάζεσαι το{' '}
+            <em>ενεργειακό αντίστοιχο</em>, που χτίζεται με ακριβώς την ίδια κίνηση. Και επειδή
+            τα δύο κανάλια κάθονται σε διαφορετικά κομμάτια του φάσματος, όλο το 8% καταλήγει
+            σε τρία πράγματα: δύο ενέργειες baseband, τι κάνει σε καθεμιά η διαμόρφωσή της, και
+            μία πρόσθεση.
+          </span>
+        </div>
+
+        <p>
+          <strong>Βήμα 1 — οι ενέργειες των δύο μηνυμάτων. Δουλεύουμε στη συχνότητα.</strong> Ο
+          ορισμός είναι <InlineMath>{'\\mathcal{E}_x = \\int |x(t)|^2\\,dt'}</InlineMath>, αλλά
+          το <InlineMath>{'\\int \\mathrm{sinc}^2(Wt)\\,dt'}</InlineMath> δεν έχει στοιχειώδη
+          αντιπαράγωγο — δεν υπάρχει τεχνική ολοκλήρωσης που να το βγάλει στον χρόνο. Η{' '}
+          <strong>Parseval</strong> λέει ότι το ίδιο ακριβώς νούμερο μπορείς να το μετρήσεις στη
+          συχνότητα:
+        </p>
+        <BlockMath>{'\\mathcal{E}_x = \\int_{-\\infty}^{\\infty}|x(t)|^2\\,dt = \\int_{-\\infty}^{\\infty}|X(f)|^2\\,df'}</BlockMath>
+        <p>
+          Εκεί τα δύο φάσματα είναι ένα <strong>ορθογώνιο</strong> και ένα{' '}
+          <strong>τρίγωνο</strong> — δηλαδή εμβαδά. Τα δύο ζεύγη του τυπολογίου, διαβασμένα από
+          την ανάποδη μεριά, δίνουν:
+        </p>
+        <BlockMath>{'\\mathrm{sinc}(at) \\;\\leftrightarrow\\; \\tfrac{1}{a}\\,\\Pi\\!\\left(\\tfrac{f}{a}\\right), \\qquad \\mathrm{sinc}^2(at) \\;\\leftrightarrow\\; \\tfrac{1}{a}\\,\\Lambda\\!\\left(\\tfrac{f}{a}\\right)'}</BlockMath>
+        <p>
+          <strong>Για το <InlineMath>{'m'}</InlineMath></strong> (<InlineMath>{'a = W'}</InlineMath>):
+          ορθογώνιο ύψους <InlineMath>{'1/W'}</InlineMath> που ζει στο{' '}
+          <InlineMath>{'|f| \\le W/2'}</InlineMath>, άρα <em>πλάτους</em>{' '}
+          <InlineMath>{'W'}</InlineMath>. Επειδή το <InlineMath>{'\\Pi'}</InlineMath> παίρνει
+          μόνο τις τιμές 0 και 1, ισχύει <InlineMath>{'\\Pi^2 = \\Pi'}</InlineMath> — το
+          τετράγωνο δεν αλλάζει τίποτα — οπότε το ολοκλήρωμα είναι σκέτο «(ύψος)² × πλάτος»:
+        </p>
+        <BlockMath>{'E_m = \\int \\mathrm{sinc}^2(Wt)\\,dt = \\left(\\tfrac{1}{W}\\right)^{2}\\cdot W = \\tfrac{1}{W}'}</BlockMath>
+        <p>
+          <strong>Για το <InlineMath>{'k'}</InlineMath></strong> (<InlineMath>{'a = 6W'}</InlineMath>):
+          τρίγωνο με κορυφή <InlineMath>{'1/(6W)'}</InlineMath> στο{' '}
+          <InlineMath>{'f = 0'}</InlineMath>, που πέφτει γραμμικά στο μηδέν στα{' '}
+          <InlineMath>{'\\pm 6W'}</InlineMath>. Με αλλαγή μεταβλητής{' '}
+          <InlineMath>{'u = f/(6W)'}</InlineMath> (άρα{' '}
+          <InlineMath>{'df = 6W\\,du'}</InlineMath>):
+        </p>
+        <BlockMath>{'E_k = \\int \\mathrm{sinc}^4(6Wt)\\,dt = \\left(\\tfrac{1}{6W}\\right)^{2}\\cdot 6W \\int_{-1}^{1}\\Lambda^2(u)\\,du = \\tfrac{1}{6W}\\cdot\\tfrac{2}{3} = \\tfrac{1}{9W}'}</BlockMath>
+        <p>
+          Το <InlineMath>{'\\int_{-1}^{1}\\Lambda^2'}</InlineMath> είναι μία γραμμή αριθμητικής:
+          το τρίγωνο είναι <InlineMath>{'\\Lambda(u) = 1 - |u|'}</InlineMath> και μηδενίζεται
+          έξω από το <InlineMath>{'[-1,1]'}</InlineMath>, ενώ η αρτιότητά του σε αφήνει να
+          δουλέψεις μόνο στο μισό:
+        </p>
+        <BlockMath>{'\\int_{-1}^{1}(1-|u|)^2\\,du = 2\\int_{0}^{1}(1-u)^2\\,du = 2\\cdot\\tfrac{1}{3} = \\tfrac{2}{3}'}</BlockMath>
+        <p className="text-sm text-fg-muted">
+          Όλα κλάσματα — δεν χρειάζεται κομπιουτεράκι πουθενά σε αυτό το ερώτημα. Η πλήρης
+          παραγωγή των δύο κανόνων{' '}
+          <InlineMath>{'\\int \\mathrm{sinc}^2(at)dt = 1/a'}</InlineMath> και{' '}
+          <InlineMath>{'\\int \\mathrm{sinc}^4(at)dt = 2/(3a)'}</InlineMath> είναι στα{' '}
+          <Link
+            href="/foundations/fourier-transform#92-δύο-ολοκληρώματα-ενέργειας-που-θα-ξαναδείς-sinc-και-sinc"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            ολοκληρώματα ενέργειας sinc
+          </Link>.
+        </p>
+
+        <p>
+          <strong>Βήμα 2 — τα δύο bandwidths, γιατί θα τα χρειαστούμε αμέσως.</strong> Το{' '}
+          <InlineMath>{'M(f)'}</InlineMath> ζει στο <InlineMath>{'|f| \\le W/2'}</InlineMath>,
+          άρα <InlineMath>{'B_m = W/2'}</InlineMath> — <strong>όχι</strong>{' '}
+          <InlineMath>{'W'}</InlineMath>· αυτή είναι η πιο συχνή απροσεξία σε όλο το ΘΕΜΑ 2. Το{' '}
+          <InlineMath>{'K(f)'}</InlineMath> ζει στο <InlineMath>{'|f| \\le 6W'}</InlineMath>,
+          άρα <InlineMath>{'B_k = 6W'}</InlineMath> — δώδεκα φορές πλατύτερο από το{' '}
+          <InlineMath>{'m'}</InlineMath>. (Το τετράγωνο στον χρόνο είναι συνέλιξη στη συχνότητα,
+          γι' αυτό το <InlineMath>{'\\mathrm{sinc}^2'}</InlineMath> απλώνει.)
+        </p>
+
+        <p>
+          <strong>Βήμα 3 — το κανάλι DSB-SC.</strong> Με{' '}
+          <InlineMath>{'x_1(t) = A_c\\,m(t)\\cos(2\\pi f_1 t)'}</InlineMath> και{' '}
+          <InlineMath>{'\\cos^2 = \\tfrac{1}{2} + \\tfrac{1}{2}\\cos(4\\pi f_1 t)'}</InlineMath>:
+        </p>
+        <BlockMath>{'E_1 = A_c^2\\!\\int m^2(t)\\cos^2(2\\pi f_1 t)\\,dt = \\tfrac{A_c^2}{2}E_m \\;+\\; \\tfrac{A_c^2}{2}\\!\\int m^2(t)\\cos(4\\pi f_1 t)\\,dt'}</BlockMath>
+        <p>
+          Ο δεύτερος όρος <strong>μηδενίζεται ακριβώς</strong> — όχι «κατά προσέγγιση», και
+          αξίζει να δεις γιατί. Το <InlineMath>{'m^2(t)'}</InlineMath> έχει φάσμα{' '}
+          <InlineMath>{'M * M'}</InlineMath>, που ζει το πολύ ως το{' '}
+          <InlineMath>{'2B_m = W'}</InlineMath>. Το ολοκλήρωμα{' '}
+          <InlineMath>{'\\int m^2\\cos(4\\pi f_1 t)\\,dt'}</InlineMath> είναι κυριολεκτικά αυτό
+          το φάσμα <em>διαβασμένο στη θέση</em> <InlineMath>{'\\pm 2f_1'}</InlineMath>. Αρκεί
+          λοιπόν <InlineMath>{'2f_1 > W'}</InlineMath>, δηλαδή{' '}
+          <InlineMath>{'f_1 > B_m'}</InlineMath> — κάτι που η συνθήκη μη-επικάλυψης του
+          προηγούμενου ερωτήματος ήδη σου εξασφαλίζει (αλλιώς το κάτοπτρο του καναλιού στο{' '}
+          <InlineMath>{'-f_1'}</InlineMath> θα έμπαινε στις θετικές συχνότητες). Άρα:
+        </p>
+        <BlockMath>{'E_1 = \\tfrac{A_c^2}{2}\\,E_m = \\tfrac{A_c^2}{2}\\cdot\\tfrac{1}{W} = \\tfrac{A_c^2}{2W}'}</BlockMath>
+
+        <p>
+          <strong>Βήμα 4 — το κανάλι USSB.</strong> Υψώνοντας στο τετράγωνο την πλήρη μορφή (και
+          με <InlineMath>{'2\\sin\\theta\\cos\\theta = \\sin 2\\theta'}</InlineMath> για τον
+          σταυρωτό όρο):
+        </p>
+        <BlockMath>{'\\big[k\\cos(2\\pi f_2 t) - \\hat{k}\\sin(2\\pi f_2 t)\\big]^2 = k^2\\cos^2(2\\pi f_2 t) + \\hat{k}^2\\sin^2(2\\pi f_2 t) - k\\,\\hat{k}\\,\\sin(4\\pi f_2 t)'}</BlockMath>
+        <p>
+          Γράψε <InlineMath>{'\\cos^2 = \\tfrac{1}{2} + \\tfrac{1}{2}\\cos(4\\pi f_2 t)'}</InlineMath>{' '}
+          και <InlineMath>{'\\sin^2 = \\tfrac{1}{2} - \\tfrac{1}{2}\\cos(4\\pi f_2 t)'}</InlineMath>.{' '}
+          <em>Κάθε</em> κομμάτι που ταλαντώνεται στο <InlineMath>{'2f_2'}</InlineMath> φεύγει με
+          το ίδιο ακριβώς επιχείρημα του Βήματος 3: τα φάσματα των{' '}
+          <InlineMath>{'k^2'}</InlineMath>, <InlineMath>{'\\hat{k}^2'}</InlineMath> και{' '}
+          <InlineMath>{'k\\hat{k}'}</InlineMath> ζουν όλα μέσα στο{' '}
+          <InlineMath>{'|f| \\le 2B_k'}</InlineMath>, και το ολοκλήρωμα τα διαβάζει στο{' '}
+          <InlineMath>{'\\pm 2f_2'}</InlineMath> — άρα μηδέν{' '}
+          <strong>εφόσον <InlineMath>{'f_2 > B_k = 6W'}</InlineMath></strong>.{' '}
+          <strong>Τίμια:</strong> αυτή είναι <em>ξεχωριστή</em> παραδοχή, όχι δώρο του
+          ερωτήματος 10 — εκείνο δίνει μόνο{' '}
+          <InlineMath>{'f_2 \\ge f_1 + W/2 \\ge W'}</InlineMath>, που δεν αρκεί. Κάθε
+          ρεαλιστικό φέρον την ικανοποιεί με άνεση, αλλά γράψ&rsquo; την. Μένουν δύο μισά:
+        </p>
+        <BlockMath>{'E_2 = A_c^2\\left(\\tfrac{1}{2}E_k + \\tfrac{1}{2}E_{\\hat k}\\right)'}</BlockMath>
+        <p>
+          Και εδώ μπαίνει η ιδιότητα που κάνει τη διαφορά: ο{' '}
+          <strong>Hilbert διατηρεί την ενέργεια</strong>. Από τη σχέση του τυπολογίου{' '}
+          <InlineMath>{'\\mathcal{F}\\{\\hat k\\} = -j\\,\\mathrm{sgn}(f)\\,K(f)'}</InlineMath>,
+          το <InlineMath>{'-j\\,\\mathrm{sgn}(f)'}</InlineMath> έχει μέτρο 1 παντού εκτός από το
+          μεμονωμένο σημείο <InlineMath>{'f = 0'}</InlineMath>. Άρα{' '}
+          <InlineMath>{'|\\hat K(f)| = |K(f)|'}</InlineMath> σχεδόν παντού, και ένα μοναδικό
+          σημείο έχει μηδενικό «πλάτος» — δεν συνεισφέρει στο ολοκλήρωμα. Οπότε{' '}
+          <InlineMath>{'E_{\\hat k} = E_k'}</InlineMath> και τα δύο μισά ξαναγίνονται ένα
+          ολόκληρο:
+        </p>
+        <BlockMath>{'E_2 = A_c^2\\,E_k = A_c^2\\cdot\\tfrac{1}{9W} = \\tfrac{A_c^2}{9W}'}</BlockMath>
+        <p>
+          <strong>Σε απλά λόγια:</strong> η SSB πετάει τη μισή ζώνη, αλλά στην πλήρη μορφή η
+          πλευρική που επιβιώνει βγαίνει με ύψος <InlineMath>{'A_c'}</InlineMath> αντί για{' '}
+          <InlineMath>{'A_c/2'}</InlineMath> — διπλό ύψος στο μισό πλάτος. Στην ενέργεια το ύψος
+          μπαίνει στο τετράγωνο ενώ το πλάτος γραμμικά, οπότε το καθαρό αποτέλεσμα είναι{' '}
+          <em>διπλάσια</em> ενέργεια ανά μονάδα <InlineMath>{'A_c'}</InlineMath> σε σχέση με τη
+          DSB-SC. Είναι η ίδια ασυμμετρία που είδες στις ισχύες:{' '}
+          <InlineMath>{'P_{SSB} = A_c^2 P_m'}</InlineMath> έναντι{' '}
+          <InlineMath>{'P_{DSB} = A_c^2 P_m/2'}</InlineMath>.
+        </p>
+
+        <p>
+          <strong>Βήμα 5 — γιατί οι δύο ενέργειες απλώς προστίθενται.</strong> Το πολυπλεγμένο
+          σήμα είναι <InlineMath>{'g(t) = x_1(t) + x_2(t)'}</InlineMath>, οπότε:
+        </p>
+        <BlockMath>{'E_g = \\int \\big(x_1 + x_2\\big)^2\\,dt = E_1 + E_2 + 2\\!\\int x_1(t)\\,x_2(t)\\,dt'}</BlockMath>
+        <p>
+          Ο σταυρωτός όρος είναι, από Parseval,{' '}
+          <InlineMath>{'2\\!\\int X_1(f)\\,X_2^{*}(f)\\,df'}</InlineMath>. Τα δύο φάσματα όμως{' '}
+          <strong>δεν επικαλύπτονται</strong> — αυτό ακριβώς εξασφάλισε η συνθήκη για το{' '}
+          <InlineMath>{'n'}</InlineMath> στο προηγούμενο ερώτημα. Όπου το ένα είναι μη μηδενικό,
+          το άλλο είναι μηδέν, άρα το γινόμενό τους είναι <em>ταυτοτικά</em> μηδέν και ο
+          σταυρωτός όρος σβήνει:
+        </p>
+        <BlockMath>{'E_g = E_1 + E_2'}</BlockMath>
+        <p>
+          <strong>Σε απλά λόγια:</strong> δύο κανάλια που δεν πατάνε το ένα πάνω στο άλλο στη
+          συχνότητα είναι <strong>ορθογώνια</strong>, και οι ενέργειες ορθογώνιων σημάτων
+          αθροίζονται σκέτα. Αν <em>επικαλύπτονταν</em>, ο σταυρωτός όρος δεν θα ήταν μηδέν και
+          η σκέτη πρόσθεση θα ήταν λάθος — γι' αυτό αξίζει να το γράψεις ρητά ως δικαιολόγηση,
+          όχι να το θεωρήσεις δεδομένο.
+        </p>
+
+        <p>
+          <strong>Βήμα 6 — το άθροισμα.</strong> Με κοινό παρονομαστή{' '}
+          <InlineMath>{'18W'}</InlineMath>:
+        </p>
+        <BlockMath>{'E_g = \\tfrac{A_c^2}{2W} + \\tfrac{A_c^2}{9W} = \\tfrac{9A_c^2}{18W} + \\tfrac{2A_c^2}{18W} = \\boxed{\\;\\tfrac{11\\,A_c^{2}}{18\\,W}\\;}'}</BlockMath>
+        <p>
+          <strong>Έλεγχος λογικής (κάν' τον πάντα):</strong> το{' '}
+          <InlineMath>{'k'}</InlineMath> έχει <strong>9 φορές μικρότερη</strong> ενέργεια από το{' '}
+          <InlineMath>{'m'}</InlineMath>, αλλά ο κανόνας της SSB είναι{' '}
+          <strong>2 φορές πιο γενναιόδωρος</strong> από της DSB-SC. Καθαρό αποτέλεσμα: το δεύτερο
+          κανάλι συνεισφέρει <InlineMath>{'2/9'}</InlineMath> του πρώτου — και πράγματι{' '}
+          <InlineMath>{'9 + 2 = 11'}</InlineMath> στους δέκατους όγδοους. Αν βάλεις{' '}
+          <InlineMath>{'A_c = 1'}</InlineMath>, η απάντηση είναι σκέτο{' '}
+          <InlineMath>{'11/(18W)'}</InlineMath>. (Το κομπιουτεράκι σού δίνει{' '}
+          <InlineMath>{'\\approx 0.61/W'}</InlineMath> σε δύο δευτερόλεπτα, αλλά μην το
+          μετατρέψεις: το κλάσμα <em>είναι</em> η απάντηση και είναι πιο ακριβές.)
+        </p>
+
+        <p>
+          <strong>Και ο δρόμος που δεν χρειάζεται καθόλου την παραδοχή.</strong> Στη συχνότητα
+          η πλήρης USSB μορφή δίνει ακριβώς{' '}
+          <InlineMath>{'X_2(f) = A_c K(f-f_2)'}</InlineMath> για{' '}
+          <InlineMath>{'f > f_2'}</InlineMath>, <InlineMath>{'A_c K(f+f_2)'}</InlineMath> για{' '}
+          <InlineMath>{'f < -f_2'}</InlineMath>, και μηδέν ενδιάμεσα (ο όρος με τον Hilbert
+          ακυρώνει την κάτω πλευρική). Οπότε{' '}
+          <InlineMath>{'\\int |X_2|^2\\,df = A_c^2\\!\\int |K|^2\\,df = A_c^2 E_k'}</InlineMath>{' '}
+          για <em>κάθε</em> <InlineMath>{'f_2 > 0'}</InlineMath>. Ίδιο νούμερο, χωρίς καμία
+          υπόθεση για το πόσο ψηλά κάθεται το φέρον — και μια καλή απόδειξη ότι δεν έχεις
+          κάνει λάθος στους τριγωνομετρικούς όρους.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-900 dark:text-amber-100">
+          <strong>Η άλλη σύμβαση — τι αλλάζει και τι όχι.</strong> Αν γράψεις τη μισή (I/Q)
+          μορφή <InlineMath>{'\\tfrac{A_c}{2}\\big[k\\cos - \\hat{k}\\sin\\big]'}</InlineMath> —
+          αυτή που παίρνεις <em>κυριολεκτικά</em> φιλτράροντας τη μία πλευρική ενός DSB-SC — τότε{' '}
+          <InlineMath>{'E_2 = A_c^2 E_k / 4 = A_c^2/(36W)'}</InlineMath> και το άθροισμα γίνεται{' '}
+          <InlineMath>{'\\tfrac{A_c^2}{2W} + \\tfrac{A_c^2}{36W} = \\tfrac{19A_c^2}{36W}'}</InlineMath>.
+          Το <InlineMath>{'E_1'}</InlineMath> δεν αλλάζει καθόλου — μόνο το USSB κανάλι
+          επηρεάζεται. Δήλωσε τη μορφή στην αρχή και το νούμερό σου είναι υπερασπίσιμο ό,τι κι
+          αν περίμενε το θέμα. Η πλήρης μηχανή (και οι δύο εκδοχές) είναι στην{' '}
+          <Link
+            href="/am/multiplexing"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            ενέργεια του πολυπλεγμένου σήματος
+          </Link>.
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th2-13',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 2.13',
+    paperPage: 2,
+    weight: 5,
+    title: 'Ανιχνευτής περιβάλλουσας + BPF σε DSB-SC και USSB',
+    topic: 'am',
+    difficulty: 'medium',
+    prerequisites: ['am/modulator-demodulator', 'am/dsb-sc', 'am/ssb', 'am/conventional'],
+    formulaIds: ['dsb-sc-signal', 'ssb-signal', 'iq-decomposition', 'hilbert', 'am-signal', 'am-mu', 'envelope-detector-rc'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνονται στο τυπολόγιο:</strong>{' '}
+        οι δύο μορφές που συγκρίνει το ερώτημα,{' '}
+        <InlineMath>{'x_{DSB-SC}(t) = A_c\\,m(t)\\cos(2\\pi f_1 t)'}</InlineMath> και{' '}
+        <InlineMath>{'x_{USSB}(t) = A_c\\,k(t)\\cos(2\\pi f_2 t) - A_c\\,\\hat{k}(t)\\sin(2\\pi f_2 t)'}</InlineMath>,{' '}
+        η μορφή του συμβατικού AM{' '}
+        <InlineMath>{'x_{AM}(t) = [A_c + m(t)]\\cos(2\\pi f_c t)'}</InlineMath> με{' '}
+        <InlineMath>{'\\mu = |m|_{\\max}/A_c \\le 1'}</InlineMath> (τη χρειάζεσαι για την
+        αντιπαραβολή), και πάνω απ&apos; όλα ο κανόνας της περιβάλλουσας{' '}
+        <InlineMath>{'V(t) = \\sqrt{x_I^2(t) + x_Q^2(t)}'}</InlineMath> — αυτός μόνος του
+        απαντά και στα δύο κανάλια. Εκτός τυπολογίου είναι και το παράθυρο του RC,{' '}
+        <InlineMath>{'\\tfrac{1}{f_c} \\ll RC \\ll \\tfrac{1}{W}'}</InlineMath>.{' '}
+        <strong>✓ Στο τυπολόγιο</strong> θα βρεις μόνο τη σχέση Hilbert{' '}
+        <InlineMath>{'\\mathcal{F}\\{\\hat{k}(t)\\} = -j\\,\\mathrm{sgn}(f)\\,K(f)'}</InlineMath>,
+        που εδώ κάνει όλη τη δουλειά: δίνει αμέσως{' '}
+        <InlineMath>{'|\\hat{K}(f)| = |K(f)|'}</InlineMath>, άρα το{' '}
+        <InlineMath>{'\\hat{k}'}</InlineMath> δεν γίνεται να είναι μηδέν. Το ίδιο εργαλείο
+        χρειάστηκε και στο{' '}
+        <Link
+          href="/practice#exercise:jun25-th2"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 2
+        </Link>{' '}
+        (σχεδόν ίδια εκφώνηση, αλλά εκεί το δεύτερο κανάλι είναι συμβατικό AM — και η
+        απάντηση βγαίνει <em>αντίστροφη</em>) και στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th1-4"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 1.4
+        </Link>{' '}
+        (οι συνθήκες λειτουργίας του ανιχνευτή περιβάλλουσας, γυμνές).
+      </>
+    ),
+    statement: (
+      <>
+        <p>
+          <strong>Κοινή εκφώνηση (ερωτήματα 9–13).</strong> Έστω τα δυο βασικά σήματα
+          πληροφορίας <InlineMath>{'m(t) = \\mathrm{sinc}(Wt)'}</InlineMath> και{' '}
+          <InlineMath>{'k(t) = \\mathrm{sinc}^2(6Wt)'}</InlineMath>. Το{' '}
+          <InlineMath>{'m(t)'}</InlineMath> διαμορφώνεται κατά <strong>AM-DSB-SC</strong> με
+          φέρον <InlineMath>{'f_1'}</InlineMath> και το <InlineMath>{'k(t)'}</InlineMath>{' '}
+          διαμορφώνεται κατά <strong>AM-USSB</strong> με φέρον{' '}
+          <InlineMath>{'f_2 = n f_1'}</InlineMath> αντίστοιχα. Τα δυο σήματα πολυπλέκονται
+          (προστίθενται) σ&rsquo; έναν πολυπλέκτη.
+        </p>
+        <p>
+          Για την αποδιαμόρφωση, διατίθεται μόνο ένας ανιχνευτής περιβάλλουσας και ένα
+          ζωνοπερατό φίλτρο. Είναι δυνατόν να ανιχνεύσουμε κάποιο από τα δύο σήματα;
+          Αιτιολογήστε γιατί.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Διαίσθηση πρώτα — ο ανιχνευτής περιβάλλουσας είναι ένα «υψόμετρο», όχι δέκτης.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Ένα διαμορφωμένο σήμα είναι μια <em>γρήγορη</em> ταλάντωση (το φέρον) της οποίας
+            το <em>ύψος</em> κουνιέται αργά. Ο ανιχνευτής περιβάλλουσας — μια δίοδος κι ένα
+            RC — μετράει <strong>μόνο αυτό το ύψος</strong>: δεν βλέπει καθόλου τη φάση της
+            ταλάντωσης και δεν μπορεί να βγάλει αρνητικό αριθμό, γιατί ένα ύψος είναι εξ
+            ορισμού μη αρνητικό. Άρα το πραγματικό ερώτημα δεν είναι «πόσο καλός είναι ο
+            δέκτης» αλλά{' '}
+            <strong>
+              «φρόντισε ο πομπός ώστε το ύψος του σήματος να <em>είναι</em> το μήνυμα;»
+            </strong>{' '}
+            Θα το ελέγξουμε κανάλι-κανάλι. Και τα δύο κόβονται — αλλά, και αυτό είναι το
+            ενδιαφέρον, για <em>διαφορετικό λόγο</em> το καθένα.
+          </span>
+        </div>
+
+        <p>
+          <strong>
+            (1) Το εργαλείο: γράψε κάθε κανάλι σε μορφή I/Q και διάβασε τι μετράει ο
+            ανιχνευτής.
+          </strong>{' '}
+          Κάθε bandpass σήμα με φέρον <InlineMath>{'f_c'}</InlineMath> γράφεται με έναν και
+          μοναδικό τρόπο ως άθροισμα μιας συνιστώσας «σε φάση» και μιας «σε τετραγωνισμό»:
+        </p>
+        <BlockMath>{'x(t) = x_I(t)\\cos(2\\pi f_c t) - x_Q(t)\\sin(2\\pi f_c t) = V(t)\\cos\\big(2\\pi f_c t + \\theta(t)\\big)'}</BlockMath>
+        <p>
+          και το ύψος αυτής της ταλάντωσης είναι{' '}
+          <InlineMath>{'V(t) = \\sqrt{x_I^2(t) + x_Q^2(t)}'}</InlineMath>.{' '}
+          <strong>Τι λέει στα απλά:</strong> ό,τι κι αν έστειλε ο πομπός, ο ανιχνευτής
+          περιβάλλουσας γυρίζει πίσω αυτή τη ρίζα — τίποτε άλλο. Οπότε ο ανιχνευτής σου δίνει
+          το <InlineMath>{'x_I(t)'}</InlineMath> (δηλαδή, ελπίζουμε, το μήνυμα) μόνο αν
+          περάσουν <em>δύο</em> έλεγχοι, ο ένας μετά τον άλλο:
+        </p>
+        <BlockMath>{'V = \\sqrt{x_I^2 + x_Q^2} \\;\\xrightarrow{\\;\\text{(A)}\\; x_Q \\equiv 0\\;}\\; |x_I| \\;\\xrightarrow{\\;\\text{(B)}\\; x_I \\ge 0\\;}\\; x_I'}</BlockMath>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>(A) Καμία συνιστώσα σε τετραγωνισμό</strong> —{' '}
+            <InlineMath>{'x_Q(t) \\equiv 0'}</InlineMath>. Αλλιώς η ρίζα ανακατεύει δύο
+            διαφορετικές κυματομορφές και το αποτέλεσμα δεν είναι καμία από τις δύο.
+          </li>
+          <li>
+            <strong>(B) Το <InlineMath>{'x_I'}</InlineMath> να μην πηγαίνει ποτέ αρνητικό</strong> —{' '}
+            <InlineMath>{'x_I(t) \\ge 0'}</InlineMath> για κάθε{' '}
+            <InlineMath>t</InlineMath>. Αλλιώς η απόλυτη τιμή αναδιπλώνει τα αρνητικά κομμάτια
+            προς τα πάνω και το πρόσημο χάνεται.
+          </li>
+        </ul>
+        <p>
+          Αυτή η λίστα των δύο σημείων είναι όλη η άσκηση. Τη διατρέχουμε δύο φορές.
+        </p>
+
+        <p>
+          <strong>(2) Πρώτα το εύκολο μέρος: το ζωνοπερατό φίλτρο κάνει τη δουλειά του.</strong>{' '}
+          Από τα προηγούμενα ερωτήματα του ίδιου ΘΕΜΑτος, τα δύο κανάλια κάθονται σε{' '}
+          <em>ξένες</em> ζώνες συχνοτήτων: το <InlineMath>{'m'}</InlineMath> έχει{' '}
+          <InlineMath>{'M(f) = \\tfrac{1}{W}\\Pi(f/W)'}</InlineMath> (μη μηδενικό για{' '}
+          <InlineMath>{'|f| \\le W/2'}</InlineMath>), οπότε το DSB-SC κανάλι πιάνει το{' '}
+          <InlineMath>{'[f_1 - \\tfrac{W}{2},\\, f_1 + \\tfrac{W}{2}]'}</InlineMath> — εύρος{' '}
+          <InlineMath>W</InlineMath>· το <InlineMath>{'k'}</InlineMath> έχει{' '}
+          <InlineMath>{'K(f) = \\tfrac{1}{6W}\\Lambda(f/6W)'}</InlineMath> (μη μηδενικό για{' '}
+          <InlineMath>{'|f| \\le 6W'}</InlineMath>), οπότε η <em>άνω</em> πλευρική του πιάνει
+          το <InlineMath>{'[f_2,\\, f_2 + 6W]'}</InlineMath> — εύρος{' '}
+          <InlineMath>{'6W'}</InlineMath>. Η συνθήκη μη-επικάλυψης που βρήκαμε στο ερώτημα 10
+          εγγυάται ακριβώς ότι αυτά τα δύο διαστήματα δεν τέμνονται. Άρα με{' '}
+          <em>ένα</em> ζωνοπερατό φίλτρο μπορούμε να παραδώσουμε στον ανιχνευτή{' '}
+          <strong>καθαρά ένα κανάλι, όποιο θέλουμε</strong>.
+        </p>
+        <p>
+          <strong>Κράτα το:</strong> ο περιορισμός του θέματος{' '}
+          <em>δεν</em> είναι ο διαχωρισμός των καναλιών — αυτός λύνεται. Ο περιορισμός είναι
+          τι κάνει ο ανιχνευτής <em>αφού</em> του δώσεις το κανάλι. Αν στην εξέταση απαντήσεις
+          «δεν γίνεται γιατί μπερδεύονται τα δύο σήματα», απαντάς σε άλλη ερώτηση.
+        </p>
+
+        <p>
+          <strong>(3) Κανάλι 1 — DSB-SC: περνάει τον έλεγχο (A), κόβεται στον (B).</strong>{' '}
+          Το DSB-SC είναι σκέτος πολλαπλασιασμός με συνημίτονο:{' '}
+          <InlineMath>{'x_m(t) = A_c\\,m(t)\\cos(2\\pi f_1 t)'}</InlineMath>. Συγκρίνοντας με
+          τη μορφή I/Q διαβάζουμε κατευθείαν{' '}
+          <InlineMath>{'x_I = A_c\\,m(t)'}</InlineMath> και{' '}
+          <InlineMath>{'x_Q = 0'}</InlineMath> — δεν υπάρχει όρος με ημίτονο. Ο έλεγχος (A)
+          περνάει, οπότε
+        </p>
+        <BlockMath>{'V_m(t) = \\sqrt{(A_c m)^2 + 0^2} = A_c\\,|m(t)|'}</BlockMath>
+        <p>
+          Τώρα ο έλεγχος (B): <em>αλλάζει ποτέ πρόσημο το</em>{' '}
+          <InlineMath>{'\\mathrm{sinc}(Wt)'}</InlineMath>; Ναι, και το βλέπουμε χωρίς πίνακα
+          τιμών. Με τη σύμβαση του μαθήματος{' '}
+          <InlineMath>{'\\mathrm{sinc}(Wt) = \\dfrac{\\sin(\\pi W t)}{\\pi W t}'}</InlineMath>,
+          ο παρονομαστής είναι θετικός για{' '}
+          <InlineMath>{'t > 0'}</InlineMath>, ενώ ο αριθμητής{' '}
+          <InlineMath>{'\\sin(\\pi W t)'}</InlineMath> γίνεται <strong>αρνητικός</strong> σε
+          όλο το διάστημα <InlineMath>{'1 < Wt < 2'}</InlineMath> (εκεί το όρισμα{' '}
+          <InlineMath>{'\\pi W t'}</InlineMath> βρίσκεται μεταξύ{' '}
+          <InlineMath>{'\\pi'}</InlineMath> και <InlineMath>{'2\\pi'}</InlineMath>). Άρα ο
+          πρώτος πλευρικός λοβός του <InlineMath>{'m'}</InlineMath> είναι κάτω από τον άξονα —
+          και το ίδιο κάθε δεύτερος λοβός μετά από αυτόν. Ο έλεγχος (B) αποτυγχάνει.
+        </p>
+        <figure className="my-4">
+          <svg
+            viewBox="0 0 480 146"
+            className="block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+            role="img"
+            aria-label="Το m(t)=sinc(Wt) περνά κάτω από τον άξονα στους πλευρικούς λοβούς, ενώ η έξοδος του ανιχνευτή περιβάλλουσας είναι το |m(t)| με τους αρνητικούς λοβούς αναδιπλωμένους προς τα πάνω"
+          >
+            <line x1="20" y1="100" x2="452" y2="100" stroke="currentColor" strokeOpacity="0.45" />
+            <polygon points="458,100 448,96 448,104" fill="currentColor" fillOpacity="0.5" />
+            <line x1="240" y1="100" x2="240" y2="36" stroke="currentColor" strokeOpacity="0.25" />
+            <line x1="60" y1="97" x2="60" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="120" y1="97" x2="120" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="180" y1="97" x2="180" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="300" y1="97" x2="300" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="360" y1="97" x2="360" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="420" y1="97" x2="420" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <text x="60" y="122" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">−3</text>
+            <text x="120" y="122" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">−2</text>
+            <text x="180" y="122" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">−1</text>
+            <text x="240" y="122" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">0</text>
+            <text x="300" y="122" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">1</text>
+            <text x="360" y="122" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">2</text>
+            <text x="420" y="122" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">3</text>
+            <polyline
+              fill="none"
+              stroke="rgb(59, 130, 246)"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+              points="30,105.5 36,105.3 42,104.7 48,103.5 54,101.9 60,100 66,98 72,96 78,94.3 84,93 90,92.4 96,92.4 102,93.3 108,94.9 114,97.2 120,100 126,103.1 132,106.2 138,109.1 144,111.4 150,112.7 156,113 162,111.9 168,109.4 174,105.4 180,100 186,93.4 192,86 198,77.9 204,69.7 210,61.8 216,54.6 222,48.5 228,43.9 234,41 240,40 246,41 252,43.9 258,48.5 264,54.6 270,61.8 276,69.7 282,77.9 288,86 294,93.4 300,100 306,105.4 312,109.4 318,111.9 324,113 330,112.7 336,111.4 342,109.1 348,106.2 354,103.1 360,100 366,97.2 372,94.9 378,93.3 384,92.4 390,92.4 396,93 402,94.3 408,96 414,98 420,100 426,101.9 432,103.5 438,104.7 444,105.3 450,105.5"
+            />
+            <polyline
+              fill="none"
+              stroke="rgb(239, 68, 68)"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+              strokeDasharray="4 3"
+              points="30,94.5 36,94.7 42,95.3 48,96.5 54,98.1 60,100 66,98 72,96 78,94.3 84,93 90,92.4 96,92.4 102,93.3 108,94.9 114,97.2 120,100 126,96.9 132,93.8 138,90.9 144,88.6 150,87.3 156,87 162,88.1 168,90.6 174,94.6 180,100 186,93.4 192,86 198,77.9 204,69.7 210,61.8 216,54.6 222,48.5 228,43.9 234,41 240,40 246,41 252,43.9 258,48.5 264,54.6 270,61.8 276,69.7 282,77.9 288,86 294,93.4 300,100 306,94.6 312,90.6 318,88.1 324,87 330,87.3 336,88.6 342,90.9 348,93.8 354,96.9 360,100 366,97.2 372,94.9 378,93.3 384,92.4 390,92.4 396,93 402,94.3 408,96 414,98 420,100 426,98.1 432,96.5 438,95.3 444,94.7 450,94.5"
+            />
+            <line x1="24" y1="20" x2="38" y2="20" stroke="rgb(59, 130, 246)" strokeWidth="1.8" />
+            <text x="43" y="23" fontSize="9" fill="currentColor" fillOpacity="0.85">m(t) = sinc(Wt) — το μήνυμα</text>
+            <line x1="24" y1="34" x2="38" y2="34" stroke="rgb(239, 68, 68)" strokeWidth="1.8" strokeDasharray="4 3" />
+            <text x="43" y="37" fontSize="9" fill="currentColor" fillOpacity="0.85">έξοδος ανιχνευτή = |m(t)|</text>
+            <text x="240" y="138" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.6" fontStyle="italic">χρόνος t, σε μονάδες 1/W</text>
+          </svg>
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Οι δύο καμπύλες ταυτίζονται μόνο στον κεντρικό λοβό (
+            <InlineMath>{'|Wt| < 1'}</InlineMath>), εκεί που το{' '}
+            <InlineMath>{'m'}</InlineMath> είναι ήδη θετικό. Παντού αλλού ο ανιχνευτής
+            επιστρέφει τον <strong>καθρέφτη</strong> του λοβού: οι λοβοί που ανήκουν κάτω από
+            τον άξονα εμφανίζονται πάνω. Ο πρώτος τέτοιος λοβός φτάνει περίπου το{' '}
+            <InlineMath>{'-0.217'}</InlineMath> γύρω στο{' '}
+            <InlineMath>{'Wt \\approx 1.43'}</InlineMath> (νούμερο για την εικόνα — για την
+            απάντηση αρκεί ότι είναι αρνητικός).
+          </figcaption>
+        </figure>
+        <p>
+          <strong>Γιατί αυτό δεν επιδιορθώνεται μετά.</strong> Η αναδίπλωση{' '}
+          <InlineMath>{'m \\to |m|'}</InlineMath> <em>πετάει</em> μια πληροφορία: το πρόσημο
+          κάθε λοβού. Αυτή η πληροφορία δεν υπάρχει πια στην έξοδο, οπότε{' '}
+          <strong>καμία γραμμική επεξεργασία μετά τον ανιχνευτή δεν τη φέρνει πίσω</strong> —
+          δεν είναι θέμα «καλύτερου φίλτρου». Σε επίπεδο σήματος, κάθε μηδενισμός του{' '}
+          <InlineMath>{'m'}</InlineMath> είναι μια αναστροφή φάσης{' '}
+          <InlineMath>{'180^\\circ'}</InlineMath> του φέροντος, και ο ανιχνευτής
+          περιβάλλουσας είναι ακριβώς τυφλός στη φάση. (Το ότι το{' '}
+          <InlineMath>{'|m|'}</InlineMath> έχει και γωνίες, άρα φάσμα πλατύτερο από{' '}
+          <InlineMath>{'W/2'}</InlineMath>, είναι το ίδιο πρόβλημα από τη μεριά της
+          συχνότητας.)
+        </p>
+
+        <p>
+          <strong>
+            (4) Κανάλι 2 — USSB: εδώ η παγίδα. Περνάει τον έλεγχο (B), κόβεται στον (A).
+          </strong>{' '}
+          Η πρώτη σκέψη είναι σχεδόν αναπόφευκτη: «το{' '}
+          <InlineMath>{'k(t) = \\mathrm{sinc}^2(6Wt)'}</InlineMath> είναι{' '}
+          <em>τετράγωνο</em>, άρα ποτέ αρνητικό, άρα δεν έχω πρόσημο να χάσω, άρα ο ανιχνευτής
+          δουλεύει». Το πρώτο μισό είναι σωστό — το <InlineMath>{'k'}</InlineMath>{' '}
+          πράγματι δεν κατεβαίνει ποτέ κάτω από το μηδέν, δηλαδή ο έλεγχος (B) περνάει. Το
+          συμπέρασμα όμως είναι λάθος, γιατί το SSB <strong>κόβεται νωρίτερα, στον (A)</strong>:
+        </p>
+        <BlockMath>{'x_k(t) = A_c\\,k(t)\\cos(2\\pi f_2 t) - A_c\\,\\hat{k}(t)\\sin(2\\pi f_2 t) \\;\\Longrightarrow\\; x_I = A_c k,\\quad x_Q = A_c \\hat{k}'}</BlockMath>
+        <p>
+          Το SSB φτιάχνεται σβήνοντας τη μία πλευρική· ο μόνος τρόπος να σβήσεις μια πλευρική
+          είναι να προσθέσεις έναν <em>δεύτερο</em> όρο σε τετραγωνισμό, τον{' '}
+          <InlineMath>{'\\hat{k}'}</InlineMath> (τον Hilbert του{' '}
+          <InlineMath>{'k'}</InlineMath>), που ακυρώνει τη μία πλευρά και αφήνει την άλλη. Αυτό
+          σημαίνει ότι το <InlineMath>{'x_Q'}</InlineMath> <em>δεν</em> είναι μηδέν, οπότε
+        </p>
+        <BlockMath>{'V_k(t) = A_c\\sqrt{k^2(t) + \\hat{k}^2(t)} \\;\\ne\\; A_c\\,k(t)'}</BlockMath>
+        <p>
+          <strong>Και γιατί δεν μπορεί ποτέ να τύχει να είναι ίσο;</strong> Θα ήταν ίσο μόνο αν{' '}
+          <InlineMath>{'\\hat{k} \\equiv 0'}</InlineMath>. Πάρε τη σχέση Hilbert του
+          τυπολογίου, <InlineMath>{'\\hat{K}(f) = -j\\,\\mathrm{sgn}(f)\\,K(f)'}</InlineMath>:
+          αφού <InlineMath>{'|-j\\,\\mathrm{sgn}(f)| = 1'}</InlineMath>, έχουμε{' '}
+          <InlineMath>{'|\\hat{K}(f)| = |K(f)|'}</InlineMath> για κάθε{' '}
+          <InlineMath>{'f \\ne 0'}</InlineMath>. Με απλά λόγια: ο Hilbert{' '}
+          <em>δεν αφαιρεί τίποτα</em> από το σήμα, μόνο του στρίβει τη φάση. Άρα{' '}
+          <InlineMath>{'\\hat{k} \\equiv 0'}</InlineMath> θα σήμαινε{' '}
+          <InlineMath>{'K \\equiv 0'}</InlineMath>, δηλαδή ότι δεν στέλνουμε τίποτα.{' '}
+          <strong>
+            Για οποιοδήποτε πραγματικό μήνυμα, το SSB έχει πάντα συνιστώσα σε τετραγωνισμό, και
+            η περιβάλλουσά του είναι πάντα διαφορετική κυματομορφή από το μήνυμα.
+          </strong>{' '}
+          Και επειδή <InlineMath>{'\\sqrt{k^2 + \\hat{k}^2} \\ge |k|'}</InlineMath>, η έξοδος
+          του ανιχνευτή κάθεται <em>πάνω</em> από το μήνυμα σχεδόν παντού.
+        </p>
+        <figure className="my-4">
+          <svg
+            viewBox="0 0 480 132"
+            className="block w-full rounded border border-border bg-bg-subtle p-2 text-fg"
+            role="img"
+            aria-label="Το k(t)=sinc²(6Wt) και η περιβάλλουσα του USSB σήματος, ρίζα του k τετράγωνο συν k-καπέλο τετράγωνο: η περιβάλλουσα είναι πολύ πλατύτερη και δεν μηδενίζεται εκεί που μηδενίζεται το k"
+          >
+            <line x1="20" y1="100" x2="452" y2="100" stroke="currentColor" strokeOpacity="0.45" />
+            <polygon points="458,100 448,96 448,104" fill="currentColor" fillOpacity="0.5" />
+            <line x1="240" y1="100" x2="240" y2="36" stroke="currentColor" strokeOpacity="0.25" />
+            <line x1="60" y1="97" x2="60" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="120" y1="97" x2="120" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="180" y1="97" x2="180" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="360" y1="97" x2="360" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <line x1="420" y1="97" x2="420" y2="103" stroke="currentColor" strokeOpacity="0.5" />
+            <text x="60" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">−3</text>
+            <text x="120" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">−2</text>
+            <text x="180" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">−1</text>
+            <text x="240" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">0</text>
+            <text x="300" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">1</text>
+            <text x="360" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">2</text>
+            <text x="420" y="114" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.75">3</text>
+            <polyline
+              fill="none"
+              stroke="rgb(59, 130, 246)"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+              points="30,99.5 36,99.5 42,99.6 48,99.8 54,99.9 60,100 66,99.9 72,99.7 78,99.5 84,99.2 90,99 96,99 102,99.2 108,99.6 114,99.9 120,100 126,99.8 132,99.4 138,98.6 144,97.9 150,97.3 156,97.2 162,97.6 168,98.5 174,99.5 180,100 186,99.3 192,96.7 198,91.9 204,84.7 210,75.7 216,65.6 222,55.8 228,47.5 234,41.9 240,40 246,41.9 252,47.5 258,55.8 264,65.6 270,75.7 276,84.7 282,91.9 288,96.7 294,99.3 300,100 306,99.5 312,98.5 318,97.6 324,97.2 330,97.3 336,97.9 342,98.6 348,99.4 354,99.8 360,100 366,99.9 372,99.6 378,99.2 384,99 390,99 396,99.2 402,99.5 408,99.7 414,99.9 420,100 426,99.9 432,99.8 438,99.6 444,99.5 450,99.5"
+            />
+            <polyline
+              fill="none"
+              stroke="rgb(239, 68, 68)"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+              strokeDasharray="4 3"
+              points="30,94.5 36,94.5 42,94.5 48,94.3 54,94 60,93.6 66,93.2 72,92.8 78,92.5 84,92.3 90,92.3 96,92.3 102,92.2 108,91.9 114,91.3 120,90.5 126,89.5 132,88.5 138,87.7 144,87.2 150,87 156,87 162,86.8 168,86 174,84.1 180,80.9 186,76.6 192,71.4 198,65.8 204,60.2 210,54.7 216,49.8 222,45.7 228,42.6 234,40.7 240,40 246,40.7 252,42.6 258,45.7 264,49.8 270,54.7 276,60.2 282,65.8 288,71.4 294,76.6 300,80.9 306,84.1 312,86 318,86.8 324,87 330,87 336,87.2 342,87.7 348,88.5 354,89.5 360,90.5 366,91.3 372,91.9 378,92.2 384,92.3 390,92.3 396,92.3 402,92.5 408,92.8 414,93.2 420,93.6 426,94 432,94.3 438,94.5 444,94.5 450,94.5"
+            />
+            <line x1="300" y1="100" x2="300" y2="80.9" stroke="rgb(239, 68, 68)" strokeOpacity="0.8" strokeDasharray="2 2" />
+            <circle cx="300" cy="100" r="2.4" fill="rgb(59, 130, 246)" />
+            <circle cx="300" cy="80.9" r="2.4" fill="rgb(239, 68, 68)" />
+            <text x="307" y="78" fontSize="9" fill="currentColor" fillOpacity="0.85">εδώ k = 0, αλλά V = A_c/π</text>
+            <line x1="24" y1="20" x2="38" y2="20" stroke="rgb(59, 130, 246)" strokeWidth="1.8" />
+            <text x="43" y="23" fontSize="9" fill="currentColor" fillOpacity="0.85">k(t) = sinc²(6Wt) — το μήνυμα</text>
+            <line x1="24" y1="34" x2="38" y2="34" stroke="rgb(239, 68, 68)" strokeWidth="1.8" strokeDasharray="4 3" />
+            <text x="43" y="37" fontSize="9" fill="currentColor" fillOpacity="0.85">έξοδος ανιχνευτή = √(k² + k̂²)</text>
+            <text x="240" y="126" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.6" fontStyle="italic">χρόνος t, σε μονάδες 1/(6W)</text>
+          </svg>
+          <figcaption className="mt-2 text-xs text-fg-subtle">
+            Και οι δύο καμπύλες είναι μη αρνητικές — δηλαδή ο «έλεγχος προσήμου» δεν πιάνει
+            τίποτα εδώ — κι όμως είναι φανερά <strong>άλλη κυματομορφή</strong>. Το πιο καθαρό
+            σημάδι: στο <InlineMath>{'t = 1/(6W)'}</InlineMath> το μήνυμα{' '}
+            <InlineMath>{'k'}</InlineMath> μηδενίζεται, ενώ ο ανιχνευτής εκεί βγάζει{' '}
+            <InlineMath>{'A_c/\\pi \\approx 0.32\\,A_c'}</InlineMath>. Ο όρος Hilbert
+            «γεμίζει» τα μηδενικά του μηνύματος. (Ο κλειστός τύπος του{' '}
+            <InlineMath>{'\\hat{k}'}</InlineMath> είναι εκτός ύλης και χρησιμεύει μόνο για να
+            σχεδιαστεί η εικόνα — στην εξέταση αρκεί το επιχείρημα ότι το{' '}
+            <InlineMath>{'\\hat{k}'}</InlineMath> δεν μπορεί να είναι μηδέν.)
+          </figcaption>
+        </figure>
+
+        <p>
+          <strong>(5) Η απάντηση.</strong>{' '}
+          <strong>Όχι — κανένα από τα δύο σήματα δεν ανιχνεύεται</strong> με ζωνοπερατό φίλτρο
+          και ανιχνευτή περιβάλλουσας. Το φίλτρο απομονώνει καθαρά όποιο κανάλι θέλουμε, αλλά:
+        </p>
+        <ul className="ml-5 list-disc space-y-1 text-fg-muted">
+          <li>
+            <strong>DSB-SC:</strong> ο ανιχνευτής βγάζει{' '}
+            <InlineMath>{'A_c|m(t)|'}</InlineMath> αντί για{' '}
+            <InlineMath>{'m(t)'}</InlineMath> — χαμένο πρόσημο, αναδιπλωμένοι λοβοί,
+            μη αναστρέψιμη παραμόρφωση.
+          </li>
+          <li>
+            <strong>USSB:</strong> ο ανιχνευτής βγάζει{' '}
+            <InlineMath>{'A_c\\sqrt{k^2(t) + \\hat{k}^2(t)}'}</InlineMath> αντί για{' '}
+            <InlineMath>{'k(t)'}</InlineMath> — ο όρος Hilbert μολύνει την έξοδο,
+            ανεξάρτητα από το ότι το <InlineMath>{'k'}</InlineMath> είναι μη αρνητικό.
+          </li>
+        </ul>
+        <p>
+          <strong>Τι θα χρειαζόταν στ&apos; αλήθεια:</strong> <em>σύμφωνη</em> (coherent)
+          αποδιαμόρφωση και για τα δύο — τοπικός ταλαντωτής κλειδωμένος στη συχνότητα{' '}
+          <em>και</em> στη φάση του φέροντος, πολλαπλασιασμός, και μετά βαθυπερατό φίλτρο. Για
+          το DSB-SC:{' '}
+          <InlineMath>{'x_m \\cdot 2\\cos(2\\pi f_1 t) = A_c m + A_c m\\cos(4\\pi f_1 t)'}</InlineMath>,
+          και το LPF (αποκοπή <InlineMath>{'W/2'}</InlineMath>) κρατά το{' '}
+          <InlineMath>{'A_c m(t)'}</InlineMath>. Για το USSB, ο ίδιος πολλαπλασιασμός με{' '}
+          <InlineMath>{'2\\cos(2\\pi f_2 t)'}</InlineMath> δίνει{' '}
+          <InlineMath>{'A_c k'}</InlineMath> συν όρους γύρω από το{' '}
+          <InlineMath>{'2f_2'}</InlineMath>, που το LPF (αποκοπή{' '}
+          <InlineMath>{'6W'}</InlineMath>) πετάει. Το SSB είναι μάλιστα το πιο απαιτητικό:
+          σφάλμα φάσης <InlineMath>{'\\varphi'}</InlineMath> στον τοπικό ταλαντωτή δίνει{' '}
+          <InlineMath>{'A_c[k\\cos\\varphi + \\hat{k}\\sin\\varphi]'}</InlineMath> — όχι απλή
+          εξασθένηση, αλλά ανάμειξη με τον Hilbert.
+        </p>
+        <p>
+          Για πληρότητα, αν <em>είχαμε</em> κάτι ανιχνεύσιμο, ο ανιχνευτής θα χρειαζόταν και
+          σωστό RC: <InlineMath>{'\\tfrac{1}{f_c} \\ll RC \\ll \\tfrac{1}{B}'}</InlineMath>{' '}
+          με <InlineMath>B</InlineMath> το εύρος του μηνύματος. Δεν φτάνουμε ποτέ σε αυτό το
+          βήμα εδώ — η αποτυχία είναι δομική, όχι θέμα ρύθμισης.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Η αντιπαραβολή που αξίζει τα περισσότερα: γιατί σε ένα σχεδόν ίδιο θέμα η απάντηση
+            είναι «ναι».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Στο{' '}
+            <Link
+              href="/practice#exercise:jun25-th2"
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              Ιούν. 2025 ΘΕΜΑ 2
+            </Link>{' '}
+            η εκφώνηση είναι σχεδόν λέξη προς λέξη η ίδια, αλλά το δεύτερο κανάλι είναι{' '}
+            <strong>συμβατικό AM</strong>, δηλαδή{' '}
+            <InlineMath>{'x_k = [A_c + k(t)]\\cos(2\\pi f_2 t)'}</InlineMath>. Ξανακάνε την
+            ίδια λίστα των δύο ελέγχων για αυτή τη μορφή: δεν υπάρχει όρος με ημίτονο, άρα{' '}
+            <InlineMath>{'x_Q = 0'}</InlineMath> — ο έλεγχος <strong>(A)</strong> περνάει,
+            ακριβώς όπως και στο DSB-SC εδώ. Και επειδή ο πομπός{' '}
+            <em>ξοδεύει ισχύ για να μεταδώσει φέρον</em>, το{' '}
+            <InlineMath>{'x_I = A_c + k(t)'}</InlineMath> έχει ένα «βάθρο»{' '}
+            <InlineMath>{'A_c'}</InlineMath>· αν αυτό είναι αρκετά μεγάλο, δηλαδή{' '}
+            <InlineMath>{'A_c \\ge |k|_{\\max}'}</InlineMath> (ισοδύναμα{' '}
+            <InlineMath>{'\\mu \\le 1'}</InlineMath>), τότε{' '}
+            <InlineMath>{'x_I \\ge 0'}</InlineMath> παντού — περνάει και ο έλεγχος{' '}
+            <strong>(B)</strong>. Ο ανιχνευτής βγάζει{' '}
+            <InlineMath>{'A_c + k(t)'}</InlineMath> και ένας πυκνωτής σε σειρά κόβει το DC.{' '}
+            <strong>Το ένα βήμα που αλλάζει είναι ακριβώς αυτό:</strong> εκεί ο πομπός πλήρωσε
+            ένα μεταδιδόμενο φέρον αρκετά μεγάλο ώστε{' '}
+            <InlineMath>{'A_c + k \\ge 0'}</InlineMath>· εδώ δεν πληρώνει κανένα από τα δύο
+            κανάλια — το DSB-SC χάνει το βάθρο (κόβεται στον B), το USSB χάνει και το βάθρο{' '}
+            <em>και</em> τη μηδενική συνιστώσα σε τετραγωνισμό (κόβεται στον A). Με άλλα λόγια,
+            η φέρουσα του συμβατικού AM δεν είναι σπατάλη: είναι <em>ακριβώς</em> το εισιτήριο
+            για φτηνό δέκτη — και τα ερωτήματα 9–13 του Ιουνίου 2026 δεν το αγόρασαν.
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Τίμια σημείωση — τι θα άλλαζε την απάντηση.</strong> Το
+          θέμα γράφει «AM-USSB» χωρίς να αναφέρει φέρον, και το SSB στο μάθημα είναι
+          κατεσταλμένου φέροντος. Αν το κανάλι έστελνε <em>και</em> φέρον πλάτους{' '}
+          <InlineMath>{'A_0'}</InlineMath> (SSB + carrier), η περιβάλλουσα θα ήταν{' '}
+          <InlineMath>{'\\sqrt{(A_0 + A_c k)^2 + (A_c\\hat{k})^2}'}</InlineMath>, που{' '}
+          <em>προσεγγίζει</em> το <InlineMath>{'A_0 + A_c k'}</InlineMath> μόνο όταν το{' '}
+          <InlineMath>{'A_0'}</InlineMath> είναι πολύ μεγαλύτερο και από το{' '}
+          <InlineMath>{'A_c|k|'}</InlineMath> και από το{' '}
+          <InlineMath>{'A_c|\\hat{k}|'}</InlineMath> — δηλαδή <em>κατά προσέγγιση</em>, ποτέ
+          ακριβώς, σε αντίθεση με το συμβατικό AM όπου η ανάκτηση είναι ακριβής. Επίσης, το{' '}
+          <InlineMath>{'A_c'}</InlineMath> εδώ ακολουθεί την πλήρη μορφή SSB{' '}
+          <InlineMath>{'A_c[k\\cos - \\hat{k}\\sin]'}</InlineMath>· η επιλογή σταθεράς δεν
+          παίζει κανέναν ρόλο στην απάντηση αυτού του ερωτήματος, γιατί μια θετική σταθερά δεν
+          αλλάζει ούτε το πρόσημο ούτε το αν υπάρχει συνιστώσα σε τετραγωνισμό.
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th3-14',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 3.14',
+    paperPage: 2,
+    weight: 5,
+    title: 'Δείκτης β από Δf και f_m',
+    topic: 'fm',
+    difficulty: 'easy',
+    prerequisites: ['fm/idea'],
+    formulaIds: ['fm-single-tone', 'fm-instantaneous-freq', 'fm-beta'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο ορισμός του δείκτη διαμόρφωσης{' '}
+        <InlineMath>{'\\beta_f = \\Delta f / W'}</InlineMath>{' '}
+        και η single-tone εκδοχή του{' '}
+        <InlineMath>{'\\beta = \\Delta f / f_m'}</InlineMath>. Ούτε ο ορισμός της
+        στιγμιαίας συχνότητας{' '}
+        <InlineMath>{'f_i(t) = \\frac{1}{2\\pi}\\,\\frac{d\\theta(t)}{dt}'}</InlineMath>{' '}
+        υπάρχει στο φυλλάδιο — κι όμως αυτός είναι που δικαιολογεί το{' '}
+        <InlineMath>{'\\Delta f = \\beta f_m'}</InlineMath>. Πρόσεξε την παγίδα: ο
+        πίνακας <InlineMath>{'J_n(\\beta)'}</InlineMath> σού <em>δίνεται</em> — υπάρχει
+        στο επίσημο τυπολόγιο, και εδώ είναι επιπλέον τυπωμένος πάνω στο ίδιο το θέμα —
+        αλλά ο τύπος που σε <em>φέρνει</em> στο{' '}
+        <InlineMath>{'\\beta'}</InlineMath> δεν είναι πουθενά. Το ίδιο εργαλείο
+        χρειάστηκε και στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th2-8"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 2.8
+        </Link>{' '}
+        (ίδια ακριβώς δομή — δίνονται <InlineMath>{'\\Delta f'}</InlineMath> και{' '}
+        <InlineMath>{'f_m'}</InlineMath>) και στο{' '}
+        <Link
+          href="/practice#exercise:jan26-th4-fm"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 4
+        </Link>{' '}
+        (εκεί το <InlineMath>{'\\beta = 3'}</InlineMath> διαβάζεται κατευθείαν από τη
+        μορφή του σήματος, χωρίς να δοθεί <InlineMath>{'\\Delta f'}</InlineMath>).
+      </>
+    ),
+    statement: (
+      <>
+        <p>
+          <strong>ΘΕΜΑ 3 — κοινή εκφώνηση (ερωτήματα 14–17).</strong> Σε πομπό FM
+          δίνεται το σήμα
+        </p>
+        <BlockMath>{'s(t) = A_c\\cos\\!\\left(2\\pi f_c t + \\beta\\sin(2\\pi f_m t)\\right)'}</BlockMath>
+        <p>
+          με <InlineMath>{'A_c = 10'}</InlineMath> V,{' '}
+          <InlineMath>{'f_m = 5'}</InlineMath> kHz και απόκλιση συχνότητας{' '}
+          <InlineMath>{'\\Delta f = 15'}</InlineMath> kHz.
+        </p>
+        <p>
+          <strong>Ερώτημα 14:</strong> Να υπολογιστεί ο δείκτης διαμόρφωσης{' '}
+          <InlineMath>{'\beta'}</InlineMath>.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Το <InlineMath>{'\\beta'}</InlineMath> είναι ήδη γραμμένο μέσα στην
+          εκφώνηση: κάθεται ως συντελεστής του{' '}
+          <InlineMath>{'\\sin(2\\pi f_m t)'}</InlineMath> μέσα στη φάση. Το πρόβλημα
+          είναι ότι δεν μας δίνεται η <strong>τιμή</strong> του — μας δίνεται η{' '}
+          <InlineMath>{'\\Delta f'}</InlineMath>. Χρειαζόμαστε λοιπόν τη γέφυρα
+          ανάμεσα σε «πόσο κουνιέται η φάση» και «πόσο κουνιέται η συχνότητα». Αυτή η
+          γέφυρα είναι η <strong>στιγμιαία συχνότητα</strong>.
+        </p>
+
+        <p>
+          <strong>Βήμα 1 — ο ορισμός που κάνει τη δουλειά.</strong> Ονομάζουμε{' '}
+          <InlineMath>{'\\theta(t)'}</InlineMath> ολόκληρη τη γωνία μέσα στο συνημίτονο
+          και γράφουμε τον ορισμό της στιγμιαίας συχνότητας:
+        </p>
+        <BlockMath>{'\\theta(t) = 2\\pi f_c t + \\beta\\sin(2\\pi f_m t), \\qquad f_i(t) \\triangleq \\frac{1}{2\\pi}\\frac{d\\theta(t)}{dt}'}</BlockMath>
+        <p>
+          Σε απλά λόγια: «σε ποια συχνότητα τρέχει το ημίτονο αυτή τη στιγμή». Ο
+          ορισμός είναι λογικός γιατί σε ένα καθαρό{' '}
+          <InlineMath>{'\\cos(2\\pi f_0 t)'}</InlineMath> η γωνία είναι{' '}
+          <InlineMath>{'2\\pi f_0 t'}</InlineMath>, η παράγωγος{' '}
+          <InlineMath>{'2\\pi f_0'}</InlineMath>, και διαιρώντας με{' '}
+          <InlineMath>{'2\\pi'}</InlineMath> παίρνεις πίσω το{' '}
+          <InlineMath>{'f_0'}</InlineMath> — όπως οφείλει.
+        </p>
+
+        <p>
+          <strong>Βήμα 2 — παραγωγίζουμε τη δοσμένη φάση.</strong> Η παράγωγος του{' '}
+          <InlineMath>{'\\beta\\sin(2\\pi f_m t)'}</InlineMath> είναι{' '}
+          <InlineMath>{'\\beta\\cdot 2\\pi f_m\\cos(2\\pi f_m t)'}</InlineMath>:
+        </p>
+        <BlockMath>{'f_i(t) = \\frac{1}{2\\pi}\\left[2\\pi f_c + \\beta\\, 2\\pi f_m\\cos(2\\pi f_m t)\\right] = f_c + \\beta f_m\\cos(2\\pi f_m t)'}</BlockMath>
+        <p>
+          Αυτή η γραμμή είναι όλο το νόημα του FM: η συχνότητα του πομπού{' '}
+          <strong>δεν</strong> είναι σταθερή, ταλαντώνεται γύρω από το{' '}
+          <InlineMath>{'f_c'}</InlineMath> με πλάτος{' '}
+          <InlineMath>{'\\beta f_m'}</InlineMath>. Το συνημίτονο φτάνει το{' '}
+          <InlineMath>1</InlineMath>, άρα η <strong>μέγιστη απόκλιση</strong> από το
+          φέρον είναι ακριβώς
+        </p>
+        <BlockMath>{'\\Delta f = \\max\\left|f_i(t) - f_c\\right| = \\beta f_m'}</BlockMath>
+
+        <p>
+          <strong>Βήμα 3 — λύνουμε ως προς β.</strong> Τώρα και τα δύο μεγέθη της
+          σχέσης είναι γνωστά:
+        </p>
+        <BlockMath>{'\\beta = \\frac{\\Delta f}{f_m} = \\frac{15\\ \\text{kHz}}{5\\ \\text{kHz}} = 3'}</BlockMath>
+        <p>
+          Οι μονάδες απλοποιούνται (kHz προς kHz), οπότε το{' '}
+          <InlineMath>{'\\beta'}</InlineMath> είναι{' '}
+          <strong>αδιάστατος αριθμός</strong> — αν σου βγει με μονάδες, κάτι έχει
+          ξεφύγει. Κομπιουτεράκι δεν χρειάζεται εδώ, είναι μία διαίρεση.
+        </p>
+
+        <p>
+          <strong>Τι σημαίνει το «3»</strong> — δύο διαβάσματα, και τα δύο σου
+          χρειάζονται στα επόμενα ερωτήματα:
+        </p>
+        <ul className="ml-5 list-disc text-fg-muted">
+          <li>
+            <strong>Στη φάση:</strong> το{' '}
+            <InlineMath>{'\\phi(t) = \\beta\\sin(2\\pi f_m t)'}</InlineMath> παίρνει
+            τιμές μέχρι <InlineMath>{'\\pm\\beta = \\pm 3'}</InlineMath> rad. Δηλαδή η
+            φάση του φέροντος τραβιέται μπρος-πίσω έως 3 ακτίνια, περίπου{' '}
+            <InlineMath>{'\\pm 172^\\circ'}</InlineMath> — σχεδόν μισός κύκλος. (Η
+            μετατροπή θέλει κομπιουτεράκι με το{' '}
+            <InlineMath>{'1\\ \\text{rad} \\approx 57.3^\\circ'}</InlineMath>· το
+            ερώτημα δεν τη ζητάει, την κάνουμε μόνο για να νιώσεις το μέγεθος.)
+          </li>
+          <li>
+            <strong>Στη συχνότητα:</strong> η <InlineMath>{'f_i'}</InlineMath> σαρώνει
+            το διάστημα{' '}
+            <InlineMath>{'[\\,f_c - 15\\ \\text{kHz},\\; f_c + 15\\ \\text{kHz}\\,]'}</InlineMath>
+            , δηλαδή <strong>3 βήματα των 5 kHz</strong> προς κάθε πλευρά. Το «σε πόσα
+            βήματα <InlineMath>{'f_m'}</InlineMath>» είναι η μονάδα μέτρησης που
+            μετράει παρακάτω, γιατί οι πλευρικές ζώνες του FM κάθονται ακριβώς ανά{' '}
+            <InlineMath>{'f_m'}</InlineMath>.
+          </li>
+        </ul>
+
+        <p>
+          <strong>Πρόσεξε τι δεν χρησιμοποιήσαμε:</strong> το{' '}
+          <InlineMath>{'A_c = 10'}</InlineMath> V δεν μπήκε πουθενά. Το{' '}
+          <InlineMath>{'\\beta'}</InlineMath> ζει αποκλειστικά μέσα στη γωνία, και το
+          πλάτος του φέροντος δεν αγγίζει τη γωνία. Το{' '}
+          <InlineMath>{'A_c'}</InlineMath> θα χρειαστεί αργότερα, στα πλάτη{' '}
+          <InlineMath>{'A_c J_n(\\beta)'}</InlineMath> των συνιστωσών του φάσματος.
+        </p>
+
+        <p>
+          <strong>Η λεπτομέρεια που κόβει μονάδες.</strong> Ο γενικός ορισμός είναι{' '}
+          <InlineMath>{'\\beta_f = \\Delta f / W'}</InlineMath>, όπου{' '}
+          <InlineMath>W</InlineMath> είναι το <strong>bandwidth του σήματος
+          πληροφορίας</strong>, όχι «μια συχνότητα». Εδώ το message είναι ένας μόνο
+          τόνος στα 5 kHz — και το βλέπεις από τη μορφή της φάσης: η φάση είναι{' '}
+          <InlineMath>{'\\phi = 2\\pi K_f\\int m'}</InlineMath>, και το ολοκλήρωμα ενός
+          συνημιτόνου δίνει ημίτονο, ακριβώς το{' '}
+          <InlineMath>{'\\sin(2\\pi f_m t)'}</InlineMath> που βλέπουμε. Άρα{' '}
+          <InlineMath>{'W = f_m = 5'}</InlineMath> kHz και ο τύπος καταρρέει στο{' '}
+          <InlineMath>{'\\beta = \\Delta f / f_m'}</InlineMath>. Αν το message είχε
+          ολόκληρο φάσμα μέχρι <InlineMath>W</InlineMath>, δεν θα υπήρχε καν{' '}
+          <InlineMath>{'f_m'}</InlineMath> να βάλεις στον παρονομαστή — εκεί γράφεις{' '}
+          <InlineMath>{'\\Delta f / W'}</InlineMath>.
+        </p>
+
+        <p>
+          <strong>Χαρακτηρισμός.</strong> Το{' '}
+          <InlineMath>{'\\beta = 3'}</InlineMath> δεν είναι καθόλου{' '}
+          <InlineMath>{'\\ll 1'}</InlineMath>, άρα πρόκειται για{' '}
+          <strong>WBFM</strong> (διαμόρφωση ευρείας ζώνης). Είναι το πρώτο σημάδι ότι
+          το φάσμα δεν θα έχει ένα μόνο ζεύγος πλευρικών, αλλά αρκετά.
+        </p>
+
+        <p>
+          <strong>Έλεγχος πριν προχωρήσεις.</strong> Ο πιο γρήγορος έλεγχος είναι να
+          πας ανάποδα: <InlineMath>{'\\beta f_m = 3\\cdot 5 = 15'}</InlineMath> kHz,
+          δηλαδή ξαναβρίσκεις τη <InlineMath>{'\\Delta f'}</InlineMath> που σου
+          έδωσαν — άρα η διαίρεση στάθηκε. Το{' '}
+          <InlineMath>{'\\beta = 3'}</InlineMath> είναι η είσοδος και για τον Carson
+          και για τον πίνακα <InlineMath>{'J_n(\\beta)'}</InlineMath> στα επόμενα
+          ερωτήματα, οπότε αξίζει να το σιγουρέψεις εδώ.{' '}
+          <strong>
+            Μην περιμένεις όμως το <InlineMath>{'\\beta'}</InlineMath> σου να πέφτει
+            πάντα πάνω σε τυπωμένη γραμμή του πίνακα.
+          </strong>{' '}
+          Ο πίνακας έχει αραιές γραμμές (0.00, 0.25, 0.5, 1.0, 1.5, 2.0, 2.41, 2.5,
+          3.0, 4.0, 5.0, 5.53, …) και ένα άλλο ερώτημα FM αυτού του ίδιου φυλλαδίου
+          βγάζει <InlineMath>{'\\beta = 0.1'}</InlineMath>, που δεν αντιστοιχεί σε
+          καμία γραμμή — και είναι σωστό. Όταν το{' '}
+          <InlineMath>{'\\beta'}</InlineMath> πέσει ανάμεσα σε δύο γραμμές, διαβάζεις
+          την πλησιέστερη ή παρεμβάλλεις· δεν είναι ένδειξη λάθους.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th3-15',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 3.15',
+    paperPage: 2,
+    weight: 5,
+    title: 'Carson — ενεργό εύρος ζώνης του FM πομπού',
+    topic: 'fm',
+    difficulty: 'easy',
+    prerequisites: ['fm/idea', 'fm/carson'],
+    formulaIds: ['fm-single-tone', 'fm-beta', 'carson', 'bessel-table', 'fm-bessel-property'],
+    memorizationNote: (
+      <>
+        <strong>⚠️ Πρέπει να θυμάσαι — δεν δίνεται στο τυπολόγιο:</strong>{' '}
+        ο κανόνας Carson{' '}
+        <InlineMath>{'B \\cong 2(\\Delta f + W) = 2W(\\beta + 1)'}</InlineMath>{' '}
+        και ο ορισμός του δείκτη διαμόρφωσης{' '}
+        <InlineMath>{'\\beta_f = \\Delta f / W'}</InlineMath>. Κανένας από τους δύο
+        δεν υπάρχει στο επίσημο τυπολόγιο — τους γράφεις απέξω. Ο πίνακας{' '}
+        <InlineMath>{'J_n(\\beta)'}</InlineMath> <em>δίνεται</em> (και σε αυτό το θέμα
+        είναι τυπωμένος πάνω στο ίδιο το φυλλάδιο), αλλά δεν σε βοηθά καθόλου να
+        θυμηθείς τον Carson — είναι δύο ανεξάρτητα πράγματα. Το ίδιο ζευγάρι τύπων
+        χρειάστηκε και στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th2-8"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 2.8
+        </Link>{' '}
+        (ίδια ακριβώς κίνηση, με{' '}
+        <InlineMath>{'\\Delta f = 50'}</InlineMath> kHz) και στο{' '}
+        <Link
+          href="/practice#exercise:jun25-th3-fm"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 3
+        </Link>{' '}
+        — εκεί ανάποδα: δίνεται το <InlineMath>B</InlineMath> και ζητείται το{' '}
+        <InlineMath>{'\\beta'}</InlineMath>.
+      </>
+    ),
+    statement: (
+      <>
+        <p>
+          <strong>ΘΕΜΑ 3 — κοινή εκφώνηση (ερωτήματα 14–17).</strong> Σε πομπό FM
+          δίνεται το σήμα
+        </p>
+        <BlockMath>{'s(t) = A_c\\cos\\!\\left(2\\pi f_c t + \\beta\\sin(2\\pi f_m t)\\right)'}</BlockMath>
+        <p>
+          με <InlineMath>{'A_c = 10'}</InlineMath> V,{' '}
+          <InlineMath>{'f_m = 5'}</InlineMath> kHz και απόκλιση συχνότητας{' '}
+          <InlineMath>{'\\Delta f = 15'}</InlineMath> kHz.
+        </p>
+        <p>
+          <strong>Ερώτημα 15:</strong> Να υπολογιστεί το εύρος ζώνης με τον κανόνα
+          Carson.
+        </p>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          <strong>Τι ρωτάει στην πραγματικότητα.</strong> Το φάσμα ενός FM σήματος δεν
+          σταματάει πουθενά: γύρω από το φέρον κάθονται sidebands στα{' '}
+          <InlineMath>{'f_c \\pm n f_m'}</InlineMath> για κάθε ακέραιο{' '}
+          <InlineMath>n</InlineMath>. Άρα «το εύρος ζώνης» ως ακριβής αριθμός δεν
+          υπάρχει — αυτό που υπάρχει είναι το <strong>ενεργό</strong> εύρος ζώνης: το
+          παράθυρο γύρω από το <InlineMath>{'f_c'}</InlineMath> που κρατάει σχεδόν όλη
+          την ισχύ. Ο κανόνας Carson είναι ακριβώς αυτό το παράθυρο γραμμένο ως τύπος —
+          γι&apos; αυτό και γράφεται με <InlineMath>{'\\cong'}</InlineMath>, όχι με
+          ίσον.
+        </p>
+
+        <p>
+          <strong>Βήμα 1 — ποια δεδομένα μπαίνουν στον τύπο.</strong> Ο Carson θέλει δύο
+          μεγέθη: την απόκλιση συχνότητας <InlineMath>{'\\Delta f'}</InlineMath> και το
+          εύρος ζώνης <InlineMath>W</InlineMath> του σήματος πληροφορίας. Το{' '}
+          <InlineMath>{'A_c = 10'}</InlineMath> V δεν μπαίνει πουθενά: το bandwidth του
+          FM δεν εξαρτάται από το πλάτος του φέροντος (το{' '}
+          <InlineMath>{'A_c'}</InlineMath> το χρειάζεσαι στο επόμενο ερώτημα, για τα
+          πλάτη των φασματικών γραμμών). Ούτε το <InlineMath>{'f_c'}</InlineMath>{' '}
+          μπαίνει: ο Carson δίνει <strong>πλάτος</strong> ζώνης, όχι{' '}
+          <strong>θέση</strong> της.
+        </p>
+
+        <p>
+          <strong>
+            Βήμα 2 — εδώ <InlineMath>{'W = f_m'}</InlineMath>.
+          </strong>{' '}
+          Το σήμα πληροφορίας είναι ένας μόνο τόνος στα{' '}
+          <InlineMath>{'f_m = 5'}</InlineMath> kHz, και ένας τόνος καταλαμβάνει
+          φασματικά μόνο τη δική του συχνότητα· άρα{' '}
+          <InlineMath>{'W = f_m = 5'}</InlineMath> kHz. Το βήμα μοιάζει περιττό εδώ,
+          αλλά είναι ακριβώς αυτό που ξεχνιέται όταν το message <em>δεν</em> είναι
+          single tone (π.χ. ένα <InlineMath>{'\\mathrm{sinc}'}</InlineMath>): τότε το{' '}
+          <InlineMath>W</InlineMath> το βγάζεις από το φάσμα του{' '}
+          <InlineMath>{'m(t)'}</InlineMath> — δεν είναι «η συχνότητα που βλέπω
+          γραμμένη».
+        </p>
+
+        <p>
+          <strong>
+            Βήμα 3 — γιατί <InlineMath>{'\\beta = \\Delta f / f_m'}</InlineMath>.
+          </strong>{' '}
+          Η φάση του σήματος είναι{' '}
+          <InlineMath>{'\\theta(t) = 2\\pi f_c t + \\beta\\sin(2\\pi f_m t)'}</InlineMath>.
+          Η στιγμιαία συχνότητα είναι η παράγωγος της φάσης διαιρεμένη με{' '}
+          <InlineMath>{'2\\pi'}</InlineMath>:
+        </p>
+        <BlockMath>{'f_i(t) = \\frac{1}{2\\pi}\\frac{d\\theta(t)}{dt} = f_c + \\beta f_m\\cos(2\\pi f_m t)'}</BlockMath>
+        <p>
+          Η συχνότητα του πομπού δηλαδή ταλαντώνεται γύρω από το{' '}
+          <InlineMath>{'f_c'}</InlineMath> με πλάτος{' '}
+          <InlineMath>{'\\beta f_m'}</InlineMath>. Αυτό ακριβώς το πλάτος λέγεται
+          απόκλιση συχνότητας, οπότε{' '}
+          <InlineMath>{'\\Delta f = \\beta f_m'}</InlineMath> και:
+        </p>
+        <BlockMath>{'\\beta = \\frac{\\Delta f}{f_m} = \\frac{15\\ \\text{kHz}}{5\\ \\text{kHz}} = 3'}</BlockMath>
+        <p>
+          Το <InlineMath>{'\\beta'}</InlineMath> βγαίνει καθαρός αριθμός (kHz προς kHz):
+          λέει πόσες φορές μεγαλύτερη είναι η ταλάντωση της συχνότητας από τη συχνότητα
+          του ίδιου του message.
+        </p>
+
+        <p>
+          <strong>Βήμα 4 — ο Carson, και στις δύο του μορφές.</strong>
+        </p>
+        <BlockMath>{'B \\cong 2(\\Delta f + W) = 2(15 + 5)\\ \\text{kHz} = 40\\ \\text{kHz}'}</BlockMath>
+        <BlockMath>{'B \\cong 2W(\\beta + 1) = 2\\cdot 5\\cdot (3 + 1)\\ \\text{kHz} = 40\\ \\text{kHz}'}</BlockMath>
+        <p>
+          Οι δύο γραμμές δεν είναι δύο κανόνες αλλά ένας: βάζοντας{' '}
+          <InlineMath>{'\\Delta f = \\beta W'}</InlineMath> στην πρώτη παίρνεις{' '}
+          <InlineMath>{'2(\\beta W + W) = 2W(\\beta + 1)'}</InlineMath>, που είναι η
+          δεύτερη. Ποια θα γράψεις εξαρτάται μόνο από το τι σου δίνει η εκφώνηση: εδώ
+          σου δίνει κατευθείαν <InlineMath>{'\\Delta f'}</InlineMath> και{' '}
+          <InlineMath>{'f_m'}</InlineMath>, οπότε η πρώτη μορφή δίνει την απάντηση χωρίς
+          να χρειαστεί καν να υπολογίσεις το <InlineMath>{'\\beta'}</InlineMath>· αν
+          αντίθετα σου δώσουν το <InlineMath>{'\\beta'}</InlineMath> διαβασμένο από τη
+          μορφή του σήματος, η δεύτερη είναι πιο γρήγορη. Και οι δύο πράξεις γίνονται με
+          το μυαλό — το κομπιουτεράκι δεν χρειάζεται σε αυτό το ερώτημα.
+        </p>
+        <p>
+          <strong>
+            Απάντηση: <InlineMath>{'B \\cong 40'}</InlineMath> kHz
+          </strong>{' '}
+          — δηλαδή η ζώνη{' '}
+          <InlineMath>{'[f_c - 20\\ \\text{kHz},\\ f_c + 20\\ \\text{kHz}]'}</InlineMath>.
+        </p>
+
+        <p>
+          <strong>Τι σημαίνει το 40 kHz.</strong> Οι γραμμές του φάσματος απέχουν{' '}
+          <InlineMath>{'f_m = 5'}</InlineMath> kHz η μία από την άλλη, οπότε μέσα στο
+          παράθυρο <InlineMath>{'\\pm 20'}</InlineMath> kHz χωράνε οι αρμονικές με{' '}
+          <InlineMath>{'|n| \\le 20/5 = 4'}</InlineMath>: το φέρον συν 4 ζεύγη
+          sidebands, 9 γραμμές συνολικά. Γενικά ο κανόνας γράφεται{' '}
+          <InlineMath>{'|n| \\le \\lfloor\\beta\\rfloor + 1'}</InlineMath> — εδώ το{' '}
+          <InlineMath>{'\\beta'}</InlineMath> είναι ακέραιο, οπότε το πάτωμα δεν αλλάζει
+          τίποτα και βγαίνει 4· αν όμως είχες <InlineMath>{'\\beta = 2.5'}</InlineMath>, η
+          σωστή κοπή είναι <InlineMath>{'|n| \\le 3'}</InlineMath> και όχι 3.5, γιατί το{' '}
+          <InlineMath>n</InlineMath> μετράει γραμμές και είναι ακέραιο. Εκεί ακριβώς κρύβεται και το «γιατί»
+          του τύπου: οι συντελεστές <InlineMath>{'J_n(\\beta)'}</InlineMath> σβήνουν
+          πρακτικά για <InlineMath>{'n > \\beta'}</InlineMath>, και ο Carson κρατάει ένα
+          sideband ασφαλείας πάνω από το <InlineMath>{'\\beta'}</InlineMath>. Το πλήρες
+          επιχείρημα (και από τη μεριά Taylor και από τη μεριά Bessel) είναι στο{' '}
+          <Link
+            href="/fm/carson"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            Carson&apos;s rule — ενεργό εύρος ζώνης
+          </Link>
+          .
+        </p>
+
+        <p>
+          <strong>Έλεγχος με τον πίνακα Bessel (προαιρετικός, θέλει κομπιουτεράκι).</strong>{' '}
+          Η ολική ισχύς του FM αντιστοιχεί σε{' '}
+          <InlineMath>{'\\sum_n J_n^2(\\beta) = 1'}</InlineMath>, οπότε το ποσοστό της
+          ισχύος που μένει μέσα στη ζώνη Carson είναι το άθροισμα των τετραγώνων μέχρι{' '}
+          <InlineMath>{'n = 4'}</InlineMath>. Με τις τιμές που τυπώνει το ίδιο το θέμα
+          για <InlineMath>{'\\beta = 3'}</InlineMath> (
+          <InlineMath>{'J_0 = -0.26,\\ J_1 = 0.34,\\ J_2 = 0.49,\\ J_3 = 0.31,\\ J_4 = 0.13'}</InlineMath>
+          ):
+        </p>
+        <BlockMath>{'J_0^2 + 2\\left(J_1^2 + J_2^2 + J_3^2 + J_4^2\\right) = 0.0676 + 2\\cdot 0.4687 = 1.005'}</BlockMath>
+        <p>
+          Το 1.005 είναι πάνω από 1, που είναι αδύνατο — η υπέρβαση είναι καθαρά σφάλμα
+          στρογγυλοποίησης του πίνακα (δύο δεκαδικά). Με ακριβείς τιμές{' '}
+          <InlineMath>{'J_n(3)'}</InlineMath> το άθροισμα βγαίνει{' '}
+          <InlineMath>{'0.996'}</InlineMath>. Δηλαδή η ζώνη των 40 kHz κρατάει{' '}
+          <InlineMath>{'\\approx 99.6\\%'}</InlineMath> της ισχύος: ο Carson εδώ είναι
+          μάλλον γενναιόδωρος παρά τσιγκούνης, και ο αριθμός που βρήκαμε στέκει.
+        </p>
+
+        <div className="my-3 rounded-md border border-border bg-bg-subtle px-3 py-2 text-xs text-fg-muted">
+          <strong className="text-fg">Δύο παγίδες.</strong> <strong>(1)</strong> Το{' '}
+          <InlineMath>{'\\beta = 3'}</InlineMath> <em>δεν</em> είναι{' '}
+          <InlineMath>{'\\gg 1'}</InlineMath>, οπότε η WBFM συντόμευση{' '}
+          <InlineMath>{'B \\approx 2\\Delta f = 30'}</InlineMath> kHz πέφτει 25% χαμηλά,
+          και η NBFM συντόμευση <InlineMath>{'B \\approx 2W = 10'}</InlineMath> kHz είναι
+          εντελώς εκτός. Οι δύο συντομεύσεις ισχύουν μόνο στα άκρα — ο πλήρης Carson
+          ισχύει παντού, οπότε δεν έχεις κανένα λόγο να ρισκάρεις.{' '}
+          <strong>(2)</strong> Ο παράγοντας <InlineMath>2</InlineMath> μπροστά υπάρχει
+          επειδή η ζώνη απλώνεται <strong>και προς τα πάνω και προς τα κάτω</strong> από
+          το φέρον· αν τον ξεχάσεις γράφεις 20 kHz αντί για 40 kHz.
+        </div>
+      </>
+    ),
+  },
+  {
+    id: 'jun26-th3-16',
+    origin: 'past-exam',
+    source: 'june-2026',
+    problemNumber: 'ΘΕΜΑ 3.16',
+    paperPage: 2,
+    weight: 5,
+    title: 'FM Bessel — πλάτη γραμμών για β=3',
+    topic: 'fm',
+    difficulty: 'medium',
+    prerequisites: ['fm/idea', 'fm/bessel', 'fm/carson'],
+    formulaIds: ['fm-single-tone', 'fm-beta', 'fm-bessel-expansion', 'fm-bessel-sidebands', 'bessel-table', 'carson', 'fm-significant-harmonics', 'fm-bessel-property', 'fm-power'],
+    memorizationNote: (
+      <>
+        <strong>Καλά νέα:</strong> ο πίνακας{' '}
+        <InlineMath>{'J_n(\\beta)'}</InlineMath> σού δίνεται{' '}
+        <em>δύο φορές</em> — υπάρχει στο τυπολόγιο και επιπλέον είναι τυπωμένος
+        πάνω στο ίδιο το θέμα. Δεν αποστηθίζεις ούτε έναν αριθμό· αρκεί να
+        διαβάζεις σωστά τη γραμμή.{' '}
+        <strong>
+          ⚠️ Αυτό που δεν δίνεται πουθενά είναι το τι κάνεις με τους αριθμούς.
+        </strong>{' '}
+        Γράφεις απέξω: (α) τη μορφή Bessel{' '}
+        <InlineMath>{'s(t)=A_c\\sum_n J_n(\\beta)\\cos[2\\pi(f_c+nf_m)t]'}</InlineMath>,
+        που είναι αυτή που λέει ότι το πλάτος της n-οστής γραμμής είναι{' '}
+        <InlineMath>{'A_c|J_n(\\beta)|'}</InlineMath>· (β) τον ορισμό{' '}
+        <InlineMath>{'\\beta = \\Delta f / f_m'}</InlineMath>, γιατί ο πίνακας
+        είναι ευρετηριασμένος στο <InlineMath>{'\\beta'}</InlineMath> και όχι στο{' '}
+        <InlineMath>{'\\Delta f'}</InlineMath>· (γ) τον κανόνα Carson{' '}
+        <InlineMath>{'B \\cong 2(\\beta+1)f_m'}</InlineMath> με το πόρισμά του{' '}
+        <InlineMath>{'N = 2\\lfloor\\beta\\rfloor+3'}</InlineMath>, που ορίζει τι
+        σημαίνει «ενεργό φάσμα»· (δ) τα{' '}
+        <InlineMath>{'J_{-n}=(-1)^n J_n'}</InlineMath>,{' '}
+        <InlineMath>{'\\sum_n J_n^2=1'}</InlineMath> και{' '}
+        <InlineMath>{'P_{FM}=A_c^2/2'}</InlineMath> για τον έλεγχο ισχύος. Το ίδιο
+        εργαλείο χρειάστηκε και στο{' '}
+        <Link
+          href="/practice#exercise:sept25-th2-9"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Σεπτ. 2025 ΘΕΜΑ 2.9
+        </Link>{' '}
+        (ίδια ανάγνωση πίνακα, <InlineMath>{'\\beta = 2.5'}</InlineMath>) και στο{' '}
+        <Link
+          href="/practice#exercise:jan26-th4-fm"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιαν. 2026 ΘΕΜΑ 4.13–16
+        </Link>{' '}
+        (ίδιο <InlineMath>{'\\beta = 3'}</InlineMath>, ίδιο{' '}
+        <InlineMath>{'A_c = 10'}</InlineMath> V — άρα ίδια ακριβώς πλάτη). Στο{' '}
+        <Link
+          href="/practice#exercise:jun25-th3-fm"
+          className="text-accent underline-offset-2 hover:underline"
+        >
+          Ιούν. 2025 ΘΕΜΑ 3
+        </Link>{' '}
+        το ίδιο εργαλείο δουλεύει αντίστροφα: εκεί σου δίνουν το bandwidth και
+        ψάχνεις πόσες γραμμές χωράνε.
+      </>
+    ),
+    statement: (
+      <>
+        <p>
+          <strong>ΘΕΜΑ 3 — κοινή εκφώνηση (ερωτήματα 14–17).</strong> Σε πομπό FM
+          δίνεται το σήμα
+        </p>
+        <BlockMath>{'s(t) = A_c\\cos\\!\\left(2\\pi f_c t + \\beta\\sin(2\\pi f_m t)\\right)'}</BlockMath>
+        <p>
+          με <InlineMath>{'A_c = 10'}</InlineMath> V,{' '}
+          <InlineMath>{'f_m = 5'}</InlineMath> kHz και απόκλιση συχνότητας{' '}
+          <InlineMath>{'\\Delta f = 15'}</InlineMath> kHz.
+        </p>
+        <p>
+          <strong>Ερώτημα 16:</strong> Με χρήση πίνακα Bessel να υπολογιστούν τα πλάτη
+          του φέροντος και των πλευρικών ζωνών <strong>εντός του ενεργού
+          φάσματος</strong>.
+        </p>
+        <p className="text-sm text-fg-muted">
+          Ο πίνακας <InlineMath>{'J_n(\\beta)'}</InlineMath> είναι τυπωμένος πάνω στο
+          θέμα. Παρατίθεται εδώ ένα κομμάτι του — μέρος της δουλειάς σου είναι να
+          διαλέξεις τη σωστή γραμμή:
+        </p>
+        <table className="my-3 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="py-2 text-left"><InlineMath>{'\\beta'}</InlineMath></th>
+              <th className="py-2 text-left"><InlineMath>{'J_0'}</InlineMath></th>
+              <th className="py-2 text-left"><InlineMath>{'J_1'}</InlineMath></th>
+              <th className="py-2 text-left"><InlineMath>{'J_2'}</InlineMath></th>
+              <th className="py-2 text-left"><InlineMath>{'J_3'}</InlineMath></th>
+              <th className="py-2 text-left"><InlineMath>{'J_4'}</InlineMath></th>
+              <th className="py-2 text-left"><InlineMath>{'J_5'}</InlineMath></th>
+              <th className="py-2 text-left"><InlineMath>{'J_6'}</InlineMath></th>
+            </tr>
+          </thead>
+          <tbody className="text-fg-muted">
+            <tr><td>2.0</td><td>0.22</td><td>0.58</td><td>0.35</td><td>0.13</td><td>0.03</td><td>—</td><td>—</td></tr>
+            <tr><td>2.5</td><td>−0.05</td><td>0.50</td><td>0.45</td><td>0.22</td><td>0.07</td><td>0.02</td><td>0.01</td></tr>
+            <tr><td>3.0</td><td>−0.26</td><td>0.34</td><td>0.49</td><td>0.31</td><td>0.13</td><td>0.04</td><td>0.01</td></tr>
+            <tr><td>4.0</td><td>−0.40</td><td>−0.07</td><td>0.36</td><td>0.43</td><td>0.28</td><td>0.13</td><td>0.05</td></tr>
+          </tbody>
+        </table>
+      </>
+    ),
+    solution: (
+      <>
+        <p>
+          Τα ερωτήματα{' '}
+          <Link
+            href="/practice#exercise:jun26-th3-14"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            14
+          </Link>{' '}
+          και{' '}
+          <Link
+            href="/practice#exercise:jun26-th3-15"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            15
+          </Link>{' '}
+          του ίδιου θέματος βγάζουν πρώτα τον δείκτη{' '}
+          <InlineMath>{'\\beta'}</InlineMath> και το εύρος ζώνης Carson. Εδώ τα
+          ξαναβγάζουμε από την αρχή, ώστε η λύση να στέκει μόνη της.
+        </p>
+
+        <p>
+          <strong>Γιατί χρειάζεται καν πίνακας.</strong> Στο FM η πληροφορία κάθεται{' '}
+          <em>μέσα</em> στο όρισμα του συνημιτόνου, όχι πολλαπλασιαστικά μπροστά του.
+          Δεν μπορείς λοιπόν να «μεταφέρεις» το φάσμα του message γύρω από το{' '}
+          <InlineMath>{'f_c'}</InlineMath> όπως κάνεις στην AM — το FM δεν είναι
+          γραμμικό ως προς το <InlineMath>{'m(t)'}</InlineMath>. Για τη
+          συγκεκριμένη περίπτωση single-tone όμως υπάρχει ακριβής απάντηση: ο
+          παράγοντας <InlineMath>{'e^{j\\beta\\sin(2\\pi f_m t)}'}</InlineMath> είναι
+          περιοδικός με περίοδο <InlineMath>{'1/f_m'}</InlineMath>, άρα αναπτύσσεται
+          σε σειρά Fourier — και οι συντελεστές του έχουν όνομα, είναι οι{' '}
+          <InlineMath>{'J_n(\\beta)'}</InlineMath>:
+        </p>
+        <BlockMath>{'e^{j\\beta\\sin\\theta} = \\sum_{n=-\\infty}^{\\infty} J_n(\\beta)\\,e^{jn\\theta}'}</BlockMath>
+        <p>
+          Παίρνοντας το πραγματικό μέρος του{' '}
+          <InlineMath>{'A_c\\,e^{j2\\pi f_c t}\\,e^{j\\beta\\sin(2\\pi f_m t)}'}</InlineMath>{' '}
+          προκύπτει η μορφή που θα δουλέψουμε:
+        </p>
+        <BlockMath>{'s(t) = A_c\\sum_{n=-\\infty}^{\\infty} J_n(\\beta)\\,\\cos\\big[2\\pi (f_c + n f_m)\\,t\\big]'}</BlockMath>
+        <p>
+          Σε απλά λόγια: το FM σήμα είναι ένα άθροισμα από καθαρά συνημίτονα,
+          τοποθετημένα ανά <InlineMath>{'f_m'}</InlineMath> δεξιά κι αριστερά του{' '}
+          <InlineMath>{'f_c'}</InlineMath>, και το{' '}
+          <strong>
+            πλάτος της <InlineMath>{'n'}</InlineMath>-οστής γραμμής είναι{' '}
+            <InlineMath>{'A_c\\,|J_n(\\beta)|'}</InlineMath>
+          </strong>. Ο πίνακας Bessel δεν κάνει τίποτα άλλο από το να σου δίνει
+          αυτούς τους καθαρούς αριθμούς <InlineMath>{'J_n(\\beta)'}</InlineMath>· το{' '}
+          <InlineMath>{'A_c'}</InlineMath> τους δίνει μονάδες (Volt).
+        </p>
+
+        <p>
+          <strong>Βήμα 1 — ποια γραμμή του πίνακα.</strong> Ο πίνακας είναι
+          ευρετηριασμένος στο <InlineMath>{'\\beta'}</InlineMath>, όχι στο{' '}
+          <InlineMath>{'\\Delta f'}</InlineMath>. Για να περάσουμε από το ένα στο
+          άλλο δεν χρειάζεται να θυμηθούμε κάτι: παραγωγίζουμε τη φάση. Η στιγμιαία
+          συχνότητα ορίζεται ως{' '}
+          <InlineMath>{'f_i(t) = \\frac{1}{2\\pi}\\,d\\theta/dt'}</InlineMath>, και με{' '}
+          <InlineMath>{'\\theta(t) = 2\\pi f_c t + \\beta\\sin(2\\pi f_m t)'}</InlineMath>{' '}
+          δίνει
+        </p>
+        <BlockMath>{'f_i(t) = f_c + \\beta f_m\\cos(2\\pi f_m t) \\;\\Longrightarrow\\; \\Delta f = \\max|f_i - f_c| = \\beta f_m'}</BlockMath>
+        <p>
+          Δηλαδή η <InlineMath>{'\\Delta f'}</InlineMath> που μας δίνεται είναι το
+          πλάτος της ταλάντωσης της συχνότητας. Ο γενικός ορισμός του δείκτη είναι{' '}
+          <InlineMath>{'\\beta = \\Delta f / W'}</InlineMath>, όπου{' '}
+          <InlineMath>W</InlineMath> το bandwidth του σήματος πληροφορίας· εδώ το
+          message είναι ένας μόνο τόνος, άρα{' '}
+          <InlineMath>{'W = f_m = 5'}</InlineMath> kHz και:
+        </p>
+        <BlockMath>{'\\beta = \\frac{\\Delta f}{f_m} = \\frac{15\\ \\text{kHz}}{5\\ \\text{kHz}} = 3'}</BlockMath>
+        <p>
+          Τι λέει αυτό: η στιγμιαία συχνότητα του πομπού ταλαντώνεται{' '}
+          <InlineMath>{'\\pm 15'}</InlineMath> kHz γύρω από το{' '}
+          <InlineMath>{'f_c'}</InlineMath>, δηλαδή κατά{' '}
+          <strong>τρία βήματα των <InlineMath>{'f_m'}</InlineMath></strong>. Το{' '}
+          <InlineMath>{'\\beta'}</InlineMath> είναι ακριβώς αυτό: πόσα{' '}
+          <InlineMath>{'f_m'}</InlineMath> «πλατιά» είναι η εκτροπή. Πάμε λοιπόν στη
+          γραμμή <InlineMath>{'\\beta = 3.0'}</InlineMath>.
+        </p>
+
+        <p>
+          <strong>Βήμα 2 — μέχρι ποιο <InlineMath>{'n'}</InlineMath> μετράμε.</strong>{' '}
+          Η σειρά Bessel είναι άπειρη: αυστηρά, το FM έχει{' '}
+          <em>άπειρες</em> πλευρικές. Η φράση «εντός του ενεργού φάσματος» είναι
+          εκείνη που κόβει το άθροισμα, και ενεργό φάσμα εδώ σημαίνει η ζώνη Carson:
+        </p>
+        <BlockMath>{'B \\cong 2(\\beta + 1)f_m = 2(\\Delta f + f_m) = 2(15 + 5) = 40\\ \\text{kHz}'}</BlockMath>
+        <p>
+          Αυτή η ζώνη είναι κεντραρισμένη στο <InlineMath>{'f_c'}</InlineMath> και
+          απλώνεται <InlineMath>{'\\pm B/2 = \\pm 20'}</InlineMath> kHz. Επειδή οι
+          γραμμές κάθονται ανά <InlineMath>{'f_m = 5'}</InlineMath> kHz, χωράνε όσες
+          έχουν
+        </p>
+        <BlockMath>{'|n| \\le \\frac{B/2}{f_m} = \\frac{20}{5} = 4'}</BlockMath>
+        <p>
+          Ίδιο αποτέλεσμα και από την άλλη πλευρά: ο κανόνας για τον αριθμό
+          σημαντικών αρμονικών δίνει{' '}
+          <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3 = 2\\cdot 3 + 3 = 9'}</InlineMath>{' '}
+          γραμμές, δηλαδή ο carrier συν <strong>τέσσερα ζεύγη</strong> πλευρικών.
+          Οι δύο αναγνώσεις συμφωνούν, και δεν είναι σύμπτωση — το{' '}
+          <InlineMath>{'N'}</InlineMath> είναι απλώς ο ίδιος κανόνας Carson
+          γραμμένος ως μέτρημα γραμμών αντί για εύρος σε Hz.
+        </p>
+
+        <p>
+          <strong>Βήμα 3 — διάβασε τη γραμμή και πολλαπλασίασε επί{' '}
+          <InlineMath>{'A_c = 10'}</InlineMath> V.</strong> Χρήσιμο εδώ το{' '}
+          <InlineMath>{'J_{-n}(\\beta) = (-1)^n J_n(\\beta)'}</InlineMath>: το
+          πρόσημο μπορεί να αλλάζει, το <em>μέτρο</em> όχι — άρα οι δύο γραμμές
+          ενός ζεύγους <InlineMath>{'\\pm n'}</InlineMath> έχουν πάντα το ίδιο
+          πλάτος και τις γράφουμε σε μία σειρά.
+        </p>
+        <table className="my-3 w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="py-2 text-left"><InlineMath>{'n'}</InlineMath></th>
+              <th className="py-2 text-left">Συχνότητα</th>
+              <th className="py-2 text-left"><InlineMath>{'J_n(3)'}</InlineMath></th>
+              <th className="py-2 text-left">Πλάτος <InlineMath>{'A_c|J_n|'}</InlineMath></th>
+            </tr>
+          </thead>
+          <tbody className="text-fg-muted">
+            <tr><td>0 (carrier)</td><td><InlineMath>{'f_c'}</InlineMath></td><td>−0.26</td><td><strong>2.6 V</strong></td></tr>
+            <tr><td>±1</td><td><InlineMath>{'f_c \\pm 5'}</InlineMath> kHz</td><td>0.34</td><td><strong>3.4 V</strong></td></tr>
+            <tr><td>±2</td><td><InlineMath>{'f_c \\pm 10'}</InlineMath> kHz</td><td>0.49</td><td><strong>4.9 V</strong> — η ισχυρότερη</td></tr>
+            <tr><td>±3</td><td><InlineMath>{'f_c \\pm 15'}</InlineMath> kHz</td><td>0.31</td><td><strong>3.1 V</strong></td></tr>
+            <tr><td>±4</td><td><InlineMath>{'f_c \\pm 20'}</InlineMath> kHz</td><td>0.13</td><td><strong>1.3 V</strong> — ακριβώς στην άκρη της ζώνης</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Το <InlineMath>{'f_c'}</InlineMath> δεν δίνεται αριθμητικά στο θέμα, οπότε
+          η σωστή απάντηση είναι <em>σχετικά</em> ως προς αυτό — αυτό είναι πλήρες,
+          όχι ελλιπές.
+        </p>
+
+        <p>
+          <strong>Η παγίδα με το πρόσημο.</strong> Ο πίνακας δίνει{' '}
+          <InlineMath>{'J_0(3) = -0.26'}</InlineMath>. Δεν γράφεις ποτέ «πλάτος{' '}
+          <InlineMath>{'-2.6'}</InlineMath> V» — πλάτος αρνητικό δεν υπάρχει. Το
+          μείον είναι <strong>φάση</strong>:
+        </p>
+        <BlockMath>{'-0.26\\,A_c\\cos(2\\pi f_c t) = 0.26\\,A_c\\cos(2\\pi f_c t + \\pi)'}</BlockMath>
+        <p>
+          δηλαδή η γραμμή του carrier έχει πλάτος 2.6 V και είναι γυρισμένη κατά{' '}
+          <InlineMath>{'180^\\circ'}</InlineMath>. Στο φάσμα πλάτους αυτό δεν
+          φαίνεται καθόλου· φαίνεται μόνο αν σου ζητήσουν φάση.
+        </p>
+
+        <p>
+          <strong>Το ενδιαφέρον συμπέρασμα.</strong> Η ψηλότερη γραμμή δεν είναι ο
+          carrier — είναι το ζεύγος <InlineMath>{'\\pm 2'}</InlineMath> στα 4.9 V,
+          σχεδόν διπλάσιο από τον carrier. Αυτό δεν είναι ιδιοτροπία του πίνακα: στο
+          FM, όσο μεγαλώνει το <InlineMath>{'\\beta'}</InlineMath>, ο carrier
+          «ξοδεύει» την ισχύ του στις πλευρικές, και για{' '}
+          <InlineMath>{'\\beta = 3'}</InlineMath> έχει ήδη δώσει τη μερίδα του
+          λέοντος. Ποσοτικά, το ποσοστό ισχύος στον carrier είναι{' '}
+          <InlineMath>{'J_0^2(3) = 0.0676'}</InlineMath>, δηλαδή μόλις 6.8%.
+        </p>
+
+        <p>
+          <strong>Έλεγχος (αξίζει τα 30 δευτερόλεπτα).</strong> Η ταυτότητα{' '}
+          <InlineMath>{'\\sum_n J_n^2(\\beta) = 1'}</InlineMath> λέει ότι, όσο και να
+          μοιραστεί η ισχύς στις γραμμές, το σύνολο μένει σταθερό:
+        </p>
+        <BlockMath>{'P_{FM} = \\frac{A_c^2}{2} = \\frac{10^2}{2} = 50\\ \\text{W}\\quad\\text{(ανεξάρτητο του }\\beta)'}</BlockMath>
+        <p>
+          Με τις τιμές του πίνακα:{' '}
+          <InlineMath>{'J_0^2 + 2(J_1^2 + J_2^2 + J_3^2 + J_4^2) = 0.0676 + 2(0.4687) = 1.005'}</InlineMath>.
+          Άρα σχεδόν όλη η ισχύς είναι όντως μέσα στη ζώνη. Δύο σημειώσεις εδώ:
+        </p>
+        <ul className="ml-5 list-disc text-fg-muted">
+          <li>
+            Το ότι βγαίνει 1.005 και όχι ακριβώς 1 είναι{' '}
+            <strong>στρογγυλοποίηση</strong> του πίνακα στα δύο δεκαδικά, όχι λάθος
+            σου. Αν βάλεις και τα <InlineMath>{'n = \\pm 5, \\pm 6'}</InlineMath> το
+            άθροισμα φτάνει 1.008. Μην κυνηγήσεις τη διαφορά.
+          </li>
+          <li>
+            Οι γραμμές που μένουν <em>έξω</em> από τη ζώνη υπάρχουν αλλά είναι
+            ψίχουλα: <InlineMath>{'n = \\pm 5'}</InlineMath> δίνει 0.4 V,{' '}
+            <InlineMath>{'n = \\pm 6'}</InlineMath> δίνει 0.1 V, και μαζί κουβαλάνε{' '}
+            <InlineMath>{'2(0.04^2 + 0.01^2) = 0.0034'}</InlineMath>, δηλαδή 0.34%
+            της ισχύος. Η ζώνη Carson κρατά{' '}
+            <InlineMath>{'\\approx 99.6\\%'}</InlineMath> — ακόμα πιο σφιχτά από το
+            ~98% που υπόσχεται γενικά ο κανόνας.
+          </li>
+        </ul>
+
+        <p>
+          <strong>Αν στη συνέχεια σου ζητήσουν να σχεδιάσεις το φάσμα:</strong> πρόσεξε
+          τη μονάδα. Τα 2.6 / 3.4 / 4.9 / 3.1 / 1.3 V είναι πλάτη{' '}
+          <em>συνημιτόνων στο χρόνο</em>. Αν σχεδιάσεις το αμφίπλευρο{' '}
+          <InlineMath>{'X(f)'}</InlineMath> με κρουστικές, κάθε κρουστική έχει βάρος{' '}
+          <InlineMath>{'\\tfrac{A_c}{2}|J_n|'}</InlineMath> — δηλαδή τα μισά ύψη,
+          μοιρασμένα στις θετικές και τις αρνητικές συχνότητες.
+        </p>
+
+        <p className="text-sm text-fg-muted">
+          Σημείωση για το κομπιουτεράκι: τα πλάτη δεν το χρειάζονται καθόλου — ο
+          πολλαπλασιασμός επί <InlineMath>{'A_c = 10'}</InlineMath> είναι απλή
+          μετακίνηση της υποδιαστολής. Το κομπιουτεράκι (επιτρέπεται στην εξέταση)
+          το θέλεις μόνο αν κάνεις τον έλεγχο ισχύος, για τα τετράγωνα των{' '}
+          <InlineMath>{'J_n'}</InlineMath>.
+        </p>
+      </>
+    ),
+  },
   // ═══════════════════════════════════════════════════════════════════════
   // ΠΡΟΟΔΟΣ · ΑΠΡΙΛΙΟΣ 2026 (13 problems · 100% · 1 ώρα)
   // ═══════════════════════════════════════════════════════════════════════
@@ -2000,6 +5288,7 @@ export const EXERCISES: Exercise[] = [
     origin: 'past-exam',
     source: 'sept-2025',
     problemNumber: 'ΘΕΜΑ 2.7',
+    repeatGroup: 'am-vs-fm-comparison',
     weight: 8,
     title: 'Σύγκριση FM vs AM',
     topic: 'fm',
@@ -2019,8 +5308,8 @@ export const EXERCISES: Exercise[] = [
         {' · '}
         <Link href="/practice#exercise:jun25-th3-fm">Ιούν.2025 ΘΕΜΑ 3</Link>.{' '}
         Επίσης off-sheet τα output-SNR αποτελέσματα αυτού του θέματος (βάρος 1
-        έκαστο — αυτό το θέμα είναι το μοναδικό στην τράπεζα που τα ζητάει
-        ρητά):{' '}
+        έκαστο — ζητούνται ρητά μόνο εδώ και στην ίδια ερώτηση όπως
+        ξαναδόθηκε τον Ιούνιο 2026):{' '}
         <InlineMath>{'\\text{SNR}_{out,AM} = \\eta\\,\\text{SNR}_{ref}'}</InlineMath>{' '}
         (id <code>am-output-snr</code>),{' '}
         <InlineMath>{'\\text{SNR}_{out,FM} = 3\\beta^2\\,\\text{SNR}_{ref}'}</InlineMath>{' '}

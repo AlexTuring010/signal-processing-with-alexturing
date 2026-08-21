@@ -261,7 +261,7 @@ Plus `content/practice/exercises.tsx:1-20` header counts, and a `SOSE_COACHING` 
 | 3 | Part A: the nested/awkward chip sites | build | ✅ done (all 7, incl. `<ExamProblem>`) |
 | 4 | B3 content gaps (energy machinery) — **before any Q12 card** | build | ✅ done |
 | 5 | Stale copy (B5) | typecheck + lint + **build** | ✅ done (structural counts) |
-| 6 | The 11 non-draw cards, in ΘΕΜΑ order | build | pending |
+| 6 | The 11 non-draw cards, in ΘΕΜΑ order | build | ✅ done |
 | 7 | Viz extends (B2), then the 6 draw cards | build | pending |
 | 8 | Docs reconcile (B6) + `examWeight` decision | — | pending |
 
@@ -306,6 +306,92 @@ I/Q form `(A_c/2)[…]` — what you get by literally filtering one sideband off
 signal — gives `19A_c²/(36W)`. Neither is wrong; not declaring which one you used is.
 The exam does not specify `A_c` for ΘΕΜΑ 2, so the card in step 6 must state the convention
 in its opening line.
+
+### Step 6 as built (the 11 non-draw cards)
+
+Ids follow the `jun25-th1-N` precedent — `jun26-th1-1/3/6/7/8`, `jun26-th2-10/12/13`,
+`jun26-th3-14/15/16` — one card per question (not one per ΘΕΜΑ), so `repeatGroup` can
+actually address a single question. Weights sum to **65**; the 6 draw problems carry the
+other 35. `paperPage` 1 for q1–12, 2 for q13–17.
+
+Bank now holds **86** exercises / 86 coaching entries (was 75), 7 exam sessions.
+
+**Registration needed nothing.** Step 2 had already added `'june-2026'` everywhere and step 5
+made every count derived, so the filter chip, `EXAM_SESSIONS`, the session fine-print and both
+page descriptions picked the paper up automatically the moment the first card existed.
+
+#### Decisions taken
+
+- **No «εμφανίστηκε σε N παλιά θέματα» counts in the new `memorizationNote`s.** The existing
+  counts are already mutually inconsistent (`am-signal` says 17 against an actual 18;
+  `am-power` says 4 where the same rule gives 3), so 11 more cards would deepen the drift for
+  no gain. The new notes name the prior cards with real links instead. The recount stays a
+  step-8 item — B5's warning is unchanged, not discharged.
+- **Q13 gets no `repeatGroup`** despite being near-verbatim `jun25-th2` sub-q5. That card
+  covers all of ΘΕΜΑ 2, so tagging it would mark 465 lines as a repeat of a 5% sub-question —
+  exactly the limitation B1 flags. Prose cross-link instead, and the card re-derives the
+  inversion (there the second channel was conventional AM, so *one* channel was
+  envelope-detectable; here neither is).
+- **Q1 opens a new `am-vs-fm-comparison` group with `sept25-th2-7`.** `repeats.ts` drops
+  single-member groups, so `sept25-th2-7` was tagged too; its «αυτό το θέμα είναι το μοναδικό
+  στην τράπεζα που τα ζητάει ρητά» claim about the output-SNR results is falsified by the new
+  card and was corrected in the same commit.
+- **Q7 joins `power-sum-sinusoids`** (4 members now). This widens the group from «same
+  parameters» to «same ask, same theorem» — deliberate, and noted because `pa25-th2-5` /
+  `pb25-th2-5` share Q7's surface form but ask for the AM harmonic count and stay out.
+- **Q16 gets no group.** `sept25-th2-9` uses β = 2.5, different parameters; a single-member
+  key would ship inert.
+- **Q3 keeps the plan's `random` topic.** `lib/sose.ts:125` hard-gates «Παρόμοιες» on identical
+  topic, which would have cut the three white-noise siblings — so the coaching entry carries an
+  explicit `relatedIds` override instead of moving the card to `noise`. This is the first use
+  of that field in the bank.
+- **No `#anchor` links into theory pages** from the new cards. 58 are known broken
+  (`ANCHOR_AUDIT.md`) and the Greek slugs are not verifiable without a build; the cards link
+  the page and name the section in prose.
+
+#### Defects caught before shipping
+
+Two independent adversarial verify passes ran over every card. Real catches:
+
+- **Q1 shipped a wrong SNR derivation** (both passes, independently). It declared a common
+  baseline `SNR_ref = A_c²/(2N_0W)` and concluded `G = 9β²`; with one shared `A_c` that
+  substitution gives `6β²` — the exact wrong answer `fm/in-noise:58` pre-emptively warns
+  about. Rewritten around equal **total transmitted power**, which is how the site derives it.
+- **Q12's `memorizationNote` was build-breaking** — two adjacent JSX fragments joined by a
+  stray top-level `{' '}` inside `memorizationNote: ( … )`.
+- **Q12 over-claimed.** The ±2f₂ terms vanish only if `f₂ > B_k = 6W`; Q10 gives only
+  `f₂ ≥ f₁ + W/2 ≥ W`, so at the admissible corner `f₁ = W/2, n = 2` the claim was false. The
+  card now flags it as a separate assumption *and* adds the frequency-domain route, which
+  needs no assumption at all.
+- **`bessel-table` is `inTypology: true`** — the table is in the τυπολόγιο, not merely printed
+  on this paper. Two FM cards said otherwise.
+- **`|n| ≤ β + 1` should be `|n| ≤ ⌊β⌋ + 1`** (`fm/bessel:502`, `fm/carson:277`). Harmless at
+  β = 3, wrong at β = 2.5 — which is the very card Q16 pointed at.
+- **Q6's figure caption was wrong three ways**: it quoted a viz title that does not exist,
+  claimed the `P_Y` readout «δεν αλλάζει» across the whole slider (the verifier ran the
+  component's own integral — it drops at both ends), and did not warn that the viz prints
+  `ΔΒ = 0.15` as a *half*-width while the card's `W` is a full band width.
+- **Q3 conflated Watts with Volts²** — `σ² = N₀W` and `σ² = 4kTRW` were called «the same
+  quantity in other units»; the `4R` is a matched-load divisor, per `noise/sources` §5.
+- One card cited the circle on the β = 3.0 Bessel row as an examiner hint; the transcription
+  notes (`:118-120`) say it is the booklet owner's pen.
+- Two `memorizationNote`s pointed at cards that never used the formula in question.
+
+#### Pre-existing problems fixed in passing
+
+- **`sose-coaching.tsx` entry `jan26-th1-5` taught «β < 0.3 → NBFM»**, contradicting
+  `fm/idea:403`, `fm/carson:440` and that card's own `memorizationNote` — and self-defeating,
+  since «αλλιώς WBFM» gets β = 0.31 wrong. Q8's card routes readers there, so it was fixed.
+- `DistributionExplorerViz` was not imported by `exercises.tsx`; added.
+
+#### Known, not fixed
+
+- **`npm run build` OOMs at the default 2 GB heap on this machine.** Verified pre-existing:
+  the same build fails identically with these two files stashed. `exercises.tsx` is now
+  ~700 KB in one module. 4 GB is enough. Vercel is unaffected so far, but the bank will
+  eventually want splitting per exam session.
+- `am/multiplexing:59` and `foundations/fourier-transform:1466` still carry «(slide N)» in
+  their headings, against `[[slide-quotes-primary-text]]`. Out of scope here.
 
 ### Step 5 as built (stale copy)
 
