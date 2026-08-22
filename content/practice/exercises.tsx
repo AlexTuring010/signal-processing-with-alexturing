@@ -9182,64 +9182,218 @@ export const EXERCISES: Exercise[] = [
       </>
     ),
     statement: (
-      <p>
-        FM modulator με{' '}
-        <InlineMath>{'m(t) = 2\\cos(2\\pi\\cdot 2000\\,t)'}</InlineMath> Volt,{' '}
-        <InlineMath>{'K_f = 1'}</InlineMath> kHz/V. Φέρον στα 90 MHz, ενεργό
-        bandwidth <InlineMath>{'B_1 = 16'}</InlineMath> kHz. (1) Πόσες
-        αρμονικές στο ενεργό εύρος ζώνης. (2) Δείκτης β₁. (3) Ισχύς FM σήματος.
-        (4) Για να μπει σε <InlineMath>{'B_2 = 8'}</InlineMath> kHz χωρίς να
-        αλλάξει η <InlineMath>{'f_m'}</InlineMath> και <InlineMath>{'K_f'}</InlineMath>,
-        τι πρέπει να συμβεί στο πλάτος του message; (5) RF φίλτρο{' '}
-        <InlineMath>{'f_{RF} = 90'}</InlineMath> MHz,{' '}
-        <InlineMath>{'B_{RF} = 4'}</InlineMath> kHz: πόσες αρμονικές περνούν αν{' '}
-        <InlineMath>{'B_2 = 8'}</InlineMath> kHz; (6) Ποσοστό ισχύος εξόδου.
-      </p>
+      <>
+        <p>
+          <strong>(1)</strong> Το σήμα πληροφορίας{' '}
+          <InlineMath>{'m(t) = 2\\cos(2\\pi\\cdot 2000\\,t)'}</InlineMath> Volt
+          διαμορφώνεται κατά FM με ευαισθησία συχνότητας{' '}
+          <InlineMath>{'K_f = 1'}</InlineMath> kHz/Volt. Πόσες αρμονικές
+          περιέχονται στο ενεργό εύρος ζώνης του διαμορφωμένου σήματος;{' '}
+          <em>(3%)</em>
+        </p>
+        <p>
+          <strong>(2)</strong> Έστω το σήμα <InlineMath>{'x(t)'}</InlineMath> που
+          προκύπτει από τη διαμόρφωση κατά FM του{' '}
+          <InlineMath>{'m(t)'}</InlineMath>, με κεντρική συχνότητα 90 MHz, και
+          έχει ενεργό εύρος ζώνης <InlineMath>{'B_1 = 16'}</InlineMath> kHz. Να
+          υπολογιστεί ο δείκτης διαμόρφωσης{' '}
+          <InlineMath>{'\\beta_f'}</InlineMath>. <em>(3%)</em>
+        </p>
+        <p>
+          <strong>(3)</strong> Πόση είναι η ισχύς του διαμορφωμένου FM σήματος;{' '}
+          <em>(3%)</em>
+        </p>
+        <p>
+          <strong>(4)</strong> Για την αποφυγή παρεμβολών ανάμεσα σε γειτονικούς
+          σταθμούς επιλέγεται ο <strong>υποδιπλασιασμός</strong> του ενεργού
+          εύρους ζώνης του <InlineMath>{'x(t)'}</InlineMath> σε{' '}
+          <InlineMath>{'B_2'}</InlineMath>, χωρίς όμως να μεταβληθεί η συχνότητα
+          του <InlineMath>{'m(t)'}</InlineMath> ούτε η ευαισθησία{' '}
+          <InlineMath>{'K_f'}</InlineMath>. Τι θα συμβεί στο πλάτος του{' '}
+          <InlineMath>{'m(t)'}</InlineMath>; <em>(6%)</em>
+        </p>
+        <p>
+          <strong>(5)</strong> Στον δέκτη το <InlineMath>{'x(t)'}</InlineMath>{' '}
+          διέρχεται από ζωνοπερατό RF φίλτρο με{' '}
+          <InlineMath>{'f_{RF} = 90'}</InlineMath> MHz και{' '}
+          <InlineMath>{'B_{RF} = 4'}</InlineMath> kHz. Πόσες αρμονικές του{' '}
+          <InlineMath>{'x(t)'}</InlineMath> περνάνε, αν το ενεργό εύρος ζώνης του
+          είναι <InlineMath>{'B_2 = 8'}</InlineMath> kHz; <em>(6%)</em>
+        </p>
+        <p>
+          <strong>(6)</strong> Να βρεθεί το ποσοστό της ισχύος που εμφανίζεται
+          στην έξοδο του φίλτρου σε σχέση με την ισχύ του{' '}
+          <InlineMath>{'x(t)'}</InlineMath>. <em>(4%)</em>
+        </p>
+      </>
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Η μία εξίσωση που τρέχει όλο το θέμα.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Πέντε από τα έξι ερωτήματα είναι ο κανόνας Carson, διαβασμένος πότε
+            μπροστά και πότε ανάποδα:
+            <BlockMath>{'B = 2(\\beta + 1)\\,f_m\\,, \\qquad \\beta = \\frac{K_f\\,\\max|m|}{f_m}'}</BlockMath>
+            <strong className="text-fg">Μπροστά</strong> (ξέρω το σήμα → βρες τη
+            ζώνη) στο (1)· <strong className="text-fg">ανάποδα</strong> (ξέρω τη
+            ζώνη → βρες το β) στα (2) και (4). Κράτα σταθερά σε όλο το θέμα:{' '}
+            <InlineMath>{'f_m = 2'}</InlineMath> kHz (από το{' '}
+            <InlineMath>{'2\\pi\\cdot 2000\\,t'}</InlineMath>) και{' '}
+            <InlineMath>{'K_f = 1'}</InlineMath> kHz/V.
+          </span>
+        </div>
+
         <p>
-          <strong>(1)</strong> <InlineMath>{'\\Delta f = K_f \\max|m| = 1\\cdot 2 = 2'}</InlineMath>{' '}
-          kHz, <InlineMath>{'f_m = 2'}</InlineMath> kHz, β₁ = 1. Carson:{' '}
-          <InlineMath>{'B_{Carson} = 2(\\beta+1)f_m = 2\\cdot 2\\cdot 2 = 8'}</InlineMath>{' '}
-          kHz. Αλλά δίνεται <InlineMath>{'B_1 = 16'}</InlineMath> kHz · συνεπώς
-          αρμονικές n από{' '}
-          <InlineMath>{'-B_1/(2 f_m) = -4'}</InlineMath> έως{' '}
-          <InlineMath>{'+4'}</InlineMath>: <strong>9 αρμονικές</strong>{' '}
-          (carrier + 4 ζεύγη sidebands).
+          <strong>(1) Πέντε αρμονικές.</strong> Πρώτα ο δείκτης, από τα δεδομένα
+          του σήματος: <InlineMath>{'\\max|m| = 2'}</InlineMath> V, άρα{' '}
+          <InlineMath>{'\\Delta f = K_f\\max|m| = 1 \\cdot 2 = 2'}</InlineMath>{' '}
+          kHz και
+        </p>
+        <BlockMath>{'\\beta = \\frac{\\Delta f}{f_m} = \\frac{2}{2} = 1.'}</BlockMath>
+        <p>
+          Carson: <InlineMath>{'B = 2(1+1)\\cdot 2 = 8'}</InlineMath> kHz, δηλαδή
+          η ζώνη απλώνεται <InlineMath>{'\\pm 4'}</InlineMath> kHz γύρω από τον
+          φέροντα. Οι αρμονικές κάθονται στα{' '}
+          <InlineMath>{'f_c + n f_m'}</InlineMath>, δηλαδή ανά 2 kHz, οπότε μέσα
+          στα <InlineMath>{'\\pm 4'}</InlineMath> kHz χωράνε τα{' '}
+          <InlineMath>{'n = 0, \\pm 1, \\pm 2'}</InlineMath> —{' '}
+          <strong>5 αρμονικές</strong> (φέρων + 2 ζεύγη sidebands). Ίδιο
+          αποτέλεσμα από τον μετρητικό τύπο{' '}
+          <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3 = 2 + 3 = 5'}</InlineMath>.
+        </p>
+
+        <p>
+          <strong>
+            (2) <InlineMath>{'\\beta_f = 3'}</InlineMath> — εδώ ο Carson
+            διαβάζεται ανάποδα.
+          </strong>{' '}
+          Τώρα <em>δεν</em> σου δίνουν το πλάτος του μηνύματος· σου δίνουν το
+          αποτέλεσμα, <InlineMath>{'B_1 = 16'}</InlineMath> kHz, και ζητούν την
+          αιτία. Λύσε τον ίδιο τύπο ως προς <InlineMath>{'\\beta'}</InlineMath>:
+        </p>
+        <BlockMath>{'B_1 = 2(\\beta_f + 1) f_m \\;\\Longrightarrow\\; \\beta_f = \\frac{B_1}{2 f_m} - 1 = \\frac{16}{2\\cdot 2} - 1 = 4 - 1 = 3.'}</BlockMath>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>Γιατί βγήκε άλλο β απ' ό,τι στο (1);</strong> Επειδή το{' '}
+          <InlineMath>{'x(t)'}</InlineMath> των ερωτημάτων (2)–(6){' '}
+          <em>δεν</em> έχει το πλάτος των 2 V του (1). Το ερώτημα (1) σου δίνει
+          το μήνυμα και ζητά τη ζώνη· το (2) σου δίνει τη ζώνη και ζητά τον
+          δείκτη — δύο ξεχωριστά σενάρια πάνω στην ίδια διάταξη. Αν θες να δεις
+          τι πλάτος υπονοεί το{' '}
+          <InlineMath>{'\\beta_f = 3'}</InlineMath>, γύρνα τον ορισμό:{' '}
+          <InlineMath>{'\\max|m| = \\beta_f f_m / K_f = 3\\cdot 2/1 = 6'}</InlineMath>{' '}
+          V. Μη «διορθώσεις» το ένα με το άλλο — απάντησε το καθένα με τα δικά
+          του δεδομένα.
+        </div>
+
+        <p>
+          <strong>
+            (3) <InlineMath>{'P_{FM} = A_c^2/2'}</InlineMath>.
+          </strong>{' '}
+          Το FM έχει <strong>σταθερή περιβάλλουσα</strong>: το πλάτος του
+          διαμορφωμένου σήματος είναι πάντα <InlineMath>{'A_c'}</InlineMath>, ό,τι
+          κι αν κάνει το μήνυμα — η πληροφορία ζει στη γωνία. Άρα η ισχύς είναι
+          αυτή ενός σκέτου συνημιτόνου πλάτους{' '}
+          <InlineMath>{'A_c'}</InlineMath>, και{' '}
+          <strong>δεν εξαρτάται από το β</strong>. Το{' '}
+          <InlineMath>{'A_c'}</InlineMath> δεν δίνεται, οπότε η απάντηση μένει
+          συμβολική. (Αυτό είναι και η ουσία του ερωτήματος: το ζητούμενο δεν
+          είναι νούμερο, είναι να δείξεις ότι το β δεν παίζει ρόλο.)
+        </p>
+
+        <p>
+          <strong>
+            (4) Το πλάτος πρέπει να πέσει στο ένα τρίτο — όχι στο μισό.
+          </strong>{' '}
+          «Υποδιπλασιασμός του ενεργού εύρους ζώνης» σημαίνει{' '}
+          <InlineMath>{'B_2 = B_1/2 = 8'}</InlineMath> kHz. Ανάποδος Carson ξανά,
+          για το νέο β:
+        </p>
+        <BlockMath>{'\\beta_2 = \\frac{B_2}{2 f_m} - 1 = \\frac{8}{2\\cdot 2} - 1 = 2 - 1 = 1.'}</BlockMath>
+        <p>
+          Και επειδή τα <InlineMath>{'K_f, f_m'}</InlineMath> μένουν σταθερά, ο
+          ορισμός <InlineMath>{'\\beta = K_f \\max|m| / f_m'}</InlineMath> κάνει
+          το <InlineMath>{'\\beta'}</InlineMath>{' '}
+          <strong>ευθέως ανάλογο</strong> του πλάτους. Άρα το πλάτος
+          ακολουθεί τον ίδιο λόγο με το β:
+        </p>
+        <BlockMath>{'\\frac{\\max|m|_{\\text{νέο}}}{\\max|m|_{\\text{παλιό}}} = \\frac{\\beta_2}{\\beta_f} = \\frac{1}{3} \\quad\\Longrightarrow\\quad 6\\,\\text{V} \\to 2\\,\\text{V}.'}</BlockMath>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Η παγίδα του ερωτήματος:</strong> «μισή ζώνη» δεν σημαίνει
+          «μισό πλάτος». Ο Carson γράφεται και ως{' '}
+          <InlineMath>{'B = 2(\\Delta f + f_m)'}</InlineMath> — το πλάτος
+          ελέγχει μόνο το <InlineMath>{'\\Delta f'}</InlineMath>, ενώ ο όρος{' '}
+          <InlineMath>{'f_m'}</InlineMath> είναι <strong>σταθερός</strong> και
+          δεν συρρικνώνεται μαζί του. Στα νούμερα:{' '}
+          <InlineMath>{'\\Delta f_1 = B_1/2 - f_m = 8 - 2 = 6'}</InlineMath> kHz,
+          ενώ <InlineMath>{'\\Delta f_2 = B_2/2 - f_m = 4 - 2 = 2'}</InlineMath>{' '}
+          kHz — δηλαδή η απόκλιση πέφτει στο{' '}
+          <strong>ένα τρίτο</strong>, όχι στο μισό, ακριβώς επειδή ο σταθερός
+          όρος <InlineMath>{'f_m'}</InlineMath> «τρώει» κομμάτι και από τις δύο
+          ζώνες. Αν απαντήσεις «στο μισό», έχεις υποθέσει{' '}
+          <InlineMath>{'B \\propto \\Delta f'}</InlineMath>, που ισχύει μόνο στο
+          όριο WBFM (<InlineMath>{'\\beta \\gg 1'}</InlineMath>).
+        </div>
+
+        <p>
+          <strong>(5) Τρεις αρμονικές.</strong> Το RF φίλτρο είναι
+          κεντραρισμένο ακριβώς στον φέροντα και έχει{' '}
+          <InlineMath>{'B_{RF} = 4'}</InlineMath> kHz, δηλαδή αφήνει το διάστημα{' '}
+          <InlineMath>{'f_c \\pm 2'}</InlineMath> kHz. Οι αρμονικές είναι στα{' '}
+          <InlineMath>{'f_c + n f_m'}</InlineMath> με{' '}
+          <InlineMath>{'f_m = 2'}</InlineMath> kHz, οπότε περνάνε όσες έχουν
+        </p>
+        <BlockMath>{'|n| \\le \\frac{B_{RF}}{2 f_m} = \\frac{4}{2\\cdot 2} = 1 \\;\\Longrightarrow\\; n = 0, \\pm 1.'}</BlockMath>
+        <p>
+          Δηλαδή <strong>3 αρμονικές</strong>: ο φέρων και το πρώτο ζεύγος
+          sidebands. Πρόσεξε ότι το φίλτρο (4 kHz) είναι{' '}
+          <strong>στενότερο</strong> από το ενεργό εύρος ζώνης του σήματος (8
+          kHz) — άρα κόβει όντως κάτι, το ζεύγος{' '}
+          <InlineMath>{'n = \\pm 2'}</InlineMath>. Αυτό ακριβώς μετράει το
+          επόμενο ερώτημα.
+        </p>
+
+        <p>
+          <strong>(6) Περνάει το 97,3% της ισχύος.</strong> Το σήμα εδώ είναι το
+          «στενεμένο» <InlineMath>{'x(t)'}</InlineMath> του ερωτήματος (4), άρα{' '}
+          <strong>
+            χρησιμοποιείς το <InlineMath>{'\\beta_2 = 1'}</InlineMath>
+          </strong>{' '}
+          — όχι το <InlineMath>{'\\beta_f = 3'}</InlineMath> του (2). Η ισχύς
+          κάθε αρμονικής είναι ανάλογη του{' '}
+          <InlineMath>{'J_n^2(\\beta)'}</InlineMath>, και η ολική ισχύς είναι το{' '}
+          <InlineMath>{'\\sum_n J_n^2(\\beta) = 1'}</InlineMath> (η ταυτότητα
+          ενέργειας των Bessel — γι' αυτό ο παρονομαστής είναι 1). Κρατώντας
+          μόνο τα <InlineMath>{'n = 0, \\pm 1'}</InlineMath>, και με{' '}
+          <InlineMath>{'J_{-1} = -J_1'}</InlineMath> (ίδιο τετράγωνο):
+        </p>
+        <BlockMath>{'\\frac{P_{\\text{out}}}{P_x} = J_0^2(1) + 2J_1^2(1) = (0{,}7652)^2 + 2(0{,}4401)^2 = 0{,}5855 + 0{,}3874 = 0{,}973'}</BlockMath>
+        <p>
+          δηλαδή <strong>≈ 97,3%</strong>.
         </p>
         <p>
-          <strong>(2) β₁ = 1</strong> (όπως υπολογίστηκε).
+          <strong>Με απλά λόγια:</strong> πετάξαμε δύο ολόκληρες sidebands και
+          χάσαμε μόλις το 2,7% της ισχύος. Δεν είναι σύμπτωση — είναι ακριβώς
+          αυτό που υπόσχεται ο Carson: η ζώνη που ορίζει περιέχει «σχεδόν όλη»
+          την ισχύ, και ό,τι μένει απ' έξω είναι ψίχουλα. Έλεγχος:{' '}
+          <InlineMath>{'2J_2^2(1) = 2(0{,}1149)^2 \\approx 0{,}026'}</InlineMath>,
+          που μαζί με το 0,973 δίνει 0,999 — τα υπόλοιπα{' '}
+          <InlineMath>{'n \\ge 3'}</InlineMath> είναι πρακτικά μηδέν.
         </p>
-        <p>
-          <strong>(3)</strong>{' '}
-          <InlineMath>{'P_{FM} = A_c^2/2'}</InlineMath> — δεν δίνεται{' '}
-          <InlineMath>{'A_c'}</InlineMath>, οπότε γενική απάντηση. Αν π.χ.{' '}
-          <InlineMath>{'A_c = 1'}</InlineMath> → <InlineMath>{'P = 0.5'}</InlineMath> W.
+
+        <p className="text-sm text-fg-muted">
+          <strong>Πρακτικά για την εξέταση:</strong> τα{' '}
+          <InlineMath>{'J_0(1) = 0{,}7652'}</InlineMath> και{' '}
+          <InlineMath>{'J_1(1) = 0{,}4401'}</InlineMath>{' '}
+          <strong>τα διαβάζεις</strong> από τον πίνακα{' '}
+          <InlineMath>{'J_n(\\beta)'}</InlineMath> του τυπολογίου — δεν τα
+          θυμάσαι και δεν τα υπολογίζεις. Τα τετράγωνα και η πρόσθεση είναι
+          δουλειά για το κομπιουτεράκι, που επιτρέπεται.
         </p>
-        <p>
-          <strong>(4) Για B₂ = 8 kHz</strong> (μισό από B₁), χρειάζεται
-          μικρότερο β. Από Carson: <InlineMath>{'B = 2(\\beta+1)f_m'}</InlineMath>,
-          με σταθερό <InlineMath>{'f_m = 2'}</InlineMath> kHz, νέο β:{' '}
-          <InlineMath>{'8 = 2(\\beta+1)\\cdot 2 \\Rightarrow \\beta = 1'}</InlineMath>.
-          Παρόμοιο! Αλλά το πραγματικό σήμα είχε β=1 και χρειαζόταν 16 kHz
-          να συμπεριλάβει τα ±4 sidebands. Για να χωρέσει σε 8 kHz μόνο τα
-          ±2 sidebands → χρειάζεται μικρότερο β. Από{' '}
-          <InlineMath>{'\\beta = K_f A_m / f_m'}</InlineMath> με σταθερά{' '}
-          <InlineMath>{'K_f, f_m'}</InlineMath>: <strong>μείωση
-          πλάτους message</strong> (π.χ. στο μισό → β=0.5).
-        </p>
-        <p>
-          <strong>(5)</strong> <InlineMath>{'B_{RF} = 4'}</InlineMath> kHz
-          γύρω από 90 MHz → αφήνει sidebands με{' '}
-          <InlineMath>{'|n| \\leq B_{RF}/(2 f_m) = 1'}</InlineMath>. Δηλαδή
-          <strong>3 αρμονικές</strong>: carrier + ±1 sb.
-        </p>
-        <p>
-          <strong>(6)</strong> Ποσοστό ισχύος = ποσοστό ολικής που
-          εμφανίζεται σε αυτές τις 3 αρμονικές. Για β=1:
-        </p>
-        <BlockMath>{'\\frac{J_0^2(1) + 2J_1^2(1)}{1} = 0.7656^2 + 2\\cdot 0.4401^2 = 0.586 + 0.387 = 97.4\\%'}</BlockMath>
       </>
     ),
   },
