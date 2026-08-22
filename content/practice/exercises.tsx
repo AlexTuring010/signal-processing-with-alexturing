@@ -4968,12 +4968,100 @@ export const EXERCISES: Exercise[] = [
         <p>Από modulation theorem:</p>
         <BlockMath>{'X_{AM}(f) = \\tfrac{A_c}{2}[\\delta(f-f_c) + \\delta(f+f_c)] + \\tfrac{1}{2}[M(f-f_c) + M(f+f_c)]'}</BlockMath>
         <p>
-          Στις θετικές συχνότητες: ένα impulse στον carrier{' '}
-          <InlineMath>{'f_c'}</InlineMath>, μια <strong>upper sideband</strong>{' '}
-          (USB, <InlineMath>{'f > f_c'}</InlineMath>) και μια{' '}
-          <strong>lower sideband</strong> (LSB,{' '}
-          <InlineMath>{'f < f_c'}</InlineMath>). Συμμετρικά στα αρνητικά.
-          Bandwidth = <InlineMath>{'2W'}</InlineMath>.
+          Διάβασέ το ως δύο ξεχωριστά πράγματα που ζουν στο ίδιο φάσμα:
+        </p>
+        <ul className="ml-5 list-disc text-fg-muted">
+          <li>
+            <strong>Ο φέρων</strong> — δύο κρούσεις ύψους{' '}
+            <InlineMath>{'A_c/2'}</InlineMath> στις{' '}
+            <InlineMath>{'\\pm f_c'}</InlineMath>. Προέρχονται από το σταθερό{' '}
+            <InlineMath>{'A_c'}</InlineMath> και <strong>δεν κουβαλάνε καμία
+            πληροφορία</strong>: είναι εκεί ακόμα κι όταν το μήνυμα σωπαίνει.
+          </li>
+          <li>
+            <strong>Οι πλευρικές ζώνες</strong> — δύο <em>αντίγραφα</em> του
+            ίδιου του φάσματος του μηνύματος, <InlineMath>{'M(f)'}</InlineMath>,
+            μετακομισμένα στις <InlineMath>{'\\pm f_c'}</InlineMath> και
+            μισοϋψωμένα. Εδώ ζει όλη η πληροφορία.
+          </li>
+        </ul>
+
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Τι ακριβώς σημαίνει «USB, <InlineMath>{'f > f_c'}</InlineMath>» και
+            «LSB, <InlineMath>{'f < f_c'}</InlineMath>».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Η άνω και η κάτω πλευρική <strong>δεν είναι δύο ξεχωριστά
+            πράγματα</strong> — είναι τα <strong>δύο μισά ενός</strong>{' '}
+            αντιγράφου, και να γιατί χωρίζονται. Το μήνυμα είναι πραγματικό
+            σήμα, οπότε το <InlineMath>{'M(f)'}</InlineMath> απλώνεται{' '}
+            <em>και στις δύο</em> πλευρές του μηδενός, από{' '}
+            <InlineMath>{'-W'}</InlineMath> έως <InlineMath>{'+W'}</InlineMath>.
+            Όταν το μετακομίσεις στο <InlineMath>{'f_c'}</InlineMath>, όλο το
+            κομμάτι πηγαίνει στο διάστημα{' '}
+            <InlineMath>{'(f_c - W,\\; f_c + W)'}</InlineMath> — και σπάει
+            φυσικά στα δύο γύρω από τον φέροντα:
+            <ul className="ml-5 mt-1.5 list-disc">
+              <li>
+                ό,τι προερχόταν από τις <strong>θετικές</strong> συχνότητες
+                βάσης <InlineMath>{'(0, W)'}</InlineMath> κάθεται{' '}
+                <strong>πάνω</strong> από τον φέροντα, στο{' '}
+                <InlineMath>{'(f_c, f_c + W)'}</InlineMath> → <strong>άνω
+                πλευρική (USB)</strong>·
+              </li>
+              <li>
+                ό,τι προερχόταν από τις <strong>αρνητικές</strong>{' '}
+                <InlineMath>{'(-W, 0)'}</InlineMath> κάθεται{' '}
+                <strong>κάτω</strong> από τον φέροντα, στο{' '}
+                <InlineMath>{'(f_c - W, f_c)'}</InlineMath> → <strong>κάτω
+                πλευρική (LSB)</strong>.
+              </li>
+            </ul>
+            Δηλαδή το «<InlineMath>{'f > f_c'}</InlineMath>» και το «
+            <InlineMath>{'f < f_c'}</InlineMath>» είναι απλώς{' '}
+            <strong>«δεξιά» και «αριστερά» της κρούσης του φέροντα</strong>. Και
+            επειδή το <InlineMath>{'M(f)'}</InlineMath> πραγματικού σήματος είναι
+            καθρέφτης γύρω από το μηδέν, οι δύο πλευρικές είναι{' '}
+            <strong>καθρέφτες μεταξύ τους</strong>: κουβαλάνε την{' '}
+            <em>ίδια</em> πληροφορία, δύο φορές. Αυτή η επανάληψη είναι που
+            επιτρέπει αργότερα το SSB να πετάξει τη μία και να μη χάσει τίποτα.
+          </span>
+        </div>
+
+        <p>
+          <strong>Εύρος ζώνης.</strong> Το κατειλημμένο διάστημα γύρω από τον
+          φέροντα είναι από <InlineMath>{'f_c - W'}</InlineMath> έως{' '}
+          <InlineMath>{'f_c + W'}</InlineMath>, άρα
+        </p>
+        <BlockMath>{'B_{AM} = (f_c + W) - (f_c - W) = 2W'}</BlockMath>
+        <p>
+          — <strong>διπλάσιο</strong> από το εύρος του μηνύματος, ακριβώς επειδή
+          μεταδίδουμε και τις δύο πλευρικές.
+        </p>
+
+        <AMSpectrumViz />
+
+        <p className="text-sm text-fg-muted">
+          Το σχήμα παραπάνω δείχνει την πιο απλή περίπτωση, όπου το μήνυμα είναι{' '}
+          <em>ένας</em> τόνος <InlineMath>{'A_m\\cos(2\\pi f_m t)'}</InlineMath>:
+          τότε το <InlineMath>{'M(f)'}</InlineMath> είναι μόνο δύο κρούσεις, άρα
+          κάθε πλευρική «μαζεύεται» σε μία γραμμή — η USB στο{' '}
+          <InlineMath>{'f_c + f_m'}</InlineMath> και η LSB στο{' '}
+          <InlineMath>{'f_c - f_m'}</InlineMath>. Σύρε το{' '}
+          <InlineMath>{'\\mu'}</InlineMath> και πρόσεξε δύο πράγματα: οι πλευρικές
+          μεγαλώνουν, ενώ ο φέρων <strong>μένει ακίνητος</strong> — η οπτική
+          απόδειξη ότι ο φέρων δεν κουβαλάει πληροφορία. Για μήνυμα με{' '}
+          <em>συνεχές</em> φάσμα (η γενική περίπτωση της εκφώνησης), οι δύο
+          γραμμές γίνονται δύο «λοφίσκοι» πλάτους{' '}
+          <InlineMath>W</InlineMath> ο καθένας — δες το σχήμα στο{' '}
+          <Link
+            href="/am/conventional"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            /am/conventional §4
+          </Link>
+          .
         </p>
       </>
     ),
@@ -5023,17 +5111,93 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
-        <BlockMath>{'\\mu = \\frac{A_m}{A_c} = \\frac{5}{10} = 0.5'}</BlockMath>
-        <p>Ισχύς carrier (RMS²/2):</p>
-        <BlockMath>{'P_c = \\frac{A_c^2}{2} = \\frac{100}{2} = 50\\text{ W}'}</BlockMath>
         <p>
-          Ισχύς message: <InlineMath>{'P_m = A_m^2/2 = 12.5'}</InlineMath> W.
-          Συνολική ισχύς:
+          <strong>Δείκτης διαμόρφωσης.</strong>
         </p>
-        <BlockMath>{'P_{AM} = \\frac{A_c^2}{2} + \\frac{A_m^2}{4} = 50 + 6.25 = 56.25\\text{ W}'}</BlockMath>
+        <BlockMath>{'\\mu = \\frac{A_m}{A_c} = \\frac{5}{10} = 0{,}5'}</BlockMath>
         <p>
-          (Ή ισοδύναμα <InlineMath>{'P_c(1 + \\mu^2/2) = 50\\cdot 1.125 = 56.25'}</InlineMath> W
-          για normalized single-tone message.)
+          Κάτω από 1, άρα καμία υπερδιαμόρφωση — η περιβάλλουσα ακολουθεί πιστά
+          το μήνυμα.
+        </p>
+
+        <p>
+          <strong>Χώρισε το σήμα στα δύο κομμάτια του.</strong> Ανοίγοντας την
+          παρένθεση, το AM σήμα είναι <em>άθροισμα δύο σημάτων</em>:
+        </p>
+        <BlockMath>{'x_{AM}(t) = \\underbrace{A_c\\cos(2\\pi f_c t)}_{\\text{φέρων}} \\;+\\; \\underbrace{m(t)\\cos(2\\pi f_c t)}_{\\text{πλευρικές}}'}</BlockMath>
+        <p>
+          Τα δύο κομμάτια ζουν σε <strong>διαφορετικές συχνότητες</strong> (το
+          πρώτο ακριβώς στο <InlineMath>{'f_c'}</InlineMath>, το δεύτερο στα{' '}
+          <InlineMath>{'f_c \\pm f_m'}</InlineMath>), οπότε οι ισχύες τους απλώς{' '}
+          <strong>προστίθενται</strong> — καμία αλληλεπίδραση.
+        </p>
+
+        <p>
+          <strong>Ισχύς φέροντος.</strong> Ένα σκέτο συνημίτονο πλάτους{' '}
+          <InlineMath>A</InlineMath> έχει ισχύ{' '}
+          <InlineMath>{'A^2/2'}</InlineMath>:
+        </p>
+        <BlockMath>{'P_c = \\frac{A_c^2}{2} = \\frac{10^2}{2} = 50\\ \\text{W}'}</BlockMath>
+
+        <p>
+          <strong>Ισχύς πλευρικών — εδώ μπαίνει ο παράγοντας που ξεγελάει.</strong>{' '}
+          Ο δεύτερος όρος <em>δεν</em> είναι το μήνυμα· είναι το μήνυμα{' '}
+          <em>επί</em> τον φέροντα. Άνοιξέ τον με την ταυτότητα γινομένου →
+          αθροίσματος του τυπολογίου,{' '}
+          <InlineMath>{'\\cos X\\cos Y = \\tfrac{1}{2}[\\cos(X-Y) + \\cos(X+Y)]'}</InlineMath>:
+        </p>
+        <BlockMath>{'A_m\\cos(2\\pi f_m t)\\cos(2\\pi f_c t) = \\frac{A_m}{2}\\cos\\!\\big(2\\pi (f_c - f_m) t\\big) + \\frac{A_m}{2}\\cos\\!\\big(2\\pi (f_c + f_m) t\\big)'}</BlockMath>
+        <p>
+          Δύο συνημίτονα πλάτους <InlineMath>{'A_m/2'}</InlineMath> το καθένα —
+          η κάτω και η άνω πλευρική. Ισχύς του καθενός:{' '}
+          <InlineMath>{'(A_m/2)^2/2 = A_m^2/8'}</InlineMath>. Σε διαφορετικές
+          συχνότητες, άρα προστίθενται:
+        </p>
+        <BlockMath>{'P_{\\text{SB}} = \\underbrace{\\frac{A_m^2}{8}}_{\\text{LSB}} + \\underbrace{\\frac{A_m^2}{8}}_{\\text{USB}} = \\frac{A_m^2}{4} = \\frac{5^2}{4} = 6{,}25\\ \\text{W}'}</BlockMath>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>
+            ⚠️ Μη μπερδέψεις την ισχύ του <em>μηνύματος</em> με την ισχύ των{' '}
+            <em>πλευρικών</em>.
+          </strong>{' '}
+          Το ίδιο το μήνυμα, στη βασική ζώνη, έχει ισχύ{' '}
+          <InlineMath>{'P_m = A_m^2/2 = 12{,}5'}</InlineMath> W. Οι πλευρικές
+          όμως κουβαλάνε τη <strong>μισή</strong> από αυτήν,{' '}
+          <InlineMath>{'A_m^2/4 = 6{,}25'}</InlineMath> W. Ο κανόνας πίσω από
+          αυτό είναι γενικός και αξίζει να τον κρατήσεις:{' '}
+          <strong>
+            πολλαπλασιασμός με φέρον συνημίτονο υποδιπλασιάζει την ισχύ
+          </strong>{' '}
+          — <InlineMath>{'P\\{m(t)\\cos(2\\pi f_c t)\\} = P_m/2'}</InlineMath>.
+          Ο λόγος φαίνεται στη γραμμή παραπάνω: το{' '}
+          <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> της ταυτότητας κόβει το
+          πλάτος στη μέση, και η ισχύς πάει με το <em>τετράγωνο</em> του
+          πλάτους → <InlineMath>{'1/4'}</InlineMath> ανά γραμμή· αλλά οι γραμμές
+          είναι <strong>δύο</strong>, οπότε το τελικό είναι{' '}
+          <InlineMath>{'2 \\times \\tfrac{1}{4} = \\tfrac{1}{2}'}</InlineMath>.
+          Αν γράψεις <InlineMath>{'P_{AM} = P_c + P_m'}</InlineMath> θα βγάλεις
+          62,5 W αντί για 56,25 W.
+        </div>
+
+        <p>
+          <strong>Συνολική ισχύς.</strong>
+        </p>
+        <BlockMath>{'P_{AM} = P_c + P_{\\text{SB}} = \\frac{A_c^2}{2} + \\frac{A_m^2}{4} = 50 + 6{,}25 = 56{,}25\\ \\text{W}'}</BlockMath>
+        <p>
+          <strong>Ο ίδιος υπολογισμός με τον «έτοιμο» τύπο.</strong> Βγάζοντας{' '}
+          <InlineMath>{'P_c'}</InlineMath> κοινό παράγοντα και βάζοντας{' '}
+          <InlineMath>{'A_m = \\mu A_c'}</InlineMath>:
+        </p>
+        <BlockMath>{'P_{AM} = \\frac{A_c^2}{2} + \\frac{\\mu^2 A_c^2}{4} = \\frac{A_c^2}{2}\\left(1 + \\frac{\\mu^2}{2}\\right) = P_c\\left(1 + \\frac{\\mu^2}{2}\\right) = 50\\,(1 + 0{,}125) = 56{,}25\\ \\text{W}'}</BlockMath>
+        <p>
+          Δεν είναι δεύτερη μέθοδος — είναι η ίδια πράξη γραμμένη με{' '}
+          <InlineMath>{'\\mu'}</InlineMath> αντί για{' '}
+          <InlineMath>{'A_m'}</InlineMath>. Χρήσιμη γιατί δείχνει με μια ματιά
+          πόσο <em>άσχημη</em> είναι η AM ενεργειακά: με{' '}
+          <InlineMath>{'\\mu = 0{,}5'}</InlineMath>, μόνο{' '}
+          <InlineMath>{'6{,}25/56{,}25 \\approx 11\\%'}</InlineMath> της
+          εκπεμπόμενης ισχύος κουβαλάει πληροφορία — τα υπόλοιπα 89% καίγονται
+          στον φέροντα, που δεν λέει τίποτα.
         </p>
       </>
     ),
