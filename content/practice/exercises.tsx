@@ -5520,7 +5520,7 @@ export const EXERCISES: Exercise[] = [
           <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
           <span className="text-fg-muted">
             Μέσα σε κάθε αντιστάτη τα ηλεκτρόνια «τρέμουν» από τη θερμότητα — όσο
-            πιο ζεστός, τόσο πιο έντονα (slide 42). Αυτό το ατελείωτο, τυχαίο
+            πιο ζεστός, τόσο πιο έντονα. Αυτό το ατελείωτο, τυχαίο
             σπρώξιμο φορτίων παράγει μια μικρή τυχαία τάση στα άκρα του ακόμα κι
             όταν δεν περνά κανένα σήμα· είναι το «σσσσ» που ακούς σ' έναν
             ενισχυτή ή ένα ξεκούρδιστο ραδιόφωνο. Επειδή τα τινάγματα είναι
@@ -5572,20 +5572,20 @@ export const EXERCISES: Exercise[] = [
         <p>
           <strong>Βήμα 1 — γιατί η PSD είναι επίπεδη στο{' '}
           <InlineMath>{'kT/2'}</InlineMath>.</strong> Ο θερμικός θόρυβος γεννιέται
-          από τη θερμική διέγερση των ηλεκτρονίων μέσα στον αγωγό (slide 42):
+          από τη θερμική διέγερση των ηλεκτρονίων μέσα στον αγωγό:
           δισεκατομμύρια ανεξάρτητα, αστραπιαία τινάγματα φορτίου. Επειδή είναι
           ασυσχέτιστα και πολύ ταχύτερα από οποιαδήποτε συχνότητα μάς ενδιαφέρει,
           η ισχύς μοιράζεται ομοιόμορφα σε όλο το φάσμα — η PSD είναι επίπεδη
-          («λευκή»), σταθερή στο ύψος <InlineMath>{'kT/2'}</InlineMath> (slide 45):
+          («λευκή»), σταθερή στο ύψος <InlineMath>{'kT/2'}</InlineMath>:
         </p>
         <BlockMath>{'S_N(f) = \\frac{N_0}{2} = \\frac{kT}{2}\\;\\text{W/Hz},\\qquad N_0 \\triangleq kT,\\quad |f| \\le 10^{12}\\,\\text{Hz}'}</BlockMath>
         <p>
-          Από τη slide 47 και μετά απλώς βαφτίζουμε αυτό το ύψος{' '}
+          Από εδώ και πέρα βαφτίζουμε αυτό το ύψος{' '}
           <InlineMath>{'N_0/2'}</InlineMath>, με <InlineMath>{'N_0 \\triangleq kT'}</InlineMath>.
           Δύο πράγματα να κρατήσεις: (i) το ύψος εξαρτάται από τη θερμοκρασία{' '}
           <InlineMath>T</InlineMath>, αλλά (ii) <em>δεν</em> εξαρτάται ούτε από τη
           συχνότητα ούτε από το εύρος ζώνης — είναι το ίδιο παντού. Το «επίπεδο
-          μέχρι <InlineMath>{'\\sim 10^{12}'}</InlineMath> Hz» (slide 45) καλύπτει
+          μέχρι <InlineMath>{'\\sim 10^{12}'}</InlineMath> Hz» καλύπτει
           κυριολεκτικά όλο το χρήσιμο φάσμα· πιο ψηλά η κβαντική φυσική κάμπτει το
           πάτωμα, αλλά καμία εξέταση K21 δεν πάει εκεί.
         </p>
@@ -5596,8 +5596,7 @@ export const EXERCISES: Exercise[] = [
           συνολική ισχύς — το εμβαδόν κάτω από το πάτωμα μέσα στη ζώνη. Ένας
           δέκτης εύρους <InlineMath>B</InlineMath> «βλέπει» τις συχνότητες από{' '}
           <InlineMath>{'-B'}</InlineMath> έως <InlineMath>{'+B'}</InlineMath>{' '}
-          (πλάτος <InlineMath>{'2B'}</InlineMath> στη δίψας-όψεως εικόνα), οπότε
-          (slide 45):
+          (πλάτος <InlineMath>{'2B'}</InlineMath> στη δίψας-όψεως εικόνα), οπότε:
         </p>
         <BlockMath>{'P_N = \\int_{-B}^{B} S_N(f)\\,df = \\int_{-B}^{B} \\frac{N_0}{2}\\,df = \\frac{N_0}{2}\\cdot 2B = N_0 B = kTB'}</BlockMath>
         <p>
@@ -5629,8 +5628,7 @@ export const EXERCISES: Exercise[] = [
           <strong>Βήμα 3 — το νούμερο που πρέπει να κουβαλάς:{' '}
           <InlineMath>{'-174'}</InlineMath> dBm/Hz.</strong> Βάλε αριθμούς σε room
           temperature <InlineMath>{'T_0 = 290'}</InlineMath> K, με τη σταθερά
-          Boltzmann <InlineMath>{'k = 1.38\\times 10^{-23}'}</InlineMath> J/K
-          (slide 43):
+          Boltzmann <InlineMath>{'k = 1.38\\times 10^{-23}'}</InlineMath> J/K:
         </p>
         <BlockMath>{'N_0 = kT_0 = (1.38\\times 10^{-23})(290) \\approx 4.0\\times 10^{-21}\\;\\text{W/Hz}'}</BlockMath>
         <p>
@@ -5867,7 +5865,7 @@ export const EXERCISES: Exercise[] = [
           χαμηλοπερατό ισχύει <InlineMath>{'|H(f)|^2 = 1'}</InlineMath> μέσα στη
           ζώνη <InlineMath>{'|f| < B'}</InlineMath> και <InlineMath>0</InlineMath>{' '}
           έξω, ενώ η είσοδος είναι το επίπεδο{' '}
-          <InlineMath>{'S_X(f) = N_0/2'}</InlineMath> (slide 47). Άρα η έξοδος
+          <InlineMath>{'S_X(f) = N_0/2'}</InlineMath>. Άρα η έξοδος
           είναι το ίδιο πάτωμα, αποκομμένο στο{' '}
           <InlineMath>{'[-B, B]'}</InlineMath>:
         </p>
@@ -8019,7 +8017,7 @@ export const EXERCISES: Exercise[] = [
             PSD του δεν είναι καμπύλη αλλά ένα <strong>επίπεδο πάτωμα</strong>:
             ίδιο ύψος σε κάθε <InlineMath>f</InlineMath>. Έτσι το «πόση είναι η
             PSD;» έχει <em>μονόλεκτη</em> απάντηση — το ύψος του πατώματος,{' '}
-            <InlineMath>{'kT/2'}</InlineMath> (slide 45), σταθερό μέχρι τα{' '}
+            <InlineMath>{'kT/2'}</InlineMath>, σταθερό μέχρι τα{' '}
             <InlineMath>{'\\sim 10^{12}'}</InlineMath> Hz (πιο ψηλά η κβαντική
             φυσική το κάμπτει, αλλά καμία εξέταση K21 δεν πάει τόσο μακριά).{' '}
             <strong>
@@ -8029,7 +8027,7 @@ export const EXERCISES: Exercise[] = [
             <em>και</em> αρνητικές συχνότητες (η μαθηματική, δίψας-όψεως εικόνα).
             Μοιράζοντας την ίδια ισχύ σε δύο πλευρές, το ύψος κάθε πλευράς είναι
             το μισό: <InlineMath>{'N_0/2'}</InlineMath>, με{' '}
-            <InlineMath>{'N_0 \\triangleq kT'}</InlineMath> (slide 47). Αν
+            <InlineMath>{'N_0 \\triangleq kT'}</InlineMath>. Αν
             μετρούσες μόνο τις φυσικές (θετικές) συχνότητες — μονόπλευρα — το
             ύψος θα ήταν ολόκληρο το <InlineMath>{'N_0 = kT'}</InlineMath>:{' '}
             <strong>ίδια συνολική ισχύς, απλώς άλλο λογιστικό σύστημα.</strong>
