@@ -628,7 +628,7 @@ $$
 ### 4d. Constant 1 → δ(f)
 
 $$
-\boxed{\,1 \overset{\mathcal{F}}{\longleftrightarrow} \delta(f)\,}
+\boxed{\,1 \overset{\mathcal{F}}{\longleftrightarrow} \delta(f)\,} \quad \text{✓ Στο τυπολόγιο}
 $$
 
 Συμμετρικό του 4c. Το σταθερό $1$ δεν είναι απολύτως ολοκληρώσιμο, οπότε δεν μπορούμε να εφαρμόσουμε απευθείας τον forward FT integral — αλλά μπορούμε να εφαρμόσουμε τον **inverse** FT στο $\delta(f)$ και να χρησιμοποιήσουμε τη σαρωτική ιδιότητα της δ, ίδιο τέχνασμα με τη 4c απλώς στη συχνότητα:
@@ -1986,28 +1986,34 @@ $$
 
 ## 12. Σύνοψη + παραπομπές
 
-**Πρωταγωνιστές transform pairs (όλοι ✓ στο τυπολόγιο):**
+**Πρωταγωνιστές transform pairs.** Η τρίτη στήλη λέει αν το ζεύγος είναι τυπωμένο στο επίσημο τυπολόγιο που έχεις μπροστά σου στις εξετάσεις — δηλαδή αν το κοιτάς ή αν πρέπει να το φτιάξεις μόνος σου:
 
-| Time | Frequency |
-| --- | --- |
-| $A\,\mathrm{rect}(t/T)$ | $AT\,\mathrm{sinc}(fT)$ |
-| $\Lambda(t/T)$ | $T\,\mathrm{sinc}^2(fT)$ |
-| $\delta(t)$ | $1$ |
-| $1$ | $\delta(f)$ |
-| $\cos(2\pi f_0 t)$ | $\tfrac{1}{2}\delta(f-f_0) + \tfrac{1}{2}\delta(f+f_0)$ |
-| $\sin(2\pi f_0 t)$ | $\tfrac{1}{2j}\delta(f-f_0) - \tfrac{1}{2j}\delta(f+f_0)$ |
-| $e^{-a\lvert t\rvert}$, $a>0$ | $\dfrac{2a}{a^2 + (2\pi f)^2}$ |
-| $e^{-\pi t^2}$ | $e^{-\pi f^2}$ (Gaussian self-dual) |
+| Time | Frequency | Τυπολόγιο |
+| --- | --- | --- |
+| $A\,\mathrm{rect}(t/T)$ | $AT\,\mathrm{sinc}(fT)$ | ✓ |
+| $\Lambda(t/T)$ | $T\,\mathrm{sinc}^2(fT)$ | ✓ |
+| $\delta(t)$ | $1$ | ✓ |
+| $1$ | $\delta(f)$ | ✓ |
+| $\cos(2\pi f_0 t)$ | $\tfrac{1}{2}\delta(f-f_0) + \tfrac{1}{2}\delta(f+f_0)$ | ✓ |
+| $\sin(2\pi f_0 t)$ | $\tfrac{1}{2j}\delta(f-f_0) - \tfrac{1}{2j}\delta(f+f_0)$ | ✓ |
+| $e^{-a\lvert t\rvert}$, $a>0$ | $\dfrac{2a}{a^2 + (2\pi f)^2}$ | ⚠️ όχι |
+| $e^{-\pi t^2}$ | $e^{-\pi f^2}$ (Gaussian self-dual) | ⚠️ όχι |
 
-**Πρωταγωνιστές ιδιότητες (όλες ✓ στο τυπολόγιο):**
+Τα δύο τελευταία δεν είναι στο χαρτί. Δεν σημαίνει «απομνημόνευσε τα»: σημαίνει «αναγνώρισε το **σχήμα**» — εκθετική κορυφή στον χρόνο δίνει Lorentzian «καμπάνα» με ουρές που σβήνουν αργά, Gaussian δίνει Gaussian. Αν χρειαστεί η ακριβής μορφή, δίνεται στην εκφώνηση.
 
-- Linearity, time shift, frequency shift, scaling, differentiation
+**Πρωταγωνιστές ιδιότητες — ✓ στο τυπολόγιο:**
+
+- Time shift, frequency shift, scaling, differentiation, ολοκλήρωση, duality
 - ⭐ **Convolution ↔ multiplication**: $x_1 * x_2 \leftrightarrow X_1 X_2$
 - Multiplication ↔ convolution (δυϊκή)
 - Modulation theorem: $x(t)\cos(2\pi f_c t) \leftrightarrow \tfrac{1}{2}[X(f-f_c) + X(f+f_c)]$
-- Conjugate symmetry για real signals: $X(-f) = X^*(f)$
-- Parseval: $\int |x|^2 dt = \int |X|^2 df$
-- Wiener–Khinchin: $R_x(\tau) \leftrightarrow |X(f)|^2$
+
+**Το ίδιο χρήσιμες — αλλά ⚠️ δεν τυπώνονται στο τυπολόγιο:**
+
+- Linearity: $a\,x_1 + b\,x_2 \leftrightarrow a\,X_1 + b\,X_2$ — δεν τη γράφει κανείς σε τυπολόγιο επειδή βγαίνει σε μία γραμμή από τη γραμμικότητα του ολοκληρώματος, αλλά τη χρησιμοποιείς σχεδόν σε κάθε άσκηση.
+- Conjugate symmetry για real signals: $X(-f) = X^*(f)$ — δηλαδή «το μέτρο είναι άρτιο, η φάση περιττή». Τη θυμάσαι ως **εικόνα** (το φάσμα ενός πραγματικού σήματος είναι καθρέφτης γύρω από το $f=0$), όχι ως τύπο.
+- Parseval: $\int |x|^2 dt = \int |X|^2 df$ — βλ. την [προειδοποίηση της §9](#9-parseval-και-energy-spectral-density) για το τι ακριβώς δίνεται και τι όχι.
+- Wiener–Khinchin: $R_x(\tau) \leftrightarrow |X(f)|^2$.
 
 **Exam tip.** Στο τυπολόγιο έχεις σχεδόν τα πάντα — δεν θα σου ζητηθεί να αποδείξεις τον FT του rect. Αυτό που πραγματικά αποτιμάται είναι:
 1. Να αναγνωρίζεις γρήγορα ποιος pair / ιδιότητα εφαρμόζεται.
