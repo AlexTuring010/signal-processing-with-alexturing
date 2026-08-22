@@ -7827,19 +7827,147 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
-        <p>
-          <strong>Χρόνος:</strong> Π-παλμοί ύψους 1, διάρκειας 1s, κάθε 10s.
-          Duty cycle <InlineMath>{'\\tau/T = 0.1'}</InlineMath>.
+        <p className="font-medium text-fg">
+          Σχήμα 1 — το σήμα στον χρόνο
         </p>
         <p>
-          <strong>Φάσμα Fourier (περιοδικό):</strong> impulses στις{' '}
-          <InlineMath>{'k f_0 = k/T = k/10'}</InlineMath> Hz, με συντελεστές:
+          Τρία νούμερα, τρία χαρακτηριστικά του σχήματος, και τα τρία γραμμένα
+          μέσα στην εκφώνηση:
         </p>
-        <BlockMath>{'a_k = \\frac{\\tau}{T}\\,\\mathrm{sinc}(k\\tau/T) = 0.1\\cdot \\mathrm{sinc}(k/10)'}</BlockMath>
+        <ul className="ml-5 list-disc text-fg-muted">
+          <li>
+            <strong>Ύψος 1.</strong> Βγαίνει από το «παλμών{' '}
+            <em>μοναδιαίου πλάτους</em>» — «πλάτος» εδώ σημαίνει το ύψος του
+            παλμού, δηλαδή <InlineMath>{'A = 1'}</InlineMath>. (Στην ίδια
+            εκφώνηση η λέξη «πλάτος» χρησιμοποιείται και για τη{' '}
+            <em>διάρκεια</em> — «πλάτος παλμού{' '}
+            <InlineMath>{'\\tau = 1'}</InlineMath> sec». Ξεχώρισέ τα από τις
+            μονάδες: sec → διάρκεια, καθαρός αριθμός → ύψος.)
+          </li>
+          <li>
+            <strong>Διάρκεια κάθε παλμού 1 sec</strong> —{' '}
+            <InlineMath>{'\\tau = 1'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Ένας παλμός κάθε 10 sec</strong> —{' '}
+            <InlineMath>{'T = 10'}</InlineMath>. Άρα{' '}
+            <em>duty cycle</em> <InlineMath>{'\\tau/T = 0.1'}</InlineMath>: το
+            σήμα είναι «αναμμένο» μόνο το 10% του χρόνου, και ανάμεσα στους
+            παλμούς μένει στο μηδέν για 9 sec.
+          </li>
+        </ul>
+
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            «Από ποιο δευτερόλεπτο ξεκινάνε οι παλμοί;»
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Η εκφώνηση <em>δεν το λέει</em> — και δεν είναι παράλειψη: για αυτό
+            που ζητάει δεν παίζει ρόλο. Έχεις δύο λογικές επιλογές και οι δύο
+            είναι σωστές:{' '}
+            <strong>(α) παλμός κεντραρισμένος στο{' '}
+            <InlineMath>{'t = 0'}</InlineMath></strong>, δηλαδή από{' '}
+            <InlineMath>{'-0{,}5'}</InlineMath> έως{' '}
+            <InlineMath>{'+0{,}5'}</InlineMath> s και μετά κάθε 10 s· ή{' '}
+            <strong>(β) παλμός που ξεκινά στο{' '}
+            <InlineMath>{'t = 0'}</InlineMath></strong>, δηλαδή από{' '}
+            <InlineMath>{'0'}</InlineMath> έως <InlineMath>1</InlineMath> s. Η
+            διαφορά τους είναι μια <strong>χρονική ολίσθηση</strong> κατά{' '}
+            <InlineMath>{'\\tau/2'}</InlineMath>, και η ιδιότητα ολίσθησης λέει
+            ότι μια μετατόπιση στον χρόνο πολλαπλασιάζει το φάσμα με{' '}
+            <InlineMath>{'e^{-j2\\pi f t_0}'}</InlineMath> — παράγοντα{' '}
+            <strong>μέτρου 1</strong>. Δηλαδή αλλάζει <em>μόνο τη φάση</em>· το{' '}
+            <strong>φάσμα πλάτους, που είναι αυτό που σου ζητάνε, βγαίνει
+            ολόιδιο</strong>. Διάλεξε το (α): κάνει τους{' '}
+            <InlineMath>{'a_k'}</InlineMath> πραγματικούς (το σήμα γίνεται
+            άρτιο) και σου γλιτώνει τους μιγαδικούς. Γράψε όμως ρητά στο χαρτί
+            «θεωρώ τον παλμό κεντραρισμένο στο{' '}
+            <InlineMath>{'t=0'}</InlineMath>» — έτσι το σχήμα σου είναι
+            ορισμένο, όχι τυχαίο.
+          </span>
+        </div>
+
+        <p className="mt-4 font-medium text-fg">
+          Σχήμα 2 — το φάσμα πλάτους
+        </p>
         <p>
-          DC: <InlineMath>{'a_0 = 0.1'}</InlineMath>. Πρώτη ρίζα του sinc στα{' '}
-          <InlineMath>{'k = 10'}</InlineMath> (δηλαδή στο{' '}
-          <InlineMath>{'1/\\tau = 1'}</InlineMath> Hz).
+          Το σήμα είναι <strong>περιοδικό</strong>. Αυτό καθορίζει ολόκληρο το
+          σχήμα του φάσματος πριν κάνεις καν πράξη: περιοδικό σήμα ⇒{' '}
+          <strong>διακριτό φάσμα</strong>, δηλαδή <em>γραμμές</em>, όχι συνεχής
+          καμπύλη. Οι γραμμές κάθονται στις αρμονικές
+        </p>
+        <BlockMath>{'f = k f_0 = \\frac{k}{T} = \\frac{k}{10}\\ \\text{Hz}, \\qquad k = 0, \\pm 1, \\pm 2, \\ldots'}</BlockMath>
+        <p>
+          δηλαδή μία γραμμή κάθε 0,1 Hz. Το ύψος κάθε γραμμής είναι ο
+          συντελεστής Fourier:
+        </p>
+        <BlockMath>{'a_k = \\frac{A\\tau}{T}\\,\\mathrm{sinc}\\!\\left(\\frac{k\\tau}{T}\\right) = 0{,}1\\cdot \\mathrm{sinc}(k/10)'}</BlockMath>
+        <p>
+          Δύο νούμερα-άγκυρες που πρέπει να φαίνονται στο σχήμα σου:
+        </p>
+        <ul className="ml-5 list-disc text-fg-muted">
+          <li>
+            <strong>Η γραμμή στο μηδέν:</strong>{' '}
+            <InlineMath>{'a_0 = A\\tau/T = 0{,}1'}</InlineMath>. Είναι η DC
+            στάθμη — και βγαίνει και χωρίς τύπο, ως ο{' '}
+            <em>μέσος όρος</em> του σήματος: ύψος 1 για το 10% του χρόνου, 0 για
+            το υπόλοιπο, μέσος όρος 0,1. Είναι πάντα η <strong>ψηλότερη</strong>{' '}
+            γραμμή.
+          </li>
+          <li>
+            <strong>Το πρώτο μηδενικό της περιβάλλουσας:</strong> η{' '}
+            <InlineMath>{'\\mathrm{sinc}(x)'}</InlineMath> μηδενίζεται στα{' '}
+            <InlineMath>{'x = \\pm 1, \\pm 2, \\ldots'}</InlineMath>, οπότε{' '}
+            <InlineMath>{'k\\tau/T = 1 \\Rightarrow k = T/\\tau = 10'}</InlineMath>.
+            Σε συχνότητα αυτό είναι{' '}
+            <InlineMath>{'f = 10 f_0 = 1'}</InlineMath> Hz — και δεν είναι
+            σύμπτωση:{' '}
+            <InlineMath>{'10 f_0 = 10/T = 1/\\tau'}</InlineMath>.{' '}
+            <strong>Τα μηδενικά είναι πάντα στα πολλαπλάσια του{' '}
+            <InlineMath>{'1/\\tau'}</InlineMath></strong>, δηλαδή εδώ στα{' '}
+            <InlineMath>{'\\pm 1, \\pm 2, \\pm 3, \\ldots'}</InlineMath> Hz.
+          </li>
+        </ul>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>«Αρκεί να σχεδιάσω την περιβάλλουσα;»</strong> Όχι — και είναι
+          η πιο συχνή παγίδα αυτής της άσκησης. Η καμπύλη sinc είναι μόνο ο{' '}
+          <strong>φάκελος</strong> μέσα στον οποίο κάθονται οι κορυφές των
+          γραμμών. Σκέτη η sinc είναι το φάσμα <em>ενός μοναχικού</em> παλμού
+          (συνεχές φάσμα)· το δικό σου σήμα είναι <em>παλμοσειρά</em>, οπότε το
+          φάσμα του υπάρχει <strong>μόνο</strong> στις αρμονικές{' '}
+          <InlineMath>{'k/10'}</InlineMath> Hz και είναι <strong>μηδέν
+          παντού αλλού</strong>. Σχεδίασέ τη λοιπόν{' '}
+          <strong>διακεκομμένη</strong> ως βοηθητική γραμμή και από πάνω τις{' '}
+          <strong>κάθετες γραμμές</strong> στα{' '}
+          <InlineMath>{'k \\cdot 0{,}1'}</InlineMath> Hz που την ακουμπάνε.
+          Χωρίς τις γραμμές, το σχήμα λέει «απεριοδικό σήμα» — άλλη απάντηση.
+        </div>
+
+        <p>
+          <strong>Πόσες γραμμές να ζωγραφίσεις;</strong> Άπειρες υπάρχουν, αλλά
+          αρκεί να δείξεις τους <strong>δύο πρώτους λοβούς</strong>: 10 γραμμές
+          να ανεβοκατεβαίνουν μέχρι το πρώτο μηδενικό στο 1 Hz, μηδενικό
+          ακριβώς στα <InlineMath>{'k = 10'}</InlineMath>, μετά έναν
+          μικρότερο λοβό μέχρι τα 2 Hz — και τελείωσες με ένα «…» δεξιά και
+          αριστερά.
+        </p>
+
+        <RectangularPulseFourier initialDuty={0.1} initialN={12} />
+
+        <p className="text-sm text-fg-muted">
+          Το διαδραστικό ακριβώς από πάνω είναι σε <strong>κανονικοποιημένους
+          άξονες</strong>: ο χρόνος μετριέται σε μονάδες{' '}
+          <InlineMath>{'T_0'}</InlineMath> (εδώ{' '}
+          <InlineMath>{'T_0 = T = 10'}</InlineMath> s) και η συχνότητα σε
+          μονάδες <InlineMath>{'f_0'}</InlineMath> (εδώ{' '}
+          <InlineMath>{'f_0 = 1/10 = 0{,}1'}</InlineMath> Hz). Με το duty cycle
+          στο <InlineMath>{'0{,}10'}</InlineMath> βλέπεις ακριβώς αυτή την
+          άσκηση: η ψηλότερη γραμμή στο 0 δείχνει{' '}
+          <InlineMath>{'a_0 = 0{,}10'}</InlineMath> και η περιβάλλουσα
+          μηδενίζεται στα <InlineMath>{'\\pm 10 f_0'}</InlineMath>, δηλαδή στα{' '}
+          <InlineMath>{'\\pm 1'}</InlineMath> Hz. Σύρε μετά το duty cycle και
+          δες τα μηδενικά να κουνιούνται — αυτό είναι το επόμενο θέμα (1.6).
         </p>
       </>
     ),

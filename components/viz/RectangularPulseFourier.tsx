@@ -34,6 +34,24 @@ function kMaxFor(d: number) {
   return Math.max(K_MAX_DRAW, Math.ceil(3 / d))
 }
 
+/**
+ * Tick spacing on the spectrum axis. When 1/d is a whole number the sinc nulls
+ * sit exactly on multiples of it, so we snap the ticks to that lattice — the
+ * labelled ticks then ARE the nulls, which is the thing worth reading off the
+ * picture. Otherwise fall back to a spacing that fits ~9 labels.
+ */
+function tickStepFor(d: number, kMax: number) {
+  const nullK = 1 / d
+  if (Math.abs(nullK - Math.round(nullK)) < 1e-9) {
+    const base = Math.round(nullK)
+    for (let m = base; m <= kMax; m += base) {
+      if (2 * Math.floor(kMax / m) + 1 <= 9) return m
+    }
+    return base
+  }
+  return Math.max(2, 2 * Math.round(kMax / 8))
+}
+
 function sinc(x: number) {
   return Math.abs(x) < 1e-9 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x)
 }
@@ -370,9 +388,11 @@ function drawSpectrum(
   ctx.fillStyle = colors.fgSubtle
   ctx.font = '9px ui-sans-serif, system-ui, sans-serif'
   ctx.textAlign = 'center'
-  for (const kf of [-6, -4, -2, 0, 2, 4, 6]) {
-    const x = xt(kf * F0)
-    ctx.fillText(`${kf}f₀`, x, h - 1)
+  const tickStep = tickStepFor(d, kMax)
+  ctx.fillText('0', xt(0), h - 1)
+  for (let kf = tickStep; kf <= kMax; kf += tickStep) {
+    ctx.fillText(`${kf}f₀`, xt(kf * F0), h - 1)
+    ctx.fillText(`−${kf}f₀`, xt(-kf * F0), h - 1)
   }
   ctx.textAlign = 'right'
   ctx.fillText(a0.toFixed(2), PAD_X - 3, yv(a0) + 3)
