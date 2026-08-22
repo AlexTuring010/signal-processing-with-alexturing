@@ -8021,26 +8021,106 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
-        <p>Νέοι συντελεστές:</p>
-        <BlockMath>{'a_k = \\frac{4}{10}\\mathrm{sinc}(4k/10) = 0.4\\,\\mathrm{sinc}(0.4k)'}</BlockMath>
-        <p>Αλλαγές:</p>
+        <p>
+          <strong>Πού ακριβώς μπαίνει η αλλαγή.</strong> Στο προηγούμενο θέμα
+          κατέληξες σε
+        </p>
+        <BlockMath>{'a_k = \\frac{A\\tau}{T}\\,\\mathrm{sinc}\\!\\left(\\frac{k\\tau}{T}\\right)'}</BlockMath>
+        <p>
+          Το <InlineMath>{'\\tau'}</InlineMath> εμφανίζεται σε{' '}
+          <strong>δύο</strong> σημεία — μια φορά μπροστά (στο ύψος) και μια
+          φορά μέσα στο όρισμα της sinc (στο πλάτος της περιβάλλουσας). Γι'
+          αυτό το <InlineMath>{'\\tau: 1 \\to 4'}</InlineMath> αλλάζει{' '}
+          <em>δύο</em> πράγματα ταυτόχρονα. Βάζοντας{' '}
+          <InlineMath>{'A = 1, \\tau = 4, T = 10'}</InlineMath>:
+        </p>
+        <BlockMath>{'a_k = \\frac{1 \\cdot 4}{10}\\,\\mathrm{sinc}\\!\\left(\\frac{4k}{10}\\right) = 0{,}4\\,\\mathrm{sinc}(0{,}4\\,k)'}</BlockMath>
+
+        <p className="mt-3 font-medium text-fg">Τι αλλάζει στο σχήμα</p>
         <ul className="ml-5 list-disc text-fg-muted">
           <li>
-            DC αυξάνεται από 0.1 σε 0.4 (μεγαλύτερο duty cycle).
+            <strong>Στον χρόνο — μόνο το φάρδος.</strong> Ο παλμός γίνεται 4 s
+            αντί για 1 s (κεντραρισμένος: από{' '}
+            <InlineMath>{'-2'}</InlineMath> έως <InlineMath>{'+2'}</InlineMath>{' '}
+            s). Το <strong>ύψος μένει 1</strong>: το{' '}
+            <InlineMath>{'A'}</InlineMath> δεν το πείραξε κανείς — η εκφώνηση
+            άλλαξε τη διάρκεια, όχι το πλάτος. Το «νεκρό» διάστημα ανάμεσα σε
+            δύο παλμούς πέφτει από 9 s σε 6 s.
           </li>
           <li>
-            Πρώτη ρίζα της <InlineMath>{'\\mathrm{sinc}'}</InlineMath>{' '}
-            μετατοπίζεται από <InlineMath>{'k = 10'}</InlineMath> (1 Hz) στο{' '}
-            <InlineMath>{'k = 2.5'}</InlineMath> (0.25 Hz). Πρακτικά οι
-            ρίζες πέφτουν στα <InlineMath>{'k = 2.5, 5, 7.5,...'}</InlineMath>{' '}
-            (όχι ακέραια — ο 5ος harmonic έχει <InlineMath>{'a_5 = 0'}</InlineMath>{' '}
-            αν επεκτείνεις το sinc).
+            <strong>Η γραμμή στο μηδέν τετραπλασιάζεται:{' '}
+            <InlineMath>{'a_0: 0{,}1 \\to 0{,}4'}</InlineMath>.</strong> Ναι —{' '}
+            <em>αλλάζει</em> κάτι στο <InlineMath>{'f = 0'}</InlineMath>. Και
+            χωρίς τύπο: το <InlineMath>{'a_0'}</InlineMath> είναι ο μέσος όρος
+            του σήματος, και τώρα το σήμα είναι «αναμμένο» 4 s στα 10 αντί για
+            1 s στα 10 → μέσος όρος 0,4 αντί 0,1.
           </li>
           <li>
-            Το envelope <strong>στενεύει</strong> (αντίστροφη σχέση{' '}
-            <InlineMath>{'\\tau \\leftrightarrow B'}</InlineMath>).
+            <strong>Η περιβάλλουσα στενεύει ×4.</strong> Τα μηδενικά είναι πάντα
+            στα πολλαπλάσια του <InlineMath>{'1/\\tau'}</InlineMath>, οπότε
+            πάνε από τα <InlineMath>{'\\pm 1, \\pm 2, \\ldots'}</InlineMath> Hz
+            στα <InlineMath>{'\\pm 0{,}25,\\ \\pm 0{,}5,\\ \\pm 0{,}75, \\ldots'}</InlineMath> Hz.
+            Σε αρμονικές: πρώτο μηδενικό στο{' '}
+            <InlineMath>{'k = T/\\tau = 2{,}5'}</InlineMath> αντί για{' '}
+            <InlineMath>{'k = 10'}</InlineMath>.
+          </li>
+          <li>
+            <strong>Οι θέσεις των γραμμών ΔΕΝ αλλάζουν.</strong> Αυτό είναι το
+            σημείο που χάνεται πιο εύκολα: οι γραμμές κάθονται στα{' '}
+            <InlineMath>{'k f_0 = k/T = k/10'}</InlineMath> Hz, και το{' '}
+            <InlineMath>{'T'}</InlineMath> έμεινε 10 s. Άρα το «χτενάκι» των
+            γραμμών είναι <em>ακριβώς στα ίδια σημεία</em> — απλώς τα{' '}
+            <strong>ύψη</strong> τους ξαναμοιράζονται κάτω από μια πιο στενή,
+            πιο ψηλή sinc.
           </li>
         </ul>
+
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">
+            Ένα μηδενικό στο <InlineMath>{'k = 2{,}5'}</InlineMath>; Δεν υπάρχει
+            αρμονική «δυόμισι».
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Σωστά — και δεν χρειάζεται. Το <InlineMath>{'k = 2{,}5'}</InlineMath>{' '}
+            είναι μηδενικό της <em>συνεχούς περιβάλλουσας</em>, όχι αρμονική. Οι
+            αρμονικές είναι μόνο ακέραιες, οπότε εκεί απλώς{' '}
+            <em>δεν πέφτει</em> γραμμή: η{' '}
+            <InlineMath>{'k=2'}</InlineMath> κάθεται λίγο πριν το μηδενικό και η{' '}
+            <InlineMath>{'k=3'}</InlineMath> λίγο μετά, στον <em>επόμενο</em>{' '}
+            λοβό — γι' αυτό η <InlineMath>{'a_3'}</InlineMath> είναι αρνητική
+            (και στο φάσμα πλάτους τη σχεδιάζεις ως{' '}
+            <InlineMath>{'|a_3|'}</InlineMath>, θετική). Όπου το{' '}
+            <InlineMath>{'0{,}4\\,k'}</InlineMath> <em>τυχαίνει</em> να βγει
+            ακέραιο, εκεί η γραμμή μηδενίζεται πραγματικά:{' '}
+            <InlineMath>{'k = 5'}</InlineMath> δίνει{' '}
+            <InlineMath>{'\\mathrm{sinc}(2) = 0'}</InlineMath> και{' '}
+            <InlineMath>{'k = 10'}</InlineMath> δίνει{' '}
+            <InlineMath>{'\\mathrm{sinc}(4) = 0'}</InlineMath>. Άρα{' '}
+            <InlineMath>{'a_5 = a_{10} = 0'}</InlineMath> — δύο γραμμές που
+            λείπουν από το σχήμα σου.
+          </span>
+        </div>
+
+        <RectangularPulseFourier initialDuty={0.4} initialN={8} />
+
+        <p className="text-sm text-fg-muted">
+          Το duty cycle στο διαδραστικό είναι{' '}
+          <InlineMath>{'\\tau/T_0'}</InlineMath>, άρα εδώ{' '}
+          <InlineMath>{'4/10 = 0{,}40'}</InlineMath>. Σύρ' το πίσω στο{' '}
+          <InlineMath>{'0{,}10'}</InlineMath> και μετά ξανά στο{' '}
+          <InlineMath>{'0{,}40'}</InlineMath>: θα δεις ταυτόχρονα και τα τρία
+          που περιγράψαμε — ο παλμός να φαρδαίνει, η γραμμή στο μηδέν να
+          ανεβαίνει από 0,10 σε 0,40, και τα μηδενικά να μαζεύονται προς το
+          κέντρο. Οι θέσεις των γραμμών μένουν καρφωμένες.
+        </p>
+
+        <p className="mt-3">
+          <strong>Ο κανόνας πίσω από όλα:</strong> πλατύτερος παλμός στον χρόνο
+          ⇒ στενότερο φάσμα, και το αντίστροφο. Είναι η ίδια αντίστροφη σχέση{' '}
+          <InlineMath>{'\\tau \\leftrightarrow 1/\\tau'}</InlineMath> που θα
+          ξαναδείς σε κάθε κεφάλαιο — και ο λόγος που ένα σύντομο, απότομο
+          σήμα χρειάζεται μεγάλο εύρος ζώνης για να περάσει.
+        </p>
       </>
     ),
   },
