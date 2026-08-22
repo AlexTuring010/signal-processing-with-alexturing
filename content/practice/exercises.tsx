@@ -10169,6 +10169,17 @@ export const EXERCISES: Exercise[] = [
     statement: <p>Σ/Λ: Ο θερμικός θόρυβος είναι ο θόρυβος του οποίου η φασματική πυκνότητα ισχύος ακολουθεί την κατανομή Gauss.</p>,
     solution: (
       <>
+        <p className="mb-3 rounded-md border border-danger/40 bg-danger/10 px-3 py-2.5 text-[15px]">
+          <strong className="text-fg">ΛΑΘΟΣ — σε μία γραμμή:</strong> ο θερμικός
+          θόρυβος έχει <strong>επίπεδη</strong> φασματική πυκνότητα ισχύος (όχι
+          gaussian) <strong>και</strong> gaussian κατανομή πλάτους. Η εκφώνηση
+          κόλλησε τη σωστή λέξη στο λάθος μέγεθος.
+        </p>
+        <p className="text-sm text-fg-muted">
+          Αν θέλεις να ξέρεις γιατί αυτή η διατύπωση μπερδεύει τόσο κόσμο — και
+          πώς να μην την ξαναπατήσεις σε παραλλαγή — συνέχισε παρακάτω.
+        </p>
+
         <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
           <strong className="text-fg">
             Διαίσθηση — ο θερμικός θόρυβος έχει δύο ξεχωριστά «πρόσωπα», σε δύο
