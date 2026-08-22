@@ -7051,16 +7051,87 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
-        <p>FT impulses:</p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>cos: ύψος <InlineMath>{'A/2'}</InlineMath> στις <InlineMath>{'\\pm f_1'}</InlineMath></li>
-          <li>sin: ύψος <InlineMath>{'B/2'}</InlineMath> στις <InlineMath>{'\\pm f_2'}</InlineMath> (φανταστικό, αλλά μέτρο = B/2)</li>
-          <li>sin: ύψος <InlineMath>{'C/2'}</InlineMath> στις <InlineMath>{'\\pm f_3'}</InlineMath></li>
-        </ul>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
+          <span className="text-fg-muted">
+            Το σήμα είναι τρεις καθαροί τόνοι σε τρεις διαφορετικές συχνότητες —
+            σαν τρία πλήκτρα πιάνου πατημένα μαζί. Το φάσμα πλάτους απαντάει σε
+            μία ερώτηση: «σε ποιες συχνότητες υπάρχει ενέργεια, και πόση;».
+            Επειδή οι τόνοι είναι <em>καθαροί</em> (ούτε διαμόρφωση, ούτε
+            παλμοί), η απάντηση δεν είναι καμπύλη — είναι λίγες{' '}
+            <strong>κάθετες γραμμές</strong> και μηδέν παντού αλλού. Το μόνο που
+            μένει να βρεις είναι <em>πού</em> και <em>πόσο ψηλά</em>.
+          </span>
+        </div>
+
         <p>
-          Έξι impulses συνολικά. Για <strong>φάσμα πλάτους</strong>{' '}
-          παίρνουμε μέτρο, όλα τα ύψη θετικά.
+          <strong>Βήμα 1 — μία γραμμή τη φορά, με τα ζεύγη του τυπολογίου.</strong>{' '}
+          Ο FT είναι γραμμικός, οπότε μετασχηματίζεις κάθε όρο χωριστά και τους
+          προσθέτεις:
         </p>
+        <BlockMath>{'A\\cos(2\\pi f_1 t) \\;\\leftrightarrow\\; \\tfrac{A}{2}\\delta(f-f_1) + \\tfrac{A}{2}\\delta(f+f_1)'}</BlockMath>
+        <BlockMath>{'B\\sin(2\\pi f_2 t) \\;\\leftrightarrow\\; \\tfrac{B}{2j}\\delta(f-f_2) - \\tfrac{B}{2j}\\delta(f+f_2)'}</BlockMath>
+        <p>
+          και το ίδιο για το <InlineMath>{'C\\sin(2\\pi f_3 t)'}</InlineMath>{' '}
+          στις <InlineMath>{'\\pm f_3'}</InlineMath>. Και τα δύο ζεύγη είναι{' '}
+          <strong>✓ στο τυπολόγιο</strong> — δεν τα αποδεικνύεις, τα διαβάζεις.
+        </p>
+
+        <p>
+          <strong>Βήμα 2 — «φάσμα πλάτους» σημαίνει πάρε μέτρο.</strong> Εδώ
+          είναι το μόνο σημείο που χρειάζεται προσοχή. Τα βάρη του{' '}
+          <InlineMath>{'\\sin'}</InlineMath> είναι{' '}
+          <strong>φανταστικά</strong>, όχι πραγματικά: το{' '}
+          <InlineMath>{'\\tfrac{1}{2j}'}</InlineMath> γράφεται{' '}
+          <InlineMath>{'\\tfrac{1}{2j}\\cdot\\tfrac{j}{j} = \\tfrac{j}{2j^2} = -\\tfrac{j}{2}'}</InlineMath>.
+          Το <em>μέτρο</em> του όμως είναι
+        </p>
+        <BlockMath>{'\\left|-\\tfrac{j}{2}\\right| = \\tfrac{1}{2} \\quad\\Longrightarrow\\quad \\left|\\tfrac{B}{2j}\\right| = \\tfrac{B}{2}'}</BlockMath>
+        <p>
+          — ίδιο ακριβώς με του συνημιτόνου. Ο λόγος: πολλαπλασιασμός με{' '}
+          <InlineMath>j</InlineMath> είναι <strong>στροφή κατά 90°</strong> στο
+          μιγαδικό επίπεδο, και η στροφή δεν αλλάζει μήκος. Άρα στο{' '}
+          <strong>φάσμα πλάτους ημίτονο και συνημίτονο είναι
+          δυσδιάκριτα</strong> — και τα δύο δίνουν δύο γραμμές ύψους «μισό
+          πλάτος». Αυτό που τα ξεχωρίζει είναι μόνο η <em>φάση</em>.
+        </p>
+
+        <p>
+          <strong>Απάντηση:</strong> έξι γραμμές, σε τρία συμμετρικά ζεύγη:
+        </p>
+        <BlockMath>{'|X(f)|:\\quad \\tfrac{A}{2}\\ \\text{στα}\\ \\pm f_1,\\qquad \\tfrac{B}{2}\\ \\text{στα}\\ \\pm f_2,\\qquad \\tfrac{C}{2}\\ \\text{στα}\\ \\pm f_3'}</BlockMath>
+        <p>
+          όλες <strong>θετικές</strong> (μέτρο δεν είναι ποτέ αρνητικό), και
+          μηδέν σε κάθε άλλη συχνότητα.
+        </p>
+
+        <SpectrumLineViz
+          title="Το σχήμα που ζητάει η εκφώνηση (+ η φάση, που το εξηγεί)"
+          lines={[
+            { f: -3, mag: 0.55, phase: Math.PI / 2, tick: '−f₃', magLabel: 'C/2', phaseLabel: '+π/2' },
+            { f: -2, mag: 0.8, phase: Math.PI / 2, tick: '−f₂', magLabel: 'B/2', phaseLabel: '+π/2' },
+            { f: -1, mag: 1, phase: 0, tick: '−f₁', magLabel: 'A/2', phaseLabel: '0' },
+            { f: 1, mag: 1, phase: 0, tick: '+f₁', magLabel: 'A/2', phaseLabel: '0' },
+            { f: 2, mag: 0.8, phase: -Math.PI / 2, tick: '+f₂', magLabel: 'B/2', phaseLabel: '−π/2' },
+            { f: 3, mag: 0.55, phase: -Math.PI / 2, tick: '+f₃', magLabel: 'C/2', phaseLabel: '−π/2' },
+          ]}
+          caption={
+            <>
+              <strong>Τα σχετικά ύψη είναι αυθαίρετα εδώ</strong> — τα{' '}
+              <InlineMath>{'A, B, C'}</InlineMath> δεν δίνονται αριθμητικά, οπότε
+              στο χαρτί σου αρκεί να τα σημειώσεις ως{' '}
+              <InlineMath>{'A/2, B/2, C/2'}</InlineMath> χωρίς να προσπαθήσεις να
+              τα βάλεις σε σειρά. Ίδιο και για τις θέσεις: μόνο{' '}
+              <InlineMath>{'f_1 \\neq f_2 \\neq f_3'}</InlineMath> ξέρεις, όχι
+              ποιο είναι μεγαλύτερο. Το κάτω σχήμα (φάση) <em>δεν</em>{' '}
+              ζητείται, αλλά δείχνει γιατί τα ημίτονα «κρύβονται» στο πάνω: ο
+              τόνος <InlineMath>{'A\\cos'}</InlineMath> έχει φάση 0, ενώ οι δύο{' '}
+              <InlineMath>{'\\sin'}</InlineMath> έχουν{' '}
+              <InlineMath>{'\\mp\\pi/2'}</InlineMath> — η πληροφορία «ημίτονο ή
+              συνημίτονο» ζει ολόκληρη εκεί κάτω.
+            </>
+          }
+        />
       </>
     ),
   },
@@ -8145,26 +8216,130 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
+          <strong className="text-fg">Πρώτα: τι είναι το <InlineMath>k</InlineMath>.</strong>{' '}
+          <span className="text-fg-muted">
+            Το <InlineMath>{'\\textstyle\\sum_{k=1}^{6}'}</InlineMath> δεν είναι
+            τίποτα εξωτικό — είναι απλώς συντομογραφία για «πρόσθεσε έξι
+            συνημίτονα». Το <InlineMath>k</InlineMath> είναι ο{' '}
+            <strong>αριθμός της αρμονικής</strong>: ο όρος{' '}
+            <InlineMath>{'k = 1'}</InlineMath> ταλαντώνεται στη{' '}
+            <InlineMath>{'f_c'}</InlineMath>, ο <InlineMath>{'k = 2'}</InlineMath>{' '}
+            στη <InlineMath>{'2f_c'}</InlineMath> (διπλάσια συχνότητα), ο{' '}
+            <InlineMath>{'k = 3'}</InlineMath> στη{' '}
+            <InlineMath>{'3f_c'}</InlineMath>, και ούτω καθεξής. Γραμμένο
+            αναλυτικά, το σήμα είναι:
+            <BlockMath>{'x(t) = 1\\cos(2\\pi f_c t + \\tfrac{\\pi}{4}) + 4\\cos(2\\pi \\cdot 2f_c t + \\tfrac{2\\pi}{4}) + \\cdots + 36\\cos(2\\pi \\cdot 6 f_c t + \\tfrac{6\\pi}{4})'}</BlockMath>
+            Τα <InlineMath>{'A_k = k^2'}</InlineMath> και{' '}
+            <InlineMath>{'\\phi_k = k\\pi/4'}</InlineMath> είναι απλώς{' '}
+            <em>συνταγές</em> που σου λένε πόσο δυνατή και πόσο μετατοπισμένη
+            είναι η κάθε αρμονική. Δεν χρειάζεται να τα φανταστείς — τα
+            υπολογίζεις έναν-έναν και τα βάζεις στο σχήμα.
+          </span>
+        </div>
+
         <p>
-          6 αρμονικές στις <InlineMath>{'\\pm k f_c'}</InlineMath> για{' '}
-          <InlineMath>{'k = 1\\ldots 6'}</InlineMath>.
+          <strong>Βήμα 1 — κάθε συνημίτονο δίνει δύο γραμμές.</strong> Από το
+          ζεύγος <InlineMath>{'A\\cos(2\\pi f_0 t + \\varphi) \\leftrightarrow \\tfrac{A}{2}e^{j\\varphi}\\delta(f-f_0) + \\tfrac{A}{2}e^{-j\\varphi}\\delta(f+f_0)'}</InlineMath>:
+          κάθε όρος γεννά ένα <strong>ζεύγος</strong> κρούσεων, στα{' '}
+          <InlineMath>{'\\pm k f_c'}</InlineMath>, με ύψος τη{' '}
+          <strong>μισή</strong> αμπλιτούδα και με φάση{' '}
+          <InlineMath>{'\\pm\\varphi_k'}</InlineMath>. Έξι όροι ⇒{' '}
+          <strong>12 γραμμές συνολικά</strong>.
         </p>
-        <p><strong>Φάσμα πλάτους</strong> (impulses ύψους <InlineMath>{'A_k/2 = k^2/2'}</InlineMath>):</p>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li><InlineMath>{'k = 1: 0.5'}</InlineMath></li>
-          <li><InlineMath>{'k = 2: 2'}</InlineMath></li>
-          <li><InlineMath>{'k = 3: 4.5'}</InlineMath></li>
-          <li><InlineMath>{'k = 4: 8'}</InlineMath></li>
-          <li><InlineMath>{'k = 5: 12.5'}</InlineMath></li>
-          <li><InlineMath>{'k = 6: 18'}</InlineMath></li>
-        </ul>
         <p>
-          <strong>Φάσμα φάσης:</strong>{' '}
-          <InlineMath>{'\\phi_k = k\\pi/4'}</InlineMath> στα{' '}
-          <InlineMath>{'+k f_c'}</InlineMath>,{' '}
+          Το «μισή» είναι ο μόνος αριθμός που ξεχνιέται εδώ: το ύψος στο σχήμα
+          δεν είναι <InlineMath>{'A_k'}</InlineMath> αλλά{' '}
+          <InlineMath>{'A_k/2'}</InlineMath>, γιατί η ισχύς του συνημίτονου
+          μοιράζεται σε θετικές <em>και</em> αρνητικές συχνότητες.
+        </p>
+
+        <p>
+          <strong>Βήμα 2 — τα δώδεκα νούμερα.</strong> Ύψη{' '}
+          <InlineMath>{'A_k/2 = k^2/2'}</InlineMath>:
+        </p>
+        <BlockMath>{'\\tfrac{1}{2},\\; 2,\\; \\tfrac{9}{2},\\; 8,\\; \\tfrac{25}{2},\\; 18 \\qquad (k = 1 \\ldots 6)'}</BlockMath>
+        <p>
+          Πρόσεξε το σχήμα που φτιάχνουν: το φάσμα{' '}
+          <strong>μεγαλώνει</strong> όσο ανεβαίνεις σε συχνότητα, και μάλιστα
+          τετραγωνικά (η 6η αρμονική είναι 36 φορές δυνατότερη από την 1η). Τα
+          περισσότερα φυσικά σήματα κάνουν το αντίθετο — φθίνουν. Αν το σχήμα
+          σου βγει φθίνον, έβαλες <InlineMath>{'1/k^2'}</InlineMath> κάπου.
+        </p>
+
+        <p>
+          <strong>Βήμα 3 — τι σημαίνει το{' '}
+          <InlineMath>{'\\phi_k'}</InlineMath> στο δεύτερο σχήμα.</strong> Το
+          ύψος στο φάσμα φάσης δεν είναι «πόσο δυνατή» — αυτό το είπε ήδη το
+          πρώτο σχήμα. Είναι <strong>πόσο μετατοπισμένη στον χρόνο</strong>{' '}
+          είναι εκείνη η αρμονική σε σχέση με ένα σκέτο{' '}
+          <InlineMath>{'\\cos(2\\pi k f_c t)'}</InlineMath>. Ξαναγράφοντας:
+        </p>
+        <BlockMath>{'\\cos(2\\pi k f_c t + \\phi_k) = \\cos\\!\\Big(2\\pi k f_c \\big(t + \\underbrace{\\tfrac{\\phi_k}{2\\pi k f_c}}_{\\text{μετατόπιση σε sec}}\\big)\\Big)'}</BlockMath>
+        <p>
+          Δηλαδή θετική φάση = η κορυφή του κύματος έρχεται{' '}
+          <strong>νωρίτερα</strong>. Μετριέται σε <strong>ακτίνια</strong>, όχι
+          σε πλάτος — γι' αυτό ο κατακόρυφος άξονας του δεύτερου σχήματος πάει
+          από <InlineMath>{'-\\pi'}</InlineMath> έως{' '}
+          <InlineMath>{'+\\pi'}</InlineMath> και όχι από 0 προς τα πάνω.
+        </p>
+        <p>
+          Οι τιμές είναι <InlineMath>{'\\phi_k = k\\pi/4'}</InlineMath> στα{' '}
+          <InlineMath>{'+k f_c'}</InlineMath> και{' '}
           <InlineMath>{'-k\\pi/4'}</InlineMath> στα{' '}
-          <InlineMath>{'-k f_c'}</InlineMath>.
+          <InlineMath>{'-k f_c'}</InlineMath> (η φάση πραγματικού σήματος είναι
+          πάντα <strong>περιττή</strong>).
         </p>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Το <InlineMath>{'\\phi_5 = 5\\pi/4'}</InlineMath> δεν
+          χωράει στον άξονα — και δεν χρειάζεται.</strong> Η φάση είναι γωνία:
+          το <InlineMath>{'5\\pi/4'}</InlineMath> και το{' '}
+          <InlineMath>{'5\\pi/4 - 2\\pi = -3\\pi/4'}</InlineMath> δείχνουν{' '}
+          <em>ακριβώς το ίδιο σημείο</em> του κύκλου, άρα το ίδιο σήμα. Η
+          σύμβαση είναι να τη γράφεις στο διάστημα{' '}
+          <InlineMath>{'(-\\pi, \\pi]'}</InlineMath>:{' '}
+          <InlineMath>{'\\phi_5 = 5\\pi/4 \\equiv -3\\pi/4'}</InlineMath> και{' '}
+          <InlineMath>{'\\phi_6 = 6\\pi/4 = 3\\pi/2 \\equiv -\\pi/2'}</InlineMath>.
+          Και οι δύο γραφές παίρνουν μονάδες· η τυλιγμένη είναι που σε αφήνει να
+          σχεδιάσεις σε έναν άξονα ύψους{' '}
+          <InlineMath>{'\\pm\\pi'}</InlineMath>.
+        </div>
+
+        <SpectrumLineViz
+          title="Τα δύο σχήματα — 12 γραμμές, πλάτος και φάση"
+          freqAxisLabel="f"
+          lines={[
+            { f: -6, mag: 18, phase: Math.PI / 2, tick: '−6f_c', magLabel: '18', phaseLabel: '+π/2' },
+            { f: -5, mag: 12.5, phase: (3 * Math.PI) / 4, tick: '−5f_c', magLabel: '12,5', phaseLabel: '+3π/4' },
+            { f: -4, mag: 8, phase: -Math.PI, tick: '−4f_c', magLabel: '8', phaseLabel: '±π' },
+            { f: -3, mag: 4.5, phase: (-3 * Math.PI) / 4, tick: '−3f_c', magLabel: '4,5', phaseLabel: '−3π/4' },
+            { f: -2, mag: 2, phase: -Math.PI / 2, tick: '−2f_c', magLabel: '2', phaseLabel: '−π/2' },
+            { f: -1, mag: 0.5, phase: -Math.PI / 4, tick: '−f_c', magLabel: '0,5', phaseLabel: '−π/4' },
+            { f: 1, mag: 0.5, phase: Math.PI / 4, tick: '+f_c', magLabel: '0,5', phaseLabel: '+π/4' },
+            { f: 2, mag: 2, phase: Math.PI / 2, tick: '+2f_c', magLabel: '2', phaseLabel: '+π/2' },
+            { f: 3, mag: 4.5, phase: (3 * Math.PI) / 4, tick: '+3f_c', magLabel: '4,5', phaseLabel: '+3π/4' },
+            { f: 4, mag: 8, phase: Math.PI, tick: '+4f_c', magLabel: '8', phaseLabel: '±π' },
+            { f: 5, mag: 12.5, phase: (-3 * Math.PI) / 4, tick: '+5f_c', magLabel: '12,5', phaseLabel: '−3π/4' },
+            { f: 6, mag: 18, phase: -Math.PI / 2, tick: '+6f_c', magLabel: '18', phaseLabel: '−π/2' },
+          ]}
+          caption={
+            <>
+              Πάνω το φάσμα πλάτους: 12 κρούσεις, ύψη{' '}
+              <InlineMath>{'k^2/2'}</InlineMath>, συμμετρικά γύρω από το{' '}
+              <InlineMath>{'f = 0'}</InlineMath> (άρτιο). Κάτω το φάσμα φάσης:
+              οι ίδιες 12 θέσεις, αλλά με τιμές{' '}
+              <InlineMath>{'\\pm k\\pi/4'}</InlineMath> τυλιγμένες στο{' '}
+              <InlineMath>{'(-\\pi, \\pi]'}</InlineMath> — αντισυμμετρικά γύρω
+              από το <InlineMath>{'f = 0'}</InlineMath> (περιττό). Στα{' '}
+              <InlineMath>{'\\pm 4 f_c'}</InlineMath> η φάση είναι{' '}
+              <InlineMath>{'\\pi'}</InlineMath>, το μοναδικό σημείο όπου «θετικό»
+              και «αρνητικό» ταυτίζονται — γι' αυτό γράφεται{' '}
+              <InlineMath>{'\\pm\\pi'}</InlineMath>. Πάτα οποιαδήποτε γραμμή για
+              να διαβάσεις το τρίδυμο θέση / ύψος / φάση.
+            </>
+          }
+        />
       </>
     ),
   },
