@@ -21,7 +21,18 @@ import { getThemeColors, setupCanvas, lerp } from '@/lib/canvas'
 const T0 = 1.0
 const F0 = 1 / T0
 const OMEGA0 = 2 * Math.PI * F0
-const K_MAX_DRAW = 21 // how many harmonics to draw in the spectrum
+const K_MAX_DRAW = 21 // how many harmonics to draw in the spectrum (d = 0.5)
+
+/**
+ * How far out to draw, given the duty cycle. The sinc's first null sits at
+ * k = 1/d, so a narrow pulse (small d) needs a wider window before the picture
+ * shows even one full mainlobe. Three lobes is enough to read the shape.
+ * At the default d = 0.5 this returns exactly K_MAX_DRAW, so the 50%-duty
+ * figure on the Fourier-series page is unchanged.
+ */
+function kMaxFor(d: number) {
+  return Math.max(K_MAX_DRAW, Math.ceil(3 / d))
+}
 
 function sinc(x: number) {
   return Math.abs(x) < 1e-9 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x)
@@ -35,10 +46,27 @@ function ak(k: number, A: number, d: number) {
   return A * d * sinc(x)
 }
 
-export function RectangularPulseFourier() {
-  const [N, setN] = useState(7)
-  const [duty, setDuty] = useState(0.5) // d = τ / T₀
-  const [amp, setAmp] = useState(1) // A
+type Props = {
+  /**
+   * Where the duty-cycle slider starts, d = τ/T₀. Default 0.5 (the 50%
+   * square wave worked in the Fourier-series chapter). Past-exam problems
+   * open at their own duty cycle — e.g. τ=1s, T₀=10s → `initialDuty={0.1}`.
+   */
+  initialDuty?: number
+  /** Where the amplitude slider starts, A. Default 1. */
+  initialAmp?: number
+  /** Where the harmonic-count slider starts, N. Default 7. */
+  initialN?: number
+}
+
+export function RectangularPulseFourier({
+  initialDuty = 0.5,
+  initialAmp = 1,
+  initialN = 7,
+}: Props = {}) {
+  const [N, setN] = useState(initialN)
+  const [duty, setDuty] = useState(initialDuty) // d = τ / T₀
+  const [amp, setAmp] = useState(initialAmp) // A
   const topRef = useRef<HTMLCanvasElement | null>(null)
   const bottomRef = useRef<HTMLCanvasElement | null>(null)
 
@@ -144,9 +172,9 @@ export function RectangularPulseFourier() {
           <input
             type="range"
             min={0}
-            max={K_MAX_DRAW}
+            max={kMaxFor(duty)}
             step={1}
-            value={N}
+            value={Math.min(N, kMaxFor(duty))}
             onChange={(e) => setN(parseInt(e.target.value))}
             className="mt-1 w-full accent-[rgb(var(--accent))]"
             aria-label="Number of harmonics N"
@@ -279,7 +307,8 @@ function drawSpectrum(
   const { ctx, w, h } = setupCanvas(canvas)
   ctx.clearRect(0, 0, w, h)
 
-  const fMax = (K_MAX_DRAW + 1) * F0
+  const kMax = kMaxFor(d)
+  const fMax = (kMax + 1) * F0
   const fMin = -fMax
   const a0 = A * d
   const yMax = Math.max(a0 * 1.15, 0.12)
@@ -318,7 +347,7 @@ function drawSpectrum(
   ctx.setLineDash([])
 
   // discrete lines
-  for (let k = -K_MAX_DRAW; k <= K_MAX_DRAW; k++) {
+  for (let k = -kMax; k <= kMax; k++) {
     const a = Math.abs(ak(k, A, d))
     if (a < 1e-9) continue
     const f = k * F0

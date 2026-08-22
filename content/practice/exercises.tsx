@@ -30,6 +30,8 @@ import { AMSpectrumViz } from '@/components/viz/AMSpectrumViz'
 import { OvermodulationPhaseReversalViz } from '@/components/viz/OvermodulationPhaseReversalViz'
 import { FdmCanonicalProblemViz } from '@/components/viz/FdmCanonicalProblemViz'
 import { DistributionExplorerViz } from '@/components/viz/DistributionExplorerViz'
+import { SpectrumLineViz } from '@/components/viz/SpectrumLineViz'
+import { RectangularPulseFourier } from '@/components/viz/RectangularPulseFourier'
 import type { Exercise } from './types'
 
 export const EXERCISES: Exercise[] = [
@@ -7691,23 +7693,87 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <InlineMath>{'f_0 = 500'}</InlineMath> Hz, <InlineMath>{'A = 2'}</InlineMath>,
-          φάση <InlineMath>{'\\pi/4'}</InlineMath>. Με{' '}
-          <InlineMath>{'2\\cos\\theta = e^{j\\theta} + e^{-j\\theta}'}</InlineMath>:
+          <strong>Βήμα 0 — από πού βγαίνει το{' '}
+          <InlineMath>{'f_0 = 500'}</InlineMath> Hz.</strong> Δεν δίνεται· το
+          διαβάζεις από την εκφώνηση. Κάθε ημιτονοειδές γράφεται στην{' '}
+          <em>κανονική μορφή</em>
+        </p>
+        <BlockMath>{'x(t) = A\\cos(2\\pi f_0 t + \\varphi)'}</BlockMath>
+        <p>
+          και το μόνο που κάνεις είναι να <strong>ταιριάξεις τα κομμάτια</strong>{' '}
+          με αυτό που σου έδωσαν. Δίπλα στο <InlineMath>t</InlineMath> μέσα στο
+          συνημίτονο η κανονική μορφή έχει <InlineMath>{'2\\pi f_0'}</InlineMath>,
+          ενώ η εκφώνηση έχει <InlineMath>{'1000\\pi'}</InlineMath>. Άρα:
+        </p>
+        <BlockMath>{'2\\pi f_0 = 1000\\pi \\;\\Longrightarrow\\; f_0 = \\frac{1000\\pi}{2\\pi} = 500\\ \\text{Hz}'}</BlockMath>
+        <p>
+          Με τον ίδιο τρόπο: μπροστά στο συνημίτονο υπάρχει το{' '}
+          <InlineMath>{'A = 2'}</InlineMath>, και ο σταθερός όρος μέσα στην
+          παρένθεση είναι η φάση <InlineMath>{'\\varphi = \\pi/4'}</InlineMath>.
+        </p>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Η πιο συχνή απώλεια μονάδων εδώ:</strong> να γράψεις{' '}
+          <InlineMath>{'f_0 = 1000'}</InlineMath> Hz. Ο αριθμός{' '}
+          <InlineMath>{'1000\\pi'}</InlineMath> είναι η <em>γωνιακή</em>{' '}
+          συχνότητα <InlineMath>{'\\omega_0 = 2\\pi f_0'}</InlineMath> σε rad/s,{' '}
+          <strong>όχι</strong> η συχνότητα σε Hz. Το{' '}
+          <InlineMath>{'2\\pi'}</InlineMath> είναι ο μετατροπέας «κύκλοι ανά
+          δευτερόλεπτο → ακτίνια ανά δευτερόλεπτο»: ένας πλήρης κύκλος είναι{' '}
+          <InlineMath>{'2\\pi'}</InlineMath> ακτίνια, άρα 500 κύκλοι το
+          δευτερόλεπτο είναι <InlineMath>{'500 \\cdot 2\\pi = 1000\\pi'}</InlineMath>{' '}
+          ακτίνια το δευτερόλεπτο. Κανόνας τσέπης: <strong>ό,τι βρίσκεται
+          δίπλα στο <InlineMath>t</InlineMath>, διαίρεσέ το με{' '}
+          <InlineMath>{'2\\pi'}</InlineMath>.</strong>
+        </div>
+
+        <p>
+          <strong>Βήμα 1 — σπάσε το συνημίτονο σε δύο εκθετικά.</strong> Το
+          φάσμα δεν «βλέπει» συνημίτονα, βλέπει{' '}
+          <InlineMath>{'e^{j2\\pi f t}'}</InlineMath>. Από την ταυτότητα του
+          τυπολογίου <InlineMath>{'\\cos\\theta = \\tfrac{1}{2}(e^{j\\theta} + e^{-j\\theta})'}</InlineMath>,
+          με <InlineMath>{'\\theta = 2\\pi(500)t + \\pi/4'}</InlineMath>:
+        </p>
+        <BlockMath>{'x(t) = 2\\cos\\theta = e^{j\\theta} + e^{-j\\theta} = \\underbrace{e^{j\\pi/4}}_{\\text{βάρος}}e^{j2\\pi(500)t} + \\underbrace{e^{-j\\pi/4}}_{\\text{βάρος}}e^{-j2\\pi(500)t}'}</BlockMath>
+        <p>
+          Το κόλπο στο τελευταίο βήμα: <InlineMath>{'e^{j(a+b)} = e^{ja}e^{jb}'}</InlineMath>,
+          οπότε η σταθερή φάση <InlineMath>{'\\pi/4'}</InlineMath> ξεκολλάει από
+          τον χρόνο και μένει μπροστά ως <strong>μιγαδικό βάρος</strong>.
+        </p>
+        <p>
+          <strong>Βήμα 2 — κάθε εκθετικό είναι μία κρούση.</strong> Το ζεύγος{' '}
+          <InlineMath>{'e^{j2\\pi f_0 t} \\leftrightarrow \\delta(f - f_0)'}</InlineMath>{' '}
+          λέει ότι ένα εκθετικό ζει σε <em>μία</em> συχνότητα. Άρα:
         </p>
         <BlockMath>{'X(f) = e^{j\\pi/4}\\delta(f-500) + e^{-j\\pi/4}\\delta(f+500)'}</BlockMath>
-        <ul className="ml-5 list-disc text-fg-muted">
-          <li>
-            <strong>Φάσμα πλάτους:</strong> δύο impulses ύψους 1 στις{' '}
-            <InlineMath>{'\\pm 500'}</InlineMath> Hz.
-          </li>
-          <li>
-            <strong>Φάσμα φάσης:</strong>{' '}
-            <InlineMath>{'+\\pi/4'}</InlineMath> στα 500 Hz,{' '}
-            <InlineMath>{'-\\pi/4'}</InlineMath> στα -500 Hz (περιττή φάση
-            για πραγματικό σήμα).
-          </li>
-        </ul>
+        <p>
+          <strong>Με απλά λόγια:</strong> το <InlineMath>{'|e^{\\pm j\\pi/4}| = 1'}</InlineMath>{' '}
+          (κάθε <InlineMath>{'e^{j\\varphi}'}</InlineMath> έχει μέτρο 1 — είναι
+          σημείο πάνω στον μοναδιαίο κύκλο), άρα το <strong>ύψος</strong> κάθε
+          κρούσης είναι 1 και η φάση <InlineMath>{'\\pi/4'}</InlineMath> δεν
+          επηρεάζει καθόλου το φάσμα πλάτους — <em>μόνο</em> το φάσμα φάσης. Γι'
+          αυτό ζητούνται δύο ξεχωριστά σχήματα: το ένα δείχνει «πόσο», το άλλο
+          «με τι χρονική μετατόπιση».
+        </p>
+
+        <SpectrumLineViz
+          title="Τα δύο σχήματα που ζητάει η εκφώνηση"
+          lines={[
+            { f: -500, mag: 1, phase: -Math.PI / 4, tick: '−500 Hz', magLabel: '1', phaseLabel: '−π/4' },
+            { f: 500, mag: 1, phase: Math.PI / 4, tick: '+500 Hz', magLabel: '1', phaseLabel: '+π/4' },
+          ]}
+          caption={
+            <>
+              Πάνω το φάσμα πλάτους, κάτω το φάσμα φάσης. Πρόσεξε τις δύο
+              συμμετρίες που ισχύουν για <strong>κάθε πραγματικό σήμα</strong>:
+              το πλάτος είναι <strong>άρτιο</strong> (καθρέφτης γύρω από το{' '}
+              <InlineMath>{'f=0'}</InlineMath> — ίδιο ύψος αριστερά και δεξιά)
+              και η φάση <strong>περιττή</strong> (αντίθετο πρόσημο αριστερά και
+              δεξιά). Αν σου βγει φάση με το ίδιο πρόσημο και στις δύο πλευρές,
+              κάπου έκανες λάθος.
+            </>
+          }
+        />
       </>
     ),
   },
