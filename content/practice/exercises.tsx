@@ -3738,6 +3738,42 @@ export const EXERCISES: Exercise[] = [
     ),
     solution: (
       <>
+        <div className="mb-3 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2.5 text-[15px]">
+          <strong className="text-fg">
+            Η απάντηση σε μία γραμμή — χωρίς ολοκλήρωμα.
+          </strong>{' '}
+          <span className="text-fg-muted">
+            Η PSD εξόδου είναι ένα <strong>ορθογώνιο</strong>: ύψος{' '}
+            <InlineMath>{'N_0/2'}</InlineMath> (σταθερό, γιατί ο θόρυβος είναι
+            λευκός), πλάτος <InlineMath>{'2W'}</InlineMath> (η ζώνη{' '}
+            <InlineMath>{'[-W, W]'}</InlineMath>). Η ισχύς είναι το εμβαδόν:
+          </span>
+          <BlockMath>{'P_y = \\underbrace{\\frac{N_0}{2}}_{\\text{ύψος}} \\times \\underbrace{2W}_{\\text{πλάτος}} = N_0 W'}</BlockMath>
+          <span className="text-fg-muted">
+            Αυτό αρκεί για πλήρεις μονάδες. Το ολοκλήρωμα παρακάτω{' '}
+            <em>είναι</em> αυτός ο πολλαπλασιασμός γραμμένος τυπικά — «εμβαδόν
+            ορθογωνίου» είναι ακριβώς το{' '}
+            <InlineMath>{'\\int_{-W}^{W} (N_0/2)\\,df'}</InlineMath> όταν η
+            συνάρτηση είναι σταθερή. Γράψ' το όπως προτιμάς· απλώς{' '}
+            <strong>πες από πού βγαίνει το ύψος και από πού το πλάτος</strong>,
+            γιατί εκεί κρίνονται οι μονάδες.
+          </span>
+        </div>
+
+        <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-800 dark:text-amber-200">
+          <strong>⚠️ Πρόσεξε να μη γράψεις <InlineMath>{'kTW'}</InlineMath> εδώ.</strong>{' '}
+          Η εκφώνηση λέει «λευκός θόρυβος με PSD{' '}
+          <InlineMath>{'N_0/2'}</InlineMath>» — <em>δεν</em> λέει ότι είναι{' '}
+          <strong>θερμικός</strong>. Η αντικατάσταση{' '}
+          <InlineMath>{'N_0 = kT'}</InlineMath> ισχύει μόνο για θερμικό θόρυβο σε
+          θερμοκρασία <InlineMath>T</InlineMath>· εδώ το{' '}
+          <InlineMath>{'N_0'}</InlineMath> είναι απλώς ένα δοσμένο σύμβολο. Η
+          σωστή απάντηση είναι <InlineMath>{'N_0 W'}</InlineMath>. (Στα θέματα
+          που <em>λένε</em> «θερμικός», τότε ναι — βάζεις{' '}
+          <InlineMath>{'N_0 = kT'}</InlineMath> και γίνεται{' '}
+          <InlineMath>{'kTW'}</InlineMath>.)
+        </div>
+
         <div className="my-3 rounded-md border border-sky-500/30 bg-sky-500/5 px-3 py-2.5 text-sm">
           <strong className="text-fg">Διαίσθηση πρώτα.</strong>{' '}
           <span className="text-fg-muted">
