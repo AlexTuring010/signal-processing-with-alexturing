@@ -233,7 +233,7 @@ $$
 **Τρεις απαραίτητες συνθήκες**:
 
 1. **Ολικό φέρον (Total Carrier)** — το λαμβανόμενο σήμα **πρέπει** να έχει την πλήρη μορφή Conventional AM: $x(t) = [A_c + m(t)]\cos(2\pi f_c t)$, με την DC συνιστώσα $A_c$ παρούσα. Σε DSB-SC ή SSB (χωρίς carrier) το envelope **δεν** είναι το $m(t)$: στο DSB-SC είναι το $A_c|m(t)|$ — χάνεται δηλαδή το πρόσημο του message — ενώ στο SSB είναι το $A_c\sqrt{m^2(t) + \hat m^2(t)}$, μια πάντα θετική ποσότητα που δεν ακολουθεί το σχήμα του $m(t)$ (η απαγωγή της είναι στο [/am/ssb](/am/ssb#5-bandwidth-και-ισχύς)). Και στις δύο περιπτώσεις ο envelope detector αποτυγχάνει.
-2. **$\mu \leq 1$** (καμία υπερδιαμόρφωση). Διαφορετικά το envelope πάει αρνητικό σε κάποιες στιγμές, ο envelope detector το αναποδογυρίζει, και παίρνεις παραμορφωμένο message. Δες [/am/conventional](/am/conventional#3-overmodulation-η-έννοια-της-καθαρής-ανάκτησης) για τη πλήρη εικόνα.
+2. **$\mu \leq 1$** (καμία υπερδιαμόρφωση). Διαφορετικά το envelope πάει αρνητικό σε κάποιες στιγμές, ο envelope detector το αναποδογυρίζει, και παίρνεις παραμορφωμένο message. Δες [/am/conventional](/am/conventional#3-υπερδιαμόρφωση-overmodulation--τι-σπάει-και-γιατί) για τη πλήρη εικόνα.
 3. **$f_c \gg W$** (καλά διαχωρισμένες κλίμακες). Διαφορετικά δεν υπάρχει «σωστό» RC ανάμεσα στα $1/f_c$ και $1/W$.
 
 ### 2d. Πώς αφαιρείται το DC offset $A_c$ — γιατί ο πυκνωτής μπλοκάρει το DC
@@ -304,7 +304,7 @@ $$
 \boxed{\,\hat m(t) = m(t)\cos\varphi + n_{\text{low}}(t)\,}
 $$
 
-**Το $\cos\varphi$ είναι το phase-error penalty**: τέλεια ευθυγράμμιση ($\varphi = 0$) → πλήρης ανάκτηση. Στις 90° → **μηδέν** (quadrature null, ίδιο όπως στο [DSB-SC](/am/dsb-sc#4a-coherent-demodulation-η-σωστή-διαδικασία)). Σε ενδιάμεσες γωνίες → γραμμική απώλεια πλάτους.
+**Το $\cos\varphi$ είναι το phase-error penalty**: τέλεια ευθυγράμμιση ($\varphi = 0$) → πλήρης ανάκτηση. Στις 90° → **μηδέν** (quadrature null, ίδιο όπως στο [DSB-SC](/am/dsb-sc#4-coherent-demodulation--γιατί-δουλεύει)). Σε ενδιάμεσες γωνίες → γραμμική απώλεια πλάτους.
 
 <CoherentReceiverChainViz />
 
@@ -340,7 +340,7 @@ $$
 \text{SNR}_{\text{out, env}} \approx \frac{\mu^2/2}{1 + \mu^2/2} \cdot \text{SNR}_{\text{in}} = \eta \cdot \text{SNR}_{\text{in}}
 $$
 
-Δηλαδή η output SNR είναι **χειρότερη** από την input SNR κατά τον παράγοντα efficiency $\eta$ που υπολογίσαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency). Για $\mu = 1$: output SNR ≈ (1/3) × input SNR ≈ −4.8 dB απώλεια. Για $\mu = 0.5$: $\eta \approx 0.111$ → −9.5 dB. **Η σπατάλη ισχύος στον carrier πληρώνεται σε SNR.**
+Δηλαδή η output SNR είναι **χειρότερη** από την input SNR κατά τον παράγοντα efficiency $\eta$ που υπολογίσαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-αποδοτικότητα-και-η-ταυτότητα-της-am). Για $\mu = 1$: output SNR ≈ (1/3) × input SNR ≈ −4.8 dB απώλεια. Για $\mu = 0.5$: $\eta \approx 0.111$ → −9.5 dB. **Η σπατάλη ισχύος στον carrier πληρώνεται σε SNR.**
 
 ### 4b. Threshold effect (κάτω από ~10 dB)
 
@@ -399,11 +399,11 @@ $$
 
 ## 5. Σύνοψη τύπων ισχύος + SNR — γρήγορη αναφορά
 
-Στο §4 παραπάνω και στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency) είδαμε όλους τους τύπους efficiency και output SNR για AM/DSB-SC/SSB κομματιαστά. Τους συγκεντρώνουμε εδώ σε ένα σημείο για γρήγορη αναφορά στις εξετάσεις — **καμία νέα παραγωγή**, όλα έχουν τεκμηριωθεί στα προηγούμενα.
+Στο §4 παραπάνω και στο [Conventional AM §5](/am/conventional#5-ισχύς-αποδοτικότητα-και-η-ταυτότητα-της-am) είδαμε όλους τους τύπους efficiency και output SNR για AM/DSB-SC/SSB κομματιαστά. Τους συγκεντρώνουμε εδώ σε ένα σημείο για γρήγορη αναφορά στις εξετάσεις — **καμία νέα παραγωγή**, όλα έχουν τεκμηριωθεί στα προηγούμενα.
 
 ### 5a. Efficiency η — γενική μορφή
 
-Η γενική μορφή που παρήγαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-και-efficiency):
+Η γενική μορφή που παρήγαμε στο [Conventional AM §5](/am/conventional#5-ισχύς-αποδοτικότητα-και-η-ταυτότητα-της-am):
 
 $$
 \boxed{\,\eta = \frac{P_m}{A_c^2 + P_m}\,}
@@ -729,7 +729,7 @@ $$i(t) \supset A_c[a_1 + 2 a_2 m(t)]\cos\omega_c t = \text{conventional AM}$$
 
 **(γ) «Output SNR AM vs DSB-SC».** Single-tone → <InlineMath>{'\\eta = \\mu^2/2 / (1 + \\mu^2/2)'}</InlineMath>. DSB-SC = 1. Λόγος σε dB. Αν SNR_in είναι κάτω από 10 dB, αναφέρε επιπλέον το threshold effect.
 
-**(δ) «Coherent demod με phase error φ».** Πολλαπλασίασε, ανάπτυξε <InlineMath>{'2\\cos A \\cos B = \\cos(A-B) + \\cos(A+B)'}</InlineMath>, LPF, DC removal — αποτέλεσμα <InlineMath>{'m(t)\\cos\\varphi'}</InlineMath>. Στις 90° → ZERO output (quadrature null), όχι παραμόρφωση. Για SSB είναι διαφορετικά (Hilbert παραμόρφωση) — δες [/am/ssb §4](/am/ssb#4-coherent-demodulation-και-phase-error).
+**(δ) «Coherent demod με phase error φ».** Πολλαπλασίασε, ανάπτυξε <InlineMath>{'2\\cos A \\cos B = \\cos(A-B) + \\cos(A+B)'}</InlineMath>, LPF, DC removal — αποτέλεσμα <InlineMath>{'m(t)\\cos\\varphi'}</InlineMath>. Στις 90° → ZERO output (quadrature null), όχι παραμόρφωση. Για SSB είναι διαφορετικά (Hilbert παραμόρφωση) — δες [/am/ssb §4](/am/ssb#4-σύμφωνη-αποδιαμόρφωση-της-ssb-am).
 
 </ThinkingPattern>
 

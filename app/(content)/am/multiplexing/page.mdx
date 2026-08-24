@@ -370,7 +370,7 @@ Mathematics: αν το input σήμα έχει συνιστώσα στο $f_{\te
 
 - **Διαμόρφωση**: mixer + BPF γύρω από $f_c$ → ανεβάζει το baseband στο RF.
 - **Σύμφωνη Αποδιαμόρφωση**: mixer + LPF → κατεβάζει το RF στο baseband (= ειδική περίπτωση όπου το «BPF» έχει $f_2 = 0$).
-- **Frequency Conversion** (βλ. [/am/dsb-sc §5b](/am/dsb-sc#5b-canonical-frequency-conversion---περιγραφή-του-πομπού)): mixer + BPF γύρω από $f_2$ → μετακινεί από το ένα RF στο άλλο.
+- **Frequency Conversion** (βλ. [/am/dsb-sc §5b](/am/dsb-sc#dsb-frequency-conversion)): mixer + BPF γύρω από $f_2$ → μετακινεί από το ένα RF στο άλλο.
 
 Το **superheterodyne** είναι ακριβώς η τρίτη περίπτωση: frequency conversion από το $f_{\text{target}}$ (RF) στο $f_{IF}$ (πιο εύκολο). Η «επιλογή σταθμού» γίνεται από τη μεταβολή του $f_{LO}$, όχι από την αλλαγή του τελικού demodulator — που τρέχει πάντα στην ίδια IF.
 </Callout>
@@ -691,6 +691,6 @@ $$
 - **Same topology, three names** (A3 connection): «mixer + filter» = διαμόρφωση (BPF στο $f_c$) = σύμφωνη αποδιαμόρφωση (LPF, ειδική περίπτωση $f_2=0$) = frequency conversion (BPF στο $f_2$). Superheterodyne είναι ακριβώς η τρίτη περίπτωση.
 </Recap>
 
-**Με αυτό κλείνει η AM ομάδα.** Επόμενη στάση: **FM**, όπου η πληροφορία ζει στη φάση/συχνότητα αντί στο πλάτος. Η μαθηματική σύνδεση: η FM είναι η γραμμή «$V = A_c$ σταθερό, $\theta(t) = \phi(t)$» του [πίνακα στο /modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή). Διαφορά κουλτούρας: όπου το AM ζει από envelope detection, το FM ζει από constant-envelope ανθεκτικότητα στον θόρυβο — το ίδιο πεδίο εφαρμογών (broadcast), αλλά οικογένεια εργαλείων εντελώς διαφορετική.
+**Με αυτό κλείνει η AM ομάδα.** Επόμενη στάση: **FM**, όπου η πληροφορία ζει στη φάση/συχνότητα αντί στο πλάτος. Η μαθηματική σύνδεση: η FM είναι η γραμμή «$V = A_c$ σταθερό, $\theta(t) = \phi(t)$» του [πίνακα στο /modulation/bridge §6b](/modulation/bridge#6b-πέντε-διαμορφώσεις-μία-canonical-μορφή). Διαφορά κουλτούρας: όπου το AM ζει από envelope detection, το FM ζει από constant-envelope ανθεκτικότητα στον θόρυβο — το ίδιο πεδίο εφαρμογών (broadcast), αλλά οικογένεια εργαλείων εντελώς διαφορετική.
 
 <NextUp slug="fm/idea" />

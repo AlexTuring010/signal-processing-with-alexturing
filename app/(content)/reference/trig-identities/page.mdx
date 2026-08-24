@@ -114,7 +114,7 @@ $$
 
 ### 2b. Πού τις χρησιμοποιείς — Coherent demodulation με phase error
 
-Στην [DSB-SC](/am/dsb-sc#3-coherent-demodulation) ο δέκτης πολλαπλασιάζει το λαμβανόμενο σήμα με έναν τοπικό oscillator που **ιδανικά** ταυτίζεται με τον carrier. Στην πράξη, ο τοπικός oscillator μπορεί να έχει σφάλμα φάσης $\phi$:
+Στην [DSB-SC](/am/dsb-sc#4-coherent-demodulation--γιατί-δουλεύει) ο δέκτης πολλαπλασιάζει το λαμβανόμενο σήμα με έναν τοπικό oscillator που **ιδανικά** ταυτίζεται με τον carrier. Στην πράξη, ο τοπικός oscillator μπορεί να έχει σφάλμα φάσης $\phi$:
 
 $$
 y(t) = x_{DSB}(t) \cdot 2\cos(2\pi f_c t + \phi) = 2\,m(t)\,\cos(2\pi f_c t)\,\cos(2\pi f_c t + \phi)
@@ -182,7 +182,7 @@ $$
 
 ### 3b. Πού τις χρησιμοποιείς — Απόδειξη του modulation theorem
 
-Στο [modulation theorem](/foundations/fourier-transform#7-modulation-theorem) γράφουμε:
+Στο [modulation theorem](/foundations/fourier-transform#7-modulation-theorem-) γράφουμε:
 
 $$
 \mathcal{F}\{m(t)\,\cos(2\pi f_c t)\} = \tfrac{1}{2}M(f - f_c) + \tfrac{1}{2}M(f + f_c)
@@ -285,7 +285,7 @@ $$
 
 ### 4b. cos·cos — Conventional AM expansion
 
-Στην [Conventional AM](/am/conventional#3-φάσμα) με single-tone $m(t) = A_m\cos(2\pi f_m t)$:
+Στην [Conventional AM](/am/conventional#4-φάσμα-του-am-σήματος) με single-tone $m(t) = A_m\cos(2\pi f_m t)$:
 
 $$
 x_{AM}(t) = [A_c + A_m\cos(2\pi f_m t)]\,\cos(2\pi f_c t)
@@ -307,7 +307,7 @@ $$
 
 ### 4c. sin·sin — NBFM expansion (cos(a−b) − cos(a+b))
 
-Στην [NBFM](/fm/pm#7-nbfm-vs-am) με μικρό modulation index $\beta \ll 1$, η FM προσεγγίζεται γραμμικά:
+Στην [NBFM](/fm/pm#8-nbfm--nbpm-γραμμικοποίηση-slide-29) με μικρό modulation index $\beta \ll 1$, η FM προσεγγίζεται γραμμικά:
 
 $$
 x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) - A_c\,\beta\,\sin(2\pi f_m t)\,\sin(2\pi f_c t)
@@ -325,7 +325,7 @@ $$
 \boxed{\,x_{NBFM}(t) \approx A_c\cos(2\pi f_c t) + \frac{A_c\beta}{2}\cos(2\pi(f_c + f_m)t) - \frac{A_c\beta}{2}\cos(2\pi(f_c - f_m)t)\,}
 $$
 
-**Σύγκρινε με το AM single-tone της §4b:** ίδια **τρία cosines στις ίδιες θέσεις**, αλλά **η μία sideband έχει πρόσημο −**. Αυτό το αρνητικό πρόσημο είναι **η μόνη αλγεβρική διαφορά** μεταξύ NBFM και AM μικρού $\mu$. Δίνει την περιστροφή του phasor στο [I/Q canonical form](/modulation/bridge#5b) και την constant-envelope ιδιότητα της FM.
+**Σύγκρινε με το AM single-tone της §4b:** ίδια **τρία cosines στις ίδιες θέσεις**, αλλά **η μία sideband έχει πρόσημο −**. Αυτό το αρνητικό πρόσημο είναι **η μόνη αλγεβρική διαφορά** μεταξύ NBFM και AM μικρού $\mu$. Δίνει την περιστροφή του phasor στο [I/Q canonical form](/modulation/bridge#6b-πέντε-διαμορφώσεις-μία-canonical-μορφή) και την constant-envelope ιδιότητα της FM.
 
 <Callout type="warning" title="cos·cos vs sin·sin — μην ξεχάσεις το −">
 **Η πιο κοινή γκάφα στο NBFM:** χρησιμοποιείς την cos·cos product-to-sum (που έχει **+** μεταξύ των cosines) αντί της σωστής sin·sin (που έχει **−**). Αποτέλεσμα: παίρνεις ίδιο σήμα με AM, χάνεις την NBFM-vs-AM διάκριση. Το πρόσημο **+/−** στις product-to-sum **είναι** η διαφορά μεταξύ AM και NBFM.
@@ -333,7 +333,7 @@ $$
 
 ### 4d. sin·cos — SSB από Hilbert pair
 
-Στην [SSB](/am/ssb#2b-phase-shift-hilbert-method) με Hilbert μέθοδο γράφεις:
+Στην [SSB](/am/ssb#2b-διαμορφωτής-ολίσθησης-φάσης-hilbert--κομψή-αλγεβρικά) με Hilbert μέθοδο γράφεις:
 
 $$
 x_{USB}(t) = m(t)\,\cos(2\pi f_c t) - \hat{m}(t)\,\sin(2\pi f_c t)
@@ -419,7 +419,7 @@ $$
 
 ### 5a. cos² — Coherent demodulation που «εκσπρέι» τον carrier
 
-Η κορυφαία χρήση της cos² είναι στη [DSB-SC coherent demodulation](/am/dsb-sc#3-coherent-demodulation). Ο δέκτης πολλαπλασιάζει το λαμβανόμενο σήμα με $2\cos(2\pi f_c t)$:
+Η κορυφαία χρήση της cos² είναι στη [DSB-SC coherent demodulation](/am/dsb-sc#4-coherent-demodulation--γιατί-δουλεύει). Ο δέκτης πολλαπλασιάζει το λαμβανόμενο σήμα με $2\cos(2\pi f_c t)$:
 
 $$
 y(t) = x_{DSB}(t) \cdot 2\cos(2\pi f_c t) = 2\,m(t)\,\cos^2(2\pi f_c t)
@@ -461,7 +461,7 @@ $$
 
 ### 5c. cos² + sin² = 1 — Constant envelope της FM/PM
 
-Στις [FM](/fm/idea) και [PM](/fm/pm#5-pm-σε-iq-canonical-form), το I/Q canonical form δίνει:
+Στις [FM](/fm/idea) και [PM](/fm/pm#6-pm-σε-iq-canonical-form-slide-10-11), το I/Q canonical form δίνει:
 
 $$
 x_{FM}(t) = A_c\cos\phi(t)\cos(2\pi f_c t) - A_c\sin\phi(t)\sin(2\pi f_c t)
@@ -681,7 +681,7 @@ $$
 **Ερώτηση:** Δείξε ότι αν $m(t) = A\cos(2\pi f_m t)$, τότε το σήμα $x(t) = m(t)\cos(2\pi f_c t) + \hat{m}(t)\sin(2\pi f_c t)$ είναι ένα **καθαρό cosine** στη συχνότητα $f_c - f_m$ (LSB).
 
 <Example title="Λύση" defaultOpen={true}>
-Με $m(t) = A\cos(2\pi f_m t)$, ο Hilbert transform είναι $\hat{m}(t) = A\sin(2\pi f_m t)$ (cos → sin, [bridge §2](/modulation/bridge#2-hilbert-transform)).
+Με $m(t) = A\cos(2\pi f_m t)$, ο Hilbert transform είναι $\hat{m}(t) = A\sin(2\pi f_m t)$ (cos → sin, [bridge §2](/modulation/bridge#3-μετασχηματισμός-hilbert--phase-shifter-όλων-των-συχνοτήτων)).
 
 Αντικαθιστώντας:
 
@@ -748,7 +748,7 @@ $$
 - **Μιγαδικοί αριθμοί και Euler** — η αλγεβρική βάση όλων των ταυτοτήτων αυτής της σελίδας: [/reference/complex-numbers](/reference/complex-numbers#euler).
 - **Πλήρες τυπολόγιο** με όλες τις 9 ταυτότητες και deep-links σε derivations και παλιά θέματα που τις χρησιμοποιούν: [/formulas](/formulas#topic-foundations).
 - **Συνιστώμενη πινακίδα εξέτασης** — όπου αυτές οι ταυτότητες εμφανίζονται στη Σελίδα 2 (τυπολογικό mirror): [/cheatsheet](/cheatsheet).
-- **AM applications** — όπου η cos·cos δίνει sidebands: [/am/conventional](/am/conventional#3-φάσμα), [/am/dsb-sc](/am/dsb-sc#1-από-conventional-am-στο-dsb-sc), [/am/ssb](/am/ssb#2b-phase-shift-hilbert-method).
-- **FM applications** — όπου η sin·sin δίνει NBFM sidebands και η Πυθαγόρεια δίνει constant envelope: [/fm/pm](/fm/pm#7-nbfm-vs-am), [/fm/idea](/fm/idea), [/fm/bessel](/fm/bessel) (όπου το Jacobi-Anger expansion γενικεύει σε υψηλά $\beta$).
+- **AM applications** — όπου η cos·cos δίνει sidebands: [/am/conventional](/am/conventional#4-φάσμα-του-am-σήματος), [/am/dsb-sc](/am/dsb-sc#1-από-conventional-am-στο-dsb-sc), [/am/ssb](/am/ssb#2b-διαμορφωτής-ολίσθησης-φάσης-hilbert--κομψή-αλγεβρικά).
+- **FM applications** — όπου η sin·sin δίνει NBFM sidebands και η Πυθαγόρεια δίνει constant envelope: [/fm/pm](/fm/pm#8-nbfm--nbpm-γραμμικοποίηση-slide-29), [/fm/idea](/fm/idea), [/fm/bessel](/fm/bessel) (όπου το Jacobi-Anger expansion γενικεύει σε υψηλά $\beta$).
 - **Random-process applications** — όπου η cos·cos δίνει autocorrelation: [/randomness/random-processes](/randomness/random-processes), [/randomness/stationarity](/randomness/stationarity).
 - **Fourier pairs** — όπου η complex-exp μορφή των cos/sin δίνει το impulse-pair φάσμα: [/reference/fourier-pairs#cos-impulses](/reference/fourier-pairs#cos-impulses), [/reference/fourier-pairs#sin-impulses](/reference/fourier-pairs#sin-impulses).

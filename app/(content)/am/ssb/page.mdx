@@ -66,7 +66,7 @@ $$
 X_{DSB}(f) = \frac{1}{2}[M(f-f_c) + M(f+f_c)]
 $$
 
-Αλλά οι δύο sidebands γύρω από κάθε carrier είναι **κατοπτρικά συμμετρικές γύρω από το $\pm f_c$**. Αυτό **δεν** είναι σύμπτωση — προκύπτει από την conjugate symmetry $M(-f) = M^*(f)$ που έχει **κάθε real-valued $m(t)$** (δες [/foundations/fourier-transform §8](/foundations/fourier-transform#8-συμμετρίες-real-time-conjugate-symmetric-frequency)). Δηλαδή η πλήρης πληροφορία του message είναι ήδη μέσα **σε οποιαδήποτε από τις δύο sidebands** — η άλλη είναι απλώς το mirror της.
+Αλλά οι δύο sidebands γύρω από κάθε carrier είναι **κατοπτρικά συμμετρικές γύρω από το $\pm f_c$**. Αυτό **δεν** είναι σύμπτωση — προκύπτει από την conjugate symmetry $M(-f) = M^*(f)$ που έχει **κάθε real-valued $m(t)$** (δες [/foundations/fourier-transform §8](/foundations/fourier-transform#8-conjugate-symmetry--γιατί-τα-φάσματα-real-signals-είναι-συμμετρικά)). Δηλαδή η πλήρης πληροφορία του message είναι ήδη μέσα **σε οποιαδήποτε από τις δύο sidebands** — η άλλη είναι απλώς το mirror της.
 
 **Αν κρατήσουμε μόνο τη μία**, δεν χάνουμε τίποτα — απλά πετάμε ένα redundant αντίγραφο. Δύο εκδοχές:
 
@@ -94,7 +94,7 @@ $$
 
 <Callout type="connection" title="Γιατί ακριβώς αυτό το σχήμα χρειάζεται τον Hilbert transform">
 Πριν προχωρήσουμε στο «πώς», αξίζει να δούμε από πού πιάνεται η SSB στη μεγάλη
-εικόνα. Στο [/modulation/bridge §5b](/modulation/bridge#5b-πέντε-διαμορφώσεις-μία-canonical-μορφή)
+εικόνα. Στο [/modulation/bridge §6b](/modulation/bridge#6b-πέντε-διαμορφώσεις-μία-canonical-μορφή)
 είδαμε ότι **κάθε** bandpass σήμα γράφεται σε μία κοινή μορφή,
 $x(t) = x_I(t)\cos(2\pi f_c t) - x_Q(t)\sin(2\pi f_c t)$, με δύο «κανάλια»: το
 in-phase $x_I$ (στο cosine) και το quadrature $x_Q$ (στο sine). Η SSB-AM (USB)
@@ -235,7 +235,7 @@ $$
 <SSBGenerationViz />
 
 <Callout type="closes-commitment" title="🎯 Κλείνει υπόσχεση — γιατί χτίσαμε τον Hilbert στο bridge chapter">
-Στο [/modulation/bridge §2](/modulation/bridge#2-hilbert-transform-phase-shifter-όλων-των-συχνοτήτων) είδαμε τον Hilbert transform — phase-shifter όλων των συχνοτήτων κατά $\pi/2$ — και υποσχεθήκαμε ότι «θα τον χρειαστούμε στη SSB». **Να γιατί.** Ο Hilbert του message $\hat{m}(t)$ μάς επιτρέπει να κατασκευάσουμε ένα bandpass σήμα με μόνο μία sideband, χωρίς να χρειαζόμαστε αδύνατα απότομα φίλτρα. Είναι το «καθαρό» μαθηματικό εργαλείο για SSB.
+Στο [/modulation/bridge §2](/modulation/bridge#3-μετασχηματισμός-hilbert--phase-shifter-όλων-των-συχνοτήτων) είδαμε τον Hilbert transform — phase-shifter όλων των συχνοτήτων κατά $\pi/2$ — και υποσχεθήκαμε ότι «θα τον χρειαστούμε στη SSB». **Να γιατί.** Ο Hilbert του message $\hat{m}(t)$ μάς επιτρέπει να κατασκευάσουμε ένα bandpass σήμα με μόνο μία sideband, χωρίς να χρειαζόμαστε αδύνατα απότομα φίλτρα. Είναι το «καθαρό» μαθηματικό εργαλείο για SSB.
 
 Στις εξετάσεις θα πρέπει να ξέρεις τη διπλή φόρμουλα `x_SSB = m cos ∓ m̂ sin`, να ξεχωρίζεις το πρόσημο για USB vs LSB, και να μπορείς να σχεδιάζεις φάσματα.
 </Callout>
@@ -395,7 +395,7 @@ y(t) = x(t)\cos(2\pi f_c t) = \tfrac{1}{2}A_c m(t) + \tfrac{1}{2}A_c\big(m(t)\co
 $$
 
 LPF κόβει τους <InlineMath>{'2f_c'}</InlineMath> όρους → **<InlineMath>{'\\tfrac{1}{2}A_c m(t)'}</InlineMath>**.
-Ίδια σύμβαση με DSB-AM-SC (δες [/am/dsb-sc §4](/am/dsb-sc#4-coherent-demodulation)).
+Ίδια σύμβαση με DSB-AM-SC (δες [/am/dsb-sc §4](/am/dsb-sc#4-coherent-demodulation--γιατί-δουλεύει)).
 Παρακάτω χρησιμοποιούμε <InlineMath>{'2\\cos'}</InlineMath> για να καταργήσουμε
 το <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> και να δούμε καθαρά το{' '}
 <InlineMath>{'m(t)'}</InlineMath> στην έξοδο — αλγεβρικά ισοδύναμο, μόνο
@@ -875,7 +875,7 @@ $$y(t) = m(t)$$
 
 <Example title="Λύση">
 
-**Σκέψη:** το $m(t)$ είναι sinc → το $M(f)$ είναι rect (γνωστή Fourier pair από [/foundations/fourier-transform](/foundations/fourier-transform#3-η-βασική-fourier-pair-rect-sinc)). Άρα το DSB-SC φάσμα είναι **δύο rect αντίγραφα γύρω από τα ±f_c**. Η LSSB πετάει τα «εξωτερικά» μισά κάθε rect — κρατάει μόνο τα «εσωτερικά», δηλαδή τα κομμάτια **πιο κοντά στο 0**.
+**Σκέψη:** το $m(t)$ είναι sinc → το $M(f)$ είναι rect (γνωστή Fourier pair από [/foundations/fourier-transform](/foundations/fourier-transform#4a-single-rectangular-pulse--sinc)). Άρα το DSB-SC φάσμα είναι **δύο rect αντίγραφα γύρω από τα ±f_c**. Η LSSB πετάει τα «εξωτερικά» μισά κάθε rect — κρατάει μόνο τα «εσωτερικά», δηλαδή τα κομμάτια **πιο κοντά στο 0**.
 
 **Παραγωγή.** Από το ζεύγος $\mathrm{sinc}(2Wt) \leftrightarrow \tfrac{1}{2W}\Pi(f/(2W))$:
 $$M(f) = 2 \cdot \tfrac{1}{2W}\Pi(f/(2W)) = \tfrac{1}{W}\Pi(f/(2W))$$
