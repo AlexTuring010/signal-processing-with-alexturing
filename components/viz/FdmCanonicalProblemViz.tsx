@@ -337,7 +337,7 @@ function drawScene(
       // USSB single sideband, peak at the carrier-adjacent edge
       if (kShape === 'sinc') {
         drawSincBand(ctx, xt, yTop, panelH, f2, f2 + kHalfBW, 0.95, COLOR_K, FILL_K)
-        drawSincBand(ctx, xt, yTop, panelH, -f2 - kHalfBW, -f2, 0.95, COLOR_K, FILL_K)
+        drawSincBand(ctx, xt, yTop, panelH, -f2, -f2 - kHalfBW, 0.95, COLOR_K, FILL_K)
       } else if (kShape === 'triangle') {
         drawTriangleBand(ctx, xt, yTop, panelH, f2, f2 + kHalfBW, 0.95, COLOR_K, FILL_K)
         drawTriangleBand(ctx, xt, yTop, panelH, -f2, -f2 - kHalfBW, 0.95, COLOR_K, FILL_K)
@@ -606,14 +606,25 @@ function drawSinc(
   ctx.stroke()
 }
 
-/** Draws the +carrier side of an SSB-shifted sinc: only positive half of the lobe. */
+/**
+ * Draws the retained sideband of an SSB-shifted sinc: the HALF-lobe running from
+ * the carrier-adjacent edge out to the first null.
+ *
+ * Args are (fPeak, fZero) — same order as `drawTriangleBand` — and `fZero` may
+ * sit either side of `fPeak`, so the −f_c copy is drawn by passing them in
+ * descending order. Getting this order wrong silently mirrors the lump and the
+ * two sidebands stop being reflections of each other.
+ *
+ * Spans exactly one main lobe (x ∈ [0,1]), matching `drawSinc`'s x ∈ [−1,1]
+ * convention: `kBW` means "first null", so no side lobe belongs inside the band.
+ */
 function drawSincBand(
   ctx: CanvasRenderingContext2D,
   xt: (f: number) => number,
   yTop: number,
   panelH: number,
-  fLeft: number,
-  fRight: number,
+  fPeak: number,
+  fZero: number,
   height: number,
   stroke: string,
   fill: string,
@@ -621,24 +632,21 @@ function drawSincBand(
   const yAxis = yTop + panelH - 22
   const yTopUsable = yTop + 18
   const STEPS = 150
-  const width = fRight - fLeft
+  const width = fZero - fPeak
   ctx.fillStyle = fill
   ctx.strokeStyle = stroke
   ctx.lineWidth = 1.4
   ctx.beginPath()
-  ctx.moveTo(xt(fLeft), yAxis)
+  ctx.moveTo(xt(fPeak), yAxis)
   for (let i = 0; i <= STEPS; i++) {
-    const f = lerp(i, 0, STEPS, fLeft, fRight)
-    // Use a half-sinc shape: peak at fLeft, descending to 0 at fRight, with
-    // sinc-style lobe oscillation in the middle. Sketch-grade — emphasizes
-    // "starts at peak, narrows to null".
-    const t = (f - fLeft) / width
-    const x = t * 2.0 // first null at t=0.5 ⇒ x=1
-    const v = Math.abs(t < 1e-6 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x))
+    const f = lerp(i, 0, STEPS, fPeak, fZero)
+    // Half of the main lobe: peak at fPeak, first null exactly at fZero.
+    const t = (f - fPeak) / width
+    const v = t < 1e-6 ? 1 : Math.abs(Math.sin(Math.PI * t) / (Math.PI * t))
     const y = yTopUsable + (1 - v * height) * (yAxis - yTopUsable)
     ctx.lineTo(xt(f), y)
   }
-  ctx.lineTo(xt(fRight), yAxis)
+  ctx.lineTo(xt(fZero), yAxis)
   ctx.closePath()
   ctx.fill()
   ctx.stroke()
