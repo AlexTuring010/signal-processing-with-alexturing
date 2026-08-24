@@ -400,6 +400,30 @@ LPF κόβει τους <InlineMath>{'2f_c'}</InlineMath> όρους → **<Inli
 το <InlineMath>{'\\tfrac{1}{2}'}</InlineMath> και να δούμε καθαρά το{' '}
 <InlineMath>{'m(t)'}</InlineMath> στην έξοδο — αλγεβρικά ισοδύναμο, μόνο
 κανονικοποίηση gain.
+
+**Ο γενικός κανόνας, για να μη χρειάζεται να το ξανασκέφτεσαι.** Ό,τι κι αν
+πολλαπλασιάσεις, η δουλειά του LPF είναι η ίδια· αλλάζει μόνο ένας σταθερός
+παράγοντας. Για **οποιοδήποτε** gain <InlineMath>K</InlineMath>:
+
+<BlockMath>{'x(t)\\cdot K\\cos(2\\pi f_c t) \\;\\xrightarrow{\\ \\text{LPF}\\ }\\; \\frac{K}{2}\\,x_I(t)'}</BlockMath>
+
+(βγαίνει από το <InlineMath>{'\\cos^2\\theta = \\tfrac12[1+\\cos 2\\theta]'}</InlineMath>:
+το <InlineMath>{'\\tfrac12'}</InlineMath> είναι εγγενές, το{' '}
+<InlineMath>K</InlineMath> το διαλέγεις εσύ). Άρα το{' '}
+<InlineMath>K</InlineMath> είναι απλώς **το κουμπί που ακυρώνει ό,τι σταθερά
+κουβαλάει το <InlineMath>{'x_I'}</InlineMath>** — και γι' αυτό η επιλογή
+σύμβασης δεν αλλάζει τίποτα ουσιαστικό:
+
+| Αν το <InlineMath>{'x_I'}</InlineMath> είναι | Και θέλεις στην έξοδο | Πολλαπλασίασε με |
+| --- | --- | --- |
+| <InlineMath>{'A_c m(t)'}</InlineMath> (μορφή του μαθήματος) | <InlineMath>{'A_c m(t)'}</InlineMath> | <InlineMath>{'2\\cos'}</InlineMath> |
+| <InlineMath>{'A_c m(t)'}</InlineMath> | <InlineMath>{'\\tfrac12 A_c m(t)'}</InlineMath> | <InlineMath>{'\\cos'}</InlineMath> |
+| <InlineMath>{'\\tfrac12 A_c m(t)'}</InlineMath> (η μορφή με το ½) | <InlineMath>{'A_c m(t)'}</InlineMath> | <InlineMath>{'4\\cos'}</InlineMath> |
+
+Δηλαδή ο δέκτης **δεν** «ξέρει» ποια σύμβαση διάλεξες — το μόνο που κάνει είναι
+να πολλαπλασιάζει και να φιλτράρει. Το gain του τοπικού ταλαντωτή είναι ελεύθερη
+παράμετρος σχεδίασης· σε μια εξέταση κρατάς αυτό που σου δίνει καθαρή έξοδο και
+το δηλώνεις.
 </Callout>
 
 Για USB:
