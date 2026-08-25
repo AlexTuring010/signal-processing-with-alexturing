@@ -286,7 +286,15 @@ $$
 «Οι πλευρικές φασματικές ζώνες <InlineMath>{'\\Phi(f - f_c)'}</InlineMath> και <InlineMath>{'\\Phi(f + f_c)'}</InlineMath> του σήματος πληροφορίας έχουν <strong>διαφορά φάσης π/2</strong> σε σχέση με τη συνιστώσα του φέροντος. Το <InlineMath>{'\\Phi(f-f_c)'}</InlineMath> <strong>προηγείται κατά π/2</strong> ενώ το <InlineMath>{'\\Phi(f+f_c)'}</InlineMath> <strong>έπεται</strong>.»
 </p>
 
-Με άλλα λόγια: το coefficient στο USB είναι <InlineMath>{'+jA_c/2'}</InlineMath> (= μήκος <InlineMath>{'A_c/2'}</InlineMath> στη φάση <InlineMath>{'+\\pi/2'}</InlineMath>), ενώ στο LSB είναι <InlineMath>{'-jA_c/2'}</InlineMath> (= φάση <InlineMath>{'-\\pi/2'}</InlineMath>). Αυτό είναι η ορατή γεωμετρία της παρακάτω viz.
+**Πρόσεξε όμως σε ΠΟΙΟ ζεύγος αναφέρεται αυτό το <InlineMath>{'\\pm\\pi/2'}</InlineMath>.** Είναι το ζεύγος <InlineMath>{'\\Phi(f-f_c)'}</InlineMath> / <InlineMath>{'\\Phi(f+f_c)'}</InlineMath>, δηλαδή **ολόκληρη η ζώνη γύρω από το <InlineMath>{'+f_c'}</InlineMath> έναντι της κατοπτρικής της γύρω από το <InlineMath>{'-f_c'}</InlineMath>** — μια απαίτηση για να βγει πραγματικό το σήμα. **Δεν** είναι η USB έναντι της LSB: και οι δύο ζουν *μέσα* στο ίδιο <InlineMath>{'\\Phi(f-f_c)'}</InlineMath>.
+
+Τι γίνεται λοιπόν μέσα στη ζώνη; Βάλε το single-tone <InlineMath>{'\\phi = \\beta_f\\sin(2\\pi f_m t)'}</InlineMath>, δηλαδή <InlineMath>{'\\Phi(f) = \\beta_f\\tfrac{1}{2j}[\\delta(f-f_m) - \\delta(f+f_m)]'}</InlineMath>, μέσα στον boxed τύπο παραπάνω. Το <InlineMath>{'j'}</InlineMath> του συντελεστή και το <InlineMath>{'1/2j'}</InlineMath> του <InlineMath>{'\\Phi'}</InlineMath> **αλληλοαναιρούνται**:
+
+$$
+\frac{jA_c}{2}\,\Phi(f-f_c) = \frac{A_c\beta_f}{4}\Big[\delta\big(f-(f_c+f_m)\big) - \delta\big(f-(f_c-f_m)\big)\Big]
+$$
+
+Δηλαδή οι δύο γραμμές βγαίνουν **πραγματικές** και με **αντίθετα πρόσημα**: <InlineMath>{'+A_c\\beta_f/4'}</InlineMath> στην USB, <InlineMath>{'-A_c\\beta_f/4'}</InlineMath> στην LSB. **Αυτό** το μείον — όχι κάποιο <InlineMath>{'j'}</InlineMath> — είναι που γέρνει το complex envelope στον κάθετο άξονα, αφού <InlineMath>{'A_c + \\tfrac{A_c\\beta_f}{2}(e^{j2\\pi f_m t} - e^{-j2\\pi f_m t}) = A_c + jA_c\\beta_f\\sin(2\\pi f_m t)'}</InlineMath>. Συμφωνεί ακριβώς με τη μορφή χρόνου της §10 και με το διαδραστικό αμέσως παρακάτω.
 </Callout>
 
 Συγκρίνοντας με τη Συμβατική AM:
@@ -295,17 +303,21 @@ $$
 X_{AM}(f) = \frac{A_c}{2}\delta(f - f_c) + \frac{A_c}{2}\delta(f + f_c) + \frac{A_c\mu}{2}M(f - f_c) + \frac{A_c\mu}{2}M(f + f_c)
 $$
 
-τα **μέτρα** των sidebands ταυτίζονται αν <InlineMath>{'\\mu = \\beta_f'}</InlineMath> (και <InlineMath>{'M = \\Phi'}</InlineMath>, που ισχύει αν το PM message έχει το ίδιο shape), αλλά οι **φάσεις διαφέρουν κατά π/2** στο USB και κατά **-π/2** στο LSB — εξ ου και η «κρυφή» γεωμετρία:
+τα **μέτρα** των sidebands ταυτίζονται αν <InlineMath>{'\\mu = \\beta_f'}</InlineMath> (και <InlineMath>{'M = \\Phi'}</InlineMath>, που ισχύει αν το PM message έχει το ίδιο shape), αλλά τα **πρόσημα** διαφέρουν: η AM βάζει τις δύο πλευρικές **ομόσημες**, η NBFM **ετερόσημες** — εξ ου και η «κρυφή» γεωμετρία:
 
 <NbfmAmPhasorDecompositionViz />
 
-| Φάση | NBFM (κάθετη γεωμετρία) | AM (οριζόντια γεωμετρία) |
+Ο πίνακας δίνει τα **βάρη των γραμμών** στο <InlineMath>{'X(f)'}</InlineMath> (όχι τους συντελεστές ολόκληρης ζώνης), ώστε όλες οι σειρές να συγκρίνονται με την ίδια κανονικοποίηση:
+
+| Γραμμή στο <InlineMath>{'X(f)'}</InlineMath> | NBFM (κάθετη γεωμετρία) | AM (οριζόντια γεωμετρία) |
 | --- | --- | --- |
-| Carrier coefficient στο +f<sub>c</sub> | <InlineMath>{'+A_c/2'}</InlineMath> | <InlineMath>{'+A_c/2'}</InlineMath> |
-| USB coefficient στο +f<sub>c</sub>+f<sub>m</sub> | <InlineMath>{'+jA_c\\beta_f/2'}</InlineMath> | <InlineMath>{'+A_c\\mu/2'}</InlineMath> |
-| LSB coefficient στο +f<sub>c</sub>−f<sub>m</sub> | <InlineMath>{'-jA_c\\beta_f/2'}</InlineMath> | <InlineMath>{'+A_c\\mu/2'}</InlineMath> |
+| Φέρον στο +f<sub>c</sub> | <InlineMath>{'+A_c/2'}</InlineMath> | <InlineMath>{'+A_c/2'}</InlineMath> |
+| USB στο +f<sub>c</sub>+f<sub>m</sub> | <InlineMath>{'+A_c\\beta_f/4'}</InlineMath> | <InlineMath>{'+A_c\\mu/4'}</InlineMath> |
+| LSB στο +f<sub>c</sub>−f<sub>m</sub> | <InlineMath>{'-A_c\\beta_f/4'}</InlineMath> **(μείον!)** | <InlineMath>{'+A_c\\mu/4'}</InlineMath> |
 | Bandwidth | <InlineMath>{'\\approx 2W'}</InlineMath> | <InlineMath>{'2W'}</InlineMath> |
 | Envelope | (σχεδόν) σταθερό | <InlineMath>{'A_c[1 + \\mu\\cos]'}</InlineMath> |
+
+Όλα τα βάρη είναι **πραγματικοί αριθμοί** — η διαφορά NBFM/AM ζει ολόκληρη στο **πρόσημο της LSB**. (Για **NBPM** με <InlineMath>{'\\phi = \\beta_p\\cos'}</InlineMath> οι δύο πλευρικές βγαίνουν ομόσημες αλλά φανταστικές· δες την άσκηση προσήμου παρακάτω.)
 
 **Πρακτικό συμπέρασμα:** ένα **μέτρο** φάσματος **δεν αρκεί** για να ξεχωρίσεις NBFM από AM. Χρειάζεσαι **και τη φάση**.
 

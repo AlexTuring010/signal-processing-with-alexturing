@@ -180,7 +180,7 @@ $$
 - Πάνω panel: το FM φάσμα. Η **μωβ ζώνη** είναι το παράθυρο <InlineMath>{'\\pm(\\beta+1)f_m'}</InlineMath> — το Carson cutoff.
 - Κάτω panel: η αθροιστική ισχύς. Η **πράσινη γραμμή στο 98%** δείχνει πού φτάνεις σωρευτικά. Η **μωβ κάθετη γραμμή** στο <InlineMath>{'n = \\beta+1'}</InlineMath> είναι ο Carson — πέφτει σταθερά κοντά στο 98%.
 - Σύρε <InlineMath>{'\\beta = 0.3'}</InlineMath>: ο πραγματικός cutoff (98%) είναι στο <InlineMath>{'n = 1'}</InlineMath>· Carson στο <InlineMath>{'\\beta+1 = 1.3'}</InlineMath>. Σχεδόν ταυτόσημα.
-- Σύρε <InlineMath>{'\\beta = 5'}</InlineMath>: πραγματικός cutoff στο <InlineMath>{'n = 7'}</InlineMath>· Carson στο 6. Λίγο πιο συντηρητικός — πιάνει 96-97% αντί 98%.
+- Σύρε <InlineMath>{'\\beta = 5'}</InlineMath>: η αθροιστική ισχύς είναι <InlineMath>{'95{,}9\\%'}</InlineMath> στο <InlineMath>{'n = 5'}</InlineMath> και πηδάει στο <InlineMath>{'99{,}4\\%'}</InlineMath> στο <InlineMath>{'n = 6'}</InlineMath> — άρα το κατώφλι του 98% πέφτει ακριβώς στο <InlineMath>{'n = 6'}</InlineMath>. Και ο Carson δίνει <InlineMath>{'\\beta + 1 = 6'}</InlineMath>: **ταυτίζεται**, πιάνοντας 99,4% — δηλαδή εδώ είναι λίγο πιο **γενναιόδωρος** από την υπόσχεση του 98%, όχι πιο φειδωλός.
 
 **Συμπέρασμα:** Carson είναι ο «98% κανόνας» γραμμένος ως bandwidth. Όχι ισότητα, αλλά πρακτικός βαθμός που χρησιμοποιείται παντού στις εξετάσεις και στη σχεδίαση.
 
@@ -509,7 +509,25 @@ NBFM/WBFM boundary (β=1).
 
 **(β)** Carson: <InlineMath>{'B_1 = 2(\\beta_f + 1) W = 2 \\cdot 2 \\cdot 2 = 8'}</InlineMath> kHz.
 
-**(γ)** Αν θέλουμε <InlineMath>{'B_2 = 8'}</InlineMath> kHz, χρειαζόμαστε <InlineMath>{'\\beta_{f,2} \\cdot W + W = 4'}</InlineMath>, δηλαδή <InlineMath>{'\\beta_{f,2} = 1'}</InlineMath>… ίδιο. (Στη πραγματική June 2025 εκφώνηση το <InlineMath>{'B_2 = 8'}</InlineMath> kHz μειώνει τη ζώνη — εδώ απλοποίησα για συμβατότητα. Δες το full problem για το «πλάτος message» μέρος.)
+**(γ)** Εδώ πρέπει να προσέξεις **ποιο** σήμα στενεύεις. Στην πραγματική εκφώνηση το ερώτημα δεν αφορά το σήμα του (α) — αφορά ένα <InlineMath>{'x(t)'}</InlineMath> με **δοσμένο** ενεργό εύρος ζώνης <InlineMath>{'B_1 = 16'}</InlineMath> kHz. Από αντίστροφο Carson:
+
+$$
+\beta_{f,1} = \frac{B_1}{2W} - 1 = \frac{16}{2\cdot 2} - 1 = 3
+$$
+
+Υποδιπλασιάζοντας σε <InlineMath>{'B_2 = 8'}</InlineMath> kHz:
+
+$$
+\beta_{f,2} = \frac{B_2}{2W} - 1 = \frac{8}{2\cdot 2} - 1 = 1
+$$
+
+Και επειδή <InlineMath>{'\\beta_f = K_f\\max|m|/W'}</InlineMath> με σταθερά <InlineMath>{'K_f, W'}</InlineMath>, το πλάτος είναι **ευθέως ανάλογο** του <InlineMath>{'\\beta_f'}</InlineMath>:
+
+$$
+\frac{\max|m|_{\text{νέο}}}{\max|m|_{\text{παλιό}}} = \frac{\beta_{f,2}}{\beta_{f,1}} = \frac{1}{3}
+$$
+
+**Το πλάτος πέφτει στο ένα τρίτο — όχι στο μισό.** Αυτή είναι η παγίδα του θέματος: ο Carson γράφεται <InlineMath>{'B = 2(\\Delta f + W)'}</InlineMath>, και ο σταθερός όρος <InlineMath>{'W'}</InlineMath> **δεν** συρρικνώνεται μαζί με το πλάτος. Στα νούμερα: <InlineMath>{'\\Delta f_1 = 8 - 2 = 6'}</InlineMath> kHz έναντι <InlineMath>{'\\Delta f_2 = 4 - 2 = 2'}</InlineMath> kHz. Πλήρης λύση όλων των ερωτημάτων στο <Link href="/practice#exercise:jun25-th3-fm">Ιούν. 2025 ΘΕΜΑ 3</Link>.
 
 **Πανικός signal:** όταν <InlineMath>{'B'}</InlineMath> και <InlineMath>{'W'}</InlineMath> δίνονται και ζητείται «τι πρέπει να αλλάξει», λύσε τον Carson για το άγνωστο:
 
