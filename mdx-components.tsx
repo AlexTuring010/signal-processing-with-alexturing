@@ -160,6 +160,7 @@ import { NbfmVsAmSpectrumViz } from '@/components/viz/NbfmVsAmSpectrumViz'
 import { PmVsFmDualityViz } from '@/components/viz/PmVsFmDualityViz'
 import { PmPhaseLeadLagViz } from '@/components/viz/PmPhaseLeadLagViz'
 import { AngleRateViz } from '@/components/viz/AngleRateViz'
+import { CosineFromCircleViz } from '@/components/viz/CosineFromCircleViz'
 import { ConstantEnvelopeCircleViz } from '@/components/viz/ConstantEnvelopeCircleViz'
 import { AngleModulationTimeDomainViz } from '@/components/viz/AngleModulationTimeDomainViz'
 import { PmInstantaneousFrequencyViz } from '@/components/viz/PmInstantaneousFrequencyViz'
@@ -437,6 +438,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PmVsFmDualityViz,
     PmPhaseLeadLagViz,
     AngleRateViz,
+    CosineFromCircleViz,
     ConstantEnvelopeCircleViz,
 
     // Visualizations — fm / pm
