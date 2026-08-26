@@ -82,7 +82,7 @@ export function ConstantEnvelopeCircleViz() {
       </div>
 
       <p className="mb-3 text-xs text-fg-muted">
-        Slide 11. Το complex envelope <span className="font-mono">g(t) = x_I + j x_Q</span>{' '}
+        Το complex envelope <span className="font-mono">g(t) = x_I + j x_Q</span>{' '}
         ζωγραφίζεται σαν τροχιά στο μιγαδικό επίπεδο. Στο FM,{' '}
         <span className="font-mono">g(t) = A_c · e^&#123;jφ(t)&#125;</span> —
         κινείται σε <strong>κύκλο ακτίνας A_c</strong>. Στο AM,{' '}

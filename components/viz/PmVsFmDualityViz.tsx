@@ -64,7 +64,7 @@ export function PmVsFmDualityViz() {
           PM ↔ FM δυϊκότητα — η μετατροπή με συγκεκριμένη σταθερά
         </h4>
         <p className="mt-1 text-xs text-fg-muted">
-          Slides 12-13 του καθηγητή. Ένας PM διαμορφωτής που τρέφεται με{' '}
+          Ένας PM διαμορφωτής που τρέφεται με{' '}
           <span className="font-mono">∫m(τ)dτ</span> παράγει FM όταν{' '}
           <strong>K_p = 2π K_f</strong>. Ένας FM διαμορφωτής που τρέφεται με{' '}
           <span className="font-mono">dm/dt</span> παράγει PM όταν{' '}
