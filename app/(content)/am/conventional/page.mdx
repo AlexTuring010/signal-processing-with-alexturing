@@ -101,6 +101,43 @@ $$
 - $A_c\cos(2\pi f_c t)$ — το **carrier component**: ένα καθαρό cosine στο $f_c$ που **δεν μεταφέρει πληροφορία**. Είναι «φάρος» — απλά υπάρχει.
 - $m(t)\cos(2\pi f_c t)$ — η **DSB-SC συνιστώσα** ([επόμενο κεφάλαιο](/am/dsb-sc)): ο πολλαπλασιασμός του message με τον carrier μετατοπίζει το $M(f)$ στις $\pm f_c$. Αυτός ο όρος κουβαλάει **όλη** την πληροφορία.
 
+<Callout type="key" title="Τι ακριβώς ΕΙΝΑΙ το A_c — και πώς το διαβάζεις από μια εκφώνηση">
+
+Μέχρι εδώ το <InlineMath>{'A_c'}</InlineMath> εμφανίστηκε σαν «μια σταθερά που βοηθά στην αποδιαμόρφωση». Αυτό είναι σωστό αλλά μισό, και το άλλο μισό είναι που χρειάζεσαι στα θέματα:
+
+<div className="my-3 text-center text-sm font-semibold">
+Το <InlineMath>{'A_c'}</InlineMath> είναι το <strong>πλάτος του φέροντος</strong>.
+</div>
+
+**Ο έλεγχος που το αποδεικνύει σε μία γραμμή.** Σβήσε το message, δηλαδή βάλε <InlineMath>{'m(t) = 0'}</InlineMath>:
+
+$$
+x(t)\Big|_{m=0} = [A_c + 0]\cos(2\pi f_c t) = A_c \cos(2\pi f_c t) = c(t)
+$$
+
+Ό,τι μένει όταν δεν στέλνεις πληροφορία **είναι το ίδιο το φέρον** — και το ύψος του είναι <InlineMath>{'A_c'}</InlineMath>. Δεν είναι σύμπτωση που χρησιμοποιούμε το ίδιο σύμβολο: είναι ο **ίδιος αριθμός**.
+
+**Και οι δύο ρόλοι είναι ο ίδιος όρος.** Δες ξανά την ανάπτυξη ακριβώς από πάνω: η σταθερά που προσθέτεις στο <InlineMath>{'m(t)'}</InlineMath> για να κρατήσεις την περιβάλλουσα θετική **είναι** ο όρος <InlineMath>{'A_c\\cos(2\\pi f_c t)'}</InlineMath> που εκπέμπεται. Το «DC offset στο baseband» και «η γραμμή του φέροντος στο φάσμα» είναι δύο ονόματα για το ίδιο πράγμα. Γι' αυτό ακριβώς το συμβατικό AM σπαταλάει ισχύ: το offset δεν είναι λογιστικό τέχνασμα στο χαρτί — **το πληρώνεις εκπέμποντας έναν πραγματικό τόνο**.
+
+</Callout>
+
+<Callout type="warning" title="⚠️ Στην εξέταση: το A_c συνήθως ΔΕΝ σου δίνεται με το όνομά του">
+
+Τα θέματα σπάνια γράφουν «<InlineMath>{'A_c = 1'}</InlineMath>». Σου δίνουν το **φέρον** και περιμένουν να διαβάσεις το πλάτος του:
+
+| Η εκφώνηση δίνει | Τότε |
+| --- | --- |
+| <InlineMath>{'c(t) = \\cos(2\\pi f_c t)'}</InlineMath> | <InlineMath>{'A_c = 1'}</InlineMath> |
+| <InlineMath>{'c(t) = 5\\cos(2\\pi f_c t)'}</InlineMath> | <InlineMath>{'A_c = 5'}</InlineMath> |
+| <InlineMath>{'x(t) = [2 + m(t)]\\cos(2\\pi f_c t)'}</InlineMath> | <InlineMath>{'A_c = 2'}</InlineMath> |
+| <InlineMath>{'x(t) = 3[1 + 0{,}4\\cos(2\\pi f_m t)]\\cos(2\\pi f_c t)'}</InlineMath> | <InlineMath>{'A_c = 3'}</InlineMath> και <InlineMath>{'\\mu = 0{,}4'}</InlineMath> άμεσα |
+
+**Χωρίς αυτό το βήμα δεν βγαίνει τίποτα**, γιατί όλα όσα ζητάει το θέμα περνάνε από το <InlineMath>{'A_c'}</InlineMath>: ο δείκτης <InlineMath>{'\\mu = |\\min m|/A_c'}</InlineMath>, η ισχύς του φέροντος <InlineMath>{'A_c^2/2'}</InlineMath>, το αν υπάρχει υπερδιαμόρφωση.
+
+**Δες το σε πραγματικό θέμα.** Στο [Σεπτ. 2025 ΘΕΜΑ 1.2](/practice#exercise:pa25-th2-2) δίνεται <InlineMath>{'c(t) = \\cos(8\\pi t)'}</InlineMath> και <InlineMath>{'m(t) = 2\\sin(2\\pi t)'}</InlineMath>. Διαβάζεις <InlineMath>{'A_c = 1'}</InlineMath> από το φέρον και <InlineMath>{'A_m = 2'}</InlineMath> από το message, άρα <InlineMath>{'\\mu = A_m/A_c = 2 > 1'}</InlineMath>: **υπερδιαμόρφωση**, και η περιβάλλουσα αναδιπλώνεται. Αν θεωρούσες ότι το <InlineMath>{'A_c'}</InlineMath> είναι ελεύθερο να το διαλέξεις εσύ, δεν θα μπορούσες καν να υπολογίσεις το <InlineMath>{'\\mu'}</InlineMath> — και το θέμα ζητάει ακριβώς αυτό.
+
+</Callout>
+
 Άρα **Conventional AM = DSB-SC + carrier**. Ο extra carrier κοστίζει ισχύ — όπως θα δούμε στη §5, **τουλάχιστον** το 67% της εκπεμπόμενης ισχύος πάει σ' αυτόν. Σε αντάλλαγμα αγοράζουμε έναν **παμφθηνό δέκτη** (δίοδος + RC, χωρίς local oscillator). Όλη η AM ραδιοτηλεόραση χτίστηκε πάνω σ' αυτό το trade — η ισχύς γίνεται στον πομπό, η απλότητα γίνεται στον δέκτη.
 
 <Callout type="connection" title="Σύνδεση με την I/Q canonical form">
