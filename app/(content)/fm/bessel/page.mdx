@@ -155,7 +155,31 @@ $$
 \mathcal{F}\{\phi^n(t)\} = \underbrace{\Phi(f) * \Phi(f) * \cdots * \Phi(f)}_{n\text{ φορές}}
 $$
 
-Κάθε συνέλιξη **διπλασιάζει** το εύρος ζώνης. Αν το `m(t)` έχει εύρος `W`, τότε το `φ(t)` επίσης έχει εύρος `W` (αφού το `φ(t)` είναι ολοκλήρωμα του `m(t)`, που στο φάσμα είναι πολλαπλασιασμός με `1/(j2πf)` — δεν μεγαλώνει το support). Άρα το `φⁿ(t)` έχει εύρος `nW`.
+**Ο κανόνας: η συνέλιξη ΠΡΟΣΘΕΤΕΙ εύρη ζώνης.** Αν το <InlineMath>{'A(f)'}</InlineMath> μηδενίζεται έξω από το <InlineMath>{'[-W_A, W_A]'}</InlineMath> και το <InlineMath>{'B(f)'}</InlineMath> έξω από το <InlineMath>{'[-W_B, W_B]'}</InlineMath>, τότε το <InlineMath>{'A * B'}</InlineMath> μηδενίζεται έξω από το <InlineMath>{'[-(W_A + W_B),\\, W_A + W_B]'}</InlineMath>.
+
+**Γιατί** — και αξίζει να το δεις, γιατί είναι δύο γραμμές. Γράψε τη συνέλιξη:
+
+$$
+(A * B)(f) = \int_{-\infty}^{+\infty} A(\lambda)\, B(f - \lambda)\, d\lambda
+$$
+
+Για να μην είναι μηδέν το ολοκλήρωμα, πρέπει να υπάρχει **τουλάχιστον ένα** <InlineMath>{'\\lambda'}</InlineMath> όπου να είναι **ταυτόχρονα** μη μηδενικοί και οι δύο παράγοντες:
+
+$$
+|\lambda| \le W_A \quad \text{ΚΑΙ} \quad |f - \lambda| \le W_B
+$$
+
+Από την τριγωνική ανισότητα, <InlineMath>{'|f| = |\\lambda + (f-\\lambda)| \\le W_A + W_B'}</InlineMath>. Δηλαδή για <InlineMath>{'|f| > W_A + W_B'}</InlineMath> οι δύο περιοχές **δεν προλαβαίνουν να συναντηθούν** όσο κι αν ολισθήσεις — το ολοκλήρωμα βγαίνει μηδέν. Το εύρος ζώνης λοιπόν **αθροίζεται**, ακριβώς όπως λέει και η διαφάνεια.
+
+**Εφαρμογή στο <InlineMath>{'\\phi^n'}</InlineMath>.** Το <InlineMath>{'\\phi(t)'}</InlineMath> έχει εύρος <InlineMath>{'W'}</InlineMath>, όσο και το <InlineMath>{'m(t)'}</InlineMath> (το <InlineMath>{'\\phi'}</InlineMath> είναι ολοκλήρωμα του <InlineMath>{'m'}</InlineMath>, που στο φάσμα είναι πολλαπλασιασμός με <InlineMath>{'1/(j2\\pi f)'}</InlineMath> — αλλάζει τα πλάτη, όχι το support). Άρα, προσθέτοντας κάθε φορά ένα <InlineMath>{'W'}</InlineMath>:
+
+$$
+\underbrace{\Phi}_{W} \;\to\; \underbrace{\Phi * \Phi}_{2W} \;\to\; \underbrace{\Phi * \Phi * \Phi}_{3W} \;\to\; \cdots \;\to\; \underbrace{\mathcal{F}\{\phi^n\}}_{nW}
+$$
+
+<span className="mt-3 block font-semibold">⚠️ Η παγίδα: «κάθε συνέλιξη διπλασιάζει».</span>
+
+Είναι εύκολο να το πει κανείς, επειδή η **πρώτη** συνέλιξη όντως πάει το <InlineMath>{'W'}</InlineMath> στο <InlineMath>{'2W'}</InlineMath> — αλλά αυτό συμβαίνει μόνο επειδή εκεί τα δύο σήματα έχουν **ίδιο** εύρος. Η επόμενη συνέλιξη δίνει <InlineMath>{'2W + W = 3W'}</InlineMath>, **όχι** <InlineMath>{'4W'}</InlineMath>. Ο διπλασιασμός δεν είναι κανόνας· η **πρόσθεση** είναι.
 
 **Συμπέρασμα (slide 25):** το FM φάσμα εκτείνεται από −∞ έως +∞. Δεν είναι περιορισμένο. Αλλά τα πλάτη `φⁿ/n!` φθίνουν γρήγορα — οπότε **πρακτικά** μπορούμε να αμελήσουμε όλους τους όρους πέρα από ένα συγκεκριμένο `n`. Αυτή είναι η ιδέα πίσω από το Carson's rule (επόμενο κεφάλαιο).
 
