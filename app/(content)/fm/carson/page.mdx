@@ -82,6 +82,23 @@ $$
 - <InlineMath>{'\\Delta f = K_f\\,\\max|m(t)|'}</InlineMath> — μέγιστη απόκλιση συχνότητας (frequency deviation).
 - <InlineMath>{'\\beta_f = \\Delta f / W = K_f\\,\\max|m|/W'}</InlineMath> — δείκτης διαμόρφωσης FM (όπως ορίστηκε στο <Link href="/fm/idea">/fm/idea §5</Link>).
 
+<Callout type="warning" title="Το W και το B μετρώνται με ΔΙΑΦΟΡΕΤΙΚΟ τρόπο — η πιο ύπουλη σύγχυση εδώ">
+
+Και τα δύο λέγονται «εύρος ζώνης», αλλά το ένα είναι **baseband** και το άλλο **bandpass**, και ο ορισμός δεν είναι ο ίδιος:
+
+| | Πού ζει το φάσμα | Εύρος ζώνης |
+| --- | --- | --- |
+| **<InlineMath>{'W'}</InlineMath>** (το message) | από το **DC** μέχρι το <InlineMath>{'W'}</InlineMath> | <InlineMath>{'W'}</InlineMath> — δηλαδή η **υψηλότερη συχνότητα** |
+| **<InlineMath>{'B'}</InlineMath>** (το εκπεμπόμενο) | σε μια ζώνη **γύρω από το <InlineMath>{'f_c'}</InlineMath>** | <InlineMath>{'f_{\\text{max}} - f_{\\text{min}}'}</InlineMath> — δηλαδή το **πλάτος** της ζώνης |
+
+Στο baseband τα δύο **συμπίπτουν** — «υψηλότερη συχνότητα» και «πλάτος ζώνης» δίνουν τον ίδιο αριθμό, επειδή η ζώνη **ξεκινάει από το μηδέν**. Γι' αυτό συνηθίζεις να τα ταυτίζεις, και γι' αυτό ακριβώς μπερδεύεσαι μετά.
+
+Στο bandpass **δεν** συμπίπτουν, και μάλιστα ούτε κατά προσέγγιση. Το <InlineMath>{'B'}</InlineMath> **δεν έχει καμία σχέση με το πόσο ψηλά κάθεται το <InlineMath>{'f_c'}</InlineMath>**: ένας σταθμός FM στα **100 MHz** με <InlineMath>{'B = 180'}</InlineMath> kHz έχει εύρος ζώνης **180 kHz** — όχι 100 MHz, ούτε 100,09 MHz. Το <InlineMath>{'f_c'}</InlineMath> λέει **πού** στέκεται η ζώνη στο ραδιοφωνικό φάσμα· το <InlineMath>{'B'}</InlineMath> λέει **πόσο φαρδιά** είναι.
+
+Γι' αυτό και το <InlineMath>{'B'}</InlineMath> βγαίνει τυπικά **χιλιάδες φορές μικρότερο** από το <InlineMath>{'f_c'}</InlineMath> — και γι' αυτό χωράνε τόσοι σταθμοί στην μπάντα.
+
+</Callout>
+
 Η ισοδυναμία των δύο μορφών προκύπτει από αντικατάσταση <InlineMath>{'\\Delta f = \\beta_f W'}</InlineMath>:
 
 $$
