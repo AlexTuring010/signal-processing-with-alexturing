@@ -483,7 +483,33 @@ $$
 
 ## 8. Carrier εξαφάνιση — οι ρίζες του J_0 (slide 37)
 
-Στο φάσμα WBFM, ο carrier impulse έχει ύψος `A_c |J_0(β_f)|/2`. Όταν το `β_f` πέφτει πάνω σε **μια ρίζα του J_0**, ο **carrier εξαφανίζεται εντελώς** — όλη η ισχύς του πάει στις sidebands.
+Πριν πούμε τι εξαφανίζεται, ας ξαναδούμε **από πού βγαίνει το ύψος κάθε γραμμής** — γιατί μετά όλα είναι απλή αντικατάσταση.
+
+**Βήμα 1 — η μορφή του σήματος.** Από το §6, το single-tone FM σήμα είναι ένα άθροισμα από cosines:
+
+$$
+x_{FM}(t) = A_c\sum_{n=-\infty}^{\infty} J_n(\beta_f)\,\cos\bigl[2\pi(f_c + n f_m)\,t\bigr]
+$$
+
+Κάθε όρος <InlineMath>{'n'}</InlineMath> είναι **ένα σκέτο cosine**, με συχνότητα <InlineMath>{'f_c + n f_m'}</InlineMath> και πλάτος <InlineMath>{'A_c J_n(\\beta_f)'}</InlineMath>.
+
+**Βήμα 2 — τι φάσμα έχει ένα cosine.** Αυτό το ξέρεις από τα <Link href="/foundations/fourier-transform">θεμέλια</Link>, αλλά αξίζει να το ξαναδείς γιατί όλο το φάσμα εδώ χτίζεται πάνω του:
+
+$$
+A\cos(2\pi f_0 t) \;\longleftrightarrow\; \frac{A}{2}\,\delta(f - f_0) \;+\; \frac{A}{2}\,\delta(f + f_0)
+$$
+
+Δηλαδή **ένα cosine πλάτους <InlineMath>{'A'}</InlineMath> δίνει δύο κρούσεις βάρους <InlineMath>{'A/2'}</InlineMath>** — μία στη θετική και μία στην αρνητική συχνότητα. Το <InlineMath>{'1/2'}</InlineMath> είναι επειδή το cosine μοιράζεται εξίσου στις <InlineMath>{'\\pm f_0'}</InlineMath> (<InlineMath>{'\\cos = \\tfrac{1}{2}(e^{j\\cdot} + e^{-j\\cdot})'}</InlineMath>).
+
+**Βήμα 3 — συνδύασε τα δύο.** Εφάρμοσε το Βήμα 2 σε κάθε όρο του Βήματος 1, με <InlineMath>{'A = A_c J_n(\\beta_f)'}</InlineMath>: η γραμμή στη θετική συχνότητα <InlineMath>{'f_c + n f_m'}</InlineMath> έχει ύψος <InlineMath>{'A_c |J_n(\\beta_f)|/2'}</InlineMath>. Αυτό ακριβώς είναι το ύψος που είδες στη «forest of impulses» του §6.
+
+**Βήμα 4 — ο carrier είναι απλώς ο όρος <InlineMath>{'n = 0'}</InlineMath>.** Βάλε <InlineMath>{'n = 0'}</InlineMath> στο Βήμα 1: ο όρος γίνεται <InlineMath>{'A_c J_0(\\beta_f)\\cos(2\\pi f_c t)'}</InlineMath> — ένα cosine ακριβώς στο <InlineMath>{'f_c'}</InlineMath>, δηλαδή **η γραμμή του φέροντος**. Άρα το ύψος της είναι
+
+$$
+\boxed{\;\text{ύψος γραμμής φέροντος} = \frac{A_c\,|J_0(\beta_f)|}{2}\;}
+$$
+
+**Και τώρα το συμπέρασμα γίνεται προφανές:** το <InlineMath>{'A_c'}</InlineMath> δεν μηδενίζεται ποτέ, οπότε το μόνο που μπορεί να μηδενίσει αυτό το ύψος είναι το <InlineMath>{'J_0(\\beta_f)'}</InlineMath>. Όταν λοιπόν το <InlineMath>{'\\beta_f'}</InlineMath> πέσει πάνω σε **μια ρίζα του <InlineMath>{'J_0'}</InlineMath>**, ο όρος <InlineMath>{'n = 0'}</InlineMath> **σβήνει τελείως** από το άθροισμα: ο **carrier εξαφανίζεται**, και όλη η ισχύς βρίσκεται στις sidebands. Πρόσεξε ότι δεν «χάνεται» ισχύς — από την ταυτότητα <InlineMath>{'\\sum J_n^2 = 1'}</InlineMath> του §7.3, ό,τι έφυγε από τον carrier βρίσκεται στους υπόλοιπους όρους.
 
 Οι πρώτες ρίζες του `J_0`:
 
