@@ -105,6 +105,27 @@ $$
 2(\Delta f + W) = 2(\beta_f W + W) = 2W(\beta_f + 1).
 $$
 
+<Callout type="key" title="Ο Carson και το «πόσες αρμονικές» είναι η ΙΔΙΑ πρόταση, σε άλλες μονάδες">
+
+Στο <Link href="/fm/bessel">/fm/bessel §9</Link> μετρήσαμε **γραμμές**: κρατάμε τις sidebands μέχρι <InlineMath>{'|n| \\le \\lfloor\\beta\\rfloor + 1'}</InlineMath>, οπότε συνολικά <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath>. Εδώ μετράμε **πλάτος ζώνης**. Δεν είναι δύο ανεξάρτητα αποτελέσματα — είναι **το ίδιο cutoff**, εκφρασμένο δύο φορές.
+
+Δες το: αν κρατάς μέχρι τη γραμμή <InlineMath>{'n = \\beta + 1'}</InlineMath>, η ακραία γραμμή κάθεται στο <InlineMath>{'f_c + (\\beta+1) f_m'}</InlineMath>, και η συμμετρική της στο <InlineMath>{'f_c - (\\beta+1) f_m'}</InlineMath>. Το άνοιγμα ανάμεσά τους είναι
+
+$$
+\underbrace{(\beta+1)f_m}_{\text{δεξιά}} + \underbrace{(\beta+1)f_m}_{\text{αριστερά}} = 2(\beta+1)f_m = 2W(\beta+1) = B
+$$
+
+— **ακριβώς ο Carson**. Και αντίστροφα: διαίρεσε το <InlineMath>{'B'}</InlineMath> με την απόσταση των γραμμών <InlineMath>{'f_m'}</InlineMath> και παίρνεις <InlineMath>{'2(\\beta+1)'}</InlineMath> διαστήματα, άρα <InlineMath>{'2(\\beta+1)+1 = 2\\beta+3'}</InlineMath> γραμμές. Η μόνη διαφορά είναι το <InlineMath>{'\\lfloor\\cdot\\rfloor'}</InlineMath>: το μέτρημα χρειάζεται **ακέραιο** δείκτη, το εύρος ζώνης όχι.
+
+Πρακτικά, στην εξέταση:
+
+- **«Πόσες σημαντικές αρμονικές;»** → <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath>
+- **«Πόσο το ενεργό εύρος ζώνης;»** → <InlineMath>{'B = 2W(\\beta+1)'}</InlineMath>
+
+Ίδιο κόψιμο, διαφορετική ερώτηση. Αν δεις να ζητούνται **και τα δύο** στο ίδιο θέμα, μην τα υπολογίσεις ανεξάρτητα — υπολόγισε <InlineMath>{'\\beta'}</InlineMath> μία φορά και διάβασε και τα δύο από αυτό.
+
+</Callout>
+
 <Callout type="key" title="Slide 26 — αυτολεξεί">
 
 «Σε πρακτικά συστήματα επικοινωνιών το εύρος ζώνης των σημάτων **περιορίζεται σε ένα πεπερασμένο διάστημα <InlineMath>{'B'}</InlineMath>**, το οποίο περιέχει σχεδόν ολόκληρη την ισχύ του διαμορφωμένου σήματος. Πρόκειται για το **ενεργό εύρος ζώνης**:
