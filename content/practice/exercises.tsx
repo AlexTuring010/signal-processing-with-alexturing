@@ -10181,10 +10181,40 @@ export const EXERCISES: Exercise[] = [
     solution: (
       <>
         <p>
-          <strong>Baseband:</strong> 8 αρμονικές στις 1, 2, ..., 8 Hz, με
-          πλάτη <InlineMath>{'n/2'}</InlineMath> καθεμία (impulses στις
-          <InlineMath>{'\\pm n'}</InlineMath>).
+          <strong>Baseband — γιατί <InlineMath>{'n/2'}</InlineMath>.</strong> Κάθε
+          όρος είναι ένα σκέτο cosine πλάτους <InlineMath>{'n'}</InlineMath>, και
+          ένα cosine πλάτους <InlineMath>{'A'}</InlineMath> δίνει{' '}
+          <strong>δύο</strong> κρούσεις βάρους <InlineMath>{'A/2'}</InlineMath>, μία
+          σε κάθε πλευρά:{' '}
+          <InlineMath>
+            {'n\\cos(2\\pi n t) \\longleftrightarrow \\tfrac{n}{2}\\delta(f-n) + \\tfrac{n}{2}\\delta(f+n)'}
+          </InlineMath>
+          . Άρα 8 ζευγάρια γραμμών, στις{' '}
+          <InlineMath>{'f = \\pm 1, \\pm 2, \\ldots, \\pm 8'}</InlineMath> Hz, με
+          ύψη <InlineMath>{'1/2, 1, 3/2, \\ldots, 4'}</InlineMath> — δηλαδή{' '}
+          <strong>16 γραμμές συνολικά</strong>, που μεγαλώνουν γραμμικά όσο
+          απομακρύνεσαι από το μηδέν.
         </p>
+
+        <SpectrumLineViz
+          title="Το σχήμα που ζητάει η εκφώνηση — φάσμα πλάτους του x(t) στη βασική ζώνη"
+          freqAxisLabel="f (Hz)"
+          lines={[1, 2, 3, 4, 5, 6, 7, 8].flatMap((n) => [
+            { f: -n, mag: n / 2, tick: `−${n}`, magLabel: `${n}/2` },
+            { f: n, mag: n / 2, tick: `+${n}`, magLabel: `${n}/2` },
+          ])}
+          caption={
+            <>
+              Πρόσεξε δύο πράγματα που θέλει να δει ο διορθωτής:{' '}
+              <strong>δεν υπάρχει γραμμή στο μηδέν</strong> (το{' '}
+              <InlineMath>{'x(t)'}</InlineMath> δεν έχει DC όρο — το άθροισμα
+              ξεκινά από <InlineMath>{'n = 1'}</InlineMath>), και το φάσμα είναι{' '}
+              <strong>συμμετρικό</strong> ως προς το <InlineMath>{'f = 0'}</InlineMath>,
+              όπως κάθε πραγματικό σήμα. Οι γραμμές <strong>ψηλώνουν</strong> προς τα
+              έξω, κάτι ασυνήθιστο — τα περισσότερα σήματα φθίνουν.
+            </>
+          }
+        />
         <p>
           <strong>AM</strong>:{' '}
           <InlineMath>{'[A_c + x(t)]\\cos(2\\pi f_c t)'}</InlineMath>{' '}
