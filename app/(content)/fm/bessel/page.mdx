@@ -539,6 +539,25 @@ $$
 N_{PM} = 2\lfloor K_p \alpha\rfloor + 3, \qquad N_{FM} = 2\lfloor K_f \alpha / f_m\rfloor + 3.
 $$
 
+**Τι είναι το <InlineMath>{'\\alpha'}</InlineMath>:** το **πλάτος του single-tone message**, δηλαδή <InlineMath>{'m(t) = \\alpha\\cos(2\\pi f_m t)'}</InlineMath>. Άρα οι δύο αυτοί τύποι **δεν είναι καινούργιοι** — είναι ο ίδιος <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath>, με το <InlineMath>{'\\beta'}</InlineMath> γραμμένο αναλυτικά:
+
+$$
+\beta_p = K_p \max|m| = K_p\,\alpha, \qquad \beta_f = \frac{K_f \max|m|}{W} = \frac{K_f\,\alpha}{f_m}
+$$
+
+(στο single-tone ισχύει <InlineMath>{'\\max|m| = \\alpha'}</InlineMath> και <InlineMath>{'W = f_m'}</InlineMath> — γι' αυτό «εξαφανίζονται» τα <InlineMath>{'\\max|m|'}</InlineMath> και <InlineMath>{'W'}</InlineMath> από τη γραφή του slide 46).
+
+<Callout type="note" title="Και για γενικό message; — τι γενικεύεται και τι όχι">
+
+Εύλογο να ρωτήσεις αν το <InlineMath>{'\\alpha'}</InlineMath> γίνεται <InlineMath>{'\\max|m(t)|'}</InlineMath> στη γενική περίπτωση. **Ναι για το <InlineMath>{'\\beta'}</InlineMath>, όχι απαραίτητα για το μέτρημα.**
+
+- **Το <InlineMath>{'\\beta'}</InlineMath> γενικεύεται κανονικά:** <InlineMath>{'\\beta_f = K_f \\max|m| / W'}</InlineMath> για οποιοδήποτε message — αυτός είναι εξάλλου ο γενικός ορισμός του <Link href="/fm/idea">/fm/idea §5</Link>, και το <InlineMath>{'\\alpha/f_m'}</InlineMath> είναι απλώς η single-tone ειδική του περίπτωση.
+- **Το «πόσες αρμονικές» όμως προϋποθέτει ότι ΥΠΑΡΧΟΥΝ αρμονικές να μετρηθούν.** Διακριτές γραμμές έχεις μόνο όταν η φάση είναι **περιοδική** (δες <Link href="/fm/idea">/fm/idea §6β</Link>). Για περιοδικό message θεμελιώδους <InlineMath>{'f_0'}</InlineMath> το μέτρημα δουλεύει με βήμα <InlineMath>{'f_0'}</InlineMath> αντί για <InlineMath>{'f_m'}</InlineMath>· για **μη περιοδικό** message (ομιλία, μουσική) το φάσμα είναι **συνεχές** και η ερώτηση «πόσες αρμονικές» δεν έχει καν νόημα.
+
+Πρακτικά: το <InlineMath>{'N = 2\\lfloor\\beta\\rfloor + 3'}</InlineMath> είναι εργαλείο **του δοκιμαστικού τόνου**. Για πραγματικό σήμα, η ερώτηση που έχει νόημα δεν είναι «πόσες γραμμές» αλλά «πόσο εύρος ζώνης» — και εκεί απαντάει ο Carson.
+
+</Callout>
+
 (Αυτές οι δύο φόρμουλες γράφονται ρητά στο slide 46.)
 
 Από αυτές τις σημαντικές αρμονικές, το **ενεργό εύρος ζώνης** προκύπτει `B = 2 f_m(β_f + 1) = 2 W(β_f + 1)` — αυτό είναι ακριβώς **το Carson's rule** που θα δούμε λεπτομερώς στο επόμενο κεφάλαιο.
