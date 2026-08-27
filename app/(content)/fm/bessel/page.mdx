@@ -418,7 +418,36 @@ $$
 \boxed{\,\sum_{n=-\infty}^{\infty} J_n^2(\beta) = 1\,}
 $$
 
-(αυτή είναι ο Parseval για τη Jacobi-Anger εφαρμοσμένος στο `e^{jβ sin θ}` που έχει μέτρο `1`). Άρα η ολική ισχύς του single-tone FM:
+Δεν είναι «γνωστή ταυτότητα, πίστεψέ την» — **αποδεικνύεται σε τρεις γραμμές**, και δεν χρειάζεται τίποτα που δεν έχεις ήδη. Ας μαζέψουμε πρώτα τα εργαλεία, γιατί δύο από αυτά είναι από πολύ παλιά.
+
+**Τι θα χρησιμοποιήσουμε:**
+
+1. **Η Jacobi-Anger του §5**: <InlineMath>{'e^{j\\beta\\sin\\theta} = \\sum_n J_n(\\beta)\\, e^{jn\\theta}'}</InlineMath>. Κοίταξέ την για ένα δευτερόλεπτο: ως συνάρτηση του <InlineMath>{'\\theta'}</InlineMath> είναι **ακριβώς μια σειρά Fourier** με περίοδο <InlineMath>{'2\\pi'}</InlineMath>, και οι **συντελεστές Fourier της είναι τα** <InlineMath>{'J_n(\\beta)'}</InlineMath>.
+2. **<InlineMath>{'|e^{jx}| = 1'}</InlineMath> για κάθε πραγματικό <InlineMath>{'x'}</InlineMath>** — είναι σημείο πάνω στον μοναδιαίο κύκλο, οπότε το μέτρο του είναι 1 ό,τι κι αν είναι η γωνία. (Εδώ το <InlineMath>{'x = \\beta\\sin\\theta'}</InlineMath> είναι πραγματικό.)
+3. **Το θεώρημα Parseval για σειρά Fourier**: αν <InlineMath>{'f(\\theta) = \\sum_n c_n e^{jn\\theta}'}</InlineMath> με περίοδο <InlineMath>{'2\\pi'}</InlineMath>, τότε
+
+$$
+\frac{1}{2\pi}\int_{-\pi}^{\pi} |f(\theta)|^2\, d\theta = \sum_{n=-\infty}^{\infty} |c_n|^2
+$$
+
+   Σε απλά λόγια: **η μέση ισχύς ισούται με το άθροισμα των τετραγώνων των συντελεστών.** Ισχύει επειδή τα <InlineMath>{'e^{jn\\theta}'}</InlineMath> είναι **ορθογώνια** μεταξύ τους — κάθε σταυρωτός όρος <InlineMath>{'n \\neq k'}</InlineMath> ολοκληρώνεται στο μηδέν σε μία περίοδο, και επιβιώνουν μόνο τα τετράγωνα.
+4. Τα <InlineMath>{'J_n(\\beta)'}</InlineMath> είναι **πραγματικοί** αριθμοί για πραγματικό <InlineMath>{'\\beta'}</InlineMath> και ακέραιο <InlineMath>{'n'}</InlineMath>, άρα <InlineMath>{'|J_n|^2 = J_n^2'}</InlineMath>.
+
+**Η απόδειξη.** Εφάρμοσε το (3) στη σειρά του (1), δηλαδή με <InlineMath>{'f(\\theta) = e^{j\\beta\\sin\\theta}'}</InlineMath> και <InlineMath>{'c_n = J_n(\\beta)'}</InlineMath>.
+
+**Αριστερό μέλος:** από το (2), <InlineMath>{'|e^{j\\beta\\sin\\theta}|^2 = 1^2 = 1'}</InlineMath> για **κάθε** <InlineMath>{'\\theta'}</InlineMath>. Άρα ολοκληρώνεις τη σταθερά 1:
+
+$$
+\frac{1}{2\pi}\int_{-\pi}^{\pi} 1\, d\theta = \frac{1}{2\pi}\cdot 2\pi = 1
+$$
+
+**Δεξί μέλος:** από το (4), <InlineMath>{'\\sum_n |J_n(\\beta)|^2 = \\sum_n J_n^2(\\beta)'}</InlineMath>.
+
+Εξισώνοντας τα δύο μέλη προκύπτει <InlineMath>{'\\sum_n J_n^2(\\beta) = 1'}</InlineMath>. ∎
+
+**Και τι σημαίνει, σε μία πρόταση:** το αριστερό μέλος είναι η μέση ισχύς ενός σήματος που έχει **πάντα μέτρο 1**. Ό,τι κι αν κάνει το <InlineMath>{'\\beta'}</InlineMath> στους επιμέρους συντελεστές, το άθροισμα των τετραγώνων τους δεν έχει περιθώριο να αλλάξει. Είναι η ίδια ακριβώς λογική με το <Link href="/fm/idea">/fm/idea §6β</Link>, όπου το σταθερό <InlineMath>{'|g| = A_c'}</InlineMath> έδωσε <InlineMath>{'\\sum_n |c_n|^2 = A_c^2'}</InlineMath> — εδώ απλώς με <InlineMath>{'A_c = 1'}</InlineMath>.
+
+Άρα η ολική ισχύς του single-tone FM:
 
 $$
 \mathcal{P}_{FM} = \frac{A_c^2}{2}\sum_{n=-\infty}^{\infty} J_n^2(\beta) = \frac{A_c^2}{2} \quad\text{(ανεξάρτητη του β)}.
